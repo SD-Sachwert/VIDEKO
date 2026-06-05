@@ -15,9 +15,19 @@ import p2 from '../assets/images/vorher-nachher/05_projekt_02_modernisierung_bes
 import p3 from '../assets/images/vorher-nachher/06_projekt_03_raumkonzept_licht.png'
 import p4 from '../assets/images/vorher-nachher/07_projekt_04_komplettumbau.png'
 import p5 from '../assets/images/vorher-nachher/08_projekt_05_wohnkueche_deluxe.png'
-import beforeImg from '../assets/images/vorher-nachher/09_before_alte_kueche.png'
-import afterImg from '../assets/images/vorher-nachher/10_after_neue_kueche.png'
 import trustImg from '../assets/images/vorher-nachher/11_beratung_kundenmoment.png'
+import vorher1 from '../assets/images/vorher-nachher/vorher-1.jpg'
+import nachher1 from '../assets/images/vorher-nachher/nachher-1.jpg'
+import vorher2 from '../assets/images/vorher-nachher/vorher-2.png'
+import nachher2 from '../assets/images/vorher-nachher/nachher-2.png'
+import vorher3 from '../assets/images/vorher-nachher/vorher-3.png'
+import nachher3 from '../assets/images/vorher-nachher/nachher-3.png'
+
+const PAIRS = [
+  { before: vorher1, after: nachher1, cap: 'Verwandlung 01' },
+  { before: vorher2, after: nachher2, cap: 'Verwandlung 02' },
+  { before: vorher3, after: nachher3, cap: 'Verwandlung 03' },
+]
 
 const KEYPOINTS = ['Reale Ausgangssituationen', 'Ehrliche Planung & Umsetzung', 'Sichtbare Veränderungen', 'Liebe zum Detail']
 
@@ -126,43 +136,24 @@ export default function VorherNachher() {
         </div>
       </section>
 
-      {/* VORHER / NACHHER SLIDER */}
+      {/* VORHER / NACHHER SLIDER – 3 echte Paare, direkt nach den Projekten */}
       <section className="section vn-ba-sec">
         <div className="container">
-          <div className="vn-ba-wrap">
-            <Reveal className="vn-ba-media">
-              <BeforeAfter before={beforeImg} after={afterImg} beforeAlt="Vorher: alte Küche" afterAlt="Nachher: neue Küche" />
-            </Reveal>
-            <Reveal className="vn-ba-copy" delay={0.08}>
-              <span className="kicker">Vorher / Nachher</span>
-              <h2 className="lintro__title">Bedeutet:<br /><span className="grad">mehr Lebensqualität.</span></h2>
-              <p className="lintro__text">
-                Es geht nicht nur um neue Fronten. Es geht um Raumgefühl, bessere
-                Abläufe, Licht, Stauraum und ein Konzept, das einfach stimmt. Zieh am
-                Regler und sieh den Unterschied.
-              </p>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* WEITERE SLIDER */}
-      <section className="section vn-ba-more">
-        <div className="container">
-          <SectionHeader align="center" kicker="Zieh am Regler" title={<>Noch mehr <span className="grad">Verwandlungen.</span></>} lead="Beispielhafte Gegenüberstellungen – echte VIDEKO-Projekte folgen." />
-          <div className="vn-ba-grid">
-            <Reveal>
-              <div className="vn-ba-item">
-                <BeforeAfter before={p2} after={p5} beforeAlt="Vorher" afterAlt="Nachher" />
-                <span className="vn-ba-cap">Modernisierung Bestandsküche</span>
-              </div>
-            </Reveal>
-            <Reveal delay={0.08}>
-              <div className="vn-ba-item">
-                <BeforeAfter before={p1} after={p4} beforeAlt="Vorher" afterAlt="Nachher" />
-                <span className="vn-ba-cap">Komplettumbau Wohnküche</span>
-              </div>
-            </Reveal>
+          <SectionHeader
+            align="center"
+            kicker="Vorher / Nachher"
+            title={<>Bedeutet: <span className="grad">mehr Lebensqualität.</span></>}
+            lead="Es geht nicht nur um neue Fronten – sondern um Raumgefühl, Licht, Stauraum und bessere Abläufe. Zieh am Regler und sieh den Unterschied."
+          />
+          <div className="vn-ba-grid vn-ba-grid--3">
+            {PAIRS.map((p, i) => (
+              <Reveal key={p.cap} delay={(i % 3) * 0.06}>
+                <div className="vn-ba-item">
+                  <BeforeAfter before={p.before} after={p.after} beforeAlt="Vorher" afterAlt="Nachher" />
+                  <span className="vn-ba-cap">{p.cap}</span>
+                </div>
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>
@@ -192,7 +183,7 @@ export default function VorherNachher() {
               <ul className="lstances lstances--2col">
                 {TRUST.map((t) => <li key={t}><Check size={16} strokeWidth={2.4} /> {t}</li>)}
               </ul>
-              <CTAButton to="/beratung">Beratung vereinbaren</CTAButton>
+              <CTAButton to="/beratung">Beratung anfragen</CTAButton>
             </Reveal>
           </div>
         </div>

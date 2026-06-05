@@ -492,13 +492,14 @@ img {
 }
 
 .mobile-menu {
-  display: none;
+  display: flex;
   flex-direction: column;
   gap: 18px;
   padding: 22px 36px 30px;
-  background: rgba(240, 236, 226, 0.96);
+  background: rgba(240, 236, 226, 0.98);
   backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--line-dark);
+  box-shadow: 0 24px 50px -24px rgba(0, 0, 0, 0.5);
 }
 
 .mobile-menu a:not(.pill) {
@@ -8534,6 +8535,125 @@ a.footer__contact-line:hover {
   }
   .hometeaser {
     height: 320px;
+  }
+}
+
+/* =====================================================================
+   FIX PASS: VN 3-up sliders, studio video, map card, mobile hero
+   ===================================================================== */
+.vn-ba-grid--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* studio video showcase */
+.studio-video {
+  position: relative;
+  min-height: 70vh;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  color: var(--cream);
+  padding: 120px 0 70px;
+}
+.studio-video__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.studio-video__vid {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.studio-video__veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, rgba(8, 8, 7, 0.85) 0%, rgba(10, 9, 7, 0.5) 40%, rgba(10, 9, 7, 0.15) 65%, transparent 85%),
+    linear-gradient(to top, rgba(8, 8, 7, 0.72), transparent 52%);
+}
+.studio-video__inner {
+  position: relative;
+  z-index: 1;
+}
+.studio-video__title {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1.04;
+  margin: 0 0 14px;
+}
+.studio-video__text {
+  font-size: 1.08rem;
+  line-height: 1.6;
+  color: rgba(244, 239, 228, 0.85);
+  max-width: 480px;
+  margin: 0;
+}
+
+/* clickable map card (über uns) */
+.mapcard {
+  position: relative;
+  display: block;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--line-dark);
+  aspect-ratio: 4 / 3;
+  box-shadow: 0 30px 60px -40px rgba(120, 90, 40, 0.4);
+}
+.mapcard img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.mapcard:hover img {
+  transform: scale(1.04);
+}
+.mapcard__btn {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 18px;
+  border-radius: 999px;
+  background: var(--grad-gold);
+  color: #20170a;
+  font-size: 0.74rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+  box-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.5);
+}
+
+/* mobile hero refinement */
+@media (max-width: 720px) {
+  .vn-ba-grid--3 {
+    grid-template-columns: 1fr;
+  }
+  .hero {
+    min-height: auto;
+    padding: 96px 0 36px;
+  }
+  .hero__inner {
+    padding-top: 24px;
+  }
+  .hero__veil {
+    background: linear-gradient(to top, rgba(8, 8, 7, 0.9) 0%, rgba(8, 8, 7, 0.6) 55%, rgba(8, 8, 7, 0.5) 100%);
+  }
+  .hero__band {
+    margin-top: 26px;
+  }
+  .hero__actions {
+    flex-wrap: wrap;
+  }
+  .hero__scroll {
+    display: none;
+  }
+  .studio-video {
+    min-height: 58vh;
+    padding: 90px 0 50px;
   }
 }
 

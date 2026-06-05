@@ -17,6 +17,7 @@ import cBeratung from '../assets/images/studio/bilder/07_studio_card_beratung_ve
 import splitImg from '../assets/images/studio/bilder/08_split_section_showroom_gross.png'
 import teamImg from '../assets/images/studio/bilder/09_team_beratung_auf_augenhoehe.png'
 import ctaImg from '../assets/images/studio/bilder/10_final_cta_studio_banner.png'
+import umbauVideo from '../assets/images/studio/bilder/Umbau.mp4'
 
 const HERO_BADGES = ['Persönliche Beratung', 'Hochwertige Materialien', 'Planung auf höchstem Niveau']
 
@@ -100,6 +101,33 @@ export default function Studio() {
               </ul>
             </Reveal>
           </div>
+        </div>
+      </section>
+
+      {/* VIDEO SHOWCASE – Studio im Aufbau */}
+      <section className="studio-video">
+        <div className="studio-video__media" aria-hidden="true">
+          <video
+            className="studio-video__vid"
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster={introImg}
+          >
+            <source src={umbauVideo} type="video/mp4" />
+          </video>
+          <div className="studio-video__veil" />
+        </div>
+        <div className="container studio-video__inner">
+          <Reveal>
+            <span className="kicker kicker--gold">Studio im Aufbau</span>
+            <h2 className="studio-video__title">Hier entsteht<br /><span className="grad">etwas Besonderes.</span></h2>
+            <p className="studio-video__text">
+              Schau uns beim Aufbau über die Schulter – Schritt für Schritt entsteht
+              dein neues Lieblings-Küchenstudio in Würzburg.
+            </p>
+          </Reveal>
         </div>
       </section>
 

@@ -21,6 +21,9 @@ import tMarketing from '../assets/images/ueber-uns/07_team_marketing_und_social_
 import tMontage from '../assets/images/ueber-uns/08_team_montage_und_handwerk.png'
 import tOrga from '../assets/images/ueber-uns/09_team_organisation_und_partner.png'
 import momentImg from '../assets/images/ueber-uns/10_persoenlicher_kundenmoment.png'
+import karteImg from '../assets/images/ueber-uns/karte.png'
+
+const MAPS_URL = 'https://www.google.com/maps/search/?api=1&query=Hertzstra%C3%9Fe%204%2C%2097076%20W%C3%BCrzburg'
 
 const VALUES = [
   { icon: Handshake, title: 'Ehrlich', text: 'Klartext statt Verkaufsmasche. Wir sagen dir auch, was du nicht brauchst.' },
@@ -203,10 +206,10 @@ export default function UeberUns() {
               </div>
             </Reveal>
             <Reveal className="standort__map" delay={0.08}>
-              <div className="standort__map-ph" aria-hidden="true">
-                <MapPin size={30} strokeWidth={1.4} />
-                <span>Würzburg · Hertzstraße 4</span>
-              </div>
+              <a className="mapcard" href={MAPS_URL} target="_blank" rel="noopener noreferrer" aria-label="Route zu VIDEKO in Würzburg auf Google Maps planen">
+                <img src={karteImg} alt="Standort VIDEKO – Hertzstraße 4, 97076 Würzburg" loading="lazy" />
+                <span className="mapcard__btn"><MapPin size={16} strokeWidth={1.9} /> Route planen</span>
+              </a>
             </Reveal>
           </div>
         </div>
