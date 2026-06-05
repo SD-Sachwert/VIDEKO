@@ -1,0 +1,139 @@
+Baue am Ende der Website einen hochwertigen Premium-CTA-/Footer-Abschnitt für VIDEKO Küchen, optisch genauso wie mein Referenzbild Footer.
+
+WICHTIG:
+- Nicht als ein einziges Bild umsetzen.
+- Alles als echte HTML-/CSS-/JS-Komponenten bauen.
+- Texte, Buttons, Ratings, Statistiken und Karten müssen echte Webelemente sein.
+- Die Bilder nur als visuelle Assets verwenden.
+- Bitte sehr hochwertig, luxuriös, ruhig und modern umsetzen.
+
+ASSETS:
+- assets/images/footer/footer-experience-bg-wide.png
+- assets/images/footer/footer-experience-bg-mobile.png
+- assets/images/footer/review-avatar-01.png
+- assets/images/footer/review-avatar-02.png
+- assets/images/footer/review-avatar-03.png
+- bestehendes VIDEKO Logo aus dem Projekt verwenden (nicht ins Hintergrundbild einbrennen)
+
+ZIEL:
+Ein spektakulärer Abschlussbereich, der wie ein eleganter Premium-Footer / Abschluss-CTA wirkt. Die Szene soll atmosphärisch, warm und luxuriös wirken – anthrazit, dunkler Stein, warme Gold-/Champagner-Lichtkanten, leichte Glassmorphism-Karten, feine Rahmen und Glow-Effekte.
+
+LAYOUT DESKTOP:
+1. Full-width Section am Seitenende.
+2. Nutze footer-experience-bg-wide.png als Haupt-Hintergrundbild.
+3. Das Bild soll cover sein, aber so positioniert werden, dass links genug dunkle Fläche für Text bleibt und rechts der leuchtende Rundbogen / Küchenbereich sichtbar ist.
+4. Über das Bild einen subtilen dunklen Overlay/Gradient legen, damit Text links sauber lesbar ist.
+5. Section soll groß und eindrucksvoll sein, eher wie ein Hero am Seitenende.
+
+OBERER CONTENTBEREICH:
+- Links oben das bestehende VIDEKO Logo platzieren.
+- Kleiner Kicker/Text darüber oder darunter: „KÜCHEN FÜR MENSCHEN MIT ANSPRUCH“
+- Hauptheadline:
+  „Bereit für ein
+   besonderes Erlebnis?“
+  Gern mit schönem Zeilenumbruch.
+  Optional kann „besonderes Erlebnis“ gold/champagnerfarben hervorgehoben werden.
+- Darunter ein kurzer Absatz:
+  „Exklusive Küchenarchitektur, die Design, Funktion und Emotion in vollendeter Harmonie vereint.“
+- Primärer CTA-Button:
+  „BERATUNG BUCHEN“
+- Darunter eine kleine Bewertungszeile mit drei kreisrunden Avataren aus den 3 Review-Bildern.
+- Daneben Text z. B.:
+  „4,9 / 5“
+  „Basierend auf 250+ Bewertungen“
+  Diese Werte bitte leicht editierbar lassen.
+
+WICHTIG ZUR KOMPOSITION:
+- Textblock links.
+- Das rechte Motiv mit Rundbogen, Küche und Bonsai muss sichtbar bleiben.
+- Nichts plump mittig draufklatschen.
+- Viel Eleganz, gutes Spacing, kein Billig-Webdesign.
+
+GLAS-/INFO-KARTEN UNTER DEM HERO-TEXT:
+Direkt darunter zwei breite, halbtransparente Premium-Karten / Panels mit Blur, Glow und feinem Rand – optisch nah am Referenzbild.
+
+KARTE 1 (größer, mehrspaltig):
+- Links ein Textblock:
+  Überschrift:
+  „VERTRAUEN SIE
+   AUF ERFAHRUNG.“
+  Text:
+  „Seit über 15 Jahren schaffen wir außergewöhnliche Küchen für Menschen, die das Besondere wertschätzen.“
+- Daneben 4 Spalten / USP-Blöcke mit kleinen Icons.
+- Beispielinhalte als Platzhalter, aber editierbar:
+  1. „AWARD WINNER“ / „German Design Award 2023 & 2024“
+  2. „ÜBER“ / „1.250 KÜCHEN REALISIERT“
+  3. „PREMIUM QUALITÄT“ / „Ausgewählte Materialien & präzise Verarbeitung“
+  4. „PERSÖNLICHE BERATUNG“ / „Individuell, ehrlich und auf höchstem Niveau“
+
+KARTE 2 (schmalere Stat-Row darunter):
+- 4 gleichmäßige Spalten mit Icon + Zahl + Beschreibung.
+- Layout optisch wie im Referenzbild.
+- Inhalte zunächst als Demo/Platzhalter anlegen und leicht austauschbar halten.
+- Beispielwerte:
+  1. „250+“ / „SHOWROOMS & PARTNERSTANDORTE“
+  2. „20+“ / „KÜCHENSTILE & DESIGNLINIEN“
+  3. „50+“ / „EXKLUSIVE MATERIALIEN VON BESTMARKEN“
+  4. „98%“ / „KUNDENZUFRIEDENHEIT WEITEREMPFEHLUNG“
+
+ACHTUNG:
+Falls reale Zahlen/Awards dafür nicht vorliegen, bitte im Code klar als Placeholder/Demo behandeln, damit ich sie später austauschen kann.
+Keine frei erfundenen rechtlich problematischen Auszeichnungen fest verankern.
+
+UNTERER CTA-BEREICH:
+Darunter ein zweigeteilter Abschlussbereich.
+
+LINKS:
+- Headline:
+  „MEHR ALS EINE KÜCHE.
+   EIN STATEMENT.“
+- Text:
+  „Für Menschen, die keine Kompromisse machen.
+   Lassen Sie uns gemeinsam Ihre Traumküche verwirklichen – einzigartig wie Sie.“
+- Darunter eine kleine Video-/Showroom-Zeile mit Play-Icon:
+  „VIDEKO ERLEBEN“
+  „Showroom ansehen“
+
+RECHTS:
+- Eine auffällige, aber stilvolle CTA-Karte mit Glow.
+- Headline:
+  „JETZT PERSÖNLICHEN
+   BERATUNGSTERMIN SICHERN“
+- Subline:
+  „Inspiration. Expertise. Exklusiv für Sie.“
+- Button:
+  „TERMIN VEREINBAREN“
+
+GANZ UNTEN:
+- Eine dezente horizontale Footer-/Trust-Zeile.
+- Text z. B. mittig:
+  „AUSGEZEICHNET. EMPFOHLEN. VERTRAUT.“
+- Darunter eine Reihe kleiner Badge-/Logo-Platzhalter.
+- Wenn wir keine echten, rechtssicheren Award-/Partnerlogos im Projekt haben, bitte neutrale Text-Badges oder simple Icon-Badges verwenden.
+- Nichts erfinden, was wir nicht belegen können.
+
+STILVORGABEN:
+- Premium, luxuriös, modern, clean.
+- Anthrazit / dunkle Steinoptik.
+- Warmes Gold-/Champagnerlicht.
+- Feine Leuchtkanten, subtile Shadows und Blur.
+- Glas-/Frosted-Glass-Karten.
+- Sehr saubere Typografie.
+- Buttons hochwertig, weich abgerundet, leicht leuchtend.
+- Kein hartes reines Schwarz.
+- Kein Möbelhaus-Look.
+- Kein 08/15-Template-Look.
+
+TECHNISCHE HINWEISE:
+- Responsiv umsetzen.
+- Auf Mobile footer-experience-bg-mobile.png verwenden.
+- Mobile Layout sauber umbauen: Inhalte untereinander stapeln, Karten umbrechen, Abstände anpassen.
+- Performance beachten.
+- Saubere Semantik.
+- Guter Hover auf Buttons.
+- Wenn sinnvoll, leichte Scroll-Reveal-Animationen für Karten und CTA einbauen, aber dezent.
+
+SEHR WICHTIG:
+Ich will die Optik sehr nah am Referenzbild, aber technisch sauber als echte Website-Sektion.
+Bitte nicht improvisieren, nicht vereinfachen und nicht in einen Standard-Footer verwandeln.
+Das Ding soll aussehen wie High-End-Premium-Webdesign.

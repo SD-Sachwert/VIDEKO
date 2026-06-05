@@ -1,0 +1,146 @@
+Baue auf unserer Website einen hochwertigen interaktiven Abschnitt im Stil des Referenzbildes: „Planungsfehler Simulator“ für VIDEKO Küchen.
+
+WICHTIG:
+- Kein generischer Abschnitt, sondern ein hochwertiger Premium-Simulator-Look.
+- Dunkles, edles, warmes Design passend zu VIDEKO.
+- Nicht einfach Bilder untereinander ausgeben, sondern eine echte interaktive Komponente bauen.
+- Die Bilder sind nur die visuellen Assets. Hotspots, Linien, Texte, Tabs, Buttons, Karten, Hover, aktive States und Animationen müssen als Code gebaut werden.
+- Desktop first. Erst für große Screens sauber bauen. Danach responsive anpassen.
+
+ASSET-PFAD:
+assets/images/simulator/
+
+VERWENDE DIESE DATEIEN:
+Hero:
+- 01-hero-planungsfehler-simulator-16x9.png
+
+Simulator Hauptbilder:
+- 02-simulator-main-problem-16x9.png
+- 03-simulator-main-loesung-16x9.png
+
+Problem-Thumbnails:
+- 04-thumb-problem-01-zu-wenig-arbeitsflaeche.png
+- 05-thumb-problem-02-schlechte-beleuchtung.png
+- 06-thumb-problem-03-unguenstige-laufwege.png
+- 07-thumb-problem-04-zu-wenig-steckdosen.png
+- 08-thumb-problem-05-geraete-falsch-platziert.png
+- 09-thumb-problem-06-zu-wenig-stauraum.png
+- 10-thumb-problem-07-unpassende-materialien.png
+
+Lösungs-Thumbnails:
+- 11-thumb-loesung-01-grosszuegige-arbeitsflaeche.png
+- 12-thumb-loesung-02-gute-beleuchtung.png
+- 13-thumb-loesung-03-optimierte-laufwege.png
+- 14-thumb-loesung-04-genug-steckdosen.png
+- 15-thumb-loesung-05-geraete-richtig-platziert.png
+- 16-thumb-loesung-06-mehr-stauraum.png
+- 17-thumb-loesung-07-passende-materialien.png
+
+AUFBAU DES ABSCHNITTS:
+1. Oberer Hero-Bereich
+- Linke Seite: Textcontent.
+- Kleine Eyebrow: „PLANUNGSFEHLER SIMULATOR“.
+- Große Headline: „Die 7 Küchenfehler, die jeden Tag nerven.“
+- Subline: „Entdecken Sie typische Planungsfehler – und erleben Sie, wie durchdachte Lösungen Ihren Alltag verwandeln.“
+- Primärer CTA: „SIMULATOR STARTEN“.
+- Sekundärer CTA mit Play-Icon: „SO FUNKTIONIERT DER SIMULATOR“.
+- Rechte Seite bzw. Hintergrundbild: 01-hero-planungsfehler-simulator-16x9.png
+- Stil: edel, warm, viel Luft, klare Typohierarchie.
+
+2. Schritt-/Kapitel-Navigation direkt unter dem Hero
+- Zahlen 01 bis 07 als klickbare Navigation.
+- Aktiver State klar hervorgehoben.
+- Optional rechts ein kleiner Link: „ÜBERSICHT ANZEIGEN“.
+
+3. Haupt-Simulator-Card
+- Große Card mit abgerundeten Ecken, dunklem Glas-/Premium-Look.
+- Linke Spalte:
+  - Zeige die aktuelle Nummer, z. B. „01 / 07“
+  - Fehler-Titel
+  - Kurze Beschreibung
+  - Liste „Die Folgen“
+  - Box „VIDEKO LÖSUNG“ mit kurzer Lösungserklärung
+  - CTA: „LÖSUNG ANZEIGEN“
+- Rechte Spalte:
+  - Großes Hauptbild
+  - Standardmäßig 02-simulator-main-problem-16x9.png
+  - Im Lösungsmodus 03-simulator-main-loesung-16x9.png
+  - Darüber eine Umschaltung „PROBLEM“ / „LÖSUNG“
+  - Rechts oben eine kleine Aktion „SIMULATOR NEU STARTEN“
+
+4. Interaktive Hotspots auf dem Hauptbild
+- Lege im Problem-Modus 7 klickbare Hotspots über das Bild.
+- Jeder Hotspot hat Nummer + kleinen Glow/Pulse.
+- Beim Hover/Klick soll ein hochwertiger aktiver State erscheinen.
+- Optional Linien/Connectoren und kleine Label wie im Referenzstil.
+- Die Hotspots bitte per Prozent-Positionierung bauen, damit sie auf dem Bild liegen und auf Desktop sauber sitzen.
+- Wenn man auf einen Hotspot klickt, wird der zugehörige Fehler aktiv.
+- Im Lösungsmodus können die Hotspots dezenter oder grün/gold als „verbessert“ dargestellt werden.
+
+5. Thumbnail-Leiste unten
+- Unterhalb der Haupt-Card eine horizontale Leiste mit 7 Karten.
+- Im Problem-Modus die Problem-Thumbnails verwenden.
+- Im Lösungsmodus die Lösungs-Thumbnails verwenden.
+- Klick auf eine Karte aktiviert den entsprechenden Fehler.
+- Aktive Karte deutlich highlighten.
+
+INHALT DER 7 FEHLER:
+Verwende diese Fehler in genau dieser Reihenfolge:
+1. Zu wenig Arbeitsfläche
+2. Schlechte Beleuchtung
+3. Ungünstige Laufwege
+4. Zu wenig Steckdosen
+5. Geräte falsch platziert
+6. Zu wenig Stauraum
+7. Unpassende Materialien
+
+NUTZE FÜR JEDEN FEHLER SINNVOLLE TEXTE.
+Formuliere hochwertig, kurz, verständlich und verkaufsstark, ohne Marktschreierei.
+Ton: premium, klar, kompetent.
+
+BEISPIELHAFTE DATENSTRUKTUR:
+Erstelle eine saubere Datenstruktur / Array mit pro Fehler:
+- id
+- stepNumber
+- title
+- shortDescription
+- consequences[]
+- solutionTitle
+- solutionText
+- hotspotPositionProblem { x, y }
+- hotspotPositionSolution { x, y }
+- problemThumbnail
+- solutionThumbnail
+
+DESIGNVORGABEN:
+- Premium, dunkel, warm, edel.
+- Kein Möbelhaus-Look.
+- Farbwelt: Anthrazit / Schwarz / warmes Gold / softes Beige / leichte Glas-Effekte.
+- Abgerundete Ecken, sanfte Schatten, dezente Borders, Glow nur gezielt.
+- Typografie hochwertig und ruhig.
+- Mikroanimationen fein, nicht verspielt.
+- Buttons sollen hochwertig wirken, nicht billig.
+
+TECHNISCHE VORGABEN:
+- Bitte als saubere, wartbare Komponente umsetzen.
+- Wenn bereits eine passende Section existiert, diese ersetzen bzw. sauber integrieren.
+- Keine kaputte Scroll-Performance.
+- Keine übertriebenen Animationen, die nerven.
+- Bilder sauber laden und mit object-fit / responsiver Skalierung behandeln.
+- Hotspots müssen auch nach Resize stabil sitzen.
+- Verwende semantische Klassen und saubere Struktur.
+
+WICHTIG:
+- Nicht die Texte ins Bild einbauen.
+- Nicht die Hotspots ins Bild einbauen.
+- Keine Canvas-Bastellösung, wenn normale HTML/CSS/JS-Komponenten sauberer sind.
+- Baue das so, dass wir Texte, Hotspots und Bilder später leicht anpassen können.
+
+OPTIONAL, ABER SEHR GUT:
+- Sanfter Einblend-Effekt beim Wechsel zwischen Problem und Lösung.
+- Kleine Fortschrittsanzeige.
+- Keyboard- und Touch-freundliche Navigation.
+- Leichter Premium-Glow beim aktiven Hotspot.
+
+ZIEL:
+Wir wollen einen 12/10 Website-Abschnitt, der wie ein echter interaktiver Premium-Simulator wirkt und sich visuell stark am Referenzstil orientiert, aber technisch sauber und modern gebaut ist.

@@ -1,0 +1,115 @@
+Baue den Budget-Kompass-Abschnitt auf unserer Website anhand des Referenz-Screenshots sauber nach und ersetze den bisherigen unteren Kartenbereich durch einen echten Budget-Showcase mit 16:9-Küchenbildern.
+
+WICHTIG
+- Nicht als ein einziges Bild umsetzen.
+- Alle Texte müssen echter HTML-/React-Text sein.
+- Desktop first sauber bauen, danach responsive runterbrechen.
+- Premium-Look: warm, modern, weich beleuchtet, anthrazit/beige/gold, hochwertig, kein Möbelhaus-Look.
+- Nutze saubere Abstände, Glow, Border, Blur, Layering und Hover-Effekte.
+- Keine stockige Standard-Card-Optik.
+
+ZIEL
+Unter dem Budget-Kompass soll pro Budgetsegment ein Bereich erscheinen, der 4 echte Küchenbeispiele im Format 16:9 zeigt. Der Nutzer soll also nicht nur Materialien sehen, sondern direkt komplette Küchen, damit er sein Budget visuell versteht.
+
+TECHNISCHE LOGIK
+1. Der Budget-Kompass bleibt der Haupttrigger.
+2. Beim Wechsel des aktiven Budgets wechseln darunter die 4 Showcase-Bilder.
+3. Die Showcase-Karten sind echte Image-Cards, keine Hintergrundbilder mit eingebranntem Text.
+4. Desktop: 4 Karten nebeneinander.
+5. Tablet/Mobile: horizontal scrollbar oder 2er Grid, je nach bestehender Projektstruktur.
+6. Bitte mit weichen Übergängen arbeiten (fade/slide), wenn der Budgetbereich wechselt.
+7. Die Karten dürfen leicht hover-animiert sein (scale 1.01–1.02, Glow, Border-Aufhellung).
+
+BUDGETSTUFEN
+1. 5.000–12.500 €
+   Label: Basis
+   Kurztext: Schöne, funktionale Küchen für kleinere Grundrisse und smarte Budgets.
+
+2. 12.000–15.000 €
+   Label: Einstieg
+   Kurztext: Solide Qualität, durchdachtes Design und mehr Gestaltungsfreiheit.
+
+3. 18.000–25.000 €
+   Label: Premium
+   Kurztext: Hochwertige Materialien, individuelle Planung und starke Wohnlichkeit.
+
+4. 25.000–35.000 €
+   Label: Exklusiv
+   Kurztext: Designstarke Küchen mit mehr Raumwirkung, Komfort und Materialtiefe.
+
+5. 35.000 €+
+   Label: Luxus
+   Kurztext: Maßarbeit ohne Kompromisse, außergewöhnliche Materialien und klare Statement-Küchen.
+
+DATEIPFAD
+Lege die Bilder unter folgendem Pfad ein bzw. nutze sie von dort:
+assets/images/budget/showcase/
+
+DATEIEN
+5.000–12.500 €
+- showcase-5000-12500-01.jpg
+- showcase-5000-12500-02.jpg
+- showcase-5000-12500-03.jpg
+- showcase-5000-12500-04.jpg
+
+12.000–15.000 €
+- showcase-12000-15000-01.jpg
+- showcase-12000-15000-02.jpg
+- showcase-12000-15000-03.jpg
+- showcase-12000-15000-04.jpg
+
+18.000–25.000 €
+- showcase-18000-25000-01.jpg
+- showcase-18000-25000-02.jpg
+- showcase-18000-25000-03.jpg
+- showcase-18000-25000-04.jpg
+
+25.000–35.000 €
+- showcase-25000-35000-01.jpg
+- showcase-25000-35000-02.jpg
+- showcase-25000-35000-03.jpg
+- showcase-25000-35000-04.jpg
+
+35.000 €+
+- showcase-35000-plus-01.jpg
+- showcase-35000-plus-02.jpg
+- showcase-35000-plus-03.jpg
+- showcase-35000-plus-04.jpg
+
+EMPFOHLENER AUFBAU UNTER DEM KOMPASS
+- kleine Label-Zeile: „Küchenbeispiele in Ihrer Budgetspanne“
+- Headline mit aktivem Budget + Label
+- kurzer Budgettext
+- 4 Showcase-Karten
+- optional darunter ein CTA wie „Beratung zu diesem Budget buchen“ oder „Mehr Beispiele ansehen“
+
+KARTEN-INHALT
+Die Karten selbst brauchen keinen langen Textblock auf dem Bild.
+Wenn Text gezeigt wird, dann nur als HTML-Overlay unter oder auf der Karte:
+- Küchenform / Stil (z. B. „Moderne Inselküche“, „L-Küche“, „Wohnküche“, „Designküche“)
+- optional ein kurzer Einzeiler
+
+DESIGN-HINWEISE
+- Karten in 16:9
+- leicht gerundete Ecken
+- feine helle Border
+- weiche Schatten
+- warmes Overlay oder dunkler Verlauf nur sehr dezent
+- kein hartes Schwarz
+- keine zu starken Gold-Spielereien
+- Gesamtlook muss zum Referenzbild passen
+
+UMSETZUNG
+- Bitte als eigenständige React/Next-Komponente oder passend zur bestehenden Projektstruktur bauen.
+- Wiederverwendbare Datenstruktur für die Budgetstufen anlegen.
+- Die Showcase-Bilder idealerweise über ein Array je Budget rendern.
+- Bestehende Design-Tokens/Variablen nutzen, falls vorhanden.
+- Sauber kommentieren, damit spätere Anpassungen leicht möglich sind.
+
+WENN MÖGLICH
+- Zeiger des Kompasses animierbar lassen.
+- Aktives Segment im Kompass und aktiver Showcase-Bereich sollen logisch miteinander gekoppelt sein.
+- Kein unnötiger Code-Ballast.
+
+Kurz gesagt:
+Baue den Bereich so, dass der obere Kompass das Budget auswählt und der untere Showcase dazu 4 passende 16:9-Küchenbeispiele zeigt – hochwertig, sauber, responsiv und sehr nah am Referenzlook.

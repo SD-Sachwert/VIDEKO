@@ -1,0 +1,131 @@
+Baue für die VIDEKO Küchen Website eine neue hochwertige Desktop-Sektion im Stil des Referenzscreens „Exploding Kitchen“. Ziel ist ein Premium-Layer-Look wie im Beispiel: links Text, mittig/rechts die schwebende zerlegte Küche, rechts die nummerierten Detailpunkte, unten eine breite USP-Leiste. Bitte Desktop-first umsetzen. Mobile ist jetzt nicht Priorität.
+
+WICHTIG
+- Nutze echten HTML-/CSS-/JS-Content. Keine Texte, Linien, Icons oder Nummern ins Bild einbrennen.
+- Arbeite sauber mit Layern.
+- Keine billige Möbelhaus-Optik.
+- Look: anthrazit, warmes Licht, edel, architektonisch, ruhig, hochwertig.
+- Section soll direkt stark wirken und nach 12/10 aussehen.
+
+ASSETS
+Nutze diese Dateien:
+1. home/exploded/exploded-bg-16x9.png
+   = leerer Raum / Background-Plate
+2. home/exploded/exploded-kitchen-main-16x9.png
+   = freigestelltes bzw. isoliertes Hauptmotiv der Exploded Kitchen
+3. home/exploded/exploded-full-fallback-16x9.png
+   = Fallback, falls Layering mit 1+2 nicht sauber genug wirkt
+4. home/exploded/detail-light-16x9.png
+5. home/exploded/detail-appliances-16x9.png
+6. home/exploded/detail-worktop-16x9.png
+7. home/exploded/detail-drawers-16x9.png
+8. home/exploded/detail-materials-16x9.png
+9. home/exploded/detail-montage-16x9.png
+
+UMSETZUNG
+Bevorzugte Lösung:
+- Layer 1: exploded-bg-16x9.png als großflächiger Hintergrund
+- Layer 2: exploded-kitchen-main-16x9.png darüber positionieren
+- Layer 3: echte UI-Elemente per HTML/CSS/SVG (Linien, Nummern, Text, CTA)
+
+Falls das visuell nicht sauber genug aussieht:
+- Nutze exploded-full-fallback-16x9.png als Gesamtbild-Hero
+- Lege Text und UI trotzdem als echte Website-Elemente darüber
+
+SECTION-AUFBAU
+1. Gesamte Sektion breit und großzügig, eher fast full-screen.
+2. Links eine Content-Spalte.
+3. Mittig/rechts das große Kitchen-Motiv.
+4. Ganz rechts eine vertikale Liste mit 8 nummerierten Punkten.
+5. Unten eine breite, abgerundete USP-Leiste.
+
+TEXT LINKS
+Eyebrow:
+KÜCHEN. DURCHDACHT BIS INS DETAIL.
+
+Headline:
+Exploding Kitchen.
+
+Fließtext:
+Jede VIDEKO Küche ist ein Meisterwerk präziser Planung, edler Materialien und intelligenter Technik. Entdecken Sie, was im Verborgenen Perfektion schafft.
+
+CTA:
+ENTDECKEN SIE DIE DETAILS
+
+RECHTE DETAIL-LISTE
+01  LICHT & ATMOSPHÄRE
+Integrierte Lichtkonzepte für Stimmung und Funktion.
+
+02  PREMIUM GERÄTE
+Nahtlos integrierte Technik – unsichtbar, bis Sie sie brauchen.
+
+03  ARBEITSPLATTE
+Edle Materialien. Perfekt verarbeitet. Zeitlos schön.
+
+04  KORPUS & STRUKTUR
+Stabile Basis. Hochwertig verarbeitet für maximale Langlebigkeit.
+
+05  FRONTEN & DESIGN
+Ausdruck Ihrer Persönlichkeit. In Material, Farbe und Haptik.
+
+06  STAURAUM & KOMFORT
+Intelligente Lösungen für Ordnung, Ergonomie und maximalen Komfort.
+
+07  MASS & PRÄZISION
+Jedes Detail millimetergenau geplant und umgesetzt.
+
+08  MONTAGE & PERFEKTION
+Fachgerecht montiert für ein Ergebnis, das bleibt.
+
+UNTERE USP-LEISTE
+Titel links:
+PERFEKTION IST KEIN ZUFALL.
+
+Text links:
+Sondern das Ergebnis aus Erfahrung, Leidenschaft und kompromisslosem Anspruch.
+
+Vier USP-Blöcke rechts daneben:
+1. INDIVIDUELL GEPLANT
+Maßgeschneidert auf Ihre Räume und Bedürfnisse.
+
+2. HOCHWERTIGE MATERIALIEN
+Ausgewählt für Qualität, Beständigkeit und Wert.
+
+3. TECHNIK MIT BEDACHT
+Innovativ, zuverlässig und elegant integriert.
+
+4. HANDWERK AUF HÖCHSTEM NIVEAU
+Mit Präzision gefertigt und detailverliebt umgesetzt.
+
+Bottom-CTA in der Leiste:
+ENTDECKEN SIE IHRE TRAUMKÜCHE
+
+DESIGN-VORGABEN
+- Schrift und UI in warmem hellen Gold/Creme statt reinweiß.
+- Headline groß, elegant, hochwertig.
+- Viel Luft und Premium-Spacing.
+- Feine goldene Linien / Connector-Lines vom rechten Text zur Küche.
+- Leichte Glass-/Glow-/Gradient-Effekte erlaubt, aber bitte edel.
+- Kein kitschiger Overkill.
+- Die Küche soll subtil schweben.
+
+INTERAKTION / MOTION
+Wenn sinnvoll:
+- leichte Floating-Bewegung für die Hauptküche
+- dezente Glow-Animationen in den Linien
+- Hover auf den 8 Punkten kann jeweils einen Bereich der Küche hervorheben
+- sanfte Scroll-Reveal-Animationen
+Aber alles dezent und performant.
+
+TECHNISCH
+- Desktop-first.
+- Sauber responsive vorbereiten, aber nicht auf Kosten des Desktop-Designs.
+- Gute Bildoptimierung.
+- Wenn notwendig object-fit / contain sauber einsetzen.
+- Keine Layout-Brüche.
+- Keine hässlichen Standard-Buttons.
+
+WICHTIGER HINWEIS
+Wenn Layering mit separatem Kitchen-Asset und Background nicht 100% sauber aussieht, nimm ohne Zögern das Fallback-Bild für die Hero-Section. Qualität geht vor Prinzip.
+
+Baue die Sektion so, dass sie optisch zu VIDEKO passt und direkt in die bestehende Seite integriert werden kann.

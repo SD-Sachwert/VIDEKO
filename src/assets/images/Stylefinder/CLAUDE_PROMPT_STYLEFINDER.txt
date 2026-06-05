@@ -1,0 +1,242 @@
+Baue eine komplette neue Unterseite / Landingpage „Stylefinder“ für die VIDEKO Küchen Website.
+
+WICHTIG:
+- Nutze die beigefügten Bilder ausschließlich als Layout-, Stil- und Struktur-Referenz.
+- Alle Texte bitte als echten HTML-Text umsetzen, NICHT als Text im Bild.
+- Das echte bestehende VIDEKO-Logo und den bestehenden Header-/Navigation-Stil der Website beibehalten. Kein neues Logo erfinden.
+- Designsprache der aktuellen Website übernehmen: helles, luxuriöses, ruhiges Premium-Design mit warmem Gold, hellem Naturstein-/Goldmarmor-Look, viel Luft, weiche Schatten, große Rundungen, hochwertige Serif-Headlines und saubere UI.
+- Der Goldmarmor-Hintergrund muss klar sichtbar über die gesamte Seite wirken. Bitte NICHT einfach eine flache weiße oder beige Fläche verwenden.
+- Ziel: Die Seite soll wie ein hochwertiger interaktiver Stylefinder wirken, nicht wie ein statisches Bild.
+- Responsive umsetzen für Desktop, Tablet und Mobile.
+- Saubere Abstände, harmonische Typografie, dezente Hover-Effekte, elegante Übergänge.
+- Keine dunkle Seite bauen. Hell, edel, freundlich, hochwertig.
+
+DATEIEN / REFERENZEN:
+- 00_aktuelle_website_reference.png = aktuelle Website als Stilreferenz für Header, Farben, Luftigkeit, Grundstimmung
+- 00_goldmarmor_hintergrund_reference.jpg = Hintergrundreferenz für den hellen Goldmarmor-Look
+- 01_stylefinder_landingpage.png
+- 02_stylefinder_warum_stylefinder.png
+- 03_stylefinder_schritt_1_raum_wohnsituation.png
+- 04_stylefinder_schritt_2_alltag_nutzung.png
+- 05_stylefinder_schritt_3_stilrichtung.png
+- 06_stylefinder_schritt_4_prioritaeten.png
+- 07_stylefinder_schritt_5_budget_rahmen.png
+- 08_stylefinder_ergebnis_kuechenprofil.png
+- 09_stylefinder_kuechenprofile_inspiration.png
+- 10_stylefinder_faq_cta.png
+
+AUFGABE:
+Erstelle die komplette Stylefinder-Seite als hochwertige, moderne, interaktive Website-Sektion bzw. Unterseite in unserem bestehenden Projekt.
+
+SEITENAUFBAU:
+
+1. HERO / EINSTIEG
+Orientiere dich an 01_stylefinder_landingpage.png.
+Inhaltlich:
+- Kleiner Eyebrow-Text: „KÜCHEN FÜR MENSCHEN MIT ANSPRUCH“
+- Große Headline: „Welche Küche passt wirklich zu Ihnen?“
+- Kurzer Einleitungstext
+- Drei kleine Benefits / Pills:
+  - ca. 2 Minuten
+  - unverbindlich
+  - keine Registrierung nötig
+- Zwei CTAs:
+  - „STYLEFINDER STARTEN“ (Primary)
+  - „DIREKT BERATUNG BUCHEN“ (Secondary)
+- Rechts ein hochwertiges Küchenbild in einem großen, weich gerundeten Container
+- Darunter oder direkt folgend: Schrittübersicht „Ihr Stylefinder in 5 Schritten“
+
+2. WARUM DER STYLEFINDER SINNVOLL IST
+Orientiere dich an 02_stylefinder_warum_stylefinder.png.
+Baue einen Abschnitt mit:
+- großer Headline links
+- drei Benefit-Karten rechts:
+  - Stil erkennen
+  - Budget einordnen
+  - Beratung vorbereiten
+- darunter noch eine schmale Benefit-Leiste / Vertrauensleiste mit 3 Punkten:
+  - ehrliche Orientierung
+  - schneller Einstieg
+  - bessere Planungsgespräche
+
+3. INTERAKTIVER STYLEFINDER WIZARD
+Der Wizard soll als echter Multi-Step-Flow gebaut werden.
+Jeder Schritt braucht Zustand / Auswahl / aktive States / Weiter-Zurück-Logik.
+
+SCHRITT 1 – RAUM & WOHNSITUATION
+Orientiere dich an 03_stylefinder_schritt_1_raum_wohnsituation.png.
+Fragen / Auswahlkarten:
+- Separate Küche
+- Offene Wohnküche
+- Küche mit Essbereich
+- Kleine Wohnung / Apartment
+- Neubau
+- Renovierung / Bestand
+Zusatzfrage als Chips / Buttons:
+- bis 10 m²
+- 10–20 m²
+- 20–30 m²
+- über 30 m²
+- weiß ich nicht genau
+Rechte Spalte / Vorschaukarte:
+- „Ihre erste Richtung“
+- Bildvorschau
+- kleine Zusammenfassung der aktuellen Auswahl
+Buttons unten:
+- „WEITER“
+- „BERATUNG BUCHEN“
+
+SCHRITT 2 – ALLTAG & NUTZUNG
+Orientiere dich an 04_stylefinder_schritt_2_alltag_nutzung.png.
+Frageblock 1: Wer nutzt die Küche hauptsächlich?
+- Single / Paar
+- Familie mit Kindern
+- Viel Besuch / Gäste
+- Hobbykoch
+- Vermietung / Mietobjekt
+- Büro / Mitarbeiterküche
+Frageblock 2: Wie kochen Sie?
+- Schnell & praktisch
+- Regelmäßig frisch
+- Leidenschaftlich / aufwendig
+- Selten, aber schön soll sie sein
+- Viel vorbereiten / Mealprep
+Rechte Empfehlungskarte:
+- „Ihre aktuelle Empfehlung“
+- Beispiel: „Moderne Familienküche“
+- kleine Tags / Schwerpunkte
+- CTA: „WEITER ZU STIL“
+
+SCHRITT 3 – STILRICHTUNG
+Orientiere dich an 05_stylefinder_schritt_3_stilrichtung.png.
+Baue 8 Stil-Karten:
+- Modern & grifflos
+- Warm & wohnlich
+- Dunkel & elegant
+- Hell & natürlich
+- Landhaus modern
+- Industrial / Beton / Schwarz
+- Luxus / Architekturküche
+- Zeitlos schlicht
+Jede Karte mit Bild, Titel, Kurzbeschreibung und auswählbarem State.
+Unten:
+- Zurück-Button
+- kleine Empfehlungs-Tags
+- Weiter-Button
+
+SCHRITT 4 – PRIORITÄTEN
+Orientiere dich an 06_stylefinder_schritt_4_prioritaeten.png.
+Baue Slider / Range Controls für:
+- Design
+- Stauraum
+- Geräte
+- Preis
+- Pflegeleicht
+- Familienalltag
+- Arbeitsfläche
+- besondere Materialien
+Rechte Spalte:
+- Live-Zusammenfassung / Richtung
+- kleine Bildkarte
+- Tags wie z. B. grifflos, offener Wohnraum, viel Stauraum, familienfreundlich
+Unten:
+- Zurück
+- Weiter
+- kleine Vertrauensleiste
+
+SCHRITT 5 – BUDGET & RAHMEN
+Orientiere dich an 07_stylefinder_schritt_5_budget_rahmen.png.
+Budget-Karten / Auswahloptionen:
+- bis 10.000 €
+- 10.000–15.000 €
+- 15.000–20.000 €
+- 20.000–30.000 €
+- 30.000–40.000 €
+- 40.000 €+
+- zusätzliche Option: „Ich brauche erst Orientierung“
+Rechte Spalte:
+- „Jeder Plan ist individuell“
+- kurze Erklärung
+- Küchenprofil-Vorschau
+Button:
+- „ERGEBNIS ANZEIGEN“
+
+4. ERGEBNIS / KÜCHENPROFIL + FORMULAR
+Orientiere dich an 08_stylefinder_ergebnis_kuechenprofil.png.
+Links:
+- Ergebnis-Karte, z. B. „Die moderne Familienküche“
+- großes Bild
+- kurzer Beschreibungstext
+- empfohlener Stil
+- empfohlene Budgetspanne
+- wichtige Punkte / Tags
+- passende Küchenwelten
+Rechts:
+- Formular zur Kontaktaufnahme / Terminvereinbarung
+Felder:
+- Name
+- E-Mail
+- Telefon
+- PLZ / Ort
+- gewünschter Fertigstellungstermin
+- Nachricht
+- Upload für Grundriss / Fotos / Skizze
+Buttons:
+- Ergebnis per E-Mail senden
+- Persönliches Planungsgespräch buchen
+Darunter noch eine hochwertige Vertrauens-/Leistungsleiste.
+
+5. KÜCHENPROFILE ALS INSPIRATION
+Orientiere dich an 09_stylefinder_kuechenprofile_inspiration.png.
+Baue einen Inspirationsbereich mit mehreren Karten:
+- Moderne Familienküche
+- Offene Wohnküche
+- Kleine Küche groß gedacht
+- Premiumküche mit Insel
+- Warme Wohnküche
+- Puristisch grifflos
+Jede Karte mit Bild, Kurztext, Budget-Hinweis und Pfeil / CTA.
+Darunter eine Benefits-Leiste:
+- Echte Orientierung
+- Individuell geplant
+- Transparente Budgets
+- Beratung auf Augenhöhe
+
+6. FAQ + ABSCHLUSS-CTA
+Orientiere dich an 10_stylefinder_faq_cta.png.
+Links oben:
+- Block „Warum der Stylefinder keine Planung ersetzt“ mit 4 kleinen Vorteilen
+Rechts oben:
+- FAQ-Akkordeon mit Fragen wie:
+  - Ist der Stylefinder kostenlos?
+  - Muss ich danach einen Termin buchen?
+  - Wie genau ist die Budgetspanne?
+  - Kann ich das Ergebnis speichern?
+  - Kann ich einen Grundriss hochladen?
+  - Funktioniert das auch für kleine Küchen?
+Unten:
+- großes Küchenbild links
+- Abschluss-CTA rechts:
+  „Lassen Sie uns Ihr Ergebnis gemeinsam in eine echte Küche übersetzen.“
+Buttons:
+- Planungsgespräch buchen
+- Zurück zum Stylefinder
+
+TECHNISCHE VORGABEN:
+- Bitte als echte Website umsetzen, nicht nur als statisches Mockup.
+- Struktur sauber in wiederverwendbare Komponenten aufteilen.
+- Bestehendes Designsystem der Website weiterverwenden, wo sinnvoll.
+- Falls vorhanden: bestehende Button-, Container-, Section-, Header- und Card-Komponenten nutzen.
+- Wenn sinnvoll, den Wizard als State-basiertes Frontend-Modul aufbauen.
+- Gute Mobile-Nutzung: Karten untereinander, saubere Abstände, Buttons breit genug.
+- Fokus auf hochwertige UX und saubere visuelle Umsetzung.
+- Keine überladenen Animationen; lieber edle, ruhige Motion.
+
+WICHTIG FÜR DIE UMSETZUNG:
+- Die Referenzbilder sind Designvorgabe.
+- Die finale Seite soll wie eine moderne, fertige Premium-Unterseite aussehen.
+- Halte dich eng an Aufbau, Look, Spacing und Stimmung der Referenzbilder.
+- Nutze den hellen Goldmarmor-Hintergrund konsequent.
+- Das echte bestehende VIDEKO-Branding muss erhalten bleiben.
+
+Bitte setze die komplette Seite fertig um.

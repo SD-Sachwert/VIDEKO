@@ -1,0 +1,235 @@
+AUFGABE
+Baue einen hochwertigen, interaktiven Website-Abschnitt für VIDEKO Küchen nach dem Stil des gelieferten Referenzbildes und nutze die mitgelieferten Assets aus assets/images/materials/.
+Der Abschnitt soll luxuriös, ruhig, hochwertig, warm und modern wirken – kein Möbelhaus, kein Discount, kein generischer Template-Look.
+
+ZIEL
+Wir bauen eine "Materialien"-Sektion mit großem Hero-Bereich, Premium-Typografie, interaktiven Materialkarten und einer unteren Nutzen-/CTA-Zone.
+Die Optik soll sehr nah an der Referenz liegen: warme Beige-/Greige-/Stein-Töne, goldene Lichtstimmung, feine Glows, sanfte Tiefe, edle Serif-Headline, klare Sans-Serif-Navigation, hochwertige Mikroanimationen.
+Desktop first.
+
+DATEIEN / ASSETS
+Hero-Bild:
+- assets/images/materials/materials-hero-bg-16x9.png
+
+Materialkarten:
+- assets/images/materials/cards/material-card-naturstein.png
+- assets/images/materials/cards/material-card-metall.png
+- assets/images/materials/cards/material-card-bronze.png
+- assets/images/materials/cards/material-card-keramik.png
+- assets/images/materials/cards/material-card-holz.png
+- assets/images/materials/cards/material-card-glas.png
+- assets/images/materials/cards/material-card-quarzkomposit.png
+- assets/images/materials/cards/material-card-lack-matt.png
+
+WICHTIG
+- Keine Texte in die Bilder einbacken.
+- Alle Texte bitte als HTML/CSS umsetzen.
+- Keine Logos in die Bilder setzen.
+- Die gesamte Sektion muss auf dunklem Text auf hellem, warmem Untergrund basieren – nicht zu grau, nicht zu dunkel.
+
+SEKTIONSAUFBAU
+1) Oberer Hero-Bereich
+- Großes section layout, horizontal, ungefähr wie in der Referenz.
+- Hintergrund/Fläche in warmem Stein-/Greige-Ton.
+- Hero-Bild rechts groß platzieren: assets/images/materials/materials-hero-bg-16x9.png
+- Linke Seite mit Headline, Kicker, Copy und 2 CTA-Elementen.
+- Vertikale kleine Navigations-/Step-Anzeige links (z. B. 01 / 02 / 03 Punkte) kann rein, wenn sauber.
+- Der Look soll nicht 1:1 kopiert wirken, aber klar davon inspiriert sein.
+
+Texte oben:
+Kicker:
+MATERIALIEN
+
+Headline:
+Materialien,
+die inspirieren.
+
+Copy:
+Echte Materialien. Perfekt verarbeitet.
+Für Küchen, die bleiben und begeistern.
+
+Primärer CTA:
+Materialien entdecken
+
+Sekundärer CTA:
+Materialien erleben
+
+2) Interaktive Materialkarten-Zone
+- Unter dem Hero-Bereich eine horizontale Kartenreihe / Slider mit 8 Karten.
+- Die Karten sollen klickbar sein.
+- Desktop: 6 Karten sichtbar, Rest per Slider / Drag / Buttons erreichbar.
+- Mobile/Tablet später responsive lösen, aber Fokus erstmal auf Desktop.
+- Jede Karte zeigt das jeweilige Materialbild mit Textoverlay unten links und kleinem Plus-Button unten.
+- Karten sollen nicht platt rumstehen wie Grabsteine im Baumarkt. Etwas Leben rein.
+
+Materialdaten für die Karten:
+
+1. NATURSTEIN
+Kurztext:
+Einzigartig.
+Kraftvoll.
+Echt.
+
+2. METALL
+Kurztext:
+Kühl.
+Präzise.
+Zeitlos.
+
+3. BRONZE
+Kurztext:
+Warm.
+Exklusiv.
+Ausdrucksstark.
+
+4. KERAMIK
+Kurztext:
+Vielseitig.
+Widerstandsfähig.
+Elegant.
+
+5. HOLZ
+Kurztext:
+Natürlich.
+Lebendig.
+Wohnlich.
+
+6. GLAS
+Kurztext:
+Leicht.
+Transparent.
+Modern.
+
+7. QUARZKOMPOSIT
+Kurztext:
+Pflegeleicht.
+Beständig.
+Harmonisch.
+
+8. LACK MATT
+Kurztext:
+Ruhig.
+Pur.
+Samtig.
+
+INTERAKTION / BEWEGUNG
+Das Segment muss lebendig sein, aber edel – kein Kirmes-Quatsch.
+Bitte so umsetzen:
+- Hover auf Karte:
+  - leichte 3D-Neigung / minimal tilt
+  - Karte fährt minimal nach oben
+  - Glow / Lichtkante wird etwas stärker
+  - Plus-Button reagiert weich
+- Klick auf Karte:
+  - Karte wird active
+  - active Karte wird leicht größer als die anderen
+  - Textbereich / Detailbereich aktualisiert sich passend zum Material
+  - optional: dezenter Hintergrund-Farbshift oder Overlay-Ton je Material
+- Karten sollen per Maus ziehbar sein oder über Pfeile links/rechts steuerbar sein
+- Sanfte Übergänge: 400–700 ms, ease / cubic-bezier hochwertig
+- Optional: Auto-Play ganz langsam, aber nur wenn es sauber wirkt
+- Optional: Light sweep / shimmer sehr subtil über active card
+
+WICHTIG ZUR UMSETZUNG
+Da nur ein Hero-Bild vorliegt, soll das Hero nicht pro Material komplett hart wechseln.
+Stattdessen:
+- Hero bleibt grundsätzlich bestehen
+- bei aktiver Materialkarte kann sich die Stimmung subtil ändern:
+  - Overlay-Tönung
+  - kleine Infobox / Detailpanel
+  - aktiver Materialname + Beschreibung
+  - eventuell kleine Materialprobe / enlarged preview neben oder unter den Karten
+
+3) Detail-/Infobereich unter den Karten
+Erstelle darunter eine elegante Nutzen-Sektion mit kurzer Einleitung links und 4 Vorteilen rechts.
+Icons gerne per SVG/Lucide, keine Bilddateien nötig.
+
+Überschrift links:
+WARUM UNSERE
+MATERIALIEN BESONDERS SIND.
+
+Text links:
+Mit höchstem Anspruch ausgewählt,
+verarbeitet und kombiniert – für ein
+Ergebnis, das Sie sehen, fühlen und
+jeden Tag erleben.
+
+Link links:
+Mehr erfahren
+
+Vier Vorteile rechts:
+
+1. AUSGEWÄHLTE QUALITÄT
+Nur Materialien, die
+unseren Standards in
+Design, Funktion und
+Langlebigkeit genügen.
+
+2. PRÄZISE VERARBEITUNG
+Modernste Technologien
+und echtes Handwerk
+für perfekte Oberflächen
+und Details.
+
+3. NACHHALTIG &
+VERANTWORTUNGSVOLL
+Ressourcenschonend
+ausgewählt, langlebig
+und gemacht für
+die Zukunft.
+
+4. SINNLICH & ERLEBBAR
+Materialien, die man
+nicht nur sieht, sondern
+spürt – jeden Tag
+aufs Neue.
+
+4) Untere CTA-Box
+Am Ende des Abschnitts eine große, helle, abgerundete CTA-Fläche mit zarter Kontur.
+Links ein kleines rundes Vorschaubild / Thumbnail aus dem Hero-Bild oder eine Crop-Version davon.
+Daneben Copy.
+Rechts zwei CTA-Buttons / Links.
+
+Texte CTA-Box:
+Headline:
+Erleben Sie Materialien
+in perfekter Harmonie.
+
+Text:
+Besuchen Sie einen unserer Showrooms
+und entdecken Sie die Vielfalt und Qualität
+unserer Materialien hautnah.
+
+CTA 1:
+Standorte ansehen
+
+CTA 2:
+Persönliche Beratung buchen
+
+DESIGN-VORGABEN
+- Farbwelt: warmes Beige, Greige, Sand, Stein, Champagner, feines Gold
+- Kein hartes Weiß, kein kaltes Blau
+- Typografie:
+  - Headlines: elegante Serifenschrift
+  - UI / Copy / Labels: saubere moderne Sans-Serif
+- Sehr gute Abstände, Premium-Whitespace
+- Feine Schatten statt schwere Schatten
+- Kanten weich, Radien hochwertig
+- Alles soll luxuriös, ruhig, hochwertig und klickbar wirken
+
+TECHNISCHE HINWEISE
+- Bitte semantisch sauber aufbauen
+- Wenn möglich mit wiederverwendbaren Komponenten
+- Slider/Kartenbereich performant umsetzen
+- Maus-/Touch-Interaktion sauber
+- Animationen nicht übertreiben
+- Kein hakeliges Flickern
+- Zustand "active" klar sichtbar
+- Hover nur dort, wo sinnvoll
+
+ERWARTUNG
+Ich will keinen 0815-Abschnitt.
+Ich will ein Segment, das so aussieht, als hätte ein Premium-Studio und kein Küchen-Discounter es gebaut.
+Die Referenz ist die visuelle Leitplanke.
+Die gelieferten Assets sind die Basis.
+Bitte den Abschnitt fertig ausarbeiten, hochwertig stylen und so bauen, dass er sofort stark aussieht.

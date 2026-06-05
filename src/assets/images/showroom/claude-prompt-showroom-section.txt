@@ -1,0 +1,210 @@
+Baue den folgenden Website-Abschnitt für VIDEKO Küchen so nah wie möglich am beigefügten Referenzbild nach. Keine halbgare Annäherung, sondern optisch sehr nah dran – hochwertig, sauber, ruhig, luxuriös, immersiv.
+
+WICHTIG:
+- Nutze das Referenzbild als visuelle Hauptvorlage für Layout, Proportionen, Stimmung, Typografie-Hierarchie, Abstände, Lichtwirkung und Gesamtanmutung.
+- Nutze die mitgelieferten Assets aus diesem Ordner.
+- Desktop zuerst und pixelgenau optimieren. Mobile kann danach vereinfacht responsiv abgeleitet werden.
+- Baue den Abschnitt als echte Website mit HTML/CSS/JS bzw. passend zur bestehenden Projektstruktur, nicht als statisches Bild.
+- Die Seite soll edel, warm, modern und technisch sauber wirken.
+- Kein Möbelhaus-Vibe, kein billiger Slider, kein Standard-Bootstrap-Look.
+
+ASSETS (im gleichen Ordner):
+- showroom-hero-immersive.png
+- journey-01-ankommen.png
+- journey-02-eintreten.png
+- journey-03-wohlfuehlen.png
+- journey-04-geniessen.png
+- journey-05-begreifen.png
+- journey-06-entdecken.png
+- journey-07-verstehen.png
+- journey-08-verlieben.png
+- showroom-cta-wide.png
+
+ZU BAUENDE STRUKTUR:
+1) TOP NAV / HEADER (optisch wie im Referenzbild)
+- links Logo
+- mittig/rechts Menüeinträge:
+  KÜCHENWELTEN
+  MATERIALIEN
+  SHOWROOMS
+  ÜBER VIDEKO
+  JOURNAL
+- rechts ein pillenförmiger Button: BERATUNG BUCHEN
+- daneben ein Hamburger-Icon
+- Header transparent bzw. sehr dezent eingebettet in den Hero
+
+2) HERO / SHOWROOM-STAGE
+- Nutze als Hintergrundbild: showroom-hero-immersive.png
+- Layout zweispaltig gedacht: links Textblock, rechts die Bildwirkung
+- Links darauf:
+  kleine Eyebrow:
+  IHR WEG DURCH UNSEREN SHOWROOM
+
+  Headline:
+  Eintauchen
+  statt nur
+  anschauen.
+
+  Dabei ist „anschauen.“ farblich gold/warm hervorgehoben.
+
+  Fließtext:
+  Erleben Sie unsere Küchenwelten mit
+  allen Sinnen. Eine Reise durch Design,
+  Materialität und Atmosphäre.
+
+  CTA-Button:
+  JETZT ERLEBEN
+
+- Der Hero muss weich auslaufen und atmosphärisch wirken.
+- Farbwelt: warme Grautöne, Taupe, Anthrazit, Gold-Highlights.
+- Kein hartes Weiß. Eher cremige Typo-Farbe.
+
+3) JOURNEY-SLIDER / STORY-KARTEN
+- Unter dem Hero eine horizontale Fortschrittslinie mit 8 Steps und rechts „01 / 08“.
+- Darunter 8 Karten nebeneinander.
+- Jede Karte hat:
+  - Bild oben
+  - unten Nummer, Titel, Kurztext, Pfeil
+- Erste Karte aktiv/gehighlighted.
+- Nutze diese Bilder in dieser Reihenfolge:
+  01 journey-01-ankommen.png
+  02 journey-02-eintreten.png
+  03 journey-03-wohlfuehlen.png
+  04 journey-04-geniessen.png
+  05 journey-05-begreifen.png
+  06 journey-06-entdecken.png
+  07 journey-07-verstehen.png
+  08 journey-08-verlieben.png
+
+- Texte:
+  Bereichsüberschrift links oben:
+  IHRE REISE DURCH
+  UNSER STUDIO
+
+  Karte 01
+  ANKOMMEN.
+  Willkommen in einer
+  Welt, die Qualität
+  von außen zeigt.
+
+  Karte 02
+  EINTRETEN.
+  Ein erster Eindruck,
+  der Vorfreude
+  weckt.
+
+  Karte 03
+  WOHLFÜHLEN.
+  Unsere Lounge lädt
+  ein zum Ankommen
+  und Verweilen.
+
+  Karte 04
+  GENIESSEN.
+  An unserer Bar
+  verschmelzen Design
+  und Gastlichkeit.
+
+  Karte 05
+  BEGREIFEN.
+  Echte Materialien,
+  spürbare Qualität,
+  zeitlose Eleganz.
+
+  Karte 06
+  ENTDECKEN.
+  Küchenwelten, die
+  Inspiration wecken
+  und begeistern.
+
+  Karte 07
+  VERSTEHEN.
+  Persönliche Beratung
+  auf Augenhöhe
+  mit Experten.
+
+  Karte 08
+  VERLIEBEN.
+  Licht, Details und
+  Stimmungen, die
+  bleiben.
+
+INTERAKTION DES JOURNEY-BEREICHS:
+- Karten sollen klickbar sein.
+- Beim Klick auf eine Karte:
+  - aktiver Zustand springt auf diese Karte
+  - Progress-Anzeige aktualisiert sich
+  - Zähler rechts wechselt z. B. auf „03 / 08“
+  - idealerweise wechseln Hero-Bild und Text weich passend zur gewählten Karte ODER mindestens der Journey-Bereich reagiert sichtbar hochwertig.
+- Animationen dezent und premium: soft fade, slight scale, glow border.
+- Kein hektisches Slider-Geschiebe.
+
+4) INFO-SECTION UNTER DEN KARTEN
+- Hintergrund heller, aber weiterhin warm und strukturiert.
+- Links großer Textblock:
+  MEHR ALS EIN SHOWROOM.
+  EIN ERLEBNIS.
+
+  Bei VIDEKO Küchen verbinden sich Architektur,
+  Design und Emotion zu einem einzigartigen
+  Ort. Lassen Sie sich inspirieren, berühren und
+  von neuen Möglichkeiten begeistern.
+
+  Link/Button:
+  MEHR ÜBER UNS
+
+- Rechts daneben 4 Benefits mit kleinen feinen Line-Icons (SVG, keine gerenderten Bilder nötig):
+  1.
+  EXKLUSIVE
+  KÜCHENWELTEN
+  Design in Perfektion.
+  Für Ihren Anspruch.
+
+  2.
+  HOCHWERTIGE
+  MATERIALIEN
+  Ausgewählt für
+  Qualität und Wert.
+
+  3.
+  PERSÖNLICHE
+  BERATUNG
+  Individuell, ehrlich
+  und inspirierend.
+
+  4.
+  ATMOSPHÄRE,
+  DIE BLEIBT
+  Erleben. Fühlen.
+  Mit allen Sinnen.
+
+5) BOTTOM CTA-SECTION
+- Nutze rechts bzw. im Hintergrund das Bild showroom-cta-wide.png
+- Links Textblock auf dunklerem Untergrund oder sauberem Overlay:
+  IHR ERLEBNIS BEGINNT HIER.
+
+  Vereinbaren Sie Ihren persönlichen Termin
+  und erleben Sie Küchen auf einem neuen Niveau.
+
+  CTA-Button:
+  TERMIN VEREINBAREN
+
+VISUELLE REGELN:
+- Sehr hochwertige Typo-Anmutung, editorial/premium.
+- Headline serif-artig oder elegant, Rest clean sans-serif.
+- Große ruhige Flächen, feine Linien, zarte Konturen, goldene Highlights.
+- Schatten weich, Übergänge weich, Border-Radius sauber.
+- Bitte möglichst nah am Referenzbild.
+- Die Karten sollen genau dieses elegante Premium-Kartenlayout bekommen.
+- Insgesamt kein überladenes UX-Gebastel. Weniger, aber edel.
+
+TECHNISCHE HINWEISE:
+- Bilder performant einbinden.
+- Hover-Effekte nur subtil.
+- Journey-Karten auf Desktop nebeneinander, bei kleineren Breakpoints horizontal scrollbar oder in Swiper/Flicking umsetzen – aber visuell weiterhin hochwertig.
+- Icons als SVG selbst bauen.
+- Verwende, wenn nötig, leichte Overlay-Verläufe und eine feine strukturierte Hintergrundwirkung per CSS.
+- Falls im bestehenden Projekt bereits Komponenten existieren, passe alles sauber ins bestehende Design-System ein, aber orientiere das Ergebnis klar am Referenzbild.
+
+ZIEL:
+Wenn man das Ergebnis neben das Referenzbild legt, soll klar sein: genau daran angelehnt, aber sauber für VIDEKO umgesetzt.

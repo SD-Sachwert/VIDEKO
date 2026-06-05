@@ -1,0 +1,190 @@
+CLAUDE-PROMPT: VIDEKO Luxury Website Section nach Referenzbild home section
+
+Aufgabe:
+Baue den Website-Abschnitt möglichst exakt nach dem Referenzbild nach. Es geht NICHT darum, ein einzelnes Bild einzusetzen, sondern einen echten responsiven Website-Abschnitt aus HTML/React/CSS zu bauen: echter Text, echte Buttons, echte Karten, echte Icons, echte Hoverstates. Die Bilder dienen nur als Assets.
+
+Wichtige Regel:
+Optisch soll der Abschnitt dem Referenzfoto sehr nahekommen: helle Creme-/Marmorfläche, goldene Linien, Premium-Luxus-Look, große Hero-Küche im oberen rechten Bereich, drei große Karten darunter, kleine Benefit-Icons unten, warme Glow-Ränder, elegante Typografie. Nicht neu erfinden. Nicht „ähnlich modern“. Exakt in diese Richtung.
+
+Vorhandene Assets im Ordner:
+- hero-kitchen-arch.jpg
+- bg-marble-warm.jpg
+- gold-orbit-lines.jpg
+- videko-emblem-badge.jpg
+- card-stylefinder.jpg
+- card-showroom.jpg
+- card-consulting.jpg
+- logo-videko-main.png
+
+Falls einzelne Kartenbilder noch fehlen, Platzhalterflächen einbauen und im Code klar markieren, welche Datei dort später eingesetzt wird.
+
+Layout nachbauen:
+
+1. Gesamtsektion
+- Vollbreiter, heller Premium-Abschnitt.
+- Hintergrund: bg-marble-warm.jpg als dezente Marmor-/Steinstruktur.
+- Darüber gold-orbit-lines.jpg oder CSS-Linien als sehr dezentes Overlay im unteren Bereich.
+- Farbwelt: warmes Ivory, Creme, Champagnergold, Anthrazit.
+- Keine harten schwarzen Flächen. Alles weich, edel, warm.
+- Sektion soll mindestens 100vh wirken, aber nicht künstlich gestreckt sein.
+- Großzügiges Padding links/rechts, Desktop sehr luftig.
+
+2. Header / Navigation innerhalb des Abschnitts
+- Oben links VIDEKO Logo einsetzen.
+- Navigation horizontal mittig/rechts:
+  Küchenwelten
+  Materialien
+  Showrooms
+  Über Videko
+  Journal
+- Rechts oben Button „Beratung buchen“ mit kleinem Pin/Icon und goldener Outline/Glow.
+- Rechts außen Burger-Menü Icon.
+- Header transparent auf dem hellen Hintergrund.
+- Schrift klein, uppercase, letter-spacing, hochwertig.
+
+3. Linker Hero-Text
+- Links oben/mittig:
+  Kleine Eyebrow:
+  KÜCHEN FÜR MENSCHEN MIT ANSPRUCH
+
+  Große Headline:
+  Küchen.
+  Die Kunst
+  des Lebens.
+
+- „des Lebens.“ farblich gold/champagner betonen.
+- Headline sehr elegant, serif-artig oder hochwertige Display-Schrift.
+- Darunter kurzer Text:
+  Exklusive Küchenarchitektur, die Design,
+  Funktion und Emotion in vollendeter
+  Harmonie vereint.
+
+4. Hero-Bild oben rechts
+- Asset hero-kitchen-arch.jpg verwenden.
+- Bild rechts oben groß platzieren.
+- Es soll wie im Referenzbild in einer weichen, großen Rundbogen-/Oval-/Arch-Maske liegen.
+- Möglich per border-radius, clip-path oder mask-image.
+- Links soll das Bild weich in den Hintergrund übergehen.
+- Außenkante mit warmem goldenen Glow/Light-Rim.
+- Bild nicht verzerren.
+- Fokus: Küche, Insel, Barhocker, Fensterblick.
+
+5. Drei große Karten
+Unter Hero/Text drei große Cards nebeneinander auf Desktop.
+
+Card 01:
+- Bild: card-stylefinder.jpg
+- Nummer: 01
+- Icon: Pokal / Award
+- Titel:
+  ENTDECKE
+  DEINEN
+  KÜCHENSTIL.
+- Text:
+  Von puristisch bis extravagant –
+  finde den Stil, der dich definiert.
+- Button:
+  STILFINDER STARTEN
+
+Card 02:
+- Bild: card-showroom.jpg
+- Nummer: 02
+- Icon: Standort-Pin
+- Titel:
+  ERLEBE
+  UNSERE
+  SHOWROOMS.
+- Text:
+  Besuche unseren exklusiven Standort und tauche in die Welt von VIDEKO ein.
+- Button:
+  STANDORTE ANSEHEN
+
+Card 03:
+- Bild: card-consulting.jpg
+- Nummer: 03
+- Icon: Person / Beratung
+- Titel:
+  PERSÖNLICHE
+  BERATUNG.
+- Text:
+  Maßgeschneidert.
+  Unverbindlich.
+  Auf höchstem Niveau.
+- Button:
+  TERMIN VEREINBAREN
+
+Card-Styling:
+- Große abgerundete Ecken.
+- Bild als Hintergrund.
+- Dunkles halbtransparentes Overlay / Verlauf, damit Text lesbar bleibt.
+- Goldene dünne Border.
+- Sehr weicher goldener Glow um die Karte.
+- Unten Button hell-gold/beige mit Pfeil nach rechts.
+- Button Hover: leichter Glow, minimaler Lift.
+- Card Hover: ganz leichte Skalierung oder Lichtbewegung, aber edel, nicht verspielt.
+- Karten müssen wie im Referenzbild hochwertig und „magazinartig“ wirken.
+
+6. Benefit-Leiste unten
+Unter den drei Karten vier kleine Benefits mit Icons:
+- DESIGN MIT SEELE
+  Ästhetik, die berührt und bleibt.
+
+- HANDWERK AUF HÖCHSTEM NIVEAU
+  Präzision, Erfahrung und Leidenschaft.
+
+- MATERIALIEN FÜR GENERATIONEN
+  Ausgewählt für Qualität, Beständigkeit und Wert.
+
+- BERATUNG AUF AUGENHÖHE
+  Individuell, ehrlich und inspirierend.
+
+Styling:
+- Icons als feine Line-Icons in Kreisen.
+- Kleine Uppercase-Titel mit Letter-Spacing.
+- Kurzer Text darunter.
+- Sehr hell, elegant, ruhig.
+
+7. Unteres Emblem
+- Ganz unten mittig videko-emblem-badge.jpg klein einsetzen.
+- Kreisförmig, mit Glow, wie im Referenzbild.
+- Darf teilweise über den goldenen Linien schweben.
+
+8. Responsiveness
+Desktop:
+- Referenzlayout möglichst exakt.
+- Hero-Text links, Hero-Bild rechts.
+- Drei Karten nebeneinander.
+- Benefits vier Spalten.
+
+Tablet:
+- Hero-Bild und Text sauber stapeln oder leicht verkleinern.
+- Karten 2-spaltig oder horizontal scrollend, wenn sinnvoll.
+
+Mobile:
+- Header vereinfachen.
+- Hero-Text zuerst, dann Hero-Bild.
+- Karten untereinander.
+- Benefits 2-spaltig oder untereinander.
+- Keine abgeschnittenen Texte.
+- Glow-Effekte reduzieren, damit es nicht überladen wirkt.
+
+9. Technische Vorgaben
+- Nutze bestehende Projektstruktur und bestehende Styles, ohne andere Sektionen kaputtzumachen.
+- Keine globalen Styles zerstören.
+- Klassen klar benennen, z. B. luxury-section, luxury-hero, luxury-card.
+- Bilder mit object-fit: cover.
+- Lazy Loading für Kartenbilder, Hero-Bild priorisiert.
+- Gute Performance: keine riesigen Filterorgien, kein unnötiger JavaScript-Kram.
+- Icons bevorzugt als SVG/Library-Icons oder cleanes CSS, nicht als gerenderte Bilddateien.
+- Text muss echter HTML-Text sein, nicht im Bild.
+- Achte auf Kontrast und Lesbarkeit.
+
+10. Zielgefühl
+Der Abschnitt soll wirken wie:
+Premium Küchenstudio, Luxus-Magazin, warme Architektur, hochwertig, ruhig, exklusiv.
+Nicht Möbelhaus.
+Nicht Rabatt-Optik.
+Nicht Stockfoto-Baukasten.
+Nicht überladen.
+
+Bitte setze den Abschnitt so um, dass er optisch sehr nah am Referenzfoto liegt. Wenn du wegen vorhandener Projektstruktur etwas anpassen musst, dann nur technisch, nicht gestalterisch.
