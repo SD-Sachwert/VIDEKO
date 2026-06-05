@@ -1,13 +1,12 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion'
 
-import MagneticButton from './MagneticButton.jsx'
-import PlayButton from './PlayButton.jsx'
+import CTAButton from './CTAButton.jsx'
 import ValueBand from './ValueBand.jsx'
 import heroImg from '../assets/images/shared/hero-videko-final-16x9.png'
 import heroVideo from '../assets/images/home/Header.mp4'
 
-const LINES = ['Küchen.', 'Die bleiben,', 'wenn Trends gehen.']
+const LINES = ['Für Menschen, die das', 'Besondere erleben wollen.']
 
 /**
  * HERO
@@ -87,7 +86,7 @@ export default function Hero() {
       <motion.div className="container hero__inner" style={{ y: textY }}>
         <motion.div className="hero__copy" style={{ x: txtPX }}>
           <p className="hero__kicker hero-in hero-in--1">
-            Kein Möbelhaus. Keine Küche von der Stange.
+            Küchen, die mehr sind als Raum.
           </p>
 
           <h1 className="hero__title">
@@ -105,16 +104,13 @@ export default function Hero() {
           </h1>
 
           <p className="hero__sub hero-in hero-in--2">
-            Für Menschen mit Anspruch. Für Räume mit Seele.
-            <br />
-            Für alle, die keine Küche von der Stange wollen.
+            Maßgeschneiderte Küchen, exklusive Materialien und präzises Handwerk –
+            für ein Zuhause, das zu dir passt.
           </p>
 
           <div className="hero__actions hero-in hero-in--3">
-            <MagneticButton as="a" href="#showrooms">
-              Küchen entdecken
-            </MagneticButton>
-            <PlayButton label="Showreel abspielen" href="#showreel" />
+            <CTAButton to="/beratung">Persönlich beraten lassen</CTAButton>
+            <CTAButton to="/inspiration" variant="dark">Inspiration entdecken</CTAButton>
           </div>
         </motion.div>
       </motion.div>

@@ -1,0 +1,116 @@
+Arbeite an der Seite /leistungen.
+
+WICHTIG:
+- Orientiere dich visuell an 00_leistungen_mockup_gesamt.png.
+- Nutze 01_referenz_startseite.png als Stilreferenz für die bestehende VIDEKO-Website.
+- Nutze 02_referenz_gold_marble_hintergrund.jpg als Referenz für den hellen Gold-Marble-Hintergrund, der fast über die ganze Seite laufen soll.
+- Der HERO oben muss dunkel bleiben und sich am Bild 03_hero_dunkle_kueche.png orientieren. Nur der obere Banner/Hero ist dunkel. Der restliche Seitenhintergrund soll hell, warm und hochwertig sein – mit Gold-Marble-Optik und nur einzelnen dunklen Akzenten.
+- Bitte kein komplett neues Design erfinden, sondern diese Leistungen-Seite sauber in den bestehenden VIDEKO-Stil integrieren.
+- Tonalität immer im DU-Stil, locker, ehrlich, hochwertig, leicht frech, kein Möbelhaus-Blabla.
+
+ZIEL:
+Die Seite soll hochwertig, lebendig und verkaufsstark wirken. Wenige Seiten = jede Seite muss etwas hermachen. Deshalb darf die Leistungen-Seite ruhig deutlich stärker inszeniert sein als eine nüchterne Standard-Unterseite.
+
+LEISTUNGSINHALTE, DIE KLAR RÜBERKOMMEN MÜSSEN:
+- Wir planen Küchen von günstig bis hochwertig.
+- Wir beraten ehrlich, locker und ohne Verkaufsdruck.
+- Wir beraten im Studio und bei den Kunden zuhause.
+- Wir bieten 3D-Planung und VR-Planung.
+- Wir kümmern uns nicht nur um Küchen, sondern auf Wunsch um ganze Räume.
+- Wir koordinieren auch Gewerke wie Maler, Putzer, Elektriker, Boden, Trockenbau etc.
+- Alles aus einer Hand ist ein Kernpunkt.
+- Im Zweifel können wir den Kunden nahezu das ganze Haus mit umbauen.
+
+DATEIEN / VERWENDUNG:
+- 00_leistungen_mockup_gesamt.png = Gesamtidee der Zielseite
+- 01_referenz_startseite.png = Stilreferenz der bestehenden Seite
+- 02_referenz_gold_marble_hintergrund.jpg = heller Marmorhintergrund
+- 03_hero_dunkle_kueche.png = Hero-Bild oben
+- 04_intro_helle_kueche.png = Bild für Intro / zweite Sektion
+- 05_kuechenplanung_detail.png = Küchenplanung / Materialien / Detail
+- 06_beratung_im_studio.png = Studio-Beratung
+- 07_beratung_bei_dir_zuhause.png = Homeberatung
+- 08_3d_planung.png = 3D-Planung
+- 09_vr_planung.png = VR-Planung
+- 10_umbau_aus_einer_hand.png = Umbau / Gewerke / Alles aus einer Hand
+- 11_team_beratung_vertrauen.png = Vertrauen / Team / ehrliche Beratung
+
+GEWÜNSCHTE SEITENSTRUKTUR:
+1. Dunkler Hero mit 03_hero_dunkle_kueche.png
+   - Große starke Headline.
+   - Subheadline, die zeigt: nicht nur Küche, sondern komplette Lösung.
+   - CTA prominent.
+
+2. Helle Intro-Sektion auf Gold-Marble-Hintergrund
+   - mit 04_intro_helle_kueche.png
+   - Aussage: Wir verkaufen dir nicht einfach eine Küche. Wir planen mit dir dein Zuhause.
+   - 4 kleine Key-Points, z. B. von günstig bis hochwertig / 3D & VR / Studio oder Zuhause / alles aus einer Hand.
+
+3. Leistungsübersicht mit stärkerer Inszenierung
+   - hochwertige Karten / Module
+   - Inhalte:
+     * Küchenplanung (05_kuechenplanung_detail.png)
+     * Beratung im Studio (06_beratung_im_studio.png)
+     * Beratung bei dir zuhause (07_beratung_bei_dir_zuhause.png)
+     * 3D-Planung (08_3d_planung.png)
+     * VR-Planung (09_vr_planung.png)
+     * Aufmaß
+     * Geräte & Materialien
+     * Lieferung & Montage
+     * Gewerkekoordination
+     * Raum- & Umbaukonzepte
+   - Die Karten dürfen modern wirken mit leichten Hover- und Scroll-Effekten.
+
+4. Starke Sektion „Alles aus einer Hand“
+   - mit 10_umbau_aus_einer_hand.png
+   - Textlich klar machen: Wir denken nicht an der Küche auf einmal auf, sondern koordinieren auf Wunsch den ganzen Raum / Umbau / Gewerke.
+
+5. Prozess / Ablauf
+   - 5–6 Schritte, hochwertig und klar dargestellt:
+     Kennenlernen → Beratung → Planung → Koordination → Umsetzung → Nachbetreuung
+
+6. Vertrauens-/Haltungssektion
+   - mit 11_team_beratung_vertrauen.png
+   - Aussagen wie: ehrlich statt Verkaufsdruck, persönlich statt Möbelhaus-Abfertigung, hochwertig ohne Stock im Arsch.
+
+7. Abschluss-CTA
+   - starke Abschlusssektion mit Kontakt-CTA
+   - sinngemäß: Egal ob neue Küche oder kompletter Umbau – lass uns gemeinsam loslegen.
+
+DESIGN-VORGABEN:
+- Heller, warmer Gold-Marble-Look als Grundfläche der Seite.
+- Nur der Hero oben dunkel.
+- Dezente dunkle Akzente und Gold-Buttons.
+- Hochwertige Typografie.
+- Viel Luft, aber nicht zu leer.
+- Seite soll modern, edel und hochwertig wirken.
+
+ANIMATION / BEWEGUNG:
+- Bitte hochwertige, aber kontrollierte Bewegung einbauen.
+- Keine Kirmes.
+- Gewünscht:
+  * Scroll-Reveal
+  * Staggered Card Entrance
+  * leichte Hover-Effekte
+  * sanfte Übergänge
+  * optional leichte Parallax-Wirkung im Hero
+- Nicht gewünscht:
+  * wilde Effekte
+  * übertriebene Animationen
+  * unruhiges Zeug
+
+TEXTTON:
+- Immer DU.
+- Locker, ehrlich, hochwertig, leicht frech.
+- Keine steife Sie-Ansprache.
+- Keine Möbelhaus-Floskeln.
+- Bitte im VIDEKO-Stil texten.
+
+TECHNISCH:
+- sauber responsive bauen
+- mobile Optimierung beachten
+- keine übergroßen Abstände
+- Performance im Blick behalten
+- auf korrekte Bildpfade achten
+
+Bitte zuerst kurz erklären, wie du die Seite umbauen willst und welche Komponenten / Sections du anpasst. Danach umsetzen.

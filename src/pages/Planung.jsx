@@ -15,9 +15,9 @@ import heroImg from '../assets/images/shared/hero-kitchen-arch.jpg'
 
 const PROCESS = [
   { title: 'Erstgespräch', text: 'Kennenlernen, Wünsche, erste Richtung.' },
-  { title: 'Bedarf verstehen', text: 'Wie Sie leben, kochen und wohnen.' },
+  { title: 'Bedarf verstehen', text: 'Wie du lebst, kochst und wohnst.' },
   { title: 'Stil & Budget', text: 'Ästhetik und Rahmen klar definieren.' },
-  { title: 'Planung', text: 'Detaillierte 3D-Planung Ihrer Küche.' },
+  { title: 'Planung', text: 'Detaillierte 3D-Planung deiner Küche.' },
   { title: 'Aufmaß', text: 'Millimetergenaues Laseraufmaß vor Ort.' },
   { title: 'Bestellung', text: 'Verbindlich, transparent, terminiert.' },
   { title: 'Montage', text: 'Fachgerecht durch unser eigenes Team.' },
@@ -51,7 +51,7 @@ export default function Planung() {
             tone="light"
             kicker="Prozess"
             title="In 8 Schritten zur fertigen Küche."
-            lead="Ein klarer, ehrlicher Ablauf – Sie wissen immer, woran Sie sind."
+            lead="Ein klarer, ehrlicher Ablauf – du weißt immer, woran du bist."
           />
           <ProcessTimeline steps={PROCESS} />
         </div>

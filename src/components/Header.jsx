@@ -4,13 +4,12 @@ import { Menu, X, MapPin } from 'lucide-react'
 import logoMain from '../assets/brand/logo-main.png'
 
 const LINKS = [
-  { label: 'Stylefinder', to: '/stylefinder' },
-  { label: 'Materialien', to: '/materialien' },
-  { label: 'Showroom', to: '/showroom' },
-  { label: 'Planung', to: '/planung' },
-  { label: 'Über VIDEKO', to: '/ueber-videko' },
-  { label: 'Team', to: '/team' },
+  { label: 'Studio', to: '/studio' },
+  { label: 'Leistungen', to: '/leistungen' },
+  { label: 'Inspiration', to: '/inspiration' },
+  { label: 'Vorher / Nachher', to: '/vorher-nachher' },
   { label: 'Karriere', to: '/karriere' },
+  { label: 'Über uns', to: '/ueber-uns' },
 ]
 
 export default function Header() {
@@ -40,6 +39,7 @@ export default function Header() {
             <NavLink
               key={l.to}
               to={l.to}
+              end={l.to === '/'}
               className={({ isActive }) => (isActive ? 'is-active' : undefined)}
             >
               {l.label}
@@ -50,7 +50,7 @@ export default function Header() {
         <div className="header__actions">
           <Link className="pill pill--cta" to="/beratung">
             <MapPin size={15} strokeWidth={1.8} />
-            Beratung buchen
+            Beratung anfragen
           </Link>
           <button
             className="burger"
@@ -66,13 +66,13 @@ export default function Header() {
       {open && (
         <div className="mobile-menu">
           {LINKS.map((l) => (
-            <NavLink key={l.to} to={l.to} onClick={() => setOpen(false)}>
+            <NavLink key={l.to} to={l.to} end={l.to === '/'} onClick={() => setOpen(false)}>
               {l.label}
             </NavLink>
           ))}
           <Link className="pill pill--cta" to="/beratung" onClick={() => setOpen(false)}>
             <MapPin size={15} strokeWidth={1.8} />
-            Beratung buchen
+            Beratung anfragen
           </Link>
         </div>
       )}

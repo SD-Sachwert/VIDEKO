@@ -84,7 +84,7 @@ const TRUST = [
 ]
 
 const STATS = [
-  { pre: 'Seit', value: '2008', post: 'für Sie da' },
+  { pre: 'Seit', value: '2008', post: 'für dich da' },
   { pre: 'Über', value: '1.250', post: 'Küchen realisiert' },
   { pre: 'Mehr als', value: '25', post: 'Auszeichnungen' },
 ]
@@ -103,13 +103,13 @@ export default function BudgetCompassSection() {
         {/* hero: copy + compass */}
         <div className="budget__hero">
           <Reveal className="budget__copy">
-            <span className="kicker">Ihr Budget, Ihre Möglichkeiten</span>
+            <span className="kicker">Dein Budget, deine Möglichkeiten</span>
             <h2 className="budget__title">
               Was kostet<br />eine gute Küche<br /><span className="grad">wirklich?</span>
             </h2>
             <p className="budget__lead">
-              Transparenz schafft Vertrauen. Unser Budget-Kompass hilft Ihnen,
-              realistische Erwartungen zu setzen und die perfekte Küche für Ihr
+              Transparenz schafft Vertrauen. Unser Budget-Kompass hilft dir,
+              realistische Erwartungen zu setzen und die perfekte Küche für dein
               Budget zu finden.
             </p>
             <MagneticButton as="a" href="#budget-showcase">Kompass starten</MagneticButton>
@@ -179,7 +179,7 @@ export default function BudgetCompassSection() {
         <Reveal className="budget__showcase" id="budget-showcase">
           <div className="showcase__head">
             <div className="showcase__intro">
-              <span className="kicker">Küchenbeispiele in Ihrer Budgetspanne</span>
+              <span className="kicker">Küchenbeispiele in deiner Budgetspanne</span>
               <h3 className="showcase__title">
                 {active.range} <span className="showcase__tier">· {active.label}</span>
               </h3>
@@ -212,7 +212,7 @@ export default function BudgetCompassSection() {
             ))}
           </div>
 
-          <a className="showcase__cta" href="#beratung">
+          <a className="showcase__cta" href="/beratung">
             <span>Beratung zu diesem Budget buchen</span>
             <ArrowRight size={16} strokeWidth={2} />
           </a>
@@ -241,7 +241,7 @@ export default function BudgetCompassSection() {
             </span>
             <div>
               <span className="budget__bottom-title">Persönliche Beratung</span>
-              <span className="budget__bottom-sub">Seit 2008 für Sie da</span>
+              <span className="budget__bottom-sub">Seit 2008 für dich da</span>
             </div>
           </div>
           <div className="budget__stats">
@@ -253,7 +253,7 @@ export default function BudgetCompassSection() {
               </div>
             ))}
           </div>
-          <a className="budget__bottom-cta" href="#beratung">
+          <a className="budget__bottom-cta" href="/beratung">
             <span>Termin vereinbaren</span>
             <ArrowRight size={17} strokeWidth={2} />
           </a>

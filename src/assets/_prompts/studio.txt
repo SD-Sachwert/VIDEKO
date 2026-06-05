@@ -1,0 +1,161 @@
+Baue die Seite „Studio“ für die VIDEKO Küchen Website neu auf.
+
+WICHTIG:
+- Nutze die Bilder aus dem Ordner /bilder.
+- Nutze die Referenzen im Ordner /referenz als visuelle Leitlinie.
+- Ziel ist eine hochwertige, moderne, außergewöhnliche Studio-Seite im aktuellen VIDEKO-Stil.
+- NICHT generisch bauen.
+- Das Design soll sich eng an der Gesamtoptik der Referenzseite orientieren: oben dunkler Hero-Bereich, darunter lange helle Bereiche mit edlem Gold-Marmor-Look, dazwischen gezielte dunkle Akzentflächen.
+- Die Aufteilung, Button-Anmutung und Karten-/Grid-Idee soll sich an reference_layout_und_buttons.png orientieren.
+- Bitte den Text NICHT in Bilder rendern, sondern sauber als HTML/CSS aufbauen.
+- Das bestehende echte VIDEKO-Logo der Website verwenden, nicht aus Bildern ausschneiden.
+- Responsiv aufbauen.
+
+DATEIEN:
+- bilder/01_hero_studio_showroom.png
+- bilder/02_intro_showroom_hell.png
+- bilder/03_studio_card_ankommen_lounge.png
+- bilder/04_studio_card_kuechenwelten_entdecken.png
+- bilder/05_studio_card_materialien_fuehlen.png
+- bilder/06_studio_card_planung_erleben.png
+- bilder/07_studio_card_beratung_vertiefen.png
+- bilder/08_split_section_showroom_gross.png
+- bilder/09_team_beratung_auf_augenhoehe.png
+- bilder/10_final_cta_studio_banner.png
+- referenz/reference_studio_gesamtseite.png
+- referenz/reference_layout_und_buttons.png
+
+SEITENZIEL:
+Die Studio-Seite soll vermitteln:
+- Küchen erleben statt nur anschauen
+- Das Studio ist kein Möbelhaus, sondern ein Premium-Ort für Beratung, Materialien, Planung und Atmosphäre
+- Der Nutzer soll Lust bekommen, einen Termin zu vereinbaren oder das Studio zu entdecken
+
+SEITENSTRUKTUR:
+
+1. HERO / HEADERBEREICH
+- Dunkler Premium-Hero mit Navigation wie auf der restlichen Seite.
+- Links starker Textblock.
+- Rechts bzw. im Hintergrund 01_hero_studio_showroom.png groß inszenieren.
+- Headline-Vorschlag:
+  „Küchen erleben.
+   Nicht nur ansehen.“
+- Subline:
+  „Unser Studio in Würzburg ist mehr als ein Ausstellungsraum. Hier werden Materialien, Planung und Atmosphäre spürbar, persönlich und auf höchstem Niveau.“
+- Zwei Buttons:
+  1) „Termin vereinbaren“
+  2) „Studio entdecken“
+- Unter den Buttons 3 kleine Benefit-Items / Badges:
+  - Persönliche Beratung
+  - Hochwertige Materialien
+  - Planung auf höchstem Niveau
+
+2. SPLIT-SECTION: MEHR ALS EIN KÜCHENSTUDIO
+- Heller Marmor-Hintergrund.
+- Links 02_intro_showroom_hell.png.
+- Rechts Textblock.
+- Kleine Eyebrow:
+  „MEHR ALS EIN KÜCHENSTUDIO“
+- Headline:
+  „Wir verkaufen nicht einfach Küchen.
+   Wir planen dein Zuhause mit dir.“
+- Darunter kurzer Text.
+- Danach 5 kleine USP-Punkte mit Icons:
+  - Individuelle Beratung
+  - Planung mit Feingefühl
+  - Realistische Planung
+  - Premium Materialien
+  - Alles aus einer Hand
+
+3. DEIN STUDIO ERLEBNIS
+- Heller Bereich.
+- Überschrift:
+  „Erlebe, wie deine Küche entsteht.
+   Schritt für Schritt. Mit Gefühl.“
+- Nutze dafür ein verspieltes, hochwertiges Card-Grid im Stil der Referenz.
+- Bitte NICHT exakt gleich wie andere Unterseiten bauen, sondern ähnlich wie die Referenz mit abwechslungsreicher Kartengröße.
+- Karten mit Bild, Nummer, Titel und kurzem Text:
+  - 01 Ankommen → 03_studio_card_ankommen_lounge.png
+  - 02 Küchenwelten entdecken → 04_studio_card_kuechenwelten_entdecken.png
+  - 03 Materialien fühlen → 05_studio_card_materialien_fuehlen.png
+  - 04 Planung erleben → 06_studio_card_planung_erleben.png
+  - 05 Beratung vertiefen → 07_studio_card_beratung_vertiefen.png
+  - 06 Angebot & Feinplanung → gern 06_studio_card_planung_erleben.png oder 07 verwenden
+- Einige Cards dunkel überlagert, andere heller. Goldene Nummern und saubere Premium-Hover-Effekte.
+
+4. UNSERE HALTUNG / SPLIT SECTION
+- Zweispaltig.
+- Links Text.
+- Rechts großes Bild 08_split_section_showroom_gross.png.
+- Headline:
+  „Kein Verkaufsraum.
+   Ein Raum für Entscheidungen.“
+- Untertext erklärt, dass man sich Zeit nimmt, ehrlich berät und keinen Möbelhaus-Druck erzeugt.
+- Drei Mini-USPs mit Icons:
+  - Diskret & respektvoll
+  - Ehrlich & transparent
+  - Erfahren & spezialisiert
+
+5. DUNKLE PROZESS-SECTION
+- Dunkler Akzentbereich über volle Breite.
+- Überschrift:
+  „Klarer Ablauf. Stressfrei für dich.“
+- 5 Schritte in einer horizontalen Reihe mit feinen Linien / Icons:
+  1) Erstgespräch
+  2) Idee & Konzept
+  3) Planung & Visualisierung
+  4) Angebot & Abstimmung
+  5) Umsetzung & Betreuung
+- Keine zusätzlichen Bilder nötig. Rein UI/CSS.
+
+6. TEAM / BERATUNG AUF AUGENHÖHE
+- Heller Bereich.
+- Links 09_team_beratung_auf_augenhoehe.png.
+- Rechts Textblock.
+- Headline:
+  „Ehrlich. Persönlich. Auf Augenhöhe.
+   So beraten wir.“
+- Darunter kurzer Text.
+- 3 kleine Icon-USPs:
+  - Ehrlich & transparent
+  - Persönlich & nah
+  - Kompetent & erfahren
+
+7. FINALER CTA-BANNER
+- Dunkler, emotionaler Abschlussbereich mit 10_final_cta_studio_banner.png als breite Hintergrund-/Keyvisual-Fläche.
+- Headline:
+  „Deine Küche. Dein Zuhause.
+   Wir machen es möglich.“
+- Zwei Buttons:
+  - Termin vereinbaren
+  - Studio entdecken
+- Darunter 3 kleine Highlights:
+  - Individuelle Beratung
+  - Premium Materialien
+  - Planung auf höchstem Niveau
+
+8. FOOTER
+- Bestehenden Footer-Stil der Website übernehmen.
+- Optional einen kleinen Studio-/Kontaktblock integrieren:
+  Studio Würzburg
+  Hertzstraße 4
+  97076 Würzburg
+- Restliche Footer-Navigation im bestehenden VIDEKO-Stil.
+
+STIL / UI-VORGABEN:
+- Dunkler Hero, dann heller Marmor, dann dunkle Akzentflächen, dann wieder hell.
+- Sehr hochwertig, modern, edel, emotional.
+- Mehr Bewegung als auf einer Standard-Unterseite:
+  - dezente Hover-Effekte auf Cards und Buttons
+  - weiche Schatten
+  - leichtes Bild-Zoom-on-hover
+  - subtile Gold-Glow-Akzente
+- Keine übertriebene Spielerei, aber klar lebendiger als die aktuelle langweilige Seite.
+- Keine Bonsai-Tunnel-Optik.
+- Die Seite soll wie ein Premium-Erlebnis wirken, nicht wie ein nüchterner Infoblock.
+
+TECHNISCHE BITTE:
+- Sauberen, wartbaren Code schreiben.
+- Bilder performant einbinden.
+- Alt-Texte ergänzen.
+- Gleiche Design-Sprache wie der Rest der Website beibehalten.

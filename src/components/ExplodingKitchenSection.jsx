@@ -15,17 +15,17 @@ import dMontage from '../assets/images/planung/exploding/detail-montage-16x9.png
 
 const POINTS = [
   { n: '01', title: 'Licht & Atmosphäre', text: 'Integrierte Lichtkonzepte für Stimmung und Funktion.', image: dLight },
-  { n: '02', title: 'Premium Geräte', text: 'Nahtlos integrierte Technik – unsichtbar, bis Sie sie brauchen.', image: dAppliances },
+  { n: '02', title: 'Premium Geräte', text: 'Nahtlos integrierte Technik – unsichtbar, bis du sie brauchst.', image: dAppliances },
   { n: '03', title: 'Arbeitsplatte', text: 'Edle Materialien. Perfekt verarbeitet. Zeitlos schön.', image: dWorktop },
   { n: '04', title: 'Korpus & Struktur', text: 'Stabile Basis. Hochwertig verarbeitet für maximale Langlebigkeit.', image: null },
-  { n: '05', title: 'Fronten & Design', text: 'Ausdruck Ihrer Persönlichkeit. In Material, Farbe und Haptik.', image: dMaterials },
+  { n: '05', title: 'Fronten & Design', text: 'Ausdruck deiner Persönlichkeit. In Material, Farbe und Haptik.', image: dMaterials },
   { n: '06', title: 'Stauraum & Komfort', text: 'Intelligente Lösungen für Ordnung, Ergonomie und maximalen Komfort.', image: dDrawers },
   { n: '07', title: 'Maß & Präzision', text: 'Jedes Detail millimetergenau geplant und umgesetzt.', image: null },
   { n: '08', title: 'Montage & Perfektion', text: 'Fachgerecht montiert für ein Ergebnis, das bleibt.', image: dMontage },
 ]
 
 const USPS = [
-  { title: 'Individuell geplant', text: 'Maßgeschneidert auf Ihre Räume und Bedürfnisse.' },
+  { title: 'Individuell geplant', text: 'Maßgeschneidert auf deine Räume und Bedürfnisse.' },
   { title: 'Hochwertige Materialien', text: 'Ausgewählt für Qualität, Beständigkeit und Wert.' },
   { title: 'Technik mit Bedacht', text: 'Innovativ, zuverlässig und elegant integriert.' },
   { title: 'Handwerk auf höchstem Niveau', text: 'Mit Präzision gefertigt und detailverliebt umgesetzt.' },
@@ -67,11 +67,11 @@ export default function ExplodingKitchenSection() {
             </h2>
             <p className="exploding__text">
               Jede VIDEKO Küche ist ein Meisterwerk präziser Planung, edler
-              Materialien und intelligenter Technik. Entdecken Sie, was im
+              Materialien und intelligenter Technik. Entdecke, was im
               Verborgenen Perfektion schafft.
             </p>
-            <MagneticButton as="a" href="#beratung">
-              Entdecken Sie die Details
+            <MagneticButton as="a" href="/beratung">
+              Entdecke die Details
             </MagneticButton>
           </Reveal>
 
@@ -131,8 +131,8 @@ export default function ExplodingKitchenSection() {
               </div>
             ))}
           </div>
-          <a className="exusp__cta" href="#beratung">
-            <span>Entdecken Sie Ihre Traumküche</span>
+          <a className="exusp__cta" href="/beratung">
+            <span>Entdecke deine Traumküche</span>
             <ArrowRight size={18} strokeWidth={2} />
           </a>
         </Reveal>

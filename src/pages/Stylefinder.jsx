@@ -25,9 +25,9 @@ const STEPS5 = [
 ]
 
 const WHY = [
-  { icon: Palette, title: 'Stil erkennen', text: 'Finden Sie heraus, welche Designsprache wirklich zu Ihnen passt.' },
-  { icon: Wallet, title: 'Budget einordnen', text: 'Bekommen Sie ein realistisches Gefühl für Ihren Rahmen.' },
-  { icon: MessageSquare, title: 'Beratung vorbereiten', text: 'Gehen Sie ins Gespräch mit klaren Vorstellungen.' },
+  { icon: Palette, title: 'Stil erkennen', text: 'Finde heraus, welche Designsprache wirklich zu dir passt.' },
+  { icon: Wallet, title: 'Budget einordnen', text: 'Bekomm ein realistisches Gefühl für deinen Rahmen.' },
+  { icon: MessageSquare, title: 'Beratung vorbereiten', text: 'Geh ins Gespräch mit klaren Vorstellungen.' },
 ]
 const WHY_TRUST = ['Ehrliche Orientierung', 'Schneller Einstieg', 'Bessere Planungsgespräche']
 
@@ -58,16 +58,16 @@ const LIFE = [
 
 const WHY_NOT_PLAN = [
   { icon: MessageSquare, title: 'Persönliche Beratung', text: 'Der echte Feinschliff passiert im Gespräch.' },
-  { icon: Lightbulb, title: 'Kreative Planung', text: 'Ihr Raum bekommt eine individuelle Lösung.' },
+  { icon: Lightbulb, title: 'Kreative Planung', text: 'Dein Raum bekommt eine individuelle Lösung.' },
   { icon: BadgeCheck, title: 'Aufmaß vor Ort', text: 'Millimetergenau statt geschätzt.' },
   { icon: ShieldCheck, title: 'Verbindliche Qualität', text: 'Geprüft, sauber, termintreu umgesetzt.' },
 ]
 const FAQ = [
   { q: 'Ist der Stylefinder kostenlos?', a: 'Ja, vollständig kostenlos und unverbindlich – ohne Registrierung.' },
-  { q: 'Muss ich danach einen Termin buchen?', a: 'Nein. Sie entscheiden, ob und wann Sie ins Gespräch gehen möchten.' },
-  { q: 'Wie genau ist die Budgetspanne?', a: 'Sie ist eine ehrliche Orientierung. Den finalen Preis bestimmt Ihre konkrete Planung.' },
-  { q: 'Kann ich das Ergebnis speichern?', a: 'Sie können sich Ihr Küchenprofil bequem per E-Mail zusenden lassen.' },
-  { q: 'Kann ich einen Grundriss hochladen?', a: 'Ja, im Ergebnis-Formular können Sie Grundriss, Fotos oder Skizzen anhängen.' },
+  { q: 'Muss ich danach einen Termin buchen?', a: 'Nein. Du entscheidest, ob und wann du ins Gespräch gehen möchtest.' },
+  { q: 'Wie genau ist die Budgetspanne?', a: 'Sie ist eine ehrliche Orientierung. Den finalen Preis bestimmt deine konkrete Planung.' },
+  { q: 'Kann ich das Ergebnis speichern?', a: 'Du kannst dir dein Küchenprofil bequem per E-Mail zusenden lassen.' },
+  { q: 'Kann ich einen Grundriss hochladen?', a: 'Ja, im Ergebnis-Formular kannst du Grundriss, Fotos oder Skizzen anhängen.' },
   { q: 'Funktioniert das auch für kleine Küchen?', a: 'Absolut. Gerade kleine Räume profitieren von durchdachter Planung.' },
 ]
 
@@ -83,9 +83,9 @@ export default function Stylefinder() {
         <div className="container sfhero__inner">
           <Reveal className="sfhero__copy">
             <span className="kicker kicker--gold">Küchen für Menschen mit Anspruch</span>
-            <h1 className="sfhero__title">Welche Küche passt <span className="grad">wirklich</span> zu Ihnen?</h1>
+            <h1 className="sfhero__title">Welche Küche passt <span className="grad">wirklich</span> zu dir?</h1>
             <p className="sfhero__lead">
-              Unser Stylefinder führt Sie in wenigen Schritten zu Ihrer
+              Unser Stylefinder führt dich in wenigen Schritten zu deiner
               persönlichen Küchen-Richtung – ehrlich, unverbindlich und ganz ohne
               Verkaufsdruck.
             </p>
@@ -108,7 +108,7 @@ export default function Stylefinder() {
         </div>
 
         <div className="container sfhero__steps">
-          <span className="sfhero__steps-title">Ihr Stylefinder in 5 Schritten</span>
+          <span className="sfhero__steps-title">Dein Stylefinder in 5 Schritten</span>
           <div className="sfministep">
             {STEPS5.map((s) => (
               <div className="sfmini" key={s.n}>
@@ -126,8 +126,8 @@ export default function Stylefinder() {
         <div className="container sfwhy__inner">
           <Reveal className="sfwhy__lead">
             <span className="kicker">Warum der Stylefinder</span>
-            <h2 className="sfwhy__title">Klarheit, bevor<br />Sie planen.</h2>
-            <p>Drei gute Gründe, warum sich die zwei Minuten lohnen – für Sie und für ein besseres Beratungsgespräch.</p>
+            <h2 className="sfwhy__title">Klarheit, bevor<br />du planst.</h2>
+            <p>Drei gute Gründe, warum sich die zwei Minuten lohnen – für dich und für ein besseres Beratungsgespräch.</p>
           </Reveal>
           <div className="sfwhy__cards">
             {WHY.map((w, i) => (
@@ -159,7 +159,7 @@ export default function Stylefinder() {
           <Reveal as="header" className="sec-head sec-head--center">
             <span className="kicker">Inspiration</span>
             <h2 className="sec-head__title">Küchenprofile als Inspiration</h2>
-            <p className="sec-head__lead">Sechs typische Richtungen – vielleicht ist Ihre schon dabei.</p>
+            <p className="sec-head__lead">Sechs typische Richtungen – vielleicht ist deine schon dabei.</p>
           </Reveal>
           <div className="sfinsp__grid">
             {INSPIRATION.map((c, i) => (
@@ -192,8 +192,8 @@ export default function Stylefinder() {
         <div className="container">
           <SectionHeader
             kicker="Lebenssituationen"
-            title="Küchen für Ihr echtes Leben."
-            lead="Jede Lebenssituation hat ihre eigene ideale Küche. Hier finden Sie Ihren Ausgangspunkt."
+            title="Küchen für dein echtes Leben."
+            lead="Jede Lebenssituation hat ihre eigene ideale Küche. Hier findest du deinen Ausgangspunkt."
           />
           <CardGrid cols={4}>
             {LIFE.map((l) => (
@@ -244,7 +244,7 @@ export default function Stylefinder() {
               <div className="sffinal__veil" aria-hidden="true" />
             </div>
             <div className="sffinal__body">
-              <h3>Lassen Sie uns Ihr Ergebnis gemeinsam in eine <span className="grad">echte Küche</span> übersetzen.</h3>
+              <h3>Lass uns dein Ergebnis gemeinsam in eine <span className="grad">echte Küche</span> übersetzen.</h3>
               <p>Aus Orientierung wird Planung – persönlich, ehrlich und auf höchstem Niveau.</p>
               <div className="sffinal__actions">
                 <CTAButton to="/beratung">Planungsgespräch buchen</CTAButton>

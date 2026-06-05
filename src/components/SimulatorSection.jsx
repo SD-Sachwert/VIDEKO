@@ -56,7 +56,7 @@ const ERRORS = [
     shortDescription: 'Geräte konkurrieren um wenige, schlecht platzierte Anschlüsse.',
     consequences: ['Kabelsalat', 'Ständiges Umstecken', 'Eingeschränkte Nutzung'],
     solutionTitle: 'Genug Steckdosen',
-    solutionText: 'Durchdacht platzierte Anschlüsse – genau dort, wo Sie sie brauchen.',
+    solutionText: 'Durchdacht platzierte Anschlüsse – genau dort, wo du sie brauchst.',
     hotspotPositionProblem: { x: 66, y: 29 }, hotspotPositionSolution: { x: 66, y: 29 },
     problemThumbnail: tP4, solutionThumbnail: tL4,
   },
@@ -114,8 +114,8 @@ export default function SimulatorSection() {
               die jeden Tag <span className="grad">nerven.</span>
             </h2>
             <p className="sim__lead">
-              Entdecken Sie typische Planungsfehler – und erleben Sie, wie
-              durchdachte Lösungen Ihren Alltag verwandeln.
+              Entdecke typische Planungsfehler – und erlebe, wie
+              durchdachte Lösungen deinen Alltag verwandeln.
             </p>
             <div className="sim__hero-actions">
               <MagneticButton as="a" href="#simulator-card">

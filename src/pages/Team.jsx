@@ -30,7 +30,7 @@ export default function Team() {
 
       <section className="section section--light">
         <div className="container">
-          <SectionHeader kicker="Unsere Rollen" title="Ein Team für Ihr Projekt." />
+          <SectionHeader kicker="Unsere Rollen" title="Ein Team für dein Projekt." />
           <CardGrid cols={3}>
             {TEAM.map((t, i) => (
               <Reveal key={t.role} delay={(i % 3) * 0.06}>

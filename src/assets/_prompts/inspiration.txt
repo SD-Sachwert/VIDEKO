@@ -1,0 +1,125 @@
+CLAUDE PROMPT – VIDEKO INSPIRATIONSSEITE
+
+Baue die Seite „Inspiration“ für VIDEKO Küchen neu auf.
+
+WICHTIG:
+- Halte dich gestalterisch eng an das Referenzbild „00_referenz_inspirationsseite_mockup.png“.
+- Nutze weiter die bestehende VIDEKO-Designsprache: dunkler Premium-Hero oben, darunter lange helle Bereiche mit warmem Gold-Marmor-Effekt, elegante Serif-Headlines, dezente Sans-Serif-UI-Typografie, goldene Akzente, dunkler Footer.
+- Die Seite soll deutlich voller, hochwertiger und inspirierender wirken als die aktuelle Version.
+- Kein Bonsai im Hero. Stattdessen die atmosphärische Küche aus „01_hero_atmosphaerische_kueche.png“ verwenden.
+- Die Seite soll wie eine kuratierte Inspirationswelt wirken: editorial, luxuriös, klar strukturiert, aber visuell spannend.
+- Buttons, Kartenaufteilung und generelle Gliederung dürfen sich an der Aufteilung des finalen Mockups orientieren.
+
+SEITENSTRUKTUR
+
+1) HERO
+- Dunkler Hero-Bereich.
+- Links: Eyebrow „INSPIRATION“.
+- H1: „Inspiration für Küchen, die bleiben.“
+- Subline: „Entdecken Sie Stilrichtungen, Materialien, Raumideen und Details, die aus einer Küche mehr machen als einen Ort zum Kochen.“
+- CTA 1: „Inspiration entdecken“
+- CTA 2: „Beratung anfragen“
+- Rechts bzw. großflächig: „01_hero_atmosphaerische_kueche.png“.
+- Bild großzügig und hochwertig einsetzen, nicht verzerren.
+
+2) SEKTION „STILE, DIE INSPIRIEREN“
+- Helle Marmorfläche.
+- Headline: „Stile, die inspirieren.“
+- Editorial-Masonry/Grid mit 8 Kategorien.
+- Verwende diese Bilder:
+  - Moderne Küchen → „02_moderne_kueche.png“
+  - Warme Wohnküchen → „03_wohnliche_kueche.png“
+  - Dunkle Küchen → „04_dunkle_kueche.png“
+  - Helle Küchen → „05_helle_kueche.png“
+  - Materialien & Details → „06_materialien_und_details.png“
+  - Küchen mit Insel → „07_kueche_mit_insel.png“
+  - Kleine Küchen groß gedacht → „08_kleine_kueche_clever_geplant.png“
+  - Premium & Architekturküchen → „09_premium_architektur_kueche.png“
+- Karten hochwertig, mit leichter Hover-Bewegung / Zoom / Glow.
+
+3) SEKTION „FINDEN SIE IHREN KÜCHENSTIL“
+- Horizontale Stil-Karten oder Stil-Chips mit kleinen Vorschaubildern.
+- Stile:
+  - Puristisch
+  - Natürlich
+  - Dunkel & elegant
+  - Familienfreundlich
+  - Urban / Industrial
+  - Landhaus modern
+  - Luxus / Architektur
+- Dafür dürfen vorhandene Bilder wiederverwendet werden, z. B. 02, 03, 04, 05, 07, 08, 09.
+
+4) SEKTION „HOCHWERTIG BIS INS DETAIL“
+- Material-Sektion.
+- Hauptbild bzw. Material-Moodshot: „06_materialien_und_details.png“.
+- Darunter oder daneben Material-Tiles / Chips für:
+  - Naturstein
+  - Holz
+  - Keramik
+  - Glas
+  - Metall
+  - Mattlack
+- Kann teils mit CSS/Kacheln gelöst werden, Bild 06 ist hier der Hauptanker.
+
+5) SEKTION „RAUMGEFÜHL, DAS BLEIBT“
+- Vier große Mood-Karten:
+  - Ruhig & reduziert
+  - Warm & wohnlich
+  - Dramatisch & dunkel
+  - Hell & leicht
+- Nutze dafür 02, 03, 04, 05.
+
+6) SEKTION „UNSERE FAVORITEN“
+- Kuratierte Galerie mit Filter-Chips darüber.
+- Chips: „Alle“, „Insel“, „Material“, „Licht“, „Wohnküche“, „Details“.
+- Verwende eine größere Galerie mit 5–6 Bildern.
+- Nutze dafür vor allem:
+  - 01_hero_atmosphaerische_kueche.png
+  - 02_moderne_kueche.png
+  - 03_wohnliche_kueche.png
+  - 07_kueche_mit_insel.png
+  - 09_premium_architektur_kueche.png
+  - 10_favoriten_wohnkueche_luxus.png
+
+7) SEKTION „SEHEN SIE, WAS MÖGLICH IST“
+- Kleine Teaser-Sektion für Vorher/Nachher oder Raumideen.
+- Drei kompakte Karten.
+- Bilder können wiederverwendet werden.
+- Rechts oder unten CTA: „Vorher / Nachher ansehen“.
+
+8) SEKTION „TIPPS, IDEEN & EXPERTENWISSEN“
+- Journal-/Ratgeber-Karten.
+- 5–6 kleine Artikelkarten.
+- Beispiele für Titel:
+  - „5 Dinge, die jede gute Küchenplanung braucht“
+  - „Warum Lichtplanung oft wichtiger ist als die Frontfarbe“
+  - „Kücheninsel: schön – aber nicht immer sinnvoll“
+  - „Stauraum clever planen: So geht’s richtig“
+  - „Welche Arbeitsplatte passt zu welchem Alltag?“
+  - „Grifflos, Griffleiste oder Griff? Was ist besser?“
+- Kleine Bildteaser können aus den vorhandenen Bildern gecroppt / wiederverwendet werden.
+
+9) FINALER CTA-BEREICH
+- Dunkler Premium-Bereich vor dem Footer.
+- Headline: „Genug Inspiration gesammelt? Jetzt wird daraus Ihre Küche.“
+- Text: „Bringen Sie Ideen, Bilder oder einfach nur ein Gefühl mit. Wir übersetzen daraus eine Küche, die zu Ihrem Raum, Alltag und Budget passt.“
+- Buttons:
+  - „Beratung anfragen“
+  - „Stylefinder starten“
+- Als Hintergrund / visuelle Bühne kann „10_favoriten_wohnkueche_luxus.png“ oder ein Crop davon genutzt werden.
+
+10) FOOTER
+- Dunkler Footer passend zum restlichen VIDEKO-System.
+- Bestehende Footer-Logik beibehalten.
+
+WICHTIGE DESIGNREGELN
+- Keine leeren Flächen wie bisher.
+- Mehr Bilder, mehr Tiefe, mehr kuratierter Magazin-Charakter.
+- Keine billigen Effekte. Eher edle Hover-Effekte, sanfte Transitions, leichter Zoom, Gold-Glow bei aktiven Karten.
+- Nicht generisch. Es soll wie eine richtig gute Premium-Unterseite wirken.
+- Alles responsiv sauber aufbauen.
+- Bilder niemals verzerren.
+- Keine Bonsais oder fernöstliche Tunnel-/Spa-Bilder mehr. Küchen stehen im Fokus.
+
+DATEIEN
+Nutze die Bilder aus diesem Ordner exakt mit diesen Namen.

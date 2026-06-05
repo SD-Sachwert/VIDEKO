@@ -19,7 +19,7 @@ export default function ContactSection() {
             <div className="contact__row">
               <label className="field">
                 <span>Name</span>
-                <input type="text" name="name" required placeholder="Ihr Name" />
+                <input type="text" name="name" required placeholder="Dein Name" />
               </label>
               <label className="field">
                 <span>E-Mail</span>
@@ -56,13 +56,20 @@ export default function ContactSection() {
                 </select>
               </label>
               <label className="field">
-                <span>Terminwunsch</span>
-                <input type="text" name="termin" placeholder="z. B. nächste Woche, vormittags" />
+                <span>Zeitplan</span>
+                <select name="zeitplan" defaultValue="">
+                  <option value="" disabled>Bitte wählen</option>
+                  <option>So bald wie möglich</option>
+                  <option>In 1–3 Monaten</option>
+                  <option>In 3–6 Monaten</option>
+                  <option>In 6–12 Monaten</option>
+                  <option>Nur Orientierung</option>
+                </select>
               </label>
             </div>
             <label className="field">
               <span>Nachricht</span>
-              <textarea name="message" rows={4} placeholder="Erzählen Sie uns von Ihrem Projekt …" />
+              <textarea name="message" rows={4} placeholder="Erzähl uns von deinem Projekt …" />
             </label>
 
             <button className="btn btn--primary btn--lg" type="submit">
@@ -72,7 +79,7 @@ export default function ContactSection() {
 
             {sent && (
               <p className="contact__ok" role="status">
-                Danke! Ihre Anfrage ist eingegangen — wir melden uns persönlich.
+                Danke! Deine Anfrage ist eingegangen — wir melden uns persönlich.
                 <br />
                 <em>(Demo-Formular — Versand wird später angebunden.)</em>
               </p>
@@ -93,7 +100,7 @@ export default function ContactSection() {
             </li>
             <li>
               <Phone size={17} strokeWidth={1.7} />
-              <span>Persönlich erreichbar zu den Studiozeiten</span>
+              <a href="tel:+491605545818">0160 5545818</a>
             </li>
           </ul>
           <p className="contact__note">

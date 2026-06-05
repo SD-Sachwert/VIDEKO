@@ -1,0 +1,157 @@
+Arbeite an der Seite /vorher-nachher.
+
+Ziel:
+Baue die Vorher-/Nachher-Seite so nach, dass sie visuell und atmosphärisch dem Mockup 01_reference_mockup_vorher_nachher.png entspricht und gleichzeitig farblich/stilistisch sauber zur bestehenden VIDEKO-Website aus 00_reference_aktuelles_design.png passt.
+
+Wichtig:
+- Die Seite soll nicht leer oder nach „Coming soon“ aussehen.
+- Sie soll hochwertig, emotional, modern und außergewöhnlich wirken.
+- Der Kunde soll denken: „Okay, mit denen will ich mein Projekt machen.“
+- Die Seite darf trotz fehlender realer Referenzen schon richtig stark aussehen.
+- Tonalität im DU-Stil, hochwertig, ehrlich, direkt, kein Möbelhaus-Blabla.
+
+Design-Richtung:
+- An 01_reference_mockup_vorher_nachher.png orientieren.
+- Heller, warmer Premium-Look mit Gold-/Creme-/Marble-Flächen.
+- Dazwischen gezielte dunkle Akzent-Sektionen.
+- Große Bilder, hochwertige Typografie, starke Cards, moderne Buttons.
+- Viel Bewegung, aber kontrolliert: Scroll-Reveals, Hover-Effekte, leichte Parallax im Hero, weiche Übergänge, Karten mit Stagger-Effekt.
+- Kein Kirmes-Zirkus.
+
+Dateien / Verwendung:
+- 00_reference_aktuelles_design.png = Stilreferenz der bestehenden Website
+- 01_reference_mockup_vorher_nachher.png = Ziel-Mockup für Aufbau und Stimmung
+- 02_hero_dark_kitchen_banner.png = Hero-Bild oben
+- 03_intro_helle_wohnkueche.png = Bild für Intro-/Erwartungssektion
+- 04_projekt_01_kueche_wohnbereich.png = Projektkarte 1
+- 05_projekt_02_modernisierung_bestandskueche.png = Projektkarte 2
+- 06_projekt_03_raumkonzept_licht.png = Projektkarte 3
+- 07_projekt_04_komplettumbau.png = Projektkarte 4
+- 08_projekt_05_wohnkueche_deluxe.png = Projektkarte 5
+- 09_before_alte_kueche.png = Vorher-Bild für Split-Section
+- 10_after_neue_kueche.png = Nachher-Bild für Split-Section
+- 11_beratung_kundenmoment.png = Vertrauens-/CTA-Sektion
+
+Empfohlene Seitenstruktur:
+
+1. HERO
+- Großes dunkles Banner mit 02_hero_dark_kitchen_banner.png.
+- Headline in Richtung:
+  „Echte Projekte. Echte Verwandlungen.“
+- Subline: Hier zeigen wir, was möglich ist: echte Räume, echte Herausforderungen und beeindruckende Ergebnisse – ehrlich dokumentiert, vom ersten Entwurf bis zum letzten Handgriff.
+- 2 CTAs:
+  - Projekt anfragen
+  - Beratung starten
+- Hero mit leichter Parallax-Wirkung.
+
+2. WAS SIE HIER ERWARTET / INTRO
+- Zweispaltige Sektion.
+- Links Text, rechts 03_intro_helle_wohnkueche.png.
+- Inhaltlich:
+  Echte Projekte statt leerer Versprechen.
+  Hier zeigen wir echte Umbauten, clevere Lösungen und sichtbare Veränderungen.
+- 4 kleine Key-Punkte / Icons, zum Beispiel:
+  * Reale Ausgangssituationen
+  * Ehrliche Planung & Umsetzung
+  * Sichtbare Veränderungen
+  * Liebe zum Detail
+
+3. PROJEKTE IM ÜBERBLICK
+- Horizontale oder Grid-basierte Projektkarten.
+- Verwende:
+  * 04_projekt_01_kueche_wohnbereich.png
+  * 05_projekt_02_modernisierung_bestandskueche.png
+  * 06_projekt_03_raumkonzept_licht.png
+  * 07_projekt_04_komplettumbau.png
+  * 08_projekt_05_wohnkueche_deluxe.png
+- Jede Karte mit Titel, kurzem Teaser und Status-Badge.
+- Beispiel-Status:
+  * In Planung
+  * In Umsetzung
+  * Folgt bald
+- Beispiel-Projekttitel:
+  * Küche + Wohnbereich
+  * Modernisierung Bestandsküche
+  * Raumkonzept & Licht
+  * Komplettumbau
+  * Wohnküche Deluxe
+
+4. SPLIT-SECTION VORHER / NACHHER
+- Verwende links 09_before_alte_kueche.png und rechts 10_after_neue_kueche.png.
+- Entweder als klassisches Vorher-/Nachher-Split-Layout oder als interaktiven Slider.
+- Daneben bzw. darunter Textblock:
+  „Vorher / Nachher bedeutet: mehr Lebensqualität.“
+- Erkläre, dass es nicht nur um neue Fronten geht, sondern um Raumgefühl, bessere Abläufe, Licht, Stauraum und ein stimmiges Gesamtkonzept.
+
+5. FILTER / KATEGORIEN
+- Kleine klickbare Chips / Filter optisch wie im Mockup.
+- Beispiele:
+  * Alle Projekte
+  * Küche
+  * Wohnküche
+  * Raumumbau
+  * Lichtkonzept
+  * Stauraumlösung
+  * Komplettumbau
+  * Planung
+  * Umsetzung
+- Auch wenn es am Anfang eher visuell ist, soll es modern wirken.
+
+6. UNSER PROZESS
+- Dunklere Akzent-Sektion.
+- 6 Schritte wie im Mockup:
+  1. Kennenlernen
+  2. Beratung
+  3. Planung in 3D/VR
+  4. Details & Materialien
+  5. Koordination & Umbau
+  6. Fertiges Ergebnis
+- Als hochwertige horizontale Step-Section mit kleiner Linie / Progress-Optik.
+
+7. VERTRAUENS- / VIELLEICHT BIST DU NÄCHSTES DABEI-SEKTION
+- Zweispaltige Sektion.
+- Verwende 11_beratung_kundenmoment.png.
+- Text in Richtung:
+  „Dein Projekt könnte schon bald hier stehen.“
+- Erklären, dass die ersten echten VIDEKO-Projekte folgen und neue Kunden jetzt starten können.
+- 3–4 kleine Stichpunkte / Bullet Benefits, z. B.:
+  * Persönliche Beratung
+  * Transparente Abläufe
+  * Individuelle Planung
+  * Ergebnisse, die bleiben
+- CTA:
+  Beratung vereinbaren
+
+8. ABSCHLUSS-CTA
+- Starke dunkle Abschlusssektion.
+- Headline in Richtung:
+  „Aus Ihrem Zuhause kann mehr werden. Lassen Sie uns gemeinsam loslegen.“
+- 2 CTAs:
+  * Projekt anfragen
+  * Beratung starten
+- Footer darunter sauber anschließen.
+
+Textton:
+- DU-Stil.
+- Ehrlich, modern, hochwertig, klar.
+- Kein Möbelhaus-Sprech.
+- Keine leeren Standardfloskeln.
+
+Animation / Bewegung:
+- Scroll-Reveals für Text- und Bildblöcke
+- Projektkarten mit Hover und leichtem Zoom
+- Status-Badges dezent animiert
+- Hero mit leichter Parallax-Wirkung
+- Step-Sektion mit sanfter Einblendung
+- Filter-Chips mit aktiven States
+- Mobile reduziert, aber weiterhin lebendig
+
+Technisch:
+- responsive sauber bauen
+- Mobile mitdenken
+- keine horizontalen Scrollprobleme
+- Bilder richtig einbinden
+- Buttons und CTAs sauber verlinken
+- auf Performance achten
+
+Bitte zuerst kurz zusammenfassen, welche Sections du anlegst/umbaust und welche Assets du wo einsetzt. Danach umsetzen.

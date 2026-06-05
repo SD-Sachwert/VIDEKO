@@ -29,7 +29,7 @@ const JOURNEY = [
 ]
 
 const BENEFITS = [
-  { icon: Sparkles, title: ['Exklusive', 'Küchenwelten'], text: 'Design in Perfektion. Für Ihren Anspruch.' },
+  { icon: Sparkles, title: ['Exklusive', 'Küchenwelten'], text: 'Design in Perfektion. Für deinen Anspruch.' },
   { icon: Layers, title: ['Hochwertige', 'Materialien'], text: 'Ausgewählt für Qualität und Wert.' },
   { icon: MessageSquare, title: ['Persönliche', 'Beratung'], text: 'Individuell, ehrlich und inspirierend.' },
   { icon: Gem, title: ['Atmosphäre,', 'die bleibt'], text: 'Erleben. Fühlen. Mit allen Sinnen.' },
@@ -84,18 +84,18 @@ export default function ShowroomJourneySection() {
         <div className="showroom__portal-veil" aria-hidden="true" />
         <div className="container showroom__portal-copy">
           <Reveal>
-            <span className="kicker kicker--gold">Ihr Weg durch unseren Showroom</span>
+            <span className="kicker kicker--gold">Dein Weg durch unseren Showroom</span>
             <h2 className="showroom__title">
               Eintauchen<br />
               statt nur<br />
               <span className="grad">anschauen.</span>
             </h2>
             <p className="showroom__lead">
-              Erleben Sie unsere Küchenwelten mit allen Sinnen. Eine Reise durch
+              Erlebe unsere Küchenwelten mit allen Sinnen. Eine Reise durch
               Design, Materialität und Atmosphäre.
             </p>
             <div className="showroom__portal-actions">
-              <MagneticButton as="a" href="#beratung">
+              <MagneticButton as="a" href="/beratung">
                 Jetzt erleben
               </MagneticButton>
             </div>
@@ -114,7 +114,7 @@ export default function ShowroomJourneySection() {
       <div className="container">
         <Reveal className="showroom__railhead">
           <h3 className="showroom__railtitle">
-            Ihre Reise durch<br />unser Studio
+            Deine Reise durch<br />unser Studio
           </h3>
           <span className="showroom__progress" aria-hidden="true">
             <span className="showroom__progress-fill" style={{ width: `${progress}%` }} />
@@ -167,10 +167,10 @@ export default function ShowroomJourneySection() {
             </h3>
             <p>
               Bei VIDEKO Küchen verbinden sich Architektur, Design und Emotion zu
-              einem einzigartigen Ort. Lassen Sie sich inspirieren, berühren und
+              einem einzigartigen Ort. Lass dich inspirieren, berühren und
               von neuen Möglichkeiten begeistern.
             </p>
-            <TextLink href="#ueber">Mehr über uns</TextLink>
+            <TextLink href="/ueber-uns">Mehr über uns</TextLink>
           </Reveal>
           <div className="showroom__benefits">
             {BENEFITS.map((b, i) => (
@@ -198,12 +198,12 @@ export default function ShowroomJourneySection() {
             <div className="showroom__cta-veil" aria-hidden="true" />
           </div>
           <div className="showroom__cta-body">
-            <h3>Ihr Erlebnis beginnt hier.</h3>
+            <h3>Dein Erlebnis beginnt hier.</h3>
             <p>
-              Vereinbaren Sie Ihren persönlichen Termin und erleben Sie Küchen auf
+              Vereinbare deinen persönlichen Termin und erlebe Küchen auf
               einem neuen Niveau.
             </p>
-            <MagneticButton as="a" href="#beratung">
+            <MagneticButton as="a" href="/beratung">
               Termin vereinbaren
             </MagneticButton>
           </div>

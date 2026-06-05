@@ -1,0 +1,139 @@
+Arbeite an der Seite /ueber-uns.
+
+Ziel:
+Baue die Über-uns-Seite im Stil der Referenz 00_reference_mockup_ueber_uns.png nach. Die Seite soll hochwertig, lebendig, modern und klar nach VIDEKO aussehen: hellerer Gesamteindruck mit warmem Gold-/Creme-Look, edle dunkle Akzente, viel Bildwirkung, moderne Bewegung, aber kein übertriebener Animationszirkus.
+
+Wichtig:
+- Die Seite ist keine Karriere-Seite. Recruiting-Inhalte gehören in /karriere.
+- Auf /ueber-uns sollen wir uns vorstellen, Vertrauen aufbauen und zeigen, wer hinter VIDEKO steckt.
+- Tonalität immer im DU-Stil.
+- Locker, ehrlich, hochwertig, direkt, sympathisch.
+- Kein steifes Möbelhaus-Gelaber.
+- Die Seite soll Lust machen, mit VIDEKO zu arbeiten und uns kennenzulernen.
+
+Design-Vorgaben:
+- Visuell an 00_reference_mockup_ueber_uns.png orientieren.
+- Heller, warmer Gesamteindruck.
+- Nur der Hero oben darf deutlich dunkler sein.
+- Der Rest der Seite eher hell, hochwertig, leicht marmoriert/cremig mit dunklen und goldenen Akzenten.
+- Große Bilder, moderne Cards, hochwertige Typografie.
+- Viel Bewegung: Scroll-Reveals, Stagger-Animationen, Hover-Effekte, weiche Übergänge.
+- Kein wildes Zeug, keine Kirmes.
+
+Dateien / Verwendung:
+- 00_reference_mockup_ueber_uns.png = Gesamtidee und visuelle Referenz
+- 01_hero_dark_kitchen_banner.png = Hero-Bild oben
+- 02_why_videko_beratungsszene.png = Bild für „Warum es VIDEKO überhaupt gibt“
+- 03_founder_vitali_placeholder.png = Platzhalterbild Founder 1 (Vitali)
+- 04_founder_dennis_placeholder.png = Platzhalterbild Founder 2 (Dennis)
+- 05_founder_heiko_placeholder.png = Platzhalterbild Founder 3 (Heiko)
+- 06_team_beratung_und_planung.png = Teamkarte Beratung & Planung
+- 07_team_marketing_und_social_media.png = Teamkarte Marketing & Social Media
+- 08_team_montage_und_handwerk.png = Teamkarte Montage & Handwerk
+- 09_team_organisation_und_partner.png = Teamkarte Organisation / Sachbearbeitung / Partner & Gewerke
+- 10_persoenlicher_kundenmoment.png = Bild für „Was du bei uns merken sollst“ oder eine persönliche Vertrauenssektion
+
+Wichtig zu den Foundern:
+- Die Bilder 03 bis 05 sind Platzhalter.
+- Die Founder müssen in dieser Reihenfolge dargestellt werden: Vitali, Dennis, Heiko.
+- Bitte die Seite so bauen, dass wir diese Bilder später leicht gegen echte Fotos austauschen können.
+
+Empfohlene Seitenstruktur:
+
+1. HERO
+- Großes dunkles Banner mit 01_hero_dark_kitchen_banner.png.
+- Headline z. B.:
+  „Wir sind VIDEKO.
+   Persönlich. Ehrlich. Hochwertig.“
+- Kurzer Text dazu.
+- 2 CTAs:
+  - Unser Team kennenlernen
+  - Beratung anfragen
+- Leichte Parallax-Wirkung im Hero erlaubt.
+
+2. WARUM ES VIDEKO GIBT
+- Zweispaltige Sektion.
+- Links Text, rechts 02_why_videko_beratungsszene.png.
+- Inhaltlich:
+  Warum VIDEKO entstanden ist.
+  Weg vom Rabattgeschrei, hin zu ehrlicher Beratung, sauberer Planung und einem besseren Gesamterlebnis.
+
+3. WOFÜR WIR STEHEN
+- Werte-Cards oder Icon-Cards.
+- Inhalte z. B.:
+  Ehrlich, Persönlich, Hochwertig, Durchdacht, Locker, Alles aus einer Hand.
+- Karten dürfen mit Stagger-Reveal erscheinen.
+
+4. DIE KÖPFE HINTER VIDEKO
+- Drei Founder-Karten in genau dieser Reihenfolge:
+  1. Vitali
+  2. Dennis
+  3. Heiko
+- Verwende die Bilder 03, 04, 05.
+- Je Karte: Name, Rolle/Funktion, kurzer Beschreibungstext, 2–4 kleine Stichworte/Tags.
+- Cards hochwertig aufbauen, damit später echte Fotos leicht austauschbar sind.
+
+5. DAS TEAM HINTER VIDEKO
+- Teamsektion mit mehreren Karten / Kacheln.
+- Nicht nur die drei Gründer, sondern das gesamte Team bzw. die Bereiche dahinter zeigen.
+- Mögliche Kategorien:
+  - Beratung & Planung (06_team_beratung_und_planung.png)
+  - Marketing & Social Media (07_team_marketing_und_social_media.png)
+  - Montage & Handwerk (08_team_montage_und_handwerk.png)
+  - Sachbearbeitung & Organisation (09_team_organisation_und_partner.png)
+  - Partner & Gewerke (kann ebenfalls mit 09_team_organisation_und_partner.png oder wiederverwendetem Bild dargestellt werden)
+- Wenn nötig, darf ein Bild für mehrere thematisch passende Teamkarten wiederverwendet werden.
+- Cards mit Hover-Effekt und kurzer Beschreibung.
+
+6. SO ARBEITEN WIR
+- Eine kompakte Prozess-/Kultursektion.
+- 5 Schritte oder Prinzipien, z. B.:
+  Ehrlich statt Verkaufsdruck
+  Direkt statt kompliziert
+  Sauber geplant
+  Persönlich begleitet
+  Zuverlässig umgesetzt
+- Als schöne Icon-Step-Section bauen.
+
+7. WAS DU BEI UNS MERKEN SOLLST
+- Persönliche Vertrauenssektion mit 10_persoenlicher_kundenmoment.png.
+- Inhaltlich:
+  Du sollst merken, dass wir zuhören, mitdenken, uns Zeit nehmen und hochwertig arbeiten, ohne steif zu wirken.
+
+8. REGION / NÄHE / WÜRZBURG
+- Kleine Sektion zu Würzburg, persönlicher Nähe, festen Ansprechpartnern und regionalem Bezug.
+- Optional mit Karte, Icons oder kurzer Faktenleiste.
+
+9. ABSCHLUSS-CTA
+- Keine Recruiting-Ansprache auf dieser Seite.
+- Stattdessen Kundenfokus:
+  „Genug von uns. Jetzt bist du dran.“
+  Oder:
+  „Lass uns deine Küche planen.“
+- 2 CTAs:
+  - Beratung anfragen
+  - Studio entdecken
+
+Textton:
+- Immer DU.
+- Klar, locker, sympathisch, hochwertig.
+- Keine steife Standardsprache.
+- Kein Möbelhaus-Sprech.
+- Die Wortlaute aus dem Mockup dürfen als inhaltliche Richtung dienen.
+
+Animation / Bewegung:
+- Scroll-Reveal für Bilder und Textblöcke
+- Stagger-Reveal für Karten
+- leichte Hover-Effekte auf Founder-/Teamkarten
+- weiche Übergänge
+- Hero mit leichter Tiefe / Parallax
+- Mobile reduziert, aber nicht tot
+
+Technisch:
+- responsive sauber bauen
+- Mobile zuerst mitdenken
+- keine horizontalen Scrollprobleme
+- auf Bildgrößen und Performance achten
+- Buttons korrekt verlinken
+
+Bitte zuerst kurz zusammenfassen, welche Sections du anlegst bzw. umbauen willst und welche Assets du wo verwenden willst. Danach umsetzen.

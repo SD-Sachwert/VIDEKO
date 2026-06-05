@@ -7,7 +7,7 @@ export default function Beratung() {
     <>
       <PageHero
         kicker="Beratung"
-        title={<>Bereit für <span className="grad">Ihre Küche?</span></>}
+        title={<>Bereit für <span className="grad">deine Küche?</span></>}
         lead="Wir melden uns persönlich. Keine Callcenter-Nummer. Kein Küchenbasar."
         image={ctaImg}
       />

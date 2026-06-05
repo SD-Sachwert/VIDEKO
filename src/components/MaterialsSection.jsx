@@ -116,7 +116,7 @@ export default function MaterialsSection({ embedded = false }) {
           </p>
           <div className="mat-hero__actions">
             <MagneticButton as="a" href="#materialien">Materialien entdecken</MagneticButton>
-            <PlayButton label="Materialien erleben" href="#beratung" light={false} />
+            <PlayButton label="Materialien erleben" href="/beratung" light={false} />
           </div>
         </Reveal>
 
@@ -165,9 +165,9 @@ export default function MaterialsSection({ embedded = false }) {
           <h3>Warum unsere<br />Materialien besonders sind.</h3>
           <p>
             Mit höchstem Anspruch ausgewählt, verarbeitet und kombiniert – für ein
-            Ergebnis, das Sie sehen, fühlen und jeden Tag erleben.
+            Ergebnis, das du siehst, fühlst und jeden Tag erlebst.
           </p>
-          <TextLink href="#beratung">Mehr erfahren</TextLink>
+          <TextLink href="/beratung">Mehr erfahren</TextLink>
         </Reveal>
         <div className="mat-benefits__grid">
           {BENEFITS.map((b, i) => (
@@ -193,15 +193,15 @@ export default function MaterialsSection({ embedded = false }) {
             <img src={heroBg} alt="" />
           </span>
           <div className="mat-cta__body">
-            <h3>Erleben Sie Materialien<br />in perfekter Harmonie.</h3>
+            <h3>Erlebe Materialien<br />in perfekter Harmonie.</h3>
             <p>
-              Besuchen Sie einen unserer Showrooms und entdecken Sie die Vielfalt
+              Besuche einen unserer Showrooms und entdecke die Vielfalt
               und Qualität unserer Materialien hautnah.
             </p>
           </div>
           <div className="mat-cta__actions">
-            <MagneticButton as="a" href="#showrooms">Standorte ansehen</MagneticButton>
-            <TextLink href="#beratung">Persönliche Beratung buchen</TextLink>
+            <MagneticButton as="a" href="/showroom">Standorte ansehen</MagneticButton>
+            <TextLink href="/beratung">Persönliche Beratung buchen</TextLink>
           </div>
         </Reveal>
       </div>

@@ -75,7 +75,7 @@ const TRUST = ['Ehrliche Orientierung', 'Ca. 2 Minuten', 'Unverbindlich']
 
 function profileFor(a) {
   const stil = STILE.find((s) => s.key === a.stil)
-  let name = 'Ihre individuelle Traumküche'
+  let name = 'Deine individuelle Traumküche'
   if (a.nutzer === 'familie') name = 'Die moderne Familienküche'
   else if (a.nutzer === 'paar') name = 'Die elegante Wohnküche'
   else if (a.nutzer === 'hobbykoch') name = 'Die Küche für Genießer'
@@ -145,7 +145,7 @@ export default function StylefinderWizard() {
     )
   }
 
-  function PreviewCard({ title = 'Ihre erste Richtung', sub = 'Basierend auf Ihrer Auswahl' }) {
+  function PreviewCard({ title = 'Deine erste Richtung', sub = 'Basierend auf deiner Auswahl' }) {
     return (
       <aside className="sfpreview">
         <span className="sfpreview__eyebrow">{title}</span>
@@ -178,11 +178,11 @@ export default function StylefinderWizard() {
       <div className="sfwizard" id="sf-wizard">
         <div className="sfresult">
           <div className="sfresult__card">
-            <span className="sfresult__eyebrow">Ihr Küchenprofil</span>
+            <span className="sfresult__eyebrow">Dein Küchenprofil</span>
             <h3 className="sfresult__name">{profile.name}</h3>
             <div className="sfresult__media"><img src={profile.image} alt={profile.name} /></div>
             <p className="sfresult__text">
-              Auf Basis Ihrer Antworten passt am besten ein Konzept mit Stil
+              Auf Basis deiner Antworten passt am besten ein Konzept mit Stil
               „{profile.style}". Eine ehrliche erste Richtung – verfeinert wird
               alles im persönlichen Gespräch.
             </p>
@@ -201,9 +201,9 @@ export default function StylefinderWizard() {
           </div>
 
           <form className="sfform" onSubmit={(e) => e.preventDefault()}>
-            <h3 className="sfform__title">Lassen Sie uns Ihre Traumküche planen.</h3>
+            <h3 className="sfform__title">Lass uns deine Traumküche planen.</h3>
             <div className="sfform__row">
-              <label className="field"><span>Name</span><input type="text" placeholder="Ihr Name" required /></label>
+              <label className="field"><span>Name</span><input type="text" placeholder="Dein Name" required /></label>
               <label className="field"><span>E-Mail</span><input type="email" placeholder="name@beispiel.de" required /></label>
             </div>
             <div className="sfform__row">
@@ -211,7 +211,7 @@ export default function StylefinderWizard() {
               <label className="field"><span>PLZ / Ort</span><input type="text" placeholder="z. B. 97070 Würzburg" /></label>
             </div>
             <label className="field"><span>Gewünschter Fertigstellungstermin</span><input type="text" placeholder="z. B. Herbst 2026" /></label>
-            <label className="field"><span>Nachricht</span><textarea rows={3} placeholder="Worauf kommt es Ihnen an?" /></label>
+            <label className="field"><span>Nachricht</span><textarea rows={3} placeholder="Worauf kommt es dir an?" /></label>
             <label className="sfupload">
               <Upload size={18} strokeWidth={1.7} />
               <span>Grundriss, Fotos oder Skizze hochladen <em>(optional)</em></span>
@@ -255,7 +255,7 @@ export default function StylefinderWizard() {
         <div className="sfstep-body">
           <div className="sfstep-main">
             <h2 className="sfstep__title"><span className="sfstep__no">1.</span> Raum &amp; Wohnsituation</h2>
-            <p className="sfq">Welche Wohnsituation beschreibt Ihre Küche am besten?</p>
+            <p className="sfq">Welche Wohnsituation beschreibt deine Küche am besten?</p>
             <div className="sfcards sfcards--3">
               {RAUM.map((o) => (
                 <button key={o.key} type="button" className={`sfcard ${a.raum === o.key ? 'sfcard--active' : ''}`} onClick={() => set('raum', o.key)}>
@@ -265,7 +265,7 @@ export default function StylefinderWizard() {
                 </button>
               ))}
             </div>
-            <p className="sfq">Wie groß ist Ihre Küchenfläche ungefähr?</p>
+            <p className="sfq">Wie groß ist deine Küchenfläche ungefähr?</p>
             <div className="sfchips">
               {FLAECHE.map((f) => (
                 <button key={f} type="button" className={`sfchipbtn ${a.flaeche === f ? 'sfchipbtn--active' : ''}`} onClick={() => set('flaeche', f)}>{f}</button>
@@ -291,14 +291,14 @@ export default function StylefinderWizard() {
                 </button>
               ))}
             </div>
-            <p className="sfq">Wie kochen Sie?</p>
+            <p className="sfq">Wie kochst du?</p>
             <div className="sfchips">
               {KOCHEN.map((k) => (
                 <button key={k} type="button" className={`sfchipbtn ${a.kochen === k ? 'sfchipbtn--active' : ''}`} onClick={() => set('kochen', k)}>{k}</button>
               ))}
             </div>
           </div>
-          <PreviewCard title="Ihre aktuelle Empfehlung" sub={profile.name} />
+          <PreviewCard title="Deine aktuelle Empfehlung" sub={profile.name} />
           <div className="sfstep-foot"><NavRow onNext={() => go(2)} nextLabel="Weiter zu Stil" /></div>
         </div>
       )}
@@ -307,7 +307,7 @@ export default function StylefinderWizard() {
         <div className="sfstep-body sfstep-body--wide">
           <div className="sfstep-main">
             <h2 className="sfstep__title"><span className="sfstep__no">3.</span> Stilrichtung</h2>
-            <p className="sfq">Welcher Stil spricht Sie am meisten an?</p>
+            <p className="sfq">Welcher Stil spricht dich am meisten an?</p>
             <div className="sfstilgrid">
               {STILE.map((s) => (
                 <button key={s.key} type="button" className={`sfstilcard ${a.stil === s.key ? 'sfstilcard--active' : ''}`} onClick={() => set('stil', s.key)}>
@@ -329,8 +329,8 @@ export default function StylefinderWizard() {
       {step === 3 && (
         <div className="sfstep-body">
           <div className="sfstep-main">
-            <h2 className="sfstep__title"><span className="sfstep__no">4.</span> Was ist Ihnen <span className="grad">wirklich</span> wichtig?</h2>
-            <p className="sfq">Verschieben Sie die Regler nach Ihrem Gefühl.</p>
+            <h2 className="sfstep__title"><span className="sfstep__no">4.</span> Was ist dir <span className="grad">wirklich</span> wichtig?</h2>
+            <p className="sfq">Verschieb die Regler nach deinem Gefühl.</p>
             <div className="sfsliders">
               {PRIOS.map((p) => (
                 <div className="sfslider" key={p}>
@@ -341,7 +341,7 @@ export default function StylefinderWizard() {
               ))}
             </div>
           </div>
-          <PreviewCard title="Ihre Richtung" sub="Live aus Ihren Prioritäten" />
+          <PreviewCard title="Deine Richtung" sub="Live aus deinen Prioritäten" />
           <div className="sfstep-foot"><NavRow onNext={() => go(4)} /><TrustBar /></div>
         </div>
       )}
@@ -350,7 +350,7 @@ export default function StylefinderWizard() {
         <div className="sfstep-body">
           <div className="sfstep-main">
             <h2 className="sfstep__title"><span className="sfstep__no">5.</span> Budget &amp; Rahmen</h2>
-            <p className="sfq">In welchem Rahmen planen Sie ungefähr?</p>
+            <p className="sfq">In welchem Rahmen planst du ungefähr?</p>
             <div className="sfcards sfcards--3">
               {BUDGET.map((b) => (
                 <button key={b} type="button" className={`sfcard sfcard--budget ${a.budget === b ? 'sfcard--active' : ''}`} onClick={() => set('budget', b)}>
@@ -365,8 +365,8 @@ export default function StylefinderWizard() {
             <span className="sfpreview__sub">Budget ist Orientierung – kein Etikett.</span>
             <div className="sfpreview__media"><img src={profile.image} alt="" loading="lazy" /></div>
             <p className="sfpreview__note">
-              Ihre Auswahl ergibt das Profil <strong>{profile.name}</strong>. Im
-              Ergebnis sehen Sie Stil, Budgetspanne und nächste Schritte.
+              Deine Auswahl ergibt das Profil <strong>{profile.name}</strong>. Im
+              Ergebnis siehst du Stil, Budgetspanne und nächste Schritte.
             </p>
           </aside>
           <div className="sfstep-foot"><NavRow onNext={() => go(5)} nextLabel="Ergebnis anzeigen" /></div>

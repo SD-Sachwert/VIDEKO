@@ -1,0 +1,175 @@
+Baue die VIDEKO Karriere-Seite jetzt komplett neu und halte dich eng an die beiliegenden Referenzbilder und Assets.
+
+WICHTIG:
+- Die Seite soll hochwertig, außergewöhnlich, modern und editorial wirken.
+- Nicht generisch bauen.
+- Nicht zu dunkel bauen, aber die dunklen Akzentflächen unbedingt beibehalten.
+- Die Seite soll sich optisch an unserer bestehenden VIDEKO-Welt orientieren: helle Premium-Flächen, warme Goldakzente, große Serif-Headlines, edle Karten, viel Luft, hochwertige Bilder und gezielte dunkle Kontrastbereiche.
+- Keine Bonsai-Bilder verwenden.
+- Kein Möbelhaus-Standarddesign.
+- Kein wildes Effektgewitter. Edle, ruhige Bewegung.
+
+DATEIEN IM ORDNER:
+- 00_karriereseite_gesamt_referenz.png = Hauptreferenz, so soll die Seite insgesamt aussehen
+- 00_optik_referenz_dunkle_akzente.png = Stilreferenz für die dunklen Akzente und die hochwertige Stimmung
+- 01_hero_team_beratung.png = Hero-Bild
+- 02_job_kuechenverkauf_beratung.png = Jobkarte Küchenverkäufer
+- 03_job_kuechenplanung_planungstisch.png = Jobkarte Küchenplaner
+- 04_job_monteure_aufmass.png = Jobkarte Monteure / Aufmaß / Projektkoordination
+- 05_job_empfang_service.png = Jobkarte Empfang / Sachbearbeitung / Reklamationsservice
+- 06_job_marketing_social_media.png = Jobkarte Marketing / Social Media
+- 07_job_reinigung_studioservice.png = Jobkarte Reinigung / Studio-Service / Quereinsteiger
+- 08_bewerbungsprozess_teammeeting.png = Bild für Bewerbungsprozess / Team / Studio erleben
+- 09_bewerbung_interior_formular.png = Bild im Bewerbungsbereich neben dem Formular
+- 10_cta_footer_premium_showroom.png = Bild für große CTA-Sektion / Footer-Band
+
+AUFGABE:
+Erstelle die komplette Karriere-Seite als echte Unterseite innerhalb der bestehenden Website.
+Route z. B. /karriere.
+
+DESIGN-RICHTUNG:
+- helle Grundfläche mit leichtem Marmor-/Natursteinlook im Hintergrund
+- dunkle Akzentsektionen mit warmen Goldlinien / Goldglow
+- starke Typografie mit Serif-Headlines und sauberer Sans-Serif für Fließtext
+- hochwertige Karten mit weichen Schatten und großen Rundungen
+- feine Hover-Effekte und dezente Scroll-Animationen
+- reich an Bildern, damit die Seite lebendig und luxuriös wirkt
+
+SEITENAUFBAU:
+
+1. HERO
+Nutze 01_hero_team_beratung.png.
+Links:
+- Eyebrow: KARRIERE
+- Headline: „Menschen, die Küchen anders denken.“
+- Kurzer Text, z. B.:
+  „Wir bauen kein Möbelhaus. Wir bauen ein Studio, in dem Design, Handwerk und Persönlichkeit zusammenkommen – jeden Tag.“
+- Buttons:
+  - Offene Rollen ansehen
+  - Initiativ bewerben
+Rechts / als großes Visual:
+- 01_hero_team_beratung.png
+Hero darf durch dunkle Akzente, Goldlinien, feine Lichtverläufe und leichte Bewegung hochwertig wirken.
+
+2. OFFENE ROLLEN
+Große Sektion auf hellem Hintergrund.
+Headline: „Werden Sie Teil von VIDEKO.“
+Baue hochwertige Jobkarten statt einfacher Listen.
+Rollen:
+- Küchenverkäufer
+- Küchenplaner
+- Monteure
+- Aufmaß / Projektkoordination
+- Empfang / Sachbearbeitung
+- Reklamationsservice
+- Marketing / Social Media
+- Reinigung / Studio-Service
+- Quereinsteiger
+- Initiativbewerbung
+
+Bildzuordnung:
+- Küchenverkäufer -> 02_job_kuechenverkauf_beratung.png
+- Küchenplaner -> 03_job_kuechenplanung_planungstisch.png
+- Monteure -> 04_job_monteure_aufmass.png
+- Aufmaß / Projektkoordination -> 04_job_monteure_aufmass.png
+- Empfang / Sachbearbeitung -> 05_job_empfang_service.png
+- Reklamationsservice -> 05_job_empfang_service.png
+- Marketing / Social Media -> 06_job_marketing_social_media.png
+- Reinigung / Studio-Service -> 07_job_reinigung_studioservice.png
+- Quereinsteiger -> 07_job_reinigung_studioservice.png
+- Initiativbewerbung -> 02_job_kuechenverkauf_beratung.png oder ein reduzierter Kartenstil ohne neues Bild
+
+Jede Karte soll enthalten:
+- Titel
+- Standort: Würzburg
+- kurzen ehrlichen Beschreibungssatz
+- kleines Icon
+- Pfeil / CTA
+- Hover-Effekt
+
+3. WARUM VIDEKO?
+Dunkle Akzentsektion.
+Headline: „Arbeiten, das mehr ist als ein Job.“
+Vier hochwertige Karten, z. B.:
+- Kein Möbelhaus-Zirkus
+- Studio statt Masse
+- Aufbau statt Stillstand
+- Gute Arbeit darf gut aussehen
+Die Karten dürfen Bildausschnitte / atmosphärische Hintergründe nutzen. Nutze gerne Crops aus 08_bewerbungsprozess_teammeeting.png, 09_bewerbung_interior_formular.png und 10_cta_footer_premium_showroom.png.
+
+4. BEWERBUNGSPROZESS
+Helle Sektion.
+Headline: „Einfach. Persönlich. Schnell.“
+Mit Timeline oder Stepper:
+1. Melden
+2. Kennenlernen
+3. Studio erleben
+4. Start planen
+Rechts oder darunter:
+- 08_bewerbungsprozess_teammeeting.png
+
+5. PASST ZU UNS / EHER NICHT
+Zwei-Spalten-Sektion oder zwei große Karten.
+Links:
+„Sie passen zu VIDEKO, wenn …“
+Rechts:
+„Eher nicht, wenn …“
+Mit ehrlichen Bulletpoints.
+Optional links/rechts zusätzliche kleine Bildausschnitte oder ruhige dekorative Flächen einbauen.
+
+6. BEWERBUNGSBEREICH
+Helle Premium-Sektion mit Textblock links und Bild/Formular rechts.
+Links:
+- Eyebrow: KOMMEN SIE INS TEAM
+- Headline: „Keine perfekte Bewerbung nötig.“
+- kurzer Text
+- Kontakt:
+  info@videko-kuechen.de
+  Würzburg
+  Telefonnummer
+Mitte oder rechts:
+- 09_bewerbung_interior_formular.png
+Daneben / darunter:
+- Bewerbungsformular mit Feldern:
+  Name
+  E-Mail
+  Telefon
+  Bereich
+  Nachricht
+  Datei hochladen
+- CTA: „Jetzt initiativ bewerben“
+
+7. GROSSE ABSCHLUSS-CTA
+Dunkler, bildstarker Abschlussbereich.
+Nutze 10_cta_footer_premium_showroom.png.
+Text:
+- kleine Eyebrow: WERDEN SIE TEIL VON VIDEKO
+- Headline: „Lust, etwas Besonderes mit aufzubauen?“
+- kurzer Text
+Buttons:
+  - Jetzt bewerben
+  - Beratung anfragen
+
+8. FOOTER
+Footer im bestehenden VIDEKO-Stil aufbauen.
+Kontakt und Links korrekt eintragen.
+
+ANIMATION / UX:
+- dezente Parallax- oder Fade-in-Effekte beim Scrollen
+- Jobkarten heben sich beim Hover leicht an
+- Goldlinien oder kleine Lichtakzente dürfen elegant mitschwingen
+- Buttons mit hochwertigem Hover-State
+- keine übertriebenen Animationen
+
+TECHNISCH:
+- Alle Texte als echten HTML-Text umsetzen, nicht ins Bild setzen.
+- Bestehendes echtes VIDEKO-Logo verwenden.
+- Bestehende Navigation übernehmen.
+- Karriere-Menüpunkt aktiv hervorheben.
+- Responsiv umsetzen für Desktop / Tablet / Mobile.
+- Bilder sinnvoll zuschneiden und optimieren.
+- Wenn nötig, Bilder mehrfach als Crops für kleinere Karten verwenden.
+
+ZIEL:
+Die Karriere-Seite soll wirken wie ein hochwertiges Premium-Studio im Aufbau – modern, menschlich, besonders, designstark und nicht wie eine normale 08/15-Jobseite.
+Setze die Seite jetzt komplett sauber um.

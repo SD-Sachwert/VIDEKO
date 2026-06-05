@@ -17,7 +17,7 @@ export default function Showroom() {
           <SectionHeader
             kicker="Standort"
             title="Studio Würzburg."
-            lead="Erleben Sie VIDEKO dort, wo Planung, Material und Architektur zusammenkommen."
+            lead="Erlebe VIDEKO dort, wo Planung, Material und Architektur zusammenkommen."
           />
           <div className="standort__grid">
             <Reveal className="standort__info">
