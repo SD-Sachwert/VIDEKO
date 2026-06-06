@@ -11,6 +11,7 @@ import UeberUns from './pages/UeberUns.jsx'
 import Beratung from './pages/Beratung.jsx'
 import Impressum from './pages/Impressum.jsx'
 import Datenschutz from './pages/Datenschutz.jsx'
+import Experience from './pages/Experience.jsx'
 
 // kept (reachable via the homepage teasers/cards)
 import Stylefinder from './pages/Stylefinder.jsx'
@@ -33,6 +34,9 @@ export default function App() {
         <Route path="/karriere" element={<Karriere />} />
         <Route path="/ueber-uns" element={<UeberUns />} />
         <Route path="/beratung" element={<Beratung />} />
+
+        {/* immersive 3D experience (opt-in route) */}
+        <Route path="/experience" element={<Experience />} />
 
         {/* legal */}
         <Route path="/impressum" element={<Impressum />} />
