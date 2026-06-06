@@ -1,0 +1,162 @@
+ARBEITSAUFTRAG FÜR CLAUDE — VIDEKO /experience immersive Journey
+
+Wichtig: Arbeite ausschließlich an der Route /experience. Die normale Website, Startseite und Unterseiten bleiben tabu. Keine globale Neugestaltung. Keine Assets verschieben oder löschen. Nur /experience verbessern.
+
+Ziel:
+Die /experience-Seite soll nicht mehr wie eine Fahrt durch einen leeren 3D-Raum mit Posterwänden wirken. Sie soll wie eine echte, räumliche, cineastische VIDEKO-Journey aussehen: Luxusarchitektur, Küche, Material, Licht, Showroom, Planungskompetenz. Es soll knallen, aber hochwertig bleiben.
+
+Das Asset-Pack liegt nach dem Entpacken idealerweise hier:
+src/assets/images/experience/
+
+Bitte übernehme die Ordnerstruktur aus dem ZIP:
+01_scene_backplates/
+02_detail_shots/
+03_material_textures/
+04_showroom_extras/
+
+Nutze diese Assets nicht als flache Poster, sondern als:
+- Backplates / Fensterflächen / Raumhintergründe
+- Materialtexturen auf 3D-Objekten
+- beleuchtete Displays in echten Räumen
+- Detail-Inserts auf räumlichen Panels
+- Showroom-Portale
+
+Kernregel:
+Ersetze das Posterwand-Prinzip durch echte Raumarchitektur.
+
+Baue /experience als 6 klare Szenenräume:
+
+1. HERO ARRIVAL ROOM
+Asset:
+01_scene_backplates/exp-room-01-hero-arrival-backplate.png
+Ziel:
+Direkter Wow-Einstieg. Hochwertige dunkle Küche, Lichtbogen, warme Tiefe.
+Umsetzung:
+- Backplate als große Fenster-/Raumfläche integrieren, nicht als Poster.
+- Davor eine einfache 3D-Kücheninsel aus Geometrie bauen: Korpus, Arbeitsplatte, Sockel, Lichtleisten.
+- Material für Insel: dunkler Stein / schwarzer Marmor mit Goldadern.
+- Lichtbogen als 3D-Arch mit emissive warm gold.
+- Boden mit dunkler Steintextur oder procedural rough stone.
+- Decke/Deckensegel und Lichtleisten ergänzen.
+- Text links als ruhiges Glas-/Stone-Panel.
+Text:
+Bereit für eine Küche,
+die nicht normal ist?
+CTA: Beratung buchen
+Secondary: Showreel ansehen
+
+2. WHY VIDEKO ROOM
+Asset:
+01_scene_backplates/exp-room-02-why-videko-backplate.png
+Ziel:
+Abgrenzung von Möbelhaus-Vibe. Kein Tabellenbild, sondern räumlich inszenierter Vergleich.
+Umsetzung:
+- Kamera fährt zwischen zwei hochwertigen Panels hindurch.
+- Links: Möbelhaus-Vibe, dunkel/matter, rote X-Icons nur sehr dezent.
+- Rechts: VIDEKO, goldene Checks, wertig beleuchtet.
+- Panels sind Glas-/Metallflächen im Raum mit Tiefe, Schatten und goldenen Kanten.
+Text:
+Schluss mit Küchenverkauf von 2008.
+Möbelhaus-Vibe: Rabattgeschrei, Verkaufsdruck, Standardlösung, anonyme Abwicklung, Prospektküche.
+VIDEKO: ehrliche Planung, Beratung auf Augenhöhe, individuelles Raumkonzept, feste Ansprechpartner, Küche für dein echtes Leben.
+CTA: Den Unterschied erleben
+
+3. MATERIAL GALLERY ROOM
+Assets:
+01_scene_backplates/exp-room-03-material-gallery-backplate.png
+03_material_textures/*
+Ziel:
+Materialien als echte Exponate, nicht als Bildkarten.
+Umsetzung:
+- Erzeuge links und rechts einen Materialgang.
+- Nutze die Materialbilder als Texturen auf dicken 3D-Platten/Slabs.
+- Jede Platte hat Tiefe, Kanten, Schatten, leichte Rotation und eigene Beleuchtung.
+- Unter jeder Platte kleine goldene Label-Fläche: Naturstein, Metall, Bronze, Keramik, Holz, Glas.
+- Kamera fährt langsam durch die Galerie.
+- Kein Bonsai-Fokus. Falls Pflanzen vorkommen, nur als Nebendetail.
+Text:
+Materialien,
+die man fühlen will.
+CTA: Materialien entdecken
+
+4. PLANNING / EXPLODING KITCHEN ROOM
+Assets:
+01_scene_backplates/exp-room-04-planning-exploding-backplate.png
+02_detail_shots/exp-detail-01-marble-island-edge.png
+02_detail_shots/exp-detail-02-planning-table.png
+02_detail_shots/exp-detail-03-service-laser-measurement.png
+Ziel:
+Kompetenz zeigen. Planung, Technik, Präzision.
+Umsetzung:
+- Baue eine abstrakte Exploding Kitchen aus echten 3D-Geometrien: Schrankmodule, Arbeitsplatte, Fronten, Geräteblöcke, Lichtleisten, Sockel, Schubladen.
+- Layer fahren beim Scroll leicht auseinander.
+- Kleine Hotspots / Linien zeigen: Licht, Geräte, Arbeitsplatte, Korpus, Fronten, Stauraum, Maß, Montage.
+- Detailshots als kleine eingelassene Displays oder Glaspaneele nutzen.
+Text:
+Was du siehst: Küche.
+Was wir sehen: 184 Entscheidungen.
+CTA: Planung entdecken
+
+5. SHOWROOM PANORAMA ROOM
+Assets:
+01_scene_backplates/exp-room-05-showroom-panorama-backplate.png
+04_showroom_extras/exp-exterior-videko-building.png
+Ziel:
+Räumliches Studio-Erlebnis. Nicht nur anschauen, sondern eintauchen.
+Umsetzung:
+- Nutze das Panorama als große Raum-/Fensterfläche.
+- Setze davor 3D-Elemente: Beratungsdesk, Materialwand, Lichtbogen, niedrige Steinpodeste.
+- Exterior-Bild als kleines Portal/Standort-Display oder finales Ankommens-Panel.
+Text:
+Eintauchen statt nur anschauen.
+Unser Studio ist kein Möbelhaus. Es ist ein Erlebnisraum für Küchen, Materialien und gute Entscheidungen.
+CTA: Showroom ansehen
+
+6. FINAL CTA ROOM
+Asset:
+01_scene_backplates/exp-room-06-final-cta-showroom-backplate.png
+Ziel:
+Ruhiger, hochwertiger Abschluss mit klarer Conversion.
+Umsetzung:
+- Heller als die vorherigen Räume, aber weiterhin Premium.
+- Weniger Objekte, mehr Raum und Ruhe.
+- Zentrales CTA-Panel als Glas/Stein mit Goldkante.
+Text:
+Bereit für deine Küche?
+Dann lass uns reden. Persönlich, ehrlich und ohne Möbelhaus-Theater.
+CTA: Beratung buchen
+
+Technische Vorgaben:
+- Bestehende Smooth-Scroll-/Camera-Logik behalten, wenn sie funktioniert.
+- Keine komplette Neuschreibung, wenn nicht nötig.
+- Nutze Three.js / React Three Fiber / Drei, falls bereits vorhanden.
+- Baue Raumarchitektur aus einfachen Geometrien: Boxen, Planes, Rounded Boxes, Torus/Curve für Lichtbögen, transparente Panels, emissive Lichtleisten.
+- Nutze echte Schatten, warme Lights, Fog/Atmosphäre und zarte Partikel.
+- Kein horizontaler Overflow.
+- CTAs müssen klickbar bleiben.
+- Header/Mobile-Menü darf nicht blockiert werden.
+- Mobile darf eine reduzierte Fallback-Version bekommen: Bilder + Parallax statt voller 3D-Last.
+- Keine externen Bilder verwenden.
+- Keine normale Website anfassen.
+
+Material-/Look-Vorgaben:
+- Deep Anthracite / Soft Black
+- Graphite Stone
+- Warm Champagne
+- Metallic Gold
+- Silver / brushed metal
+- Dunkler Marmor mit Goldadern
+- Glas / Rauchglas / transparent panels
+- Lichtleisten warm, nicht neonbunt
+
+Bitte nach Umsetzung melden:
+1. Welche /experience-Dateien geändert wurden
+2. Welche Assets aus diesem Pack wo genutzt wurden
+3. Welche 3D-Objekte neu gebaut wurden
+4. Welche flachen Poster entfernt/reduziert wurden
+5. Was noch echte finale Assets brauchen würde
+6. Ob npm run build erfolgreich war
+7. Danach pushen/deployen
+
+Nochmals wichtig:
+Die Experience soll keine 3D-PowerPoint sein. Sie soll sich wie ein futuristischer VIDEKO-Showroom anfühlen, durch den man geführt wird.

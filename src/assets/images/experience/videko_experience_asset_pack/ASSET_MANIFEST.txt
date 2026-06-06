@@ -1,0 +1,12 @@
+VIDEKO Experience Asset Pack
+
+Ziel: Assets fuer die /experience-Seite, damit Claude aus der aktuellen 3D-Diashow eine echte Raum-Journey baut.
+
+Ordner:
+01_scene_backplates = grosse Raum-/Szenenbilder fuer Backplates, Fenster, Portale und Kulissen
+02_detail_shots = Nahaufnahmen fuer Planung, Material, Aufmass, Beratung
+03_material_textures = Materialmotive/Texturen fuer 3D-Slabs und Oberflaechen
+04_showroom_extras = Zusatzbild fuer Showroom/Standort/Finale
+prompt = kopierbarer Claude-Prompt
+
+Wichtig: Bilder nicht als flache Poster in den Raum stellen, sondern als Backplates, Texturen, Displays, Raumflaechen und Panels integrieren.
