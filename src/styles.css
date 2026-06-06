@@ -347,7 +347,7 @@ img {
   display: flex;
   align-items: center;
   gap: 24px;
-  height: 100px;
+  height: 108px;
 }
 
 .brand {
@@ -363,8 +363,8 @@ img {
 }
 
 .brand__logo {
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   object-fit: contain;
   filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.38));
 }
@@ -377,7 +377,7 @@ img {
 
 .brand__name {
   font-family: var(--serif);
-  font-size: 1.78rem;
+  font-size: 2rem;
   font-weight: 600;
   letter-spacing: 0.2em;
 }
@@ -514,6 +514,57 @@ img {
   align-self: flex-start;
   color: var(--bronze);
 }
+
+/* desktop dropdowns (Inspiration, Über uns) */
+.nav__group { position: relative; display: flex; align-items: center; }
+.nav__top { display: inline-flex; align-items: center; gap: 5px; }
+.nav__caret { transition: transform 0.3s ease; opacity: 0.7; }
+.nav__group:hover .nav__caret,
+.nav__group:focus-within .nav__caret { transform: rotate(180deg); }
+.nav__dd {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  padding-top: 16px; /* invisible hover bridge */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.26s ease, transform 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nav__group:hover .nav__dd,
+.nav__group:focus-within .nav__dd {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+.nav__dd-inner {
+  min-width: 226px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px;
+  border-radius: 16px;
+  background: rgba(18, 17, 15, 0.92);
+  backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid rgba(232, 201, 120, 0.28);
+  box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.6);
+}
+.nav__dd-inner a {
+  display: block;
+  padding: 11px 14px;
+  border-radius: 10px;
+  color: var(--cream-soft);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.nav__dd-inner a::after { display: none; }
+.nav__dd-inner a:hover,
+.nav__dd-inner a.is-active { background: rgba(232, 201, 120, 0.12); color: var(--gold-bright); }
 
 /* CTA always a solid gold button */
 .pill--cta,
@@ -7296,9 +7347,9 @@ body {
 
 @media (max-width: 720px) {
   .header__actions .pill--cta { display: none; }
-  .brand__logo { width: 46px; height: 46px; }
-  .brand__name { font-size: 1.3rem; }
-  .brand__sub { font-size: 0.52rem; letter-spacing: 0.4em; }
+  .brand__logo { width: 54px; height: 54px; }
+  .brand__name { font-size: 1.5rem; }
+  .brand__sub { font-size: 0.54rem; letter-spacing: 0.4em; }
   .luxury {
     padding: 60px 0 50px;
   }
@@ -9722,9 +9773,9 @@ a.footer__contact-line:hover {
   .burger {
     display: inline-flex;
   }
-  .header__inner { height: 84px; }
-  .brand__logo { width: 52px; height: 52px; }
-  .brand__name { font-size: 1.5rem; }
+  .header__inner { height: 92px; }
+  .brand__logo { width: 60px; height: 60px; }
+  .brand__name { font-size: 1.7rem; }
   .paths__grid {
     grid-template-columns: 1fr;
     max-width: 560px;

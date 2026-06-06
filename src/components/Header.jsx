@@ -1,26 +1,26 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
-import { Menu, X, MapPin } from 'lucide-react'
+import { Menu, X, MapPin, ChevronDown } from 'lucide-react'
 import logoMain from '../assets/brand/logo-main.png'
 
 const MAIN = [
-  { label: 'Home', to: '/' },
   { label: 'Studio', to: '/studio' },
-  { label: 'Inspiration', to: '/inspiration' },
+  { label: 'Inspiration', to: '/inspiration', menu: 'insp' },
   { label: 'Leistungen', to: '/leistungen' },
-  { label: 'Über uns', to: '/ueber-uns' },
+  { label: 'Über uns', to: '/ueber-uns', menu: 'about' },
   { label: 'Journal', to: '/journal' },
 ]
 
-// extra links surfaced only inside the mobile menu, grouped under a parent
-const SUBMENUS = {
-  Inspiration: [
+const DROPDOWN = {
+  insp: [
+    { label: 'Inspiration Übersicht', to: '/inspiration' },
     { label: 'Stylefinder', to: '/stylefinder' },
     { label: 'Materialien', to: '/inspiration#materialien' },
     { label: 'Vorher / Nachher', to: '/vorher-nachher' },
     { label: 'Projektideen', to: '/inspiration#insp-stilwelten' },
   ],
-  'Über uns': [
+  about: [
+    { label: 'Über uns', to: '/ueber-uns' },
     { label: 'Team', to: '/team' },
     { label: 'Karriere', to: '/karriere' },
   ],
@@ -63,9 +63,22 @@ export default function Header() {
 
         <nav className="nav" aria-label="Hauptnavigation">
           {MAIN.map((l) => (
-            <NavLink key={l.to} to={l.to} end={l.to === '/'} className={({ isActive }) => (isActive ? 'is-active' : undefined)}>
-              {l.label}
-            </NavLink>
+            l.menu ? (
+              <div className="nav__group" key={l.to}>
+                <NavLink to={l.to} className={({ isActive }) => `nav__top ${isActive ? 'is-active' : ''}`}>
+                  {l.label} <ChevronDown className="nav__caret" size={14} strokeWidth={2} />
+                </NavLink>
+                <div className="nav__dd">
+                  <div className="nav__dd-inner">
+                    {DROPDOWN[l.menu].map((d) => (
+                      <NavLink key={d.to} to={d.to} end className={({ isActive }) => (isActive ? 'is-active' : undefined)}>{d.label}</NavLink>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <NavLink key={l.to} to={l.to} className={({ isActive }) => (isActive ? 'is-active' : undefined)}>{l.label}</NavLink>
+            )
           ))}
         </nav>
 
@@ -87,11 +100,11 @@ export default function Header() {
           </Link>
           {MAIN.map((l) => (
             <div className="mm-group" key={l.to}>
-              <NavLink to={l.to} end={l.to === '/'} className="mm-link" onClick={close}>{l.label}</NavLink>
-              {SUBMENUS[l.label] && (
+              <NavLink to={l.to} end className="mm-link" onClick={close}>{l.label}</NavLink>
+              {l.menu && (
                 <div className="mm-sub">
-                  {SUBMENUS[l.label].map((s) => (
-                    <Link key={s.to} to={s.to} className="mm-sublink" onClick={close}>{s.label}</Link>
+                  {DROPDOWN[l.menu].map((d) => (
+                    <Link key={d.to} to={d.to} className="mm-sublink" onClick={close}>{d.label}</Link>
                   ))}
                 </div>
               )}
