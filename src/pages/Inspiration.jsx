@@ -43,13 +43,13 @@ const STILWELTEN = [
 ]
 
 const MATERIALS = [
-  { key: 'Holz', img: mHolz, text: 'Warm, lebendig, natürlich – bringt Ruhe in jeden Raum.' },
-  { key: 'Stein', img: mStein, text: 'Charakterstark und zeitlos – jede Platte ein Unikat.' },
-  { key: 'Keramik', img: mKeramik, text: 'Robust, hygienisch und edel – für den echten Alltag.' },
-  { key: 'Glas', img: mGlas, text: 'Leicht, klar und modern – Licht und Tiefe zugleich.' },
-  { key: 'Metall', img: mMetall, text: 'Präziser Akzent mit Industrie-Charakter.' },
-  { key: 'Fronten', img: mFronten, text: 'Matt, fingerabdruckarm und elegant.' },
-  { key: 'Arbeitsplatten', img: mPlatten, text: 'Strapazierfähig und schön – gemacht zum Arbeiten.' },
+  { key: 'Naturstein', img: mStein, text: 'Jede Platte ein Unikat. Naturstein bringt Tiefe, Charakter und eine ehrliche Oberfläche in deine Küche.' },
+  { key: 'Keramik', img: mKeramik, text: 'Robust, pflegeleicht und stark in der Wirkung. Perfekt, wenn Alltag und Optik beide gewinnen sollen.' },
+  { key: 'Holz', img: mHolz, text: 'Warm, lebendig und natürlich. Holz bringt Ruhe in den Raum und macht moderne Küchen wohnlicher.' },
+  { key: 'Metall', img: mMetall, text: 'Kühl, präzise und markant. Metall setzt Akzente und bringt einen modernen, architektonischen Charakter.' },
+  { key: 'Glas', img: mGlas, text: 'Leicht, klar und elegant. Glas sorgt für Reflexion, Tiefe und eine ruhige, hochwertige Wirkung.' },
+  { key: 'Fronten', img: mFronten, text: 'Fronten bestimmen den ersten Eindruck deiner Küche. Matt, strukturiert oder glatt – hier entsteht der Charakter.' },
+  { key: 'Arbeitsplatten', img: mPlatten, text: 'Die Arbeitsplatte muss gut aussehen und im Alltag liefern. Wir zeigen dir, was wirklich zu deinem Leben passt.' },
 ]
 
 const MOOD = ['Licht & Atmosphäre', 'Farben & Kontraste', 'Proportion & Raum', 'Details, die bleiben']
@@ -147,32 +147,35 @@ export default function Inspiration() {
       {/* MATERIAL-EXPLORER */}
       <section className="section insp-matex" id="materialien">
         <div className="container">
-          <SectionHeader kicker="Material" title={<>Materialien erleben. <span className="grad">Qualität fühlen.</span></>} />
-          <div className="matex">
-            <Reveal className="matex__media">
-              <div className="matex__frame"><img src={mat.img} alt={mat.key} /><span className="lintro__rim" aria-hidden="true" /></div>
-            </Reveal>
-            <Reveal className="matex__panel" delay={0.06}>
-              <div className="matex__tabs">
-                {MATERIALS.map((m, i) => (
-                  <button key={m.key} type="button" className={`chip chip--btn ${activeMat === i ? 'chip--active' : ''}`} onClick={() => setActiveMat(i)}>{m.key}</button>
-                ))}
+          <SectionHeader kicker="Material" title={<>Materialien erleben. <span className="grad">Qualität fühlen.</span></>} lead="Klick dich durch unsere Oberflächen – wähle ein Material und sieh, was es kann." />
+          <div className="matex2">
+            <Reveal className="matex2__preview">
+              <div className="matex2__img" style={{ backgroundImage: `url(${mat.img})` }}>
+                <span className="matex2__scrim" aria-hidden="true" />
+                <div className="matex2__overlay">
+                  <span className="matex2__count">Material {activeMat + 1} / {MATERIALS.length}</span>
+                  <h3 className="matex2__name">{mat.key}</h3>
+                  <p className="matex2__text">{mat.text}</p>
+                  <CTAButton to="/beratung">Material im Studio erleben</CTAButton>
+                </div>
               </div>
-              <p className="matex__text">{mat.text}</p>
-              <div className="matex__swatches">
-                {MATERIALS.map((m, i) => (
-                  <button
-                    key={m.key}
-                    type="button"
-                    aria-label={m.key}
-                    className={`matex__swatch ${activeMat === i ? 'is-active' : ''}`}
-                    style={{ backgroundImage: `url(${m.img})` }}
-                    onClick={() => setActiveMat(i)}
-                  />
-                ))}
-              </div>
-              <CTAButton to="/studio">Material im Studio erleben</CTAButton>
             </Reveal>
+            <div className="matex2__strip" role="tablist" aria-label="Materialien">
+              {MATERIALS.map((m, i) => (
+                <button
+                  key={m.key}
+                  type="button"
+                  role="tab"
+                  aria-selected={activeMat === i}
+                  className={`mtile ${activeMat === i ? 'is-active' : ''}`}
+                  style={{ backgroundImage: `url(${m.img})` }}
+                  onClick={() => setActiveMat(i)}
+                >
+                  <span className="mtile__scrim" aria-hidden="true" />
+                  <span className="mtile__label">{m.key}</span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </section>

@@ -15,13 +15,10 @@ const DROPDOWN = {
   insp: [
     { label: 'Inspiration Übersicht', to: '/inspiration' },
     { label: 'Stylefinder', to: '/stylefinder' },
-    { label: 'Materialien', to: '/inspiration#materialien' },
     { label: 'Vorher / Nachher', to: '/vorher-nachher' },
-    { label: 'Projektideen', to: '/inspiration#insp-stilwelten' },
   ],
   about: [
     { label: 'Über uns', to: '/ueber-uns' },
-    { label: 'Team', to: '/team' },
     { label: 'Karriere', to: '/karriere' },
   ],
 }
