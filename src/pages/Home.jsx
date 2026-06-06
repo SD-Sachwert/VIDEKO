@@ -6,21 +6,31 @@ import Reveal from '../components/Reveal.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 
+import styleCardImg from '../assets/images/kuechenwelten/stilfinderhero-kitchen-wide.jpg'
 import studioImg from '../assets/images/studio/bilder/01_hero_studio_showroom.png'
+import beratungCardImg from '../assets/images/beratung/cta-light-portal.png'
 import leistImg from '../assets/images/leistungen/04_intro_helle_kueche.png'
 import inspImg from '../assets/images/inspiration/01_hero_atmosphaerische_kueche.png'
+import jrnlImg from '../assets/images/inspiration/06_materialien_und_details.png'
 import vnImg from '../assets/images/vorher-nachher/10_after_neue_kueche.png'
-import matImg from '../assets/images/materialien/materials-hero-bg-16x9.png'
 import karriereImg from '../assets/images/karriere/01_hero_team_beratung.png'
+import ueberImg from '../assets/images/ueber-uns/02_why_videko_beratungsszene.png'
 import finalImg from '../assets/images/studio/bilder/10_final_cta_studio_banner.png'
 
+// three organic entry cards
+const ENTRIES = [
+  { shape: 'a', kicker: 'Stylefinder', title: 'Finde deinen Küchenstil.', text: 'In wenigen Schritten zu der Richtung, die wirklich zu dir passt.', cta: 'Stilfinder starten', to: '/stylefinder', image: styleCardImg },
+  { shape: 'b', kicker: 'Studio', title: 'Erlebe unser Studio.', text: 'Materialien, Licht und Raumgefühl live in Würzburg – kein Möbelhaus.', cta: 'Studio entdecken', to: '/studio', image: studioImg },
+  { shape: 'c', kicker: 'Beratung', title: 'Persönliche Beratung.', text: 'Ehrlich, individuell und auf Augenhöhe – dein Projekt, dein Tempo.', cta: 'Beratung anfragen', to: '/beratung', image: beratungCardImg },
+]
+
 const TEASERS = [
-  { kicker: 'Studio', title: 'Eintauchen statt nur anschauen.', text: 'Erlebe unser Studio in Würzburg und spüre Materialien, Licht, Raumgefühl und Planung live.', cta: 'Studio erleben', to: '/studio', image: studioImg },
-  { kicker: 'Leistungen', title: 'Planung, die jeden Tag Sinn ergibt.', text: 'Von der ersten Idee bis zur fertigen Küche denken wir deinen Raum sauber durch – funktional, ehrlich und ohne Küchenchaos.', cta: 'Mehr über Planung', to: '/leistungen', image: leistImg },
-  { kicker: 'Inspiration', title: 'Ideen, die bleiben.', text: 'Entdecke Küchenstile, Materialien, Raumideen und Details, die aus einer Küche dein Zuhause machen.', cta: 'Inspiration entdecken', to: '/inspiration', image: inspImg },
-  { kicker: 'Vorher / Nachher', title: 'Echte Projekte. Echte Verwandlungen.', text: 'Sieh, was aus Räumen werden kann, wenn Planung, Material und Handwerk zusammenpassen.', cta: 'Projekte ansehen', to: '/vorher-nachher', image: vnImg },
-  { kicker: 'Materialien', title: 'Materialien, die man fühlen will.', text: 'Naturstein, Holz, Keramik, Metall, Glas und Oberflächen, die nicht nur gut aussehen, sondern auch im Alltag bestehen.', cta: 'Materialien entdecken', to: '/materialien', image: matImg },
-  { kicker: 'Karriere', title: 'Gestalte mit uns die Zukunft.', text: 'Du hast Lust auf Küchen, Design, Beratung oder Handwerk ohne Möbelhaus-Zirkus? Dann schau rein.', cta: 'Mehr erfahren', to: '/karriere', image: karriereImg },
+  { kicker: 'Leistungen', title: 'Planung, die jeden Tag Sinn ergibt.', text: 'Von der ersten Idee bis zur fertigen Küche – sauber durchdacht.', cta: 'Mehr über Planung', to: '/leistungen', image: leistImg },
+  { kicker: 'Inspiration', title: 'Ideen & Materialien, die bleiben.', text: 'Küchenstile, Oberflächen und Raumideen, die dein Zuhause prägen.', cta: 'Inspiration entdecken', to: '/inspiration', image: inspImg },
+  { kicker: 'Journal', title: 'Wissen, das weiterhilft.', text: 'Tipps, Ideen und Expertenwissen rund um deine Küche.', cta: 'Zum Journal', to: '/journal', image: jrnlImg },
+  { kicker: 'Vorher / Nachher', title: 'Echte Verwandlungen.', text: 'Sieh, was aus Räumen werden kann, wenn alles zusammenpasst.', cta: 'Projekte ansehen', to: '/vorher-nachher', image: vnImg },
+  { kicker: 'Karriere', title: 'Gestalte mit uns die Zukunft.', text: 'Lust auf Küchen, Design und Handwerk ohne Möbelhaus-Zirkus?', cta: 'Mehr erfahren', to: '/karriere', image: karriereImg },
+  { kicker: 'Über uns', title: 'Die Menschen hinter VIDEKO.', text: 'Persönlich, ehrlich und mit echtem Anspruch an gute Küchen.', cta: 'Lern uns kennen', to: '/ueber-uns', image: ueberImg },
 ]
 
 export default function Home() {
@@ -28,24 +38,30 @@ export default function Home() {
     <div className="leist-page home-page">
       <Hero />
 
-      {/* MARKENSTATEMENT – hell, edel */}
-      <section className="section home-statement">
+      {/* DREI EINSTIEGE – organische Premium-Cards */}
+      <section className="section home-entries">
         <div className="container">
-          <Reveal>
-            <span className="kicker kicker--gold">Nicht lauter. Besser.</span>
-            <h2 className="home-statement__title">
-              Kein Möbelhaus.<br /><span className="grad">Keine Küche von der Stange.</span>
-            </h2>
-            <p className="home-statement__text">
-              VIDEKO steht für Küchen, die bleiben: durchdacht geplant, ehrlich
-              beraten und sauber umgesetzt. Für Menschen, die ihr Zuhause ernst nehmen.
-            </p>
-            <div className="home-statement__trust">
-              <span>Design</span>
-              <span>Handwerk</span>
-              <span>Leidenschaft</span>
-            </div>
-          </Reveal>
+          <SectionHeader
+            align="center"
+            kicker="Dein Einstieg"
+            title={<>Wo möchtest du <span className="grad">beginnen?</span></>}
+            lead="Drei Wege in deine VIDEKO-Küche – finde deinen Stil, erlebe unser Studio oder sprich direkt mit uns."
+          />
+          <div className="orbcards">
+            {ENTRIES.map((c, i) => (
+              <Reveal key={c.to} delay={i * 0.08}>
+                <Link className={`orbcard orbcard--${c.shape}`} to={c.to}>
+                  <span className="orbcard__img" style={{ backgroundImage: `url(${c.image})` }} aria-hidden="true" />
+                  <span className="orbcard__body">
+                    <span className="orbcard__kicker">{c.kicker}</span>
+                    <span className="orbcard__title">{c.title}</span>
+                    <span className="orbcard__text">{c.text}</span>
+                    <span className="orbcard__cta">{c.cta} <ArrowUpRight size={16} strokeWidth={1.9} /></span>
+                  </span>
+                </Link>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 

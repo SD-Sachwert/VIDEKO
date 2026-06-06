@@ -9152,6 +9152,118 @@ a.footer__contact-line:hover {
 }
 
 /* =====================================================================
+   HOME — three organic entry cards
+   ===================================================================== */
+.orbcards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+.orbcard {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid var(--line-dark);
+  box-shadow: 0 34px 70px -46px rgba(120, 90, 40, 0.45);
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.45s ease, border-color 0.45s ease;
+}
+.orbcard--a { border-radius: 30px 30px 30px 110px; }
+.orbcard--b { border-radius: 110px 30px 30px 30px; }
+.orbcard--c { border-radius: 30px 110px 30px 30px; }
+.orbcard:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 50px 90px -42px rgba(120, 90, 40, 0.55);
+  border-color: rgba(232, 201, 120, 0.5);
+}
+.orbcard__img {
+  aspect-ratio: 4 / 3;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.orbcard:hover .orbcard__img {
+  transform: scale(1.05);
+}
+.orbcard__body {
+  padding: 30px 32px 34px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+.orbcard__kicker {
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--bronze);
+}
+.orbcard__title {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.05;
+}
+.orbcard__text {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.orbcard__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 0.74rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--bronze);
+  transition: gap 0.25s ease;
+}
+.orbcard:hover .orbcard__cta {
+  gap: 13px;
+}
+
+/* ÜBER UNS — larger, better-cropped founder photos */
+.founder-grid {
+  gap: 26px;
+}
+.founder__photo {
+  aspect-ratio: 4 / 5;
+}
+.founder__photo img {
+  object-position: top center;
+}
+
+/* ÜBER UNS — larger, fully visible map card */
+.about-region .standort__grid {
+  grid-template-columns: 0.82fr 1.18fr;
+  gap: 50px;
+}
+.about-region .mapcard {
+  aspect-ratio: 16 / 11;
+  background: linear-gradient(160deg, #2b2925, #1b1916);
+}
+.about-region .mapcard img {
+  object-fit: contain;
+}
+
+@media (max-width: 1080px) {
+  .orbcards { grid-template-columns: repeat(2, 1fr); }
+  .about-region .standort__grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 720px) {
+  .orbcards { grid-template-columns: 1fr; }
+  .orbcard--a { border-radius: 24px 24px 24px 70px; }
+  .orbcard--b { border-radius: 70px 24px 24px 24px; }
+  .orbcard--c { border-radius: 24px 70px 24px 24px; }
+  .founder__photo { aspect-ratio: 4 / 4; }
+}
+
+/* =====================================================================
    KEYFRAMES
    ===================================================================== */
 @keyframes pulse {

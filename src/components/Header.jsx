@@ -4,9 +4,10 @@ import { Menu, X, MapPin } from 'lucide-react'
 import logoMain from '../assets/brand/logo-main.png'
 
 const LINKS = [
+  { label: 'Stylefinder', to: '/stylefinder' },
   { label: 'Studio', to: '/studio' },
-  { label: 'Leistungen', to: '/leistungen' },
   { label: 'Inspiration', to: '/inspiration' },
+  { label: 'Journal', to: '/journal' },
   { label: 'Vorher / Nachher', to: '/vorher-nachher' },
   { label: 'Karriere', to: '/karriere' },
   { label: 'Über uns', to: '/ueber-uns' },

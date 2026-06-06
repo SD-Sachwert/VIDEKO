@@ -1,0 +1,372 @@
+Du bist Claude Code in meinem bestehenden VIDEKO-Küchen-Website-Projekt.
+
+WICHTIG: Baue keinen losgelösten Prototypen. Arbeite im bestehenden Projekt, prüfe zuerst die vorhandene Projektstruktur, Komponenten, Routing, Styling-Dateien, Farben, Fonts, Header/Footer, Buttons, Formulare und vorhandene Unterseiten. Nutze die bestehenden Designregeln und Komponenten so weit wie möglich.
+
+REFERENZEN IM ORDNER:
+- assets/stylefinder_vorlage_mockup.png = visuelle Vorlage für Aufbau, Spaßfaktor, Dynamik, Karten/Reiter, Ergebnisbereich und Conversion-Flow.
+- assets/videko_aktuelle_designreferenz.png = aktuelle VIDEKO-Seite. Daran musst du dich optisch orientieren. Besonders wichtig: Die fertigen Unterseiten haben oben ein dunkles Hero. Der neue Stylefinder soll ebenfalls als normale Unterseite mit dunklem Hero starten und danach in den warmen hellen VIDEKO-Look übergehen.
+
+ZIEL:
+Erstelle eine neue öffentliche Unterseite für den VIDEKO Stylefinder / Küchen-Kompass. Die Seite soll über die normale Navigation erreichbar sein und sich wie ein hochwertiger, sehr gut animierter, spaßiger und gleichzeitig seriöser Küchenstil-Finder anfühlen. Der Kunde soll denken: „Geil, ich will wissen, was bei mir rauskommt.“
+
+Der Stylefinder ist kein trockenes Formular. Er ist ein geführter, hochwertiger Mini-Konfigurator mit Reitern/Schritten, Bildern, Slidern, Chips, kleinen humorvollen VIDEKO-Microcopy-Sätzen, Fortschritt, Sofort-Ergebnis und anschließendem Upload für ein genaueres Angebot.
+
+HAUPTZIEL DES FLOWS:
+1. Kunde beantwortet in ca. 2–4 Minuten mehrere Fragen.
+2. Nach den Pflichtfragen bekommt er DIREKT eine erste Einschätzung:
+   - wahrscheinlicher Küchenstil
+   - Stil-Match / Ergebnisname
+   - grobe Budget- und Ausstattungs-Einschätzung
+   - Geräte-/Material-/Alltagsprofil
+   - Hinweis, was für ein genaues Angebot noch fehlt
+3. Danach kann er Grundriss, Maße, Raumfotos, bestehendes Angebot oder Inspirationsbilder hochladen.
+4. Danach kann er seine Kontaktdaten senden, damit VIDEKO ein genaueres Angebot bzw. eine kostenlose Ersteinschätzung erstellt.
+
+SEITEN-ROUTE / NAVIGATION:
+- Erstelle eine neue normale Unterseite, z. B. /stylefinder oder /kuechen-kompass, je nachdem wie die bestehende Routing-Struktur aufgebaut ist.
+- Die Seite muss direkt über die Website erreichbar sein.
+- Ergänze in der Navigation einen passenden Menüpunkt, z. B. „Stylefinder“ oder „Küchen-Kompass“. Wenn es bereits einen Küchen-Konfigurator/Stylefinder-Link gibt, nutze/ersetze diesen sinnvoll.
+- Bestehende Unterseiten dürfen nicht kaputtgehen.
+
+DESIGNRICHTUNG:
+Halte dich an die aktuelle VIDEKO-Optik aus der Designreferenz:
+- dunkles, hochwertiges Hero oben
+- warmer Ivory-/Beige-Hintergrund in den Inhaltsbereichen
+- schwarze/dunkle Akzentsektionen für Ergebnis/Highlight
+- Gold-/Messing-Akzente
+- elegante Typografie wie auf der bestehenden Seite
+- großzügige Abstände
+- organische, weiche Karten
+- keine generische Baukasten-Optik
+- keine komplett dunkle Formularwüste
+
+Der Stylefinder darf verspielter und lebendiger sein als die anderen Seiten, aber nicht billig. Premium + Spaß, nicht Kindergeburtstag mit Küchenfront.
+
+VISUELLE ELEMENTE:
+- großes dunkles Hero mit Bildcollage / Küchenbild / Doodles / Badge
+- große Cards für Stil-Auswahl mit Küchenbildern
+- Reiter-/Stepper-Logik oben oder seitlich
+- Fortschrittsanzeige mit „1/8“, „2/8“ usw.
+- lebendige Karten mit Hover-Effekten
+- Slider mit Gold-Akzenten
+- Chips/Pills für Auswahloptionen
+- organische Rundungen, einzelne Cards dürfen leicht unterschiedliche Border-Radien haben
+- kleine handschriftliche/Sticker-artige Hinweise wie in der Vorlage
+- Result-Reveal mit hochwertiger Animation
+- Upload-Bereich mit Drag & Drop bzw. Klick-Upload
+- CTA-Bereich am Ende hochwertig und klar
+
+ANIMATIONEN:
+Bitte hochwertig animieren. Falls im Projekt Framer Motion oder eine andere Animationsbibliothek bereits vorhanden ist, nutze sie. Falls nicht, nutze saubere CSS-Transitions und IntersectionObserver-basierte Animationen.
+
+Gewünschte Animationen:
+- Hero-Elemente kommen leicht versetzt rein.
+- Karten schweben/skalieren minimal beim Hover.
+- Reiterwechsel animiert weich, nicht hart.
+- Fortschrittsleiste füllt sich sichtbar.
+- Slider bewegt sich flüssig.
+- Auswahl-Chips bekommen ein klares, schönes Aktiv-Feedback.
+- Beim Ergebnis: kurzer Reveal-Effekt, z. B. Score zählt hoch, Ergebnis-Card fährt rein, kleine goldene Sparkles/Lines.
+- Upload-Box hebt sich bei Drag-over sichtbar hervor.
+- Kein übertriebener Glitzer-Quatsch. Es soll hochwertig bleiben.
+
+VALIDIERUNG / REITER-LOGIK:
+Sehr wichtig:
+- Der Nutzer darf erst auf „Weiter“ klicken, wenn alle Pflichtfragen des aktuellen Schritts beantwortet sind.
+- Der Weiter-Button ist vorher disabled, aber freundlich erklärt.
+- Fehlende Pflichtangaben werden sichtbar markiert, aber nicht aggressiv.
+- Bereits abgeschlossene Schritte/Reiter dürfen wieder angeklickt werden.
+- Noch nicht erreichte Schritte dürfen nicht frei übersprungen werden.
+- Fortschritt wird gespeichert, solange der Nutzer auf der Seite bleibt.
+- Bei Mobile muss die Reiterleiste horizontal scrollbar oder als kompakter Stepper nutzbar sein.
+
+Pflichtfelder vor Ergebnis:
+1. Stil & Look: mindestens 1 Auswahl, maximal 2
+2. Grundriss/Layout: genau 1 Auswahl
+3. Budget: 1 Bereich per Slider/Segment
+4. Geräte-Niveau: Slider 1–5, zusätzlich Geräte optional/mehrfach
+5. Materialien & Farben: mindestens 1 Material-/Mood-Auswahl, maximal 3
+6. Kochen & Alltag: mindestens 1 Nutzungstyp, plus Stauraum/Pflegeleicht Slider
+7. Projektstand & Zeitplan: Projektstand + Zeitraum
+
+Upload und Kontaktdaten kommen NACH der ersten Einschätzung.
+
+INHALT / COPY / FLOW:
+
+HERO:
+Eyebrow: „VIDEKO STYLEFINDER“
+Headline: „Dein Stil. Deine Küche. Deine erste Einschätzung.“
+Subline: „Finde in wenigen Minuten heraus, welcher Küchenstil zu dir passt – und was daraus realistisch entstehen kann.“
+Humor-Zeile: „Kein Möbelhaus-Blabla. Wir raten nicht ins Blaue, wir planen lieber sauber.“
+CTA: „Stylefinder starten“
+Trust-Hinweis: „Dauer: ca. 2–4 Minuten“
+Kleine Badge-Idee: „Es geht um deinen Stil, nicht unseren.“
+
+INTRO / SCHRITTE-ÜBERSICHT:
+Headline: „Deine 8 Schritte zur passenden Küche“
+Subline: „Kurz klicken, ehrlich antworten, Ergebnis bekommen. Kein Küchenverhör.“
+
+SCHRITT 1: Stil & Look
+Frage: „Welcher Stil spricht dich spontan an?“
+Optionen als große Bildcards:
+- Modern & grifflos
+- Warm & natürlich
+- Dunkel & elegant
+- Hell & zeitlos
+- Landhaus modern
+- Statement / Industrial
+Microcopy: „Nicht zu lange grübeln. Bauchgefühl ist bei Küchen erstaunlich nützlich.“
+
+SCHRITT 2: Grundriss & Layout
+Frage: „Welche Küchenform passt ungefähr zu deinem Raum?“
+Optionen als Icons/Cards:
+- Zeile
+- L-Küche
+- U-Küche
+- Inselküche
+- Wohnküche / offen
+- Noch offen
+Microcopy: „Wenn du es nicht weißt: Kein Drama. Dafür gibt es Menschen mit Maßband.“
+
+SCHRITT 3: Budget
+Frage: „In welchem Rahmen soll deine Küche ungefähr liegen?“
+Als Slider oder segmentierte Auswahl:
+- 5.000–12.500 €
+- 12.500–18.000 €
+- 18.000–25.000 €
+- 25.000–40.000 €
+- 40.000 €+
+Microcopy: „Keine Sorge – das ist keine Beichte, nur Orientierung.“
+Hinweis: „Wir zeigen dir damit keine Luftschlösser mit Keramikplatte und Raketenantrieb.“
+
+SCHRITT 4: Geräte-Niveau
+Frage: „Wie hochwertig sollen deine Geräte sein?“
+Slider 1–5:
+1 = solide
+2 = gutes Preis-Leistungs-Verhältnis
+3 = besser als Standard
+4 = hochwertig
+5 = Premium / Technikspielzeug erlaubt
+Zusätzliche Geräte als Chips, Mehrfachauswahl optional:
+- Backofen
+- Dampfgarer
+- Mikrowelle
+- Induktion
+- Muldenlüfter / Bora-Art
+- Geschirrspüler
+- Kühl-Gefrier-Kombi
+- Weinkühlschrank
+- Kaffeevollautomat
+Microcopy: „Geräte können aus einer Küche Alltag machen – oder ein Cockpit. Beides okay.“
+
+SCHRITT 5: Materialien & Farben
+Frage: „Was soll deine Küche ausstrahlen?“
+Optionen als Chips/Swatches:
+- pflegeleicht
+- hochwertig & edel
+- natürlich & warm
+- minimalistisch
+- familienfreundlich
+- besonders / auffällig
+- dunkle Akzente
+- helle Naturtöne
+Zusatzslider: „Wie wichtig ist dir eine besondere Arbeitsplatte?“ 1–5
+Microcopy: „Arbeitsplatten sind wie Schuhe: Man merkt erst zu spät, wenn man am falschen Ende gespart hat.“
+
+SCHRITT 6: Kochen & Alltag
+Frage: „Wie nutzt du deine Küche wirklich?“
+Optionen:
+- Ich koche fast täglich
+- Familie & viel Stauraum
+- Ich empfange gerne Gäste
+- Schnell & praktisch
+- Design im Fokus
+- Chaos mit Stil
+Slider:
+- Stauraum wichtig? 1–5
+- Pflegeleicht wichtig? 1–5
+Microcopy: „Hier bitte ehrlich sein. Eine Küche für Instagram und eine Küche für Montagabend sind zwei verschiedene Tiere.“
+
+SCHRITT 7: Projektstand & Zeitplan
+Frage: „Wo stehst du gerade?“
+Optionen:
+- Ich sammle Inspiration
+- Ich plane konkret
+- Ich habe schon ein Angebot
+- Neubau / Umbau läuft
+- Küche muss bald bestellt werden
+- Ich will erstmal wissen, was möglich ist
+Zeitraum:
+- sofort / schnellstmöglich
+- 1–3 Monate
+- 3–6 Monate
+- 6–12 Monate
+- später / noch offen
+Microcopy: „Wir unterscheiden zwischen ‚mal schauen‘ und ‚Hilfe, der Estrich kommt‘.“
+
+SCHRITT 8: ERSTE EINSCHÄTZUNG
+Nach Schritt 7 wird automatisch ein Ergebnis berechnet und sofort angezeigt.
+Überschrift: „Deine erste VIDEKO-Einschätzung“
+Unterzeile: „Noch kein verbindliches Angebot – aber schon deutlich besser als wildes Küchenraten.“
+
+Ergebnisbereich soll enthalten:
+- Ergebnisname/Küchentyp, z. B. „Modern Warm“, „Dark Luxury“, „Natural Living“, „Clean Minimal“, „Family Smart“, „Country Modern“, „Compact Clever“, „Premium Statement“
+- Match-Prozent oder Score, z. B. „92 % Stil-Match“
+- großes passendes Beispielbild
+- kurze Erklärung in emotionaler Sprache
+- passende Materialien/Swatches
+- empfohlene Küchenform/Planungsrichtung
+- Einschätzung Budgetrealismus:
+  - „komfortabel machbar“
+  - „realistisch, aber sauber priorisieren“
+  - „sportlich – hier müssen wir clever planen“
+- Geräte-Einschätzung anhand des Sliders
+- Hinweis, welche Daten für ein genaues Angebot noch fehlen
+
+Beispieltext Ergebnis „Modern Warm“:
+„Du magst klare Linien, aber keine sterile Showroom-Kälte. Zu dir passt wahrscheinlich eine Küche mit ruhigen Fronten, warmen Naturtönen, guter Beleuchtung und Geräten, die im Alltag nicht nerven. Klingt simpel. Ist es aber nur, wenn man sauber plant.“
+
+CTA nach Ergebnis:
+Primär: „Grundriss hochladen & genaueres Angebot sichern“
+Sekundär: „Ergebnis speichern“
+
+UPLOAD-BEREICH NACH EINSCHÄTZUNG:
+Headline: „Jetzt wird aus Bauchgefühl Planung.“
+Subline: „Lade hoch, was du hast. Je mehr wir sehen, desto weniger müssen wir raten.“
+Upload-Karten:
+- Grundriss
+- Maße
+- Raumfotos
+- bestehendes Angebot
+- Inspirationsbilder
+- Bauplan
+Hinweis: „PDF, JPG, PNG. Maximal sinnvolle Dateigröße nach bestehendem Projektstandard.“
+Upload ist stark empfohlen, aber nicht zwingend, damit keine Leads verloren gehen.
+
+KONTAKT-/ABSENDEBEREICH:
+Headline: „Fast geschafft. Wohin schicken wir deine Einschätzung?“
+Felder:
+- Vorname*
+- Nachname*
+- E-Mail*
+- Telefon optional
+- PLZ / Ort*
+- Wunschkontakt: Telefon / WhatsApp / E-Mail
+- Freitext: „Was sollten wir noch wissen?“ optional
+- Pflicht-Checkbox Datenschutz
+- Optionale Checkbox für Inspiration/Newsletter, falls technisch/rechtlich bereits vorgesehen
+Button: „Einschätzung senden & kostenloses Angebot anfragen“
+
+Telefon soll NICHT Pflicht sein. Sonst springen Leute ab.
+
+DATENMODELL:
+Erfasse intern mindestens diese Daten:
+- styleSelections: string[]
+- layout: string
+- budgetRange: string
+- applianceLevel: number
+- selectedAppliances: string[]
+- materialMoods: string[]
+- countertopImportance: number
+- cookingUsage: string[]
+- storageImportance: number
+- easyCareImportance: number
+- projectStatus: string
+- timeline: string
+- resultType: string
+- resultScore: number
+- budgetAssessment: string
+- leadScore: number
+- uploadedFiles: file[] / metadata
+- contact: { firstName, lastName, email, phone, postalCodeCity, preferredContact, message, privacyAccepted, marketingConsent }
+
+ERGEBNIS-LOGIK:
+Implementiere eine einfache, nachvollziehbare Scoring-/Mapping-Logik clientseitig oder in einer eigenen Utility-Datei.
+
+Küchentypen:
+1. Modern Warm
+   Trigger: Modern/grifflos + warm/natürlich + Naturtöne + Alltag/Gäste
+2. Dark Luxury
+   Trigger: Dunkel/elegant + hochwertig/edel + Geräte 4–5 + Budget ab 18k/25k
+3. Natural Living
+   Trigger: warm/natürlich + Holz/Natur + Familie/Kochen
+4. Clean Minimal
+   Trigger: hell/zeitlos oder modern + minimalistisch + pflegeleicht
+5. Family Smart
+   Trigger: familienfreundlich + Stauraum hoch + pflegeleicht hoch
+6. Country Modern
+   Trigger: Landhaus modern + natürlich/warm
+7. Compact Clever
+   Trigger: Zeile/L-Küche + Budget kleiner + praktisch/Stauraum
+8. Premium Statement
+   Trigger: Insel/Wohnküche + Geräte 5 + Arbeitsplatte 5 + Budget 25k+
+
+Budget-Einschätzung grob:
+- Layout Zeile/L und Budget 5–12,5k: „machbar, aber sauber begrenzen“
+- Insel/Wohnküche + Premiumgeräte + Arbeitsplatte hoch und Budget unter 18k: „sportlich – hier müssen wir clever priorisieren“
+- Budget 18–25k: „gute Basis für eine starke Planung“
+- Budget 25–40k oder 40k+: „viel Spielraum für hochwertige Details“
+
+Lead-Score intern:
+- Budget höher = mehr Punkte
+- Zeitraum schneller = mehr Punkte
+- Projekt konkret/Angebot vorhanden/Neubau = mehr Punkte
+- Upload vorhanden = mehr Punkte
+- Gerätelevel hoch = mehr Punkte
+Dieser Score muss nicht sichtbar sein, aber in den abgesendeten Daten enthalten sein.
+
+FORMULAR / ABSENDEN:
+- Prüfe, ob im Projekt bereits eine Anfrage-/Kontaktformular-Logik existiert. Wenn ja, nutze dieselbe saubere Struktur/API.
+- Falls noch kein Backend/API vorhanden ist, baue die Komponente so, dass sie vorbereitet ist: zentrale submitStylefinderLead()-Funktion mit sauberem Payload, klarer TODO-Markierung und sichtbarer Success/Error-UI.
+- Keine Fake-Erfolgsmeldung, wenn ein echter Request fehlschlägt.
+- Zeige nach erfolgreichem Absenden eine hochwertige Danke-Ansicht:
+  „Deine Einschätzung ist unterwegs. Wir schauen uns das an und melden uns mit klarem Blick statt Küchenlatein.“
+
+DSGVO / DATENSCHUTZ:
+- Pflichtcheckbox für Datenschutzerklärung.
+- Datenschutzerklärung verlinken.
+- Newsletter/Marketing nur als separate optionale Einwilligung, nicht vorangekreuzt.
+- Upload-Hinweis: „Bitte keine sensiblen Dokumente hochladen.“
+
+MOBILE:
+- Muss sehr gut auf Smartphone funktionieren.
+- Große Klickflächen.
+- Slider gut bedienbar.
+- Reiter/Stepper horizontal scrollen oder kompakt darstellen.
+- Cards untereinander.
+- Ergebnisbereich nicht zu überladen.
+- CTA immer klar sichtbar.
+
+PERFORMANCE:
+- Bilder optimieren/lazy loaden.
+- Keine unnötig riesigen Animationen.
+- Keine Layout-Shifts.
+- Accessibility beachten: Fokuszustände, Labels, Kontrast, Tastaturbedienung.
+
+WAS DU NICHT MACHEN SOLLST:
+- Nicht die ganze Website umbauen.
+- Keine bestehende Seite kaputt machen.
+- Kein komplett dunkles Design über die ganze Seite.
+- Kein trockenes Standardformular.
+- Keine Telefonnummer als Pflichtfeld.
+- Kein Ergebnis erst nach Kontaktabgabe. Das Ergebnis kommt VOR Upload/Kontakt.
+- Kein Pflicht-Upload.
+- Keine billigen Emojis überall.
+- Keine hässlichen Standard-Inputs ohne VIDEKO-Stil.
+- Keine Lorem-Ipsum-Texte, wenn hier konkrete Texte vorgegeben sind.
+
+AKZEPTANZKRITERIEN:
+- Neue Unterseite ist direkt erreichbar.
+- Navigation enthält den Stylefinder/Küchen-Kompass.
+- Hero entspricht optisch den fertigen Unterseiten: dunkel, hochwertig, VIDEKO-konform.
+- Danach orientiert sich die Seite an der hellen, warmen VIDEKO-Optik.
+- Reiter/Schritte funktionieren.
+- Weiter-Button ist gesperrt, bis Pflichtangaben gemacht wurden.
+- Ergebnis erscheint direkt nach den Fragen, bevor Kontakt oder Upload verlangt wird.
+- Upload kommt nach Ergebnis.
+- Kontaktformular sendet oder ist sauber an bestehende Logik vorbereitet.
+- Mobile Ansicht funktioniert.
+- Animationen sind vorhanden, hochwertig und nicht nervig.
+- Die Seite fühlt sich wie ein Spaß machender, hochwertiger Küchen-Kompass an – nicht wie ein Formularfriedhof.
+
+Arbeite sorgfältig. Prüfe nach Umsetzung, ob die bestehende Website noch läuft, ob keine Routing-/Build-Fehler entstehen und ob die neue Seite optisch zur aktuellen VIDEKO-Seite passt.

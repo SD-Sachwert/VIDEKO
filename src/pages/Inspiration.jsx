@@ -61,12 +61,6 @@ const PROJECTS = [
   { title: 'Raumlösung mit Licht', text: 'Hell, luftig, durchdacht.', img: iHell },
 ]
 
-const JOURNAL = [
-  { title: 'Licht in der Küche', text: 'Warum Lichtplanung oft wichtiger ist als die Frontfarbe.', img: iHell },
-  { title: 'Welche Materialien passen zu mir?', text: 'Ein ehrlicher Wegweiser durch Stein, Holz & Co.', img: iDetails },
-  { title: 'Küchenplanung: 7 Tipps vom Experten', text: 'Was eine richtig gute Planung ausmacht.', img: iInsel },
-]
-
 const TRUST = ['Persönliche Beratung', 'Individuelle Planung', 'Hochwertige Materialien', 'Perfekte Umsetzung']
 
 export default function Inspiration() {
@@ -177,7 +171,7 @@ export default function Inspiration() {
                   />
                 ))}
               </div>
-              <CTAButton to="/materialien">Materialwelt entdecken</CTAButton>
+              <CTAButton to="/studio">Material im Studio erleben</CTAButton>
             </Reveal>
           </div>
         </div>
@@ -236,27 +230,6 @@ export default function Inspiration() {
                   <span className="favcard__body">
                     <span className="favcard__title">{p.title}</span>
                     <span className="favcard__text">{p.text}</span>
-                  </span>
-                </article>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* JOURNAL */}
-      <section className="section insp-journal">
-        <div className="container">
-          <SectionHeader align="center" kicker="Journal" title="Wissen, das weiterhilft." lead="Unser Küchen-Ratgeber – die ersten Beiträge sind in Arbeit." />
-          <div className="cardgrid cardgrid--3">
-            {JOURNAL.map((a) => (
-              <Reveal key={a.title}>
-                <article className="artcard">
-                  <span className="artcard__img" style={{ backgroundImage: `url(${a.img})` }} aria-hidden="true" />
-                  <span className="artcard__body">
-                    <span className="artcard__tag">Demnächst</span>
-                    <span className="artcard__title">{a.title}</span>
-                    <span className="favcard__text" style={{ color: 'var(--ink-soft)' }}>{a.text}</span>
                   </span>
                 </article>
               </Reveal>

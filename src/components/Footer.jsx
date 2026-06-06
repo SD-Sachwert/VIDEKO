@@ -3,9 +3,10 @@ import { MapPin, Mail, Phone } from 'lucide-react'
 import logoMark from '../assets/brand/logo-main.png'
 
 const NAV = [
+  { label: 'Stylefinder', to: '/stylefinder' },
   { label: 'Studio', to: '/studio' },
-  { label: 'Leistungen', to: '/leistungen' },
   { label: 'Inspiration', to: '/inspiration' },
+  { label: 'Journal', to: '/journal' },
   { label: 'Vorher / Nachher', to: '/vorher-nachher' },
   { label: 'Karriere', to: '/karriere' },
   { label: 'Über uns', to: '/ueber-uns' },
