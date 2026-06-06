@@ -1,6 +1,6 @@
 import ExperienceSection from './ExperienceSection.jsx'
 
-/** The scrolling HTML layer above the 3D canvas — one section per scene. */
+/** The scrolling HTML layer above the 3D rooms — one section per room. */
 export default function ExperienceOverlay() {
   return (
     <div className="xp__sections">
@@ -28,17 +28,8 @@ export default function ExperienceOverlay() {
       />
 
       <ExperienceSection
-        id="xp-stilfinder"
-        align="left"
-        eyebrow="Küchenwelten"
-        lines={['Welcher', 'Küchenstil bist du?']}
-        sub="Zeitlos Elegant, Modern Warm, Dunkel & Dramatisch, Natürlich Luxuriös oder Industrial Premium – finde deine Richtung."
-        primary={{ label: 'Stilfinder starten', to: '/stylefinder' }}
-      />
-
-      <ExperienceSection
         id="xp-material"
-        align="right"
+        align="left"
         eyebrow="Materialwelt"
         lines={['Materialien,', 'die man fühlen will.']}
         sub="Naturstein, Metall, Bronze, Keramik, Holz und Glas – echte Oberflächen, präzise verarbeitet."
@@ -47,7 +38,7 @@ export default function ExperienceOverlay() {
 
       <ExperienceSection
         id="xp-planning"
-        align="left"
+        align="right"
         eyebrow="Planungskompetenz"
         lines={['Was du siehst: Küche.', 'Was wir sehen:', '184 Entscheidungen.']}
         sub="Licht, Geräte, Arbeitsplatte, Korpus, Fronten, Stauraum, Maß und Montage – alles greift ineinander."

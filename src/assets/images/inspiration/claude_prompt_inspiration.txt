@@ -1,0 +1,237 @@
+AUFGABE FÜR CLAUDE CODE – INSPIRATIONSSEITE VIDEKO
+
+Bitte arbeite NUR an der Seite /inspiration und den dafür nötigen Komponenten. Die bestehende Startseite und andere Unterseiten nicht neu erfinden.
+
+Ich lege dir in diesen Ordner folgende Referenzen:
+- 00_reference_current_inspiration.png = aktuelle Inspirationsseite / aktueller Stand
+- 01_target_mockup_inspiration.png = gewünschte Richtung für Aufbau, Look und Erlebnis
+
+ZIEL
+Die Inspirationsseite soll keine normale Bildergalerie mehr sein. Aktuell sieht sie zu sehr nach „viele schöne Küchenbilder untereinander“ aus. Wir wollen eine echte VIDEKO-Experience:
+- entdecken
+- klicken
+- filtern
+- Materialien erleben
+- Stylefinder nutzen
+- Inspiration speichern/merken
+- danach Beratung starten
+
+WICHTIG
+1. Unsere bereits vorhandene Materialseite soll in diese Inspirationsseite integriert werden.
+2. Unser aktuell bereits vorhandener Stylefinder soll ebenfalls auf diese Seite gesetzt werden.
+3. Bitte vorhandene Komponenten nicht doppelt neu bauen, sondern zuerst suchen:
+   - Stylefinder-Komponente / Stylefinder-Section
+   - Materialseite / Material-Komponenten / Material-Explorer
+   - vorhandene Bilddaten / Assets
+   - vorhandene Animationen / UI-Komponenten
+4. Diese Komponenten sollen optisch sauber in die neue Inspirationsseite eingebettet werden.
+5. Wenn die vorhandenen Komponenten technisch nicht direkt passen, dann bitte refactoren statt blind neu bauen.
+
+DESIGNRICHTUNG
+Bitte an 01_target_mockup_inspiration.png orientieren:
+- helles VIDEKO-Design beibehalten
+- warmer Creme-/Gold-Marble-Hintergrund
+- dunkle Premium-Akzente
+- organische Rundungen statt harter Kästen
+- hochwertige Karten mit Bild, Text, Hover und klarer Klickfläche
+- Gold-Buttons
+- ruhige, edle Typografie
+- viel Bewegung, aber kein Kirmes-Zirkus
+
+Nicht gewünscht:
+- harte Standard-Raster ohne Leben
+- 30 fast gleiche Bilder untereinander
+- zu viele kleine Kacheln ohne Hierarchie
+- billige Animationen
+- komplett neues Farbsystem
+- Startseite oder andere Seiten kaputt umbauen
+
+SEITENAUFBAU
+
+1. HERO
+Großer Hero oben im VIDEKO-Stil.
+Headline:
+„Inspiration für Küchen, die bleiben.“
+
+Subline sinngemäß:
+„Entdecke Ideen, Materialien und Raumkonzepte, die Design, Funktion und Wertigkeit auf besondere Weise verbinden.“
+
+Buttons:
+- „Inspiration entdecken“
+- „Küche planen“
+
+Hero darf dunkel sein, restliche Seite überwiegend hell.
+
+2. STYLEFINDER DIREKT OBEN INTEGRIEREN
+Direkt nach dem Hero kommt unser vorhandener Stylefinder.
+Überschrift:
+„Finde deinen Küchenstil“
+
+Text:
+„Wähle, was dich anspricht – wir zeigen dir Ideen, die dazu passen.“
+
+Stylefinder soll nicht wie ein Fremdkörper wirken, sondern wie ein hochwertiger Einstieg.
+Kategorien z. B.:
+- Modern
+- Warm & wohnlich
+- Dunkel & elegant
+- Hell & leicht
+- Natürlich
+- Luxuriös
+
+Wichtig:
+Der vorhandene Stylefinder soll übernommen werden. Falls er aktuell anders aufgebaut ist, bitte optisch an diese Seite anpassen, aber nicht unnötig neu erfinden.
+
+3. STILWELTEN
+Sektion:
+„Stilwelten, die inspirieren.“
+
+Hier sollen kuratierte Karten entstehen, weniger Bildflut, mehr Wirkung.
+Beispiele:
+- Zeitlos modern
+- Urban dunkel
+- Natürlich warm
+- Licht & elegant
+
+Layout:
+Große Karten, unterschiedliche Breiten möglich, gerne horizontal scrollend auf Mobile.
+Hover:
+Bild zoomt leicht, CTA erscheint, Karte hebt sich minimal.
+
+4. MATERIALSEITE / MATERIAL-EXPLORER INTEGRIEREN
+Sektion:
+„Materialien erleben. Qualität fühlen.“
+
+Hier bitte unsere vorhandene Materialseite / Material-Komponente einbauen.
+Sie soll Bestandteil der Inspirationsseite sein, nicht nur ein Link.
+
+Gewünschtes Verhalten:
+- Tabs oder Chips: Holz, Stein, Keramik, Glas, Metall, Fronten, Arbeitsplatten
+- großes Materialbild
+- kurzer Erklärungstext
+- auswählbare Material-Swatches
+- CTA: „Materialwelt entdecken“ oder „Alle Holzarten ansehen“
+
+Wichtig:
+Bitte zuerst vorhandene Material-Komponenten suchen und verwenden/refactoren.
+
+5. RAUMGEFÜHL / MOODBOARD-SEKTION
+Sektion:
+„Mehr als Design. Ein Gefühl.“
+
+Diese Sektion soll editorial wirken:
+- große Bildfläche
+- kleinere überlappende Detailbilder
+- Notiz-/Label-Elemente
+- Materialproben
+- Mini-Statements wie:
+  „Licht & Atmosphäre“
+  „Farben & Kontraste“
+  „Proportion & Raum“
+  „Details, die bleiben“
+
+Hier soll die Seite nach Erlebnis wirken, nicht nach Standard-Galerie.
+
+6. BEFORE / AFTER TEASER
+Sektion:
+„Funktional, aber dunkel und wenig einladend“ → „Lichtdurchflutet, modern und ein Ort zum Leben.“
+
+Bitte einen Before/After-Bereich einbauen.
+Wenn bereits eine Vorher-/Nachher-Komponente existiert, nutzen.
+Sonst als visuelle Split-Section mit Slider vorbereiten.
+
+Wichtig:
+Keine falschen echten Referenzen behaupten.
+Es darf als Inspirations-/Transformationsvorschau gestaltet sein.
+
+7. IDEEN AUS ECHTEN PROJEKTEN / FAVORITEN
+Sektion:
+„Ideen aus echten Projekten“
+
+3 bis 4 Karten:
+- Puristische Eleganz
+- Stadtvilla mit Charakter
+- Natürlich wohnen
+- Raumlösung mit Licht
+
+Karten sollen ein Herz-/Merken-Icon haben.
+Wenn Favoritenfunktion schon existiert: integrieren.
+Wenn nicht: UI vorbereiten, ohne Backend zu erfinden.
+
+8. JOURNAL / EXPERTENWISSEN
+Sektion:
+„Wissen, das weiterhilft.“
+
+Nur 3 starke Karten, nicht wieder 12 kleine Alibi-Kacheln:
+- „Licht in der Küche“
+- „Welche Materialien passen zu mir?“
+- „Küchenplanung: 7 Tipps vom Experten“
+
+9. ABSCHLUSS-CTA
+Dunkler Abschlussbereich:
+Headline:
+„Aus Inspiration wird deine Küche.“
+
+Text:
+„Gemeinsam gestalten wir einen Ort, der genau zu dir und deinem Leben passt.“
+
+Buttons:
+- „Küchenberatung buchen“
+- „Küche planen“
+
+Optional kleine Vertrauensbox rechts:
+- Persönliche Beratung
+- Individuelle Planung
+- Hochwertige Materialien
+- Perfekte Umsetzung
+
+BEWEGUNG / INTERAKTION
+Bitte hochwertige Bewegung einbauen:
+- Scroll-Reveal pro Sektion
+- Stagger-Reveal für Karten
+- sanfte Hover-Zooms auf Bilder
+- Material-Tabs mit smooth transition
+- Stylefinder-Auswahl mit aktiven States
+- Filter-Chips bei Projekten
+- optional Lightbox bei Galerie-Bildern
+- auf Mobile reduziert, aber nicht tot
+
+WICHTIG FÜR MOBILE
+- Kein horizontaler Scroll außer bewusst bei Card-Slidern
+- Karten sauber stapeln oder horizontal swipen
+- Buttons groß genug
+- Texte lesbar
+- Animationen reduziert
+- Performance beachten
+
+TEXTTON
+- DU-Stil
+- hochwertig, direkt, locker, inspirierend
+- kein Möbelhaus-Blabla
+- keine steife Sie-Ansprache
+- keine unnötigen Floskeln
+
+TECHNISCHER ABLAUF
+Bitte zuerst:
+1. Projektstruktur prüfen.
+2. Vorhandene Stylefinder-Komponente finden.
+3. Vorhandene Materialseite/Material-Komponenten finden.
+4. Kurz erklären, welche Dateien du ändern willst.
+5. Dann umsetzen.
+6. Danach build/test prüfen.
+
+PRÜFUNG AM ENDE
+Bitte prüfen:
+- /inspiration funktioniert
+- Stylefinder ist integriert
+- Materialseite/Material-Explorer ist integriert
+- alle Buttons verlinken sinnvoll
+- Mobile sauber
+- keine horizontalen Fehler
+- npm run build läuft
+- keine kaputten Imports
+- bestehende Seiten nicht beschädigt
+
+Nochmal wichtig:
+Nicht einfach neue Bilderwand bauen.
+Die Seite soll wirken wie eine echte Inspirations-Experience im VIDEKO-Stil.
