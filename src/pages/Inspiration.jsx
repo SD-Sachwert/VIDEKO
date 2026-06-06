@@ -145,7 +145,7 @@ export default function Inspiration() {
       </section>
 
       {/* MATERIAL-EXPLORER */}
-      <section className="section insp-matex">
+      <section className="section insp-matex" id="materialien">
         <div className="container">
           <SectionHeader kicker="Material" title={<>Materialien erleben. <span className="grad">Qualität fühlen.</span></>} />
           <div className="matex">

@@ -347,13 +347,13 @@ img {
   display: flex;
   align-items: center;
   gap: 24px;
-  height: 92px;
+  height: 100px;
 }
 
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 13px;
+  gap: 16px;
   text-decoration: none;
   color: var(--cream);
 }
@@ -363,10 +363,10 @@ img {
 }
 
 .brand__logo {
-  width: 46px;
-  height: 46px;
+  width: 60px;
+  height: 60px;
   object-fit: contain;
-  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.35));
+  filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.38));
 }
 
 .brand__text {
@@ -377,7 +377,7 @@ img {
 
 .brand__name {
   font-family: var(--serif);
-  font-size: 1.55rem;
+  font-size: 1.78rem;
   font-weight: 600;
   letter-spacing: 0.2em;
 }
@@ -393,7 +393,7 @@ img {
 
 .nav {
   display: flex;
-  gap: 38px;
+  gap: 34px;
   margin: 0 auto;
 }
 
@@ -514,6 +514,57 @@ img {
   align-self: flex-start;
   color: var(--bronze);
 }
+
+/* CTA always a solid gold button */
+.pill--cta,
+.header--scrolled .pill--cta {
+  background: var(--grad-gold);
+  color: #20170a;
+  border-color: transparent;
+  box-shadow: 0 14px 30px -16px rgba(168, 122, 40, 0.6);
+}
+.pill--cta:hover {
+  background: var(--grad-gold);
+  color: #20170a;
+  transform: translateY(-1px);
+  box-shadow: 0 18px 38px -16px rgba(168, 122, 40, 0.78);
+}
+
+/* mobile menu groups + submenus */
+.mm-cta {
+  align-self: stretch !important;
+  justify-content: center;
+  margin-bottom: 6px;
+  font-size: 0.74rem;
+  padding: 15px 24px;
+}
+.mm-group { display: flex; flex-direction: column; gap: 10px; }
+.mobile-menu .mm-link {
+  text-decoration: none;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+.mobile-menu .mm-link.is-active { color: var(--bronze); }
+.mm-sub {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 8px 0 4px 16px;
+  border-left: 1px solid var(--line-dark);
+  margin-left: 2px;
+}
+.mobile-menu .mm-sublink {
+  text-decoration: none;
+  color: var(--ink-soft);
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.mobile-menu .mm-sublink:hover { color: var(--bronze); }
 
 /* =====================================================================
    HERO
@@ -7244,6 +7295,10 @@ body {
 }
 
 @media (max-width: 720px) {
+  .header__actions .pill--cta { display: none; }
+  .brand__logo { width: 46px; height: 46px; }
+  .brand__name { font-size: 1.3rem; }
+  .brand__sub { font-size: 0.52rem; letter-spacing: 0.4em; }
   .luxury {
     padding: 60px 0 50px;
   }
@@ -9667,6 +9722,9 @@ a.footer__contact-line:hover {
   .burger {
     display: inline-flex;
   }
+  .header__inner { height: 84px; }
+  .brand__logo { width: 52px; height: 52px; }
+  .brand__name { font-size: 1.5rem; }
   .paths__grid {
     grid-template-columns: 1fr;
     max-width: 560px;
@@ -9944,7 +10002,7 @@ a.footer__contact-line:hover {
   .container {
     padding: 0 22px;
   }
-  .pill--cta {
+  .header__actions .pill--cta {
     display: none;
   }
   .hero__title {
