@@ -4,11 +4,12 @@ import { motion } from 'framer-motion'
 import CTAButton from '../components/CTAButton.jsx'
 import ExperienceOverlay from '../components/experience/ExperienceOverlay.jsx'
 
-import fbHero from '../assets/images/experience/hero/exp-hero-kitchen.png'
-import fbWhy from '../assets/images/experience/why-videko/exp-why-bg.png'
-import fbMaterial from '../assets/images/experience/materials/exp-material-naturstein.png'
-import fbPlanning from '../assets/images/experience/planning/exp-exploding-kitchen.png'
-import fbFinal from '../assets/images/experience/showroom/exp-final-cta.jpg'
+import fbHero from '../assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-01-hero-arrival-backplate.png'
+import fbWhy from '../assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-02-why-videko-backplate.png'
+import fbMaterial from '../assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-03-material-gallery-backplate.png'
+import fbPlanning from '../assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-04-planning-exploding-backplate.png'
+import fbShowroom from '../assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-05-showroom-panorama-backplate.png'
+import fbFinal from '../assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-06-final-cta-showroom-backplate.png'
 
 // load three/r3f only when the immersive version is actually used
 const ExperienceCanvas = lazy(() => import('../components/experience/ExperienceCanvas.jsx'))
@@ -25,7 +26,8 @@ const FB = [
   { img: fbWhy, align: 'right', eyebrow: 'Warum VIDEKO', lines: ['Schluss mit', 'Küchenverkauf von 2008.'], sub: 'Kein Rabattgeschrei, kein Verkaufsdruck. Sondern ehrliche Planung für dein echtes Leben.', cta: { label: 'Den Unterschied erleben', to: '/ueber-uns' } },
   { img: fbMaterial, align: 'left', eyebrow: 'Materialwelt', lines: ['Materialien,', 'die man fühlen will.'], sub: 'Naturstein, Metall, Bronze, Keramik, Holz und Glas – echte Oberflächen.', cta: { label: 'Materialien entdecken', to: '/materialien' } },
   { img: fbPlanning, align: 'left', eyebrow: 'Planungskompetenz', lines: ['Was du siehst: Küche.', 'Was wir sehen: 184 Entscheidungen.'], sub: 'Licht, Geräte, Arbeitsplatte, Korpus, Fronten, Stauraum, Maß und Montage.', cta: { label: 'Planung entdecken', to: '/planung' } },
-  { img: fbFinal, align: 'left', eyebrow: 'Eintauchen statt nur anschauen.', lines: ['Bereit für', 'deine Küche?'], sub: 'Unser Studio ist kein Möbelhaus. Es ist ein Erlebnisraum für gute Entscheidungen.', cta: { label: 'Beratung buchen', to: '/beratung' } },
+  { img: fbShowroom, align: 'right', eyebrow: 'Showroom', lines: ['Eintauchen', 'statt nur anschauen.'], sub: 'Unser Studio ist kein Möbelhaus. Es ist ein Erlebnisraum für gute Entscheidungen.', cta: { label: 'Showroom ansehen', to: '/showroom' } },
+  { img: fbFinal, align: 'left', eyebrow: 'Bereit?', lines: ['Bereit für', 'deine Küche?'], sub: 'Dann lass uns reden. Persönlich, ehrlich und ohne Möbelhaus-Theater.', cta: { label: 'Beratung buchen', to: '/beratung' } },
 ]
 
 function ExperienceFallback() {

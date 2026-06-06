@@ -47,12 +47,21 @@ export default function ExperienceOverlay() {
 
       <ExperienceSection
         id="xp-showroom"
-        align="center"
-        eyebrow="Eintauchen statt nur anschauen."
-        lines={['Bereit für', 'deine Küche?']}
+        align="left"
+        eyebrow="Showroom"
+        lines={['Eintauchen', 'statt nur anschauen.']}
         sub="Unser Studio ist kein Möbelhaus. Es ist ein Erlebnisraum für Küchen, Materialien und gute Entscheidungen."
+        primary={{ label: 'Showroom ansehen', to: '/showroom' }}
+      />
+
+      <ExperienceSection
+        id="xp-final"
+        align="center"
+        eyebrow="Bereit?"
+        lines={['Bereit für', 'deine Küche?']}
+        sub="Dann lass uns reden. Persönlich, ehrlich und ohne Möbelhaus-Theater."
         primary={{ label: 'Beratung buchen', to: '/beratung' }}
-        secondary={{ label: 'Showroom ansehen', href: '/showroom' }}
+        secondary={{ label: 'Studio entdecken', href: '/studio' }}
       />
     </div>
   )
