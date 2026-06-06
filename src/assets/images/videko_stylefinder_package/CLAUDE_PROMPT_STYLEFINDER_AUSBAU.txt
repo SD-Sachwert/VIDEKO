@@ -1,0 +1,457 @@
+Arbeite im bestehenden VIDEKO-Projekt am Stylefinder.
+
+WICHTIG:
+- Das visuelle Grunddesign aus dem Referenzbild soll exakt als Richtung beibehalten werden.
+- Bitte NICHT neu designen.
+- Bitte NICHT wieder generisch machen.
+- Bitte NICHT die normale Website-Struktur zerstören.
+- Der Stylefinder soll genau in dieser hochwertigen dunklen/hellen VIDEKO-Optik weiter ausgebaut werden.
+- Nutze das beiliegende Referenzbild als visuelle Vorlage: reference/stylefinder_reference_final.png
+
+Ziel:
+Der Stylefinder soll sich wie ein hochwertiger Küchenberater anfühlen, nicht wie ein billiges Quiz.
+Er soll in wenigen Minuten eine erste sinnvolle Einschätzung liefern:
+- Stilrichtung
+- Wohnsituation
+- Raum-/Projektart
+- Budgetrahmen
+- Prioritäten
+- Material-/Geräteanspruch
+- alltagstaugliche Empfehlung
+- klarer nächster Schritt zur Beratung
+
+Der Look soll bleiben:
+- dunkler cineastischer Hero oben
+- heller Premium-Fragebereich
+- große hochwertige Bildkarten
+- goldene Akzente
+- klare Step-Navigation
+- Premium, aber verständlich
+- nicht abgehoben, sondern realistisch und ehrlich
+
+==================================================
+1) BESTEHENDES DESIGN BEIBEHALTEN
+==================================================
+
+Bitte nimm die aktuelle Stylefinder-Seite als Basis und entwickle sie weiter.
+Nicht komplett neu bauen.
+
+Beibehalten:
+- Hero-Aufbau
+- Typografie-Stil
+- helle zentrale Fragefläche
+- große Step-Leiste
+- Card-Look
+- Footer-Stil
+- Button-Stil
+- ausgewählter Zustand mit Gold-Akzent
+
+Verbessern:
+- mehr Logik in den Fragen
+- mehr sinnvolle Schritte
+- bessere Ergebnisberechnung
+- stärkere Ergebnisansicht
+- klarere Nutzbarkeit
+- mehr Wohnsituationen und reale Küchenfälle
+- nicht nur Luxus-Inselküchen
+
+==================================================
+2) STYLEFINDER: SCHRITTE / FRAGENSTRUKTUR
+==================================================
+
+Bitte baue den Stylefinder als echten mehrstufigen Konfigurator aus.
+Die Schritte sollen logisch aufeinander aufbauen.
+
+Empfohlene Schritte:
+
+SCHRITT 1: Stilgefühl
+Frage:
+"Welcher Stil spricht dich spontan an?"
+
+Optionen:
+- Modern & grifflos
+- Warm & natürlich
+- Dunkel & elegant
+- Hell & zeitlos
+- Landhaus modern
+- Statement / Industrial
+
+Dieser Schritt existiert bereits grob. Bitte optisch beibehalten und sauber in die neue Logik integrieren.
+
+SCHRITT 2: Wohnsituation
+Frage:
+"Welche Wohnsituation passt aktuell zu dir?"
+
+Optionen als große Cards oder hochwertige Auswahlchips mit Bild/Icon:
+- Alleine
+- Zu zweit
+- Familie
+- WG / gemeinschaftliches Wohnen
+- Mietwohnung
+- Eigentum
+- Neubau
+- Renovierung / Bestand
+- Vermietung / Mietobjekt
+- Ferienwohnung / Apartment
+
+Wichtig:
+VIDEKO soll nicht nur abgehobene Inselküchen zeigen.
+Auch normale, praktische Küchen müssen ernst genommen werden.
+
+SCHRITT 3: Projektart
+Frage:
+"Was soll geplant werden?"
+
+Optionen:
+- Küchenzeile
+- L-Küche
+- U-Küche
+- Küche mit Insel
+- offene Wohnküche
+- kleine Küche / Apartmentküche
+- Austausch bestehender Küche
+- komplette Neuplanung
+- nur Orientierung / noch unsicher
+
+SCHRITT 4: Montage / Umsetzung
+Frage:
+"Wie soll die Küche umgesetzt werden?"
+
+Optionen:
+- Komplettservice durch VIDEKO
+- Lieferung + Montage
+- Lieferung ohne Montage
+- Selbstmontage geplant
+- Vermieter-/Objektlösung mit pragmatischer Umsetzung
+- Ich weiß es noch nicht
+
+Wichtig:
+Wenn jemand nur ca. 3.000 € ausgeben möchte, 4 Schränke braucht und selbst montieren will, soll der Stylefinder das nicht abwerten.
+Er soll ehrlich sagen, was realistisch ist und welchen Weg VIDEKO anbieten kann oder worauf man achten sollte.
+
+SCHRITT 5: Budgetrahmen
+Frage:
+"Welcher Budgetrahmen fühlt sich realistisch an?"
+
+Optionen:
+- bis 3.000 €
+- 3.000–5.000 €
+- 5.000–12.500 €
+- 12.500–18.000 €
+- 18.000–25.000 €
+- 25.000–40.000 €
+- 40.000 €+
+- noch unsicher
+
+Bitte Budget nicht arrogant behandeln.
+Texte sollen ehrlich sein:
+- bis 3.000 €: sehr pragmatisch, kleine Lösung, ggf. Selbstmontage/Standardmodule
+- 3.000–5.000 €: einfache Küchenzeile / Austausch / kleine Mietlösung
+- 5.000–12.500 €: solide normale Küche, funktional geplant
+- 12.500–18.000 €: mehr Komfort, bessere Geräte, mehr Planungstiefe
+- 18.000–25.000 €: hochwertiger Standard mit starker Gestaltung
+- 25.000–40.000 €: Premiumlösung mit besonderen Materialien und Details
+- 40.000 €+: kompromisslose Architekturküche
+
+SCHRITT 6: Prioritäten mit Reglern
+Frage:
+"Was ist dir wirklich wichtig?"
+
+Bitte als hochwertige Slider/Regler darstellen, nicht nur Checkboxen.
+Skala 1–5 oder 1–10.
+
+Regler:
+- Preis / Budget einhalten
+- Pflegeleicht
+- Arbeitsfläche
+- Stauraum
+- Gerätequalität
+- Optik / Design
+- Robustheit
+- schnelle Umsetzung
+- nachhaltige / langlebige Materialien
+- leichte Selbstmontage / einfache Lösung
+
+Wichtig:
+Die Regler sollen optisch zum VIDEKO-Stil passen:
+- goldener Slider-Knob
+- dezente Linien
+- ruhige Beschriftung
+- klare Werte
+- mobil gut bedienbar
+
+SCHRITT 7: Alltag & Nutzung
+Frage:
+"Wie wird die Küche im Alltag genutzt?"
+
+Optionen:
+- schnelle Alltagsküche
+- viel Kochen / Hobbykoch
+- Familie mit viel Stauraum
+- selten genutzt / Mietobjekt
+- repräsentative Wohnküche
+- pflegeleicht und robust
+- kleine Wohnung / wenig Platz
+- offene Küche mit Wohnbereich
+
+SCHRITT 8: Ergebnis
+Ergebnisbereich mit konkreter Empfehlung.
+
+Das Ergebnis soll enthalten:
+- Ergebnisname, z. B. "Pragmatische Mietküche", "Moderne Familienküche", "Warme Wohnküche", "Premium Statement Küche"
+- empfohlener Budgetrahmen
+- empfohlene Küchenform
+- passende Stilrichtung
+- Materialempfehlung
+- Geräteempfehlung
+- Montage-/Umsetzungsempfehlung
+- 3 konkrete Hinweise
+- CTA "Beratung anfragen"
+- sekundärer CTA "Ergebnis speichern" oder "Zusammenfassung kopieren"
+
+==================================================
+3) ERGEBNISLOGIK / SCORING
+==================================================
+
+Bitte eine einfache, nachvollziehbare Ergebnislogik implementieren.
+Sie muss nicht perfekt mathematisch sein, aber sinnvoll.
+
+Die Antworten sollen Einfluss haben auf:
+- Stilprofil
+- Budgetklasse
+- Küchenform
+- Nutzungsprofil
+- Materialempfehlung
+- Geräteklasse
+- Umsetzungsweg
+
+Beispiele:
+
+Wenn:
+- Wohnsituation = Vermietung / Mietobjekt
+- Budget niedrig
+- Priorität Preis, robust, pflegeleicht hoch
+Dann Ergebnis:
+"Pragmatische Mietküche"
+Empfehlung:
+- robuste Fronten
+- einfache Geräte
+- pflegeleichte Arbeitsplatte
+- keine unnötigen Sonderlösungen
+- Lieferung/Selbstmontage oder pragmatische Montageoption prüfen
+
+Wenn:
+- Familie
+- Stauraum hoch
+- Pflegeleicht hoch
+- Budget 12.500–25.000 €
+Dann Ergebnis:
+"Moderne Familienküche"
+Empfehlung:
+- viel Stauraum
+- robuste Materialien
+- gute Geräte
+- klare Laufwege
+- pflegeleicht
+
+Wenn:
+- Neubau / Eigentum
+- Design hoch
+- Budget 25.000 €+
+Dann Ergebnis:
+"Premium Wohnküche"
+Empfehlung:
+- hochwertige Materialien
+- integrierte Geräte
+- Lichtkonzept
+- besondere Details
+
+Wenn:
+- Selbstmontage
+- niedriges Budget
+- kleine Küche
+Dann Ergebnis:
+"Kompakte Selbstmontage-Lösung"
+Empfehlung:
+- einfache Küchenform
+- klare Maße
+- robuste Standardmodule
+- Priorität auf Funktion und Preis
+
+==================================================
+4) ERGEBNISSE / PROFILE
+==================================================
+
+Bitte mehrere Ergebnisprofile vorbereiten:
+
+1. Kompakte Budgetküche
+Für kleine Räume, niedrigeres Budget, einfache Umsetzung.
+
+2. Pragmatische Mietküche
+Für Vermieter, Mietobjekte, robuste und pflegeleichte Lösungen.
+
+3. Solide Alltagsküche
+Für normale Haushalte, gutes Preis-Leistungs-Verhältnis.
+
+4. Moderne Familienküche
+Für Familien, Stauraum, Robustheit, Alltag.
+
+5. Warme Wohnküche
+Für Paare / offene Wohnräume / wohnliche Atmosphäre.
+
+6. Hobbykoch-Küche
+Für Menschen, die viel kochen, mit Fokus auf Arbeitsfläche, Geräte, Ergonomie.
+
+7. Premium Statement Küche
+Für Designanspruch, besondere Materialien, Insel, Architekturwirkung.
+
+8. Kompromisslose Architekturküche
+Für hohe Budgets, Neubau, Maßkonzept, Licht, Material, Geräte, Premiumdetails.
+
+Jedes Profil braucht:
+- Titel
+- Kurzbeschreibung
+- empfohlener Budgetrahmen
+- Küchenform
+- Materialrichtung
+- Geräteanspruch
+- Umsetzungsempfehlung
+- 3–5 passende Tags
+- CTA
+
+==================================================
+5) DESIGN-AUSBAU
+==================================================
+
+Bitte den Stylefinder optisch weiter aufwerten.
+
+Wichtig:
+Nicht nur funktional, sondern "geil, was passiert als nächstes?"
+
+Designideen:
+- Step-Bereich als großes hochwertiges Panel
+- aktive Auswahl mit Gold-Glow und Check
+- Cards beim Hover leicht anheben und Bild leicht zoomen
+- ausgewählte Card minimal größer / stärkerer Rahmen
+- Progress-Leiste mit goldener Linie
+- Ergebnis-Vorschau nach jeder Auswahl aktualisieren
+- unten eine kleine Live-Vorschau:
+  "Dein Profil schärft sich"
+- bei jedem Schritt rechts oder unten eine Zusammenfassung anzeigen:
+  - aktueller Stil
+  - Wohnsituation
+  - Budgetrichtung
+  - wichtigste Priorität
+- Button "Weiter" erst aktiv, wenn Auswahl getroffen wurde
+- Zurück-Button hinzufügen
+- Ergebnis mit hochwertigem Reveal anzeigen
+
+Bitte auf Mobile:
+- Cards sauber untereinander oder als 2er Grid
+- Slider gut bedienbar
+- Weiter-Button gerne sticky unten
+- keine abgeschnittenen Bilder
+
+==================================================
+6) TEXT / TONALITÄT
+==================================================
+
+Texte sollen VIDEKO-mäßig sein:
+- ehrlich
+- direkt
+- hochwertig
+- nicht überheblich
+- nicht Möbelhaus
+- nicht Luxus-Blabla
+- nicht so tun, als wäre jede Küche 40.000 €
+
+Beispiele:
+- "Wir planen nicht ins Blaue. Wir fragen erst sauber."
+- "Nicht jede Küche braucht eine Insel. Manche brauchen einfach gute Entscheidungen."
+- "Von pragmatisch bis Premium – entscheidend ist, dass es zu deinem Alltag passt."
+- "Auch kleine Küchen verdienen gute Planung."
+- "Ehrliche Einschätzung statt Küchenorakel."
+
+Bitte solche Tonalität verwenden.
+
+==================================================
+7) TECHNIK
+==================================================
+
+Bitte sauber implementieren:
+- React State für Antworten
+- Datenstruktur für Fragen, Optionen und Gewichtungen
+- einfache Scoring-Funktion
+- Ergebnisprofil-Berechnung
+- Ergebnisansicht
+- Vor/Zurück Navigation
+- Validierung pro Schritt
+- Responsive Layout
+
+Falls bereits Stylefinder-Komponenten vorhanden sind:
+- bitte wiederverwenden und erweitern
+- nicht unnötig alles neu bauen
+
+Bitte Komponenten sinnvoll aufteilen:
+- StyleFinderPage
+- StyleFinderHero
+- StyleFinderSteps
+- StyleFinderQuestion
+- StyleFinderCardOption
+- StyleFinderSliderQuestion
+- StyleFinderLivePreview
+- StyleFinderResult
+- stylefinderData.js oder ähnlich
+- stylefinderScoring.js oder ähnlich
+
+==================================================
+8) ASSETS / BILDER
+==================================================
+
+Nutze vorhandene Bilder aus dem Projekt.
+Falls Bilder fehlen, verwende hochwertige vorhandene Küchenbilder als Platzhalter.
+Bitte keine externen Webbilder einbauen.
+
+Wichtig:
+Der Stylefinder soll nicht nur Luxus-Inselküchen zeigen.
+Bitte Bildauswahl breiter machen:
+- kleine Küche
+- normale Küchenzeile
+- L-Küche
+- Mietobjekt / einfache Küche
+- Familienküche
+- offene Wohnküche
+- Premiumküche
+- dunkle Statementküche
+
+Wenn keine passenden Bilder vorhanden sind:
+- Platzhalter aus vorhandenen Bildern verwenden
+- am Ende auflisten, welche Bilder später noch benötigt werden
+
+==================================================
+9) WAS NICHT PASSIEREN SOLL
+==================================================
+
+Bitte nicht:
+- komplettes Design neu erfinden
+- Stylefinder zurück auf Standardformular reduzieren
+- nur Luxus als Ziel darstellen
+- niedrige Budgets abwerten
+- alle Cards gleich langweilig machen
+- zu kleine Texte verwenden
+- Mobile kaputt machen
+- Navigation zerstören
+
+==================================================
+10) NACH UMSETZUNG
+==================================================
+
+Bitte am Ende kurz zusammenfassen:
+- Welche Schritte/Fragen umgesetzt wurden
+- Welche Ergebnisprofile angelegt wurden
+- Welche Dateien geändert/erstellt wurden
+- Wie die Scoring-Logik funktioniert
+- Welche Bilder noch fehlen
+- Ob der Build erfolgreich war
+
+Danach bitte committen, pushen und deployen.

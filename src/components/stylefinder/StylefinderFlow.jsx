@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  Sparkles, Check, ArrowRight, ArrowLeft, Upload, Lock, Save, HelpCircle,
-  Square, Minus, CircleDot, LayoutGrid, CornerDownRight, RefreshCw, Loader2, X,
+  Sparkles, Check, ArrowRight, ArrowLeft, Upload, Lock, Save, Copy,
+  RefreshCw, Loader2, X,
 } from 'lucide-react'
 
 import CTAButton from '../CTAButton.jsx'
-import { EMPTY_ANSWERS, computeResult, computeLeadScore } from './stylefinderLogic.js'
+import { EMPTY_ANSWERS, PROFILES, computeResult, computeLeadScore } from './stylefinderLogic.js'
 
 import sModern from '../../assets/images/kuechenwelten/stilfindercard-modern-warm.jpg'
 import sNatur from '../../assets/images/kuechenwelten/stilfindercard-natuerlich-luxurioes.jpg'
@@ -15,14 +15,14 @@ import sHell from '../../assets/images/kuechenwelten/stilfindercard-zeitlos-eleg
 import sLandhaus from '../../assets/images/inspiration/03_wohnliche_kueche.png'
 import sIndustrial from '../../assets/images/kuechenwelten/stilfindercard-industrial-premium.jpg'
 
-import rModernWarm from '../../assets/images/kuechenwelten/stilfinderresult-modern-warm.jpg'
-import rDark from '../../assets/images/kuechenwelten/stilfinderresult-dunkel-dramatisch.jpg'
-import rNatural from '../../assets/images/kuechenwelten/stilfinderresult-natuerlich-luxurioes.jpg'
-import rClean from '../../assets/images/kuechenwelten/stilfinderresult-zeitlos-elegant.jpg'
-import rFamily from '../../assets/images/inspiration/03_wohnliche_kueche.png'
-import rCompact from '../../assets/images/inspiration/08_kleine_kueche_clever_geplant.png'
-import rPremium from '../../assets/images/kuechenwelten/stilfinderresult-industrial-premium.jpg'
-import rCountry from '../../assets/images/inspiration/02_moderne_kueche.png'
+import pKompakt from '../../assets/images/inspiration/08_kleine_kueche_clever_geplant.png'
+import pMiet from '../../assets/images/inspiration/02_moderne_kueche.png'
+import pSolide from '../../assets/images/inspiration/05_helle_kueche.png'
+import pFamilie from '../../assets/images/inspiration/03_wohnliche_kueche.png'
+import pWarm from '../../assets/images/kuechenwelten/stilfinderresult-natuerlich-luxurioes.jpg'
+import pHobby from '../../assets/images/inspiration/07_kueche_mit_insel.png'
+import pPremium from '../../assets/images/kuechenwelten/stilfinderresult-dunkel-dramatisch.jpg'
+import pArch from '../../assets/images/kuechenwelten/stilfinderresult-industrial-premium.jpg'
 
 import mNaturstein from '../../assets/images/materialien/cards/material-card-naturstein.png'
 import mHolz from '../../assets/images/materialien/cards/material-card-holz.png'
@@ -33,36 +33,27 @@ import mLack from '../../assets/images/materialien/cards/material-card-lack-matt
 import mBronze from '../../assets/images/materialien/cards/material-card-bronze.png'
 
 const STYLE_OPTIONS = [
-  { label: 'Modern & grifflos', img: sModern },
-  { label: 'Warm & natürlich', img: sNatur },
-  { label: 'Dunkel & elegant', img: sDunkel },
-  { label: 'Hell & zeitlos', img: sHell },
-  { label: 'Landhaus modern', img: sLandhaus },
-  { label: 'Statement / Industrial', img: sIndustrial },
+  { label: 'Modern & grifflos', img: sModern }, { label: 'Warm & natürlich', img: sNatur },
+  { label: 'Dunkel & elegant', img: sDunkel }, { label: 'Hell & zeitlos', img: sHell },
+  { label: 'Landhaus modern', img: sLandhaus }, { label: 'Statement / Industrial', img: sIndustrial },
 ]
-const LAYOUTS = [
-  { label: 'Zeile', icon: Minus }, { label: 'L-Küche', icon: CornerDownRight },
-  { label: 'U-Küche', icon: Square }, { label: 'Inselküche', icon: CircleDot },
-  { label: 'Wohnküche / offen', icon: LayoutGrid }, { label: 'Noch offen', icon: HelpCircle },
+const LIVING = ['Alleine', 'Zu zweit', 'Familie', 'WG / gemeinschaftliches Wohnen', 'Mietwohnung', 'Eigentum', 'Neubau', 'Renovierung / Bestand', 'Vermietung / Mietobjekt', 'Ferienwohnung / Apartment']
+const PROJECTS = ['Küchenzeile', 'L-Küche', 'U-Küche', 'Küche mit Insel', 'offene Wohnküche', 'kleine Küche / Apartmentküche', 'Austausch bestehender Küche', 'komplette Neuplanung', 'nur Orientierung / noch unsicher']
+const ASSEMBLY = ['Komplettservice durch VIDEKO', 'Lieferung + Montage', 'Lieferung ohne Montage', 'Selbstmontage geplant', 'Vermieter-/Objektlösung mit pragmatischer Umsetzung', 'Ich weiß es noch nicht']
+const BUDGETS = ['bis 3.000 €', '3.000–5.000 €', '5.000–12.500 €', '12.500–18.000 €', '18.000–25.000 €', '25.000–40.000 €', '40.000 €+', 'noch unsicher']
+const PRIORITIES = [
+  { key: 'preis', label: 'Preis / Budget einhalten' }, { key: 'pflege', label: 'Pflegeleicht' },
+  { key: 'arbeit', label: 'Arbeitsfläche' }, { key: 'stauraum', label: 'Stauraum' },
+  { key: 'geraete', label: 'Gerätequalität' }, { key: 'design', label: 'Optik / Design' },
+  { key: 'robust', label: 'Robustheit' }, { key: 'schnell', label: 'Schnelle Umsetzung' },
 ]
-const BUDGETS = ['5.000–12.500 €', '12.500–18.000 €', '18.000–25.000 €', '25.000–40.000 €', '40.000 €+']
-const APPLIANCE_LABELS = ['solide', 'Preis-Leistung', 'besser als Standard', 'hochwertig', 'Premium']
-const APPLIANCES = ['Backofen', 'Dampfgarer', 'Mikrowelle', 'Induktion', 'Muldenlüfter / Bora-Art', 'Geschirrspüler', 'Kühl-Gefrier-Kombi', 'Weinkühlschrank', 'Kaffeevollautomat']
-const MATERIAL_MOODS = ['pflegeleicht', 'hochwertig & edel', 'natürlich & warm', 'minimalistisch', 'familienfreundlich', 'besonders / auffällig', 'dunkle Akzente', 'helle Naturtöne']
-const COOKING = ['Ich koche fast täglich', 'Familie & viel Stauraum', 'Ich empfange gerne Gäste', 'Schnell & praktisch', 'Design im Fokus', 'Chaos mit Stil']
-const PROJECT_STATUS = ['Ich sammle Inspiration', 'Ich plane konkret', 'Ich habe schon ein Angebot', 'Neubau / Umbau läuft', 'Küche muss bald bestellt werden', 'Ich will erstmal wissen, was möglich ist']
-const TIMELINES = ['sofort / schnellstmöglich', '1–3 Monate', '3–6 Monate', '6–12 Monate', 'später / noch offen']
+const USAGE = ['schnelle Alltagsküche', 'viel Kochen / Hobbykoch', 'Familie mit viel Stauraum', 'selten genutzt / Mietobjekt', 'repräsentative Wohnküche', 'pflegeleicht und robust', 'kleine Wohnung / wenig Platz', 'offene Küche mit Wohnbereich']
 const UPLOAD_TYPES = ['Grundriss', 'Maße', 'Raumfotos', 'bestehendes Angebot', 'Inspirationsbilder', 'Bauplan']
 
-const RESULTS = {
-  ModernWarm: { name: 'Modern Warm', img: rModernWarm, form: 'L-Küche oder offene Wohnküche', materials: [mHolz, mNaturstein, mLack], blurb: 'Du magst klare Linien, aber keine sterile Showroom-Kälte. Zu dir passt eine Küche mit ruhigen Fronten, warmen Naturtönen, guter Beleuchtung und Geräten, die im Alltag nicht nerven. Klingt simpel. Ist es aber nur, wenn man sauber plant.' },
-  DarkLuxury: { name: 'Dark Luxury', img: rDark, form: 'Inselküche mit Statement-Front', materials: [mNaturstein, mMetall, mBronze], blurb: 'Tiefe Töne, edle Oberflächen und ein Hauch Drama. Deine Küche darf ein Statement sein – dunkel, hochwertig und mit Geräten, die mitspielen. Wir sorgen dafür, dass es edel wirkt und nicht schwer.' },
-  NaturalLiving: { name: 'Natural Living', img: rNatural, form: 'offene Wohnküche', materials: [mHolz, mKeramik, mNaturstein], blurb: 'Holz, weiche Töne und echte Geborgenheit. Deine Küche soll ein Ort zum Leben sein – warm, natürlich und ehrlich. Materialien, die man fühlen will, und ein Raum, in den man gerne kommt.' },
-  CleanMinimal: { name: 'Clean Minimal', img: rClean, form: 'grifflose Zeile oder L-Küche', materials: [mLack, mGlas, mNaturstein], blurb: 'Ruhe, Klarheit, keine unnötigen Linien. Deine Küche lebt von Reduktion, guten Proportionen und pflegeleichten Oberflächen. Weniger, aber richtig.' },
-  FamilySmart: { name: 'Family Smart', img: rFamily, form: 'L- oder U-Küche mit viel Stauraum', materials: [mLack, mKeramik, mHolz], blurb: 'Alltag, Familie, Tempo. Deine Küche muss robust, clever organisiert und pflegeleicht sein – und trotzdem schön. Genau dafür planen wir Stauraum, der wirklich funktioniert.' },
-  CountryModern: { name: 'Country Modern', img: rCountry, form: 'L-Küche oder Wohnküche', materials: [mHolz, mNaturstein, mKeramik], blurb: 'Landhaus, aber modern gedacht. Warme Materialien, charaktervolle Fronten und trotzdem zeitgemäße Technik. Gemütlich, ohne altmodisch zu sein.' },
-  CompactClever: { name: 'Compact Clever', img: rCompact, form: 'Zeile oder kompakte L-Küche', materials: [mLack, mHolz, mGlas], blurb: 'Wenig Platz, viel Wirkung. Deine Küche holt aus jedem Zentimeter etwas heraus – clevere Auszüge, gute Wege und eine klare Optik. Klein, aber richtig durchdacht.' },
-  PremiumStatement: { name: 'Premium Statement', img: rPremium, form: 'Inselküche mit Wohnanschluss', materials: [mNaturstein, mMetall, mBronze], blurb: 'Du willst eine Küche, die beeindruckt – Insel, Premiumgeräte und eine Arbeitsplatte, die man nicht übersieht. Hier holen wir Material, Licht und Technik auf Top-Niveau zusammen.' },
+const PROFILE_IMG = { kompakt: pKompakt, miet: pMiet, solide: pSolide, familie: pFamilie, warm: pWarm, hobby: pHobby, premium: pPremium, architektur: pArch }
+const PROFILE_MAT = {
+  kompakt: [mLack, mHolz], miet: [mLack, mKeramik], solide: [mLack, mNaturstein, mHolz], familie: [mLack, mKeramik, mHolz],
+  warm: [mHolz, mNaturstein, mKeramik], hobby: [mNaturstein, mMetall, mHolz], premium: [mNaturstein, mMetall, mBronze], architektur: [mNaturstein, mMetall, mGlas],
 }
 
 function Chip({ active, onClick, children, disabled }) {
@@ -73,10 +64,10 @@ function Chip({ active, onClick, children, disabled }) {
   )
 }
 
-function Slider({ label, value, onChange, labels }) {
+function Slider({ label, value, onChange }) {
   return (
     <div className="sf-slider">
-      <div className="sf-slider__top"><span>{label}</span><span className="sf-slider__val">{labels ? labels[value - 1] : value}</span></div>
+      <div className="sf-slider__top"><span>{label}</span><span className="sf-slider__val">{value}/5</span></div>
       <input type="range" min="1" max="5" value={value} onChange={(e) => onChange(Number(e.target.value))} style={{ '--p': `${((value - 1) / 4) * 100}%` }} />
     </div>
   )
@@ -91,6 +82,7 @@ export default function StylefinderFlow() {
   const [displayScore, setDisplayScore] = useState(0)
   const [files, setFiles] = useState([])
   const [dragOver, setDragOver] = useState(false)
+  const [copied, setCopied] = useState(false)
   const [contact, setContact] = useState({ firstName: '', lastName: '', email: '', phone: '', postalCodeCity: '', preferredContact: 'E-Mail', message: '', privacyAccepted: false, marketingConsent: false })
   const [submitting, setSubmitting] = useState(false)
   const [sent, setSent] = useState(false)
@@ -105,16 +97,17 @@ export default function StylefinderFlow() {
     return { ...prev, [key]: [...arr, value] }
   })
   const set = (key, value) => setA((prev) => ({ ...prev, [key]: value }))
+  const setPrio = (key, value) => setA((prev) => ({ ...prev, priorities: { ...prev.priorities, [key]: value } }))
 
-  const STEPS = ['Stil', 'Grundriss', 'Budget', 'Geräte', 'Material', 'Alltag', 'Projekt']
+  const STEPS = ['Stil', 'Wohnen', 'Projekt', 'Umsetzung', 'Budget', 'Prioritäten', 'Alltag']
   const valid = [
     a.styleSelections.length >= 1 && a.styleSelections.length <= 2,
-    a.layout !== '',
+    a.living.length >= 1,
+    a.projectType !== '',
+    a.assembly !== '',
     a.budgetRange !== '',
-    a.applianceLevel >= 1,
-    a.materialMoods.length >= 1 && a.materialMoods.length <= 3,
-    a.cookingUsage.length >= 1,
-    a.projectStatus !== '' && a.timeline !== '',
+    true,
+    a.usage.length >= 1,
   ]
   const isLast = step === STEPS.length - 1
 
@@ -129,19 +122,16 @@ export default function StylefinderFlow() {
   const scrollTop = () => flowTop.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 
   function finish() {
-    const r = computeResult(a)
-    setResult(r); setShowResult(true)
+    setResult(computeResult(a)); setShowResult(true)
     setTimeout(() => flowTop.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60)
   }
 
-  // score count-up
   useEffect(() => {
     if (!showResult || !result) return
     let raf, start
-    const dur = 1100
     const tick = (t) => {
       if (!start) start = t
-      const p = Math.min(1, (t - start) / dur)
+      const p = Math.min(1, (t - start) / 1100)
       setDisplayScore(Math.round(result.score * (1 - Math.pow(1 - p, 3))))
       if (p < 1) raf = requestAnimationFrame(tick)
     }
@@ -149,17 +139,22 @@ export default function StylefinderFlow() {
     return () => cancelAnimationFrame(raf)
   }, [showResult, result])
 
-  const addFiles = (list) => {
-    const incoming = Array.from(list).map((f) => ({ name: f.name, size: f.size, type: f.type }))
-    setFiles((prev) => [...prev, ...incoming])
-  }
+  const addFiles = (list) => setFiles((prev) => [...prev, ...Array.from(list).map((f) => ({ name: f.name, size: f.size, type: f.type }))])
   const removeFile = (i) => setFiles((prev) => prev.filter((_, k) => k !== i))
+
+  // live preview helpers
+  const topPriority = PRIORITIES.reduce((best, p) => (a.priorities[p.key] > a.priorities[best.key] ? p : best), PRIORITIES[0])
+  const liveItems = [
+    { k: 'Stil', v: a.styleSelections[0] || '—' },
+    { k: 'Wohnen', v: a.living[0] || '—' },
+    { k: 'Budget', v: a.budgetRange || '—' },
+    { k: 'Wichtig', v: a.priorities[topPriority.key] >= 4 ? topPriority.label : '—' },
+  ]
 
   const contactValid = contact.firstName && contact.lastName && /\S+@\S+\.\S+/.test(contact.email) && contact.postalCodeCity && contact.privacyAccepted
 
   async function submitStylefinderLead(payload) {
-    // TODO: connect to the real VIDEKO lead endpoint / mail service.
-    // No backend wired yet — package a clean payload and resolve as "queued".
+    // TODO: connect to the real VIDEKO lead endpoint / mail service (no backend yet).
     // eslint-disable-next-line no-console
     console.info('[stylefinder lead]', payload)
     await new Promise((r) => setTimeout(r, 800))
@@ -170,21 +165,24 @@ export default function StylefinderFlow() {
     e.preventDefault()
     if (!contactValid || submitting) return
     setSubmitting(true); setSubmitError('')
-    const payload = { ...a, resultType: result?.type, resultScore: result?.score, budgetAssessment: result?.budgetAssessment, leadScore: computeLeadScore(a, files.length > 0), uploadedFiles: files, contact }
+    const payload = { ...a, resultType: result?.type, resultScore: result?.score, leadScore: computeLeadScore(a, files.length > 0), uploadedFiles: files, contact }
     try {
       const res = await submitStylefinderLead(payload)
-      if (res?.ok) setSent(true)
-      else setSubmitError('Das hat leider nicht geklappt. Bitte versuch es noch einmal.')
+      res?.ok ? setSent(true) : setSubmitError('Das hat leider nicht geklappt. Bitte versuch es noch einmal.')
     } catch {
       setSubmitError('Verbindung fehlgeschlagen. Bitte versuch es noch einmal oder ruf uns an.')
-    } finally {
-      setSubmitting(false)
-    }
+    } finally { setSubmitting(false) }
+  }
+
+  function copySummary() {
+    const P = PROFILES[result.type]
+    const txt = `VIDEKO Stylefinder – ${P.name} (${result.score}% Match)\nBudget: ${P.budget}\nForm: ${P.form}\nStil: ${a.styleSelections.join(', ')}\nMaterial: ${P.material}\nGeräte: ${P.appliances}\nUmsetzung: ${P.assembly}`
+    navigator.clipboard?.writeText(txt).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000) }).catch(() => {})
   }
 
   /* ---------------- RESULT + UPLOAD + CONTACT ---------------- */
   if (showResult && result) {
-    const R = RESULTS[result.type]
+    const P = PROFILES[result.type]
     if (sent) {
       return (
         <div className="sf-wrap" ref={flowTop}>
@@ -199,34 +197,39 @@ export default function StylefinderFlow() {
     }
     return (
       <div className="sf-wrap" ref={flowTop}>
-        {/* RESULT */}
         <div className="sf-result">
           <div className="sf-result__head">
             <span className="kicker kicker--gold">Deine erste VIDEKO-Einschätzung</span>
-            <p className="sf-result__note">Noch kein verbindliches Angebot – aber schon deutlich besser als wildes Küchenraten.</p>
+            <p className="sf-result__note">Ehrliche Einschätzung statt Küchenorakel – noch kein verbindliches Angebot, aber ein klarer Startpunkt.</p>
           </div>
           <div className="sf-result__card">
             <div className="sf-result__media">
-              <img src={R.img} alt={R.name} />
-              <span className="sf-result__score"><b>{displayScore}%</b><span>Stil-Match</span></span>
+              <img src={PROFILE_IMG[result.type]} alt={P.name} />
+              <span className="sf-result__score"><b>{displayScore}%</b><span>Match</span></span>
             </div>
             <div className="sf-result__body">
-              <span className="sf-result__type">{R.name}</span>
-              <p className="sf-result__blurb">{R.blurb}</p>
+              <span className="sf-result__type">{P.name}</span>
+              <p className="sf-result__blurb">{P.blurb}</p>
               <div className="sf-result__materials">
-                {R.materials.map((m, i) => <span key={i} className="sf-result__swatch" style={{ backgroundImage: `url(${m})` }} />)}
-                <span className="sf-result__matlabel">Passende Materialien</span>
+                {PROFILE_MAT[result.type].map((m, i) => <span key={i} className="sf-result__swatch" style={{ backgroundImage: `url(${m})` }} />)}
+                <span className="sf-result__matlabel">{P.material}</span>
               </div>
               <ul className="sf-result__facts">
-                <li><span>Empfohlene Form</span><b>{R.form}</b></li>
-                <li><span>Budget-Realismus</span><b>{result.budgetAssessment}</b></li>
-                <li><span>Geräte</span><b>{result.applianceText}</b></li>
+                <li><span>Budgetrahmen</span><b>{P.budget}</b></li>
+                <li><span>Küchenform</span><b>{P.form}</b></li>
+                <li><span>Stilrichtung</span><b>{a.styleSelections.join(', ') || '—'}</b></li>
+                <li><span>Geräte</span><b>{P.appliances}</b></li>
+                <li><span>Umsetzung</span><b>{P.assembly}</b></li>
               </ul>
-              <p className="sf-result__missing"><Sparkles size={15} strokeWidth={2} /> Für ein genaues Angebot fehlen noch: Grundriss / Maße & ein paar Raumfotos.</p>
+              <ul className="sf-tips">
+                {P.tips.map((t) => <li key={t}><Sparkles size={14} strokeWidth={2} /> {t}</li>)}
+              </ul>
+              <div className="sf-tags">{P.tags.map((t) => <span key={t}>#{t}</span>)}</div>
               <div className="sf-result__cta">
-                <button type="button" className="btn-magnet sf-btn-primary" onClick={() => uploadRef.current?.scrollIntoView({ behavior: 'smooth' })}>Grundriss hochladen & Angebot sichern</button>
-                <button type="button" className="sf-link" onClick={() => { try { localStorage.setItem('videko_stylefinder', JSON.stringify({ a, result })) } catch { /* ignore */ } }}><Save size={16} /> Ergebnis speichern</button>
+                <CTAButton to="/beratung">Beratung anfragen</CTAButton>
+                <button type="button" className="sf-link" onClick={copySummary}><Copy size={16} /> {copied ? 'Kopiert!' : 'Zusammenfassung kopieren'}</button>
               </div>
+              <button type="button" className="sf-link sf-uploadlink" onClick={() => uploadRef.current?.scrollIntoView({ behavior: 'smooth' })}>Oder Grundriss hochladen für ein genaueres Angebot ↓</button>
             </div>
           </div>
         </div>
@@ -237,9 +240,7 @@ export default function StylefinderFlow() {
             <h2>Jetzt wird aus Bauchgefühl Planung.</h2>
             <p>Lade hoch, was du hast. Je mehr wir sehen, desto weniger müssen wir raten.</p>
           </div>
-          <div className="sf-upload__types">
-            {UPLOAD_TYPES.map((t) => <span key={t} className="sf-pill">{t}</span>)}
-          </div>
+          <div className="sf-upload__types">{UPLOAD_TYPES.map((t) => <span key={t} className="sf-pill">{t}</span>)}</div>
           <label
             className={`sf-drop ${dragOver ? 'is-over' : ''}`}
             onDragOver={(e) => { e.preventDefault(); setDragOver(true) }}
@@ -252,11 +253,7 @@ export default function StylefinderFlow() {
             <span className="sf-drop__hint">PDF, JPG, PNG. Bitte keine sensiblen Dokumente hochladen.</span>
           </label>
           {files.length > 0 && (
-            <ul className="sf-files">
-              {files.map((f, i) => (
-                <li key={i}><span>{f.name}</span><button type="button" onClick={() => removeFile(i)} aria-label="Entfernen"><X size={14} /></button></li>
-              ))}
-            </ul>
+            <ul className="sf-files">{files.map((f, i) => <li key={i}><span>{f.name}</span><button type="button" onClick={() => removeFile(i)} aria-label="Entfernen"><X size={14} /></button></li>)}</ul>
           )}
         </div>
 
@@ -273,16 +270,14 @@ export default function StylefinderFlow() {
             <label className="sf-field"><span>Telefon (optional)</span><input value={contact.phone} onChange={(e) => setContact({ ...contact, phone: e.target.value })} /></label>
             <label className="sf-field"><span>PLZ / Ort *</span><input value={contact.postalCodeCity} onChange={(e) => setContact({ ...contact, postalCodeCity: e.target.value })} required /></label>
             <label className="sf-field"><span>Wunschkontakt</span>
-              <select value={contact.preferredContact} onChange={(e) => setContact({ ...contact, preferredContact: e.target.value })}>
-                <option>E-Mail</option><option>Telefon</option><option>WhatsApp</option>
-              </select>
+              <select value={contact.preferredContact} onChange={(e) => setContact({ ...contact, preferredContact: e.target.value })}><option>E-Mail</option><option>Telefon</option><option>WhatsApp</option></select>
             </label>
           </div>
           <label className="sf-field"><span>Was sollten wir noch wissen? (optional)</span><textarea rows={3} value={contact.message} onChange={(e) => setContact({ ...contact, message: e.target.value })} /></label>
           <label className="sf-check"><input type="checkbox" checked={contact.privacyAccepted} onChange={(e) => setContact({ ...contact, privacyAccepted: e.target.checked })} required /><span>Ich akzeptiere die <a href="/datenschutz" target="_blank" rel="noopener noreferrer">Datenschutzerklärung</a>. *</span></label>
           <label className="sf-check"><input type="checkbox" checked={contact.marketingConsent} onChange={(e) => setContact({ ...contact, marketingConsent: e.target.checked })} /><span>Schickt mir gerne Inspiration & Neuigkeiten (optional).</span></label>
           {submitError && <p className="sf-error">{submitError}</p>}
-          <button type="submit" className="btn-magnet sf-btn-primary sf-submit" disabled={!contactValid || submitting}>
+          <button type="submit" className="sf-btn-primary sf-submit" disabled={!contactValid || submitting}>
             {submitting ? <><Loader2 size={18} className="sf-spin" /> Wird gesendet …</> : 'Einschätzung senden & kostenloses Angebot anfragen'}
           </button>
           {!contactValid && <p className="sf-help">Bitte fülle Vorname, Nachname, E-Mail, PLZ/Ort aus und bestätige den Datenschutz.</p>}
@@ -295,16 +290,9 @@ export default function StylefinderFlow() {
   /* ---------------- QUESTION STEPS ---------------- */
   return (
     <div className="sf-wrap" ref={flowTop}>
-      {/* stepper */}
       <div className="sf-stepper" role="tablist">
         {STEPS.map((s, i) => (
-          <button
-            key={s}
-            type="button"
-            className={`sf-step ${i === step ? 'is-current' : ''} ${valid[i] && i < step ? 'is-done' : ''}`}
-            onClick={() => goTo(i)}
-            disabled={i > maxReached}
-          >
+          <button key={s} type="button" className={`sf-step ${i === step ? 'is-current' : ''} ${valid[i] && i < step ? 'is-done' : ''}`} onClick={() => goTo(i)} disabled={i > maxReached}>
             <span className="sf-step__n">{i > maxReached ? <Lock size={12} /> : (valid[i] && i < step ? <Check size={13} strokeWidth={2.6} /> : i + 1)}</span>
             <span className="sf-step__label">{s}</span>
           </button>
@@ -314,14 +302,7 @@ export default function StylefinderFlow() {
       <div className="sf-count">Schritt {step + 1}/{STEPS.length}</div>
 
       <AnimatePresence mode="wait">
-        <motion.div
-          key={step}
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -12 }}
-          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          className="sf-stepbody"
-        >
+        <motion.div key={step} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }} className="sf-stepbody">
           {step === 0 && (
             <>
               <h2 className="sf-q">Welcher Stil spricht dich spontan an?</h2>
@@ -342,92 +323,67 @@ export default function StylefinderFlow() {
 
           {step === 1 && (
             <>
-              <h2 className="sf-q">Welche Küchenform passt ungefähr zu deinem Raum?</h2>
-              <p className="sf-micro">Wenn du es nicht weißt: Kein Drama. Dafür gibt es Menschen mit Maßband.</p>
-              <div className="sf-iconrid">
-                {LAYOUTS.map((o) => {
-                  const Icon = o.icon
-                  const active = a.layout === o.label
-                  return (
-                    <button key={o.label} type="button" className={`sf-iconcard ${active ? 'is-active' : ''}`} onClick={() => set('layout', o.label)}>
-                      <Icon size={26} strokeWidth={1.6} /><span>{o.label}</span>
-                    </button>
-                  )
-                })}
-              </div>
+              <h2 className="sf-q">Welche Wohnsituation passt aktuell zu dir?</h2>
+              <p className="sf-micro">Auch kleine Küchen verdienen gute Planung. <em>(Mehrfachauswahl)</em></p>
+              <div className="sf-chips">{LIVING.map((l) => <Chip key={l} active={a.living.includes(l)} onClick={() => toggle('living', l)}>{l}</Chip>)}</div>
             </>
           )}
 
           {step === 2 && (
             <>
-              <h2 className="sf-q">In welchem Rahmen soll deine Küche ungefähr liegen?</h2>
-              <p className="sf-micro">Keine Sorge – das ist keine Beichte, nur Orientierung. Wir zeigen dir keine Luftschlösser mit Raketenantrieb.</p>
-              <div className="sf-segments">
-                {BUDGETS.map((b) => (
-                  <button key={b} type="button" className={`sf-segment ${a.budgetRange === b ? 'is-active' : ''}`} onClick={() => set('budgetRange', b)}>{b}</button>
-                ))}
-              </div>
+              <h2 className="sf-q">Was soll geplant werden?</h2>
+              <p className="sf-micro">Nicht jede Küche braucht eine Insel. Manche brauchen einfach gute Entscheidungen.</p>
+              <div className="sf-chips">{PROJECTS.map((pj) => <Chip key={pj} active={a.projectType === pj} onClick={() => set('projectType', pj)}>{pj}</Chip>)}</div>
             </>
           )}
 
           {step === 3 && (
             <>
-              <h2 className="sf-q">Wie hochwertig sollen deine Geräte sein?</h2>
-              <p className="sf-micro">Geräte können aus einer Küche Alltag machen – oder ein Cockpit. Beides okay.</p>
-              <Slider label="Geräte-Niveau" value={a.applianceLevel} onChange={(v) => set('applianceLevel', v)} labels={APPLIANCE_LABELS} />
-              <p className="sf-sub">Welche Geräte sind dir wichtig? <em>(optional, Mehrfachauswahl)</em></p>
-              <div className="sf-chips">
-                {APPLIANCES.map((g) => <Chip key={g} active={a.selectedAppliances.includes(g)} onClick={() => toggle('selectedAppliances', g)}>{g}</Chip>)}
-              </div>
+              <h2 className="sf-q">Wie soll die Küche umgesetzt werden?</h2>
+              <p className="sf-micro">Von pragmatisch bis Premium – entscheidend ist, dass es zu deinem Alltag passt.</p>
+              <div className="sf-chips">{ASSEMBLY.map((m) => <Chip key={m} active={a.assembly === m} onClick={() => set('assembly', m)}>{m}</Chip>)}</div>
             </>
           )}
 
           {step === 4 && (
             <>
-              <h2 className="sf-q">Was soll deine Küche ausstrahlen?</h2>
-              <p className="sf-micro">Arbeitsplatten sind wie Schuhe: Man merkt erst zu spät, wenn man am falschen Ende gespart hat. <em>(1–3 wählen)</em></p>
-              <div className="sf-chips">
-                {MATERIAL_MOODS.map((m) => <Chip key={m} active={a.materialMoods.includes(m)} onClick={() => toggle('materialMoods', m, 3)}>{m}</Chip>)}
-              </div>
-              <Slider label="Wie wichtig ist dir eine besondere Arbeitsplatte?" value={a.countertopImportance} onChange={(v) => set('countertopImportance', v)} />
+              <h2 className="sf-q">Welcher Budgetrahmen fühlt sich realistisch an?</h2>
+              <p className="sf-micro">Wir planen nicht ins Blaue. Wir fragen erst sauber – ehrlich, ohne Bewertung.</p>
+              <div className="sf-segments">{BUDGETS.map((b) => <button key={b} type="button" className={`sf-segment ${a.budgetRange === b ? 'is-active' : ''}`} onClick={() => set('budgetRange', b)}>{b}</button>)}</div>
             </>
           )}
 
           {step === 5 && (
             <>
-              <h2 className="sf-q">Wie nutzt du deine Küche wirklich?</h2>
-              <p className="sf-micro">Hier bitte ehrlich sein. Eine Küche für Instagram und eine für Montagabend sind zwei verschiedene Tiere.</p>
-              <div className="sf-chips">
-                {COOKING.map((c) => <Chip key={c} active={a.cookingUsage.includes(c)} onClick={() => toggle('cookingUsage', c)}>{c}</Chip>)}
-              </div>
-              <Slider label="Wie wichtig ist dir Stauraum?" value={a.storageImportance} onChange={(v) => set('storageImportance', v)} />
-              <Slider label="Wie wichtig ist dir Pflegeleichtigkeit?" value={a.easyCareImportance} onChange={(v) => set('easyCareImportance', v)} />
+              <h2 className="sf-q">Was ist dir wirklich wichtig?</h2>
+              <p className="sf-micro">Schieb die Regler so, wie es zu deinem Alltag passt. Es gibt kein richtig oder falsch.</p>
+              <div className="sf-sliders">{PRIORITIES.map((p) => <Slider key={p.key} label={p.label} value={a.priorities[p.key]} onChange={(v) => setPrio(p.key, v)} />)}</div>
             </>
           )}
 
           {step === 6 && (
             <>
-              <h2 className="sf-q">Wo stehst du gerade?</h2>
-              <p className="sf-micro">Wir unterscheiden zwischen „mal schauen" und „Hilfe, der Estrich kommt".</p>
-              <div className="sf-chips">
-                {PROJECT_STATUS.map((p) => <Chip key={p} active={a.projectStatus === p} onClick={() => set('projectStatus', p)}>{p}</Chip>)}
-              </div>
-              <p className="sf-sub">Bis wann soll es soweit sein?</p>
-              <div className="sf-chips">
-                {TIMELINES.map((t) => <Chip key={t} active={a.timeline === t} onClick={() => set('timeline', t)}>{t}</Chip>)}
-              </div>
+              <h2 className="sf-q">Wie wird die Küche im Alltag genutzt?</h2>
+              <p className="sf-micro">Hier bitte ehrlich sein – danach richtet sich die ganze Empfehlung. <em>(Mehrfachauswahl)</em></p>
+              <div className="sf-chips">{USAGE.map((u) => <Chip key={u} active={a.usage.includes(u)} onClick={() => toggle('usage', u)}>{u}</Chip>)}</div>
             </>
           )}
         </motion.div>
       </AnimatePresence>
 
+      {/* live preview */}
+      <div className="sf-live">
+        <span className="sf-live__title"><Sparkles size={14} strokeWidth={2} /> Dein Profil schärft sich</span>
+        <div className="sf-live__items">
+          {liveItems.map((it) => <span key={it.k} className="sf-live__item"><b>{it.k}</b>{it.v}</span>)}
+        </div>
+      </div>
+
       <div className="sf-nav">
-        {step > 0
-          ? <button type="button" className="sf-link" onClick={back}><ArrowLeft size={16} /> Zurück</button>
-          : <span />}
+        {step > 0 ? <button type="button" className="sf-link" onClick={back}><ArrowLeft size={16} /> Zurück</button> : <span />}
         <div className="sf-nav__right">
           {!valid[step] && <span className="sf-hint">Bitte triff erst deine Auswahl.</span>}
-          <button type="button" className="btn-magnet sf-btn-primary" onClick={next} disabled={!valid[step]}>
+          <button type="button" className="sf-btn-primary" onClick={next} disabled={!valid[step]}>
             {isLast ? 'Ergebnis anzeigen' : 'Weiter'} <ArrowRight size={17} strokeWidth={2} />
           </button>
         </div>

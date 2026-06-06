@@ -1,0 +1,11 @@
+VIDEKO Stylefinder Ausbau Paket
+
+Enthalten:
+- reference/stylefinder_reference_final.png
+  Referenzmockup für die gewünschte Optik. Das Design soll beibehalten und funktional ausgebaut werden.
+
+- CLAUDE_PROMPT_STYLEFINDER_AUSBAU.txt
+  Kopierbarer Prompt für Claude zur Erweiterung des Stylefinders.
+
+Hinweis:
+Dieses Paket enthält bewusst nur das finale Referenzbild und den Prompt. Claude soll die bereits im Projekt vorhandenen Küchenbilder verwenden und fehlende Bildtypen am Ende auflisten.

@@ -1,112 +1,169 @@
-// Pure, client-side scoring/mapping for the VIDEKO Stylefinder.
-// No side effects, no imports — easy to reason about and test.
+// Pure client-side scoring/mapping for the VIDEKO Stylefinder.
+// Honest from pragmatic budget kitchens up to architecture kitchens.
 
 export const EMPTY_ANSWERS = {
   styleSelections: [],
-  layout: '',
+  living: [],
+  projectType: '',
+  assembly: '',
   budgetRange: '',
-  applianceLevel: 3,
-  selectedAppliances: [],
-  materialMoods: [],
-  countertopImportance: 3,
-  cookingUsage: [],
-  storageImportance: 3,
-  easyCareImportance: 3,
-  projectStatus: '',
-  timeline: '',
+  priorities: { preis: 3, pflege: 3, arbeit: 3, stauraum: 3, geraete: 3, design: 3, robust: 3, schnell: 3 },
+  usage: [],
+}
+
+// text profiles (images live in the component)
+export const PROFILES = {
+  kompakt: {
+    name: 'Kompakte Budgetküche', budget: 'bis ca. 5.000 €', form: 'Küchenzeile / kleine L-Küche',
+    material: 'robuste Standardfronten, pflegeleichte Platte', appliances: 'solide Grundgeräte', assembly: 'Lieferung oder Selbstmontage',
+    blurb: 'Klein, klar, bezahlbar. Hier zählt jede gute Entscheidung mehr als jedes Extra – wir holen aus wenig Platz und Budget das Beste raus.',
+    tips: ['Auf Standardmaße setzen – das spart spürbar Geld.', 'Lieber wenige, gute Auszüge als viele Spielereien.', 'Pflegeleichte Front + robuste Platte = langer Alltag.'],
+    tags: ['kompakt', 'preisbewusst', 'funktional', 'pragmatisch'],
+  },
+  miet: {
+    name: 'Pragmatische Mietküche', budget: 'ca. 3.000–8.000 €', form: 'Zeile / L-Küche',
+    material: 'robuste, pflegeleichte Oberflächen', appliances: 'zuverlässige Standardgeräte', assembly: 'pragmatische Montage / Objektlösung',
+    blurb: 'Robust, pflegeleicht, wirtschaftlich. Eine Küche, die im Mietobjekt funktioniert, ohne dass du dich an Sonderlösungen verausgabst.',
+    tips: ['Auf langlebige, austauschbare Standardteile setzen.', 'Pflegeleichte Oberflächen sparen später Ärger.', 'Klare, einfache Form statt teurer Sonderlösungen.'],
+    tags: ['robust', 'pflegeleicht', 'objekt', 'wirtschaftlich'],
+  },
+  solide: {
+    name: 'Solide Alltagsküche', budget: 'ca. 5.000–15.000 €', form: 'L- oder U-Küche',
+    material: 'gute Dekorfronten, robuste Arbeitsplatte', appliances: 'starkes Preis-Leistungs-Niveau', assembly: 'Lieferung + Montage',
+    blurb: 'Die ehrliche Allrounderin. Gut geplant, gut verarbeitet, ohne Schnickschnack – eine Küche, die im Alltag einfach passt.',
+    tips: ['In gute Geräte investieren – die nutzt du täglich.', 'Laufwege sauber planen, das merkt man jeden Tag.', 'Ein, zwei hochwertige Akzente statt überall sparen.'],
+    tags: ['alltagstauglich', 'gutes P/L', 'durchdacht'],
+  },
+  familie: {
+    name: 'Moderne Familienküche', budget: 'ca. 12.500–25.000 €', form: 'U- oder L-Küche mit viel Stauraum',
+    material: 'robuste, pflegeleichte Materialien', appliances: 'gute Marken-Geräte', assembly: 'Komplettservice',
+    blurb: 'Alltag, Familie, Tempo. Viel Stauraum, robuste Oberflächen und klare Wege – schön und gleichzeitig kindersicher belastbar.',
+    tips: ['Stauraum lieber großzügig als knapp planen.', 'Pflegeleichte Platten überstehen den Familienalltag.', 'Sichere, leise Auszüge zahlen sich aus.'],
+    tags: ['familie', 'stauraum', 'robust', 'alltag'],
+  },
+  warm: {
+    name: 'Warme Wohnküche', budget: 'ca. 15.000–28.000 €', form: 'offene Wohnküche',
+    material: 'Holz & warme Naturtöne', appliances: 'hochwertige Geräte', assembly: 'Lieferung + Montage / Komplettservice',
+    blurb: 'Küche und Wohnen verschmelzen. Warme Materialien, gutes Licht und eine Atmosphäre, in die man gerne kommt – und bleibt.',
+    tips: ['Übergang zum Wohnraum bewusst gestalten.', 'Licht in Schichten planen, nicht nur eine Lampe.', 'Natürliche Materialien bringen Ruhe rein.'],
+    tags: ['wohnlich', 'offen', 'natürlich', 'atmosphäre'],
+  },
+  hobby: {
+    name: 'Hobbykoch-Küche', budget: 'ca. 18.000–32.000 €', form: 'L- oder Inselküche mit viel Arbeitsfläche',
+    material: 'strapazierfähige Arbeitsplatte', appliances: 'Premium-Kochgeräte', assembly: 'Komplettservice',
+    blurb: 'Für Menschen, die wirklich kochen. Arbeitsfläche, gute Geräte und kurze Wege – damit Kochen Spaß macht statt Stress.',
+    tips: ['Genug zusammenhängende Arbeitsfläche einplanen.', 'In Kochfeld, Lüftung und Backofen investieren.', 'Ergonomie: Spüle, Herd, Kühlschrank im Dreieck.'],
+    tags: ['kochen', 'arbeitsfläche', 'geräte', 'ergonomie'],
+  },
+  premium: {
+    name: 'Premium Statement Küche', budget: 'ca. 25.000–45.000 €', form: 'Inselküche',
+    material: 'edle Steine, Metall, Glas', appliances: 'integrierte Premiumgeräte', assembly: 'Komplettservice',
+    blurb: 'Eine Küche, die etwas sagt. Edle Materialien, integrierte Technik und eine Insel als Mittelpunkt – hochwertig, nicht protzig.',
+    tips: ['Materialkombination bewusst und reduziert wählen.', 'Geräte integrieren für ein ruhiges Gesamtbild.', 'Lichtkonzept macht aus gut → beeindruckend.'],
+    tags: ['premium', 'insel', 'design', 'material'],
+  },
+  architektur: {
+    name: 'Kompromisslose Architekturküche', budget: 'ab 40.000 €', form: 'Maß-Inselküche mit Wohnanschluss',
+    material: 'Architekturmaterialien & Lichtkonzept', appliances: 'Top-Premium, vollintegriert', assembly: 'VIDEKO Komplettservice',
+    blurb: 'Maß, Material, Licht – ohne Kompromisse. Eine Küche, die mit dem Raum eins wird und jedes Detail durchplant.',
+    tips: ['Früh in die Architektur-/Bauplanung einsteigen.', 'Material- und Lichtkonzept zusammen denken.', 'Maßanfertigung dort, wo Standard nicht reicht.'],
+    tags: ['architektur', 'maßküche', 'neubau', 'premium'],
+  },
 }
 
 const has = (arr, v) => Array.isArray(arr) && arr.includes(v)
 
-function applianceText(level) {
-  return [
-    'solide Grundausstattung',
-    'gutes Preis-Leistungs-Verhältnis',
-    'einen Tick besser als Standard',
-    'hochwertige Markengeräte',
-    'Premium-Geräte – Technikspielzeug erlaubt',
-  ][Math.min(4, Math.max(0, level - 1))]
-}
-
-function assessBudget(a) {
-  const big = a.layout === 'Inselküche' || a.layout === 'Wohnküche / offen'
-  const premiumWish = a.applianceLevel >= 5 || a.countertopImportance >= 5
-  if (big && premiumWish && (a.budgetRange === '5.000–12.500 €' || a.budgetRange === '12.500–18.000 €')) {
-    return 'sportlich – hier müssen wir clever priorisieren'
-  }
-  if (a.budgetRange === '5.000–12.500 €') return 'machbar, aber sauber begrenzen'
-  if (a.budgetRange === '12.500–18.000 €') return 'realistisch, aber sauber priorisieren'
-  if (a.budgetRange === '18.000–25.000 €') return 'gute Basis für eine starke Planung'
-  if (a.budgetRange === '25.000–40.000 €' || a.budgetRange === '40.000 €+') return 'viel Spielraum für hochwertige Details'
-  return 'realistisch einschätzbar, sobald wir mehr sehen'
-}
-
 export function computeLeadScore(a, hasUpload = false) {
   let s = 0
   const b = a.budgetRange
-  if (b === '12.500–18.000 €') s += 10
-  if (b === '18.000–25.000 €') s += 20
-  if (b === '25.000–40.000 €') s += 30
-  if (b === '40.000 €+') s += 40
-  if (a.timeline === 'sofort / schnellstmöglich') s += 30
-  if (a.timeline === '1–3 Monate') s += 20
-  if (a.timeline === '3–6 Monate') s += 10
-  if (['Ich plane konkret', 'Ich habe schon ein Angebot', 'Neubau / Umbau läuft', 'Küche muss bald bestellt werden'].includes(a.projectStatus)) s += 20
-  if (a.applianceLevel >= 4) s += 10
+  const map = { '12.500–18.000 €': 15, '18.000–25.000 €': 25, '25.000–40.000 €': 35, '40.000 €+': 45 }
+  s += map[b] || 0
+  if (['Eigentum', 'Neubau'].some((x) => has(a.living, x))) s += 15
+  if (['komplette Neuplanung', 'Küche mit Insel', 'offene Wohnküche'].includes(a.projectType)) s += 10
+  if (a.assembly === 'Komplettservice durch VIDEKO') s += 15
+  if (a.priorities.geraete >= 4 || a.priorities.design >= 4) s += 10
   if (hasUpload) s += 20
   return s
 }
 
 export function computeResult(a) {
-  const s = {
-    ModernWarm: 0, DarkLuxury: 0, NaturalLiving: 0, CleanMinimal: 0,
-    FamilySmart: 0, CountryModern: 0, CompactClever: 0, PremiumStatement: 0,
+  const s = { kompakt: 0, miet: 0, solide: 0, familie: 0, warm: 0, hobby: 0, premium: 0, architektur: 0 }
+  const add = (k, n) => { s[k] += n }
+  const hi = (v) => v >= 4
+  const p = a.priorities
+
+  // budget
+  const B = {
+    'bis 3.000 €': () => { add('kompakt', 3); add('miet', 2) },
+    '3.000–5.000 €': () => { add('kompakt', 2); add('miet', 2); add('solide', 1) },
+    '5.000–12.500 €': () => { add('solide', 3); add('familie', 1) },
+    '12.500–18.000 €': () => { add('solide', 2); add('familie', 2); add('warm', 1) },
+    '18.000–25.000 €': () => { add('familie', 2); add('warm', 2); add('hobby', 1) },
+    '25.000–40.000 €': () => { add('premium', 3); add('warm', 1); add('hobby', 1) },
+    '40.000 €+': () => { add('architektur', 3); add('premium', 2) },
+    'noch unsicher': () => { add('solide', 1) },
   }
+  B[a.budgetRange]?.()
 
-  if (has(a.styleSelections, 'Modern & grifflos')) { s.ModernWarm += 2; s.CleanMinimal += 2 }
-  if (has(a.styleSelections, 'Warm & natürlich')) { s.ModernWarm += 2; s.NaturalLiving += 2 }
-  if (has(a.styleSelections, 'Dunkel & elegant')) { s.DarkLuxury += 3 }
-  if (has(a.styleSelections, 'Hell & zeitlos')) { s.CleanMinimal += 2; s.ModernWarm += 1 }
-  if (has(a.styleSelections, 'Landhaus modern')) { s.CountryModern += 3; s.NaturalLiving += 1 }
-  if (has(a.styleSelections, 'Statement / Industrial')) { s.PremiumStatement += 2; s.DarkLuxury += 1 }
+  // living
+  const L = {
+    'Alleine': ['kompakt', 'solide'], 'Zu zweit': ['warm', 'warm'], 'Familie': ['familie', 'familie', 'familie'],
+    'WG / gemeinschaftliches Wohnen': ['kompakt', 'solide'], 'Mietwohnung': ['miet', 'solide'],
+    'Eigentum': ['premium', 'familie'], 'Neubau': ['architektur', 'architektur', 'premium'],
+    'Renovierung / Bestand': ['solide', 'familie'], 'Vermietung / Mietobjekt': ['miet', 'miet', 'miet'],
+    'Ferienwohnung / Apartment': ['kompakt', 'kompakt', 'miet'],
+  }
+  a.living.forEach((l) => (L[l] || []).forEach((k) => add(k, 1)))
 
-  if (a.layout === 'Inselküche' || a.layout === 'Wohnküche / offen') { s.PremiumStatement += 2; s.DarkLuxury += 1 }
-  if (a.layout === 'Zeile' || a.layout === 'L-Küche') { s.CompactClever += 2 }
+  // project type
+  const P = {
+    'Küchenzeile': ['kompakt', 'solide', 'miet'], 'L-Küche': ['solide', 'familie'], 'U-Küche': ['familie', 'solide'],
+    'Küche mit Insel': ['premium', 'premium', 'hobby'], 'offene Wohnküche': ['warm', 'warm', 'premium'],
+    'kleine Küche / Apartmentküche': ['kompakt', 'kompakt', 'miet'], 'Austausch bestehender Küche': ['miet', 'solide'],
+    'komplette Neuplanung': ['premium', 'architektur', 'familie'], 'nur Orientierung / noch unsicher': ['solide'],
+  }
+  ;(P[a.projectType] || []).forEach((k) => add(k, 1))
 
-  if (a.budgetRange === '25.000–40.000 €' || a.budgetRange === '40.000 €+') { s.DarkLuxury += 2; s.PremiumStatement += 2 }
-  if (a.budgetRange === '5.000–12.500 €') { s.CompactClever += 2 }
+  // assembly
+  const A = {
+    'Komplettservice durch VIDEKO': ['premium', 'architektur', 'familie'], 'Lieferung + Montage': ['solide', 'familie'],
+    'Lieferung ohne Montage': ['kompakt', 'miet'], 'Selbstmontage geplant': ['kompakt', 'kompakt', 'kompakt'],
+    'Vermieter-/Objektlösung mit pragmatischer Umsetzung': ['miet', 'miet', 'miet'], 'Ich weiß es noch nicht': [],
+  }
+  ;(A[a.assembly] || []).forEach((k) => add(k, 1))
 
-  if (a.applianceLevel >= 4) { s.DarkLuxury += 1; s.PremiumStatement += 1 }
+  // priorities
+  if (hi(p.preis)) { add('kompakt', 2); add('miet', 1); add('solide', 1) }
+  if (hi(p.pflege)) { add('miet', 1); add('familie', 1) }
+  if (hi(p.arbeit)) { add('hobby', 2) }
+  if (hi(p.stauraum)) { add('familie', 2) }
+  if (hi(p.geraete)) { add('hobby', 1); add('premium', 1) }
+  if (hi(p.design)) { add('premium', 2); add('warm', 1); add('architektur', 1) }
+  if (hi(p.robust)) { add('miet', 1); add('familie', 1) }
+  if (hi(p.schnell)) { add('kompakt', 1); add('miet', 1) }
 
-  if (has(a.materialMoods, 'hochwertig & edel')) { s.DarkLuxury += 2; s.PremiumStatement += 1 }
-  if (has(a.materialMoods, 'natürlich & warm') || has(a.materialMoods, 'helle Naturtöne')) { s.NaturalLiving += 2; s.ModernWarm += 1 }
-  if (has(a.materialMoods, 'minimalistisch')) { s.CleanMinimal += 2 }
-  if (has(a.materialMoods, 'familienfreundlich')) { s.FamilySmart += 2 }
-  if (has(a.materialMoods, 'pflegeleicht')) { s.FamilySmart += 1; s.CleanMinimal += 1 }
-  if (has(a.materialMoods, 'dunkle Akzente')) { s.DarkLuxury += 1 }
-  if (has(a.materialMoods, 'besonders / auffällig')) { s.PremiumStatement += 1 }
-  if (a.countertopImportance >= 4) { s.PremiumStatement += 1; s.DarkLuxury += 1 }
+  // usage
+  const U = {
+    'schnelle Alltagsküche': ['solide', 'solide'], 'viel Kochen / Hobbykoch': ['hobby', 'hobby', 'hobby'],
+    'Familie mit viel Stauraum': ['familie', 'familie', 'familie'], 'selten genutzt / Mietobjekt': ['miet', 'miet', 'miet'],
+    'repräsentative Wohnküche': ['premium', 'premium', 'warm'], 'pflegeleicht und robust': ['miet', 'familie'],
+    'kleine Wohnung / wenig Platz': ['kompakt', 'kompakt'], 'offene Küche mit Wohnbereich': ['warm', 'warm'],
+  }
+  a.usage.forEach((u) => (U[u] || []).forEach((k) => add(k, 1)))
 
-  if (has(a.cookingUsage, 'Familie & viel Stauraum')) { s.FamilySmart += 2 }
-  if (has(a.cookingUsage, 'Ich empfange gerne Gäste')) { s.PremiumStatement += 1; s.ModernWarm += 1 }
-  if (has(a.cookingUsage, 'Design im Fokus')) { s.DarkLuxury += 1; s.CleanMinimal += 1 }
-  if (has(a.cookingUsage, 'Schnell & praktisch')) { s.CompactClever += 1; s.CleanMinimal += 1 }
-  if (a.storageImportance >= 4) { s.FamilySmart += 1 }
-  if (a.easyCareImportance >= 4) { s.FamilySmart += 1; s.CleanMinimal += 1 }
+  // style nudges
+  if (has(a.styleSelections, 'Dunkel & elegant')) add('premium', 1)
+  if (has(a.styleSelections, 'Statement / Industrial')) { add('premium', 1); add('architektur', 1) }
+  if (has(a.styleSelections, 'Warm & natürlich')) add('warm', 1)
+  if (has(a.styleSelections, 'Landhaus modern')) { add('warm', 1); add('familie', 1) }
+  if (has(a.styleSelections, 'Modern & grifflos')) { add('solide', 1); add('premium', 1) }
+  if (has(a.styleSelections, 'Hell & zeitlos')) { add('solide', 1); add('warm', 1) }
 
-  let type = 'ModernWarm'
+  let type = 'solide'
   let best = -1
-  for (const k of Object.keys(s)) {
-    if (s[k] > best) { best = s[k]; type = k }
-  }
+  for (const k of Object.keys(s)) { if (s[k] > best) { best = s[k]; type = k } }
   const total = Object.values(s).reduce((x, y) => x + y, 0) || 1
-  const score = Math.max(78, Math.min(96, Math.round(72 + (best / total) * 70)))
+  const score = Math.max(78, Math.min(96, Math.round(72 + (best / total) * 80)))
 
-  return {
-    type,
-    score,
-    budgetAssessment: assessBudget(a),
-    applianceText: applianceText(a.applianceLevel),
-    leadScore: computeLeadScore(a),
-  }
+  return { type, score, leadScore: computeLeadScore(a) }
 }

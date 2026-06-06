@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'fram
 import CTAButton from './CTAButton.jsx'
 import ValueBand from './ValueBand.jsx'
 import heroImg from '../assets/images/shared/hero-videko-final-16x9.png'
+import heroVideoWebm from '../assets/images/home/Header.webm'
 import heroVideo from '../assets/images/home/Header.mp4'
 
 const LINES = ['Für Menschen, die das', 'Besondere erleben wollen.']
@@ -69,6 +70,7 @@ export default function Hero() {
             poster={heroImg}
             aria-hidden="true"
           >
+            <source src={heroVideoWebm} type="video/webm" />
             <source src={heroVideo} type="video/mp4" />
           </video>
         </motion.div>
