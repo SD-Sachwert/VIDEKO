@@ -33,7 +33,7 @@ export default function ExperienceOverlay() {
         eyebrow="Materialwelt"
         lines={['Materialien,', 'die man fühlen will.']}
         sub="Naturstein, Metall, Bronze, Keramik, Holz und Glas – echte Oberflächen, präzise verarbeitet."
-        primary={{ label: 'Materialien entdecken', to: '/materialien' }}
+        primary={{ label: 'Materialien entdecken', to: '/inspiration' }}
       />
 
       <ExperienceSection
