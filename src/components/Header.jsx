@@ -26,7 +26,8 @@ const DROPDOWN = {
 export default function Header() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
-  const close = () => setOpen(false)
+  const [openMenu, setOpenMenu] = useState(null)
+  const close = () => { setOpen(false); setOpenMenu(null) }
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -34,6 +35,16 @@ export default function Header() {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  // close desktop dropdown on outside click / Escape
+  useEffect(() => {
+    if (!openMenu) return
+    const onDoc = (e) => { if (!e.target.closest('.nav__group')) setOpenMenu(null) }
+    const onKey = (e) => { if (e.key === 'Escape') setOpenMenu(null) }
+    document.addEventListener('click', onDoc)
+    document.addEventListener('keydown', onKey)
+    return () => { document.removeEventListener('click', onDoc); document.removeEventListener('keydown', onKey) }
+  }, [openMenu])
 
   useEffect(() => {
     if (!open) return
@@ -61,14 +72,24 @@ export default function Header() {
         <nav className="nav" aria-label="Hauptnavigation">
           {MAIN.map((l) => (
             l.menu ? (
-              <div className="nav__group" key={l.to}>
-                <NavLink to={l.to} className={({ isActive }) => `nav__top ${isActive ? 'is-active' : ''}`}>
+              <div
+                className="nav__group"
+                key={l.to}
+                onMouseEnter={() => setOpenMenu(l.menu)}
+                onMouseLeave={() => setOpenMenu(null)}
+              >
+                <NavLink
+                  to={l.to}
+                  className={({ isActive }) => `nav__top ${isActive ? 'is-active' : ''}`}
+                  aria-expanded={openMenu === l.menu}
+                  onClick={() => setOpenMenu(null)}
+                >
                   {l.label} <ChevronDown className="nav__caret" size={14} strokeWidth={2} />
                 </NavLink>
-                <div className="nav__dd">
+                <div className={`nav__dd ${openMenu === l.menu ? 'is-open' : ''}`}>
                   <div className="nav__dd-inner">
                     {DROPDOWN[l.menu].map((d) => (
-                      <NavLink key={d.to} to={d.to} end className={({ isActive }) => (isActive ? 'is-active' : undefined)}>{d.label}</NavLink>
+                      <NavLink key={d.to} to={d.to} end className={({ isActive }) => (isActive ? 'is-active' : undefined)} onClick={() => setOpenMenu(null)}>{d.label}</NavLink>
                     ))}
                   </div>
                 </div>

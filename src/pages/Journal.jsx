@@ -18,6 +18,7 @@ export default function Journal() {
   return (
     <>
       <PageHero
+        className="leist-hero"
         kicker="Journal"
         title={<>Wissen, das <span className="grad">weiterhilft.</span></>}
         lead="Tipps, Ideen und Expertenwissen rund um Küche, Material und Planung – unser Küchen-Ratgeber."

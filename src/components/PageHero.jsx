@@ -5,9 +5,9 @@ import Reveal from './Reveal.jsx'
  * legibility veil, kicker, large serif title and lead. `title` accepts JSX
  * (for gold accents).
  */
-export default function PageHero({ kicker, title, lead, image, children }) {
+export default function PageHero({ kicker, title, lead, image, children, className = '' }) {
   return (
-    <section className="pagehero">
+    <section className={`pagehero ${className}`.trim()}>
       {image && (
         <div className="pagehero__media" aria-hidden="true">
           <img src={image} alt="" className="pagehero__img" />

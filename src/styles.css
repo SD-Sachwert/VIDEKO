@@ -519,8 +519,7 @@ img {
 .nav__group { position: relative; display: flex; align-items: center; }
 .nav__top { display: inline-flex; align-items: center; gap: 5px; }
 .nav__caret { transition: transform 0.3s ease; opacity: 0.7; }
-.nav__group:hover .nav__caret,
-.nav__group:focus-within .nav__caret { transform: rotate(180deg); }
+.nav__top[aria-expanded='true'] .nav__caret { transform: rotate(180deg); }
 .nav__dd {
   position: absolute;
   top: 100%;
@@ -531,8 +530,7 @@ img {
   pointer-events: none;
   transition: opacity 0.26s ease, transform 0.26s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.nav__group:hover .nav__dd,
-.nav__group:focus-within .nav__dd {
+.nav__dd.is-open {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
   pointer-events: auto;
@@ -549,7 +547,9 @@ img {
   border: 1px solid rgba(201, 160, 80, 0.4);
   box-shadow: 0 30px 60px -24px rgba(0, 0, 0, 0.7);
 }
-.nav__dd-inner a {
+/* explicit colors so the scrolled-header nav rules can't wash these out */
+.header .nav__dd-inner a,
+.header--scrolled .nav__dd-inner a {
   display: block;
   padding: 11px 14px;
   border-radius: 10px;
@@ -563,8 +563,10 @@ img {
   transition: background 0.2s ease, color 0.2s ease;
 }
 .nav__dd-inner a::after { display: none; }
-.nav__dd-inner a:hover,
-.nav__dd-inner a.is-active { background: rgba(232, 201, 120, 0.16); color: var(--gold-bright); }
+.header .nav__dd-inner a:hover,
+.header .nav__dd-inner a.is-active,
+.header--scrolled .nav__dd-inner a:hover,
+.header--scrolled .nav__dd-inner a.is-active { background: rgba(232, 201, 120, 0.16); color: var(--gold-bright); }
 
 /* CTA always a solid gold button */
 .pill--cta,
@@ -657,6 +659,11 @@ img {
 
 .kenburns {
   animation: kenburns 26s ease-in-out infinite alternate;
+}
+
+/* mobile 9:16 hero photo — keep the important (centre) area in frame */
+.hero__img--mobile {
+  object-position: center center;
 }
 
 /* glimmering gold arcs + light dust over the image */
@@ -7379,7 +7386,7 @@ body {
    LEISTUNGEN page
    ===================================================================== */
 .leist-hero {
-  min-height: 74vh;
+  min-height: 88vh;
 }
 
 .leist-hero__link {
@@ -9350,11 +9357,16 @@ a.footer__contact-line:hover {
   gap: 50px;
 }
 .about-region .mapcard {
-  aspect-ratio: 16 / 11;
-  background: linear-gradient(160deg, #2b2925, #1b1916);
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--cream);
 }
 .about-region .mapcard img {
-  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
 }
 
 @media (max-width: 1080px) {

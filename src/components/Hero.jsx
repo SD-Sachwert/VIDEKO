@@ -1,9 +1,10 @@
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion'
 
 import CTAButton from './CTAButton.jsx'
 import ValueBand from './ValueBand.jsx'
 import heroImg from '../assets/images/shared/hero-videko-final-16x9.png'
+import heroMobileImg from '../assets/images/home/Mobile.png'
 import heroVideoWebm from '../assets/images/home/Header.webm'
 import heroVideo from '../assets/images/home/Header.mp4'
 
@@ -18,6 +19,18 @@ const LINES = ['Für Menschen, die das', 'Besondere erleben wollen.']
  */
 export default function Hero() {
   const ref = useRef(null)
+
+  // mobile gets a 9:16 photo (Ken-Burns) instead of the 16:9 video — the video
+  // is never put in the DOM on mobile, so it isn't downloaded.
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia('(max-width: 720px)').matches
+  )
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 720px)')
+    const onChange = () => setIsMobile(mq.matches)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -61,18 +74,22 @@ export default function Hero() {
       {/* --- Media: scroll (outer) + pointer (middle) + CSS ken-burns (img) --- */}
       <motion.div className="hero__media" style={{ y: imgY, scale: imgScale }}>
         <motion.div className="hero__kb" style={{ x: imgPX, y: imgPY }}>
-          <video
-            className="hero__img kenburns"
-            autoPlay
-            muted
-            loop
-            playsInline
-            poster={heroImg}
-            aria-hidden="true"
-          >
-            <source src={heroVideoWebm} type="video/webm" />
-            <source src={heroVideo} type="video/mp4" />
-          </video>
+          {isMobile ? (
+            <img className="hero__img kenburns hero__img--mobile" src={heroMobileImg} alt="" aria-hidden="true" />
+          ) : (
+            <video
+              className="hero__img kenburns"
+              autoPlay
+              muted
+              loop
+              playsInline
+              poster={heroImg}
+              aria-hidden="true"
+            >
+              <source src={heroVideoWebm} type="video/webm" />
+              <source src={heroVideo} type="video/mp4" />
+            </video>
+          )}
         </motion.div>
       </motion.div>
 
