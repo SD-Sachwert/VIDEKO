@@ -5,7 +5,7 @@ import SectionHeader from '../components/SectionHeader.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import StylefinderFlow from '../components/stylefinder/StylefinderFlow.jsx'
 
-import heroPoster from '../assets/images/kuechenwelten/stilfinderhero-kitchen-wide.jpg'
+import heroPoster from '../assets/images/stylefinder_assets_videko/01_hero_dark_premium_kitchen.png'
 
 export default function Stylefinder() {
   return (
@@ -21,7 +21,7 @@ export default function Stylefinder() {
       </PageHero>
 
       <section className="section section--light" id="sf-start">
-        <div className="container container--narrow">
+        <div className="container">
           <SectionHeader
             align="center"
             kicker="So funktioniert's"
@@ -29,6 +29,23 @@ export default function Stylefinder() {
             lead="Kurz klicken, ehrlich antworten, Ergebnis bekommen. Kein Küchenverhör – am Ende bekommst du sofort eine erste Einschätzung."
           />
           <StylefinderFlow />
+        </div>
+      </section>
+
+      {/* DUNKLER ABSCHLUSS */}
+      <section className="section section--dark sf-final">
+        <div className="container">
+          <SectionHeader
+            tone="light"
+            align="center"
+            kicker="Bereit?"
+            title={<>Genug eingeschätzt? <span className="grad">Jetzt machen wir daraus einen echten Plan.</span></>}
+            lead="Kein Druck, kein Möbelhaus-Theater – nur ehrliche Planung auf Augenhöhe."
+          />
+          <div className="sf-final__actions">
+            <CTAButton to="/beratung">Beratung anfragen</CTAButton>
+            <CTAButton to="/studio" variant="dark">Studio erleben</CTAButton>
+          </div>
         </div>
       </section>
     </>

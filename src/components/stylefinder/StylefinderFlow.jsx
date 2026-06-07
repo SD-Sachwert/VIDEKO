@@ -8,12 +8,12 @@ import {
 import CTAButton from '../CTAButton.jsx'
 import { EMPTY_ANSWERS, PROFILES, computeResult, computeLeadScore } from './stylefinderLogic.js'
 
-import sModern from '../../assets/images/kuechenwelten/stilfindercard-modern-warm.jpg'
-import sNatur from '../../assets/images/kuechenwelten/stilfindercard-natuerlich-luxurioes.jpg'
-import sDunkel from '../../assets/images/kuechenwelten/stilfindercard-dunkel-dramatisch.jpg'
-import sHell from '../../assets/images/kuechenwelten/stilfindercard-zeitlos-elegant.jpg'
-import sLandhaus from '../../assets/images/inspiration/03_wohnliche_kueche.png'
-import sIndustrial from '../../assets/images/kuechenwelten/stilfindercard-industrial-premium.jpg'
+import sModern from '../../assets/images/stylefinder_assets_videko/02_stil_hell_modern_minimal.png'
+import sNatur from '../../assets/images/stylefinder_assets_videko/03_stil_skandinavisch_natuerlich.png'
+import sDunkel from '../../assets/images/stylefinder_assets_videko/05_stil_dunkel_luxurioes_wohnlich.png'
+import sHell from '../../assets/images/stylefinder_assets_videko/08_stil_hell_luxurioes_mit_pflanzen.png'
+import sLandhaus from '../../assets/images/stylefinder_assets_videko/04_stil_hell_wohnlich_landhaus_modern.png'
+import sIndustrial from '../../assets/images/stylefinder_assets_videko/06_stil_industrial_dark_city.png'
 
 import pKompakt from '../../assets/images/inspiration/08_kleine_kueche_clever_geplant.png'
 import pMiet from '../../assets/images/inspiration/02_moderne_kueche.png'
@@ -144,12 +144,44 @@ export default function StylefinderFlow() {
 
   // live preview helpers
   const topPriority = PRIORITIES.reduce((best, p) => (a.priorities[p.key] > a.priorities[best.key] ? p : best), PRIORITIES[0])
-  const liveItems = [
-    { k: 'Stil', v: a.styleSelections[0] || '—' },
-    { k: 'Wohnen', v: a.living[0] || '—' },
-    { k: 'Budget', v: a.budgetRange || '—' },
-    { k: 'Wichtig', v: a.priorities[topPriority.key] >= 4 ? topPriority.label : '—' },
+
+  // ---- live "VIDEKO Stylefinder" profile ----
+  const hasv = (arr, v) => Array.isArray(arr) && arr.includes(v)
+  const clampPct = (n) => Math.max(6, Math.min(100, Math.round(n)))
+  const st = a.styleSelections
+  let bHell = 50, bWohn = 50, bNat = 28, bAus = 38
+  if (hasv(st, 'Dunkel & elegant')) { bHell += 30; bAus += 14 }
+  if (hasv(st, 'Statement / Industrial')) { bHell += 24; bAus += 26; bWohn -= 10 }
+  if (hasv(st, 'Hell & zeitlos')) { bHell -= 28; bAus -= 12; bWohn -= 14 }
+  if (hasv(st, 'Modern & grifflos')) { bHell -= 8; bAus -= 18; bWohn -= 26 }
+  if (hasv(st, 'Warm & natürlich')) { bHell -= 16; bWohn += 26; bNat += 38 }
+  if (hasv(st, 'Landhaus modern')) { bHell -= 10; bWohn += 30; bNat += 32 }
+  if (hasv(a.usage, 'Familie mit viel Stauraum')) bWohn += 8
+  if (hasv(a.usage, 'offene Küche mit Wohnbereich')) bWohn += 6
+  bAus += (a.priorities.design - 3) * 6
+  const bars = [
+    { label: 'Helligkeit', a: 'Dunkel', b: 'Hell', val: clampPct(100 - bHell) },
+    { label: 'Charakter', a: 'Modern', b: 'Wohnlich', val: clampPct(bWohn) },
+    { label: 'Natürlichkeit', a: 'Eher kühl', b: 'Natürlich', val: clampPct(bNat) },
+    { label: 'Ausdruck', a: 'Minimal', b: 'Statement', val: clampPct(bAus) },
   ]
+  let answeredCount = 0
+  if (a.styleSelections.length) answeredCount++
+  if (a.living.length) answeredCount++
+  if (a.projectType) answeredCount++
+  if (a.assembly) answeredCount++
+  if (a.budgetRange) answeredCount++
+  answeredCount++ // priorities always set
+  if (a.usage.length) answeredCount++
+  const completeness = Math.round((answeredCount / 7) * 100)
+  const profileChips = []
+  if (bHell < 45) profileChips.push('eher hell'); else if (bHell > 58) profileChips.push('eher dunkel')
+  if (bWohn < 45) profileChips.push('modern'); else if (bWohn > 58) profileChips.push('wohnlich')
+  if (bNat > 55) profileChips.push('natürlich')
+  if (bAus > 60) profileChips.push('ausdrucksstark'); else if (bAus < 38) profileChips.push('minimal')
+  if (hasv(a.usage, 'Familie mit viel Stauraum')) profileChips.push('familienfreundlich')
+  if (a.priorities.design >= 4) profileChips.push('designorientiert')
+  const prioTags = PRIORITIES.filter((p) => a.priorities[p.key] >= 4).map((p) => p.label)
 
   const contactValid = contact.firstName && contact.lastName && /\S+@\S+\.\S+/.test(contact.email) && contact.postalCodeCity && contact.privacyAccepted
 
@@ -301,6 +333,8 @@ export default function StylefinderFlow() {
       <div className="sf-progress"><span style={{ width: `${((step + 1) / STEPS.length) * 100}%` }} /></div>
       <div className="sf-count">Schritt {step + 1}/{STEPS.length}</div>
 
+      <div className="sf-layout">
+        <div className="sf-main">
       <AnimatePresence mode="wait">
         <motion.div key={step} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }} className="sf-stepbody">
           {step === 0 && (
@@ -371,23 +405,54 @@ export default function StylefinderFlow() {
         </motion.div>
       </AnimatePresence>
 
-      {/* live preview */}
-      <div className="sf-live">
-        <span className="sf-live__title"><Sparkles size={14} strokeWidth={2} /> Dein Profil schärft sich</span>
-        <div className="sf-live__items">
-          {liveItems.map((it) => <span key={it.k} className="sf-live__item"><b>{it.k}</b>{it.v}</span>)}
-        </div>
-      </div>
+          <div className="sf-nav">
+            {step > 0 ? <button type="button" className="sf-link" onClick={back}><ArrowLeft size={16} /> Zurück</button> : <span />}
+            <div className="sf-nav__right">
+              {!valid[step] && <span className="sf-hint">Bitte triff erst deine Auswahl.</span>}
+              <button type="button" className="sf-btn-primary" onClick={next} disabled={!valid[step]}>
+                {isLast ? 'Ergebnis anzeigen' : 'Weiter'} <ArrowRight size={17} strokeWidth={2} />
+              </button>
+            </div>
+          </div>
+        </div>{/* /sf-main */}
 
-      <div className="sf-nav">
-        {step > 0 ? <button type="button" className="sf-link" onClick={back}><ArrowLeft size={16} /> Zurück</button> : <span />}
-        <div className="sf-nav__right">
-          {!valid[step] && <span className="sf-hint">Bitte triff erst deine Auswahl.</span>}
-          <button type="button" className="sf-btn-primary" onClick={next} disabled={!valid[step]}>
-            {isLast ? 'Ergebnis anzeigen' : 'Weiter'} <ArrowRight size={17} strokeWidth={2} />
-          </button>
-        </div>
-      </div>
+        <aside className="sf-side">
+          <div className="sf-profile">
+            <span className="sf-profile__eyebrow"><Sparkles size={13} strokeWidth={2} /> VIDEKO Stylefinder</span>
+            <h3 className="sf-profile__title">Dein Stilbild wird schärfer.</h3>
+            <div className="sf-donut">
+              <svg viewBox="0 0 110 110">
+                <circle className="sf-donut__bg" cx="55" cy="55" r="46" />
+                <circle className="sf-donut__fg" cx="55" cy="55" r="46" transform="rotate(-90 55 55)"
+                  style={{ strokeDasharray: 289, strokeDashoffset: 289 * (1 - completeness / 100) }} />
+              </svg>
+              <span className="sf-donut__val">{completeness}%<small>Profil</small></span>
+            </div>
+            <div className="sf-bars">
+              {bars.map((bar) => (
+                <div className="sf-bar" key={bar.label}>
+                  <div className="sf-bar__top"><span>{bar.label}</span></div>
+                  <div className="sf-bar__track"><span style={{ width: `${bar.val}%` }} /></div>
+                  <div className="sf-bar__poles"><span>{bar.a}</span><span>{bar.b}</span></div>
+                </div>
+              ))}
+            </div>
+            <div className="sf-profile__row"><span className="sf-profile__k">Budget</span><span className="sf-profile__v">{a.budgetRange || 'noch offen'}</span></div>
+            {prioTags.length > 0 && (
+              <div className="sf-profile__block">
+                <span className="sf-profile__k">Prioritäten</span>
+                <div className="sf-profile__tags">{prioTags.map((t) => <span key={t}>{t}</span>)}</div>
+              </div>
+            )}
+            <div className="sf-profile__block">
+              <span className="sf-profile__k">Dein Profil schärft sich</span>
+              <div className="sf-profile__tags sf-profile__tags--gold">
+                {profileChips.length ? profileChips.map((t) => <span key={t}>{t}</span>) : <span className="sf-profile__muted">Triff deine erste Auswahl …</span>}
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>{/* /sf-layout */}
     </div>
   )
 }

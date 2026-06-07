@@ -1,0 +1,128 @@
+Baue die Seite `Stylefinder` für VIDEKO Küchen neu auf und orientiere dich visuell stark am Referenzbild `00_stylefinder_referenz_fullpage.png`.
+
+WICHTIG:
+- Die Seite soll `Stylefinder` heißen, NICHT `Kompass`.
+- Bitte die Seite direkt in das bestehende VIDEKO-Designsystem integrieren.
+- Oben dunkles Hero-Banner, in der Mitte helle Content-Flächen, unten wieder ein dunkler Abschlussbereich/Footer.
+- Die Seite soll hochwertig, interaktiv, lebendig und modern wirken – nicht wie ein statisches Formular.
+- Das Referenzbild ist die Hauptvorlage für Aufbau, Stimmung und Dichte.
+
+ZIEL DER SEITE:
+Ein interaktiver Küchen-Stilfinder, bei dem der Nutzer in wenigen Schritten eine erste realistische Einschätzung bekommt, welcher Küchenstil zu ihm passt.
+
+GRUNDSTRUKTUR:
+1. HERO-BEREICH (dunkel)
+- Verwende `01_hero_dark_premium_kitchen.png` als Hero-Bild oder als visuelle Basis.
+- Links großer Textblock.
+- Headline etwa in diese Richtung:
+  "Dein Stil. Deine Küche. Deine erste Einschätzung."
+- Subline in lockerem VIDEKO-Ton, geduzt, ehrlich, ohne Möbelhaus-Blabla.
+- Primärer CTA: `Stylefinder starten`
+- Kleine Meta-Zeile darunter, z. B. Dauer / Hinweis, dass es um den Stil des Kunden geht.
+- Sehr hochwertige Typo, elegante Serif-Headline, warme Goldakzente.
+- Leichte Overlays / Schatten, damit Text gut lesbar bleibt.
+
+2. INTERAKTIVER STYLEFINDER-BEREICH (hell)
+- Hauptbereich auf hellem, edlem Hintergrund.
+- Oben eine kleine Intro-Zeile wie: `So funktioniert’s`
+- Große Headline wie im Referenzbild.
+- Darunter 8 Schritte als anklickbare Step-Chips / Tabs:
+  1 Stil
+  2 Wohnen
+  3 Projekt
+  4 Umsetzung
+  5 Budget
+  6 Prioritäten
+  7 Alltag
+  8 Ergebnis
+- Dazu eine sichtbare Fortschrittsleiste.
+- Der aktuelle Schritt soll klar hervorgehoben sein.
+- Bei jedem Schritt wird eine Frage gestellt und darunter kommen passende Bildkarten.
+
+3. BILDKARTEN / STILOPTIONEN
+Nutze die beiliegenden Bilder für die Stil-Auswahlkarten:
+- `02_stil_hell_modern_minimal.png`
+- `03_stil_skandinavisch_natuerlich.png`
+- `04_stil_hell_wohnlich_landhaus_modern.png`
+- `05_stil_dunkel_luxurioes_wohnlich.png`
+- `06_stil_industrial_dark_city.png`
+- `07_stil_modern_dark_city.png`
+- `08_stil_hell_luxurioes_mit_pflanzen.png`
+
+Die Karten sollen:
+- hochwertig aussehen
+- Hover-Effekte haben (leicht anheben, Glow, Zoom, Outline)
+- bei Auswahl klar markiert werden
+- maximal 1–2 Auswahlen erlauben (je nach Frage)
+- als moderne, saubere Premium-Cards erscheinen
+
+4. RECHTS / STICKY: VIDEKO STYLEFINDER PANEL
+Ganz wichtig: Das bisherige starke Element soll bleiben, aber korrekt benannt werden.
+- Statt `VIDEKO Kompass` bitte `VIDEKO Stylefinder` oder `Stylefinder-Profil`.
+- Dieses Panel darf sticky sein.
+- Es soll sich dynamisch füllen, je weiter der Nutzer kommt.
+- Zeige dort z. B.:
+  - Stilrichtung
+  - Hell vs. Dunkel
+  - Modern vs. Wohnlich
+  - Minimal vs. Ausdrucksstark
+  - Natürlichkeit
+  - Budget-Spanne grob
+  - Prioritäten
+- Das darf visuell wie ein Premium-Dashboard wirken: Ringe, Balken, Tags, Füllstände, kleine Glow-Akzente.
+- Wichtig: in hellem Seitenkontext, aber weiterhin edel und gut sichtbar.
+- Das Panel soll deutlich lebendiger wirken als ein Standardformular.
+
+5. ERGEBNIS-LOGIK / PREVIEW
+Unter den Karten oder unterhalb des Bereichs bitte eine kleine Live-Zusammenfassung einbauen:
+- `Dein Profil schärft sich`
+- mit kleinen Tags / Chips wie:
+  - modern
+  - warm
+  - eher hell
+  - wohnlich
+  - Familienküche
+  - designorientiert
+- Dieser Bereich soll sich dynamisch aktualisieren.
+
+6. ABSCHLUSS / CTA (dunkel)
+Unten wieder ein dunkler Abschlussbereich, passend zu den restlichen VIDEKO-Seiten.
+- Große Headline wie:
+  `Genug eingeschätzt? Jetzt machen wir daraus einen echten Plan.`
+- Zwei CTAs:
+  - `Beratung anfragen`
+  - `Studio erleben`
+- Kleiner Hinweis im lockeren VIDEKO-Ton.
+
+INTERAKTION / ANIMATIONEN:
+Bitte nicht statisch bauen. Die Seite soll spürbar lebendig sein.
+Gewünscht sind z. B.:
+- weiche Hover-Animationen auf Karten
+- Progressbar füllt sich animiert
+- Auswahlchips reagieren sauber
+- Stylefinder-Panel aktualisiert sich sichtbar
+- kleine Fade-/Slide-In-Effekte beim Schrittwechsel
+- Buttons mit hochwertigem Hover-State
+- dezente Mikrointeraktionen, aber kein überladenes Chaos
+
+VISUELLE REGELN:
+- Farbwelt: VIDEKO-typisch (Creme / Hell / Gold / Anthrazit / Schwarz)
+- Oben dunkel, Mitte hell, unten dunkel
+- Premium, ruhig, aber spannend
+- Keine billige Form-Optik
+- Viel Weißraum, aber nicht langweilig
+- Typografie edel und gut lesbar
+
+TECHNISCHE HINWEISE:
+- Bitte responsiv denken.
+- Die Seite muss auch mobil gut funktionieren.
+- Den vorhandenen Header/Footer-Stil des Projekts übernehmen.
+- `Stylefinder` muss im Menü und auf der Seite konsistent so benannt werden.
+- Kein Begriff `Kompass` mehr in UI, Texten oder Variablennamen, wenn möglich.
+
+DATEIEN IM ORDNER:
+- `00_stylefinder_referenz_fullpage.png` = Haupt-Referenz
+- `01_hero_dark_premium_kitchen.png` = Hero / dunkler Aufmacher
+- `02` bis `08` = Stilbilder für Karten und Auswahloptionen
+
+Bitte die Seite so bauen, dass sie sich wie ein eigenständiges Highlight der Website anfühlt und nicht wie eine normale Unterseite.
