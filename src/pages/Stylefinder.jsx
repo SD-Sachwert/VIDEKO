@@ -5,7 +5,7 @@ import SectionHeader from '../components/SectionHeader.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import StylefinderFlow from '../components/stylefinder/StylefinderFlow.jsx'
 
-import heroPoster from '../assets/images/stylefinder_assets_videko/01_hero_dark_premium_kitchen.png'
+import heroPoster from '../assets/images/stylefinder-assets/01_hero_dark_premium_kitchen.png'
 
 export default function Stylefinder() {
   return (

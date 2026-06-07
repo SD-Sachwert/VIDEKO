@@ -5937,7 +5937,7 @@ body {
   color: var(--ink);
   background:
     linear-gradient(180deg, rgba(244, 239, 228, 0.74), rgba(238, 232, 220, 0.82)),
-    url('./assets/images/Stylefinder/00_goldmarmor_hintergrund_reference.jpg') center top / cover fixed;
+    url('./assets/images/stylefinder-assets/00_goldmarmor_hintergrund_reference.jpg') center top / cover fixed;
 }
 
 /* hero (video) */
@@ -10199,7 +10199,7 @@ a.footer__contact-line:hover {
 @media (max-width: 560px) { .sf-budgrid { grid-template-columns: repeat(2, 1fr); } }
 
 /* LEISTUNGEN — interactive service section */
-.svc8 { display: grid; grid-template-columns: 1fr 1.05fr; gap: 28px; align-items: start; }
+.svc8 { display: grid; grid-template-columns: 340px 1fr; gap: 28px; align-items: start; }
 .svc8__list { display: flex; flex-direction: column; gap: 10px; }
 .svc8__list--square { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-content: start; }
 .svc8__list--square .svc8__arrow { display: none; }

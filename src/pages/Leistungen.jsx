@@ -106,7 +106,7 @@ export default function Leistungen() {
         <div className="container">
           <SectionHeader align="center" kicker="Ein Prozess. Ein Team. Ein Ergebnis." title={<>Von der ersten Idee bis zur <span className="grad">letzten Schraube.</span></>} lead="Klick dich durch unsere Leistungen – und sieh, was hinter jedem Schritt steckt." />
           <div className="svc8">
-            <div className="svc8__list svc8__list--square">
+            <div className="svc8__list">
               {SERVICES8.map((s, i) => (
                 <button key={s.title} type="button" className={`svc8__card ${activeSvc === i ? 'is-active' : ''}`} onClick={() => { setActiveSvc(i); setActiveThumb(0) }}>
                   <span className="svc8__n">{s.n}</span>
