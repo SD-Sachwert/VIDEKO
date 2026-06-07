@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  Sparkles, Check, ArrowRight, ArrowLeft, Lock, Save, RefreshCw, ChevronUp, ChevronDown,
+  Sparkles, Check, ArrowRight, ArrowLeft, Lock, Save, RefreshCw, ChevronUp, ChevronDown, Heart,
   Users, PartyPopper, ChefHat, Archive, Wind, LayoutGrid, Zap, Droplets, Leaf, Sun, Footprints, Gem,
 } from 'lucide-react'
 
@@ -24,12 +24,22 @@ import mLack from '../../assets/images/materialien/cards/material-card-lack-matt
 import mBronze from '../../assets/images/materialien/cards/material-card-bronze.png'
 import mPlatten from '../../assets/images/materialien/cards/material-card-quarzkomposit.png'
 
+import iHell from '../../assets/images/inspiration/05_helle_kueche.png'
+import iWohnlich from '../../assets/images/inspiration/03_wohnliche_kueche.png'
+import iModernK from '../../assets/images/inspiration/02_moderne_kueche.png'
+import iInsel from '../../assets/images/inspiration/07_kueche_mit_insel.png'
+import iKlein from '../../assets/images/inspiration/08_kleine_kueche_clever_geplant.png'
+import iDetails from '../../assets/images/inspiration/06_materialien_und_details.png'
+
 const STEPS = ['Stil', 'Mehrwerte', 'Materialdetails', 'Farbwelten', 'Funktionsraum', 'Budget', 'Prioritäten', 'Ergebnis']
 
 const STYLE_OPTIONS = [
-  { label: 'Modern & grifflos', img: sModern }, { label: 'Warm & natürlich', img: sNatur },
-  { label: 'Dunkel & elegant', img: sDunkel }, { label: 'Hell & zeitlos', img: sHell },
-  { label: 'Landhaus modern', img: sLandhaus }, { label: 'Statement / Industrial', img: sIndustrial },
+  { label: 'Modern & grifflos', sub: 'Klar, reduziert, technisch', img: sModern },
+  { label: 'Warm & natürlich', sub: 'Holz, weiche Töne', img: sNatur },
+  { label: 'Dunkel & elegant', sub: 'Tiefe Farben, edel', img: sDunkel },
+  { label: 'Hell & zeitlos', sub: 'Licht und Leichtigkeit', img: sHell },
+  { label: 'Landhaus modern', sub: 'Charakter, modern gedacht', img: sLandhaus },
+  { label: 'Statement / Industrial', sub: 'Roh, markant, urban', img: sIndustrial },
 ]
 const MEHRWERTE = [
   { label: 'Familienzeit', icon: Users }, { label: 'Gäste & Geselligkeit', icon: PartyPopper },
@@ -46,16 +56,23 @@ const MAT_TEX = {
 }
 const MATERIALS = Object.keys(MAT_TEX)
 const FARBWELTEN = [
-  { label: 'Hell & natürlich', dots: ['#efe9dd', '#d8cdb6', '#b79b78'] },
-  { label: 'Beige & Sand', dots: ['#e7d9c2', '#cdb796', '#a98c63'] },
-  { label: 'Warmes Holz', dots: ['#caa06a', '#8a5a32', '#e3c79c'] },
-  { label: 'Dunkel & elegant', dots: ['#2b2925', '#12110f', '#c9a050'] },
-  { label: 'Greige modern', dots: ['#cfc7ba', '#a89e8c', '#6f665a'] },
-  { label: 'Schwarz & Bronze', dots: ['#15140f', '#3a352c', '#b08642'] },
-  { label: 'Soft White', dots: ['#f4efe6', '#e6ddcc', '#cfc3ad'] },
-  { label: 'Stein & Taupe', dots: ['#bdb3a3', '#8d8275', '#5f574c'] },
+  { label: 'Hell & natürlich', sub: 'Licht, Leinen, helle Hölzer', dots: ['#efe9dd', '#d8cdb6', '#b79b78'], img: sHell },
+  { label: 'Beige & Sand', sub: 'Warme Neutraltöne', dots: ['#e7d9c2', '#cdb796', '#a98c63'], img: sNatur },
+  { label: 'Warmes Holz', sub: 'Honig- und Nusstöne', dots: ['#caa06a', '#8a5a32', '#e3c79c'], img: sLandhaus },
+  { label: 'Dunkel & elegant', sub: 'Tiefe Töne, edler Look', dots: ['#2b2925', '#12110f', '#c9a050'], img: sDunkel },
+  { label: 'Greige modern', sub: 'Grau trifft Beige', dots: ['#cfc7ba', '#a89e8c', '#6f665a'], img: iModernK },
+  { label: 'Schwarz & Bronze', sub: 'Kontrast mit Charakter', dots: ['#15140f', '#3a352c', '#b08642'], img: sIndustrial },
+  { label: 'Soft White', sub: 'Ruhig, hell, zeitlos', dots: ['#f4efe6', '#e6ddcc', '#cfc3ad'], img: iHell },
+  { label: 'Stein & Taupe', sub: 'Erdig und natürlich', dots: ['#bdb3a3', '#8d8275', '#5f574c'], img: iWohnlich },
 ]
-const FUNKTION = ['Viel Stauraum', 'Kurze Wege', 'Große Arbeitsfläche', 'Offene Wohnküche', 'Kochen zu zweit', 'Familienalltag', 'Kücheninsel', 'Geräte auf Augenhöhe', 'Speisekammer', 'Frühstücksplatz', 'Homebar', 'Ruhiger Look trotz Funktion']
+const FUNKTION = [
+  { label: 'Viel Stauraum', img: iKlein }, { label: 'Kurze Wege', img: iModernK },
+  { label: 'Große Arbeitsfläche', img: iDetails }, { label: 'Offene Wohnküche', img: sHell },
+  { label: 'Kochen zu zweit', img: iWohnlich }, { label: 'Familienalltag', img: iWohnlich },
+  { label: 'Kücheninsel', img: iInsel }, { label: 'Geräte auf Augenhöhe', img: sModern },
+  { label: 'Speisekammer', img: iKlein }, { label: 'Frühstücksplatz', img: iHell },
+  { label: 'Homebar', img: sDunkel }, { label: 'Ruhiger Look trotz Funktion', img: sModern },
+]
 const BUDGETS = ['bis 10.000 €', '10.000 – 15.000 €', '15.000 – 20.000 €', '20.000 – 30.000 €', '30.000 €+', 'noch offen']
 
 const EXPERT_TIPS = [
@@ -80,15 +97,6 @@ const RESULT = {
 
 const MOODS = ['Stimmung', 'Premium', 'Harmonie', 'Funktional', 'Großzügig', 'Offen']
 const DETAILS = ['Arbeitsplatte', 'Fronten', 'Griffe', 'Armatur', 'Licht', 'Stauraum']
-const RECO = [
-  [{ title: 'Zeitlos & natürlich', img: sNatur }, { title: 'Modern & aufgeräumt', img: sModern }, { title: 'Dunkel & elegant', img: sDunkel }, { title: 'Hell & leicht', img: sHell }],
-  [{ title: 'Familienfreundlich', img: sLandhaus }, { title: 'Offen & gesellig', img: sHell }, { title: 'Viel Stauraum', img: sModern }, { title: 'Natürlich & hell', img: sNatur }],
-  [{ title: 'Keramik & Rillenfronten', img: mKeramik }, { title: 'Dunkler Stein & Messing', img: mNaturstein }, { title: 'Helle Flächen & Holz', img: mHolz }, { title: 'Mattlack & Glas', img: mLack }],
-  [{ title: 'Hell & natürlich', img: sHell }, { title: 'Beige & Sand', img: sNatur }, { title: 'Dunkel & elegant', img: sDunkel }, { title: 'Greige modern', img: sModern }],
-  [{ title: 'Offene Wohnküche', img: sHell }, { title: 'Kücheninsel', img: sModern }, { title: 'Viel Stauraum', img: sLandhaus }, { title: 'Kurze Wege', img: sNatur }],
-  [{ title: 'Solide & schön', img: sNatur }, { title: 'Premium-Details', img: sDunkel }, { title: 'Clever geplant', img: sModern }, { title: 'Statement-Küche', img: sIndustrial }],
-  [{ title: 'Design zuerst', img: sDunkel }, { title: 'Alltagsstark', img: sLandhaus }, { title: 'Materialfokus', img: mNaturstein }, { title: 'Ausgewogen', img: sNatur }],
-]
 
 function Chip({ active, onClick, children }) {
   return <button type="button" className={`sf-chip ${active ? 'is-active' : ''}`} onClick={onClick} aria-pressed={active}>{active && <Check size={14} strokeWidth={2.6} />} {children}</button>
@@ -101,6 +109,8 @@ export default function StylefinderFlow() {
   const [saved, setSaved] = useState(false)
   const [mood, setMood] = useState(0)
   const [detail, setDetail] = useState({ Arbeitsplatte: 3, Fronten: 3, Griffe: 2, Armatur: 3, Licht: 4, Stauraum: 3 })
+  const [liked, setLiked] = useState(() => new Set())
+  const toggleLike = (e, label) => { e.stopPropagation(); setLiked((s) => { const n = new Set(s); n.has(label) ? n.delete(label) : n.add(label); return n }) }
   const flowTop = useRef(null)
 
   const toggle = (key, value, max) => setA((p) => {
@@ -200,10 +210,14 @@ export default function StylefinderFlow() {
                       {STYLE_OPTIONS.map((o) => {
                         const active = a.styleSelections.includes(o.label)
                         return (
-                          <button key={o.label} type="button" className={`sf-imgcard ${active ? 'is-active' : ''}`} onClick={() => toggle('styleSelections', o.label, 2)}>
-                            <span className="sf-imgcard__img" style={{ backgroundImage: `url(${o.img})` }} />
-                            <span className="sf-imgcard__label">{o.label}{active && <Check size={15} strokeWidth={2.6} />}</span>
-                          </button>
+                          <div key={o.label} role="button" tabIndex={0} className={`sf-imgcard ${active ? 'is-active' : ''}`} onClick={() => toggle('styleSelections', o.label, 2)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle('styleSelections', o.label, 2) } }}>
+                            <span className="sf-imgcard__img" style={{ backgroundImage: `url(${o.img})` }}>
+                              <button type="button" className={`sf-like ${liked.has(o.label) ? 'is-on' : ''}`} aria-label="Merken" onClick={(e) => toggleLike(e, o.label)}><Heart size={15} strokeWidth={2} fill={liked.has(o.label) ? 'currentColor' : 'none'} /></button>
+                              {active && <span className="sf-imgcard__check"><Check size={14} strokeWidth={2.8} /></span>}
+                            </span>
+                            <span className="sf-imgcard__label">{o.label}</span>
+                            <span className="sf-imgcard__sub">{o.sub}</span>
+                          </div>
                         )
                       })}
                     </div>
@@ -249,14 +263,18 @@ export default function StylefinderFlow() {
                   <>
                     <h2 className="sf-q">Welche Farbwelt passt zu dir?</h2>
                     <p className="sf-micro">Wähle die Töne, die deine Küche tragen sollen. <em>(Mehrfachauswahl)</em></p>
-                    <div className="sf-colorgrid">
+                    <div className="sf-imggrid sf-imggrid--4">
                       {FARBWELTEN.map((o) => {
                         const active = a.farbwelten.includes(o.label)
                         return (
-                          <button key={o.label} type="button" className={`sf-colorcard ${active ? 'is-active' : ''}`} onClick={() => toggle('farbwelten', o.label)}>
-                            <span className="sf-colorcard__dots">{o.dots.map((d, k) => <span key={k} style={{ background: d }} />)}</span>
-                            <span className="sf-colorcard__label">{o.label}{active && <Check size={14} strokeWidth={2.6} />}</span>
-                          </button>
+                          <div key={o.label} role="button" tabIndex={0} className={`sf-imgcard ${active ? 'is-active' : ''}`} onClick={() => toggle('farbwelten', o.label)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle('farbwelten', o.label) } }}>
+                            <span className="sf-imgcard__img" style={{ backgroundImage: `url(${o.img})` }}>
+                              <button type="button" className={`sf-like ${liked.has(o.label) ? 'is-on' : ''}`} aria-label="Merken" onClick={(e) => toggleLike(e, o.label)}><Heart size={15} strokeWidth={2} fill={liked.has(o.label) ? 'currentColor' : 'none'} /></button>
+                              {active && <span className="sf-imgcard__check"><Check size={14} strokeWidth={2.8} /></span>}
+                            </span>
+                            <span className="sf-imgcard__label">{o.label}</span>
+                            <span className="sf-imgcard__dots">{o.dots.map((d, k) => <span key={k} style={{ background: d }} />)}</span>
+                          </div>
                         )
                       })}
                     </div>
@@ -267,7 +285,20 @@ export default function StylefinderFlow() {
                   <>
                     <h2 className="sf-q">Wie soll deine Küche funktionieren?</h2>
                     <p className="sf-micro">Wähle, was im Alltag für dich wirklich zählt. <em>(Mehrfachauswahl)</em></p>
-                    <div className="sf-chips">{FUNKTION.map((f) => <Chip key={f} active={a.funktion.includes(f)} onClick={() => toggle('funktion', f)}>{f}</Chip>)}</div>
+                    <div className="sf-imggrid sf-imggrid--4">
+                      {FUNKTION.map((o) => {
+                        const active = a.funktion.includes(o.label)
+                        return (
+                          <div key={o.label} role="button" tabIndex={0} className={`sf-imgcard sf-imgcard--sm ${active ? 'is-active' : ''}`} onClick={() => toggle('funktion', o.label)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle('funktion', o.label) } }}>
+                            <span className="sf-imgcard__img" style={{ backgroundImage: `url(${o.img})` }}>
+                              <button type="button" className={`sf-like ${liked.has(o.label) ? 'is-on' : ''}`} aria-label="Merken" onClick={(e) => toggleLike(e, o.label)}><Heart size={14} strokeWidth={2} fill={liked.has(o.label) ? 'currentColor' : 'none'} /></button>
+                              {active && <span className="sf-imgcard__check"><Check size={13} strokeWidth={2.8} /></span>}
+                            </span>
+                            <span className="sf-imgcard__label">{o.label}</span>
+                          </div>
+                        )
+                      })}
+                    </div>
                   </>
                 )}
 
@@ -339,20 +370,6 @@ export default function StylefinderFlow() {
               <div className="sf-tip"><span className="sf-tip__head"><Gem size={13} strokeWidth={2} /> Experten-Tipp</span><p>{EXPERT_TIPS[step]}</p></div>
             </div>
           </aside>
-        </div>
-
-        {/* LIVE EMPFEHLUNGEN */}
-        <div className="sf-reco">
-          <span className="sf-block__head"><Sparkles size={14} strokeWidth={2} /> Live Empfehlungen für dich</span>
-          <div className="sf-reco__row">
-            {RECO[step].map((r) => (
-              <article className="sf-reco__card" key={r.title}>
-                <span className="sf-reco__img" style={{ backgroundImage: `url(${r.img})` }} aria-hidden="true" />
-                <span className="sf-reco__scrim" aria-hidden="true" />
-                <span className="sf-reco__title">{r.title}</span>
-              </article>
-            ))}
-          </div>
         </div>
 
         {/* LIVE VORSCHAU + DETAIL ANPASSEN */}
