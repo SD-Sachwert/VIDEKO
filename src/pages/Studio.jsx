@@ -1,5 +1,5 @@
-import { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { useRef, useState } from 'react'
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { Check, ArrowRight } from 'lucide-react'
 
 import Reveal from '../components/Reveal.jsx'
@@ -26,13 +26,14 @@ const INTRO_USP = [
   'Premium Materialien', 'Alles aus einer Hand',
 ]
 
-const CARDS = [
-  { n: '01', title: 'Ankommen', text: 'Erstmal ankommen, durchatmen, wohlfühlen. Kein Druck, kein Geschwätz.', image: cAnkommen },
-  { n: '02', title: 'Küchenwelten entdecken', text: 'Stöbern, vergleichen, inspirieren lassen – in echten Küchenwelten.', image: cWelten },
-  { n: '03', title: 'Materialien fühlen', text: 'Oberflächen anfassen, Qualität spüren. Bilder lügen, Material nicht.', image: cMaterial },
-  { n: '04', title: 'Planung erleben', text: 'Deine Küche in 3D – realistisch, bevor irgendwas gebaut wird.', image: cPlanung },
-  { n: '05', title: 'Beratung vertiefen', text: 'In Ruhe Fragen klären, ehrlich und auf Augenhöhe.', image: cBeratung },
-  { n: '06', title: 'Angebot & Feinplanung', text: 'Transparent, fair und bis ins Detail durchdacht.', image: cPlanung },
+const JOURNEY = [
+  { title: 'Ankommen', text: 'Erstmal ankommen, durchatmen, wohlfühlen. Kein Druck, kein Geschwätz.', img: cAnkommen },
+  { title: 'Raumgefühl spüren', text: 'Echte Küchenwelten zum Durchgehen – Proportion und Atmosphäre live.', img: introImg },
+  { title: 'Materialien anfassen', text: 'Oberflächen fühlen, Qualität spüren. Bilder lügen, Material nicht.', img: cMaterial },
+  { title: 'Licht erleben', text: 'Wie Licht deine Küche verändert – morgens, abends, beim Kochen.', img: cWelten },
+  { title: 'Planung sehen', text: 'Deine Küche in 3D – realistisch, bevor irgendwas gebaut wird.', img: cPlanung },
+  { title: 'Beratung vertiefen', text: 'In Ruhe Fragen klären, ehrlich und auf Augenhöhe.', img: cBeratung },
+  { title: 'Entscheidung treffen', text: 'Kein Druck. Du entscheidest in deinem Tempo – mit einem klaren Plan.', img: splitImg },
 ]
 
 const STANCE = ['Diskret & respektvoll', 'Ehrlich & transparent', 'Erfahren & spezialisiert']
@@ -53,6 +54,7 @@ export default function Studio() {
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
   const imgY = useTransform(scrollYProgress, [0, 1], ['0%', '16%'])
   const imgScale = useTransform(scrollYProgress, [0, 1], [1.06, 1.16])
+  const [active, setActive] = useState(0)
 
   return (
     <div className="leist-page studio-page">
@@ -131,24 +133,34 @@ export default function Studio() {
         </div>
       </section>
 
-      {/* DEIN STUDIO ERLEBNIS */}
+      {/* DEIN STUDIO ERLEBNIS — interaktive Journey */}
       <section className="section studio-exp" id="erlebnis">
         <div className="container">
-          <SectionHeader align="center" kicker="Dein Studio-Erlebnis" title={<>Erlebe, wie deine Küche entsteht.<br /><span className="grad">Schritt für Schritt. Mit Gefühl.</span></>} />
-          <div className="studio-grid">
-            {CARDS.map((cd, i) => (
-              <Reveal key={cd.n} delay={(i % 3) * 0.06}>
-                <article className="lscard studio-card">
-                  <span className="lscard__img" style={{ backgroundImage: `url(${cd.image})` }} aria-hidden="true" />
-                  <span className="lscard__scrim" aria-hidden="true" />
-                  <span className="snum">{cd.n}</span>
-                  <span className="lscard__body">
-                    <span className="lscard__title">{cd.title}</span>
-                    <span className="lscard__text">{cd.text}</span>
+          <SectionHeader align="center" kicker="Dein Studio-Erlebnis" title={<>Erlebe, wie deine Küche entsteht.<br /><span className="grad">Schritt für Schritt. Mit Gefühl.</span></>} lead="Klick dich durch deinen Besuch – vom Ankommen bis zur Entscheidung." />
+          <div className="sjourney">
+            <div className="sjourney__steps">
+              {JOURNEY.map((s, i) => (
+                <button key={s.title} type="button" className={`sjstep ${active === i ? 'is-active' : ''}`} onClick={() => setActive(i)} onMouseEnter={() => setActive(i)}>
+                  <span className="sjstep__n">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="sjstep__body">
+                    <span className="sjstep__title">{s.title}</span>
+                    <span className="sjstep__text">{s.text}</span>
                   </span>
-                </article>
-              </Reveal>
-            ))}
+                </button>
+              ))}
+            </div>
+            <div className="sjourney__stage">
+              <AnimatePresence mode="wait">
+                <motion.div key={active} className="sjourney__card" initial={{ opacity: 0, scale: 1.03 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}>
+                  <span className="sjourney__img" style={{ backgroundImage: `url(${JOURNEY[active].img})` }} aria-hidden="true" />
+                  <span className="sjourney__scrim" aria-hidden="true" />
+                  <span className="sjourney__cap">
+                    <span className="sjourney__capn">{String(active + 1).padStart(2, '0')}</span>
+                    <span className="sjourney__captitle">{JOURNEY[active].title}</span>
+                  </span>
+                </motion.div>
+              </AnimatePresence>
+            </div>
           </div>
         </div>
       </section>
