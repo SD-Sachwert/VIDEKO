@@ -1,0 +1,155 @@
+Baue die VIDEKO-Seite „Beratung anfragen“ so nah wie möglich an der beigefügten Referenz nach. Nicht nur grob inspirieren lassen, sondern die Seite layout-, stil- und stimmungstechnisch sehr eng daran nachbauen. Ziel ist eine hochwertige, moderne, warme Premium-Seite im VIDEKO-Stil: oben dunkel, in der Mitte hell, unten wieder dunkel. Bitte die Seite technisch sauber, responsiv und production-ready umsetzen.
+
+WICHTIG
+- Nutze die beigefügte Referenzdatei als visuelle Hauptvorlage.
+- Verwende das echte VIDEKO-Logo aus dem Projekt.
+- Verwende die bestehenden Projektfarben, Typografie und Komponenten, aber richte alles optisch stark an der Referenz aus.
+- Der rechte dunkle Infoblock („Was nach deiner Anfrage passiert“) soll heller werden als in der Referenz: nicht tiefschwarz, sondern eher ein elegantes dunkles Anthrazit / warmes Charcoal, z. B. ungefähr in Richtung #1b1b1d bis #232326, damit der Kontrast angenehmer und weniger hart wirkt.
+- Alles, was nach „Beratung anfragen“, „Rückruf anfragen“, „Termin anfragen“, „Anfrage starten“, „Zum Formular“ usw. klingt, muss den Nutzer direkt zum Eingabebereich bringen. Kein Umweg, kein „oben auf der Seite landen und dann wieder scrollen müssen“.
+
+ZIEL DER SEITE
+Die Seite soll nicht wie ein langweiliger Kontaktbogen wirken, sondern wie eine hochwertige Beratungs-Landingpage. Der Nutzer soll sofort denken: „Okay, hier bekomme ich persönliche Hilfe ohne Möbelhaus-Gelaber.“ Weniger Formularstress, mehr Vertrauen, Klarheit und Premium-Gefühl.
+
+SEITENAUFBAU
+
+1. HEADER / NAVIGATION
+- Transparenter bzw. sehr dunkler Header über dem Hero.
+- Links: VIDEKO-Logo.
+- Mitte/Rechts: Navigation wie im Rest der Website.
+- CTA oben rechts: „Beratung anfragen“.
+- Dieser CTA muss direkt zum Formularbereich springen: /beratung#anfrage-formular
+
+2. HERO-BEREICH
+- Großes, hochwertiges Küchenbild mit dunklem Overlay links.
+- Links im Overlay:
+  - kleine Eyebrow: „BERATUNG ANFRAGEN“
+  - große Headline:
+    „Erzähl uns groß,
+    wir sortieren den Rest.“
+  - Subline:
+    „Keine Hotline. Kein Rabatt-Gebrüll. Kein Küchenlatein mit 47 Abkürzungen. Nur ehrliche Beratung, klare nächsten Schritte und eine Küche, die zu deinem Leben passt.“
+- CTA 1: „Anfrage starten“ → springt direkt zu #anfrage-formular
+- CTA 2: „Erst Stylefinder machen“ → führt auf die Stylefinder-Seite
+- Hero optisch nah an der Referenz: warme Holztöne, goldene Akzente, ruhige hochwertige Stimmung.
+
+3. EINLEITENDER HELLER ABSCHNITT
+- Überschrift mittig:
+  „Du musst noch nicht alles wissen.“
+- Kleiner erklärender Text darunter:
+  „Ein paar Ideen, ein grobes Ziel oder einfach nur der Wunsch nach Veränderung reichen völlig aus. Wir helfen dir, daraus etwas zu machen, das wirklich zu dir passt.“
+
+4. DREI EINSTIEGS-KARTEN
+Drei helle Karten nebeneinander, jeweils mit kleinem Icon/Bilddetail und Button.
+
+Karte 1:
+- Titel: „Ich will erst mal grob planen“
+- Text: „Du hast Ideen, aber noch keinen fertigen Plan? Perfekt. Genau dafür ist der Stylefinder da.“
+- Button: „Stylefinder starten“
+- Link: zur Stylefinder-Seite
+
+Karte 2:
+- Titel: „Ich will einen Rückruf“
+- Text: „Kurz anfragen, wir melden uns persönlich. Ohne Callcenter-Gelaber.“
+- Button: „Rückruf anfragen“
+- Link: /beratung#anfrage-formular
+- Beim Klick soll im Formular das Anliegen „Rückruf“ vorausgewählt werden.
+
+Karte 3:
+- Titel: „Ich will direkt ins Studio“
+- Text: „Wenn du schon konkreter bist, planen wir direkt den nächsten sinnvollen Schritt.“
+- Button: „Termin anfragen“
+- Link: /beratung#anfrage-formular
+- Beim Klick soll im Formular das Anliegen „Studio-Termin“ vorausgewählt werden.
+
+5. FORMULARBEREICH + INFOBLOCK
+Zweispaltiger Bereich.
+Links: Formularkarte.
+Rechts: Info-/Ablaufkarte.
+
+FORMULARKARTE
+- id="anfrage-formular"
+- Große Überschrift: „Kurz reicht. Wirklich.“
+- Kurzer Hinweis: „Wir brauchen keinen Küchen-Essay. Ein paar Infos genügen.“
+- Möglichst reduziert, modern, hochwertig und nicht überladen.
+- Sichtbar direkt im ersten Schritt nur:
+  - Name
+  - Telefon
+  - E-Mail
+  - Anliegen
+  - Nachricht
+- Anliegen als auswählbare Chips / Buttons:
+  - Rückruf
+  - Studio-Termin
+  - Ich habe erst mal Fragen
+- Darunter eine aufklappbare Sektion „Mehr Details angeben (optional)“
+- In dieser optionalen Sektion können rein:
+  - Küchenart
+  - Projektstatus
+  - Zeitplan
+  - Budgetrahmen
+  - Grundriss vorhanden?
+- CTA unten: „Anfrage absenden“
+- Kleiner Vertrauenshinweis wie „Deine Daten sind sicher.“
+
+RECHTER INFOBLOCK
+- Optisch wie in der Referenz, aber heller als dort.
+- Keine tiefschwarze Fläche, sondern dunkles warmes Anthrazit.
+- Überschrift:
+  „Was nach deiner Anfrage passiert“
+- 5 Schritte:
+  1. Wir schauen uns deine Angaben an.
+  2. Wir melden uns persönlich.
+  3. Wir klären, wo du gerade stehst.
+  4. Wir planen den nächsten sinnvollen Schritt.
+  5. Du entscheidest in Ruhe.
+- Darunter Kontaktblock mit:
+  - VIDEKO Küchen eG
+  - Hertzstraße 4, 97076 Würzburg
+  - info@videko-kuechen.de
+  - Telefonnummer bitte die echte VIDEKO-Projekttelefonnummer einsetzen, keine Dummy-Nummer.
+
+6. DREI BILDKARTEN UNTEN
+Drei visuelle Karten wie in der Referenz.
+- „Aus Idee wird Richtung“
+- „Aus Richtung wird Planung“
+- „Aus Planung wird Küche“
+Mit jeweils kleiner Unterzeile.
+Optisch hochwertig, leicht editorial, hell und sauber.
+
+7. FOOTER
+- Dunkler Footer im Stil des restlichen Projekts.
+- VIDEKO Branding sauber einbauen.
+- Bestehende Footer-Navigation übernehmen und optisch an die Referenz anlehnen.
+
+INTERAKTION / WICHTIG FÜR DIE LINKS
+Das ist Pflicht:
+- Jeder CTA, der zu einer Beratung / Anfrage / Termin / Rückruf führt, muss DIREKT im Formularbereich landen.
+- Wenn der Nutzer bereits auf der Beratungsseite ist, smooth-scroll exakt zum Formular.
+- Wenn der Nutzer von einer anderen Seite kommt, soll der Link auf /beratung#anfrage-formular gehen und nach dem Laden automatisch exakt zum Formular springen.
+- Optional zusätzlich das erste relevante Feld fokussieren.
+- Für die Karten „Rückruf anfragen“ und „Termin anfragen“ soll das Anliegen im Formular automatisch vorausgewählt werden.
+- Kein Zustand, in dem man nur oben auf der Seite landet und erst noch manuell nach unten scrollen muss.
+
+GESTALTUNG / LOOK & FEEL
+- Premium, warm, elegant, modern.
+- Kein Möbelhaus-Look.
+- Keine übertriebenen Spielereien.
+- Schöne Abstände, viel Luft, hochwertige Typo.
+- Goldene Akzente sparsam und edel einsetzen.
+- Die helle Mittelzone soll freundlich, ruhig und luxuriös wirken.
+- Der dunkle rechte Kasten soll edel und präsent sein, aber nicht brutal dunkel.
+
+TECHNISCH
+- Responsiv umsetzen.
+- Desktop zuerst, dann Tablet/Mobile sauber adaptieren.
+- Komponenten sauber strukturieren.
+- Wenn möglich vorhandene Komponenten aus dem Projekt wiederverwenden.
+- Bitte keinen generischen Fallback bauen, sondern die Seite wirklich nah an der Referenz umsetzen.
+
+TEXT / PLACEHOLDER
+- Keine Fantasie-Kontaktdaten einsetzen.
+- Echte VIDEKO-Daten verwenden, soweit im Projekt vorhanden.
+- Falls einzelne Assets/Bilder fehlen, die bestehenden hochwertigen Küchenbilder aus dem Projekt so wählen, dass die Stimmung der Referenz möglichst genau getroffen wird.
+
+DATEI-/UMSETZUNGSZIEL
+Bitte die Beratungsseite final in diesem Stil umsetzen, sodass sie direkt in die Website eingebunden werden kann und alle Beratungs-CTAs sauber und ohne Umweg zum Formular führen.

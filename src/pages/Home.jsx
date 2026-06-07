@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom'
 import { ArrowUpRight } from 'lucide-react'
 
 import Hero from '../components/Hero.jsx'
-import ExplodingKitchen from '../components/ExplodingKitchen.jsx'
 import Reveal from '../components/Reveal.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
 import CTAButton from '../components/CTAButton.jsx'
@@ -93,9 +92,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* EXPLODING KITCHEN */}
-      <ExplodingKitchen />
 
       {/* FINALER CTA */}
       <section className="leist-final home-final">

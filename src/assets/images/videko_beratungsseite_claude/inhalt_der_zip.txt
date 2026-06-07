@@ -1,0 +1,3 @@
+Inhalt der ZIP:
+- referenz_beratungsseite_videko.png
+- claude_prompt_beratungsseite_videko.txt

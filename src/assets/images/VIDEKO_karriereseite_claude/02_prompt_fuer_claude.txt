@@ -1,0 +1,187 @@
+BAUE DIE VIDEKO-KARRIEReseite NEU – angelehnt an die beigefügte Referenz "01_referenz_karriereseite.png".
+
+WICHTIG:
+- Nutze die Referenz klar als gestalterische Vorlage für Aufbau, Hierarchie, Tonalität und Wertigkeit.
+- Verwende das echte VIDEKO-Logo aus dem Projekt.
+- Die Seite soll wie eine moderne Premium-Karriereseite wirken: hochwertig, emotional, klar, nicht überladen, aber deutlich lebendiger als die bisherigen Seiten.
+- Der Stil muss zur restlichen VIDEKO-Website passen.
+- Ganz wichtig: Der dunkle Banner / Abschnitt in der Mitte aus der Referenz soll bei der Umsetzung HELL sein, nicht dunkel.
+- Grundregel: Hero oben dunkel, Hauptinhalt überwiegend hell/cremefarben, Abschluss-CTA + Footer unten wieder dunkel.
+- Bitte keine generische Möbelhaus-Anmutung, kein 08/15-Recruiting-Look.
+
+ZIEL DER SEITE:
+Die Seite soll nicht nur schön aussehen, sondern Bewerber emotional abholen. Jeder soll direkt merken:
+"Hier entsteht etwas Geiles. Premium statt Möbelhaus-Zirkus."
+Die Seite muss hochwertig, sympathisch, etwas frech, modern und konversionsstark sein.
+
+DESIGNRICHTUNG:
+- Premium, warm, modern, clean
+- Farbstimmung: Schwarz / Anthrazit / Creme / Goldakzente
+- Große starke Headlines
+- Viel Weißraum
+- Runde Karten / weiche Schatten / edle Hover-Effekte
+- Hochwertige Bildsprache, echte Menschen, echte Arbeitssituationen
+- Mehr Dynamik und mehr spürbare Bewegung als auf den anderen Seiten
+
+WICHTIGE LAYOUT-REGELN:
+1. Oben dunkler Hero-Bereich
+2. Danach hauptsächlich helle Bereiche
+3. Kein weiterer großer dunkler Block mitten auf der Seite
+4. Erst ganz unten wieder dunkler CTA-Bereich + Footer
+
+SEITENAUFBAU:
+
+1) HERO / HEADER (DUNKEL)
+- Große Fullscreen- oder fast Fullscreen-Hero-Sektion
+- Hintergrundbild / Szene: Team im hochwertigen Küchenstudio bei echter Zusammenarbeit
+- Links starke Headline:
+  "Bock auf Küchen.
+   Aber ohne Möbelhaus-Zirkus."
+- Darunter kurzer Text in diesem Stil:
+  "Wir suchen Menschen mit Anspruch, Humor und Lust, etwas Besonderes aufzubauen.
+   Kein Rabatt-Gebrüll. Kein 08/15-Job. Sondern ein Studio, das gerade richtig Fahrt aufnimmt."
+- Zwei CTAs:
+  1. "Offene Stellen ansehen"
+  2. "Einfach Hallo sagen"
+- Rechts oder ergänzend 3 kleine Value-Highlights / Floating Cards, z. B.:
+  - Echte Verantwortung
+  - Kurze Wege
+  - Premium statt Preisschlacht
+- Navigation oben im bekannten VIDEKO-Stil
+- Optional dezenter Scroll-Hinweis
+
+2) WARUM VIDEKO? (HELL)
+- Zweispaltige Sektion
+- Linke Seite große Headline:
+  "Wir bauen kein Möbelhaus.
+   Wir bauen ein Team."
+- Rechte Seite 4 hochwertige Karten mit kurzen Vorteilen:
+  - Premium statt Masse
+  - Mitgestalten statt Mitschwimmen
+  - Klartext statt Konzernsprech
+  - Humor inklusive
+- Karten mit kleinen Icons, Nummern oder Mini-Badges
+- Sanfte Hover-Animationen
+
+3) SO LÄUFT'S BEI UNS WIRKLICH (HELL, NICHT DUNKEL)
+- Das ist die wichtige Änderung.
+- Dieser Abschnitt soll HELL gestaltet werden.
+- Zeige 3 Schritte / 3 Bereiche in einer modernen visuellen Reihe:
+  1. Beratung
+  2. Planung
+  3. Umsetzung
+- Je Schritt ein passendes Bild und kurzer erklärender Text
+- Optional leichte verbindende Linie / Pfad / Mikroanimation zwischen den Schritten
+- Tonalität: ehrlich, bodenständig, hochwertig
+
+4) OFFENE STELLEN / JOBGRID (HELL)
+- Headline:
+  "Such dir, was zu dir passt."
+- Filter-Tabs / Chips:
+  - Alle
+  - Verkauf
+  - Planung
+  - Handwerk
+  - Organisation
+  - Marketing
+- Darunter ein Grid mit Stellenkarten, z. B.:
+  - Küchenverkauf & Beratung
+  - Küchenplanung
+  - Montage & Handwerk
+  - Aufmaß & Projektkoordination
+  - Empfang & Organisation
+  - Marketing & Social Media
+  - Quereinstieg
+  - Initiativbewerbung
+- Jede Karte mit eigenem Bild, kleinem Icon, kurzer Beschreibung und Link / CTA
+- Wichtig: Die Karten sollen abwechslungsreich wirken, nicht zu gleichförmig
+- Auf Hover darf gern etwas Leben reinkommen: Bildzoom, Schatten, Mini-Shift, Goldakzent
+
+5) PASSEN WIR ZUSAMMEN? (HELL)
+- Überschrift in diesem Stil:
+  "Passen wir zusammen?"
+- Zwei Boxen nebeneinander:
+  a) "Du passt zu VIDEKO, wenn ..."
+  b) "Eher nicht, wenn ..."
+- Ehrlicher, leicht frecher Ton
+- Nicht zu lang, klar, direkt
+
+6) KEINE PERFEKTE BEWERBUNG NÖTIG (HELL)
+- 3-Schritte-Erklärung:
+  1. Kurz melden
+  2. Kurz quatschen
+  3. Passt? Dann los.
+- Darunter kurzer Satz:
+  "Schreib uns einfach. Lebenslauf kann, muss aber nicht."
+- Grafisch modern, leicht, unkompliziert
+
+7) KONTAKT / HALLO-SEKTION (HELL)
+- Links Bild vom Studio / Showroom
+- Dazu Headline:
+  "Sag einfach Hallo."
+- Kurzer Text, dass man sich locker melden kann, egal ob Verkauf, Planung, Montage oder Quereinstieg
+- Rechts ein kompaktes Formular mit wenigen Feldern:
+  - Name
+  - E-Mail oder Telefon
+  - Bereich
+  - Nachricht (optional)
+- CTA-Button z. B.:
+  "Unverbindlich melden"
+- Kleiner Vertrauenssatz darunter:
+  "Kein Anschreiben. Kein Bewerbungsroman. Erstmal reden."
+
+8) ABSCHLUSS-CTA (DUNKEL)
+- Dunkler, emotionaler Abschlussbereich mit starkem Bild
+- Headline z. B.:
+  "Lust, etwas Besonderes mit aufzubauen?"
+- Kurzer Text:
+  "Wir suchen keine Lebensläufe. Wir suchen Menschen, die Bock haben."
+- Zwei CTAs:
+  - Jetzt bewerben
+  - Beratung ansehen
+
+9) FOOTER (DUNKEL)
+- Sauber im bekannten VIDEKO-Stil
+- Echte Projektdaten einsetzen
+- Logo, Navigation, Kontakt, Impressum, Datenschutz, Social Icons
+
+ANIMATIONEN / INTERAKTIONEN – GANZ WICHTIG:
+Die Seite soll deutlich lebendiger sein als die bisherigen Seiten.
+Bitte mehr Bewegung, aber hochwertig und nicht verspielt-chaotisch.
+
+Gewünschte Effekte:
+- Hero-Elemente weich einblenden / leicht nach oben fahren
+- Floating-Cards im Hero mit leichter Bewegung / Parallax-Effekt
+- Karten beim Scrollen sauber revealen
+- Jobkarten mit elegantem Hover
+- Filter-Chips mit weichem Active-State
+- Zahlen / Icons / Linien dezent animieren
+- Schrittbereich (Beratung / Planung / Umsetzung) mit leichter Motion
+- CTA-Buttons mit hochwertigem Hover-Zustand
+- Insgesamt smooth, modern, leicht luxuriös
+
+WICHTIG FÜR DEN TON:
+- Etwas frecher als klassische Karriereseiten
+- Aber trotzdem stilvoll und hochwertig
+- Nicht albern, sondern charmant-direkt
+- VIDEKO-Humor darf spürbar sein
+
+TECHNISCHE UMSETZUNG:
+- Bitte responsiv aufbauen
+- Desktop first, aber mobil sauber mitdenken
+- Abschnittsabstände großzügig
+- Gute Lesbarkeit
+- Bildgrößen und Kartenverhältnisse sauber angleichen
+- Keine dunkle Mittelsektion mehr – bitte alles zwischen Hero und Abschluss-CTA überwiegend hell halten
+
+TEXTLICHE WICHTIGKEIT:
+Falls bestehende Texte aus der aktuellen Karriereseite übernommen werden, dann sprachlich schärfen und hochwertiger formulieren.
+Achte auf fehlerfreie Sprache.
+Beispiele für Stil:
+- klar
+- direkt
+- hochwertig
+- sympathisch
+- modern
+
+BITTE JETZT DIE KARRIEReseite AUF DIESER BASIS KOMPLETT ÜBERARBEITEN UND VISUELL SO STARK UMSETZEN, DASS SIE SICH KLAR VON DEN ANDEREN, ETWAS ZU RUHIGEN VIDEKO-SEITEN ABSETZT.

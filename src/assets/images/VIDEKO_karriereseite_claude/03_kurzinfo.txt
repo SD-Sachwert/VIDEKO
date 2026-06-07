@@ -1,0 +1,11 @@
+Inhalt dieser ZIP:
+
+01_referenz_karriereseite.png
+- Die visuelle Referenz für Aufbau, Stil und Hierarchie.
+
+02_prompt_fuer_claude.txt
+- Der vollständige Umsetzungs-Prompt für Claude.
+
+Wichtige Zusatzvorgabe:
+- Der bisher dunkle Mittelabschnitt soll in der finalen Umsetzung hell gestaltet werden.
+- Nur Hero oben und CTA/Footer unten dunkel halten.

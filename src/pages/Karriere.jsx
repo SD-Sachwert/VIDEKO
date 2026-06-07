@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import {
   Store, PencilRuler, Hammer, Ruler, Headset, MessageSquare, Megaphone,
   Sparkles, Rocket, Mail, ArrowUpRight, ArrowRight, MapPin, Upload, Check, Coffee,
+  Gem, Smile, ShieldCheck, Zap,
 } from 'lucide-react'
 
 import Reveal from '../components/Reveal.jsx'
@@ -51,19 +52,30 @@ const EGGS = [
   'Wenn du „passt schon" sagst, meinen wir hoffentlich nicht dasselbe.',
 ]
 
-const TICKEN = [
-  'Ehrlich statt Verkaufsdruck',
-  'Mitdenken statt mitlaufen',
-  'Kurze Wege statt Konzern-Pingpong',
-  'Qualität vor Stückzahl',
-  'Aufbauphase mit echtem Gestaltungsspielraum',
-  'Ein Team, kein Zuständigkeits-Tetris',
-]
 
 const STEPS3 = [
   { n: '1', title: 'Kurz melden', text: 'Ein paar Zeilen reichen. Lebenslauf? Gern, muss aber nicht perfekt sein.' },
   { n: '2', title: 'Wir melden uns', text: 'Persönlich, ehrlich, kein Bot – wir schauen, ob die Chemie passt.' },
   { n: '3', title: 'Studio erleben', text: 'Komm vorbei, schau wie wir ticken. Passt? Dann legen wir los.' },
+]
+
+const HEROCARDS = [
+  { icon: ShieldCheck, t: 'Echte Verantwortung' },
+  { icon: Zap, t: 'Kurze Wege' },
+  { icon: Gem, t: 'Premium statt Preisschlacht' },
+]
+
+const WHY4 = [
+  { icon: Gem, title: 'Premium statt Masse', text: 'Qualität vor Stückzahl – jedes Projekt zählt.' },
+  { icon: Rocket, title: 'Mitgestalten statt Mitschwimmen', text: 'Aufbauphase mit echtem Gestaltungsspielraum.' },
+  { icon: MessageSquare, title: 'Klartext statt Konzernsprech', text: 'Kurze Wege, ehrliche Worte, schnelle Entscheidungen.' },
+  { icon: Smile, title: 'Humor inklusive', text: 'Hochwertig heißt nicht steif. Wir nehmen die Arbeit ernst – uns nicht zu sehr.' },
+]
+
+const FLOW3 = [
+  { n: '01', title: 'Beratung', text: 'Wir hören zu, bevor wir planen – ehrlich und auf Augenhöhe.', img: jVerkauf },
+  { n: '02', title: 'Planung', text: 'Aus Wünschen wird ein klarer Plan, in 3D sichtbar.', img: jPlanung },
+  { n: '03', title: 'Umsetzung', text: 'Sauber montiert, termintreu, bis die letzte Schraube sitzt.', img: jMontage },
 ]
 
 const BEREICHE = ROLES.map((r) => r.title).concat('Initiativbewerbung')
@@ -95,17 +107,60 @@ export default function Karriere() {
               Den Rest kriegen wir gemeinsam hin.
             </p>
             <div className="pagehero__actions">
-              <CTAButton href="#rollen">Rollen entdecken</CTAButton>
-              <a className="leist-hero__link" href="#bewerbung">Ich hab keine Ahnung, aber Bock <ArrowRight size={16} strokeWidth={1.9} /></a>
+              <CTAButton href="#rollen">Offene Stellen ansehen</CTAButton>
+              <a className="leist-hero__link" href="#bewerbung">Einfach Hallo sagen <ArrowRight size={16} strokeWidth={1.9} /></a>
             </div>
           </Reveal>
+          <div className="karr-herocards">
+            {HEROCARDS.map((h, i) => (
+              <Reveal key={h.t} delay={0.15 + i * 0.08} className="karr-herocard">
+                <span className="karr-herocard__ic"><h.icon size={17} strokeWidth={1.7} /></span>
+                <span>{h.t}</span>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* 2 — WARUM ANDERS (kurzblock) */}
-      <section className="section karr-intro">
+      {/* 2 — WARUM VIDEKO (hell, 4 Karten) */}
+      <section className="section karr-why2">
         <div className="container">
-          <SectionHeader align="center" kicker="Warum VIDEKO anders ist" title={<>Wir bauen kein Möbelhaus. <span className="grad">Wir bauen ein Team.</span></>} lead="Keine Rabattschlachten, kein Drücker-Vibe, kein Konzern-Dschungel. Sondern echte Arbeit, kurze Wege und Menschen, die ihren Job können." />
+          <div className="karr-why2__grid">
+            <Reveal className="karr-why2__copy">
+              <span className="kicker">Warum VIDEKO</span>
+              <h2 className="lintro__title">Wir bauen kein Möbelhaus. <span className="grad">Wir bauen ein Team.</span></h2>
+              <p className="lintro__text">Keine Rabattschlachten, kein Drücker-Vibe, kein Konzern-Dschungel. Sondern echte Arbeit, kurze Wege und Menschen, die ihren Job können.</p>
+            </Reveal>
+            <div className="karr-why2__cards">
+              {WHY4.map((wc, i) => (
+                <Reveal key={wc.title} className="karr-whycard2" delay={(i % 2) * 0.06}>
+                  <span className="karr-whycard2__ic"><wc.icon size={20} strokeWidth={1.6} /></span>
+                  <span className="karr-whycard2__title">{wc.title}</span>
+                  <span className="karr-whycard2__text">{wc.text}</span>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 2b — SO LÄUFT'S BEI UNS WIRKLICH (hell, 3 Schritte) */}
+      <section className="section section--light karr-flow">
+        <div className="container">
+          <SectionHeader align="center" kicker="So läuft's bei uns wirklich" title={<>Beratung. Planung. <span className="grad">Umsetzung.</span></>} lead="Ehrlich, bodenständig und hochwertig – vom ersten Gespräch bis zur fertigen Küche." />
+          <div className="karr-flowrow">
+            {FLOW3.map((s, i) => (
+              <Reveal key={s.title} className="karr-flowcard" delay={(i % 3) * 0.08}>
+                <span className="karr-flowcard__img" style={{ backgroundImage: `url(${s.img})` }} aria-hidden="true" />
+                <span className="karr-flowcard__scrim" aria-hidden="true" />
+                <span className="karr-flowcard__n">{s.n}</span>
+                <span className="karr-flowcard__body">
+                  <span className="karr-flowcard__title">{s.title}</span>
+                  <span className="karr-flowcard__text">{s.text}</span>
+                </span>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -142,25 +197,6 @@ export default function Karriere() {
           </div>
           <div className="karr-egg" aria-hidden="true">
             {EGGS.map((e) => <span key={e} className="karr-egg__item"><Coffee size={12} strokeWidth={1.9} /> {e}</span>)}
-          </div>
-        </div>
-      </section>
-
-      {/* 4 — SO TICKEN WIR */}
-      <section className="section karr-ticken">
-        <div className="container">
-          <div className="karr-ticken__grid">
-            <Reveal className="karr-ticken__copy">
-              <span className="kicker">So ticken wir</span>
-              <h2 className="lintro__title">Klartext statt <span className="grad">Küchen-Geschwafel.</span></h2>
-              <ul className="lstances">
-                {TICKEN.map((t) => <li key={t}><Check size={16} strokeWidth={2.4} /> {t}</li>)}
-              </ul>
-            </Reveal>
-            <Reveal className="karr-quote" delay={0.08}>
-              <p>„Wir planen nicht für den Prospekt.<br /><span className="grad">Wir planen für deinen Alltag.“</span></p>
-              <span className="karr-quote__by">— das ganze VIDEKO-Team</span>
-            </Reveal>
           </div>
         </div>
       </section>
