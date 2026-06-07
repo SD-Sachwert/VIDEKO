@@ -1,4 +1,5 @@
 Baue eine hochwertige, moderne Leistungsseite für VIDEKO Küchen auf Basis des beiliegenden Referenzbildes und der mitgelieferten Assets.
+Baue das Referenzbild genau so nach.
 
 WICHTIGER RAHMEN
 - Designprinzip: oben dunkel, mittlerer Bereich hell, unten wieder dunkel.

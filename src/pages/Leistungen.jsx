@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { Check, X, ArrowRight, MapPin, Mail, Phone } from 'lucide-react'
+import { Check, X, ArrowRight, MapPin, Mail, Phone, ShieldCheck, Layers, Gem, Clock } from 'lucide-react'
 
 import Reveal from '../components/Reveal.jsx'
 import CTAButton from '../components/CTAButton.jsx'
@@ -20,7 +20,12 @@ import imgCoordination from '../assets/images/leistungen/ls-coordination.png'
 import imgAftercare from '../assets/images/leistungen/ls-aftercare.png'
 import vnVideo from '../assets/images/leistungen/vorher-nachher.mp4'
 
-const USPS = ['Persönlich & ehrlich', 'Alles aus einer Hand', 'Premium Materialien', 'Termintreu & verlässlich']
+const USPS = [
+  { icon: ShieldCheck, t: 'Persönlich & ehrlich' },
+  { icon: Layers, t: 'Alles aus einer Hand' },
+  { icon: Gem, t: 'Premium Materialien' },
+  { icon: Clock, t: 'Termintreu & verlässlich' },
+]
 const FEATURE = ['Individuelle Beratung', 'Kreative Konzepte', 'Präzise Planung', 'Reibungslose Umsetzung', 'Verlässlicher Service']
 
 const SERVICES = [
@@ -81,10 +86,15 @@ export default function Leistungen() {
               <CTAButton to="/beratung">Beratung anfragen</CTAButton>
               <a className="leist-hero__link" href="#leist-services">Leistungen entdecken <ArrowRight size={16} strokeWidth={1.9} /></a>
             </div>
-            <div className="svc-usps">
-              {USPS.map((u) => <span key={u}><Check size={14} strokeWidth={2.6} /> {u}</span>)}
-            </div>
           </Reveal>
+          <div className="svc-hero__usps">
+            {USPS.map((u, i) => (
+              <Reveal key={u.t} delay={0.1 + i * 0.07} className="svc-uspcard">
+                <span className="svc-uspcard__ic"><u.icon size={18} strokeWidth={1.7} /></span>
+                <span className="svc-uspcard__t">{u.t}</span>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -118,15 +128,14 @@ export default function Leistungen() {
       <section className="section leist-services2" id="leist-services">
         <div className="container">
           <SectionHeader align="center" kicker="Leistungen" title={<>Unsere Leistungen. <span className="grad">Dein Vorteil.</span></>} lead="Alles, was du für eine richtig gute Küche brauchst – aus einer Hand." />
-          <div className="lservice-grid">
+          <div className="svc-cards">
             {SERVICES.map((sv, i) => (
-              <Reveal key={sv.title} delay={(i % 4) * 0.06}>
-                <article className="lscard">
-                  <span className="lscard__img" style={{ backgroundImage: `url(${sv.image})` }} aria-hidden="true" />
-                  <span className="lscard__scrim" aria-hidden="true" />
-                  <span className="lscard__body">
-                    <span className="lscard__title">{sv.title}</span>
-                    <span className="lscard__text">{sv.text}</span>
+              <Reveal key={sv.title} delay={(i % 4) * 0.05}>
+                <article className="svc-card">
+                  <span className="svc-card__img" style={{ backgroundImage: `url(${sv.image})` }} aria-hidden="true" />
+                  <span className="svc-card__body">
+                    <span className="svc-card__title">{sv.title}</span>
+                    <span className="svc-card__text">{sv.text}</span>
                   </span>
                 </article>
               </Reveal>
@@ -166,10 +175,10 @@ export default function Leistungen() {
         </div>
       </section>
 
-      {/* 6 — EMOTIONAL (hell, dunkle Akzentkarten) */}
-      <section className="section leist-emo">
+      {/* 6 — EMOTIONAL (dunkles Band, wie Referenz) */}
+      <section className="section section--dark leist-emo">
         <div className="container">
-          <SectionHeader align="center" kicker="Entspannt" title={<>Weniger Chaos. <span className="grad">Mehr Zeit für das, was zählt.</span></>} />
+          <SectionHeader tone="light" align="center" kicker="Entspannt" title={<>Weniger Chaos. <span className="grad">Mehr Zeit für das, was zählt.</span></>} />
           <div className="lservice-grid lservice-grid--4">
             {EMO.map((e, i) => (
               <Reveal key={e.title} delay={(i % 4) * 0.06}>
