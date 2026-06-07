@@ -78,6 +78,18 @@ const RESULT = {
   'Statement / Industrial': { img: sIndustrial, char: 'Roh, markant, urban – Küche mit Haltung.', tags: ['Industrial', 'Markant', 'Urban', 'Stark'], mats: [mMetall, mNaturstein, mBronze] },
 }
 
+const MOODS = ['Stimmung', 'Premium', 'Harmonie', 'Funktional', 'Großzügig', 'Offen']
+const DETAILS = ['Arbeitsplatte', 'Fronten', 'Griffe', 'Armatur', 'Licht', 'Stauraum']
+const RECO = [
+  [{ title: 'Zeitlos & natürlich', img: sNatur }, { title: 'Modern & aufgeräumt', img: sModern }, { title: 'Dunkel & elegant', img: sDunkel }, { title: 'Hell & leicht', img: sHell }],
+  [{ title: 'Familienfreundlich', img: sLandhaus }, { title: 'Offen & gesellig', img: sHell }, { title: 'Viel Stauraum', img: sModern }, { title: 'Natürlich & hell', img: sNatur }],
+  [{ title: 'Keramik & Rillenfronten', img: mKeramik }, { title: 'Dunkler Stein & Messing', img: mNaturstein }, { title: 'Helle Flächen & Holz', img: mHolz }, { title: 'Mattlack & Glas', img: mLack }],
+  [{ title: 'Hell & natürlich', img: sHell }, { title: 'Beige & Sand', img: sNatur }, { title: 'Dunkel & elegant', img: sDunkel }, { title: 'Greige modern', img: sModern }],
+  [{ title: 'Offene Wohnküche', img: sHell }, { title: 'Kücheninsel', img: sModern }, { title: 'Viel Stauraum', img: sLandhaus }, { title: 'Kurze Wege', img: sNatur }],
+  [{ title: 'Solide & schön', img: sNatur }, { title: 'Premium-Details', img: sDunkel }, { title: 'Clever geplant', img: sModern }, { title: 'Statement-Küche', img: sIndustrial }],
+  [{ title: 'Design zuerst', img: sDunkel }, { title: 'Alltagsstark', img: sLandhaus }, { title: 'Materialfokus', img: mNaturstein }, { title: 'Ausgewogen', img: sNatur }],
+]
+
 function Chip({ active, onClick, children }) {
   return <button type="button" className={`sf-chip ${active ? 'is-active' : ''}`} onClick={onClick} aria-pressed={active}>{active && <Check size={14} strokeWidth={2.6} />} {children}</button>
 }
@@ -87,6 +99,8 @@ export default function StylefinderFlow() {
   const [maxReached, setMaxReached] = useState(0)
   const [a, setA] = useState(EMPTY_ANSWERS)
   const [saved, setSaved] = useState(false)
+  const [mood, setMood] = useState(0)
+  const [detail, setDetail] = useState({ Arbeitsplatte: 3, Fronten: 3, Griffe: 2, Armatur: 3, Licht: 4, Stauraum: 3 })
   const flowTop = useRef(null)
 
   const toggle = (key, value, max) => setA((p) => {
@@ -173,6 +187,7 @@ export default function StylefinderFlow() {
           </div>
         </div>
       ) : (
+        <>
         <div className="sf-layout">
           <div className="sf-main">
             <AnimatePresence mode="wait">
@@ -325,6 +340,44 @@ export default function StylefinderFlow() {
             </div>
           </aside>
         </div>
+
+        {/* LIVE EMPFEHLUNGEN */}
+        <div className="sf-reco">
+          <span className="sf-block__head"><Sparkles size={14} strokeWidth={2} /> Live Empfehlungen für dich</span>
+          <div className="sf-reco__row">
+            {RECO[step].map((r) => (
+              <article className="sf-reco__card" key={r.title}>
+                <span className="sf-reco__img" style={{ backgroundImage: `url(${r.img})` }} aria-hidden="true" />
+                <span className="sf-reco__scrim" aria-hidden="true" />
+                <span className="sf-reco__title">{r.title}</span>
+              </article>
+            ))}
+          </div>
+        </div>
+
+        {/* LIVE VORSCHAU + DETAIL ANPASSEN */}
+        <div className="sf-preview-row">
+          <div className="sf-preview">
+            <span className="sf-block__head">Live Vorschau</span>
+            <div className="sf-preview__media" style={{ backgroundImage: `url(${R.img})` }}>
+              <span className="sf-preview__scrim" aria-hidden="true" />
+              <span className="sf-preview__cap">{MOODS[mood]} · {resultStyle}</span>
+            </div>
+            <div className="sf-preview__tabs">
+              {MOODS.map((m, k) => <button key={m} type="button" className={`sf-mood ${mood === k ? 'is-active' : ''}`} onClick={() => setMood(k)}>{m}</button>)}
+            </div>
+          </div>
+          <div className="sf-detail">
+            <span className="sf-block__head">Detail anpassen</span>
+            {DETAILS.map((d) => (
+              <div className="sf-detail__row" key={d}>
+                <span className="sf-detail__label">{d}</span>
+                <input type="range" min="1" max="5" value={detail[d]} onChange={(e) => setDetail({ ...detail, [d]: Number(e.target.value) })} style={{ '--p': `${((detail[d] - 1) / 4) * 100}%` }} />
+              </div>
+            ))}
+          </div>
+        </div>
+        </>
       )}
     </div>
   )
