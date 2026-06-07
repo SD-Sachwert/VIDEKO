@@ -9740,6 +9740,167 @@ a.footer__contact-line:hover {
 }
 
 /* =====================================================================
+   LEISTUNGEN — rebuilt sections
+   ===================================================================== */
+.svc-iconstrip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 8px;
+  margin-top: 32px;
+}
+.svc-iconstrip__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cream);
+}
+.svc-iconstrip__item:not(:last-child)::after {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  margin-left: 6px;
+}
+.svc-iconstrip__ic {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--gold-bright);
+  border: 1px solid rgba(232, 201, 120, 0.4);
+  background: rgba(18, 17, 15, 0.3);
+}
+
+/* chaos -> plan split image */
+.svc-split { position: relative; }
+.svc-split__tag {
+  position: absolute;
+  top: 14px;
+  z-index: 2;
+  padding: 6px 13px;
+  border-radius: 999px;
+  font-size: 0.64rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.svc-split__tag--l { left: 14px; color: var(--cream); background: rgba(8, 8, 7, 0.7); border: 1px solid rgba(255, 255, 255, 0.25); }
+.svc-split__tag--r { right: 14px; color: #20170a; background: var(--grad-gold); }
+
+/* leistungsmaschine */
+.svc-machine {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  margin-top: 14px;
+}
+.svc-mod {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 22px 18px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  height: 100%;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease, box-shadow 0.35s ease;
+}
+.svc-mod:hover { transform: translateY(-5px); border-color: rgba(232, 201, 120, 0.5); box-shadow: 0 24px 50px -30px rgba(0, 0, 0, 0.6); }
+.svc-mod__n { font-family: var(--serif); font-size: 0.85rem; letter-spacing: 0.1em; color: var(--gold-bright); }
+.svc-mod__ic { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; color: var(--gold-bright); background: rgba(232, 201, 120, 0.12); border: 1px solid rgba(232, 201, 120, 0.25); margin: 2px 0 4px; }
+.svc-mod__title { font-family: var(--serif); font-size: 1.05rem; font-weight: 600; color: var(--cream); }
+.svc-mod__text { font-size: 0.82rem; line-height: 1.5; color: rgba(244, 239, 228, 0.75); }
+
+.lscard--tall { aspect-ratio: 4 / 5; }
+
+/* was du dir sparen kannst */
+.svc-spar { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-top: 14px; }
+.svc-spar__card { text-align: center; padding: 26px 16px; border-radius: 18px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.04); }
+.svc-spar__ic { display: inline-grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; color: var(--gold-bright); background: rgba(232, 201, 120, 0.12); border: 1px solid rgba(232, 201, 120, 0.25); margin-bottom: 12px; }
+.svc-spar__title { display: block; font-family: var(--serif); font-size: 1.05rem; font-weight: 600; color: var(--cream); margin-bottom: 4px; }
+.svc-spar__text { display: block; font-size: 0.82rem; color: rgba(244, 239, 228, 0.75); }
+
+/* compare */
+.svc-compare { display: grid; grid-template-columns: 1fr auto 1fr; gap: 20px; align-items: center; }
+.svc-comp { padding: 30px 28px; border-radius: 22px; border: 1px solid var(--line-dark); background: rgba(255, 255, 255, 0.55); }
+.svc-comp--good { border-color: rgba(232, 201, 120, 0.5); background: rgba(232, 201, 120, 0.08); }
+.svc-comp__head { display: block; font-family: var(--serif); font-size: 1.4rem; font-weight: 600; color: var(--ink); margin-bottom: 16px; }
+.svc-comp ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 11px; }
+.svc-comp li { display: flex; align-items: flex-start; gap: 9px; font-size: 0.92rem; color: var(--ink-soft); }
+.svc-comp--bad svg { color: #c2705a; flex: none; margin-top: 2px; }
+.svc-comp--good svg { color: var(--bronze); flex: none; margin-top: 2px; }
+.svc-compare__vs { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: var(--grad-gold); color: #20170a; font-weight: 800; font-family: var(--serif); box-shadow: 0 14px 30px -14px rgba(168, 122, 40, 0.6); }
+
+@media (max-width: 980px) {
+  .svc-machine { grid-template-columns: repeat(2, 1fr); }
+  .svc-spar { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 760px) {
+  .svc-compare { grid-template-columns: 1fr; }
+  .svc-compare__vs { justify-self: center; }
+}
+@media (max-width: 560px) {
+  .svc-machine { grid-template-columns: 1fr; }
+  .svc-spar { grid-template-columns: 1fr; }
+}
+
+/* =====================================================================
+   INSPIRATION — exploding kitchen, room ideas, conversion zone
+   ===================================================================== */
+.explode { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 44px; align-items: center; }
+.explode__media img { width: 100%; border-radius: 24px; display: block; box-shadow: 0 40px 80px -50px rgba(120, 90, 40, 0.4); }
+.explode__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 40px; }
+.ecard { display: flex; flex-direction: column; gap: 7px; padding: 22px; border-radius: 18px; border: 1px solid var(--line-dark); background: rgba(255, 255, 255, 0.55); transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease; }
+.ecard:hover { transform: translateY(-4px); border-color: rgba(232, 201, 120, 0.5); box-shadow: 0 24px 50px -34px rgba(120, 90, 40, 0.4); }
+.ecard__n { font-family: var(--serif); color: var(--bronze); font-size: 0.85rem; }
+.ecard__ic { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; color: var(--bronze); background: rgba(201, 160, 80, 0.12); border: 1px solid rgba(201, 160, 80, 0.25); margin: 2px 0 4px; }
+.ecard__title { font-family: var(--serif); font-size: 1.1rem; font-weight: 600; color: var(--ink); }
+.ecard__text { font-size: 0.86rem; line-height: 1.5; color: var(--ink-soft); }
+
+/* room ideas tabs */
+.roomtabs { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 24px; }
+.roomtab { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 999px; border: 1px solid var(--line-dark); background: rgba(255, 255, 255, 0.5); color: var(--ink); font-weight: 600; font-size: 0.84rem; cursor: pointer; transition: all 0.25s ease; }
+.roomtab svg { color: var(--bronze); }
+.roomtab:hover { border-color: rgba(201, 160, 80, 0.5); }
+.roomtab.is-active { background: var(--soft-black); color: var(--cream); border-color: var(--soft-black); }
+.roomtab.is-active svg { color: var(--gold-bright); }
+.roompanel { display: grid; grid-template-columns: 1.3fr 0.7fr; min-height: 360px; border-radius: 26px; overflow: hidden; border: 1px solid var(--line-dark); box-shadow: 0 40px 80px -50px rgba(120, 90, 40, 0.4); }
+.roompanel__media { position: relative; background-size: cover; background-position: center; }
+.roompanel__scrim { position: absolute; inset: 0; background: linear-gradient(to right, transparent, rgba(8, 8, 7, 0.18)); }
+.roompanel__body { background: var(--soft-black); color: var(--cream); padding: 40px 38px; display: flex; flex-direction: column; justify-content: center; gap: 12px; }
+.roompanel__title { font-family: var(--serif); font-size: clamp(1.5rem, 2.6vw, 2.1rem); font-weight: 600; color: var(--gold-bright); margin: 0; }
+.roompanel__text { color: rgba(244, 239, 228, 0.85); line-height: 1.6; margin: 0 0 8px; }
+
+/* conversion zone */
+.convert-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 14px; }
+.convcard { display: flex; flex-direction: column; gap: 10px; padding: 30px 26px; border-radius: 22px; border: 1px solid rgba(255, 255, 255, 0.12); background: rgba(255, 255, 255, 0.05); height: 100%; }
+.convcard__tag { font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold-bright); }
+.convcard__ic { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; color: var(--gold-bright); background: rgba(232, 201, 120, 0.12); border: 1px solid rgba(232, 201, 120, 0.25); }
+.convcard__title { font-family: var(--serif); font-size: 1.35rem; font-weight: 600; color: var(--cream); }
+.convcard__text { font-size: 0.9rem; line-height: 1.55; color: rgba(244, 239, 228, 0.8); }
+.convcard__points { list-style: none; margin: 4px 0 18px; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.convcard__points li { display: flex; align-items: center; gap: 8px; font-size: 0.84rem; color: rgba(244, 239, 228, 0.8); }
+.convcard__points svg { color: var(--gold-bright); flex: none; }
+.convcard > a { margin-top: auto; }
+.convert-note { text-align: center; margin-top: 26px; font-size: 0.86rem; color: rgba(244, 239, 228, 0.6); }
+
+@media (max-width: 980px) {
+  .explode { grid-template-columns: 1fr; }
+  .explode__grid { grid-template-columns: repeat(2, 1fr); }
+  .roompanel { grid-template-columns: 1fr; }
+  .roompanel__media { min-height: 240px; }
+  .convert-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .explode__grid { grid-template-columns: 1fr; }
+}
+
+/* =====================================================================
    KEYFRAMES
    ===================================================================== */
 @keyframes pulse {

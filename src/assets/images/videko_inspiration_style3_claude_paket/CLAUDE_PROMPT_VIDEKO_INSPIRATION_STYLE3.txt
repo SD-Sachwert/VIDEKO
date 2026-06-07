@@ -1,0 +1,507 @@
+CLAUDE PROMPT – VIDEKO INSPIRATION-SEITE KOMPLETT NEU AUFBAUEN
+===============================================================
+
+AUFGABE
+Baue die VIDEKO Unterseite „Inspiration“ komplett neu auf. Die Seite soll nicht mehr wie eine statische Bildergalerie wirken, sondern wie eine hochwertige, interaktive Inspirations-Experience mit klarer Conversion zum VIDEKO Kompass, Upload und Beratung.
+
+Wichtig: Designtechnisch an den fertigen VIDEKO-Unterseiten orientieren: dunkles Hero oben, danach warme helle Creme-/Beige-Flächen, schwarze/dunkle Akzentsektionen, Goldakzente, große Serif-Headlines, ruhige Premium-Optik, hochwertige Animationen. Kein Möbelhaus-Vibe, kein Standard-Template, kein Bildkarten-Friedhof.
+
+NUTZE DIE MITGELIEFERTEN BILDER ALS KONKRETE DESIGN- UND SEKTIONSVORLAGEN:
+- assets/00_current_inspiration_reference.png = aktuelle Seite / bestehender VIDEKO-Stil
+- assets/01_hero_dark_inspiration.png = Hero-Vorlage
+- assets/02_videko_kompass_style_selector.png = VIDEKO-Kompass/Stilfinder-Vorlage
+- assets/03_exploding_kitchen_style_3_SELECTED.png = ausgewählte Exploding-Kitchen-Vorlage, GENAU DIESE RICHTUNG nehmen
+- assets/04_materialien_erleben.png = Materialien-Vorlage
+- assets/05_stilwelten_editorial_grid.png = Stilwelten-Vorlage
+- assets/06_raumideen_tabs_slider.png = Raumideen-Vorlage
+- assets/07_vorher_nachher_teaser.png = Vorher/Nachher-Teaser, nur klein/kompakt, weil es dafür eine eigene Seite gibt
+- assets/08_vier_schritte_process.png = Prozess-Vorlage
+- assets/09_conversion_cta_upload.png = Conversion-/Upload-/Beratungsbereich
+
+Die Bilder sind visuelle Zielrichtung und Layoutreferenz. Bitte keine plumpe Screenshot-Galerie bauen, sondern echte HTML/CSS/React-Komponenten, die sich optisch daran orientieren. Wenn echte Inhalte/Bilder im Projekt vorhanden sind, nutze diese sinnvoll. Falls Assets fehlen, verwende die mitgelieferten Bilder vorübergehend als Platzhalter und strukturiere den Code so, dass sie später leicht ersetzt werden können.
+
+
+SEITENZIEL
+Die Seite soll drei Dinge schaffen:
+1. Besucher emotional abholen und Lust auf Küchenplanung machen.
+2. VIDEKO als hochwertig, ehrlich, modern und sympathisch positionieren.
+3. Nutzer in den VIDEKO Kompass, Upload oder Beratung führen.
+
+Der Nutzer soll denken:
+„Geil, da klicke ich mich durch. Ich will wissen, was rauskommt.“
+
+
+NAME DES STYLEFINDERS
+Der Stylefinder heißt überall:
+VIDEKO Kompass
+oder kurz:
+Küchen-Kompass
+
+Nicht mehr „Stylefinder“ schreiben, außer es existiert im Code intern.
+
+
+GESAMTER SEITENAUFBAU
+Bitte die Seite in genau dieser Dramaturgie bauen:
+
+1. HERO – dunkel, cinematisch, hochwertig
+2. VIDEKO Kompass – großer Stil-Selector / Carousel
+3. Exploding Kitchen – helle Version, Stil 3, als großer Wow-Block
+4. Materialien erleben – interaktive Materialbühne
+5. Stilwelten – asymmetrisches Editorial Grid
+6. Raumideen – Tab-/Slider-Sektion
+7. Vorher/Nachher – nur kurzer Teaser, nicht dominant
+8. So funktioniert’s – 4 Schritte
+9. Conversion-Zone – Kompass / Upload / Beratung
+10. Footer / finaler CTA passend zum bestehenden VIDEKO Footer
+
+
+1. HERO
+Design wie assets/01_hero_dark_inspiration.png.
+
+Anforderungen:
+- dunkles Hero wie die fertigen Unterseiten
+- große Hintergrundküche mit leichter Dunkel-Overlay-Ebene
+- dezente Parallax-/Zoom-Bewegung beim Scrollen
+- Floating Cards rechts, die leicht versetzt schweben
+- handschriftliche Note / Sticky Note
+- Slider-/Progress-Indikator unten
+- Header/Nav soll zum restlichen VIDEKO-Auftritt passen
+
+Textvorschlag:
+Kicker: INSPIRATION
+Headline:
+Inspiration,
+die bleibt.
+
+Subline:
+Echte Küchen. Echte Materialien.
+Echte Ideen für dein Zuhause.
+
+Zusatz:
+Entdecke Designs, Stilwelten und Küchenlösungen, die so individuell sind wie dein Leben.
+
+Buttons:
+VIDEKO Kompass starten
+Inspiration entdecken
+
+Microcopy/Sticky:
+Keine Möbel. Sondern Lieblingsorte.
+
+Animationen:
+- Hero-Bild minimal scale von 1.04 auf 1.0 beim Laden
+- Text gestaffelt reinfahren/faden
+- Floating Cards mit leichtem Parallax und Hover-Lift
+- Button-Hover mit Gold-Schimmer, aber dezent
+
+
+2. VIDEKO KOMPASS / KÜCHENSTIL-FINDER
+Design wie assets/02_videko_kompass_style_selector.png.
+
+Ziel: Der Kompass ist ein Haupt-Lead-Magnet, kein kleiner Button.
+
+Layout:
+- Heller Creme-Hintergrund
+- Links Editorial-Text
+- Rechts großer 3D-artiger Card-Carousel mit aktivem Stil in der Mitte
+- Mittlere Karte groß, seitliche Karten kleiner/leicht zurückgesetzt
+- Pfeile links/rechts
+- Pagination-Dots
+- Benefit-Leiste unten
+
+Text:
+Kicker: VIDEKO KOMPASS
+Headline:
+Finde deinen
+Küchenstil.
+
+Copy:
+Jede Küche erzählt ihre eigene Geschichte. Mit dem VIDEKO Kompass findest du den Stil, der zu deinem Leben, deinem Raum und deinem Anspruch passt.
+
+Handschriftlich:
+Wir raten nicht. Wir treffen.
+
+Button:
+Kompass starten
+
+Kleiner Hinweis:
+In 2 Minuten zu deinem Stil
+
+Stile im Carousel:
+- Modern Luxury
+- Urban
+- Industrial
+- Japandi
+- Classic Elegance
+- Warm & Natürlich
+- Dunkel & Elegant
+
+Interaktion:
+- Carousel klickbar/swipable
+- aktive Karte bekommt Goldrand/Glow/check
+- Hover: Bild leicht zoomen, Card hebt sich 6–10px
+- Klick auf „Kompass starten“ führt zur Kompass-Unterseite oder öffnet den Kompass, je nach bestehender Struktur
+
+
+3. EXPLODING KITCHEN – HELLE VERSION, STIL 3
+Design: assets/03_exploding_kitchen_style_3_SELECTED.png ist die ausgewählte Richtung.
+
+WICHTIG: Diese Version nehmen. Nicht die dunkle Exploding-Kitchen. Die vorherige dunkle Version war zu technisch und nicht passend genug.
+
+Ziel:
+Der Block soll zeigen: Eine VIDEKO-Küche besteht aus perfekt komponierten Details. Das ist Kompetenz + Wow + Interaktion.
+
+Layout:
+- heller Creme-/Ivory-Hintergrund
+- links große Headline und Copy
+- rechts/zentral große helle Exploded-Kitchen-Grafik
+- Küche wirkt hell, luftig, hochwertig, warm
+- einzelne Elemente fliegen auseinander: Beleuchtung, Stauraum, Arbeitsplatte, Technik, Fronten, Innenleben
+- Goldene Hotspots mit Plus-Symbolen
+- unten 6 Info-Cards zu den Komponenten
+- CTA unten/rechts oder links
+
+Text:
+Kicker: KONZEPT
+Headline:
+Die Küche.
+In perfekter Komposition.
+
+Copy:
+Jedes Detail. Jede Funktion. Jedes Material. Entdecke, wie deine Küche aus perfekt aufeinander abgestimmten Elementen entsteht.
+
+Button:
+Küche entdecken
+
+Handschriftlich:
+Klicke auf die Bereiche und entdecke mehr.
+
+Komponenten-Cards:
+01 Beleuchtung
+Stimmung, Akzente und Funktion in perfektem Licht.
+
+02 Stauraum
+Durchdacht bis ins Detail – für maximale Ordnung und Komfort.
+
+03 Arbeitsplatte
+Hochwertige Materialien, die Schönheit und Alltag perfekt verbinden.
+
+04 Technik
+Intelligente Geräte, nahtlos integriert für mehr Freude am Kochen.
+
+05 Fronten
+Design, das Charakter zeigt – in Farbe, Struktur und Material.
+
+06 Innenleben
+Qualität, die man sieht – für Langlebigkeit und Wertbeständigkeit.
+
+Animation:
+- Beim Scrollen fährt die Exploded Kitchen in 3–4 Ebenen leicht auseinander.
+- Hotspots pulsieren sehr dezent.
+- Hover auf Hotspot hebt passende Card hervor.
+- Klick/hover auf Card markiert passenden Bereich.
+- Wenn technisch zu aufwendig: erst visuell vorbereiten, Interaktion mit CSS/JS simpel umsetzen.
+
+
+4. MATERIALIEN ERLEBEN
+Design wie assets/04_materialien_erleben.png.
+
+Ziel: Material nicht als Katalog zeigen, sondern als haptisches Erlebnis.
+
+Layout:
+- links Headline + Text + CTA
+- rechts große Material-Makrofläche mit Zoom-Kreis
+- unten horizontale Material-Karten
+- ausgewähltes Material mit Goldrand/check
+
+Text:
+Kicker: MATERIALIEN ERLEBEN
+Headline:
+Fühlen. Sehen.
+Verlieben.
+
+Copy:
+Materialien sind mehr als Oberfläche. Sie sind die Seele deiner Küche – zum Anfassen, Erleben und Verlieben.
+
+Button:
+Materialien entdecken
+
+Microcopy:
+Wir sind nicht nur Küchenversteher, wir sind Materialverführer.
+
+Material-Tabs:
+- Arbeitsplatten
+- Holz
+- Glas
+- Metall
+- Fronten
+- Griffdetails
+
+Animation:
+- Materialbild wechselt weich beim Klick
+- Zoom-Kreis folgt Maus leicht oder bleibt als visuelles Element
+- Swatches mit Hover-Zoom
+
+
+5. STILWELTEN
+Design wie assets/05_stilwelten_editorial_grid.png.
+
+Wichtig: Kein langweiliger 4-Karten-Row. Asymmetrisches Editorial Grid.
+
+Headline:
+Jede Küche hat
+ihren eigenen Charakter.
+
+Copy:
+Entdecke Stilwelten, die mehr sind als Design. Sie sind Ausdruck deines Lebens, deiner Werte und deiner Ästhetik.
+
+Stilwelten:
+- Modern Luxury
+- Japandi
+- Urban Chic
+- Country Soul
+- Scandinavian Calm
+
+Animation:
+- Cards kommen versetzt rein
+- Hover: Overlay wird heller, Pfeil erscheint, Bild zoomt minimal
+- unterschiedliche Cardgrößen beibehalten
+
+CTA:
+Mehr über Stilwelten
+Alle Stilwelten entdecken
+
+
+6. RAUMIDEEN
+Design wie assets/06_raumideen_tabs_slider.png.
+
+Ziel: VIDEKO denkt nicht nur Küchen, sondern Wohnräume.
+
+Headline:
+Mehr als
+nur Küche.
+
+Copy:
+Entdecke durchdachte Raumkonzepte für jeden Bereich deines Zuhauses.
+
+Tabs:
+- Kochen
+- Essen
+- Wohnen
+- Homeoffice
+- Hauswirtschaft
+
+Hauptkarte:
+Kochen mit Stil.
+Funktion trifft Emotion. Entdecke Küchen, die mehr können – und schöner sind.
+
+CTA:
+Ideen entdecken
+
+Animation:
+- Tabwechsel tauscht großes Bild und Text weich aus
+- Preview-Karten unten horizontal scrollbar
+- Aktiver Tab dunkel/schwarz mit Goldakzent
+
+Microcopy:
+Jeder Raum. Dein Stil.
+
+
+7. VORHER/NACHHER-TEASER
+Design wie assets/07_vorher_nachher_teaser.png.
+
+WICHTIG:
+Diese Sektion nur als kompakter Teaser, weil Vorher/Nachher eine eigene Seite hat. Nicht zu groß machen, aber stark genug, um neugierig zu machen.
+
+Headline:
+Aus alt
+wird wow.
+
+Copy:
+Echte Küchen. Echte Verwandlungen. Wisch rüber und entdecke, was möglich wird.
+
+Button:
+Mehr Verwandlungen entdecken
+
+Microcopy Sticky:
+Wisch mal rüber. Es lohnt sich.
+
+Interaktion:
+- echter Before/After-Slider mit Drag-Handle
+- auf Mobile wischbar
+- CTA führt zur Vorher/Nachher-Seite
+
+
+8. SO EINFACH GEHT’S
+Design wie assets/08_vier_schritte_process.png.
+
+Headline:
+In 4 Schritten zu deiner Traumküche.
+
+Copy:
+Unser Prozess ist klar, persönlich und transparent. Damit aus deiner Idee ein Raum wird, der bleibt.
+
+Schritte:
+1 Kompass starten
+Beantworte ein paar Fragen und finde deinen Stil. Schnell & unverbindlich.
+
+2 Erste Einschätzung
+Wir prüfen deine Angaben und geben dir eine erste, ehrliche Einschätzung.
+
+3 Grundriss & Fotos hochladen
+Lade Grundriss, Maße und Fotos hoch – je mehr Infos, desto besser.
+
+4 Angebot & Beratung
+Du erhältst dein persönliches Angebot und eine Beratung auf Augenhöhe.
+
+Microcopy:
+Kein Spam. Nur gute Küchen.
+
+Button:
+Kompass starten
+
+
+9. CONVERSION-ZONE / DREI WEGE
+Design wie assets/09_conversion_cta_upload.png.
+
+Ziel: Drei Nutzertypen abholen.
+
+Headline:
+Ideen sind der Anfang.
+Deine Küche ist das Ziel.
+
+Subline:
+Wähle den Weg, der zu dir passt – schnell & einfach oder persönlich & individuell.
+
+Karte 1:
+Schnell & einfach
+1. VIDEKO Kompass
+Starte deine erste Einschätzung in nur 2 Minuten.
+- Sofort eine grobe Preisspanne
+- Passende Stilwelt entdecken
+- Unverbindlich & anonym
+Button: Kompass starten
+
+Karte 2:
+Genau & individuell
+2. Unterlagen hochladen
+Teile deinen Grundriss, Fotos und Ideen für ein präzises Angebot.
+Drag & Drop Bereich:
+Ziehe Dateien hierher oder klicke zum Auswählen
+Grundriss, Fotos, Skizzen oder Ideen
+PDF, JPG, PNG – max. 20 MB
+Button: Unterlagen hochladen
+
+Karte 3:
+Persönlich & beratend
+3. Persönlich beraten lassen
+Buche ein unverbindliches Gespräch mit unseren Küchenexperten.
+- Individuelle Beratung
+- Konkrete Empfehlungen
+- Zeitlich flexibel
+Button: Termin buchen
+
+Microcopy unten:
+Kein Druck. Keine Verpflichtung. Nur ehrliche Ideen für deine Küche.
+
+
+ANIMATIONEN GENERELL
+Bitte hochwertige Animationen einbauen, aber nicht billig/überladen:
+
+- Scroll reveal mit Intersection Observer oder vorhandener Motion-Library
+- Cards versetzt einblenden
+- Parallax bei Hero und Floating Cards
+- Hover-Lift bei Cards
+- Bild-Zoom bei Card-Hover
+- dezenter Gold-Schimmer bei CTA-Hover
+- Smooth scroll
+- horizontale Carousels mit Pfeilen und Touch-Swipe
+- Materialwechsel weich crossfaden
+- Exploding Kitchen mit Hotspots und Highlight-Cards
+- Sticky kleiner CTA „Kompass starten“ ab Scrolltiefe, falls zur bestehenden Website passend
+
+Keine billigen Effekte:
+- kein wildes Bouncen
+- kein Neon
+- kein Glitzer-Overkill
+- keine übertriebenen 3D-Rotationen
+- kein Ladezeiten-Massaker
+
+
+RESPONSIVE
+Mobile ist extrem wichtig.
+
+Mobile-Anforderungen:
+- Hero CTA direkt sichtbar
+- Carousels horizontal wischbar
+- Exploding Kitchen auf Mobile vereinfachen: Grafik oben, Component-Cards darunter als Accordion oder horizontaler Slider
+- Materialkarten wischbar
+- Stilwelten als vertikaler Stack mit großen Cards
+- Raumideen Tabs als horizontale Pills
+- Before/After touchfähig
+- Conversion-Cards untereinander
+
+
+TECHNISCHE VORGABEN
+Bitte zuerst Projektstruktur prüfen und bestehende Komponenten/Styles respektieren.
+
+- Keine bestehende Seite kaputtmachen.
+- Bestehende Header/Footer/Navigation wiederverwenden, falls vorhanden.
+- Inspiration-Seite als normale erreichbare Unterseite bauen/ersetzen.
+- Route/Link in Navigation sauber setzen.
+- Performance beachten: lazy loading für Bilder, optimierte Bildgrößen, keine unnötigen riesigen Animationen.
+- Barrierefreiheit: Buttons als echte Buttons/Links, alt-Texte, Tastaturbedienbarkeit bei Slider/Carousel, ausreichende Kontraste.
+- Code sauber in Komponenten aufteilen.
+
+Mögliche Komponenten:
+- InspirationHero
+- VidekoKompassTeaser
+- ExplodingKitchenLight
+- MaterialsExperience
+- StyleWorldsGrid
+- RoomIdeasTabs
+- BeforeAfterTeaser
+- ProcessSteps
+- ConversionNextSteps
+
+
+BILDER / ASSETS
+Verwende die mitgelieferten Referenzbilder als visuelle Vorlage. Wenn du sie direkt als Platzhalter nutzt, lege sie sinnvoll in den bestehenden Asset-Ordner, z. B.:
+/public/assets/images/inspiration/
+
+Benennungsvorschlag:
+hero-inspiration.png
+videko-kompass-selector.png
+exploding-kitchen-light.png
+materialien-erleben.png
+stilwelten-grid.png
+raumideen-tabs.png
+before-after-teaser.png
+process-steps.png
+conversion-upload.png
+
+Bitte nicht alle Bilder einfach untereinander als statische Screenshots einbauen. Sie dienen als Designvorlage. Ziel ist echte, responsive Website-Komponenten.
+
+
+TONALITÄT / VIDEKO HUMOR
+Bitte dezent und hochwertig, nicht peinlich.
+
+Gute Sprüche:
+- Keine Möbel. Sondern Lieblingsorte.
+- Wir raten nicht. Wir treffen.
+- Kein Spam. Nur gute Küchen.
+- Sieht gut aus. Hält was aus. Küchenromantik mit Rückgrat.
+- Für Menschen, die keine Küche von der Stange wollen.
+- Aus Idee wird Lieblingsort.
+
+Nicht machen:
+- keine zu albernen Sprüche
+- kein Möbelhaus-Bashing zu hart
+- kein „billig“, „Rabatt“, „Schreierei“ ständig wiederholen
+
+
+ABSCHLUSS
+Wenn du fertig bist:
+1. Liste kurz auf, welche Dateien/Komponenten du erstellt oder geändert hast.
+2. Erkläre kurz, wo die Seite erreichbar ist.
+3. Nenne offene Platzhalter/Bilder, falls noch echte Assets ersetzt werden müssen.
+4. Prüfe, ob Desktop und Mobile sauber aussehen.

@@ -1,0 +1,229 @@
+Überarbeite die Seite „Leistungen“ von VIDEKO Küchen komplett neu – aber bleib optisch klar im bestehenden VIDEKO-Designsystem der anderen fertigen Unterseiten.
+
+WICHTIG:
+- Design/Optik an die bestehenden VIDEKO-Seiten anpassen: dunkler Premium-Hero, helle Gold-Marmor-/Naturstein-Flächen, gezielte dunkle Akzentbereiche, warme Goldakzente, hochwertige Serif-Headlines, saubere Sans-Serif-Texte, große Rundungen, edle Karten, dezente Schatten.
+- Nicht generisch bauen.
+- Nicht einfach die aktuelle Kachelseite hübscher sortieren.
+- Die Leistungsseite muss wie ein animiertes Erlebnis wirken: mehr Bewegung, mehr Wumms, mehr VIDEKO-Haltung.
+- Zielgefühl: „Du willst eine Küche. Wir kümmern uns um den Rest.“
+- Alle Texte konsequent in Du-Ansprache.
+- Keine Sie/Ihnen/Ihre-Ansprache.
+- Keine Möbelhaus-Sprache, kein Rabattgeschrei, kein Standard-Blabla.
+- Die Seite soll hochwertig, mutig, klar, lebendig und technisch spannender wirken als bisher.
+
+DATEIEN:
+Nutze die Bilder aus /bilder:
+- 01_hero_leistungen_premium_kueche.png
+- 02_chaos_zu_plan_before_after.png
+- 03_kuechenplanung_beratung.png
+- 04_materialauswahl_details.png
+- 05_aufmass_koordination.png
+- 06_lieferung_montage.png
+- 07_3d_planung_visualisierung.png
+- 08_persoenliche_beratung_ohne_blabla.png
+- 09_finale_kueche_ergebnis.png
+- 10_cta_premium_kuechen_lounge.png
+
+Nutze die Referenz aus /referenz:
+- 00_referenz_neues_leistungen_mockup.png = grobe Design-/Strukturidee für die neue Leistungsseite
+- 00_referenz_aktuelle_leistungen_seite.png = aktuelle Seite, deren Stil grundsätzlich zur Marke passt, aber zu brav ist
+
+AUFGABE:
+Baue die Leistungsseite als hochwertige, animierte Prozess- und Erlebnis-Seite neu.
+Der Nutzer soll nicht nur eine Liste von Leistungen sehen, sondern sofort verstehen:
+VIDEKO nimmt dir den Küchenstress ab – von Idee über Planung, Materialien, Aufmaß, Koordination, Lieferung, Montage bis Service.
+
+SEITENAUFBAU:
+
+1. HERO: „DU WILLST EINE KÜCHE. WIR KÜMMERN UNS UM DEN REST.“
+- Dunkler Premium-Hero.
+- Nutze 01_hero_leistungen_premium_kueche.png groß im Hintergrund oder rechts als Keyvisual.
+- Links Textblock:
+  Eyebrow: „UNSERE LEISTUNGEN“
+  Headline:
+  „Du willst eine Küche.
+   Wir kümmern uns um den Rest.“
+  Subline:
+  „Von der ersten Idee bis zur letzten Schraube: VIDEKO übernimmt Planung, Materialien, Aufmaß, Koordination, Lieferung, Montage und Service. Sauber geführt. Ehrlich beraten. Ohne Küchenchaos.“
+- CTA 1: „Projekt starten“ → Beratungsseite
+- CTA 2: „Leistungen entdecken“ → scrollt zur Leistungsübersicht
+- Unter dem Hero: kleine animierte Leistungs-Navigation / Icon-Leiste:
+  Planung → Material → Aufmaß → Montage → Service
+- Animation: Beim Scrollen oder Laden dürfen die Icons nacheinander aktiv werden, Goldlinie zieht sich elegant durch.
+
+2. TRANSFORMATION: „AUS KÜCHENCHAOS WIRD EIN KLARER PLAN.“
+- Heller Gold-Marmor-Bereich.
+- Links Text:
+  „Aus Küchenchaos wird ein klarer Plan.“
+  Punkte:
+  - Raum verstehen
+  - Ideen sortieren
+  - Budget realistisch einordnen
+  - Umsetzung sauber führen
+- Rechts großes Vorher/Nachher-Slider-Modul mit 02_chaos_zu_plan_before_after.png.
+- Slider soll interaktiv wirken: mittige Griff-Markierung, links „Vorher“, rechts „Nachher“.
+- Wenn ein echter Slider technisch schnell machbar ist: umsetzen. Sonst optisch als Split-Image-Modul bauen.
+
+3. ANIMIERTE LEISTUNGSMASCHINE: „WAS WIR FÜR DICH ÜBERNEHMEN“
+- Das ist die wichtigste Wow-Sektion.
+- Dunkler Akzentbereich oder Wechsel aus dunkler Bühne und Marmor-Hintergrund.
+- Headline:
+  „Was wir für dich übernehmen.“
+- Baue keine langweilige Standard-Kachelwand.
+- Stattdessen: eine visuelle „Leistungsmaschine“ mit goldener Linie / Orbit / Flow.
+- Die einzelnen Module sollen entlang einer Linie / Kurve / Bewegung angeordnet sein und beim Scrollen nacheinander aktiv werden.
+- Module:
+  1. Küchenplanung
+  2. Materialauswahl
+  3. Geräteberatung
+  4. Lichtkonzept
+  5. 3D-Planung
+  6. Aufmaß
+  7. Koordination
+  8. Lieferung
+  9. Montage
+  10. Service
+- Jedes Modul bekommt Icon, Titel und kurzen Satz.
+- Hover: Karte hebt sich, Goldrand/glow erscheint, kurzer Text wird klarer.
+- Mobile: Module untereinander als elegante Timeline/Accordion darstellen.
+
+4. GROSSE LEISTUNGSPANEL / STORY-CARDS
+- Direkt darunter 4–6 große, abwechslungsreiche Cards/Panels statt gleichförmiger Mini-Kacheln.
+- Nutze diese Bilder:
+  - Küchenplanung → 03_kuechenplanung_beratung.png
+  - Materialien → 04_materialauswahl_details.png
+  - Aufmaß/Koordination → 05_aufmass_koordination.png
+  - Lieferung/Montage → 06_lieferung_montage.png
+  - 3D-Planung → 07_3d_planung_visualisierung.png
+  - Beratung/Service → 08_persoenliche_beratung_ohne_blabla.png
+- Textstil VIDEKO, direkt und leicht frech.
+
+Beispiele:
+Küchenplanung:
+„Wir planen nicht nur Schränke. Wir planen deinen Alltag.“
+Text:
+„Wo stehst du morgens? Wo landet der Einkauf? Wer kocht? Wer steht im Weg? Genau da beginnt gute Küchenplanung.“
+
+Materialien:
+„Materialien, die nicht nur gut aussehen.“
+Text:
+„Schön ist Pflicht. Alltagstauglich ist wichtiger. Wir zeigen dir, was bleibt – und was nur im Prospekt glänzt.“
+
+Aufmaß & Koordination:
+„Aufmaß, Koordination, Montage – ohne Handwerker-Tetris.“
+Text:
+„Du brauchst keinen Masterplan für Gewerke, Termine und Maße. Den bringen wir mit.“
+
+Service:
+„Service, wenn andere schon weg sind.“
+Text:
+„Auch nach dem Einbau lassen wir dich nicht mit Fragezeichen und Schranktüren allein.“
+
+5. SEKTION „WAS DU DIR SPAREN KANNST“
+- Dunkler Bereich, humorvoll und markant.
+- Headline:
+  „Was du dir sparen kannst.“
+- Karten / Icons:
+  - Zollstock-Panik
+    „Wir messen. Nicht du.“
+  - Geräte-Wirrwarr
+    „Wir finden, was wirklich passt.“
+  - Handwerker-Tetris
+    „Wir koordinieren. Du lehnst dich zurück.“
+  - Budget-Nebel
+    „Klare Preise. Keine Überraschungen.“
+  - Möbelhaus-Blabla
+    „Bei uns: ehrliche Beratung statt leerer Versprechen.“
+- Animation: Icons leicht bewegen, Karten erscheinen beim Scrollen, Goldpunkte/Glimmer dezent.
+
+6. DER VIDEKO-WEG: ANIMIERTE TIMELINE
+- Dunkler Premiumbereich.
+- Headline:
+  „Klarer Ablauf. Stressfrei für dich.“
+- Timeline mit 6 Schritten, Goldlinie läuft beim Scrollen mit.
+- Schritte:
+  01 Wir hören zu
+  „Deine Wünsche, dein Raum, dein Alltag – wir verstehen erst, bevor wir planen.“
+  02 Wir sortieren das Chaos
+  „Ideen, Anforderungen, Budget – wir schaffen Klarheit.“
+  03 Wir planen sichtbar
+  „Erste Konzepte, 3D-Visualisierungen und echte Kostentransparenz.“
+  04 Wir machen es greifbar
+  „Materialien, Details und Licht – alles zum Anfassen.“
+  05 Wir koordinieren sauber
+  „Aufmaß, Lieferung, Montage – alles perfekt abgestimmt.“
+  06 Du bekommst eine Küche, die Sinn ergibt
+  „Durchdacht. Schön. Und bereit für dein echtes Leben.“
+- Dieser Bereich soll stärker animiert wirken als aktuell.
+
+7. VERGLEICH: KLASSISCH VS. VIDEKO
+- Heller Bereich mit zwei starken Vergleichskarten.
+- Links „Klassisch“:
+  - Standardlösungen von der Stange
+  - Viele Ansprechpartner, wenig Verantwortung
+  - Planung aus Katalogen, wenig Alltag
+  - Unklare Kosten, böse Überraschungen
+  - Koordination? Viel Glück.
+- Rechts „VIDEKO“:
+  - Maßgeschneiderte Lösung für dein Leben
+  - Ein Team, ein Ansprechpartner, volle Verantwortung
+  - Planung mit Zeit, Ruhe und echter Expertise
+  - Transparente Preise, ehrlich von Anfang an
+  - Eine Küche, die dich jeden Tag begeistert
+- In der Mitte ein kleiner „VS“-Kreis.
+- Optisch hochwertig, nicht comicartig.
+
+8. FINALER CTA
+- Helle CTA-Sektion mit starkem Bild 09_finale_kueche_ergebnis.png oder 10_cta_premium_kuechen_lounge.png.
+- Headline:
+  „Lass uns aus deinem Küchenchaos einen Plan machen.“
+- Subline:
+  „Unverbindlich. Persönlich. Auf Augenhöhe.“
+- Buttons:
+  - „Beratung anfragen“ → Beratungsseite
+  - „Studio erleben“ → Studio-/Showroom-Seite
+- Danach sauberer Footer im bestehenden Design.
+
+ANIMATIONEN / TECHNIK:
+- Bitte deutlich mehr Bewegung als auf der aktuellen Seite, aber hochwertig und performant.
+- Verwende z. B.:
+  - Scroll-Reveals
+  - Parallax im Hero
+  - aktive Goldlinien beim Scrollen
+  - Karten-Hover mit leichtem Tilt/Zoom/Glow
+  - animierte Timeline
+  - Vorher/Nachher-Slider
+  - Orbit-/Flow-Animation in der Leistungsmachine
+  - dezente Button-Glows
+- Keine billigen Partikel-Suppen.
+- Keine Kirmes.
+- Es soll technisch frisch wirken, aber trotzdem Premium.
+
+RESPONSIVE:
+- Desktop: großzügige, visuelle Erlebnis-Seite.
+- Tablet: Grid sauber umbrechen.
+- Mobile:
+  - Hero lesbar
+  - Leistungsmaschine als vertikale Timeline/Accordion
+  - Vorher/Nachher-Slider mobil bedienbar
+  - Cards sauber stapeln
+  - keine horizontalen Scrollfehler
+  - Buttons groß genug
+
+ROUTING:
+- Alle Beratung/Projekt/Termin-Buttons zur Beratungsseite.
+- „Studio erleben“ zur Studio-/Showroom-Seite.
+- „Leistungen entdecken“ scrollt zur passenden Sektion auf dieser Seite.
+
+ABSCHLUSSCHECK:
+Bitte am Ende prüfen:
+- Passt die Seite optisch zu den anderen VIDEKO-Seiten?
+- Wirkt sie deutlich frischer, lebendiger und hochwertiger als vorher?
+- Sind die Animationen spürbar, aber nicht billig?
+- Ist die Du-Ansprache konsequent?
+- Sind alle Buttons korrekt verlinkt?
+- Funktioniert alles auf Mobile?
+- Keine verzerrten Bilder?
+- Keine toten Links?
+
+Baue diese Leistungsseite jetzt so, dass sie das stärkste Argument der Website wird: VIDEKO übernimmt den ganzen Küchenwahnsinn – sauber, ehrlich, hochwertig und mit einem klaren Plan.

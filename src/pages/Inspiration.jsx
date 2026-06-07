@@ -1,13 +1,17 @@
 import { useRef, useState } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { ArrowUpRight, Heart, Check } from 'lucide-react'
+import {
+  ArrowUpRight, Heart, Check, Compass, Lightbulb, Archive, Layers, Cpu, PanelsTopLeft,
+  Boxes, ChefHat, Utensils, Sofa, Briefcase, WashingMachine, Upload, MessageSquare, ArrowRight,
+} from 'lucide-react'
 
 import Reveal from '../components/Reveal.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
 import BeforeAfter from '../components/BeforeAfter.jsx'
 
-import heroImg from '../assets/images/inspiration/01_hero_atmosphaerische_kueche.png'
+import heroImg from '../assets/images/inspiration/insp-hero-dark.png'
+import explodeImg from '../assets/images/inspiration/insp-exploding-light.png'
 import iModern from '../assets/images/inspiration/02_moderne_kueche.png'
 import iWohnlich from '../assets/images/inspiration/03_wohnliche_kueche.png'
 import iDunkel from '../assets/images/inspiration/04_dunkle_kueche.png'
@@ -61,6 +65,29 @@ const PROJECTS = [
   { title: 'Raumlösung mit Licht', text: 'Hell, luftig, durchdacht.', img: iHell },
 ]
 
+const EXPLODE = [
+  { n: '01', icon: Lightbulb, title: 'Beleuchtung', text: 'Stimmung, Akzente und Funktion in perfektem Licht.' },
+  { n: '02', icon: Archive, title: 'Stauraum', text: 'Durchdacht bis ins Detail – für Ordnung und Komfort.' },
+  { n: '03', icon: Layers, title: 'Arbeitsplatte', text: 'Materialien, die Schönheit und Alltag verbinden.' },
+  { n: '04', icon: Cpu, title: 'Technik', text: 'Intelligente Geräte, nahtlos integriert.' },
+  { n: '05', icon: PanelsTopLeft, title: 'Fronten', text: 'Design mit Charakter – Farbe, Struktur, Material.' },
+  { n: '06', icon: Boxes, title: 'Innenleben', text: 'Qualität, die man sieht – langlebig und wertbeständig.' },
+]
+
+const ROOMS = [
+  { key: 'Kochen', icon: ChefHat, title: 'Kochen mit Stil.', text: 'Funktion trifft Emotion – Küchen, die mehr können und schöner sind.', img: iInsel },
+  { key: 'Essen', icon: Utensils, title: 'Essen & zusammenkommen.', text: 'Übergänge, die Küche und Tisch zu einem Ort verbinden.', img: iWohnlich },
+  { key: 'Wohnen', icon: Sofa, title: 'Offen wohnen.', text: 'Küche und Wohnraum als eine ruhige, warme Einheit.', img: iHell },
+  { key: 'Homeoffice', icon: Briefcase, title: 'Arbeiten zuhause.', text: 'Clevere Nischen, die sich nahtlos in den Raum fügen.', img: iModern },
+  { key: 'Hauswirtschaft', icon: WashingMachine, title: 'Ordnung dahinter.', text: 'Stauraum und Technik, die den Alltag leise tragen.', img: iKlein },
+]
+
+const CONVERT = [
+  { tag: 'Schnell & einfach', icon: Compass, title: 'VIDEKO Kompass', text: 'Starte deine erste Einschätzung in nur 2 Minuten.', points: ['Sofort eine grobe Preisspanne', 'Passende Stilwelt entdecken', 'Unverbindlich & anonym'], cta: 'Kompass starten', to: '/stylefinder' },
+  { tag: 'Genau & individuell', icon: Upload, title: 'Unterlagen hochladen', text: 'Teile Grundriss, Fotos und Ideen für ein präzises Angebot.', points: ['Grundriss, Fotos, Skizzen', 'PDF, JPG, PNG', 'Wir melden uns mit Plan'], cta: 'Unterlagen hochladen', to: '/stylefinder' },
+  { tag: 'Persönlich & beratend', icon: MessageSquare, title: 'Persönlich beraten lassen', text: 'Buche ein unverbindliches Gespräch mit unseren Küchenexperten.', points: ['Individuelle Beratung', 'Konkrete Empfehlungen', 'Zeitlich flexibel'], cta: 'Termin buchen', to: '/beratung' },
+]
+
 const TRUST = ['Persönliche Beratung', 'Individuelle Planung', 'Hochwertige Materialien', 'Perfekte Umsetzung']
 
 export default function Inspiration() {
@@ -71,6 +98,8 @@ export default function Inspiration() {
 
   const [activeStyle, setActiveStyle] = useState('modern')
   const [activeMat, setActiveMat] = useState(0)
+  const [activeRoom, setActiveRoom] = useState(0)
+  const room = ROOMS[activeRoom]
   const [favs, setFavs] = useState(() => new Set())
   const toggleFav = (i) => setFavs((s) => { const n = new Set(s); n.has(i) ? n.delete(i) : n.add(i); return n })
   const mat = MATERIALS[activeMat]
@@ -86,23 +115,23 @@ export default function Inspiration() {
         <div className="container pagehero__inner">
           <Reveal>
             <span className="kicker kicker--gold">Inspiration</span>
-            <h1 className="pagehero__title">Inspiration für<br /><span className="grad">Küchen, die bleiben.</span></h1>
+            <h1 className="pagehero__title">Inspiration,<br /><span className="grad">die bleibt.</span></h1>
             <p className="pagehero__lead">
-              Entdecke Ideen, Materialien und Raumkonzepte, die Design, Funktion und
-              Wertigkeit auf besondere Weise verbinden.
+              Echte Küchen. Echte Materialien. Echte Ideen für dein Zuhause –
+              so individuell wie dein Leben. Keine Möbel. Sondern Lieblingsorte.
             </p>
             <div className="pagehero__actions">
-              <CTAButton href="#insp-stilwelten">Inspiration entdecken</CTAButton>
-              <CTAButton to="/beratung" variant="dark">Küche planen</CTAButton>
+              <CTAButton to="/stylefinder">VIDEKO Kompass starten</CTAButton>
+              <CTAButton href="#insp-stilwelten" variant="dark">Inspiration entdecken</CTAButton>
             </div>
           </Reveal>
         </div>
       </section>
 
-      {/* STYLEFINDER (kompakt) */}
-      <section className="section insp-style">
+      {/* VIDEKO KOMPASS (kompakt) */}
+      <section className="section insp-style" id="kompass">
         <div className="container">
-          <SectionHeader align="center" kicker="Dein Stil" title="Finde deinen Küchenstil." lead="Wähle, was dich anspricht – wir zeigen dir Ideen, die dazu passen." />
+          <SectionHeader align="center" kicker="VIDEKO Kompass" title="Finde deinen Küchenstil." lead="Wir raten nicht. Wir treffen. Wähle, was dich anspricht – wir zeigen dir Ideen, die dazu passen." />
           <div className="stylerow">
             {STYLES.map((sObj) => (
               <button
@@ -117,7 +146,36 @@ export default function Inspiration() {
             ))}
           </div>
           <div className="section__cta">
-            <CTAButton to="/stylefinder">Stilfinder starten</CTAButton>
+            <CTAButton to="/stylefinder">Kompass starten</CTAButton>
+          </div>
+        </div>
+      </section>
+
+      {/* EXPLODING KITCHEN (hell) */}
+      <section className="section insp-explode">
+        <div className="container">
+          <div className="explode">
+            <Reveal className="explode__copy">
+              <span className="kicker">Konzept</span>
+              <h2 className="lintro__title">Die Küche.<br /><span className="grad">In perfekter Komposition.</span></h2>
+              <p className="lintro__text">Jedes Detail. Jede Funktion. Jedes Material. Entdecke, wie deine Küche aus perfekt aufeinander abgestimmten Elementen entsteht.</p>
+              <CTAButton to="/stylefinder">Küche entdecken</CTAButton>
+            </Reveal>
+            <Reveal className="explode__media" delay={0.08}>
+              <img src={explodeImg} alt="Exploded-View einer VIDEKO-Küche" loading="lazy" />
+            </Reveal>
+          </div>
+          <div className="explode__grid">
+            {EXPLODE.map((e, i) => (
+              <Reveal key={e.title} delay={(i % 3) * 0.05}>
+                <div className="ecard">
+                  <span className="ecard__n">{e.n}</span>
+                  <span className="ecard__ic"><e.icon size={20} strokeWidth={1.6} /></span>
+                  <span className="ecard__title">{e.title}</span>
+                  <span className="ecard__text">{e.text}</span>
+                </div>
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>
@@ -175,6 +233,30 @@ export default function Inspiration() {
                   <span className="mtile__label">{m.key}</span>
                 </button>
               ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* RAUMIDEEN */}
+      <section className="section insp-rooms">
+        <div className="container">
+          <SectionHeader kicker="Raumideen" title={<>Mehr als <span className="grad">nur Küche.</span></>} lead="Wir denken nicht nur Küchen, sondern Wohnräume. Jeder Raum. Dein Stil." />
+          <div className="roomtabs">
+            {ROOMS.map((r, i) => (
+              <button key={r.key} type="button" className={`roomtab ${activeRoom === i ? 'is-active' : ''}`} onClick={() => setActiveRoom(i)}>
+                <r.icon size={16} strokeWidth={1.8} /> {r.key}
+              </button>
+            ))}
+          </div>
+          <div className="roompanel">
+            <div className="roompanel__media" style={{ backgroundImage: `url(${room.img})` }} aria-hidden="true">
+              <span className="roompanel__scrim" />
+            </div>
+            <div className="roompanel__body">
+              <h3 className="roompanel__title">{room.title}</h3>
+              <p className="roompanel__text">{room.text}</p>
+              <CTAButton to="/inspiration#insp-stilwelten" variant="dark">Ideen entdecken</CTAButton>
             </div>
           </div>
         </div>
@@ -238,6 +320,30 @@ export default function Inspiration() {
               </Reveal>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* CONVERSION ZONE */}
+      <section className="section section--dark insp-convert">
+        <div className="container">
+          <SectionHeader tone="light" align="center" kicker="Drei Wege" title={<>Ideen sind der Anfang. <span className="grad">Deine Küche ist das Ziel.</span></>} lead="Wähle den Weg, der zu dir passt – schnell & einfach oder persönlich & individuell." />
+          <div className="convert-grid">
+            {CONVERT.map((c, i) => (
+              <Reveal key={c.title} delay={(i % 3) * 0.07}>
+                <div className="convcard">
+                  <span className="convcard__tag">{c.tag}</span>
+                  <span className="convcard__ic"><c.icon size={22} strokeWidth={1.6} /></span>
+                  <span className="convcard__title">{c.title}</span>
+                  <span className="convcard__text">{c.text}</span>
+                  <ul className="convcard__points">
+                    {c.points.map((p) => <li key={p}><Check size={13} strokeWidth={2.6} /> {p}</li>)}
+                  </ul>
+                  <CTAButton to={c.to}>{c.cta}</CTAButton>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+          <p className="convert-note">Kein Druck. Keine Verpflichtung. Nur ehrliche Ideen für deine Küche.</p>
         </div>
       </section>
 
