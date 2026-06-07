@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   Sparkles, Check, ArrowRight, ArrowLeft, Lock, Save, RefreshCw, Heart,
   Users, PartyPopper, ChefHat, Archive, Wind, LayoutGrid, Zap, Droplets, Leaf, Sun, Footprints, Gem, Wallet,
+  Maximize, Baby, CircleDot, Cpu, Package, Coffee, Wine, PiggyBank, Coins, BadgeEuro, HelpCircle,
 } from 'lucide-react'
 
 import CTAButton from '../CTAButton.jsx'
@@ -28,9 +29,6 @@ import mPlatten from '../../assets/images/materialien/cards/material-card-quarzk
 import iHell from '../../assets/images/inspiration/05_helle_kueche.png'
 import iWohnlich from '../../assets/images/inspiration/03_wohnliche_kueche.png'
 import iModernK from '../../assets/images/inspiration/02_moderne_kueche.png'
-import iInsel from '../../assets/images/inspiration/07_kueche_mit_insel.png'
-import iKlein from '../../assets/images/inspiration/08_kleine_kueche_clever_geplant.png'
-import iDetails from '../../assets/images/inspiration/06_materialien_und_details.png'
 
 const STEPS = ['Stil', 'Mehrwerte', 'Materialdetails', 'Farbwelten', 'Funktionsraum', 'Budget', 'Prioritäten', 'Ergebnis']
 
@@ -67,14 +65,18 @@ const FARBWELTEN = [
   { label: 'Stein & Taupe', sub: 'Erdig und natürlich', dots: ['#bdb3a3', '#8d8275', '#5f574c'], img: iWohnlich },
 ]
 const FUNKTION = [
-  { label: 'Viel Stauraum', img: iKlein }, { label: 'Kurze Wege', img: iModernK },
-  { label: 'Große Arbeitsfläche', img: iDetails }, { label: 'Offene Wohnküche', img: sHell },
-  { label: 'Kochen zu zweit', img: iWohnlich }, { label: 'Familienalltag', img: iWohnlich },
-  { label: 'Kücheninsel', img: iInsel }, { label: 'Geräte auf Augenhöhe', img: sModern },
-  { label: 'Speisekammer', img: iKlein }, { label: 'Frühstücksplatz', img: iHell },
-  { label: 'Homebar', img: sDunkel }, { label: 'Ruhiger Look trotz Funktion', img: sModern },
+  { label: 'Viel Stauraum', icon: Archive }, { label: 'Kurze Wege', icon: Footprints },
+  { label: 'Große Arbeitsfläche', icon: Maximize }, { label: 'Offene Wohnküche', icon: LayoutGrid },
+  { label: 'Kochen zu zweit', icon: Users }, { label: 'Familienalltag', icon: Baby },
+  { label: 'Kücheninsel', icon: CircleDot }, { label: 'Geräte auf Augenhöhe', icon: Cpu },
+  { label: 'Speisekammer', icon: Package }, { label: 'Frühstücksplatz', icon: Coffee },
+  { label: 'Homebar', icon: Wine }, { label: 'Ruhiger Look trotz Funktion', icon: Wind },
 ]
-const BUDGETS = ['bis 10.000 €', '10.000 – 15.000 €', '15.000 – 20.000 €', '20.000 – 30.000 €', '30.000 €+', 'noch offen']
+const BUDGETS = [
+  { label: 'bis 10.000 €', icon: PiggyBank }, { label: '10.000 – 15.000 €', icon: Coins },
+  { label: '15.000 – 20.000 €', icon: Wallet }, { label: '20.000 – 30.000 €', icon: BadgeEuro },
+  { label: '30.000 €+', icon: Gem }, { label: 'noch offen', icon: HelpCircle },
+]
 
 const EXPERT_TIPS = [
   'Vertrau deinem Bauchgefühl – dein erster Eindruck verrät oft am meisten.',
@@ -276,17 +278,13 @@ export default function StylefinderFlow() {
                   <>
                     <h2 className="sf-q">Wie soll deine Küche funktionieren?</h2>
                     <p className="sf-micro">Wähle, was im Alltag für dich wirklich zählt. <em>(Mehrfachauswahl)</em></p>
-                    <div className="sf-imggrid sf-imggrid--4">
+                    <div className="sf-iconrid">
                       {FUNKTION.map((o) => {
                         const active = a.funktion.includes(o.label)
                         return (
-                          <div key={o.label} role="button" tabIndex={0} className={`sf-imgcard sf-imgcard--sm ${active ? 'is-active' : ''}`} onClick={() => toggle('funktion', o.label)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle('funktion', o.label) } }}>
-                            <span className="sf-imgcard__img" style={{ backgroundImage: `url(${o.img})` }}>
-                              <button type="button" className={`sf-like ${liked.has(o.label) ? 'is-on' : ''}`} aria-label="Merken" onClick={(e) => toggleLike(e, o.label)}><Heart size={14} strokeWidth={2} fill={liked.has(o.label) ? 'currentColor' : 'none'} /></button>
-                              {active && <span className="sf-imgcard__check"><Check size={13} strokeWidth={2.8} /></span>}
-                            </span>
-                            <span className="sf-imgcard__label">{o.label}</span>
-                          </div>
+                          <button key={o.label} type="button" className={`sf-iconcard ${active ? 'is-active' : ''}`} onClick={() => toggle('funktion', o.label)}>
+                            <o.icon size={22} strokeWidth={1.6} /><span>{o.label}</span>
+                          </button>
                         )
                       })}
                     </div>
@@ -299,11 +297,11 @@ export default function StylefinderFlow() {
                     <p className="sf-micro">Nicht auf den Euro genau – aber so, dass wir realistisch planen können.</p>
                     <div className="sf-budgrid">
                       {BUDGETS.map((b) => {
-                        const active = a.budget === b
+                        const active = a.budget === b.label
                         return (
-                          <button key={b} type="button" className={`sf-budcard ${active ? 'is-active' : ''}`} onClick={() => set('budget', b)}>
-                            <span className="sf-budcard__ic"><Wallet size={20} strokeWidth={1.6} /></span>
-                            <span className="sf-budcard__label">{b}</span>
+                          <button key={b.label} type="button" className={`sf-budcard ${active ? 'is-active' : ''}`} onClick={() => set('budget', b.label)}>
+                            <span className="sf-budcard__ic"><b.icon size={20} strokeWidth={1.6} /></span>
+                            <span className="sf-budcard__label">{b.label}</span>
                             {active && <span className="sf-budcard__check"><Check size={14} strokeWidth={2.8} /></span>}
                           </button>
                         )

@@ -10168,15 +10168,17 @@ a.footer__contact-line:hover {
 /* STYLEFINDER — compass ring (logo + progress dots), priority sliders, budget cards */
 .sf-compass { position: relative; width: 150px; height: 150px; margin: 4px auto 14px; }
 .sf-compass__ring { position: relative; width: 150px; height: 150px; }
+.sf-compass__ring::before { content: ''; position: absolute; inset: 16px; border-radius: 50%; border: 1px solid rgba(201, 160, 80, 0.35); }
 .sf-compass__dot { position: absolute; top: 50%; left: 50%; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; border-radius: 50%; background: var(--line-dark); transition: background 0.3s ease, box-shadow 0.3s ease; }
 .sf-compass__dot.is-on { background: var(--gold); box-shadow: 0 0 8px -1px rgba(201, 160, 80, 0.7); }
 .sf-compass__logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80px; height: 80px; object-fit: contain; filter: drop-shadow(0 2px 8px rgba(120, 90, 40, 0.25)); }
 .sf-compass__cap { display: block; text-align: center; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--bronze); font-weight: 700; }
 
-.sf-priolist { display: flex; flex-direction: column; gap: 14px; }
-.sf-prio2 { display: grid; grid-template-columns: 150px 1fr 26px; align-items: center; gap: 16px; }
+.sf-priolist { display: flex; flex-direction: column; gap: 12px; }
+.sf-prio2 { display: grid; grid-template-columns: 160px 1fr 34px; align-items: center; gap: 16px; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--line-dark); background: rgba(255, 255, 255, 0.6); transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+.sf-prio2:hover { border-color: rgba(201, 160, 80, 0.45); box-shadow: 0 14px 32px -28px rgba(120, 90, 40, 0.4); }
 .sf-prio2__label { font-weight: 600; color: var(--ink); font-size: 0.9rem; }
-.sf-prio2__val { font-family: var(--serif); font-weight: 700; color: var(--bronze); text-align: right; }
+.sf-prio2__val { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: rgba(201, 160, 80, 0.14); border: 1px solid rgba(201, 160, 80, 0.3); font-family: var(--serif); font-weight: 700; color: var(--bronze); }
 .sf-prio2 input[type='range'] { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 6px; background: linear-gradient(to right, var(--gold) var(--p, 50%), var(--line-dark) var(--p, 50%)); cursor: pointer; outline: none; }
 .sf-prio2 input[type='range']::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--grad-gold); border: 3px solid #fff; cursor: pointer; box-shadow: 0 4px 12px -3px rgba(168, 122, 40, 0.7); }
 .sf-prio2 input[type='range']::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: #c9a050; border: 3px solid #fff; cursor: pointer; }
@@ -10197,8 +10199,16 @@ a.footer__contact-line:hover {
 @media (max-width: 560px) { .sf-budgrid { grid-template-columns: repeat(2, 1fr); } }
 
 /* LEISTUNGEN — interactive service section */
-.svc8 { display: grid; grid-template-columns: 340px 1fr; gap: 28px; align-items: start; }
+.svc8 { display: grid; grid-template-columns: 1fr 1.05fr; gap: 28px; align-items: start; }
 .svc8__list { display: flex; flex-direction: column; gap: 10px; }
+.svc8__list--square { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-content: start; }
+.svc8__list--square .svc8__arrow { display: none; }
+.svc8__list--square .svc8__card { padding: 16px 16px; }
+
+/* echte planung + teamarbeit */
+.leist-team__row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.leist-team__img { display: block; aspect-ratio: 4 / 5; border-radius: 16px; background-size: cover; background-position: center; border: 1px solid var(--line-dark); box-shadow: 0 26px 54px -40px rgba(120, 90, 40, 0.4); }
+@media (max-width: 720px) { .leist-team__row { grid-template-columns: repeat(2, 1fr); } }
 .svc8__card { display: flex; align-items: center; gap: 14px; padding: 16px 18px; border-radius: 16px; border: 1px solid var(--line-dark); background: rgba(255, 255, 255, 0.6); cursor: pointer; text-align: left; transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease; }
 .svc8__card:hover { transform: translateX(3px); border-color: rgba(201, 160, 80, 0.5); box-shadow: 0 18px 40px -30px rgba(120, 90, 40, 0.4); }
 .svc8__card.is-active { background: var(--soft-black); border-color: var(--soft-black); }

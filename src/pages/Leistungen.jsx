@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
-import { Check, X, ArrowRight, MapPin, Mail, Phone, ShieldCheck, Layers, Gem, Clock } from 'lucide-react'
+import { Check, X, ArrowRight, MapPin, Mail, Phone } from 'lucide-react'
 
 import Reveal from '../components/Reveal.jsx'
 import CTAButton from '../components/CTAButton.jsx'
@@ -17,12 +17,6 @@ import imgCoordination from '../assets/images/leistungen/ls-coordination.png'
 import imgAftercare from '../assets/images/leistungen/ls-aftercare.png'
 import vnVideo from '../assets/images/leistungen/vorher-nachher.mp4'
 
-const USPS = [
-  { icon: ShieldCheck, t: 'Persönlich & ehrlich' },
-  { icon: Layers, t: 'Alles aus einer Hand' },
-  { icon: Gem, t: 'Premium Materialien' },
-  { icon: Clock, t: 'Termintreu & verlässlich' },
-]
 const FEATURE = ['Individuelle Beratung', 'Kreative Konzepte', 'Präzise Planung', 'Reibungslose Umsetzung', 'Verlässlicher Service']
 
 const SERVICES8 = [
@@ -75,14 +69,6 @@ export default function Leistungen() {
               <a className="leist-hero__link" href="#leist-services">Leistungen entdecken <ArrowRight size={16} strokeWidth={1.9} /></a>
             </div>
           </Reveal>
-          <div className="svc-hero__usps">
-            {USPS.map((u, i) => (
-              <Reveal key={u.t} delay={0.1 + i * 0.07} className="svc-uspcard">
-                <span className="svc-uspcard__ic"><u.icon size={18} strokeWidth={1.7} /></span>
-                <span className="svc-uspcard__t">{u.t}</span>
-              </Reveal>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -118,9 +104,9 @@ export default function Leistungen() {
       {/* 3 — INTERAKTIVE LEISTUNGSSEKTION (hell) */}
       <section className="section leist-svc8" id="leist-services">
         <div className="container">
-          <SectionHeader align="center" kicker="Unsere Leistungen" title={<>Von der ersten Idee bis zur fertigen Küche. <span className="grad">Alles aus einer Hand.</span></>} lead="Klick dich durch unsere Leistungen – und sieh, was hinter jedem Schritt steckt." />
+          <SectionHeader align="center" kicker="Ein Prozess. Ein Team. Ein Ergebnis." title={<>Von der ersten Idee bis zur <span className="grad">letzten Schraube.</span></>} lead="Klick dich durch unsere Leistungen – und sieh, was hinter jedem Schritt steckt." />
           <div className="svc8">
-            <div className="svc8__list">
+            <div className="svc8__list svc8__list--square">
               {SERVICES8.map((s, i) => (
                 <button key={s.title} type="button" className={`svc8__card ${activeSvc === i ? 'is-active' : ''}`} onClick={() => { setActiveSvc(i); setActiveThumb(0) }}>
                   <span className="svc8__n">{s.n}</span>
@@ -150,6 +136,42 @@ export default function Leistungen() {
                 </motion.div>
               </AnimatePresence>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3b — ECHTE PLANUNG */}
+      <section className="section leist-plan">
+        <div className="container">
+          <div className="lintro">
+            <Reveal className="lintro__media">
+              <div className="lintro__frame"><img src={img3d} alt="Echte 3D-Planung" loading="lazy" /><span className="lintro__rim" aria-hidden="true" /></div>
+            </Reveal>
+            <Reveal className="lintro__copy" delay={0.08}>
+              <span className="kicker">Mehr als schöne Bilder</span>
+              <h2 className="lintro__title">Echte Planung.<br /><span className="grad">Kein Hochglanz-Versprechen.</span></h2>
+              <p className="lintro__text">Hinter jeder VIDEKO-Küche steckt eine durchdachte Planung – millimetergenau, ehrlich kalkuliert und in 3D sichtbar, bevor etwas gebaut wird.</p>
+              <ul className="lstances">
+                <li><Check size={16} strokeWidth={2.4} /> 3D-Visualisierung statt Prospektbild</li>
+                <li><Check size={16} strokeWidth={2.4} /> Millimetergenaues Aufmaß</li>
+                <li><Check size={16} strokeWidth={2.4} /> Transparente Kosten von Anfang an</li>
+              </ul>
+              <CTAButton to="/beratung">Projekt starten</CTAButton>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* 3c — TEAMARBEIT */}
+      <section className="section leist-team">
+        <div className="container">
+          <SectionHeader align="center" kicker="Hinter jeder Küche" title={<>Weil gute Küchen <span className="grad">Teamarbeit sind.</span></>} lead="Beratung, Planung, Aufmaß, Montage und Service – ein eingespieltes Team, ein Ansprechpartner, ein Ergebnis." />
+          <div className="leist-team__row">
+            {[imgConsulting, imgCoordination, imgRenovation, imgAftercare].map((img, k) => (
+              <Reveal key={k} delay={(k % 4) * 0.06}>
+                <span className="leist-team__img" style={{ backgroundImage: `url(${img})` }} aria-hidden="true" />
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>
