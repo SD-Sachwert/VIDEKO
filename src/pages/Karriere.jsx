@@ -1,15 +1,14 @@
 import { useRef, useState } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import {
   Store, PencilRuler, Hammer, Ruler, Headset, MessageSquare, Megaphone,
-  Sparkles, Rocket, Mail, ArrowUpRight, ArrowRight, MapPin, Upload,
+  Sparkles, Rocket, Mail, ArrowUpRight, ArrowRight, MapPin, Upload, Check, Coffee,
 } from 'lucide-react'
 
 import Reveal from '../components/Reveal.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
 import ComparisonTable from '../components/ComparisonTable.jsx'
-import ProcessTimeline from '../components/ProcessTimeline.jsx'
 
 import heroImg from '../assets/images/karriere/01_hero_team_beratung.png'
 import jVerkauf from '../assets/images/karriere/02_job_kuechenverkauf_beratung.png'
@@ -22,34 +21,52 @@ import imgProzess from '../assets/images/karriere/08_bewerbungsprozess_teammeeti
 import imgFormular from '../assets/images/karriere/09_bewerbung_interior_formular.png'
 import imgCta from '../assets/images/karriere/10_cta_footer_premium_showroom.png'
 
-const JOBS = [
-  { title: 'Küchenverkäufer', icon: Store, image: jVerkauf, text: 'Du liebst Menschen und gute Küchen? Dann passt das.' },
-  { title: 'Küchenplaner', icon: PencilRuler, image: jPlanung, text: 'Aus Ideen wird ein Plan, der wirklich sitzt.' },
-  { title: 'Monteure', icon: Hammer, image: jMontage, text: 'Du baust auf, was wir planen – sauber und mit Stolz.' },
-  { title: 'Aufmaß / Projektkoordination', icon: Ruler, image: jMontage, text: 'Millimeter, Termine, Überblick – genau dein Ding.' },
-  { title: 'Empfang / Sachbearbeitung', icon: Headset, image: jEmpfang, text: 'Erste Stimme, gute Laune, alles im Griff.' },
-  { title: 'Reklamationsservice', icon: MessageSquare, image: jEmpfang, text: 'Du löst Probleme, bevor sie welche werden.' },
-  { title: 'Marketing / Social Media', icon: Megaphone, image: jMarketing, text: 'Du machst VIDEKO sichtbar – und richtig gut.' },
-  { title: 'Reinigung / Studio-Service', icon: Sparkles, image: jReinigung, text: 'Du hältst das Studio jeden Tag in Top-Form.' },
-  { title: 'Quereinsteiger', icon: Rocket, image: jReinigung, text: 'Kein klassischer Lebenslauf? Zeig uns, was du draufhast.' },
-  { title: 'Initiativbewerbung', icon: Mail, image: jVerkauf, text: 'Deine Rolle ist nicht dabei? Schreib uns trotzdem.' },
+const FILTERS = [
+  { key: 'alle', label: 'Alle zeigen' },
+  { key: 'verkaufen', label: 'Ich kann verkaufen' },
+  { key: 'planen', label: 'Ich kann planen' },
+  { key: 'anpacken', label: 'Ich kann anpacken' },
+  { key: 'organisieren', label: 'Ich kann organisieren' },
+  { key: 'social', label: 'Ich kann Social Media' },
+  { key: 'offen', label: 'Ich weiß es noch nicht' },
 ]
 
-const WHY = [
-  { title: 'Kein Möbelhaus-Zirkus', text: 'Keine Rabattschlachten, kein Drücker-Vibe. Echte Arbeit.', image: imgProzess },
-  { title: 'Studio statt Masse', text: 'Qualität vor Stückzahl. Hier zählt jedes Projekt.', image: imgFormular },
-  { title: 'Aufbau statt Stillstand', text: 'Wir wachsen – und du wächst mit. Viel Raum für dich.', image: imgCta },
-  { title: 'Gute Arbeit darf gut aussehen', text: 'Premium-Umfeld, das zu deinem Anspruch passt.', image: imgProzess },
+const ROLES = [
+  { title: 'Beratung & Verkauf', cat: 'verkaufen', icon: Store, image: jVerkauf, text: 'Für Menschen, die zuhören können, bevor sie verkaufen.' },
+  { title: 'Planung & Technik', cat: 'planen', icon: PencilRuler, image: jPlanung, text: 'Für alle, die bei 3 mm Versatz nervös werden. Gut so.' },
+  { title: 'Aufmaß & Koordination', cat: 'planen', icon: Ruler, image: jMontage, text: 'Millimeter, Termine, Überblick – genau dein Spielfeld.' },
+  { title: 'Montage & Handwerk', cat: 'anpacken', icon: Hammer, image: jMontage, text: 'Für Leute, die wissen: Gerade ist nicht ungefähr gerade.' },
+  { title: 'Reinigung & Studio-Service', cat: 'anpacken', icon: Sparkles, image: jReinigung, text: 'Du hältst das Studio jeden Tag in Top-Form.' },
+  { title: 'Empfang & Sachbearbeitung', cat: 'organisieren', icon: Headset, image: jEmpfang, text: 'Für alle, die Chaos sehen und innerlich schon eine Tabelle öffnen.' },
+  { title: 'Reklamation & Service', cat: 'organisieren', icon: MessageSquare, image: jEmpfang, text: 'Du löst Probleme, bevor sie welche werden.' },
+  { title: 'Marketing & Social Media', cat: 'social', icon: Megaphone, image: jMarketing, text: 'Mehr als ein Vorher-Nachher-Bild mit Filter.' },
+  { title: 'Quereinsteiger', cat: 'offen', icon: Rocket, image: jReinigung, text: 'Noch keine Küchen-Erfahrung? Hauptsache Kopf an.' },
 ]
 
-const PROCESS = [
-  { title: 'Melden', text: 'Kurze Nachricht reicht – ganz unkompliziert.' },
-  { title: 'Kennenlernen', text: 'Wir quatschen, ob die Chemie stimmt.' },
-  { title: 'Studio erleben', text: 'Komm vorbei und schau, wie wir ticken.' },
-  { title: 'Start planen', text: 'Passt? Dann legen wir gemeinsam los.' },
+const EGGS = [
+  'Keine Sorge, wir haben Kaffee.',
+  'Excel darfst du mögen. Musst du aber nicht heiraten.',
+  'Rabattgeschrei? Nicht bei uns.',
+  'Gerade Wände wären schön. Sind sie nie.',
+  'Wenn du „passt schon" sagst, meinen wir hoffentlich nicht dasselbe.',
 ]
 
-const BEREICHE = JOBS.map((j) => j.title)
+const TICKEN = [
+  'Ehrlich statt Verkaufsdruck',
+  'Mitdenken statt mitlaufen',
+  'Kurze Wege statt Konzern-Pingpong',
+  'Qualität vor Stückzahl',
+  'Aufbauphase mit echtem Gestaltungsspielraum',
+  'Ein Team, kein Zuständigkeits-Tetris',
+]
+
+const STEPS3 = [
+  { n: '1', title: 'Kurz melden', text: 'Ein paar Zeilen reichen. Lebenslauf? Gern, muss aber nicht perfekt sein.' },
+  { n: '2', title: 'Wir melden uns', text: 'Persönlich, ehrlich, kein Bot – wir schauen, ob die Chemie passt.' },
+  { n: '3', title: 'Studio erleben', text: 'Komm vorbei, schau wie wir ticken. Passt? Dann legen wir los.' },
+]
+
+const BEREICHE = ROLES.map((r) => r.title).concat('Initiativbewerbung')
 
 export default function Karriere() {
   const heroRef = useRef(null)
@@ -57,10 +74,13 @@ export default function Karriere() {
   const imgY = useTransform(scrollYProgress, [0, 1], ['0%', '16%'])
   const imgScale = useTransform(scrollYProgress, [0, 1], [1.06, 1.16])
   const [sent, setSent] = useState(false)
+  const [cat, setCat] = useState('alle')
+
+  const roles = cat === 'alle' ? ROLES : ROLES.filter((r) => r.cat === cat)
 
   return (
     <div className="leist-page karr-page">
-      {/* HERO */}
+      {/* 1 — HERO */}
       <section className="pagehero leist-hero" ref={heroRef}>
         <div className="pagehero__media" aria-hidden="true">
           <motion.img src={heroImg} alt="" className="pagehero__img" style={{ y: imgY, scale: imgScale }} />
@@ -68,32 +88,41 @@ export default function Karriere() {
         </div>
         <div className="container pagehero__inner">
           <Reveal>
-            <span className="kicker kicker--gold">Karriere</span>
-            <h1 className="pagehero__title">Menschen, die Küchen<br /><span className="grad">anders denken.</span></h1>
+            <span className="kicker kicker--gold">Karriere bei VIDEKO</span>
+            <h1 className="pagehero__title">Bock auf Küchen.<br /><span className="grad">Aber ohne Möbelhaus-Zirkus.</span></h1>
             <p className="pagehero__lead">
-              Wir bauen kein Möbelhaus. Wir bauen ein Studio, in dem Design,
-              Handwerk und Persönlichkeit zusammenkommen – jeden Tag.
+              Du musst kein Küchenroboter sein. Du musst mitdenken, anpacken und Lust auf gute Arbeit haben.
+              Den Rest kriegen wir gemeinsam hin.
             </p>
             <div className="pagehero__actions">
-              <CTAButton href="#rollen">Offene Rollen ansehen</CTAButton>
-              <a className="leist-hero__link" href="#bewerbung">Initiativ bewerben <ArrowRight size={16} strokeWidth={1.9} /></a>
+              <CTAButton href="#rollen">Rollen entdecken</CTAButton>
+              <a className="leist-hero__link" href="#bewerbung">Ich hab keine Ahnung, aber Bock <ArrowRight size={16} strokeWidth={1.9} /></a>
             </div>
           </Reveal>
         </div>
       </section>
 
-      {/* OFFENE ROLLEN */}
-      <section className="section karr-roles" id="rollen">
+      {/* 2 — WARUM ANDERS (kurzblock) */}
+      <section className="section karr-intro">
         <div className="container">
-          <SectionHeader
-            kicker="Offene Rollen"
-            title={<>Werde Teil von <span className="grad">VIDEKO.</span></>}
-            lead="Standort Würzburg. Such dir deinen Bereich – oder bewirb dich einfach initiativ."
-          />
+          <SectionHeader align="center" kicker="Warum VIDEKO anders ist" title={<>Wir bauen kein Möbelhaus. <span className="grad">Wir bauen ein Team.</span></>} lead="Keine Rabattschlachten, kein Drücker-Vibe, kein Konzern-Dschungel. Sondern echte Arbeit, kurze Wege und Menschen, die ihren Job können." />
+        </div>
+      </section>
+
+      {/* 3 — ROLLENWELT (interaktiv) */}
+      <section className="section section--light karr-rollen" id="rollen">
+        <div className="container">
+          <SectionHeader kicker="Rollenwelt" title={<>Such dir, <span className="grad">was zu dir passt.</span></>} lead="Filtere nach dem, was du kannst – oder klick dich einfach durch." />
+          <div className="karr-filters">
+            {FILTERS.map((f) => (
+              <button key={f.key} type="button" className={`karr-chip ${cat === f.key ? 'is-active' : ''}`} onClick={() => setCat(f.key)}>{f.label}</button>
+            ))}
+          </div>
           <div className="lservice-grid karr-jobgrid">
-            {JOBS.map((j, i) => (
-              <Reveal key={j.title} delay={(i % 3) * 0.06}>
-                <a className="lscard jobcard" href="#bewerbung">
+            <AnimatePresence mode="popLayout">
+              {roles.map((j) => (
+                <motion.a key={j.title} className="lscard jobcard" href="#bewerbung"
+                  layout initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.96 }} transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}>
                   <span className="lscard__img" style={{ backgroundImage: `url(${j.image})` }} aria-hidden="true" />
                   <span className="lscard__scrim" aria-hidden="true" />
                   <span className="jobcard__icon" aria-hidden="true"><j.icon size={18} strokeWidth={1.7} /></span>
@@ -101,51 +130,45 @@ export default function Karriere() {
                     <span className="jobcard__meta"><MapPin size={12} strokeWidth={1.9} /> Würzburg</span>
                     <span className="lscard__title">{j.title}</span>
                     <span className="lscard__text">{j.text}</span>
-                    <span className="jobcard__cta">Mehr erfahren <ArrowUpRight size={15} strokeWidth={1.9} /></span>
+                    <span className="jobcard__cta">Bewerben <ArrowUpRight size={15} strokeWidth={1.9} /></span>
                   </span>
-                </a>
-              </Reveal>
-            ))}
+                </motion.a>
+              ))}
+            </AnimatePresence>
+          </div>
+          <div className="karr-initiativ">
+            <span>Nichts Passendes dabei? <strong>Auch „keine Ahnung, aber Bock" ist ein gültiger Startpunkt.</strong></span>
+            <CTAButton href="#bewerbung">Initiativ bewerben</CTAButton>
+          </div>
+          <div className="karr-egg" aria-hidden="true">
+            {EGGS.map((e) => <span key={e} className="karr-egg__item"><Coffee size={12} strokeWidth={1.9} /> {e}</span>)}
           </div>
         </div>
       </section>
 
-      {/* WARUM VIDEKO (hell) */}
-      <section className="section section--light karr-why">
+      {/* 4 — SO TICKEN WIR */}
+      <section className="section karr-ticken">
         <div className="container">
-          <SectionHeader kicker="Warum VIDEKO" title={<>Arbeiten, das mehr ist <span className="grad">als ein Job.</span></>} />
-          <div className="karr-grid4">
-            {WHY.map((wcard, i) => (
-              <Reveal key={wcard.title} delay={(i % 4) * 0.06}>
-                <article className="lscard karr-whycard">
-                  <span className="lscard__img" style={{ backgroundImage: `url(${wcard.image})` }} aria-hidden="true" />
-                  <span className="lscard__scrim" aria-hidden="true" />
-                  <span className="lscard__body">
-                    <span className="lscard__title">{wcard.title}</span>
-                    <span className="lscard__text">{wcard.text}</span>
-                  </span>
-                </article>
-              </Reveal>
-            ))}
+          <div className="karr-ticken__grid">
+            <Reveal className="karr-ticken__copy">
+              <span className="kicker">So ticken wir</span>
+              <h2 className="lintro__title">Klartext statt <span className="grad">Küchen-Geschwafel.</span></h2>
+              <ul className="lstances">
+                {TICKEN.map((t) => <li key={t}><Check size={16} strokeWidth={2.4} /> {t}</li>)}
+              </ul>
+            </Reveal>
+            <Reveal className="karr-quote" delay={0.08}>
+              <p>„Wir planen nicht für den Prospekt.<br /><span className="grad">Wir planen für deinen Alltag.“</span></p>
+              <span className="karr-quote__by">— das ganze VIDEKO-Team</span>
+            </Reveal>
           </div>
         </div>
       </section>
 
-      {/* BEWERBUNGSPROZESS */}
-      <section className="section karr-prozess">
+      {/* 5 — PASST DU ZU UNS */}
+      <section className="section section--light karr-fit">
         <div className="container">
-          <SectionHeader align="center" kicker="So läuft's" title={<>Einfach. Persönlich. <span className="grad">Schnell.</span></>} />
-          <ProcessTimeline steps={PROCESS} />
-          <Reveal className="karr-prozess__media">
-            <div className="lintro__frame"><img src={imgProzess} alt="VIDEKO Team im Studio" loading="lazy" /><span className="lintro__rim" aria-hidden="true" /></div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* PASST ZU UNS */}
-      <section className="section karr-fit">
-        <div className="container">
-          <SectionHeader align="center" kicker="Ehrlich gesagt" title="Passt das zwischen uns?" />
+          <SectionHeader align="center" kicker="Ehrlich gesagt" title={<>Passt das <span className="grad">zwischen uns?</span></>} />
           <ComparisonTable
             left={{ title: 'Du passt zu VIDEKO, wenn …', items: ['du Bock auf echte Qualität hast', 'du gern im Team anpackst', 'du ehrlich mit Menschen umgehst', 'du mitdenkst statt nur abarbeitest', 'du Lust hast, was aufzubauen'] }}
             right={{ title: 'Eher nicht, wenn …', items: ['du nur Dienst nach Vorschrift willst', 'dir Qualität egal ist', 'du Verkaufsdruck cool findest', 'du dich vor Neuem drückst', 'Teamwork nicht dein Ding ist'] }}
@@ -153,20 +176,27 @@ export default function Karriere() {
         </div>
       </section>
 
-      {/* BEWERBUNGSBEREICH */}
+      {/* 6 — BEWERBUNG IN 3 MINUTEN */}
       <section className="section karr-apply" id="bewerbung">
         <div className="container">
+          <SectionHeader align="center" kicker="Bewerbung in 3 Minuten" title={<>Keine perfekte Bewerbung <span className="grad">nötig.</span></>} lead="Schick uns einfach, wer du bist und was du suchst. Wir urteilen nicht über Lücken im Lebenslauf." />
+          <div className="karr-steps">
+            {STEPS3.map((s) => (
+              <Reveal key={s.n} className="karr-step">
+                <span className="karr-step__n">{s.n}</span>
+                <span className="karr-step__title">{s.title}</span>
+                <span className="karr-step__text">{s.text}</span>
+              </Reveal>
+            ))}
+          </div>
           <div className="kapply">
             <Reveal className="kapply__copy">
               <span className="kicker">Komm ins Team</span>
-              <h2 className="lintro__title">Keine perfekte<br /><span className="grad">Bewerbung nötig.</span></h2>
-              <p className="lintro__text">
-                Schick uns einfach, wer du bist und was du suchst. Lebenslauf ohne
-                Lücken? Brauchen wir nicht. Persönlichkeit? Umso mehr.
-              </p>
+              <h2 className="lintro__title">Sag einfach <span className="grad">Hallo.</span></h2>
+              <p className="lintro__text">Ein Satz reicht. Roman geht auch. Persönlichkeit zählt bei uns mehr als ein makelloser Lebenslauf.</p>
               <ul className="kapply__contact">
                 <li><Mail size={17} strokeWidth={1.7} /> <a href="mailto:info@videko-kuechen.de">info@videko-kuechen.de</a></li>
-                <li><MapPin size={17} strokeWidth={1.7} /> Würzburg</li>
+                <li><MapPin size={17} strokeWidth={1.7} /> Würzburg, Hertzstraße 4</li>
                 <li><Headset size={17} strokeWidth={1.7} /> <a href="tel:+491605545818">0160 5545818</a></li>
               </ul>
               <div className="kapply__pic"><img src={imgFormular} alt="" loading="lazy" /></div>
@@ -187,25 +217,24 @@ export default function Karriere() {
                     </select>
                   </label>
                 </div>
-                <label className="field"><span>Nachricht</span><textarea rows={4} placeholder="Erzähl uns kurz, wer du bist …" /></label>
+                <label className="field"><span>Nachricht</span><textarea rows={4} placeholder="Erzähl uns kurz, wer du bist – ein Satz reicht." /></label>
                 <label className="sfupload">
                   <Upload size={18} strokeWidth={1.7} />
                   <span>Lebenslauf / Unterlagen hochladen <em>(optional)</em></span>
                   <input type="file" multiple hidden />
                 </label>
-                {/* TODO: Versand anbinden (z. B. Formspree / Resend / eigenes API) */}
                 <button className="btn btn--primary btn--lg" type="submit">
                   <span className="btn__shimmer" aria-hidden="true" />
                   <span className="btn__label">Jetzt initiativ bewerben</span>
                 </button>
-                {sent && <p className="contact__ok" role="status">Danke! Deine Bewerbung ist da – wir melden uns persönlich.<br /><em>(Demo-Formular – Versand wird später angebunden.)</em></p>}
+                {sent && <p className="contact__ok" role="status">Danke! Deine Bewerbung ist da – wir melden uns persönlich. Kein Bot, kein Küchen-Orakel.<br /><em>(Demo-Formular – Versand wird später angebunden.)</em></p>}
               </form>
             </Reveal>
           </div>
         </div>
       </section>
 
-      {/* ABSCHLUSS-CTA (dark, image) */}
+      {/* 7 — ABSCHLUSS-CTA (dark) */}
       <section className="leist-final karr-final">
         <div className="leist-final__media" aria-hidden="true">
           <img src={imgCta} alt="" />
