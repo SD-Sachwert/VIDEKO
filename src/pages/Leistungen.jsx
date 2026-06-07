@@ -1,15 +1,13 @@
-import { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { useRef, useState } from 'react'
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { Check, X, ArrowRight, MapPin, Mail, Phone, ShieldCheck, Layers, Gem, Clock } from 'lucide-react'
 
 import Reveal from '../components/Reveal.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
-import BeforeAfter from '../components/BeforeAfter.jsx'
 
 import heroImg from '../assets/images/leistungen/ls-hero.png'
 import featureImg from '../assets/images/leistungen/ls-feature.png'
-import beforeImg from '../assets/images/leistungen/ls-before.png'
 import imgConsulting from '../assets/images/leistungen/ls-consulting.png'
 import img3d from '../assets/images/leistungen/ls-3d.png'
 import imgMaterials from '../assets/images/leistungen/ls-materials.png'
@@ -27,27 +25,16 @@ const USPS = [
 ]
 const FEATURE = ['Individuelle Beratung', 'Kreative Konzepte', 'Präzise Planung', 'Reibungslose Umsetzung', 'Verlässlicher Service']
 
-const SERVICES = [
-  { title: 'Beratung & Planung', text: 'Wir hören zu, bevor wir planen – ehrlich und auf Augenhöhe.', image: imgConsulting },
-  { title: 'Aufmaß & 3D-Planung', text: 'Millimetergenau gemessen, in 3D sichtbar gemacht.', image: img3d },
-  { title: 'Materialien & Geräte', text: 'Oberflächen und Technik, die im Alltag bestehen.', image: imgMaterials },
-  { title: 'Lichtplanung & Ambiente', text: 'Stimmung, Akzente und Funktion im richtigen Licht.', image: featureImg },
-  { title: 'Lieferung & Montage', text: 'Termintreu geliefert und sauber aufgebaut.', image: imgInstall },
-  { title: 'Gewerke & Umbau', text: 'Maler, Elektrik, Boden – wir steuern den ganzen Raum.', image: imgRenovation },
-  { title: 'Koordination', text: 'Ein Ansprechpartner hält alle Fäden zusammen.', image: imgCoordination },
-  { title: 'Nachbetreuung & Service', text: 'Auch nach dem Einbau noch für dich da.', image: imgAftercare },
+const SERVICES8 = [
+  { n: '01', title: 'Beratung & Planung', text: 'Wir hören zu, bevor wir planen – ehrlich, persönlich und auf Augenhöhe.', benefits: ['Beratung auf Augenhöhe', 'Klares Konzept', 'Ein fester Ansprechpartner'], gallery: [imgConsulting, featureImg, img3d] },
+  { n: '02', title: 'Aufmaß & 3D-Planung', text: 'Millimetergenau gemessen und in 3D sichtbar gemacht – bevor etwas bestellt wird.', benefits: ['Laser-Aufmaß', '3D-Visualisierung', 'Planungssicherheit'], gallery: [img3d, imgConsulting, featureImg] },
+  { n: '03', title: 'Materialien & Auswahl', text: 'Oberflächen, die nicht nur gut aussehen, sondern im Alltag bestehen.', benefits: ['Echte Muster zum Fühlen', 'Alltagstauglich', 'Premium-Oberflächen'], gallery: [imgMaterials, featureImg, imgConsulting] },
+  { n: '04', title: 'Lichtplanung & Ambiente', text: 'Stimmung, Akzente und Funktion – im richtigen Licht wird aus Küche ein Raum.', benefits: ['Stimmungslicht', 'Gezielte Akzente', 'Funktionslicht'], gallery: [featureImg, heroImg, imgMaterials] },
+  { n: '05', title: 'Lieferung & Montage', text: 'Termintreu geliefert und sauber durch unser eigenes Team aufgebaut.', benefits: ['Termintreu', 'Saubere Montage', 'Eigenes Team'], gallery: [imgInstall, imgRenovation, featureImg] },
+  { n: '06', title: 'Geräte & Technik', text: 'Intelligente Geräte, nahtlos integriert – Technik, die den Alltag leichter macht.', benefits: ['Top-Marken', 'Smart integriert', 'Effizient & leise'], gallery: [imgInstall, img3d, imgMaterials] },
+  { n: '07', title: 'Koordination & Gewerke', text: 'Maler, Elektrik, Boden, Trockenbau – wir steuern alle Gewerke für dich.', benefits: ['Alle Gewerke aus einer Hand', 'Ein klarer Plan', 'Kein Handwerker-Tetris'], gallery: [imgCoordination, imgRenovation, img3d] },
+  { n: '08', title: 'Nachbetreuung & Service', text: 'Auch nach dem Einbau lassen wir dich nicht allein – versprochen.', benefits: ['Gemeinsame Abnahme', 'Schnell erreichbar', 'Langfristig für dich da'], gallery: [imgAftercare, imgConsulting, featureImg] },
 ]
-
-const PROCESS = [
-  { title: 'Kennenlernen', text: 'Wir verstehen deinen Raum, deinen Alltag und deine Wünsche.' },
-  { title: 'Idee & Konzept', text: 'Aus Wünschen wird eine klare Richtung.' },
-  { title: 'Planung & Visualisierung', text: 'Du siehst deine Küche in 3D, bevor etwas bestellt wird.' },
-  { title: 'Angebot & Feinplanung', text: 'Transparent, ehrlich und bis ins Detail durchdacht.' },
-  { title: 'Lieferung & Montage', text: 'Sauber koordiniert und termintreu umgesetzt.' },
-  { title: 'Übergabe & Service', text: 'Gemeinsame Abnahme – und Begleitung danach.' },
-]
-
-const BA_POINTS = ['Ein Ansprechpartner von Anfang bis Ende', 'Keine bösen Überraschungen', 'Erfahrenes Team & eingespielte Partner', 'Qualität, die bleibt']
 
 const EMO = [
   { title: 'Kein Planungschaos', image: imgCoordination },
@@ -61,6 +48,8 @@ const VIDEKO = ['Ein Ansprechpartner', 'Perfekte Planung & 3D-Visualisierung', '
 
 export default function Leistungen() {
   const heroRef = useRef(null)
+  const [activeSvc, setActiveSvc] = useState(0)
+  const [activeThumb, setActiveThumb] = useState(0)
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
   const imgY = useTransform(scrollYProgress, [0, 1], ['0%', '16%'])
   const imgScale = useTransform(scrollYProgress, [0, 1], [1.06, 1.16])
@@ -126,61 +115,41 @@ export default function Leistungen() {
         </div>
       </section>
 
-      {/* 3 — SERVICES (hell) */}
-      <section className="section leist-services2" id="leist-services">
+      {/* 3 — INTERAKTIVE LEISTUNGSSEKTION (hell) */}
+      <section className="section leist-svc8" id="leist-services">
         <div className="container">
-          <SectionHeader align="center" kicker="Leistungen" title={<>Unsere Leistungen. <span className="grad">Dein Vorteil.</span></>} lead="Alles, was du für eine richtig gute Küche brauchst – aus einer Hand." />
-          <div className="svc-cards">
-            {SERVICES.map((sv, i) => (
-              <Reveal key={sv.title} delay={(i % 4) * 0.05}>
-                <article className="svc-card">
-                  <span className="svc-card__img" style={{ backgroundImage: `url(${sv.image})` }} aria-hidden="true" />
-                  <span className="svc-card__body">
-                    <span className="svc-card__title">{sv.title}</span>
-                    <span className="svc-card__text">{sv.text}</span>
-                  </span>
-                </article>
-              </Reveal>
-            ))}
-          </div>
-          <div className="section__cta"><CTAButton to="/beratung">Projekt starten</CTAButton></div>
-        </div>
-      </section>
-
-      {/* 4 — PROZESS (hell) — Gold-Kreise mit Linie wie Referenz */}
-      <section className="section section--light leist-ablauf2">
-        <div className="container">
-          <SectionHeader align="center" kicker="Ablauf" title={<>Dein Weg zur Traumküche. <span className="grad">In 6 klaren Schritten.</span></>} />
-          <div className="svc-steps">
-            {PROCESS.map((s, i) => (
-              <Reveal key={s.title} delay={(i % 6) * 0.06} className="svc-step">
-                <span className="svc-step__node">{i + 1}</span>
-                <span className="svc-step__title">{s.title}</span>
-                <span className="svc-step__text">{s.text}</span>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 5 — VORHER / NACHHER + ERKLÄRUNG (hell) */}
-      <section className="section leist-baexp">
-        <div className="container">
-          <div className="lintro">
-            <Reveal className="lintro__media">
-              <div className="svc-ba__frame">
-                <BeforeAfter before={beforeImg} after={featureImg} beforeAlt="Vorher" afterAlt="Nachher" />
-              </div>
-            </Reveal>
-            <Reveal className="lintro__copy" delay={0.08}>
-              <span className="kicker">Struktur statt Stress</span>
-              <h2 className="lintro__title">Wir bringen Struktur in das,<br /><span className="grad">was kompliziert wirkt.</span></h2>
-              <ul className="lstances">
-                {BA_POINTS.map((c) => <li key={c}><Check size={16} strokeWidth={2.4} /> {c}</li>)}
-              </ul>
-              <p className="lintro__text">Mehr Zeit für die wichtigen Dinge – den Rest übernehmen wir.</p>
-              <CTAButton to="/vorher-nachher">Vorher / Nachher ansehen</CTAButton>
-            </Reveal>
+          <SectionHeader align="center" kicker="Unsere Leistungen" title={<>Von der ersten Idee bis zur fertigen Küche. <span className="grad">Alles aus einer Hand.</span></>} lead="Klick dich durch unsere Leistungen – und sieh, was hinter jedem Schritt steckt." />
+          <div className="svc8">
+            <div className="svc8__list">
+              {SERVICES8.map((s, i) => (
+                <button key={s.title} type="button" className={`svc8__card ${activeSvc === i ? 'is-active' : ''}`} onClick={() => { setActiveSvc(i); setActiveThumb(0) }}>
+                  <span className="svc8__n">{s.n}</span>
+                  <span className="svc8__ctitle">{s.title}</span>
+                  <ArrowRight className="svc8__arrow" size={16} strokeWidth={1.9} />
+                </button>
+              ))}
+            </div>
+            <div className="svc8__detail">
+              <AnimatePresence mode="wait">
+                <motion.div key={activeSvc} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}>
+                  <div className="svc8__hero">
+                    <AnimatePresence mode="wait">
+                      <motion.span key={activeThumb} className="svc8__heroimg" style={{ backgroundImage: `url(${SERVICES8[activeSvc].gallery[activeThumb]})` }} initial={{ opacity: 0, scale: 1.03 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }} />
+                    </AnimatePresence>
+                    <span className="svc8__badge">{SERVICES8[activeSvc].n}</span>
+                  </div>
+                  <div className="svc8__thumbs">
+                    {SERVICES8[activeSvc].gallery.map((g, k) => (
+                      <button key={k} type="button" className={`svc8__thumb ${activeThumb === k ? 'is-active' : ''}`} style={{ backgroundImage: `url(${g})` }} onClick={() => setActiveThumb(k)} aria-label={`Bild ${k + 1}`} />
+                    ))}
+                  </div>
+                  <h3 className="svc8__title">{SERVICES8[activeSvc].title}</h3>
+                  <p className="svc8__text">{SERVICES8[activeSvc].text}</p>
+                  <ul className="svc8__benefits">{SERVICES8[activeSvc].benefits.map((b) => <li key={b}><Check size={15} strokeWidth={2.4} /> {b}</li>)}</ul>
+                  <CTAButton to="/beratung">Beratung anfragen</CTAButton>
+                </motion.div>
+              </AnimatePresence>
+            </div>
           </div>
         </div>
       </section>

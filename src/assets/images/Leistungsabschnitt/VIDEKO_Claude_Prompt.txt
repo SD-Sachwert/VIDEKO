@@ -1,0 +1,36 @@
+CLAUDE PROMPT – VIDEKO LEISTUNGSSEKTION
+
+Ersetze auf der Leistungsseite die folgenden Bereiche vollständig:
+- "Unsere Leistungen. Dein Vorteil."
+- "Dein Weg zur Traumküche in 6 klaren Schritten"
+- "Wir bringen Struktur in das, was kompliziert wirkt"
+
+Direkt unter dem bestehenden Video-Bereich "Mehr als nur Planung – wir schaffen Klarheit"
+eine neue interaktive Premium-Leistungssektion einfügen ich habe dir das referenzfoto hier mit in den ordner gelegt.
+
+Ziel:
+- Heller Premium-Look
+- Creme/Ivory Hintergrund
+- Goldakzente
+- Starke Animationen
+- Interaktive Leistungskarten
+- Klick auf Karte öffnet großes Detail-Panel
+- Detail-Panel mit Hero-Bild, 3 Vorschaubildern, Text und Vorteilen
+
+Leistungen:
+01 Beratung & Planung
+02 Aufmaß & 3D-Planung
+03 Materialien & Auswahl
+04 Lichtplanung & Ambiente
+05 Lieferung & Montage
+06 Geräte & Technik
+07 Koordination & Gewerke
+08 Nachbetreuung & Service
+
+Benötigte Bilddateien laut Asset-Liste verwenden.
+Animationen:
+- Karten heben sich beim Hover an
+- Goldener Glow
+- Smooth Fade / Scale
+- Detailbereich per AnimatePresence öffnen
+- Bildwechsel weich animieren

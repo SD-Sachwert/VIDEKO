@@ -83,6 +83,7 @@ export default function Hero() {
               muted
               loop
               playsInline
+              preload="metadata"
               poster={heroImg}
               aria-hidden="true"
             >
