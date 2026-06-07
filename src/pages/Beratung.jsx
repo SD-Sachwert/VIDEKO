@@ -8,6 +8,9 @@ import heroImg from '../assets/images/leistungen/ls-hero.png'
 import cIdee from '../assets/images/beratung/story-idee.png'
 import cPlanung from '../assets/images/beratung/story-richtung.png'
 import cKueche from '../assets/images/beratung/story-kueche.png'
+import entryGrob from '../assets/images/beratung/entry-grob.png'
+import entryRueckruf from '../assets/images/beratung/entry-rueckruf.png'
+import entryStudio from '../assets/images/beratung/entry-studio.png'
 
 const ANLIEGEN = ['Rückruf', 'Studio-Termin', 'Ich habe erst mal Fragen']
 const KUECHENART = ['Zeile', 'L-Küche', 'U-Küche', 'Insel', 'Noch offen']
@@ -17,17 +20,17 @@ const BUDGET = ['bis 12.500 €', '12.500–18.000 €', '18.000–25.000 €', 
 const GRUNDRISS = ['Ja', 'Nein']
 
 const ENTRIES = [
-  { icon: Compass, title: 'Ich will erst mal grob planen', text: 'Du hast Ideen, aber noch keinen fertigen Plan? Perfekt. Genau dafür ist der Stylefinder da.', cta: 'Stylefinder starten', to: '/stylefinder' },
-  { icon: PhoneCall, title: 'Ich will einen Rückruf', text: 'Kurz anfragen, wir melden uns persönlich. Ohne Callcenter-Gelaber.', cta: 'Rückruf anfragen', anliegen: 'Rückruf' },
-  { icon: Store, title: 'Ich will direkt ins Studio', text: 'Wenn du schon konkreter bist, planen wir direkt den nächsten sinnvollen Schritt.', cta: 'Termin anfragen', anliegen: 'Studio-Termin' },
+  { icon: Compass, title: 'Ich will erst mal grob planen', text: 'Du hast Ideen, aber noch keinen fertigen Plan? Perfekt. Genau dafür ist der Stylefinder da.', cta: 'Stylefinder starten', to: '/stylefinder', img: entryGrob },
+  { icon: PhoneCall, title: 'Ich will einen Rückruf', text: 'Kurz anfragen, wir melden uns persönlich. Ohne Callcenter-Gelaber.', cta: 'Rückruf anfragen', anliegen: 'Rückruf', img: entryRueckruf },
+  { icon: Store, title: 'Ich will direkt ins Studio', text: 'Wenn du schon konkreter bist, planen wir direkt den nächsten sinnvollen Schritt.', cta: 'Termin anfragen', anliegen: 'Studio-Termin', img: entryStudio },
 ]
 
 const ABLAUF = [
-  'Wir schauen uns deine Angaben an.',
-  'Wir melden uns persönlich.',
-  'Wir klären, wo du gerade stehst.',
-  'Wir planen den nächsten sinnvollen Schritt.',
-  'Du entscheidest in Ruhe.',
+  { t: 'Wir schauen uns deine Angaben an', d: 'Sorgfältig und in Ruhe.' },
+  { t: 'Wir melden uns persönlich', d: 'Kein Callcenter, versprochen.' },
+  { t: 'Wir klären, wo du gerade stehst', d: 'Deine Wünsche, dein Budget, dein Punkt.' },
+  { t: 'Wir planen den nächsten sinnvollen Schritt', d: 'Transparent, ehrlich, auf den Punkt.' },
+  { t: 'Du entscheidest in Ruhe', d: 'Ganz in deinem Tempo.' },
 ]
 
 const STORY = [
@@ -101,12 +104,15 @@ export default function Beratung() {
           <div className="bf-entries">
             {ENTRIES.map((e, i) => (
               <Reveal key={e.title} className="bf-entry" delay={(i % 3) * 0.07}>
-                <span className="bf-entry__ic"><e.icon size={22} strokeWidth={1.6} /></span>
-                <span className="bf-entry__title">{e.title}</span>
-                <span className="bf-entry__text">{e.text}</span>
-                {e.to
-                  ? <Link className="bf-entry__btn" to={e.to}>{e.cta} <ArrowRight size={15} strokeWidth={1.9} /></Link>
-                  : <button type="button" className="bf-entry__btn" onClick={() => pick(e.anliegen)}>{e.cta} <ArrowRight size={15} strokeWidth={1.9} /></button>}
+                <span className="bf-entry__col">
+                  <span className="bf-entry__ic"><e.icon size={22} strokeWidth={1.6} /></span>
+                  <span className="bf-entry__title">{e.title}</span>
+                  <span className="bf-entry__text">{e.text}</span>
+                  {e.to
+                    ? <Link className="bf-entry__btn" to={e.to}>{e.cta} <ArrowRight size={15} strokeWidth={1.9} /></Link>
+                    : <button type="button" className="bf-entry__btn" onClick={() => pick(e.anliegen)}>{e.cta} <ArrowRight size={15} strokeWidth={1.9} /></button>}
+                </span>
+                <span className="bf-entry__img" style={{ backgroundImage: `url(${e.img})` }} aria-hidden="true" />
               </Reveal>
             ))}
           </div>
@@ -162,7 +168,12 @@ export default function Beratung() {
               <div className="bf-ablauf">
                 <span className="kicker kicker--gold">Was nach deiner Anfrage passiert</span>
                 <ol className="bf-steps">
-                  {ABLAUF.map((s, i) => <li key={i}><span className="bf-steps__n">{i + 1}</span><span>{s}</span></li>)}
+                  {ABLAUF.map((s, i) => (
+                    <li key={i}>
+                      <span className="bf-steps__n">{String(i + 1).padStart(2, '0')}</span>
+                      <span className="bf-steps__body"><b>{s.t}</b><i>{s.d}</i></span>
+                    </li>
+                  ))}
                 </ol>
                 <div className="bf-contact">
                   <h3>VIDEKO Küchen eG</h3>

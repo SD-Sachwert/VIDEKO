@@ -344,14 +344,23 @@ export default function StylefinderFlow() {
             <div className="sf-profile">
               <span className="sf-profile__eyebrow"><Sparkles size={13} strokeWidth={2} /> VIDEKO Stylefinder</span>
               <h3 className="sf-profile__title">Dein Stylefinder-Profil.</h3>
-              <div className="sf-compass">
-                <div className="sf-compass__ring">
-                  {Array.from({ length: 7 }).map((_, i) => (
-                    <span key={i} className={`sf-compass__dot ${i < answeredSteps ? 'is-on' : ''}`} style={{ transform: `rotate(${i * (360 / 7)}deg) translateY(-60px)` }} />
-                  ))}
-                  <img className="sf-compass__logo" src={logoMain} alt="VIDEKO" />
+              <div className="sf-compass2">
+                <div className="sf-compass2__viz">
+                  <svg className="sf-arc" viewBox="0 0 240 150" aria-hidden="true">
+                    <path className="sf-arc__bg" d="M20,140 A100,100 0 0 1 220,140" />
+                    <path className="sf-arc__fg" d="M20,140 A100,100 0 0 1 220,140" style={{ strokeDasharray: 314.16, strokeDashoffset: 314.16 * (1 - answeredSteps / 7) }} />
+                  </svg>
+                  {Array.from({ length: 7 }).map((_, i) => {
+                    const a = Math.PI * (1 + i / 6)
+                    const x = 120 + 100 * Math.cos(a)
+                    const y = 140 + 100 * Math.sin(a)
+                    const on = i < answeredSteps
+                    return <span key={i} className={`sf-pt ${on ? 'is-on' : ''}`} style={{ left: `${(x / 240) * 100}%`, top: `${(y / 200) * 100}%` }}>{on ? <Check size={11} strokeWidth={3} /> : i + 1}</span>
+                  })}
+                  <div className="sf-badge"><img src={logoMain} alt="VIDEKO Küchen" /></div>
                 </div>
-                <span className="sf-compass__cap">{answeredSteps} / 7 erfasst</span>
+                <span className="sf-compass2__cap">{answeredSteps} von 7 erfasst</span>
+                <span className="sf-compass2__sub">{answeredSteps >= 7 ? 'Profil vollständig' : 'Profil wächst'}</span>
               </div>
               <div className="sf-bars">
                 {Object.entries(profile.bars).map(([k, v]) => (
@@ -366,7 +375,7 @@ export default function StylefinderFlow() {
                 <span className="sf-profile__muted">Fertig in ca. 1–2 Minuten</span>
               </div>
               <button type="button" className="sf-link sf-save" onClick={saveProgress}><Save size={15} /> {saved ? 'Gespeichert!' : 'Fortschritt speichern'}</button>
-              <div className="sf-tip"><span className="sf-tip__head"><Gem size={13} strokeWidth={2} /> Experten-Tipp</span><p>{EXPERT_TIPS[step]}</p></div>
+              <div className="sf-tip"><span className="sf-tip__head"><Gem size={13} strokeWidth={2} /> Experten-Tipp</span><p>Dein Profil ist kein Geschmackstest mit Gewinner. Es zeigt, wo deine Küche später kompromisslos sein muss – und wo wir clever abwägen können.</p></div>
             </div>
           </aside>
         </div>

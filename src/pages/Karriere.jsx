@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import {
   Store, PencilRuler, Hammer, Ruler, Headset, MessageSquare, Megaphone,
-  Sparkles, Rocket, Mail, ArrowUpRight, ArrowRight, MapPin, Upload, Check, Coffee,
+  Sparkles, Rocket, Mail, ArrowRight, MapPin, Upload, Check,
   Gem, Smile, ShieldCheck, Zap,
 } from 'lucide-react'
 
@@ -18,19 +18,24 @@ import jMontage from '../assets/images/karriere/04_job_monteure_aufmass.png'
 import jEmpfang from '../assets/images/karriere/05_job_empfang_service.png'
 import jMarketing from '../assets/images/karriere/06_job_marketing_social_media.png'
 import jReinigung from '../assets/images/karriere/07_job_reinigung_studioservice.png'
+import jc01 from '../assets/images/karriere/jobcards/01_jobcard_beratung_verkauf.png'
+import jc02 from '../assets/images/karriere/jobcards/02_jobcard_planung_technik.png'
+import jc03 from '../assets/images/karriere/jobcards/03_jobcard_montage_handwerk.png'
+import jc04 from '../assets/images/karriere/jobcards/04_jobcard_empfang_organisation.png'
+import jc05 from '../assets/images/karriere/jobcards/05_jobcard_marketing_social_media.png'
+import jc06 from '../assets/images/karriere/jobcards/06_jobcard_quereinsteiger.png'
+
+const STAGE = [
+  { n: '01', name: 'Beratung & Verkauf', img: jc01 },
+  { n: '02', name: 'Planung & Technik', img: jc02 },
+  { n: '03', name: 'Montage & Handwerk', img: jc03 },
+  { n: '04', name: 'Empfang & Organisation', img: jc04 },
+  { n: '05', name: 'Marketing & Social Media', img: jc05 },
+  { n: '06', name: 'Quereinsteiger', img: jc06 },
+]
 import imgProzess from '../assets/images/karriere/08_bewerbungsprozess_teammeeting.png'
 import imgFormular from '../assets/images/karriere/09_bewerbung_interior_formular.png'
 import imgCta from '../assets/images/karriere/10_cta_footer_premium_showroom.png'
-
-const FILTERS = [
-  { key: 'alle', label: 'Alle zeigen' },
-  { key: 'verkaufen', label: 'Ich kann verkaufen' },
-  { key: 'planen', label: 'Ich kann planen' },
-  { key: 'anpacken', label: 'Ich kann anpacken' },
-  { key: 'organisieren', label: 'Ich kann organisieren' },
-  { key: 'social', label: 'Ich kann Social Media' },
-  { key: 'offen', label: 'Ich weiß es noch nicht' },
-]
 
 const ROLES = [
   { title: 'Beratung & Verkauf', cat: 'verkaufen', icon: Store, image: jVerkauf, text: 'Für Menschen, die zuhören können, bevor sie verkaufen.' },
@@ -44,13 +49,6 @@ const ROLES = [
   { title: 'Quereinsteiger', cat: 'offen', icon: Rocket, image: jReinigung, text: 'Noch keine Küchen-Erfahrung? Hauptsache Kopf an.' },
 ]
 
-const EGGS = [
-  'Keine Sorge, wir haben Kaffee.',
-  'Excel darfst du mögen. Musst du aber nicht heiraten.',
-  'Rabattgeschrei? Nicht bei uns.',
-  'Gerade Wände wären schön. Sind sie nie.',
-  'Wenn du „passt schon" sagst, meinen wir hoffentlich nicht dasselbe.',
-]
 
 
 const STEPS3 = [
@@ -86,9 +84,7 @@ export default function Karriere() {
   const imgY = useTransform(scrollYProgress, [0, 1], ['0%', '16%'])
   const imgScale = useTransform(scrollYProgress, [0, 1], [1.06, 1.16])
   const [sent, setSent] = useState(false)
-  const [cat, setCat] = useState('alle')
-
-  const roles = cat === 'alle' ? ROLES : ROLES.filter((r) => r.cat === cat)
+  const [activeJob, setActiveJob] = useState(0)
 
   return (
     <div className="leist-page karr-page">
@@ -164,39 +160,37 @@ export default function Karriere() {
         </div>
       </section>
 
-      {/* 3 — ROLLENWELT (interaktiv) */}
-      <section className="section section--light karr-rollen" id="rollen">
+      {/* 3 — JOB-STAGE (eine aktive Rolle statt Kachelwand) */}
+      <section className="section section--light karr-jobstage" id="rollen">
         <div className="container">
-          <SectionHeader kicker="Rollenwelt" title={<>Such dir, <span className="grad">was zu dir passt.</span></>} lead="Filtere nach dem, was du kannst – oder klick dich einfach durch." />
-          <div className="karr-filters">
-            {FILTERS.map((f) => (
-              <button key={f.key} type="button" className={`karr-chip ${cat === f.key ? 'is-active' : ''}`} onClick={() => setCat(f.key)}>{f.label}</button>
-            ))}
-          </div>
-          <div className="lservice-grid karr-jobgrid">
-            <AnimatePresence mode="popLayout">
-              {roles.map((j) => (
-                <motion.a key={j.title} className="lscard jobcard" href="#bewerbung"
-                  layout initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.96 }} transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}>
-                  <span className="lscard__img" style={{ backgroundImage: `url(${j.image})` }} aria-hidden="true" />
-                  <span className="lscard__scrim" aria-hidden="true" />
-                  <span className="jobcard__icon" aria-hidden="true"><j.icon size={18} strokeWidth={1.7} /></span>
-                  <span className="lscard__body">
-                    <span className="jobcard__meta"><MapPin size={12} strokeWidth={1.9} /> Würzburg</span>
-                    <span className="lscard__title">{j.title}</span>
-                    <span className="lscard__text">{j.text}</span>
-                    <span className="jobcard__cta">Bewerben <ArrowUpRight size={15} strokeWidth={1.9} /></span>
-                  </span>
+          <div className="jobstage">
+            <div className="jobstage__intro">
+              <span className="kicker">Karriere bei VIDEKO</span>
+              <h2 className="lintro__title">Finde deinen Platz. <span className="grad">Nicht irgendeinen.</span></h2>
+              <p className="lintro__text">Ob Beratung, Planung, Handwerk, Organisation oder Marketing: Bei VIDEKO zählt nicht, dass du schon alles kannst – sondern dass du mitdenkst, anpackst und Lust auf etwas Besonderes hast.</p>
+              <p className="jobstage__wink">Auch „keine Ahnung, aber Bock" ist ein ziemlich guter Start.</p>
+              <div className="jobstage__nav">
+                {STAGE.map((r, i) => (
+                  <button key={r.name} type="button" className={`jobstage__navitem ${activeJob === i ? 'is-active' : ''}`} onClick={() => setActiveJob(i)} onMouseEnter={() => setActiveJob(i)}>
+                    <span className="jobstage__navn">{r.n}</span>
+                    <span className="jobstage__navlabel">{r.name}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="jobstage__stage">
+              <AnimatePresence mode="wait">
+                <motion.a key={activeJob} href="#bewerbung" className="jobstage__card" aria-label={`${STAGE[activeJob].name} – jetzt initiativ bewerben`}
+                  initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}>
+                  <img src={STAGE[activeJob].img} alt={STAGE[activeJob].name} />
                 </motion.a>
-              ))}
-            </AnimatePresence>
+              </AnimatePresence>
+            </div>
           </div>
-          <div className="karr-initiativ">
-            <span>Nichts Passendes dabei? <strong>Auch „keine Ahnung, aber Bock" ist ein gültiger Startpunkt.</strong></span>
+          <div className="jobstage__cta">
+            <h3 className="jobstage__cta-title">Nicht sicher, wo du reinpasst?</h3>
+            <p className="jobstage__cta-text">Dann bewirb dich trotzdem. Wir sortieren gemeinsam, ob und wo es passt. Kein Bewerbungstheater, kein Lebenslauf-Bingo.</p>
             <CTAButton href="#bewerbung">Initiativ bewerben</CTAButton>
-          </div>
-          <div className="karr-egg" aria-hidden="true">
-            {EGGS.map((e) => <span key={e} className="karr-egg__item"><Coffee size={12} strokeWidth={1.9} /> {e}</span>)}
           </div>
         </div>
       </section>
