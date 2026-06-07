@@ -563,10 +563,23 @@ img {
   transition: background 0.2s ease, color 0.2s ease;
 }
 .nav__dd-inner a::after { display: none; }
+/* hover: subtle gold wash, still bright text */
 .header .nav__dd-inner a:hover,
+.header--scrolled .nav__dd-inner a:hover {
+  background: rgba(196, 151, 68, 0.18);
+  color: var(--gold-bright);
+}
+/* active/current: solid gold fill + dark text — always maximally legible */
 .header .nav__dd-inner a.is-active,
-.header--scrolled .nav__dd-inner a:hover,
-.header--scrolled .nav__dd-inner a.is-active { background: rgba(232, 201, 120, 0.16); color: var(--gold-bright); }
+.header--scrolled .nav__dd-inner a.is-active {
+  background: var(--grad-gold);
+  color: #20170a;
+  font-weight: 700;
+}
+.header .nav__dd-inner a.is-active:hover,
+.header--scrolled .nav__dd-inner a.is-active:hover {
+  color: #20170a;
+}
 
 /* CTA always a solid gold button */
 .pill--cta,
@@ -9353,13 +9366,19 @@ a.footer__contact-line:hover {
 
 /* ÜBER UNS — larger, fully visible map card */
 .about-region .standort__grid {
-  grid-template-columns: 0.82fr 1.18fr;
-  gap: 50px;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 48px;
+  align-items: center;
 }
 .about-region .mapcard {
-  aspect-ratio: 4 / 3;
+  width: 100%;
+  max-width: 580px;
+  margin-left: auto;
+  aspect-ratio: 16 / 10;
+  border-radius: 26px;
   overflow: hidden;
   background: var(--cream);
+  box-shadow: 0 24px 50px -36px rgba(120, 90, 40, 0.35);
 }
 .about-region .mapcard img {
   width: 100%;
@@ -9372,6 +9391,10 @@ a.footer__contact-line:hover {
 @media (max-width: 1080px) {
   .orbcards { grid-template-columns: repeat(2, 1fr); }
   .about-region .standort__grid { grid-template-columns: 1fr; }
+  .about-region .mapcard { margin: 0 auto; }
+}
+@media (max-width: 720px) {
+  .about-region .mapcard { max-width: 100%; aspect-ratio: 4 / 3; }
 }
 @media (max-width: 720px) {
   .orbcards { grid-template-columns: 1fr; }
