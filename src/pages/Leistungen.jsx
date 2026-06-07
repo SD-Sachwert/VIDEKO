@@ -37,8 +37,8 @@ const EMO = [
   { title: 'Nur Vorfreude', image: imgAftercare },
 ]
 
-const CLASSIC = ['Viele Ansprechpartner', 'Risiko von Fehlplanungen', 'Undurchsichtige Kosten', 'Unsicherheit bis zum Schluss']
-const VIDEKO = ['Ein Ansprechpartner', 'Perfekte Planung & 3D-Visualisierung', 'Koordination aller Gewerke', 'Transparente Preise & feste Abläufe', 'Deine Küche. Genauso wie du sie willst.']
+const CLASSIC = ['Viele Ansprechpartner', 'Unklare Zuständigkeiten', 'Schwer vergleichbare Angebote', 'Wenig echte Visualisierung', 'Material ohne Raumgefühl', 'Kosten ändern sich spät', 'Planung & Montage nicht verzahnt', 'Du koordinierst vieles selbst', 'Am Ende sieht es anders aus als gedacht']
+const VIDEKO = ['Ein klarer Ansprechpartner', 'Ehrliche Beratung statt Verkaufsdruck', 'Perfekte Planung & 3D-Visualisierung', 'Transparente Preise & feste Abläufe', 'Material, Licht & Raumwirkung zusammen gedacht', 'Planung passend zu Alltag & Budget', 'Aufmaß, Lieferung & Montage aus einem Prozess', 'Du weißt vorher, was du bekommst', 'Keine Küchenlotterie, sondern Klarheit']
 
 export default function Leistungen() {
   const heroRef = useRef(null)
@@ -197,7 +197,7 @@ export default function Leistungen() {
       {/* 7 — COMPARE (hell) */}
       <section className="section leist-compare">
         <div className="container">
-          <SectionHeader align="center" kicker="Der Unterschied" title={<>Klassisch geplant oder <span className="grad">VIDEKO geplant?</span></>} />
+          <SectionHeader align="center" kicker="Der Unterschied" title={<>Klassisch geplant oder <span className="grad">VIDEKO geplant?</span></>} lead="Der Unterschied liegt nicht nur im Ergebnis. Sondern in jedem Schritt davor." />
           <div className="svc-compare">
             <Reveal className="svc-comp svc-comp--bad">
               <span className="svc-comp__head">Klassisch</span>

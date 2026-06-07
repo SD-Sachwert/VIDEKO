@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import {
   Handshake, Heart, Gem, Lightbulb, Smile, Wrench, ArrowRight, MapPin,
+  ShieldCheck, Zap, Ruler, UserCheck, BadgeCheck, Ban, Layers, MessageSquare,
 } from 'lucide-react'
 
 import Reveal from '../components/Reveal.jsx'
@@ -9,7 +10,6 @@ import CTAButton from '../components/CTAButton.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
 import CardGrid from '../components/CardGrid.jsx'
 import FeatureCard from '../components/FeatureCard.jsx'
-import ProcessTimeline from '../components/ProcessTimeline.jsx'
 
 import heroDark from '../assets/images/leistungen/ls-feature.png'
 import whyImg from '../assets/images/ueber-uns/02_why_videko_beratungsszene.png'
@@ -48,12 +48,15 @@ const TEAM = [
   { title: 'Partner & Gewerke', text: 'Verlässliche Profis für alles rund um deinen Raum.', image: tOrga },
 ]
 
-const PRINCIPLES = [
-  { title: 'Ehrlich statt Verkaufsdruck', text: 'Wir beraten dich, statt dir was anzudrehen.' },
-  { title: 'Direkt statt kompliziert', text: 'Kurze Wege, klare Worte, schnelle Antworten.' },
-  { title: 'Sauber geplant', text: 'Erst denken, dann bauen. Bis ins Detail.' },
-  { title: 'Persönlich begleitet', text: 'Ein Ansprechpartner – von Anfang bis Ende.' },
-  { title: 'Zuverlässig umgesetzt', text: 'Was wir zusagen, halten wir auch.' },
+const RULES = [
+  { icon: ShieldCheck, title: 'Ehrlich statt Verkaufsdruck', text: 'Wir beraten dich, statt dir was anzudrehen.' },
+  { icon: Zap, title: 'Direkt statt kompliziert', text: 'Kurze Wege, klare Worte, schnelle Antworten.' },
+  { icon: Ruler, title: 'Sauber geplant', text: 'Erst denken, dann bauen. Bis ins Detail.' },
+  { icon: UserCheck, title: 'Persönlich begleitet', text: 'Ein Ansprechpartner – von Anfang bis Ende.' },
+  { icon: BadgeCheck, title: 'Zuverlässig umgesetzt', text: 'Was wir zusagen, halten wir auch.' },
+  { icon: Ban, title: 'Kein Rabatt-Theater', text: 'Ehrliche Preise statt Schein-Aktionen.' },
+  { icon: Layers, title: 'Keine Küche von der Stange', text: 'Maßgeschneidert auf dich, nicht auf den Katalog.' },
+  { icon: MessageSquare, title: 'Wir sagen auch mal Nein', text: 'Wenn etwas keinen Sinn ergibt, sagen wir es.' },
 ]
 
 const REGION = ['Würzburg', 'Tauberbischofsheim', 'Kitzingen', 'Main-Tauber', 'Schweinfurt']
@@ -144,32 +147,42 @@ export default function UeberUns() {
         </div>
       </section>
 
-      {/* TEAM */}
+      {/* TEAM — Bento */}
       <section className="section about-team">
         <div className="container">
           <SectionHeader align="center" kicker="Das Team hinter VIDEKO" title="Mehr als nur drei Gründer." lead="Hinter jeder Küche steht ein ganzes Team, das mitdenkt." />
-          <div className="lservice-grid">
+          <div className="about-bento">
             {TEAM.map((t, i) => (
-              <Reveal key={t.title} delay={(i % 3) * 0.06}>
-                <article className="lscard">
-                  <span className="lscard__img" style={{ backgroundImage: `url(${t.image})` }} aria-hidden="true" />
-                  <span className="lscard__scrim" aria-hidden="true" />
-                  <span className="lscard__body">
-                    <span className="lscard__title">{t.title}</span>
-                    <span className="lscard__text">{t.text}</span>
-                  </span>
-                </article>
+              <Reveal key={t.title} className={`bento-card ${i === 0 ? 'is-big' : ''}`} delay={(i % 3) * 0.06}>
+                <span className="bento-card__img" style={{ backgroundImage: `url(${t.image})` }} aria-hidden="true" />
+                <span className="bento-card__body">
+                  <span className="bento-card__title">{t.title}</span>
+                  <span className="bento-card__text">{t.text}</span>
+                </span>
+                <span className="bento-card__edge" aria-hidden="true" />
               </Reveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* SO ARBEITEN WIR (hell) */}
+      {/* SO ARBEITEN WIR — Spielregeln (hell) */}
       <section className="section section--light about-principles">
         <div className="container">
-          <SectionHeader align="center" kicker="So arbeiten wir" title={<>Unsere Spielregeln. <span className="grad">Ganz einfach.</span></>} />
-          <ProcessTimeline steps={PRINCIPLES} />
+          <SectionHeader align="center" kicker="So arbeiten wir" title={<>Unsere Spielregeln. <span className="grad">Ganz einfach.</span></>} lead="Kein Kleingedrucktes, kein Verkaufstheater – einfach, wie wir mit dir arbeiten." />
+          <div className="about-rules">
+            {RULES.map((r, i) => (
+              <Reveal key={r.title} className="rule-card" delay={(i % 4) * 0.05}>
+                <span className="rule-card__n">{String(i + 1).padStart(2, '0')}</span>
+                <span className="rule-card__ic"><r.icon size={20} strokeWidth={1.6} /></span>
+                <span className="rule-card__title">{r.title}</span>
+                <span className="rule-card__text">{r.text}</span>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal className="about-rules__quote">
+            <p>„Wir planen nicht für den Prospekt.<br /><span className="grad">Wir planen für deinen Alltag.“</span></p>
+          </Reveal>
         </div>
       </section>
 
