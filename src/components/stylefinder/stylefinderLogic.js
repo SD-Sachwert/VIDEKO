@@ -12,7 +12,7 @@ export const EMPTY_ANSWERS = {
   farbwelten: [],
   funktion: [],
   budget: '',
-  prioritaeten: [...PRIORITY_LIST],
+  prioritaeten: Object.fromEntries(PRIORITY_LIST.map((p) => [p, 3])),
 }
 
 const has = (arr, v) => Array.isArray(arr) && arr.includes(v)

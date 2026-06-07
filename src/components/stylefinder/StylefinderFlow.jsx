@@ -1,12 +1,13 @@
 import { useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  Sparkles, Check, ArrowRight, ArrowLeft, Lock, Save, RefreshCw, ChevronUp, ChevronDown, Heart,
-  Users, PartyPopper, ChefHat, Archive, Wind, LayoutGrid, Zap, Droplets, Leaf, Sun, Footprints, Gem,
+  Sparkles, Check, ArrowRight, ArrowLeft, Lock, Save, RefreshCw, Heart,
+  Users, PartyPopper, ChefHat, Archive, Wind, LayoutGrid, Zap, Droplets, Leaf, Sun, Footprints, Gem, Wallet,
 } from 'lucide-react'
 
 import CTAButton from '../CTAButton.jsx'
-import { EMPTY_ANSWERS, computeProfile, computeResultStyle } from './stylefinderLogic.js'
+import logoMain from '../../assets/brand/logo-main.png'
+import { EMPTY_ANSWERS, PRIORITY_LIST, computeProfile, computeResultStyle } from './stylefinderLogic.js'
 
 import sModern from '../../assets/images/stylefinder_assets_videko/02_stil_hell_modern_minimal.png'
 import sNatur from '../../assets/images/stylefinder_assets_videko/03_stil_skandinavisch_natuerlich.png'
@@ -95,9 +96,6 @@ const RESULT = {
   'Statement / Industrial': { img: sIndustrial, char: 'Roh, markant, urban – Küche mit Haltung.', tags: ['Industrial', 'Markant', 'Urban', 'Stark'], mats: [mMetall, mNaturstein, mBronze] },
 }
 
-const MOODS = ['Stimmung', 'Premium', 'Harmonie', 'Funktional', 'Großzügig', 'Offen']
-const DETAILS = ['Arbeitsplatte', 'Fronten', 'Griffe', 'Armatur', 'Licht', 'Stauraum']
-
 function Chip({ active, onClick, children }) {
   return <button type="button" className={`sf-chip ${active ? 'is-active' : ''}`} onClick={onClick} aria-pressed={active}>{active && <Check size={14} strokeWidth={2.6} />} {children}</button>
 }
@@ -107,8 +105,6 @@ export default function StylefinderFlow() {
   const [maxReached, setMaxReached] = useState(0)
   const [a, setA] = useState(EMPTY_ANSWERS)
   const [saved, setSaved] = useState(false)
-  const [mood, setMood] = useState(0)
-  const [detail, setDetail] = useState({ Arbeitsplatte: 3, Fronten: 3, Griffe: 2, Armatur: 3, Licht: 4, Stauraum: 3 })
   const [liked, setLiked] = useState(() => new Set())
   const toggleLike = (e, label) => { e.stopPropagation(); setLiked((s) => { const n = new Set(s); n.has(label) ? n.delete(label) : n.add(label); return n }) }
   const flowTop = useRef(null)
@@ -120,12 +116,7 @@ export default function StylefinderFlow() {
     return { ...p, [key]: [...arr, value] }
   })
   const set = (key, value) => setA((p) => ({ ...p, [key]: value }))
-  const movePrio = (i, dir) => setA((p) => {
-    const arr = [...p.prioritaeten]; const j = i + dir
-    if (j < 0 || j >= arr.length) return p
-    ;[arr[i], arr[j]] = [arr[j], arr[i]]
-    return { ...p, prioritaeten: arr }
-  })
+  const setPrio = (label, value) => setA((p) => ({ ...p, prioritaeten: { ...p.prioritaeten, [label]: value } }))
 
   const valid = [
     a.styleSelections.length >= 1 && a.styleSelections.length <= 2,
@@ -138,6 +129,7 @@ export default function StylefinderFlow() {
   ]
   const isResult = step === 7
   const profile = computeProfile(a)
+  const answeredSteps = Math.round((profile.completeness / 100) * 7)
   const scrollTop = () => flowTop.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   const goTo = (i) => { if (i <= maxReached) { setStep(i); scrollTop() } }
   const next = () => {
@@ -197,7 +189,6 @@ export default function StylefinderFlow() {
           </div>
         </div>
       ) : (
-        <>
         <div className="sf-layout">
           <div className="sf-main">
             <AnimatePresence mode="wait">
@@ -306,7 +297,18 @@ export default function StylefinderFlow() {
                   <>
                     <h2 className="sf-q">Welcher Rahmen passt zu deinem Projekt?</h2>
                     <p className="sf-micro">Nicht auf den Euro genau – aber so, dass wir realistisch planen können.</p>
-                    <div className="sf-segments">{BUDGETS.map((b) => <button key={b} type="button" className={`sf-segment ${a.budget === b ? 'is-active' : ''}`} onClick={() => set('budget', b)}>{b}</button>)}</div>
+                    <div className="sf-budgrid">
+                      {BUDGETS.map((b) => {
+                        const active = a.budget === b
+                        return (
+                          <button key={b} type="button" className={`sf-budcard ${active ? 'is-active' : ''}`} onClick={() => set('budget', b)}>
+                            <span className="sf-budcard__ic"><Wallet size={20} strokeWidth={1.6} /></span>
+                            <span className="sf-budcard__label">{b}</span>
+                            {active && <span className="sf-budcard__check"><Check size={14} strokeWidth={2.8} /></span>}
+                          </button>
+                        )
+                      })}
+                    </div>
                     <div className="sf-infobox"><span>Realistische Einordnung</span><span>Planungssicherheit</span><span>Im Preis mitgedacht</span></div>
                   </>
                 )}
@@ -314,19 +316,16 @@ export default function StylefinderFlow() {
                 {step === 6 && (
                   <>
                     <h2 className="sf-q">Was ist dir am wichtigsten?</h2>
-                    <p className="sf-micro">Bring deine Wünsche in eine Reihenfolge – damit wir wissen, worauf es ankommt.</p>
-                    <ol className="sf-prio">
-                      {a.prioritaeten.map((p, i) => (
-                        <li key={p} className="sf-prio__item">
-                          <span className="sf-prio__rank">{i + 1}</span>
-                          <span className="sf-prio__label">{p}</span>
-                          <span className="sf-prio__ctrl">
-                            <button type="button" onClick={() => movePrio(i, -1)} disabled={i === 0} aria-label="Höher"><ChevronUp size={16} /></button>
-                            <button type="button" onClick={() => movePrio(i, 1)} disabled={i === a.prioritaeten.length - 1} aria-label="Tiefer"><ChevronDown size={16} /></button>
-                          </span>
-                        </li>
+                    <p className="sf-micro">Zieh die Regler je nach Wichtigkeit. <em>(1 = nebensächlich · 5 = entscheidend)</em></p>
+                    <div className="sf-priolist">
+                      {PRIORITY_LIST.map((p) => (
+                        <div key={p} className="sf-prio2">
+                          <span className="sf-prio2__label">{p}</span>
+                          <input type="range" min="1" max="5" value={a.prioritaeten[p]} onChange={(e) => setPrio(p, Number(e.target.value))} style={{ '--p': `${((a.prioritaeten[p] - 1) / 4) * 100}%` }} />
+                          <span className="sf-prio2__val">{a.prioritaeten[p]}</span>
+                        </div>
                       ))}
-                    </ol>
+                    </div>
                   </>
                 )}
               </motion.div>
@@ -347,12 +346,14 @@ export default function StylefinderFlow() {
             <div className="sf-profile">
               <span className="sf-profile__eyebrow"><Sparkles size={13} strokeWidth={2} /> VIDEKO Stylefinder</span>
               <h3 className="sf-profile__title">Dein Stylefinder-Profil.</h3>
-              <div className="sf-donut">
-                <svg viewBox="0 0 110 110">
-                  <circle className="sf-donut__bg" cx="55" cy="55" r="46" />
-                  <circle className="sf-donut__fg" cx="55" cy="55" r="46" transform="rotate(-90 55 55)" style={{ strokeDasharray: 289, strokeDashoffset: 289 * (1 - profile.completeness / 100) }} />
-                </svg>
-                <span className="sf-donut__val">{profile.completeness}%<small>Profil</small></span>
+              <div className="sf-compass">
+                <div className="sf-compass__ring">
+                  {Array.from({ length: 7 }).map((_, i) => (
+                    <span key={i} className={`sf-compass__dot ${i < answeredSteps ? 'is-on' : ''}`} style={{ transform: `rotate(${i * (360 / 7)}deg) translateY(-60px)` }} />
+                  ))}
+                  <img className="sf-compass__logo" src={logoMain} alt="VIDEKO" />
+                </div>
+                <span className="sf-compass__cap">{answeredSteps} / 7 erfasst</span>
               </div>
               <div className="sf-bars">
                 {Object.entries(profile.bars).map(([k, v]) => (
@@ -371,30 +372,6 @@ export default function StylefinderFlow() {
             </div>
           </aside>
         </div>
-
-        {/* LIVE VORSCHAU + DETAIL ANPASSEN */}
-        <div className="sf-preview-row">
-          <div className="sf-preview">
-            <span className="sf-block__head">Live Vorschau</span>
-            <div className="sf-preview__media" style={{ backgroundImage: `url(${R.img})` }}>
-              <span className="sf-preview__scrim" aria-hidden="true" />
-              <span className="sf-preview__cap">{MOODS[mood]} · {resultStyle}</span>
-            </div>
-            <div className="sf-preview__tabs">
-              {MOODS.map((m, k) => <button key={m} type="button" className={`sf-mood ${mood === k ? 'is-active' : ''}`} onClick={() => setMood(k)}>{m}</button>)}
-            </div>
-          </div>
-          <div className="sf-detail">
-            <span className="sf-block__head">Detail anpassen</span>
-            {DETAILS.map((d) => (
-              <div className="sf-detail__row" key={d}>
-                <span className="sf-detail__label">{d}</span>
-                <input type="range" min="1" max="5" value={detail[d]} onChange={(e) => setDetail({ ...detail, [d]: Number(e.target.value) })} style={{ '--p': `${((detail[d] - 1) / 4) * 100}%` }} />
-              </div>
-            ))}
-          </div>
-        </div>
-        </>
       )}
     </div>
   )
