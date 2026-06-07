@@ -158,10 +158,10 @@ export default function VorherNachher() {
         </div>
       </section>
 
-      {/* PROZESS (dark) */}
-      <section className="section section--dark vn-process">
+      {/* PROZESS (hell) */}
+      <section className="section section--light vn-process">
         <div className="container">
-          <SectionHeader tone="light" align="center" kicker="Unser Prozess" title={<>So entsteht aus deinem Raum <span className="grad">dein Lieblingsort.</span></>} />
+          <SectionHeader align="center" kicker="Unser Prozess" title={<>So entsteht aus deinem Raum <span className="grad">dein Lieblingsort.</span></>} />
           <ProcessTimeline steps={PROCESS} />
         </div>
       </section>

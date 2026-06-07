@@ -45,10 +45,9 @@ export default function Planung() {
       <SimulatorSection />
       <BudgetCompassSection />
 
-      <section className="section section--dark">
+      <section className="section section--light">
         <div className="container">
           <SectionHeader
-            tone="light"
             kicker="Prozess"
             title="In 8 Schritten zur fertigen Küche."
             lead="Ein klarer, ehrlicher Ablauf – du weißt immer, woran du bist."

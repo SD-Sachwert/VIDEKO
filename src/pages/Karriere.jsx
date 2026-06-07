@@ -110,10 +110,10 @@ export default function Karriere() {
         </div>
       </section>
 
-      {/* WARUM VIDEKO (dark) */}
-      <section className="section section--dark karr-why">
+      {/* WARUM VIDEKO (hell) */}
+      <section className="section section--light karr-why">
         <div className="container">
-          <SectionHeader tone="light" kicker="Warum VIDEKO" title={<>Arbeiten, das mehr ist <span className="grad">als ein Job.</span></>} />
+          <SectionHeader kicker="Warum VIDEKO" title={<>Arbeiten, das mehr ist <span className="grad">als ein Job.</span></>} />
           <div className="karr-grid4">
             {WHY.map((wcard, i) => (
               <Reveal key={wcard.title} delay={(i % 4) * 0.06}>

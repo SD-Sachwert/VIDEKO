@@ -165,10 +165,10 @@ export default function UeberUns() {
         </div>
       </section>
 
-      {/* SO ARBEITEN WIR */}
-      <section className="section section--dark about-principles">
+      {/* SO ARBEITEN WIR (hell) */}
+      <section className="section section--light about-principles">
         <div className="container">
-          <SectionHeader tone="light" align="center" kicker="So arbeiten wir" title={<>Unsere Spielregeln. <span className="grad">Ganz einfach.</span></>} />
+          <SectionHeader align="center" kicker="So arbeiten wir" title={<>Unsere Spielregeln. <span className="grad">Ganz einfach.</span></>} />
           <ProcessTimeline steps={PRINCIPLES} />
         </div>
       </section>

@@ -175,10 +175,10 @@ export default function Studio() {
         </div>
       </section>
 
-      {/* PROZESS (dark) */}
-      <section className="section section--dark studio-process">
+      {/* PROZESS (hell) */}
+      <section className="section section--light studio-process">
         <div className="container">
-          <SectionHeader tone="light" align="center" kicker="So läuft's" title={<>Klarer Ablauf. <span className="grad">Stressfrei für dich.</span></>} />
+          <SectionHeader align="center" kicker="So läuft's" title={<>Klarer Ablauf. <span className="grad">Stressfrei für dich.</span></>} />
           <ProcessTimeline steps={PROCESS} />
         </div>
       </section>
