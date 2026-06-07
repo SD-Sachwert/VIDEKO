@@ -5,7 +5,6 @@ import { Check, X, ArrowRight, MapPin, Mail, Phone, ShieldCheck, Layers, Gem, Cl
 import Reveal from '../components/Reveal.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
-import ProcessTimeline from '../components/ProcessTimeline.jsx'
 import BeforeAfter from '../components/BeforeAfter.jsx'
 
 import heroImg from '../assets/images/leistungen/ls-hero.png'
@@ -119,6 +118,9 @@ export default function Leistungen() {
                 </video>
                 <span className="lintro__rim" aria-hidden="true" />
               </div>
+              <div className="svc-microusp">
+                <span>Persönliche Planung</span><span>3D-Visualisierung</span><span>Festpreis & Termin</span>
+              </div>
             </Reveal>
           </div>
         </div>
@@ -145,11 +147,19 @@ export default function Leistungen() {
         </div>
       </section>
 
-      {/* 4 — PROZESS (hell) */}
+      {/* 4 — PROZESS (hell) — Gold-Kreise mit Linie wie Referenz */}
       <section className="section section--light leist-ablauf2">
         <div className="container">
           <SectionHeader align="center" kicker="Ablauf" title={<>Dein Weg zur Traumküche. <span className="grad">In 6 klaren Schritten.</span></>} />
-          <ProcessTimeline steps={PROCESS} />
+          <div className="svc-steps">
+            {PROCESS.map((s, i) => (
+              <Reveal key={s.title} delay={(i % 6) * 0.06} className="svc-step">
+                <span className="svc-step__node">{i + 1}</span>
+                <span className="svc-step__title">{s.title}</span>
+                <span className="svc-step__text">{s.text}</span>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
