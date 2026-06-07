@@ -1,0 +1,112 @@
+Baue auf der VIDEKO-Landingpage direkt unter die bestehenden 6 Kacheln eine neue hochwertige Sektion zur „Exploding Kitchen“.
+
+Ziel:
+Die Sektion soll zeigen: Für den Kunden ist es einfach „eine schöne Küche“. Für VIDEKO ist es ein präzises Zusammenspiel aus Planung, Material, Technik, Stauraum, Licht, Montage und vielen Details.
+
+Position:
+
+* Direkt unter die 6 Kacheln auf der Landingpage setzen.
+* Die Sektion soll wie ein hochwertiger Übergang wirken, nicht wie ein Fremdkörper.
+* Sie soll optisch zur bestehenden VIDEKO-Seite passen: dunkel/anthrazit, warmes Goldlicht, Premium, clean, modern.
+
+Grundidee der Sektion:
+Headline:
+Eine Küche. Oder 187 Entscheidungen, die perfekt sitzen müssen.
+
+Subline:
+Was für Sie am Ende selbstverständlich aussieht, ist bei uns millimetergenau geplant: Licht, Geräte, Stauraum, Materialien, Technik, Montage und jedes kleine Detail dazwischen.
+
+Layout Desktop:
+Baue eine starke zweigeteilte Vergleichssektion:
+
+Links:
+Normale Küche / fertiges Ergebnis
+Label:
+WAS SIE SEHEN
+
+Headline klein:
+Eine fertige Traumküche.
+
+Text:
+Ruhig, schön, aufgeräumt. Alles wirkt selbstverständlich. Genau so soll es am Ende aussehen.
+
+Bild:
+Nutze hier ein vorhandenes schönes fertiges Küchenbild von der Landingpage oder aus den bestehenden Website-Assets. Falls kein passendes vorhanden ist, nutze ein ruhiges, hochwertiges Küchenbild aus dem bestehenden Bestand. Keine neuen generischen Stockbilder einbauen.
+
+Rechts:
+Exploding Kitchen / zerlegte Ansicht
+Label:
+WAS WIR SEHEN
+
+Headline klein:
+187 Bauteile. 1000 Entscheidungen. 0 Zufall.
+
+Text:
+Korpus, Fronten, Licht, Geräte, Auszüge, Fugen, Höhen, Materialien, Anschlüsse, Laufwege und Montagepunkte. Wir sehen nicht nur eine Küche – wir sehen das System dahinter.
+
+Bild:
+Nutze die Datei:
+home/exploded/exploded-full-fallback-16x9.png
+
+Alternativ, wenn es optisch besser wirkt:
+home/exploded/exploded-bg-16x9.png als Hintergrund
+home/exploded/exploded-kitchen-main-16x9.png als darüberliegendes Hauptmotiv
+
+Wichtig:
+
+* Keine Texte ins Bild einbauen.
+* Alle Texte als echter HTML-Text.
+* Keine überladenen Icons.
+* Die Exploded Kitchen soll hochwertig wirken, nicht technisch kalt.
+* Bitte nicht „zerstörte Küche“ schreiben. Nutze „zerlegte Ansicht“, „Exploded Kitchen“ oder „Innenleben“.
+
+Optischer Aufbau:
+
+* Großzügige Section mit viel Luft.
+* Dunkler oder leicht transparenter Premium-Hintergrund.
+* Zwei große Bildflächen nebeneinander, leicht abgerundet.
+* Feine goldene Linien oder kleine technische Marker dürfen eingesetzt werden.
+* Zwischen den beiden Seiten kann eine kleine vertikale Trennlinie oder ein dezenter „Perspektivwechsel“-Hinweis stehen.
+* Die rechte Exploded-Kitchen-Seite darf etwas spektakulärer wirken.
+* Auf Hover darf die rechte Seite leicht aufleuchten oder minimal zoomen.
+
+Zusätzlicher kurzer Textblock unter den beiden Bildern:
+Titel:
+Warum das wichtig ist?
+
+Text:
+Weil eine Küche nicht an einem schönen Bild scheitert. Sondern an den Details, die man später jeden Tag merkt: falsche Höhen, schlechte Laufwege, verschenkter Stauraum, unpraktische Geräte, schwaches Licht oder eine Montage, die nicht sauber sitzt. Genau deshalb planen wir nicht einfach Möbel. Wir planen Abläufe.
+
+CTA:
+Küche durchdenken lassen
+
+CTA-Verhalten:
+Der Button soll zur Beratung / Terminbuchung führen.
+
+Optional kleine Detailpunkte unter dem Text:
+
+* Licht, das nicht blendet, sondern wirkt.
+* Stauraum, der wirklich genutzt wird.
+* Geräte, die zum Alltag passen.
+* Materialien, die nicht nur gut aussehen.
+* Montage, die am Ende den Unterschied macht.
+
+Animation:
+
+* Beim Scrollen sanft einblenden.
+* Rechte Exploded-Kitchen leicht schweben lassen.
+* Feine Glow-Animation an Linien/Details.
+* Keine wilde Animation, kein Kirmesmodus.
+* Premium, ruhig, hochwertig.
+
+Mobile:
+
+* Untereinander stapeln.
+* Erst „Was Sie sehen“, dann „Was wir sehen“.
+* Bilder 16:9 lassen.
+* Texte kurz und sauber lesbar halten.
+
+Ton:
+Hochwertig, aber mit VIDEKO-Charakter. Ein bisschen frech, aber nicht albern.
+Es soll klar werden:
+Andere sehen eine Küche. VIDEKO sieht das ganze System dahinter.
