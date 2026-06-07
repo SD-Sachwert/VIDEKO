@@ -73,7 +73,7 @@ export default function Hero() {
     >
       {/* --- Media: scroll (outer) + pointer (middle) + CSS ken-burns (img) --- */}
       <motion.div className="hero__media" style={{ y: imgY, scale: imgScale }}>
-        <motion.div className="hero__kb" style={{ x: imgPX, y: imgPY }}>
+        <div className="hero__kb">
           {isMobile ? (
             <img className="hero__img kenburns hero__img--mobile" src={heroMobileImg} alt="" aria-hidden="true" />
           ) : (
@@ -91,7 +91,7 @@ export default function Hero() {
               <source src={heroVideo} type="video/mp4" />
             </video>
           )}
-        </motion.div>
+        </div>
       </motion.div>
 
       <motion.div className="hero__arcs" style={{ y: arcsY, x: arcPX }} aria-hidden="true">

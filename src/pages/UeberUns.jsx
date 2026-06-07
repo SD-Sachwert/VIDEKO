@@ -11,7 +11,7 @@ import CardGrid from '../components/CardGrid.jsx'
 import FeatureCard from '../components/FeatureCard.jsx'
 import ProcessTimeline from '../components/ProcessTimeline.jsx'
 
-import heroDark from '../assets/images/ueber-uns/01_hero_dark_kitchen_banner.png'
+import heroDark from '../assets/images/leistungen/ls-feature.png'
 import whyImg from '../assets/images/ueber-uns/02_why_videko_beratungsszene.png'
 import fVitali from '../assets/images/ueber-uns/05_founder_vitali_placeholder.png'
 import fDennis from '../assets/images/ueber-uns/05_founder_dennis_placeholder.png'

@@ -62,11 +62,7 @@ export default function Header() {
     <header className={`header ${scrolled ? 'header--scrolled' : ''}`}>
       <div className="container header__inner">
         <Link className="brand" to="/" aria-label="VIDEKO Küchen — Startseite" onClick={close}>
-          <img className="brand__logo" src={logoMain} alt="VIDEKO" />
-          <span className="brand__text">
-            <span className="brand__name">VIDEKO</span>
-            <span className="brand__sub">Küchen</span>
-          </span>
+          <img className="brand__logo" src={logoMain} alt="VIDEKO Küchen" />
         </Link>
 
         <nav className="nav" aria-label="Hauptnavigation">

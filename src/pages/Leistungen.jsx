@@ -176,10 +176,10 @@ export default function Leistungen() {
         </div>
       </section>
 
-      {/* 6 — EMOTIONAL (dunkles Band, wie Referenz) */}
-      <section className="section section--dark leist-emo">
+      {/* 6 — EMOTIONAL (hell) */}
+      <section className="section leist-emo">
         <div className="container">
-          <SectionHeader tone="light" align="center" kicker="Entspannt" title={<>Weniger Chaos. <span className="grad">Mehr Zeit für das, was zählt.</span></>} />
+          <SectionHeader align="center" kicker="Entspannt" title={<>Weniger Chaos. <span className="grad">Mehr Zeit für das, was zählt.</span></>} />
           <div className="lservice-grid lservice-grid--4">
             {EMO.map((e, i) => (
               <Reveal key={e.title} delay={(i % 4) * 0.06}>

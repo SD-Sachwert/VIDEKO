@@ -374,8 +374,8 @@ body {
 }
 
 .brand__logo {
-  width: 70px;
-  height: 70px;
+  width: auto;
+  height: 72px;
   object-fit: contain;
   filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.38));
 }
@@ -5183,8 +5183,8 @@ body {
 .pagehero__title {
   font-family: var(--serif);
   font-weight: 600;
-  font-size: clamp(2.6rem, 5.4vw, 4.8rem);
-  line-height: 1;
+  font-size: clamp(2.1rem, 5vw, 4.8rem);
+  line-height: 1.04;
   letter-spacing: -0.012em;
   margin: 0 0 18px;
   max-width: 16ch;
@@ -7378,9 +7378,7 @@ body {
 
 @media (max-width: 720px) {
   .header__actions .pill--cta { display: none; }
-  .brand__logo { width: 54px; height: 54px; }
-  .brand__name { font-size: 1.5rem; }
-  .brand__sub { font-size: 0.54rem; letter-spacing: 0.4em; }
+  .brand__logo { width: auto; height: 56px; }
   .luxury {
     padding: 60px 0 50px;
   }

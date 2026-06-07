@@ -1,0 +1,651 @@
+# VIDEKO Küchen – Master-Prompt für Claude
+
+Du arbeitest an der VIDEKO-Küchen-Website. Bitte nicht komplett blind neu anfangen, sondern die bestehenden Seiten gezielt verbessern. Ziel: hochwertiger, moderner, mehr VIDEKO-Charakter, mehr Humor, mehr Bewegung, bessere Mobile-Darstellung und ein einheitlicher Premium-Look.
+
+## Grunddesign / Marke
+
+VIDEKO Küchen ist ein hochwertiges Küchenstudio in Würzburg.
+
+Bekannte Daten:
+- VIDEKO Küchen eG
+- Standort: Würzburg, Hertzstraße 4
+- E-Mail: info@videko-kuechen.de
+- Telefonnummer nur verwenden, wenn im Projekt bereits hinterlegt
+
+Designrichtung:
+- Premium, warm, modern, hochwertig
+- kein Möbelhaus-Look
+- kein Rabattgeschrei
+- keine generischen 08/15-Kacheln
+- dunkle Hero-Bereiche oben
+- helle Mitte mit einheitlichem Marble-Gold-Hintergrund
+- dunkler emotionaler Abschluss unten
+- Gold-/Bronze-Akzente
+- warme Lichtstimmung
+- edle Serif-Headlines, klare Sans-Serif-Texte
+- ruhig und hochwertig, aber mit mehr Mut, Witz und Schwung
+
+Wichtig: Die Seite soll nicht steif wirken. VIDEKO darf sympathisch, direkt, leicht frech und humorvoll sein. Premium heißt nicht einschläfernd. Kein „Küchenstudio aus der Beige-Hölle“.
+
+## Global: Mehr VIDEKO-Humor und Persönlichkeit
+
+Bitte über alle Seiten hinweg mehr charmanten VIDEKO-Humor einbauen, aber dosiert und hochwertig. Nicht albern, nicht billig, sondern menschlich, wach und ein bisschen frech.
+
+Beispiele für Tonalität:
+- „Kein Küchenbasar. Kein Rabatt-Geschrei. Einfach gute Planung.“
+- „Du musst noch nicht alles wissen. Dafür sind wir da.“
+- „Auch ‘Ich weiß nur, die alte Küche nervt’ ist ein gültiger Startpunkt.“
+- „Gerade Wände wären schön. Sind sie aber selten.“
+- „Wir planen nicht für den Prospekt. Wir planen für Montagmorgen.“
+- „Schöne Fronten sind nett. Gute Abläufe retten dir jeden Tag Nerven.“
+
+Der Humor soll besonders stark auf diesen Seiten vorkommen:
+- Stylefinder
+- Karriere-Seite
+- Beratung-anfragen-Seite
+- teilweise Leistungsseite
+
+## Global: Hero-Schriften oben kleiner machen
+
+Auf mehreren dunklen Hero-Bannern oben ist die Schrift zu groß. Teilweise wirkt sie auf Desktop und Mobile überdimensioniert und kann auf Mobile abgeschnitten werden.
+
+Bitte:
+- Hero-Headlines global prüfen und mit `clamp()` sauber responsiv machen.
+- Desktop weiterhin groß und edel, aber nicht brutal riesig.
+- Mobile deutlich kleiner, damit nichts abgeschnitten wird.
+- Zeilenlängen begrenzen.
+- Keine Texte dürfen rechts aus dem Viewport laufen.
+- Kein horizontaler Overflow.
+
+Empfehlung:
+- große Hero-H1: `font-size: clamp(2.4rem, 5vw, 5.6rem);`
+- Mobile ggf. noch kleiner je nach Layout.
+- `line-height` ca. 0.95 bis 1.1.
+
+## Global: Helle Bereiche einheitlich Marble-Gold
+
+Alles, was hell ist, soll einheitlich den gleichen Marble-Gold-Look bekommen.
+
+Bitte:
+- Keine zufälligen unterschiedlichen Beige-/Creme-/Grau-Flächen mehr.
+- Alle hellen Sections auf denselben subtilen Marble-Gold-Hintergrund setzen.
+- Wenn es bereits ein Asset/CSS dafür gibt, global wiederverwenden.
+- Look: warmes Ivory/Creme, sehr dezente Marmorstruktur, feine Gold-/Bronze-Akzente.
+- Nicht gelb, nicht kitschig, nicht zu unruhig.
+- Lesbarkeit beachten.
+
+## Global: Header / Logo doppelt
+
+In der Navigation ist teilweise links einmal das VIDEKO-Logo mit Schriftzug und direkt daneben nochmal „VIDEKO Küchen“ als zusätzlicher Schriftzug. Das wirkt doppelt und unruhig.
+
+Bitte Header bereinigen:
+- Entweder echtes Logo komplett als eine Einheit verwenden,
+- oder Monogramm + Schriftzug sauber kombiniert,
+- aber nicht Logo plus nochmal extra VIDEKO daneben.
+- Auf allen Seiten konsistent.
+- Mobile Header ebenfalls sauber: Logo links, Menübutton rechts, keine Überlappung.
+
+## Global: Animationen hochwertig, aber performant
+
+Mehr Bewegung ja, aber nicht Kirmes.
+
+Bitte einsetzen:
+- Scroll-Reveals
+- sanftes Fade/Slide-In
+- Hover-Zoom auf Bildern
+- Goldlinien, die beim Scrollen einfahren
+- Karten, die sich minimal heben/kippen
+- aktive Zustände bei Steps/Chips
+- kleine Easter Eggs bei Karriere/Stylefinder
+
+Bitte vermeiden:
+- wilde Daueranimationen, die nerven
+- zu viel Parallax, das ruckelt
+- Animationen auf großen Videos
+- Layout Shift
+- Mobile-Ruckeln
+
+Bei `prefers-reduced-motion` Animationen reduzieren/deaktivieren.
+
+---
+
+# 1. Über-uns-Seite: Team-Kacheln und Spielregeln verbessern
+
+Siehe Screenshot: `01_ueber_uns_team_spielregeln.png`
+
+## Aktueller Zustand
+- Team-Kacheln sind langweilig, gleichförmig und sehen wie Standard-Bildkarten aus.
+- „Mehr als nur drei Gründer“ ist grundsätzlich gut, aber visuell zu brav.
+- Die Spielregeln darunter sind zu dünn und verschenken viel Fläche.
+
+## Gewünschte Änderung Team-Bereich
+
+Die Kacheln über den Spielregeln müssen abwechslungsreicher und lebendiger werden.
+
+Bitte statt statischem 5-Karten-Grid:
+- ein asymmetrisches Bento-/Editorial-Layout bauen
+- eine große Hauptkarte „Beratung & Planung“
+- kleinere Nebenkarten für Marketing, Montage, Sachbearbeitung, Partner/Gewerke
+- Mischung aus Bildkarten, Icon-Karten, kleinen Statement-Karten
+- Hover: Bild zoomt leicht, Goldkante fährt ein, Overlay bewegt sich, kurzer Zusatztext erscheint
+- Karten sollen mehr nach lebendigem Team und weniger nach Stock-Baukasten aussehen
+
+Mögliche Texte:
+- Beratung & Planung: „Die Menschen, die deine Küche mit dir denken.“
+- Marketing & Social Media: „Sorgen dafür, dass man VIDEKO sieht – und versteht.“
+- Montage & Handwerk: „Bauen auf, was geplant wurde. Sauber und termintreu.“
+- Sachbearbeitung & Organisation: „Halten im Hintergrund alle Fäden zusammen.“
+- Partner & Gewerke: „Verlässliche Profis für alles rund um deinen Raum.“
+
+## Gewünschte Änderung Spielregeln
+
+Die „Unsere Spielregeln“-Sektion muss ausgebaut und schöner gestaltet werden.
+
+Aktuelle Punkte können bleiben, aber bitte erweitern und schöner inszenieren:
+- Ehrlich statt Verkaufsdruck
+- Direkt statt kompliziert
+- Sauber geplant
+- Persönlich begleitet
+- Zuverlässig umgesetzt
+
+Weitere mögliche Regeln:
+- Kein Rabatt-Theater
+- Keine Standardküche von der Stange
+- Wir sagen auch, wenn etwas keinen Sinn ergibt
+- Ein Ansprechpartner statt Zuständigkeits-Pingpong
+- Planung, die im Alltag funktioniert
+
+Designidee:
+- große zentrale Headline „Unsere Spielregeln. Ganz einfach.“
+- darunter hochwertige Werte-Karten mit Nummer, Icon, kurzem Text
+- eine große Highlight-Karte/Quote, z. B.:
+  „Wir planen nicht für den Prospekt. Wir planen für deinen Alltag.“
+- feine Goldlinien, Scroll-Reveal, Hover-Effekte
+- auf Mobile sauber gestapelt
+
+---
+
+# 2. Leistungsseite: dunklen Zwischenbanner hell machen + Vergleich ausbauen
+
+Siehe Screenshot: `02_leistungsseite_vergleich.png`
+
+## Dunkler Zwischenbanner
+
+Der dunkle Banner „Weniger Chaos. Mehr Zeit für das, was zählt.“ sitzt relativ weit unten auf der Leistungsseite und muss hell werden.
+
+Bitte:
+- diesen Zwischenbereich nicht mehr dunkel darstellen
+- Hintergrund auf einheitliches Marble-Gold ändern
+- dadurch soll die Mitte der Seite durchgehend hell bleiben
+- dunkle Abschnitte nur oben als Hero und unten als Abschluss verwenden
+
+Der Abschnitt kann inhaltlich bleiben, aber visuell heller, luftiger und hochwertiger werden.
+
+## Vergleich „Klassisch geplant oder VIDEKO geplant?“ ausbauen
+
+Aktueller Zustand:
+- gute Idee, aber viel zu dünn
+- zu wenig Gegenüberstellung
+- zu wenig Bewegung
+- zu wenig Aha-Effekt
+
+Bitte deutlich stärker machen:
+- größere Vergleichssektion mit zwei Spalten oder Split-Screen
+- links „Klassisch geplant“ kritisch/blasser
+- rechts „VIDEKO geplant“ stärker/goldener/hochwertiger
+- mittig ein edles „VS“ oder animierter Gold-Split
+- Punkte erscheinen nacheinander beim Scrollen
+- Hover auf Punkten zeigt kurze Erklärung
+- gerne kleine Icons/Badges verwenden
+
+Mehr Negativpunkte bei „Klassisch“:
+- viele Ansprechpartner
+- unklare Zuständigkeiten
+- schwer vergleichbare Angebote
+- wenig echte Visualisierung
+- Materialauswahl ohne Raumgefühl
+- Kosten ändern sich spät
+- Montage und Planung sind nicht sauber verzahnt
+- Kunde muss vieles selbst koordinieren
+- am Ende sieht es anders aus als gedacht
+
+Mehr Pluspunkte bei „VIDEKO“:
+- ein klarer Ansprechpartner
+- ehrliche Beratung statt Verkaufsdruck
+- perfekte Planung und 3D-Visualisierung
+- transparente Preise und feste Abläufe
+- Material, Licht und Raumwirkung werden zusammen gedacht
+- Planung passend zu Alltag und Budget
+- Aufmaß, Lieferung und Montage aus einem Prozess
+- du weißt vorher, was du bekommst
+- keine Küchenlotterie, sondern Klarheit
+
+Mögliche Headline:
+„Klassisch geplant oder VIDEKO geplant?“
+Subline:
+„Der Unterschied liegt nicht nur im Ergebnis. Sondern in jedem Schritt davor.“
+
+---
+
+# 3. Studio-Seite: langweilige 6er-Kacheln ersetzen + Logo-Dopplung beheben
+
+Siehe Screenshot: `03_studio_kacheln_header.png`
+
+## Abschnitt „Erlebe, wie deine Küche entsteht“
+
+Aktueller Zustand:
+- 6 Bildkacheln im gleichförmigen Grid
+- sauber, aber langweilig
+- zu wenig Erlebnis für eine Studio-Seite
+- wirkt wie Standard-Template
+
+Bitte daraus einen echten Studio-Journey-Bereich machen.
+
+Ziel:
+Der Besucher soll das Gefühl haben, beim Scrollen durchs Studio zu laufen.
+
+Mögliche Umsetzung:
+- statt 6 gleicher Karten: große aktive Bildfläche + Steps daneben/darunter
+- oder horizontale Timeline mit aktivem Schritt
+- oder Bento-Layout mit wechselnden Bildgrößen
+- Goldlinie verbindet Schritte
+- aktive Karte hebt sich sichtbar hervor
+- Bild/Text wechseln beim Scrollen oder bei Klick/Hover
+- Material-Detail, Beratung, 3D-Planung und Raumgefühl abwechslungsreich zeigen
+
+Schritte:
+1. Ankommen
+2. Raumgefühl spüren
+3. Materialien anfassen
+4. Licht erleben
+5. Planung sehen
+6. Beratung vertiefen
+7. Entscheidung treffen
+
+Animationen:
+- Scroll-Reveal pro Schritt
+- aktive Goldnummer
+- dezenter Bildzoom
+- Overlay fährt hoch
+- kurze Zusatzinfos erscheinen
+- Mobile als Swipe-Slider oder saubere Step-Karten
+
+Bitte nicht wieder einfach 6 gleiche Karten bauen. Das ist genau das Problem.
+
+## Header / Logo-Dopplung
+
+In der Leiste ist links das Logo mit VIDEKO Küchen und daneben steht nochmal groß VIDEKO Küchen.
+
+Bitte entfernen/korrigieren:
+- nur eine saubere Logo-Einheit verwenden
+- kein doppelter Schriftzug
+- Header über alle Seiten vereinheitlichen
+
+---
+
+# 4. Beratung-anfragen-Seite komplett hochwertiger gestalten
+
+Siehe Screenshot: `04_beratung_anfragen.png`
+
+## Aktueller Zustand
+- Seite wirkt trocken und steif
+- Formular sieht funktional aus, aber nicht einladend
+- Hero/Bannergröße passt nicht konsequent zu den anderen Seiten
+- es fehlt Emotion, Humor und ein Grund, das Formular wirklich auszufüllen
+
+## Ziel
+Die komplette Beratung-anfragen-Seite soll neu gestaltet und deutlich hochwertiger werden.
+
+Nicht nur Formular, sondern ein schöner Erstkontakt:
+„Erzähl uns grob, was du vorhast. Wir machen daraus einen Plan.“
+
+## Hero
+Hero/Bannergröße und Aufbau an andere Seiten angleichen.
+
+Mögliche Headline:
+„Bereit für deine Küche?“
+Oder:
+„Erzähl uns grob, was du vorhast.“
+
+Subline:
+„Du musst noch nicht alles wissen. Kein Callcenter, kein Küchenbasar, kein Rabatt-Gebrüll. Wir melden uns persönlich und bringen Struktur rein.“
+
+## Formular
+Es soll schnell auszufüllen sein, aber für VIDEKO wertvolle Informationen liefern.
+
+Pflichtfelder schlank:
+- Name
+- E-Mail
+- Telefon
+- Nachricht
+- DSGVO-Checkbox
+
+Sinnvolle Zusatzfelder als Chips/Buttons statt Dropdown-Wüste:
+- Küchenart: Zeile, L-Küche, U-Küche, Insel, noch offen
+- Projektstatus: Neubau, Renovierung, Austausch, erstmal Ideen sammeln
+- Zeitplan: sofort, 1–3 Monate, 3–6 Monate, später
+- Budgetrahmen optional
+- Grundriss vorhanden? Ja/Nein
+- Was ist dir wichtig? Stauraum, Design, Familienalltag, Kochen, Geräte, Pflegeleicht, Preisrahmen, „Die alte Küche nervt einfach“
+
+Microcopy:
+- Budget: „Keine Falle. Hilft nur, realistisch zu planen.“
+- Nachricht: „Ein Satz reicht. Roman geht auch. Wir urteilen nicht.“
+- Projektstatus: „Auch ‘keine Ahnung’ ist ein gültiger Startpunkt.“
+
+Neben dem Formular:
+Kontakt-/Ablaufkarte:
+„Was passiert nach deiner Anfrage?“
+1. Wir schauen uns deine Angaben an.
+2. Wir melden uns persönlich.
+3. Wir klären, wo du gerade stehst.
+4. Wenn es passt, vereinbaren wir einen Termin im Studio.
+5. Du bekommst keine Standardantwort, sondern eine ehrliche Einschätzung.
+
+Design:
+- Marble-Gold-Hintergrund
+- Formular als helle Premium-Karte
+- dunkle Kontaktkarte daneben
+- Kontaktkarte auf Desktop gern sticky
+- Goldakzente
+- leichte Animationen bei Feldern und Chips
+- Button hochwertig mit Hover
+- Erfolgsmeldung nach Absenden:
+  „Anfrage ist raus. Wir melden uns persönlich – kein Bot, kein Küchen-Orakel.“
+
+Mobile:
+- perfekt stapeln
+- keine abgeschnittenen Felder
+- Formular nicht erschlagend wirken lassen
+
+---
+
+# 5. Karriere-Seite komplett neu denken
+
+Siehe Screenshot: `05_karriere_langweilig.png`
+
+## Aktueller Zustand
+Diese Seite ist aktuell die langweiligste Seite. Sie ist nicht schlecht, aber viel zu brav und generisch. Man denkt nicht: „Da will ich arbeiten.“
+
+Probleme:
+- zu viele gleichartige Kacheln
+- wenig Persönlichkeit
+- wenig Humor
+- wenig Bewegung
+- kein „die sind wach und auf Zack“-Gefühl
+- zu wenig junge Energie
+- wirkt wie eine Pflichtseite
+
+## Ziel
+Die Karriere-Seite muss von Grund auf neu gestaltet werden.
+
+Sie soll sagen:
+„Wir bauen etwas Besonderes auf. Vielleicht passt du rein.“
+
+Nicht wirken wie:
+„Wir suchen alles und jeden, bitte bewerbt euch.“
+
+## Tonalität
+Mehr Humor, mehr Pepp, mehr Mut.
+
+Mögliche Hero-Headlines:
+- „Bock auf Küchen. Aber bitte ohne Möbelhaus-Zirkus.“
+- „Komm zu VIDEKO. Wir bauen kein Möbelhaus. Wir bauen ein Team.“
+- „Menschen gesucht, die mitdenken. Nicht nur mitlaufen.“
+
+Subline:
+„Du musst kein Küchenroboter sein. Du musst mitdenken, anpacken und Lust auf gute Arbeit haben. Den Rest kriegen wir gemeinsam hin.“
+
+## Gesuchte Bereiche
+Im Hintergrund werden Leute in allen Bereichen gesucht:
+- Küchenverkäufer
+- Küchenplaner
+- Monteure
+- Aufmaß / Projektkoordination
+- Empfang / Sachbearbeitung
+- Reklamationsservice
+- Marketing / Social Media
+- Reinigung / Studio-Service
+- Quereinsteiger
+- Initiativbewerbungen
+
+Aber bitte charmant verpacken. Nicht als verzweifelte Liste.
+
+## Rollenwelt neu gestalten
+Keine langweilige 3x3-Kartenwand.
+
+Besser:
+- interaktive Rollenwelt
+- große Hauptkarten + kleinere Nebenrollen
+- Karten mit humorvollen Microcopies
+- Filter/Chips: „Ich kann verkaufen“, „Ich kann planen“, „Ich kann anpacken“, „Ich kann organisieren“, „Ich kann Social Media“, „Ich weiß es noch nicht“
+- „Ich weiß nicht, wo ich reinpasse“-Button führt zu Initiativbewerbung
+
+Beispieltexte:
+- Beratung & Verkauf: „Für Menschen, die zuhören können, bevor sie verkaufen.“
+- Planung & Technik: „Für alle, die bei 3 mm Versatz nervös werden. Gut so.“
+- Montage & Handwerk: „Für Leute, die wissen: Gerade ist nicht ungefähr gerade.“
+- Marketing & Social Media: „Für Menschen, die aus einer Küche mehr machen als ein Vorher-Nachher-Bild mit Filter.“
+- Sachbearbeitung & Organisation: „Für alle, die Chaos sehen und innerlich schon eine Tabelle öffnen.“
+- Quereinsteiger: „Noch keine Küchen-Erfahrung? Kein Problem. Hauptsache Kopf an.“
+
+## Animationen / Easter Eggs
+Bitte hier mutiger sein:
+- Jobkarten kippen/floaten leicht beim Hover
+- kleine Gold-Icons reagieren
+- Chaos-Elemente sortieren sich beim Scrollen
+- Bewerbungsprozess animiert
+- Easter-Egg-Texte bei Hover
+- kleiner „Passt du zu uns?“-Check
+- Mini-Button „Ich habe keine Ahnung, aber Bock“
+
+Easter-Egg-Ideen:
+- „Keine Sorge, wir haben Kaffee.“
+- „Excel darfst du mögen. Musst du aber nicht heiraten.“
+- „Rabattgeschrei? Nicht bei uns.“
+- „Gerade Wände wären schön. Sind sie nie.“
+- „Wenn du ‘passt schon’ sagst, meinen wir hoffentlich nicht dasselbe.“
+
+## Neuer Aufbau Karriere-Seite
+1. Dunkler Hero mit starker, frecher Headline
+2. Kurzblock: Warum VIDEKO anders arbeitet
+3. Interaktive Rollenwelt
+4. Warum VIDEKO: keine Möbelhaus-Hektik, ehrliches Team, Aufbauphase, kurze Wege
+5. „So ticken wir“ mit Humor und klaren Werten
+6. „Passt du zu uns?“ Gegenüberstellung
+7. Bewerbung in 3 Minuten
+8. Dunkler CTA unten: „Lust, etwas Besonderes mit aufzubauen?“
+
+Bitte diese Seite nicht nur verschönern, sondern konzeptionell neu bauen.
+
+---
+
+# 6. Stylefinder: deutlich mehr Spaß und Humor
+
+Der Stylefinder soll mehr Humor erhalten und Spaß machen. Er ist ein zentrales interaktives Tool und darf nicht wirken wie eine trockene Umfrage.
+
+## Ziel
+Der Stylefinder soll sich anfühlen wie:
+- hochwertiger Küchen-Stiltest
+- spielerisch
+- leicht frech
+- schnell
+- visuell stark
+- mit kleinen Kommentaren, die hängen bleiben
+
+## Wichtig
+Name bleibt: **Stylefinder**
+Nicht „Kompass“ nennen.
+
+## Tonalität
+Mehr Microcopy und kleine Reaktionen einbauen.
+
+Beispiele:
+- „Keine Sorge, wir fragen nicht nach deinem Sternzeichen. Noch nicht.“
+- „Dunkel, hell oder ‘ich weiß nur, dass es nicht wie bei Tante Monika aussehen soll’?“
+- „Material wählen. Anfassen musst du später im Studio. Bildschirm lecken zählt nicht.“
+- „Inselküche? Schön. Aber nur, wenn der Raum nicht danach weint.“
+- „Stauraum ist wie WLAN: Man merkt erst, dass er fehlt, wenn es nervt.“
+- „Fast fertig. Deine Küche nimmt langsam Form an. Keine Panik, noch ohne Liefertermin.“
+
+## Animationen
+- Auswahlkarten mit Hover-Zoom und Goldrahmen
+- aktive Auswahl pulsiert kurz dezent
+- Fortschrittsanzeige oben
+- Step-Wechsel mit weichem Slide/Fade
+- Ergebnis mit hochwertiger Reveal-Animation
+- kleine Zwischenkommentare nach Auswahl
+
+## Ergebnis-Seite
+Am Ende nicht nur trocken „Du bist Typ X“.
+
+Besser:
+- großer Ergebnisname, z. B. „Urban Dark“, „Natural Calm“, „Family Bright“
+- kurze charaktervolle Beschreibung
+- passende Material-/Farbvorschläge
+- passende Küchenbilder
+- CTA: „Ergebnis mit ins Studio nehmen“ / „Beratung anfragen“
+- Hinweis: „Das ist keine Diagnose. Aber ein verdammt guter Start.“
+
+---
+
+# 7. Über-uns Hero-Foto zu dunkel
+
+Auf der Über-uns-Seite ist das Foto im oberen dunklen Banner zu dunkel.
+
+Bitte:
+- ein helleres Foto einsetzen
+- im Projektordner gibt es einen Ordner `unbenutzt` mit möglichen Alternativen
+- daraus ein passenderes, helleres Bild wählen
+- trotzdem dunkler Overlay für Lesbarkeit, aber Bild nicht komplett absaufen lassen
+- Hero-Schrift wie oben beschrieben kleiner/sauberer machen
+
+Wichtig: Hero muss weiterhin hochwertig und passend wirken, aber nicht wie schwarzer Nebel mit Text.
+
+---
+
+# 8. Landingpage-Video ruckelt und bewegt sich bei Hover komisch
+
+Siehe Screenshot: `06_mobile_landing_overflow_video.png`
+
+## Probleme
+- Video ruckelt.
+- Auf Mobile ist der Hero verschoben/zu breit.
+- Texte werden abgeschnitten.
+- Buttons und Feature-Karten laufen aus dem Viewport.
+- Wenn man mit der Maus über das Video fährt, bewegt es sich komisch. Das darf nicht passieren.
+
+## Bitte beheben
+
+### Video Performance
+- Desktop und Mobile getrennte Videoquellen verwenden, falls vorhanden.
+- Mobile nicht das riesige Desktopvideo laden.
+- Video webtauglich komprimieren.
+- Video-Tag korrekt:
+  - autoplay
+  - muted
+  - loop
+  - playsInline
+  - preload sinnvoll, z. B. metadata
+  - Posterbild verwenden
+- `object-fit: cover`
+- kein Layout Shift
+- wenn Mobile weiterhin ruckelt: Mobile statisches Posterbild statt Video verwenden
+
+### Hover-Bewegung entfernen
+- Keine Hover-Animation auf dem Video selbst.
+- Kein `transform`, `scale`, Parallax, Mousemove oder Tilt auf Hero-Video.
+- Video-Hintergrund muss ruhig bleiben.
+- Falls es einen Hover-Effekt auf Hero oder Video-Wrapper gibt: entfernen.
+- Buttons dürfen Hover haben, aber das Video nicht.
+
+### Mobile Hero Overflow beheben
+- Kein horizontaler Scroll auf der gesamten Seite.
+- Ursache suchen, nicht nur `overflow-x: hidden` draufklatschen.
+- Textcontainer auf Mobile sauber begrenzen.
+- CTA-Buttons auf Mobile untereinander.
+- Feature-Karten auf Mobile stapeln oder als sauberer Slider mit Snap.
+- Header Mobile sauber.
+
+CSS-Prüfpunkte:
+- feste Breiten wie `width: 1200px`
+- `100vw` plus Padding
+- absolute Positionierung im Hero
+- zu große Font-Sizes
+- Flex/Grid ohne `min-width: 0`
+- Karten mit festen Breiten
+- Container ohne `max-width: 100%`
+
+Globaler Sicherheitsrahmen ist okay:
+```css
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+img, video {
+  max-width: 100%;
+}
+```
+Aber bitte zusätzlich die echte Ursache beheben.
+
+---
+
+# 9. Mobile allgemein prüfen
+
+Bitte alle betroffenen Seiten auf Mobile prüfen:
+- 390px
+- 430px
+- 768px
+- Desktop
+
+Keine abgeschnittenen Texte.
+Keine horizontalen Überstände.
+Keine Kacheln, die aus dem Bildschirm laufen.
+Buttons dürfen nicht überlaufen.
+Bilder/Videos sauber mit `object-fit: cover`.
+Animationen auf Mobile reduziert, wenn sie ruckeln.
+
+---
+
+# 10. Bitte nicht kaputtmachen
+
+Beibehalten:
+- VIDEKO-Premium-Look
+- dunkle Hero-Bereiche
+- Goldakzente
+- helle Marble-Gold-Mitte
+- dunkler Footer/Abschluss
+- edle Typografie
+- warme Lichtstimmung
+- bestehende Grundstruktur, wo sie sinnvoll ist
+
+Ändern:
+- langweilige Kacheln
+- zu große Hero-Typo
+- doppelte Logos
+- zu dunkles Über-uns-Foto
+- ruckelndes Landingpage-Video
+- komische Hover-Bewegung im Hero-Video
+- zu trockene Beratung-Seite
+- komplett langweilige Karriere-Seite
+- Stylefinder humorvoller und lebendiger
+- Vergleichssektionen stärker und animierter
+
+---
+
+# 11. Ergebnis bitte so liefern
+
+Bitte am Ende kurz auflisten:
+1. Welche Dateien/Komponenten geändert wurden.
+2. Welche Animationen eingebaut wurden.
+3. Welche Mobile-Fixes gemacht wurden.
+4. Ob der horizontale Overflow behoben wurde.
+5. Ob das Video auf Mobile optimiert oder durch Poster ersetzt wurde.
+6. Welche Bilder aus `unbenutzt` verwendet wurden.
+
+Bitte keine halbherzige Template-Kosmetik. Die Seiten sollen deutlich lebendiger und eigenständiger wirken. VIDEKO soll Premium bleiben, aber nicht einschlafen. Humor rein, Schwung rein, Kachelfriedhof raus.

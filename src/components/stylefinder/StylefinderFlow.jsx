@@ -198,7 +198,7 @@ export default function StylefinderFlow() {
                 {step === 0 && (
                   <>
                     <h2 className="sf-q">Welcher Stil spricht dich spontan an?</h2>
-                    <p className="sf-micro">Nicht zu lange grübeln. Bauchgefühl ist bei Küchen erstaunlich nützlich. <em>(1–2 wählen)</em></p>
+                    <p className="sf-micro">Keine Sorge, wir fragen nicht nach deinem Sternzeichen. Bauchgefühl reicht. <em>(1–2 wählen)</em></p>
                     <div className="sf-imggrid">
                       {STYLE_OPTIONS.map((o) => {
                         const active = a.styleSelections.includes(o.label)
@@ -220,7 +220,7 @@ export default function StylefinderFlow() {
                 {step === 1 && (
                   <>
                     <h2 className="sf-q">Was soll deine Küche für dich können?</h2>
-                    <p className="sf-micro">Wähle aus, was dir im Alltag wirklich wichtig ist. <em>(Mehrfachauswahl)</em></p>
+                    <p className="sf-micro">Stauraum ist wie WLAN: Man merkt erst, dass er fehlt, wenn's nervt. <em>(Mehrfachauswahl)</em></p>
                     <div className="sf-iconrid">
                       {MEHRWERTE.map((o) => {
                         const active = a.mehrwerte.includes(o.label)
@@ -237,7 +237,7 @@ export default function StylefinderFlow() {
                 {step === 2 && (
                   <>
                     <h2 className="sf-q">Welche Materialien sprechen dich an?</h2>
-                    <p className="sf-micro">Oberflächen, Details und Haptiken, die dich anziehen. <em>(Mehrfachauswahl)</em></p>
+                    <p className="sf-micro">Anfassen darfst du später im Studio – Bildschirm lecken zählt nicht. <em>(Mehrfachauswahl)</em></p>
                     <div className="sf-matgrid">
                       {MATERIALS.map((label) => {
                         const active = a.materials.includes(label)
@@ -255,7 +255,7 @@ export default function StylefinderFlow() {
                 {step === 3 && (
                   <>
                     <h2 className="sf-q">Welche Farbwelt passt zu dir?</h2>
-                    <p className="sf-micro">Wähle die Töne, die deine Küche tragen sollen. <em>(Mehrfachauswahl)</em></p>
+                    <p className="sf-micro">Dunkel, hell oder „nur nicht wie bei Tante Monika"? <em>(Mehrfachauswahl)</em></p>
                     <div className="sf-imggrid sf-imggrid--4">
                       {FARBWELTEN.map((o) => {
                         const active = a.farbwelten.includes(o.label)
@@ -277,7 +277,7 @@ export default function StylefinderFlow() {
                 {step === 4 && (
                   <>
                     <h2 className="sf-q">Wie soll deine Küche funktionieren?</h2>
-                    <p className="sf-micro">Wähle, was im Alltag für dich wirklich zählt. <em>(Mehrfachauswahl)</em></p>
+                    <p className="sf-micro">Inselküche? Schön. Aber nur, wenn der Raum nicht danach weint. <em>(Mehrfachauswahl)</em></p>
                     <div className="sf-iconrid">
                       {FUNKTION.map((o) => {
                         const active = a.funktion.includes(o.label)
