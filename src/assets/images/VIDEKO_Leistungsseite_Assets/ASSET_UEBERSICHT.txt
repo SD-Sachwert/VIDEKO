@@ -1,0 +1,41 @@
+VIDEKO Leistungsseite – Asset Übersicht
+
+Dateien und empfohlene Nutzung:
+
+01_hero_dark_kitchen.png
+- Haupt-Hero oben
+- dunkler Premium-Look, ideal für Header/Hero und unteren CTA-Bereich
+
+02_light_kitchen_feature.png
+- großes helles Küchenbild im Mittelteil
+- ideal für den Abschnitt „Mehr als nur Planung – wir schaffen Klarheit.“
+- kann auch für den unteren Vergleichs-/Contentbereich genutzt werden
+
+03_before_renovation_room.png
+- Vorher-Bild für Vorher/Nachher-Slider
+
+04_service_consulting.png
+- Servicekarte: Beratung & Planung
+
+05_service_3d_planning.png
+- Servicekarte: Aufmaß / 3D-Visualisierung / Planung
+
+06_service_materials.png
+- Servicekarte: Materialien & Geräte / Oberflächen
+
+07_service_installation.png
+- Servicekarte: Lieferung & Montage / Geräte & Technik
+
+08_service_renovation.png
+- Servicekarte: Gewerke & Umbau / Renovierung
+
+09_service_coordination.png
+- Servicekarte: Koordination / Projektsteuerung / Team-Abstimmung
+
+10_service_aftercare_lifestyle.png
+- Servicekarte: Nachbetreuung & Service
+- zusätzlich perfekt für emotionalen Abschluss / Lifestyle-Block
+
+reference_leistungsseite_mockup.png
+- Referenzbild für Aufbau, Rhythmus, Größenverhältnisse und Gesamtanmutung
+- NICHT 1:1 kopieren, sondern modern und sauber nachbauen

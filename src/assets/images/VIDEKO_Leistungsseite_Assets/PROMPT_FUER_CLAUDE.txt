@@ -1,0 +1,159 @@
+Baue eine hochwertige, moderne Leistungsseite für VIDEKO Küchen auf Basis des beiliegenden Referenzbildes und der mitgelieferten Assets.
+
+WICHTIGER RAHMEN
+- Designprinzip: oben dunkel, mittlerer Bereich hell, unten wieder dunkel.
+- Gesamtwirkung: Premium, ruhig, elegant, hochwertig, nicht überladen.
+- Markenstil: dunkle Holz-/Marmoroptik, warme Lichtstimmung, Goldakzente, cremefarbener heller Contentbereich.
+- Bitte technisch sauber, responsive und konsistent umsetzen.
+- Kein Möbelhaus-Look, kein Billig-Vibe, kein wildes Kachelchaos.
+- Verwende die Assets so, dass die Seite hochwertig und abwechslungsreich wirkt.
+- Layout am Referenzbild orientieren, aber nicht blind kopieren. Lieber sauberer, aufgeräumter und stärker.
+
+DATEISTRUKTUR / ASSETS
+Die Bilder liegen im Ordner assets.
+Nutze folgende Zuordnung:
+- assets/01_hero_dark_kitchen.png = Hero / dunkle Banner / CTA-Hintergrund
+- assets/02_light_kitchen_feature.png = heller Feature-Abschnitt + Nachher-Bild im Vorher/Nachher-Bereich
+- assets/03_before_renovation_room.png = Vorher-Bild
+- assets/04_service_consulting.png = Beratung & Planung
+- assets/05_service_3d_planning.png = Aufmaß / 3D / Visualisierung
+- assets/06_service_materials.png = Materialien & Geräte
+- assets/07_service_installation.png = Lieferung & Montage / Geräte & Technik
+- assets/08_service_renovation.png = Gewerke & Umbau
+- assets/09_service_coordination.png = Koordination / Projektmanagement
+- assets/10_service_aftercare_lifestyle.png = Nachbetreuung / emotionaler Lifestyle-Block
+- assets/reference_leistungsseite_mockup.png = nur als visuelle Referenz für Struktur und Look
+
+SEITENAUFBAU
+
+1) HERO / HEADER (dunkel)
+- Großes Hero-Bild mit assets/01_hero_dark_kitchen.png als Hintergrund.
+- Dunkler Overlay links für sehr gute Lesbarkeit.
+- Überschrift ähnlich dieser Richtung:
+  „Du willst eine Küche. Wir kümmern uns um den Rest.“
+- Kurzer Untertext: von der ersten Idee bis zur fertigen Küche – Beratung, Planung, Materialien, Aufmaß, Lieferung, Montage und Service.
+- Zwei CTAs:
+  - Primär: „Beratung anfragen“
+  - Sekundär: „Leistungen entdecken“
+- Rechts oder unten 4 USP-Badges / Vorteilsinfos:
+  - Persönlich & ehrlich
+  - Alles aus einer Hand
+  - Premium Materialien
+  - Termintreu & verlässlich
+- Header/Navi im dunklen Stil, Goldakzente.
+
+2) HELLER INTRO-FEATURE-BLOCK
+- Linke Textspalte, rechte große Bildkarte.
+- Bild: assets/02_light_kitchen_feature.png
+- Headline:
+  „Mehr als nur Planung – wir schaffen Klarheit.“
+- Darunter 4–5 kurze Bulletpoints:
+  - Individuelle Beratung
+  - Kreative Konzepte
+  - Präzise Planung
+  - Reibungslose Umsetzung
+  - Verlässlicher Service
+- Button: „Mehr über uns“
+- Im Bild oder darunter kleine Vorteilslabels / Micro-USPs möglich.
+
+3) LEISTUNGSRASTER / SERVICES
+- Heller Bereich mit sauberem Grid.
+- Überschrift:
+  „Unsere Leistungen. Dein Vorteil.“
+- Erstelle 8–10 Servicekarten.
+- Nutze diese Services:
+  1. Beratung & Planung → assets/04_service_consulting.png
+  2. Aufmaß & 3D/VR → assets/05_service_3d_planning.png
+  3. Materialien & Geräte → assets/06_service_materials.png
+  4. Lichtplanung & Ambiente → optional Crop aus assets/01 oder 02
+  5. 3D-Visualisierung → assets/05_service_3d_planning.png
+  6. Lieferung & Montage → assets/07_service_installation.png
+  7. Gewerke & Umbau → assets/08_service_renovation.png
+  8. Koordination → assets/09_service_coordination.png
+  9. Nachbetreuung & Service → assets/10_service_aftercare_lifestyle.png
+  10. Geräte & Technik → assets/07_service_installation.png oder passender Crop
+- Karten hochwertig, nicht zu klein, eher luftig.
+
+4) PROZESS / ABLAUF
+- Heller Abschnitt mit feiner goldener Linie / Steps.
+- Überschrift:
+  „Dein Weg zur Traumküche. In 6 klaren Schritten.“
+- 6 Schritte:
+  1. Kennenlernen
+  2. Idee & Konzept
+  3. Planung & Visualisierung
+  4. Angebot & Feinplanung
+  5. Lieferung & Montage
+  6. Übergabe & Service
+- Icons schlicht, hochwertig, einheitlich.
+
+5) VORHER / NACHHER + ERKLÄRKLÄRUNG
+- Zweispaltiger Block im hellen Bereich.
+- Links Vorher/Nachher-Slider oder Split-Card:
+  - Vorher = assets/03_before_renovation_room.png
+  - Nachher = assets/02_light_kitchen_feature.png
+- Rechts Textblock:
+  Headline z. B. „Wir bringen Struktur in das, was kompliziert wirkt.“
+  Bulletpoints:
+  - Ein Ansprechpartner von Anfang bis Ende
+  - Keine bösen Überraschungen
+  - Erfahrenes Team & eingespielte Partner
+  - Qualität, die bleibt
+- Daneben oder darunter kleine Vorteilskarte:
+  „Mehr Zeit für die wichtigen Dinge.“
+
+6) DUNKLER EMOTIONALER BAND-ABSCHNITT
+- Wieder dunkler Full-Width-Bereich.
+- Links Text:
+  „Weniger Chaos. Mehr Zeit für das, was zählt.“
+- Rechts 4 kleine Kacheln / Story-Karten mit goldenem Lichtschwung als Verbindung:
+  - Kein Planungschaos → assets/04 oder 09
+  - Keine Handwerker-Jonglage → assets/08 oder 07
+  - Keine Materialsuche → assets/06
+  - Nur Vorfreude → assets/10
+- Dieser Bereich darf richtig geil aussehen, aber sauber bleiben.
+
+7) VERGLEICH: KLASSISCH VS. VIDEKO
+- Heller Bereich.
+- Überschrift:
+  „Klassisch geplant oder VIDEKO geplant?“
+- Zweispalter / Vergleichskarten mit VS-Kreis in der Mitte.
+- Klassisch:
+  - Viele Ansprechpartner
+  - Risiko von Fehlplanungen
+  - Undurchsichtige Kosten
+  - Unsicherheit bis zum Schluss
+- VIDEKO:
+  - Ein Ansprechpartner
+  - Perfekte Planung & 3D-Visualisierung
+  - Koordination aller Gewerke
+  - Transparente Preise & feste Abläufe
+  - Deine Küche. Genauso wie du sie willst.
+- Optional rechts oder links ein ergänzendes stimmiges Bild-Crop aus assets/02 oder 01.
+
+8) ABSCHLUSS-CTA + FOOTER (dunkel)
+- Dunkler CTA-Bereich mit schönem Küchenhintergrund, bevorzugt assets/01_hero_dark_kitchen.png.
+- Headline:
+  „Deine Küche. Unser Versprechen. Wir machen es einfach.“
+- Zwei Buttons:
+  - „Termin vereinbaren“
+  - „Studio erleben“
+- Daneben kleine Kontaktinfos:
+  - VIDEKO Küchen eG
+  - Hertzstraße 4, 97076 Würzburg
+  - info@videko-kuechen.de
+  - 0931 250 66 180
+- Darunter Footer mit Navigation und Social Icons.
+
+TECHNISCHE / VISUELLE VORGABEN
+- Desktop first, danach responsive.
+- Große saubere Abstände, hochwertige Typografie.
+- Keine unnötigen schwarzen Zwischenbalken mitten im hellen Content.
+- Der helle Mittelteil soll durchgängig ruhig und einladend wirken.
+- Bilder großzügig einsetzen, aber nicht doppelt und dreifach ohne Sinn.
+- Buttons in warmer Goldfarbe, Hover hochwertig.
+- Karten mit weichen Radien, subtilen Schatten und sauberem Grid.
+- Animationen nur dezent: leichte Hover-Effekte, sanftes Einblenden, keine billigen Effekthämmer.
+
+ZIEL
+Die Seite soll sofort zeigen: premium, organisiert, vertrauenswürdig, hochwertig, emotional – und deutlich besser als typischer Küchenstudio-Standard.

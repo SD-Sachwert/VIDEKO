@@ -83,13 +83,13 @@ const ROOMS = [
 ]
 
 const CONVERT = [
-  { tag: 'Schnell & einfach', icon: Compass, title: 'VIDEKO Kompass', text: 'Starte deine erste Einschätzung in nur 2 Minuten.', points: ['Sofort eine grobe Preisspanne', 'Passende Stilwelt entdecken', 'Unverbindlich & anonym'], cta: 'Kompass starten', to: '/stylefinder' },
+  { tag: 'Schnell & einfach', icon: Compass, title: 'VIDEKO Stylefinder', text: 'Starte deine erste Einschätzung in nur 2 Minuten.', points: ['Sofort eine grobe Preisspanne', 'Passende Stilwelt entdecken', 'Unverbindlich & anonym'], cta: 'Stylefinder starten', to: '/stylefinder' },
   { tag: 'Genau & individuell', icon: Upload, title: 'Unterlagen hochladen', text: 'Teile Grundriss, Fotos und Ideen für ein präzises Angebot.', points: ['Grundriss, Fotos, Skizzen', 'PDF, JPG, PNG', 'Wir melden uns mit Plan'], cta: 'Unterlagen hochladen', to: '/stylefinder' },
   { tag: 'Persönlich & beratend', icon: MessageSquare, title: 'Persönlich beraten lassen', text: 'Buche ein unverbindliches Gespräch mit unseren Küchenexperten.', points: ['Individuelle Beratung', 'Konkrete Empfehlungen', 'Zeitlich flexibel'], cta: 'Termin buchen', to: '/beratung' },
 ]
 
 const STEPS4 = [
-  { n: '1', title: 'Kompass starten', text: 'Beantworte ein paar Fragen und finde deinen Stil. Schnell & unverbindlich.' },
+  { n: '1', title: 'Stylefinder starten', text: 'Beantworte ein paar Fragen und finde deinen Stil. Schnell & unverbindlich.' },
   { n: '2', title: 'Erste Einschätzung', text: 'Wir prüfen deine Angaben und geben dir eine erste, ehrliche Einschätzung.' },
   { n: '3', title: 'Grundriss & Fotos hochladen', text: 'Lade Grundriss, Maße und Fotos hoch – je mehr Infos, desto besser.' },
   { n: '4', title: 'Angebot & Beratung', text: 'Du bekommst dein persönliches Angebot und Beratung auf Augenhöhe.' },
@@ -126,7 +126,7 @@ export default function Inspiration() {
               so individuell wie dein Leben. Keine Möbel. Sondern Lieblingsorte.
             </p>
             <div className="pagehero__actions">
-              <CTAButton to="/stylefinder">VIDEKO Kompass starten</CTAButton>
+              <CTAButton to="/stylefinder">VIDEKO Stylefinder starten</CTAButton>
               <CTAButton href="#insp-stilwelten" variant="dark">Inspiration entdecken</CTAButton>
             </div>
           </Reveal>
@@ -136,7 +136,7 @@ export default function Inspiration() {
       {/* VIDEKO KOMPASS (kompakt) */}
       <section className="section insp-style" id="kompass">
         <div className="container">
-          <SectionHeader align="center" kicker="VIDEKO Kompass" title="Finde deinen Küchenstil." lead="Wir raten nicht. Wir treffen. Wähle, was dich anspricht – wir zeigen dir Ideen, die dazu passen." />
+          <SectionHeader align="center" kicker="VIDEKO Stylefinder" title="Finde deinen Küchenstil." lead="Wir raten nicht. Wir treffen. Wähle, was dich anspricht – wir zeigen dir Ideen, die dazu passen." />
           <div className="stylerow">
             {STYLES.map((sObj) => (
               <button
@@ -151,7 +151,7 @@ export default function Inspiration() {
             ))}
           </div>
           <div className="section__cta">
-            <CTAButton to="/stylefinder">Kompass starten</CTAButton>
+            <CTAButton to="/stylefinder">Stylefinder starten</CTAButton>
           </div>
         </div>
       </section>

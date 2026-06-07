@@ -1,54 +1,59 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import {
-  PencilRuler, Layers, Cpu, Lightbulb, Box, Ruler, CalendarClock, Truck, Wrench, LifeBuoy,
-  Wallet, MessageSquare, ArrowRight, Check, X,
-} from 'lucide-react'
+import { Check, X, ArrowRight, MapPin, Mail, Phone } from 'lucide-react'
 
 import Reveal from '../components/Reveal.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
 import ProcessTimeline from '../components/ProcessTimeline.jsx'
+import BeforeAfter from '../components/BeforeAfter.jsx'
 
-import heroImg from '../assets/images/leistungen/svc-hero.png'
-import posterImg from '../assets/images/leistungen/svc-final.png'
-import ctaImg from '../assets/images/leistungen/svc-cta-lounge.png'
+import heroImg from '../assets/images/leistungen/ls-hero.png'
+import featureImg from '../assets/images/leistungen/ls-feature.png'
+import beforeImg from '../assets/images/leistungen/ls-before.png'
+import imgConsulting from '../assets/images/leistungen/ls-consulting.png'
+import img3d from '../assets/images/leistungen/ls-3d.png'
+import imgMaterials from '../assets/images/leistungen/ls-materials.png'
+import imgInstall from '../assets/images/leistungen/ls-install.png'
+import imgRenovation from '../assets/images/leistungen/ls-renovation.png'
+import imgCoordination from '../assets/images/leistungen/ls-coordination.png'
+import imgAftercare from '../assets/images/leistungen/ls-aftercare.png'
 import vnVideo from '../assets/images/leistungen/vorher-nachher.mp4'
 
-const CHAOS = ['Raum verstehen', 'Ideen sortieren', 'Budget realistisch einordnen', 'Umsetzung sauber führen']
+const USPS = ['Persönlich & ehrlich', 'Alles aus einer Hand', 'Premium Materialien', 'Termintreu & verlässlich']
+const FEATURE = ['Individuelle Beratung', 'Kreative Konzepte', 'Präzise Planung', 'Reibungslose Umsetzung', 'Verlässlicher Service']
 
-const MODULES = [
-  { icon: PencilRuler, title: 'Küchenplanung', text: 'Maßgeschneidert auf dich und deinen Alltag.' },
-  { icon: Layers, title: 'Materialauswahl', text: 'Oberflächen, die bleiben – nicht nur im Prospekt.' },
-  { icon: Cpu, title: 'Geräteberatung', text: 'Technik, die passt – nicht das teuerste Cockpit.' },
-  { icon: Lightbulb, title: 'Lichtkonzept', text: 'Stimmung, Akzente und Funktion im richtigen Licht.' },
-  { icon: Box, title: '3D-Planung', text: 'Du siehst deine Küche, bevor sie gebaut wird.' },
-  { icon: Ruler, title: 'Aufmaß', text: 'Millimetergenau per Laser. Damit nichts hakt.' },
-  { icon: CalendarClock, title: 'Koordination', text: 'Termine und Gewerke – wir halten das zusammen.' },
-  { icon: Truck, title: 'Lieferung', text: 'Sauber geplant, pünktlich, ohne Drama.' },
-  { icon: Wrench, title: 'Montage', text: 'Termintreu aufgebaut – ohne Chaos bei dir.' },
-  { icon: LifeBuoy, title: 'Service', text: 'Auch nach dem Einbau noch für dich da.' },
-]
-
-const SPAR = [
-  { icon: Ruler, title: 'Zollstock-Panik', text: 'Wir messen sauber auf.' },
-  { icon: Cpu, title: 'Geräte-Wirrwarr', text: 'Wir sortieren, was wirklich Sinn ergibt.' },
-  { icon: CalendarClock, title: 'Handwerker-Tetris', text: 'Wir koordinieren, damit du nicht 17 Leuten hinterherrennst.' },
-  { icon: Wallet, title: 'Budget-Nebel', text: 'Wir sprechen früh über echte Rahmen.' },
-  { icon: MessageSquare, title: 'Möbelhaus-Blabla', text: 'Ehrliche Beratung statt Verkaufs-Show.' },
+const SERVICES = [
+  { title: 'Beratung & Planung', text: 'Wir hören zu, bevor wir planen – ehrlich und auf Augenhöhe.', image: imgConsulting },
+  { title: 'Aufmaß & 3D-Planung', text: 'Millimetergenau gemessen, in 3D sichtbar gemacht.', image: img3d },
+  { title: 'Materialien & Geräte', text: 'Oberflächen und Technik, die im Alltag bestehen.', image: imgMaterials },
+  { title: 'Lichtplanung & Ambiente', text: 'Stimmung, Akzente und Funktion im richtigen Licht.', image: featureImg },
+  { title: 'Lieferung & Montage', text: 'Termintreu geliefert und sauber aufgebaut.', image: imgInstall },
+  { title: 'Gewerke & Umbau', text: 'Maler, Elektrik, Boden – wir steuern den ganzen Raum.', image: imgRenovation },
+  { title: 'Koordination', text: 'Ein Ansprechpartner hält alle Fäden zusammen.', image: imgCoordination },
+  { title: 'Nachbetreuung & Service', text: 'Auch nach dem Einbau noch für dich da.', image: imgAftercare },
 ]
 
 const PROCESS = [
-  { title: 'Kennenlernen', text: 'Wir hören zu und verstehen deinen Raum.' },
-  { title: 'Ideen sortieren', text: 'Wir bringen Struktur in Wünsche, Budget und Möglichkeiten.' },
-  { title: 'Planung sichtbar machen', text: 'Du siehst, was entsteht – bevor etwas bestellt wird.' },
-  { title: 'Materialien greifbar machen', text: 'Oberflächen, Geräte, Licht und Details werden konkret.' },
-  { title: 'Koordination übernehmen', text: 'Aufmaß, Lieferung, Montage und Abstimmungen laufen sauber.' },
-  { title: 'Ergebnis genießen', text: 'Eine Küche, die nicht nur schön ist, sondern jeden Tag Sinn ergibt.' },
+  { title: 'Kennenlernen', text: 'Wir verstehen deinen Raum, deinen Alltag und deine Wünsche.' },
+  { title: 'Idee & Konzept', text: 'Aus Wünschen wird eine klare Richtung.' },
+  { title: 'Planung & Visualisierung', text: 'Du siehst deine Küche in 3D, bevor etwas bestellt wird.' },
+  { title: 'Angebot & Feinplanung', text: 'Transparent, ehrlich und bis ins Detail durchdacht.' },
+  { title: 'Lieferung & Montage', text: 'Sauber koordiniert und termintreu umgesetzt.' },
+  { title: 'Übergabe & Service', text: 'Gemeinsame Abnahme – und Begleitung danach.' },
 ]
 
-const CLASSIC = ['Standardlösung von der Stange', 'Viele Ansprechpartner', 'Wenig Verantwortung', 'Unklare Kosten', 'Hauptsache verkauft']
-const VIDEKO = ['Maßgeschneiderte Lösung für dein Leben', 'Ein Team mit Verantwortung', 'Planung mit Zeit, Erfahrung und Gefühl', 'Transparente Abläufe', 'Eine Küche, die dich jeden Tag begeistert']
+const BA_POINTS = ['Ein Ansprechpartner von Anfang bis Ende', 'Keine bösen Überraschungen', 'Erfahrenes Team & eingespielte Partner', 'Qualität, die bleibt']
+
+const EMO = [
+  { title: 'Kein Planungschaos', image: imgCoordination },
+  { title: 'Keine Handwerker-Jonglage', image: imgRenovation },
+  { title: 'Keine Materialsuche', image: imgMaterials },
+  { title: 'Nur Vorfreude', image: imgAftercare },
+]
+
+const CLASSIC = ['Viele Ansprechpartner', 'Risiko von Fehlplanungen', 'Undurchsichtige Kosten', 'Unsicherheit bis zum Schluss']
+const VIDEKO = ['Ein Ansprechpartner', 'Perfekte Planung & 3D-Visualisierung', 'Koordination aller Gewerke', 'Transparente Preise & feste Abläufe', 'Deine Küche. Genauso wie du sie willst.']
 
 export default function Leistungen() {
   const heroRef = useRef(null)
@@ -69,39 +74,37 @@ export default function Leistungen() {
             <span className="kicker kicker--gold">Unsere Leistungen</span>
             <h1 className="pagehero__title">Du willst eine Küche.<br /><span className="grad">Wir kümmern uns um den Rest.</span></h1>
             <p className="pagehero__lead">
-              Von der ersten Idee bis zur Montage: Planung, Materialien, Aufmaß,
-              Lieferung und Service – ehrlich beraten, ohne Küchenchaos.
+              Von der ersten Idee bis zur fertigen Küche: Beratung, Planung, Materialien,
+              Aufmaß, Lieferung, Montage und Service – sauber geführt, ehrlich beraten, ohne Küchenchaos.
             </p>
             <div className="pagehero__actions">
               <CTAButton to="/beratung">Beratung anfragen</CTAButton>
-              <a className="leist-hero__link" href="#leist-machine">Leistungen entdecken <ArrowRight size={16} strokeWidth={1.9} /></a>
+              <a className="leist-hero__link" href="#leist-services">Leistungen entdecken <ArrowRight size={16} strokeWidth={1.9} /></a>
+            </div>
+            <div className="svc-usps">
+              {USPS.map((u) => <span key={u}><Check size={14} strokeWidth={2.6} /> {u}</span>)}
             </div>
           </Reveal>
         </div>
       </section>
 
-      {/* 2 — VIDEO + TRANSFORMATION (light) */}
-      <section className="section leist-transform" id="leist-transform">
+      {/* 2 — INTRO FEATURE (hell) + Video */}
+      <section className="section leist-transform">
         <div className="container">
           <div className="lintro">
             <Reveal className="lintro__copy">
-              <span className="kicker">Vom Chaos zum Plan</span>
-              <h2 className="lintro__title">Aus Küchenchaos wird<br /><span className="grad">ein klarer Plan.</span></h2>
-              <p className="lintro__text">
-                Ideen, Maße, Budget, Geräte, Handwerker, Termine – Küchenplanung kann schnell
-                unübersichtlich werden. Wir sortieren das Ganze und machen daraus einen Ablauf, der für dich Sinn ergibt.
-              </p>
+              <span className="kicker">Unser Anspruch</span>
+              <h2 className="lintro__title">Mehr als nur Planung –<br /><span className="grad">wir schaffen Klarheit.</span></h2>
+              <p className="lintro__text">Ideen, Maße, Budget, Geräte, Handwerker, Termine – wir sortieren das Ganze und machen daraus einen Ablauf, der für dich Sinn ergibt.</p>
               <ul className="lstances">
-                {CHAOS.map((c) => <li key={c}><Check size={16} strokeWidth={2.4} /> {c}</li>)}
+                {FEATURE.map((c) => <li key={c}><Check size={16} strokeWidth={2.4} /> {c}</li>)}
               </ul>
-              <CTAButton to="/beratung">Beratung anfragen</CTAButton>
+              <CTAButton to="/ueber-uns">Mehr über uns</CTAButton>
             </Reveal>
             <Reveal className="lintro__media" delay={0.08}>
               <div className="svc-video__frame">
-                <div className="svc-video__labels" aria-hidden="true">
-                  <span>Vorher</span><span>Planung</span><span>Nachher</span>
-                </div>
-                <video className="svc-video__vid" autoPlay muted loop playsInline preload="none" poster={posterImg} aria-hidden="true">
+                <div className="svc-video__labels" aria-hidden="true"><span>Vorher</span><span>Planung</span><span>Nachher</span></div>
+                <video className="svc-video__vid" autoPlay muted loop playsInline preload="none" poster={featureImg} aria-hidden="true">
                   <source src={vnVideo} type="video/mp4" />
                 </video>
                 <span className="lintro__rim" aria-hidden="true" />
@@ -111,63 +114,80 @@ export default function Leistungen() {
         </div>
       </section>
 
-      {/* 3 — WAS WIR ÜBERNEHMEN (light) */}
-      <section className="section leist-machine" id="leist-machine">
+      {/* 3 — SERVICES (hell) */}
+      <section className="section leist-services2" id="leist-services">
         <div className="container">
-          <SectionHeader
-            align="center"
-            kicker="Alles aus einer Hand"
-            title={<>Was wir für dich <span className="grad">übernehmen.</span></>}
-            lead="Du musst dich nicht durch Küchenplanung, Aufmaß, Geräte, Handwerker und Montage kämpfen. Genau dafür sind wir da."
-          />
-          <div className="svc-machine">
-            {MODULES.map((m, i) => (
-              <Reveal key={m.title} delay={(i % 5) * 0.05}>
-                <div className="svc-mod">
-                  <span className="svc-mod__n">{String(i + 1).padStart(2, '0')}</span>
-                  <span className="svc-mod__ic"><m.icon size={22} strokeWidth={1.6} /></span>
-                  <span className="svc-mod__title">{m.title}</span>
-                  <span className="svc-mod__text">{m.text}</span>
-                </div>
+          <SectionHeader align="center" kicker="Leistungen" title={<>Unsere Leistungen. <span className="grad">Dein Vorteil.</span></>} lead="Alles, was du für eine richtig gute Küche brauchst – aus einer Hand." />
+          <div className="lservice-grid">
+            {SERVICES.map((sv, i) => (
+              <Reveal key={sv.title} delay={(i % 4) * 0.06}>
+                <article className="lscard">
+                  <span className="lscard__img" style={{ backgroundImage: `url(${sv.image})` }} aria-hidden="true" />
+                  <span className="lscard__scrim" aria-hidden="true" />
+                  <span className="lscard__body">
+                    <span className="lscard__title">{sv.title}</span>
+                    <span className="lscard__text">{sv.text}</span>
+                  </span>
+                </article>
               </Reveal>
             ))}
           </div>
-          <div className="section__cta">
-            <CTAButton to="/beratung">Projekt starten</CTAButton>
-          </div>
+          <div className="section__cta"><CTAButton to="/beratung">Projekt starten</CTAButton></div>
         </div>
       </section>
 
-      {/* 4 — PROZESS (light) */}
+      {/* 4 — PROZESS (hell) */}
       <section className="section section--light leist-ablauf2">
         <div className="container">
-          <SectionHeader align="center" kicker="Der VIDEKO-Weg" title={<>Klarer Ablauf. <span className="grad">Stressfrei für dich.</span></>} />
+          <SectionHeader align="center" kicker="Ablauf" title={<>Dein Weg zur Traumküche. <span className="grad">In 6 klaren Schritten.</span></>} />
           <ProcessTimeline steps={PROCESS} />
         </div>
       </section>
 
-      {/* 5 — WAS DU DIR SPAREN KANNST (light) */}
-      <section className="section leist-spar">
+      {/* 5 — VORHER / NACHHER + ERKLÄRUNG (hell) */}
+      <section className="section leist-baexp">
         <div className="container">
-          <SectionHeader align="center" kicker="Entspannt" title={<>Was du dir <span className="grad">sparen kannst.</span></>} />
-          <div className="svc-spar">
-            {SPAR.map((s, i) => (
-              <Reveal key={s.title} delay={(i % 5) * 0.05}>
-                <div className="svc-spar__card">
-                  <span className="svc-spar__ic"><s.icon size={20} strokeWidth={1.6} /></span>
-                  <span className="svc-spar__title">{s.title}</span>
-                  <span className="svc-spar__text">{s.text}</span>
-                </div>
+          <div className="lintro">
+            <Reveal className="lintro__media">
+              <div className="svc-ba__frame">
+                <BeforeAfter before={beforeImg} after={featureImg} beforeAlt="Vorher" afterAlt="Nachher" />
+              </div>
+            </Reveal>
+            <Reveal className="lintro__copy" delay={0.08}>
+              <span className="kicker">Struktur statt Stress</span>
+              <h2 className="lintro__title">Wir bringen Struktur in das,<br /><span className="grad">was kompliziert wirkt.</span></h2>
+              <ul className="lstances">
+                {BA_POINTS.map((c) => <li key={c}><Check size={16} strokeWidth={2.4} /> {c}</li>)}
+              </ul>
+              <p className="lintro__text">Mehr Zeit für die wichtigen Dinge – den Rest übernehmen wir.</p>
+              <CTAButton to="/vorher-nachher">Vorher / Nachher ansehen</CTAButton>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* 6 — EMOTIONAL (hell, dunkle Akzentkarten) */}
+      <section className="section leist-emo">
+        <div className="container">
+          <SectionHeader align="center" kicker="Entspannt" title={<>Weniger Chaos. <span className="grad">Mehr Zeit für das, was zählt.</span></>} />
+          <div className="lservice-grid lservice-grid--4">
+            {EMO.map((e, i) => (
+              <Reveal key={e.title} delay={(i % 4) * 0.06}>
+                <article className="lscard lscard--emo">
+                  <span className="lscard__img" style={{ backgroundImage: `url(${e.image})` }} aria-hidden="true" />
+                  <span className="lscard__scrim" aria-hidden="true" />
+                  <span className="lscard__body"><span className="lscard__title">{e.title}</span></span>
+                </article>
               </Reveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 6 — COMPARE (light) */}
+      {/* 7 — COMPARE (hell) */}
       <section className="section leist-compare">
         <div className="container">
-          <SectionHeader align="center" kicker="Der Unterschied" title={<>Klassisch geplant oder VIDEKO geplant? <span className="grad">Große Wirkung.</span></>} />
+          <SectionHeader align="center" kicker="Der Unterschied" title={<>Klassisch geplant oder <span className="grad">VIDEKO geplant?</span></>} />
           <div className="svc-compare">
             <Reveal className="svc-comp svc-comp--bad">
               <span className="svc-comp__head">Klassisch</span>
@@ -182,20 +202,25 @@ export default function Leistungen() {
         </div>
       </section>
 
-      {/* 7 — FINAL CTA (dark) */}
+      {/* 8 — FINAL CTA (dunkel) + Kontakt */}
       <section className="leist-final leist-final--svc">
         <div className="leist-final__media" aria-hidden="true">
-          <img src={ctaImg} alt="" />
+          <img src={heroImg} alt="" />
           <div className="leist-final__veil" />
         </div>
         <div className="container leist-final__inner">
           <Reveal>
             <span className="kicker kicker--gold">Bereit?</span>
-            <h2 className="leist-final__title">Lass uns aus deinem Küchenchaos<br /><span className="grad">einen Plan machen.</span></h2>
-            <p className="leist-final__text">Unverbindlich. Persönlich. Auf Augenhöhe.</p>
+            <h2 className="leist-final__title">Deine Küche. Unser Versprechen.<br /><span className="grad">Wir machen es einfach.</span></h2>
+            <p className="leist-final__text">Unverbindlich, persönlich und auf Augenhöhe.</p>
             <div className="leist-final__actions">
-              <CTAButton to="/beratung">Beratung anfragen</CTAButton>
+              <CTAButton to="/beratung">Termin vereinbaren</CTAButton>
               <CTAButton to="/studio" variant="dark">Studio erleben</CTAButton>
+            </div>
+            <div className="svc-contact">
+              <span><MapPin size={14} strokeWidth={1.9} /> Hertzstraße 4, 97076 Würzburg</span>
+              <a href="mailto:info@videko-kuechen.de"><Mail size={14} strokeWidth={1.9} /> info@videko-kuechen.de</a>
+              <a href="tel:+4901605545818"><Phone size={14} strokeWidth={1.9} /> 0160 5545818</a>
             </div>
           </Reveal>
         </div>
