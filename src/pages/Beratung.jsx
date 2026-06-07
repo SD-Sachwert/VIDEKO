@@ -5,9 +5,9 @@ import { MapPin, Mail, Phone, Check, ArrowRight, Compass, PhoneCall, Store, Chev
 
 import Reveal from '../components/Reveal.jsx'
 import heroImg from '../assets/images/leistungen/ls-hero.png'
-import cIdee from '../assets/images/leistungen/ls-consulting.png'
-import cPlanung from '../assets/images/leistungen/ls-3d.png'
-import cKueche from '../assets/images/leistungen/ls-feature.png'
+import cIdee from '../assets/images/beratung/story-idee.png'
+import cPlanung from '../assets/images/beratung/story-richtung.png'
+import cKueche from '../assets/images/beratung/story-kueche.png'
 
 const ANLIEGEN = ['Rückruf', 'Studio-Termin', 'Ich habe erst mal Fragen']
 const KUECHENART = ['Zeile', 'L-Küche', 'U-Küche', 'Insel', 'Noch offen']
@@ -31,9 +31,9 @@ const ABLAUF = [
 ]
 
 const STORY = [
-  { title: 'Aus Idee wird Richtung', text: 'Wir hören zu und sortieren deine Gedanken.', img: cIdee },
-  { title: 'Aus Richtung wird Planung', text: '3D-Visualisierung und ehrliche Kosten.', img: cPlanung },
-  { title: 'Aus Planung wird Küche', text: 'Sauber umgesetzt – bis die letzte Schraube sitzt.', img: cKueche },
+  { title: 'Aus Idee wird Richtung', text: 'Wir finden deinen Stil. Klar und inspirierend.', img: cIdee },
+  { title: 'Aus Richtung wird Planung', text: 'Aus Maßen und Ideen wird ein konkreter Plan.', img: cPlanung },
+  { title: 'Aus Planung wird Küche', text: 'Deine Küche. Für jeden Tag gemacht.', img: cKueche },
 ]
 
 function Chip({ active, onClick, children }) {
@@ -186,7 +186,6 @@ export default function Beratung() {
             {STORY.map((s, i) => (
               <Reveal key={s.title} className="bstory-card" delay={(i % 3) * 0.06}>
                 <span className="bstory-card__img" style={{ backgroundImage: `url(${s.img})` }} aria-hidden="true" />
-                <span className="bstory-card__scrim" aria-hidden="true" />
                 <span className="bstory-card__body">
                   <span className="bstory-card__title">{s.title}</span>
                   <span className="bstory-card__text">{s.text}</span>

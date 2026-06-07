@@ -10406,13 +10406,12 @@ a.footer__contact-line:hover {
 .bf-trust svg { color: var(--bronze); }
 
 .bstory { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-.bstory-card { position: relative; aspect-ratio: 4 / 3; border-radius: 18px; overflow: hidden; border: 1px solid var(--line-dark); box-shadow: 0 24px 50px -38px rgba(120, 90, 40, 0.4); }
-.bstory-card__img { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform 0.5s ease; }
-.bstory-card:hover .bstory-card__img { transform: scale(1.05); }
-.bstory-card__scrim { position: absolute; inset: 0; background: linear-gradient(to top, rgba(8, 8, 7, 0.8), transparent 60%); }
-.bstory-card__body { position: absolute; left: 0; right: 0; bottom: 0; padding: 20px; color: var(--cream); }
-.bstory-card__title { display: block; font-family: var(--serif); font-size: 1.2rem; font-weight: 600; }
-.bstory-card__text { display: block; font-size: 0.84rem; color: rgba(244, 239, 228, 0.8); margin-top: 3px; }
+.bstory-card { border-radius: 18px; overflow: hidden; border: 1px solid var(--line-dark); background: rgba(255, 255, 255, 0.62); box-shadow: 0 24px 50px -38px rgba(120, 90, 40, 0.4); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.bstory-card:hover { transform: translateY(-4px); box-shadow: 0 34px 64px -40px rgba(120, 90, 40, 0.5); }
+.bstory-card__img { display: block; aspect-ratio: 16 / 7; background-size: cover; background-position: center; }
+.bstory-card__body { display: block; padding: 22px 22px 26px; text-align: center; }
+.bstory-card__title { display: block; font-family: var(--serif); font-size: 1.2rem; font-weight: 600; color: var(--ink); }
+.bstory-card__text { display: block; font-size: 0.86rem; color: var(--ink-soft); margin-top: 6px; }
 @media (max-width: 860px) { .bf-entries { grid-template-columns: 1fr; } .bstory { grid-template-columns: 1fr; } }
 
 /* KARRIERE — hero cards, warum-4, so-läuft's flow */
