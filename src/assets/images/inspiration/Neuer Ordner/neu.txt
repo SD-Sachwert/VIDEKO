@@ -1,0 +1,262 @@
+Baue die Seite „Inspiration“ komplett neu auf und orientiere dich in Struktur, Stimmung und Dramaturgie an der gelieferten Gesamtvorlage / dem Full-Page-Mockup.
+
+WICHTIG:
+Die Seite soll NICHT einfach nur schön aussehen, sondern wie eine starke, moderne Premium-Unterseite von VIDEKO funktionieren.
+Sie soll lebendig, hochwertig, inspirierend, klar und conversion-stark wirken.
+Kein langweiliges Aneinanderreihen von Bildern. Kein generisches Template-Gefühl.
+
+==================================================
+ZIEL
+==================================================
+
+Die Seite „Inspiration“ soll so umgebaut werden, dass sie:
+1. visuell an die gelieferten Entwürfe angelehnt ist,
+2. sich aber stilistisch sauber in die bestehenden VIDEKO-Unterseiten einfügt,
+3. deutlich mehr Dynamik, Bewegung und Spannung bekommt,
+4. die Nutzer aktiv durch die Seite führt,
+5. und später als Designsystem-Vorlage für ALLE Unterseiten dienen kann.
+
+==================================================
+GLOBALER DESIGN-RAHMEN FÜR ALLE SEITEN
+==================================================
+
+Dieses Prinzip soll nicht nur für die Inspirationsseite gelten, sondern grundsätzlich als neues Seitenmuster für alle Unterseiten übernommen werden:
+
+1. OBERER BEREICH = DUNKEL
+- großer dunkler Hero / Banner
+- warm, hochwertig, cinematisch
+- starke Bildwirkung
+- Premium-Look
+- Goldakzente
+- gleiche Designsprache wie die bereits fertigen Unterseiten
+
+2. MITTLERER BEREICH = HELL
+- Hauptinhalt auf hellem, edlem Hintergrund
+- beige / ivory / warm white
+- luftiger Aufbau
+- klarer Contentfluss
+- hochwertige Typografie
+- starke Karten, Slider, Interaktionen und Bildmodule
+
+3. UNTERER ABSCHLUSS = WIEDER DUNKEL
+- dunkler finaler CTA-Bereich + Footer
+- starke Kontrastwirkung
+- hochwertiger Abschluss
+- gleiche Designlinie wie Hero
+- wieder warme Goldakzente und starke Call-to-Actions
+
+Dieses Layout-Schema soll später für alle Unterseiten einheitlich gelten:
+Dunkler Einstieg → heller Hauptinhalt → dunkler Abschluss
+
+==================================================
+DESIGNRICHTUNG
+==================================================
+
+Bitte halte dich visuell an die bestehende VIDEKO-Welt:
+- premium
+- modern
+- warm
+- stilvoll
+- emotional
+- kein Möbelhaus-Look
+- kein Rabatt-Schrei
+- kein 08/15-Webdesign
+- eher Editorial / Luxus / Interior / Architektur
+- ruhig, aber nicht langweilig
+- hochwertig animiert
+- mit Microinteractions und Tiefe
+
+Farben:
+- dunkle Hero-/Footerbereiche in Schwarz, Anthrazit, warmem Dunkelbraun
+- helle Contentbereiche in Ivory, Beige, Creme, leichtem Stein-Ton
+- Gold / Messing / warmer Ocker als Akzentfarbe
+- keine grellen Farben
+
+Typografie:
+- elegante Serif für Headlines
+- moderne Sans Serif für Fließtext, Navigation, UI
+- großzügige Abstände
+- klare Hierarchie
+- hochwertige Größenverhältnisse
+
+==================================================
+WICHTIG: STIL AN BESTEHENDE UNTERSEITEN ANPASSEN
+==================================================
+
+Die neuen Bereiche müssen optisch zur bestehenden Website passen.
+Besonders wichtig:
+- Hero-Stil soll sich an die bereits fertigen Unterseiten anlehnen
+- Navigation, Buttons, Abstände, Typo und Farblogik sollen mit den bestehenden Seiten konsistent sein
+- nicht plötzlich ein komplett anderes Designsystem einführen
+- die Inspirationsseite soll wie eine natürliche Weiterentwicklung der bisherigen Website wirken
+
+==================================================
+SEITENSTRUKTUR – INSPIRATIONSSEITE
+==================================================
+
+Baue die Seite in dieser Reihenfolge auf:
+
+1. HERO / DUNKLER BANNER
+- großer dunkler Hero
+- starke Küchenaufnahme / Stimmung
+- hochwertige Layer / Floating Inspiration Cards
+- Headline mit emotionalem Zug
+- 2 CTAs
+- klare Einführung in die Seite
+- muss sofort Bock machen
+
+2. VIDEKO KOMPASS / STILFINDER EINSTIEG
+- Bereich auf hellem Hintergrund
+- Einführung in den VIDEKO Kompass
+- Stilkarten / Slider / Auswahl
+- interaktiv und hochwertig
+- Nutzer soll Lust bekommen, den Stil zu entdecken
+- moderne Karten mit Hover / Fokus-Zuständen
+
+3. STILWELTEN
+- als spannendes Grid, keine öde Bildreihe
+- unterschiedliche Kartengrößen
+- klare Stilnamen
+- hochwertige Bilder
+- Karten sollen klickbar und lebendig wirken
+
+4. MATERIALIEN ERLEBEN
+- große Materialfläche
+- Materialkategorien
+- hochwertige Nahaufnahmen
+- Zoom-/Detailwirkung
+- Materialien sollen nach „Anfassen wollen“ aussehen
+- eleganter Slider oder interaktives Auswahlmodul
+
+5. EXPLODING KITCHEN
+- bitte die helle Variante / Stil 3 umsetzen
+- NICHT dunkel
+- die Küche als hochwertiges, helles, interaktives Exploding-Kitchen-Modul
+- die einzelnen Elemente sollen verständlich und edel präsentiert werden
+- visuell hochwertig, modern, aufgeräumt
+- mit anklickbaren Bereichen / Hotspots
+- darunter oder dazu passende Detailkarten / Module
+- diese Sektion soll wie ein echtes Highlight wirken
+
+6. RAUMIDEEN
+- mehr als nur Küche
+- Bereiche wie Kochen, Essen, Wohnen, Homeoffice, Hauswirtschaft
+- mit Tabs / vertikaler Navigation / Slider
+- Hauptbild groß, weitere Räume als Vorschau
+- nicht statisch
+
+7. VORHER / NACHHER TEASER
+- nur als Teaser, nicht als riesige Hauptseite in der Seite
+- echter Slider-Look
+- kurz, prägnant, spannend
+- Ziel: Appetit machen auf die eigene Vorher-/Nachher-Seite
+
+8. SO EINFACH GEHT’S / ABLAUF
+- 4-Schritte-Erklärung
+- klar, modern, leicht verständlich
+- Nutzer versteht sofort, wie es weitergeht:
+  - Kompass starten
+  - erste Einschätzung
+  - Grundriss/Fotos hochladen
+  - Angebot & Beratung
+
+9. FINALER CTA-BEREICH / DUNKLER ABSCHLUSS
+- dunkler Abschlussblock
+- drei Möglichkeiten klar darstellen:
+  a) VIDEKO Kompass starten
+  b) Unterlagen hochladen
+  c) persönliche Beratung buchen
+- stark, hochwertig, conversion-orientiert
+- anschließend Footer
+
+==================================================
+VIDEKO HUMOR / TONALITÄT
+==================================================
+
+Die Seite darf mehr VIDEKO-Humor bekommen.
+Bitte charmant, intelligent und leicht frech texten – aber nicht albern.
+
+Beispiele für die Richtung:
+- ehrlich
+- nahbar
+- stilvoll
+- mit Persönlichkeit
+- kleine Augenzwinkerer
+- kein peinlicher Werbetexter-Humor
+- keine platten Kalendersprüche
+
+Der Ton darf sich nach „echte Menschen mit Geschmack“ anfühlen.
+Nicht geschniegelt. Nicht steif. Nicht Möbelhaus.
+
+==================================================
+ANIMATIONEN / INTERAKTIONEN
+==================================================
+
+Die Seite soll deutlich mehr Bewegung bekommen.
+Bitte nicht überladen, aber klar hochwertig animiert.
+
+Einbauen wo sinnvoll:
+- Scroll-Reveal
+- leichte Parallax-Tiefe
+- weiche Fade-/Slide-Ins
+- Hover-Effekte auf Karten
+- Bild-Zooms bei Hover
+- aktive Slider
+- Hotspots mit feinen Übergängen
+- Material-Switching
+- stilvolle CTA-Hover
+- kleine lebendige Details
+
+Wichtig:
+- keine billigen Effekte
+- kein übertriebenes Rumgefliege
+- keine Chaos-Animationen
+- alles soll hochwertig, ruhig und modern wirken
+
+==================================================
+TECHNISCHE UMSETZUNG
+==================================================
+
+Bitte die Seite sauber und modular umsetzen.
+Wichtig:
+- wiederverwendbare Komponenten bauen
+- responsiv denken
+- mobile mit bedenken
+- Bildbereiche sauber skalieren
+- Abstände konsistent halten
+- Navigation und CTA-System einheitlich halten
+
+Wenn möglich:
+- bestehende Design Tokens / Komponenten nutzen oder sinnvoll erweitern
+- Header / Hero / Footer / CTA-Module so anlegen, dass sie später leicht auf andere Unterseiten übertragen werden können
+
+==================================================
+BESONDERS WICHTIG
+==================================================
+
+Bitte NICHT einfach nur Inhalte untereinander stapeln.
+Die Seite braucht:
+- Rhythmus
+- Spannungsbogen
+- Größenwechsel
+- helle und dunkle Kontraste
+- visuelle Highlights
+- echte Hierarchie
+
+Sie soll sich anfühlen wie:
+oben emotionaler Einstieg,
+in der Mitte inspirierende Entdeckungsreise,
+unten klarer nächster Schritt.
+
+==================================================
+OUTPUT
+==================================================
+
+Bitte setze die Inspirationsseite direkt entsprechend um.
+Achte dabei darauf, dass:
+- der Stil zu den bestehenden Unterseiten passt,
+- das neue Muster „dunkel oben / hell in der Mitte / dunkel unten“ sauber umgesetzt wird,
+- und dieses Seitenprinzip anschließend auch als Grundlage für die restlichen Unterseiten dienen kann.
+
+Wenn du Stellen vereinfachen musst, dann bitte nie auf Kosten der Wirkung.
+Lieber weniger, aber stark – statt viel und langweilig.

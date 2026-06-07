@@ -88,7 +88,12 @@ const CONVERT = [
   { tag: 'Persönlich & beratend', icon: MessageSquare, title: 'Persönlich beraten lassen', text: 'Buche ein unverbindliches Gespräch mit unseren Küchenexperten.', points: ['Individuelle Beratung', 'Konkrete Empfehlungen', 'Zeitlich flexibel'], cta: 'Termin buchen', to: '/beratung' },
 ]
 
-const TRUST = ['Persönliche Beratung', 'Individuelle Planung', 'Hochwertige Materialien', 'Perfekte Umsetzung']
+const STEPS4 = [
+  { n: '1', title: 'Kompass starten', text: 'Beantworte ein paar Fragen und finde deinen Stil. Schnell & unverbindlich.' },
+  { n: '2', title: 'Erste Einschätzung', text: 'Wir prüfen deine Angaben und geben dir eine erste, ehrliche Einschätzung.' },
+  { n: '3', title: 'Grundriss & Fotos hochladen', text: 'Lade Grundriss, Maße und Fotos hoch – je mehr Infos, desto besser.' },
+  { n: '4', title: 'Angebot & Beratung', text: 'Du bekommst dein persönliches Angebot und Beratung auf Augenhöhe.' },
+]
 
 export default function Inspiration() {
   const heroRef = useRef(null)
@@ -283,13 +288,14 @@ export default function Inspiration() {
         </div>
       </section>
 
-      {/* BEFORE / AFTER */}
-      <section className="section section--dark insp-ba">
+      {/* VORHER / NACHHER TEASER (hell) */}
+      <section className="section insp-ba">
         <div className="container">
-          <SectionHeader tone="light" align="center" kicker="Transformation" title={<>Aus dunkel und eng wird <span className="grad">licht und einladend.</span></>} lead="Eine Inspirations-Vorschau, wie viel in einem Raum stecken kann. Zieh am Regler." />
+          <SectionHeader align="center" kicker="Vorher / Nachher" title={<>Aus alt <span className="grad">wird wow.</span></>} lead="Echte Küchen. Echte Verwandlungen. Zieh am Regler – und sieh, was möglich wird." />
           <div className="insp-ba__wrap">
             <BeforeAfter before={iDunkel} after={iHell} beforeAlt="Vorher" afterAlt="Nachher" />
           </div>
+          <div className="section__cta"><CTAButton to="/vorher-nachher">Mehr Verwandlungen entdecken</CTAButton></div>
         </div>
       </section>
 
@@ -323,7 +329,25 @@ export default function Inspiration() {
         </div>
       </section>
 
-      {/* CONVERSION ZONE */}
+      {/* SO EINFACH GEHT'S (hell) */}
+      <section className="section insp-steps">
+        <div className="container">
+          <SectionHeader align="center" kicker="So einfach geht's" title={<>In 4 Schritten zu <span className="grad">deiner Traumküche.</span></>} lead="Klar, persönlich und transparent – damit aus deiner Idee ein Raum wird, der bleibt." />
+          <div className="istep-grid">
+            {STEPS4.map((s, i) => (
+              <Reveal key={s.n} delay={(i % 4) * 0.06}>
+                <div className="istep">
+                  <span className="istep__n">{s.n}</span>
+                  <span className="istep__title">{s.title}</span>
+                  <span className="istep__text">{s.text}</span>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FINALER CTA / DUNKLER ABSCHLUSS — 3 Wege */}
       <section className="section section--dark insp-convert">
         <div className="container">
           <SectionHeader tone="light" align="center" kicker="Drei Wege" title={<>Ideen sind der Anfang. <span className="grad">Deine Küche ist das Ziel.</span></>} lead="Wähle den Weg, der zu dir passt – schnell & einfach oder persönlich & individuell." />
@@ -344,30 +368,6 @@ export default function Inspiration() {
             ))}
           </div>
           <p className="convert-note">Kein Druck. Keine Verpflichtung. Nur ehrliche Ideen für deine Küche.</p>
-        </div>
-      </section>
-
-      {/* FINAL CTA */}
-      <section className="leist-final insp-final">
-        <div className="leist-final__media" aria-hidden="true">
-          <img src={iLuxus} alt="" />
-          <div className="leist-final__veil" />
-        </div>
-        <div className="container leist-final__inner">
-          <div className="insp-final__row">
-            <Reveal>
-              <span className="kicker kicker--gold">Bereit?</span>
-              <h2 className="leist-final__title">Aus Inspiration<br /><span className="grad">wird deine Küche.</span></h2>
-              <p className="leist-final__text">Gemeinsam gestalten wir einen Ort, der genau zu dir und deinem Leben passt.</p>
-              <div className="leist-final__actions">
-                <CTAButton to="/beratung">Küchenberatung buchen</CTAButton>
-                <CTAButton to="/stylefinder" variant="dark">Küche planen</CTAButton>
-              </div>
-            </Reveal>
-            <Reveal className="insp-trustbox" delay={0.1}>
-              {TRUST.map((t) => <span key={t}><Check size={15} strokeWidth={2.4} /> {t}</span>)}
-            </Reveal>
-          </div>
         </div>
       </section>
     </div>
