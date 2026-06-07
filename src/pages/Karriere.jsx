@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import {
   Store, PencilRuler, Hammer, Ruler, Headset, MessageSquare, Megaphone,
@@ -85,6 +85,16 @@ export default function Karriere() {
   const imgScale = useTransform(scrollYProgress, [0, 1], [1.06, 1.16])
   const [sent, setSent] = useState(false)
   const [activeJob, setActiveJob] = useState(0)
+  const stageRef = useRef(null)
+  const { scrollYProgress: jobProg } = useScroll({ target: stageRef, offset: ['start start', 'end end'] })
+
+  // scroll-driven role switching (desktop only)
+  useEffect(() => {
+    return jobProg.on('change', (v) => {
+      if (window.innerWidth < 900) return
+      setActiveJob(Math.min(STAGE.length - 1, Math.max(0, Math.floor(v * STAGE.length))))
+    })
+  }, [jobProg])
 
   return (
     <div className="leist-page karr-page">
@@ -160,38 +170,45 @@ export default function Karriere() {
         </div>
       </section>
 
-      {/* 3 — JOB-STAGE (eine aktive Rolle statt Kachelwand) */}
-      <section className="section section--light karr-jobstage" id="rollen">
-        <div className="container">
-          <div className="jobstage">
-            <div className="jobstage__intro">
-              <span className="kicker">Karriere bei VIDEKO</span>
-              <h2 className="lintro__title">Finde deinen Platz. <span className="grad">Nicht irgendeinen.</span></h2>
-              <p className="lintro__text">Ob Beratung, Planung, Handwerk, Organisation oder Marketing: Bei VIDEKO zählt nicht, dass du schon alles kannst – sondern dass du mitdenkst, anpackst und Lust auf etwas Besonderes hast.</p>
-              <p className="jobstage__wink">Auch „keine Ahnung, aber Bock" ist ein ziemlich guter Start.</p>
-              <div className="jobstage__nav">
-                {STAGE.map((r, i) => (
-                  <button key={r.name} type="button" className={`jobstage__navitem ${activeJob === i ? 'is-active' : ''}`} onClick={() => setActiveJob(i)} onMouseEnter={() => setActiveJob(i)}>
-                    <span className="jobstage__navn">{r.n}</span>
-                    <span className="jobstage__navlabel">{r.name}</span>
-                  </button>
-                ))}
+      {/* 3 — JOB-STAGE (scroll-driven, große Karte) */}
+      <section className="karr-jobstage-scroll" id="rollen" ref={stageRef}>
+        <div className="karr-jobstage-sticky">
+          <div className="container">
+            <div className="jobstage">
+              <div className="jobstage__intro">
+                <span className="kicker">Karriere bei VIDEKO</span>
+                <h2 className="lintro__title">Finde deinen Platz. <span className="grad">Nicht irgendeinen.</span></h2>
+                <p className="lintro__text">Bei VIDEKO zählt nicht, dass du schon alles kannst – sondern dass du mitdenkst, anpackst und Lust auf etwas Besonderes hast.</p>
+                <p className="jobstage__wink">Auch „keine Ahnung, aber Bock" ist ein ziemlich guter Start.</p>
+                <div className="jobstage__nav">
+                  {STAGE.map((r, i) => (
+                    <button key={r.name} type="button" className={`jobstage__navitem ${activeJob === i ? 'is-active' : ''}`} onClick={() => setActiveJob(i)}>
+                      <span className="jobstage__navn">{r.n}</span>
+                      <span className="jobstage__navlabel">{r.name}</span>
+                    </button>
+                  ))}
+                </div>
+                <span className="jobstage__hint" aria-hidden="true">Scroll dich durch die Rollen ↓</span>
+              </div>
+              <div className="jobstage__stage">
+                <AnimatePresence mode="wait">
+                  <motion.a key={activeJob} href="#bewerbung" className="jobstage__card" aria-label={`${STAGE[activeJob].name} – jetzt initiativ bewerben`}
+                    initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}>
+                    <img src={STAGE[activeJob].img} alt={STAGE[activeJob].name} />
+                  </motion.a>
+                </AnimatePresence>
               </div>
             </div>
-            <div className="jobstage__stage">
-              <AnimatePresence mode="wait">
-                <motion.a key={activeJob} href="#bewerbung" className="jobstage__card" aria-label={`${STAGE[activeJob].name} – jetzt initiativ bewerben`}
-                  initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}>
-                  <img src={STAGE[activeJob].img} alt={STAGE[activeJob].name} />
-                </motion.a>
-              </AnimatePresence>
-            </div>
           </div>
-          <div className="jobstage__cta">
-            <h3 className="jobstage__cta-title">Nicht sicher, wo du reinpasst?</h3>
-            <p className="jobstage__cta-text">Dann bewirb dich trotzdem. Wir sortieren gemeinsam, ob und wo es passt. Kein Bewerbungstheater, kein Lebenslauf-Bingo.</p>
-            <CTAButton href="#bewerbung">Initiativ bewerben</CTAButton>
-          </div>
+        </div>
+      </section>
+
+      {/* 3b — JOB-STAGE CTA */}
+      <section className="section karr-jobcta">
+        <div className="container jobstage__cta">
+          <h3 className="jobstage__cta-title">Nicht sicher, wo du reinpasst?</h3>
+          <p className="jobstage__cta-text">Dann bewirb dich trotzdem. Wir sortieren gemeinsam, ob und wo es passt. Kein Bewerbungstheater, kein Lebenslauf-Bingo.</p>
+          <CTAButton href="#bewerbung">Initiativ bewerben</CTAButton>
         </div>
       </section>
 

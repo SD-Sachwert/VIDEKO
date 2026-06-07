@@ -1,6 +1,10 @@
 import { useRef, useState } from 'react'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
-import { Check, X, ArrowRight, MapPin, Mail, Phone } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import {
+  Check, X, ArrowRight, MapPin, Mail, Phone,
+  PencilRuler, Ruler, Layers, Lightbulb, Truck, Cpu, CalendarClock, LifeBuoy, UserCheck, CalendarCheck, Coffee,
+} from 'lucide-react'
 
 import Reveal from '../components/Reveal.jsx'
 import CTAButton from '../components/CTAButton.jsx'
@@ -8,33 +12,40 @@ import SectionHeader from '../components/SectionHeader.jsx'
 
 import heroImg from '../assets/images/leistungen/ls-hero.png'
 import featureImg from '../assets/images/leistungen/ls-feature.png'
-import imgConsulting from '../assets/images/leistungen/ls-consulting.png'
-import img3d from '../assets/images/leistungen/ls-3d.png'
-import imgMaterials from '../assets/images/leistungen/ls-materials.png'
-import imgInstall from '../assets/images/leistungen/ls-install.png'
-import imgRenovation from '../assets/images/leistungen/ls-renovation.png'
-import imgCoordination from '../assets/images/leistungen/ls-coordination.png'
-import imgAftercare from '../assets/images/leistungen/ls-aftercare.png'
 import vnVideo from '../assets/images/leistungen/vorher-nachher.mp4'
+import p01 from '../assets/images/leistungen/baustein/panel-01.png'
+import p02 from '../assets/images/leistungen/baustein/panel-02.png'
+import p03 from '../assets/images/leistungen/baustein/panel-03.png'
+import p04 from '../assets/images/leistungen/baustein/panel-04.png'
+import p05 from '../assets/images/leistungen/baustein/panel-05.png'
+import p06 from '../assets/images/leistungen/baustein/panel-06.png'
+import p07 from '../assets/images/leistungen/baustein/panel-07.png'
+import p08 from '../assets/images/leistungen/baustein/panel-08.png'
 
 const FEATURE = ['Individuelle Beratung', 'Kreative Konzepte', 'Präzise Planung', 'Reibungslose Umsetzung', 'Verlässlicher Service']
 
-const SERVICES8 = [
-  { n: '01', title: 'Beratung & Planung', text: 'Wir hören zu, bevor wir planen – ehrlich, persönlich und auf Augenhöhe.', benefits: ['Beratung auf Augenhöhe', 'Klares Konzept', 'Ein fester Ansprechpartner'], gallery: [imgConsulting, featureImg, img3d] },
-  { n: '02', title: 'Aufmaß & 3D-Planung', text: 'Millimetergenau gemessen und in 3D sichtbar gemacht – bevor etwas bestellt wird.', benefits: ['Laser-Aufmaß', '3D-Visualisierung', 'Planungssicherheit'], gallery: [img3d, imgConsulting, featureImg] },
-  { n: '03', title: 'Materialien & Auswahl', text: 'Oberflächen, die nicht nur gut aussehen, sondern im Alltag bestehen.', benefits: ['Echte Muster zum Fühlen', 'Alltagstauglich', 'Premium-Oberflächen'], gallery: [imgMaterials, featureImg, imgConsulting] },
-  { n: '04', title: 'Lichtplanung & Ambiente', text: 'Stimmung, Akzente und Funktion – im richtigen Licht wird aus Küche ein Raum.', benefits: ['Stimmungslicht', 'Gezielte Akzente', 'Funktionslicht'], gallery: [featureImg, heroImg, imgMaterials] },
-  { n: '05', title: 'Lieferung & Montage', text: 'Termintreu geliefert und sauber durch unser eigenes Team aufgebaut.', benefits: ['Termintreu', 'Saubere Montage', 'Eigenes Team'], gallery: [imgInstall, imgRenovation, featureImg] },
-  { n: '06', title: 'Geräte & Technik', text: 'Intelligente Geräte, nahtlos integriert – Technik, die den Alltag leichter macht.', benefits: ['Top-Marken', 'Smart integriert', 'Effizient & leise'], gallery: [imgInstall, img3d, imgMaterials] },
-  { n: '07', title: 'Koordination & Gewerke', text: 'Maler, Elektrik, Boden, Trockenbau – wir steuern alle Gewerke für dich.', benefits: ['Alle Gewerke aus einer Hand', 'Ein klarer Plan', 'Kein Handwerker-Tetris'], gallery: [imgCoordination, imgRenovation, img3d] },
-  { n: '08', title: 'Nachbetreuung & Service', text: 'Auch nach dem Einbau lassen wir dich nicht allein – versprochen.', benefits: ['Gemeinsame Abnahme', 'Schnell erreichbar', 'Langfristig für dich da'], gallery: [imgAftercare, imgConsulting, featureImg] },
+const BAUSTEINE = [
+  { n: '01', title: 'Beratung & Planung', icon: PencilRuler, short: 'Wir hören zu und planen mit dir.', panel: p01 },
+  { n: '02', title: 'Aufmaß & 3D-Planung', icon: Ruler, short: 'Millimetergenau, in 3D sichtbar.', panel: p02 },
+  { n: '03', title: 'Materialien & Auswahl', icon: Layers, short: 'Oberflächen, die im Alltag bestehen.', panel: p03 },
+  { n: '04', title: 'Lichtplanung & Ambiente', icon: Lightbulb, short: 'Licht für Stimmung und Funktion.', panel: p04 },
+  { n: '05', title: 'Lieferung & Montage', icon: Truck, short: 'Termintreu geliefert und montiert.', panel: p05 },
+  { n: '06', title: 'Geräte & Technik', icon: Cpu, short: 'Technik, die zu deinem Alltag passt.', panel: p06 },
+  { n: '07', title: 'Koordination & Gewerke', icon: CalendarClock, short: 'Ein Plan, alle Gewerke gesteuert.', panel: p07 },
+  { n: '08', title: 'Nachbetreuung & Service', icon: LifeBuoy, short: 'Auch nach dem Einbau für dich da.', panel: p08 },
 ]
 
-const EMO = [
-  { title: 'Kein Planungschaos', image: imgCoordination },
-  { title: 'Keine Handwerker-Jonglage', image: imgRenovation },
-  { title: 'Keine Materialsuche', image: imgMaterials },
-  { title: 'Nur Vorfreude', image: imgAftercare },
+const STATS = [
+  { v: '98%', l: 'zufriedene Kunden' },
+  { v: '12+', l: 'Jahre Erfahrung' },
+  { v: '500+', l: 'Küchen realisiert' },
+]
+
+const BENEFITS = [
+  { icon: Layers, title: 'Weniger Abstimmung', text: 'Wir sprechen mit allen, damit du es nicht musst.' },
+  { icon: UserCheck, title: 'Ein fester Ansprechpartner', text: 'Du hast immer einen, der dein Projekt kennt.' },
+  { icon: CalendarCheck, title: 'Klare Abläufe', text: 'Transparente Prozesse, verlässliche Termine.', dark: true },
+  { icon: Coffee, title: 'Entspannter zur neuen Küche', text: 'Du hältst den Kopf frei – von Anfang an.' },
 ]
 
 const CLASSIC = ['Viele Ansprechpartner', 'Unklare Zuständigkeiten', 'Schwer vergleichbare Angebote', 'Wenig echte Visualisierung', 'Material ohne Raumgefühl', 'Kosten ändern sich spät', 'Planung & Montage nicht verzahnt', 'Du koordinierst vieles selbst', 'Am Ende sieht es anders aus als gedacht']
@@ -42,8 +53,7 @@ const VIDEKO = ['Ein klarer Ansprechpartner', 'Ehrliche Beratung statt Verkaufsd
 
 export default function Leistungen() {
   const heroRef = useRef(null)
-  const [activeSvc, setActiveSvc] = useState(0)
-  const [activeThumb, setActiveThumb] = useState(0)
+  const [activeL, setActiveL] = useState(0)
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
   const imgY = useTransform(scrollYProgress, [0, 1], ['0%', '16%'])
   const imgScale = useTransform(scrollYProgress, [0, 1], [1.06, 1.16])
@@ -101,38 +111,25 @@ export default function Leistungen() {
         </div>
       </section>
 
-      {/* 3 — INTERAKTIVE LEISTUNGSSEKTION (hell) */}
-      <section className="section leist-svc8" id="leist-services">
+      {/* 3 — 8-LEISTUNGS-BAUSTEIN (interaktiv) */}
+      <section className="section leist-bau" id="leist-services">
         <div className="container">
-          <SectionHeader align="center" kicker="Ein Prozess. Ein Team. Ein Ergebnis." title={<>Von der ersten Idee bis zur <span className="grad">letzten Schraube.</span></>} lead="Klick dich durch unsere Leistungen – und sieh, was hinter jedem Schritt steckt." />
-          <div className="svc8">
-            <div className="svc8__list">
-              {SERVICES8.map((s, i) => (
-                <button key={s.title} type="button" className={`svc8__card ${activeSvc === i ? 'is-active' : ''}`} onClick={() => { setActiveSvc(i); setActiveThumb(0) }}>
-                  <span className="svc8__n">{s.n}</span>
-                  <span className="svc8__ctitle">{s.title}</span>
-                  <ArrowRight className="svc8__arrow" size={16} strokeWidth={1.9} />
+          <SectionHeader align="center" kicker="Unser Prozess" title={<>Alles aus einer Hand. <span className="grad">Schritt für Schritt.</span></>} lead="Klick dich durch unsere acht Leistungen – immer eine im Fokus." />
+          <div className="leistbau">
+            <div className="leistbau__nav">
+              {BAUSTEINE.map((b, i) => (
+                <button key={b.title} type="button" className={`leistbau__item ${activeL === i ? 'is-active' : ''}`} onClick={() => setActiveL(i)}>
+                  <span className="leistbau__n">{b.n}</span>
+                  <span className="leistbau__ic"><b.icon size={17} strokeWidth={1.7} /></span>
+                  <span className="leistbau__label">{b.title}</span>
                 </button>
               ))}
             </div>
-            <div className="svc8__detail">
+            <div className="leistbau__stage">
               <AnimatePresence mode="wait">
-                <motion.div key={activeSvc} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}>
-                  <div className="svc8__hero">
-                    <AnimatePresence mode="wait">
-                      <motion.span key={activeThumb} className="svc8__heroimg" style={{ backgroundImage: `url(${SERVICES8[activeSvc].gallery[activeThumb]})` }} initial={{ opacity: 0, scale: 1.03 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }} />
-                    </AnimatePresence>
-                    <span className="svc8__badge">{SERVICES8[activeSvc].n}</span>
-                  </div>
-                  <div className="svc8__thumbs">
-                    {SERVICES8[activeSvc].gallery.map((g, k) => (
-                      <button key={k} type="button" className={`svc8__thumb ${activeThumb === k ? 'is-active' : ''}`} style={{ backgroundImage: `url(${g})` }} onClick={() => setActiveThumb(k)} aria-label={`Bild ${k + 1}`} />
-                    ))}
-                  </div>
-                  <h3 className="svc8__title">{SERVICES8[activeSvc].title}</h3>
-                  <p className="svc8__text">{SERVICES8[activeSvc].text}</p>
-                  <ul className="svc8__benefits">{SERVICES8[activeSvc].benefits.map((b) => <li key={b}><Check size={15} strokeWidth={2.4} /> {b}</li>)}</ul>
-                  <CTAButton to="/beratung">Beratung anfragen</CTAButton>
+                <motion.div key={activeL} className="leistbau__panel"
+                  initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>
+                  <Link to="/beratung" aria-label={`${BAUSTEINE[activeL].title} – Beratung anfragen`}><img src={BAUSTEINE[activeL].panel} alt={BAUSTEINE[activeL].title} /></Link>
                 </motion.div>
               </AnimatePresence>
             </div>
@@ -140,56 +137,50 @@ export default function Leistungen() {
         </div>
       </section>
 
-      {/* 3b — ECHTE PLANUNG */}
-      <section className="section leist-plan">
+      {/* 4 — PROZESS / TIMELINE */}
+      <section className="section section--light leist-timeline">
         <div className="container">
-          <div className="lintro">
-            <Reveal className="lintro__media">
-              <div className="lintro__frame"><img src={img3d} alt="Echte 3D-Planung" loading="lazy" /><span className="lintro__rim" aria-hidden="true" /></div>
+          <div className="ltl">
+            <Reveal className="ltl__intro">
+              <span className="kicker">Dein Weg zur Küche</span>
+              <h2 className="lintro__title">Deine neue Küche. <span className="grad">Ein klarer Prozess.</span></h2>
+              <p className="lintro__text">Acht Schritte, ein Team, ein Ergebnis – du weißt jederzeit, woran wir gerade arbeiten.</p>
+              <div className="ltl__img"><img src={featureImg} alt="" loading="lazy" /></div>
             </Reveal>
-            <Reveal className="lintro__copy" delay={0.08}>
-              <span className="kicker">Mehr als schöne Bilder</span>
-              <h2 className="lintro__title">Echte Planung.<br /><span className="grad">Kein Hochglanz-Versprechen.</span></h2>
-              <p className="lintro__text">Hinter jeder VIDEKO-Küche steckt eine durchdachte Planung – millimetergenau, ehrlich kalkuliert und in 3D sichtbar, bevor etwas gebaut wird.</p>
-              <ul className="lstances">
-                <li><Check size={16} strokeWidth={2.4} /> 3D-Visualisierung statt Prospektbild</li>
-                <li><Check size={16} strokeWidth={2.4} /> Millimetergenaues Aufmaß</li>
-                <li><Check size={16} strokeWidth={2.4} /> Transparente Kosten von Anfang an</li>
-              </ul>
-              <CTAButton to="/beratung">Projekt starten</CTAButton>
-            </Reveal>
+            <ol className="ltl__list">
+              {BAUSTEINE.map((b, i) => (
+                <Reveal key={b.title} className="ltl__step" delay={(i % 4) * 0.05}>
+                  <span className="ltl__n">{b.n}</span>
+                  <span className="ltl__body"><span className="ltl__t">{b.title}</span><span className="ltl__d">{b.short}</span></span>
+                </Reveal>
+              ))}
+            </ol>
           </div>
         </div>
       </section>
 
-      {/* 3c — TEAMARBEIT */}
-      <section className="section leist-team">
+      {/* 5 — VORTEILE / BENEFITS */}
+      <section className="section leist-benefits">
         <div className="container">
-          <SectionHeader align="center" kicker="Hinter jeder Küche" title={<>Weil gute Küchen <span className="grad">Teamarbeit sind.</span></>} lead="Beratung, Planung, Aufmaß, Montage und Service – ein eingespieltes Team, ein Ansprechpartner, ein Ergebnis." />
-          <div className="leist-team__row">
-            {[imgConsulting, imgCoordination, imgRenovation, imgAftercare].map((img, k) => (
-              <Reveal key={k} delay={(k % 4) * 0.06}>
-                <span className="leist-team__img" style={{ backgroundImage: `url(${img})` }} aria-hidden="true" />
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 6 — EMOTIONAL (hell) */}
-      <section className="section leist-emo">
-        <div className="container">
-          <SectionHeader align="center" kicker="Entspannt" title={<>Weniger Chaos. <span className="grad">Mehr Zeit für das, was zählt.</span></>} />
-          <div className="lservice-grid lservice-grid--4">
-            {EMO.map((e, i) => (
-              <Reveal key={e.title} delay={(i % 4) * 0.06}>
-                <article className="lscard lscard--emo">
-                  <span className="lscard__img" style={{ backgroundImage: `url(${e.image})` }} aria-hidden="true" />
-                  <span className="lscard__scrim" aria-hidden="true" />
-                  <span className="lscard__body"><span className="lscard__title">{e.title}</span></span>
-                </article>
-              </Reveal>
-            ))}
+          <div className="lbf">
+            <Reveal className="lbf__left">
+              <span className="kicker">Das bringt dir VIDEKO</span>
+              <h2 className="lintro__title">Weniger Chaos. <span className="grad">Mehr Zeit für das, was zählt.</span></h2>
+              <p className="lintro__text">Wir nehmen dir die Arbeit ab – damit du dich auf das Ergebnis freust, nicht auf den Stress.</p>
+              <div className="lbf__stats">
+                {STATS.map((s) => <span key={s.l} className="lbf__stat"><b>{s.v}</b><i>{s.l}</i></span>)}
+              </div>
+            </Reveal>
+            <div className="lbf__cards">
+              {BENEFITS.map((b, i) => (
+                <Reveal key={b.title} className={`lbf__card ${b.dark ? 'is-dark' : ''}`} delay={(i % 2) * 0.06}>
+                  <span className="lbf__cic"><b.icon size={20} strokeWidth={1.6} /></span>
+                  <span className="lbf__ctitle">{b.title}</span>
+                  <span className="lbf__ctext">{b.text}</span>
+                </Reveal>
+              ))}
+            </div>
+            <Reveal className="lbf__media" delay={0.1}><span className="lbf__img" style={{ backgroundImage: `url(${heroImg})` }} aria-hidden="true" /></Reveal>
           </div>
         </div>
       </section>

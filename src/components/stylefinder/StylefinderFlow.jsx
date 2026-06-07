@@ -357,7 +357,7 @@ export default function StylefinderFlow() {
                     const on = i < answeredSteps
                     return <span key={i} className={`sf-pt ${on ? 'is-on' : ''}`} style={{ left: `${(x / 240) * 100}%`, top: `${(y / 200) * 100}%` }}>{on ? <Check size={11} strokeWidth={3} /> : i + 1}</span>
                   })}
-                  <div className="sf-badge"><img src={logoMain} alt="VIDEKO Küchen" /></div>
+                  <div className="sf-badge"><span className="sf-badge__marble" aria-hidden="true" /><img src={logoMain} alt="VIDEKO Küchen" /></div>
                 </div>
                 <span className="sf-compass2__cap">{answeredSteps} von 7 erfasst</span>
                 <span className="sf-compass2__sub">{answeredSteps >= 7 ? 'Profil vollständig' : 'Profil wächst'}</span>
