@@ -1,98 +1,74 @@
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Check } from 'lucide-react'
+import { Lightbulb, Cpu, Layers, PanelsTopLeft, Archive, LayoutGrid, Ruler, Wrench, Gem, Hammer, MessageSquare } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
-import SectionHeader from './SectionHeader.jsx'
 import CTAButton from './CTAButton.jsx'
 
-import finishedImg from '../assets/images/inspiration/02_moderne_kueche.png'
-import xkFull from '../assets/images/home/exploded/exploded-full-fallback-16x9.png'
-import xkLight from '../assets/images/home/exploded/detail-light-16x9.png'
-import xkApp from '../assets/images/home/exploded/detail-appliances-16x9.png'
-import xkWork from '../assets/images/home/exploded/detail-worktop-16x9.png'
-import xkDraw from '../assets/images/home/exploded/detail-drawers-16x9.png'
-import xkMat from '../assets/images/home/exploded/detail-materials-16x9.png'
-import xkMont from '../assets/images/home/exploded/detail-montage-16x9.png'
+import sceneImg from '../assets/images/home/exploded/exploded-full-fallback-16x9.png'
 
-const DETAILS = [
-  { label: 'Licht', img: xkLight, text: 'Licht, das nicht blendet, sondern wirkt – Stimmung, Akzente und Funktion an der richtigen Stelle.' },
-  { label: 'Geräte', img: xkApp, text: 'Geräte, die zu deinem Alltag passen – nahtlos integriert statt nachträglich reingequetscht.' },
-  { label: 'Arbeitsplatte', img: xkWork, text: 'Materialien, die schön sind und im Alltag bestehen – Höhe und Fuge millimetergenau.' },
-  { label: 'Auszüge', img: xkDraw, text: 'Stauraum, der wirklich genutzt wird – durchdacht bis in die letzte Ecke.' },
-  { label: 'Materialien', img: xkMat, text: 'Oberflächen, die nicht nur gut aussehen, sondern bleiben – auch nach Jahren.' },
-  { label: 'Montage', img: xkMont, text: 'Montage, die am Ende den Unterschied macht – sauber, termintreu, passgenau.' },
+const FEATURES = [
+  { icon: Lightbulb, title: 'Licht & Atmosphäre', text: 'Integriertes Lichtkonzept für Stimmung und Funktion.' },
+  { icon: Cpu, title: 'Premium Geräte', text: 'Nahtlos integrierte Technik – passend zu deinem Alltag.' },
+  { icon: Layers, title: 'Arbeitsplatte', text: 'Edle Materialien, perfekt verarbeitet, äußerst belastbar.' },
+  { icon: PanelsTopLeft, title: 'Korpus & Fronten', text: 'Maßgenau geplant, sauber gefertigt, langlebig schön.' },
+  { icon: Archive, title: 'Auszüge & Stauraum', text: 'Durchdachter Stauraum bis in die letzte Ecke.' },
+  { icon: LayoutGrid, title: 'Struktur & Komfort', text: 'Intelligente Lösungen für Ordnung und Ergonomie.' },
+  { icon: Ruler, title: 'Maße & Präzision', text: 'Jeder Zentimeter millimetergenau geplant.' },
+  { icon: Wrench, title: 'Montage & Perfektion', text: 'Fachgerecht montiert bis ins letzte Detail.' },
 ]
 
-const POINTS = [
-  'Licht, das nicht blendet, sondern wirkt.',
-  'Stauraum, der wirklich genutzt wird.',
-  'Geräte, die zum Alltag passen.',
-  'Materialien, die nicht nur gut aussehen.',
-  'Montage, die am Ende den Unterschied macht.',
+const VALUES = [
+  { icon: Gem, title: 'Design mit Seele', text: 'Ästhetik, die berührt und bleibt.' },
+  { icon: Hammer, title: 'Handwerk auf Niveau', text: 'Präzision, Erfahrung, Leidenschaft.' },
+  { icon: Layers, title: 'Materialien für Generationen', text: 'Qualität, Beständigkeit und Wert.' },
+  { icon: Cpu, title: 'Technik mit Mehrwert', text: 'Intelligent, leise, alltagstauglich.' },
+  { icon: MessageSquare, title: 'Beratung auf Augenhöhe', text: 'Ehrlich, individuell, inspirierend.' },
 ]
 
 export default function ExplodingKitchen() {
-  const [active, setActive] = useState(null) // null = Gesamtansicht
-  const rightImg = active === null ? xkFull : DETAILS[active].img
-  const rightTitle = active === null ? '187 Bauteile. 1000 Entscheidungen. 0 Zufall.' : DETAILS[active].label
-  const rightText = active === null
-    ? 'Korpus, Fronten, Licht, Geräte, Auszüge, Fugen, Höhen, Materialien, Anschlüsse, Laufwege und Montagepunkte – wir sehen nicht nur eine Küche, sondern das System dahinter.'
-    : DETAILS[active].text
-
   return (
-    <section className="section section--dark home-exploded">
-      <div className="container">
-        <SectionHeader
-          tone="light"
-          align="center"
-          kicker="Das System hinter deiner Küche"
-          title={<>Eine Küche. Oder 187 Entscheidungen, <span className="grad">die perfekt sitzen müssen.</span></>}
-          lead="Was für dich am Ende selbstverständlich aussieht, ist bei uns millimetergenau geplant: Licht, Geräte, Stauraum, Materialien, Technik, Montage – und jedes kleine Detail dazwischen."
-        />
+    <section className="xk2">
+      <div className="xk2__bg" aria-hidden="true">
+        <img src={sceneImg} alt="" />
+        <span className="xk2__veil" />
+      </div>
 
-        <div className="xk">
-          <Reveal className="xk__side">
-            <span className="xk__label">Was du siehst</span>
-            <div className="xk__frame"><img src={finishedImg} alt="Fertige VIDEKO-Küche" loading="lazy" /></div>
-            <h3 className="xk__h">Eine fertige Traumküche.</h3>
-            <p className="xk__t">Ruhig, schön, aufgeräumt. Alles wirkt selbstverständlich – genau so soll es am Ende aussehen.</p>
-          </Reveal>
-
-          <span className="xk__switch" aria-hidden="true">Perspektivwechsel</span>
-
-          <Reveal className="xk__side xk__side--explode" delay={0.1}>
-            <span className="xk__label xk__label--gold">Was wir sehen</span>
-            <div className="xk__frame xk__frame--explode">
-              <AnimatePresence mode="wait">
-                <motion.img key={active ?? 'full'} src={rightImg} alt="" aria-hidden="true"
-                  initial={{ opacity: 0, scale: 1.03 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }} />
-              </AnimatePresence>
-              <span className="xk__glow" aria-hidden="true" />
-            </div>
-            <div className="xk__markers">
-              <button type="button" className={`xk__marker ${active === null ? 'is-active' : ''}`} onClick={() => setActive(null)}>Gesamtansicht</button>
-              {DETAILS.map((d, i) => (
-                <button key={d.label} type="button" className={`xk__marker ${active === i ? 'is-active' : ''}`} onClick={() => setActive(i)}>{d.label}</button>
-              ))}
-            </div>
-            <h3 className="xk__h">{rightTitle}</h3>
-            <p className="xk__t">{rightText}</p>
-          </Reveal>
-        </div>
-
-        <Reveal className="xk__why">
-          <h3 className="xk__why-title">Warum das wichtig ist?</h3>
-          <p className="xk__why-text">
-            Weil eine Küche nicht an einem schönen Bild scheitert – sondern an den Details, die du später jeden Tag merkst:
-            falsche Höhen, schlechte Laufwege, verschenkter Stauraum, unpraktische Geräte, schwaches Licht oder eine Montage,
-            die nicht sauber sitzt. Genau deshalb planen wir nicht einfach Möbel. Wir planen Abläufe.
+      <div className="container xk2__inner">
+        <Reveal className="xk2__intro">
+          <span className="kicker kicker--gold">Küchen, durchdacht bis ins Detail</span>
+          <h2 className="xk2__title">Exploding<br /><span className="grad">Kitchen.</span></h2>
+          <p className="xk2__lead">
+            Jede VIDEKO-Küche ist ein Zusammenspiel aus präziser Planung, edlen Materialien
+            und intelligenter Technik. Für dich sieht es am Ende einfach selbstverständlich aus –
+            bei uns sitzt jedes Detail.
           </p>
-          <ul className="xk__points">
-            {POINTS.map((p) => <li key={p}><Check size={15} strokeWidth={2.4} /> {p}</li>)}
-          </ul>
           <CTAButton to="/beratung">Küche durchdenken lassen</CTAButton>
         </Reveal>
+
+        <Reveal className="xk2__features" delay={0.1}>
+          {FEATURES.map((f, i) => (
+            <div className="xk2feat" key={f.title}>
+              <span className="xk2feat__n">{String(i + 1).padStart(2, '0')}</span>
+              <span className="xk2feat__ic"><f.icon size={18} strokeWidth={1.7} /></span>
+              <span className="xk2feat__body">
+                <span className="xk2feat__title">{f.title}</span>
+                <span className="xk2feat__text">{f.text}</span>
+              </span>
+            </div>
+          ))}
+        </Reveal>
+      </div>
+
+      <div className="container xk2__foot">
+        <div className="xk2__values">
+          {VALUES.map((v) => (
+            <span className="xk2val" key={v.title}>
+              <v.icon size={20} strokeWidth={1.6} />
+              <b>{v.title}</b>
+              <i>{v.text}</i>
+            </span>
+          ))}
+        </div>
+        <CTAButton to="/beratung">Entdecke deine Traumküche</CTAButton>
       </div>
     </section>
   )
