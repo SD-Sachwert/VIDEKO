@@ -9805,25 +9805,45 @@ a.footer__contact-line:hover {
   gap: 7px;
   padding: 22px 18px;
   border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line-dark);
+  background: rgba(255, 255, 255, 0.6);
   height: 100%;
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease, box-shadow 0.35s ease;
 }
-.svc-mod:hover { transform: translateY(-5px); border-color: rgba(232, 201, 120, 0.5); box-shadow: 0 24px 50px -30px rgba(0, 0, 0, 0.6); }
-.svc-mod__n { font-family: var(--serif); font-size: 0.85rem; letter-spacing: 0.1em; color: var(--gold-bright); }
-.svc-mod__ic { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; color: var(--gold-bright); background: rgba(232, 201, 120, 0.12); border: 1px solid rgba(232, 201, 120, 0.25); margin: 2px 0 4px; }
-.svc-mod__title { font-family: var(--serif); font-size: 1.05rem; font-weight: 600; color: var(--cream); }
-.svc-mod__text { font-size: 0.82rem; line-height: 1.5; color: rgba(244, 239, 228, 0.75); }
+.svc-mod:hover { transform: translateY(-5px); border-color: rgba(201, 160, 80, 0.55); box-shadow: 0 24px 50px -32px rgba(120, 90, 40, 0.45); }
+.svc-mod__n { font-family: var(--serif); font-size: 0.85rem; letter-spacing: 0.1em; color: var(--bronze); }
+.svc-mod__ic { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; color: var(--bronze); background: rgba(201, 160, 80, 0.12); border: 1px solid rgba(201, 160, 80, 0.25); margin: 2px 0 4px; transition: transform 0.35s ease; }
+.svc-mod:hover .svc-mod__ic { transform: translateY(-2px) scale(1.05); }
+.svc-mod__title { font-family: var(--serif); font-size: 1.05rem; font-weight: 600; color: var(--ink); }
+.svc-mod__text { font-size: 0.82rem; line-height: 1.5; color: var(--ink-soft); }
 
 .lscard--tall { aspect-ratio: 4 / 5; }
 
-/* was du dir sparen kannst */
+/* video card (vorher/nachher) */
+.svc-video__frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: 26px;
+  overflow: hidden;
+  border: 1px solid rgba(201, 160, 80, 0.45);
+  box-shadow: 0 40px 80px -48px rgba(120, 90, 40, 0.5);
+  background: var(--graphite);
+}
+.svc-video__vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.svc-video__labels { position: absolute; top: 14px; left: 14px; right: 14px; z-index: 2; display: flex; justify-content: space-between; gap: 8px; pointer-events: none; }
+.svc-video__labels span {
+  padding: 6px 13px; border-radius: 999px; font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700;
+  color: var(--cream); background: rgba(8, 8, 7, 0.55); backdrop-filter: blur(4px); border: 1px solid rgba(232, 201, 120, 0.35);
+}
+.svc-video__labels span:last-child { color: #20170a; background: var(--grad-gold); border-color: transparent; }
+
+/* was du dir sparen kannst (light) */
 .svc-spar { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-top: 14px; }
-.svc-spar__card { text-align: center; padding: 26px 16px; border-radius: 18px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.04); }
-.svc-spar__ic { display: inline-grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; color: var(--gold-bright); background: rgba(232, 201, 120, 0.12); border: 1px solid rgba(232, 201, 120, 0.25); margin-bottom: 12px; }
-.svc-spar__title { display: block; font-family: var(--serif); font-size: 1.05rem; font-weight: 600; color: var(--cream); margin-bottom: 4px; }
-.svc-spar__text { display: block; font-size: 0.82rem; color: rgba(244, 239, 228, 0.75); }
+.svc-spar__card { text-align: center; padding: 26px 16px; border-radius: 18px; border: 1px solid var(--line-dark); background: rgba(255, 255, 255, 0.6); transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease; }
+.svc-spar__card:hover { transform: translateY(-4px); border-color: rgba(201, 160, 80, 0.55); box-shadow: 0 24px 50px -34px rgba(120, 90, 40, 0.4); }
+.svc-spar__ic { display: inline-grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; color: var(--bronze); background: rgba(201, 160, 80, 0.12); border: 1px solid rgba(201, 160, 80, 0.25); margin-bottom: 12px; }
+.svc-spar__title { display: block; font-family: var(--serif); font-size: 1.05rem; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+.svc-spar__text { display: block; font-size: 0.82rem; color: var(--ink-soft); }
 
 /* compare */
 .svc-compare { display: grid; grid-template-columns: 1fr auto 1fr; gap: 20px; align-items: center; }
