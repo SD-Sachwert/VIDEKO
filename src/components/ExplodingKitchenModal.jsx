@@ -36,15 +36,10 @@ export default function ExplodingKitchenModal() {
   }, [active])
 
   const h = active !== null ? HOTSPOTS[active] : null
-  const sideR = h ? h.x < 50 : true // open toward image center
-  const below = h ? h.y < 50 : true
-  const popStyle = h
-    ? {
-        ...(sideR ? { left: `${h.x + 2.5}%` } : { right: `${100 - h.x + 2.5}%` }),
-        ...(below ? { top: `${h.y}%` } : { bottom: `${100 - h.y}%` }),
-      }
-    : {}
-  const popCls = h ? `ekm-pop--${sideR ? 'r' : 'l'} ekm-pop--${below ? 'b' : 'a'}` : ''
+  // large side-card: opens on the side opposite the hotspot so it has room
+  const panelLeft = h ? h.x >= 50 : false
+  const wrapStyle = h ? (panelLeft ? { left: '3%' } : { right: '3%' }) : {}
+  const arrowSide = panelLeft ? 'r' : 'l'
 
   return (
     <section className="section section--light ekm" id="exploding-kitchen-modal">
@@ -77,11 +72,13 @@ export default function ExplodingKitchenModal() {
 
           <AnimatePresence>
             {h && (
-              <motion.div key={active} className={`ekm-pop ${popCls}`} style={popStyle} onClick={(e) => e.stopPropagation()}
-                initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}>
-                <button type="button" className="ekm-pop__close" onClick={() => setActive(null)} aria-label="Schließen">×</button>
-                <img className="ekm-pop__img" src={h.card} alt={h.title} />
-              </motion.div>
+              <div className="ekm-popwrap" style={wrapStyle}>
+                <motion.div key={active} className={`ekm-pop ekm-pop--${arrowSide}`} onClick={(e) => e.stopPropagation()}
+                  initial={{ opacity: 0, scale: 0.96, y: 8 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.97 }} transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}>
+                  <button type="button" className="ekm-pop__close" onClick={() => setActive(null)} aria-label="Schließen">×</button>
+                  <img className="ekm-pop__img" src={h.card} alt={h.title} />
+                </motion.div>
+              </div>
             )}
           </AnimatePresence>
 

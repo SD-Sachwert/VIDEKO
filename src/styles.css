@@ -11188,28 +11188,23 @@ a.footer__contact-line:hover {
 .ekm-hot.is-active .ekm-hot__dot { transform: scale(1.3); background: var(--gold-bright); box-shadow: 0 0 0 10px rgba(216, 180, 106, 0.22), 0 0 28px rgba(214, 176, 95, 0.75); }
 
 /* inline popover that pops out of the hotspot (no modal, no overlay) */
-.ekm-pop { position: absolute; z-index: 9; width: min(440px, 62%); }
-.ekm-pop--r { margin-left: 14px; transform-origin: left center; }
-.ekm-pop--l { margin-right: 14px; transform-origin: right center; }
-.ekm-pop--r.ekm-pop--b { transform-origin: top left; }
-.ekm-pop--r.ekm-pop--a { transform-origin: bottom left; }
-.ekm-pop--l.ekm-pop--b { transform-origin: top right; }
-.ekm-pop--l.ekm-pop--a { transform-origin: bottom right; }
-.ekm-pop__img { width: 100%; height: auto; display: block; border-radius: 16px; border: 1px solid rgba(198, 145, 56, 0.4); box-shadow: 0 34px 80px -34px rgba(45, 35, 20, 0.65); }
-/* gold connector notch toward the hotspot */
-.ekm-pop::before { content: ""; position: absolute; width: 13px; height: 13px; background: #fdf8ee; border: 1px solid rgba(198, 145, 56, 0.4); transform: rotate(45deg); z-index: -1; }
-.ekm-pop--r::before { left: -7px; }
-.ekm-pop--l::before { right: -7px; }
-.ekm-pop--b::before { top: 26px; }
-.ekm-pop--a::before { bottom: 26px; }
-.ekm-pop__close { position: absolute; top: 9px; right: 11px; z-index: 2; width: 28px; height: 28px; border: none; border-radius: 50%; background: rgba(255, 255, 255, 0.85); color: var(--ink); font-size: 1.2rem; line-height: 1; cursor: pointer; display: grid; place-items: center; }
+/* large premium side-card that opens beside the hotspot */
+.ekm-popwrap { position: absolute; top: 50%; transform: translateY(-50%); z-index: 9; width: min(560px, 50%); }
+.ekm-pop { position: relative; }
+.ekm-pop__img { width: 100%; height: auto; display: block; border-radius: 20px; border: 1px solid rgba(198, 145, 56, 0.32); box-shadow: 0 50px 110px -38px rgba(45, 35, 20, 0.62); }
+/* gold connector arrow toward the hotspot */
+.ekm-pop::before { content: ""; position: absolute; top: 50%; width: 18px; height: 18px; background: #fdf8ee; border: 1px solid rgba(198, 145, 56, 0.32); transform: translateY(-50%) rotate(45deg); z-index: -1; }
+.ekm-pop--l::before { left: -9px; }
+.ekm-pop--r::before { right: -9px; }
+.ekm-pop__close { position: absolute; top: 12px; right: 14px; z-index: 2; width: 32px; height: 32px; border: none; border-radius: 50%; background: rgba(255, 255, 255, 0.9); color: var(--ink); font-size: 1.35rem; line-height: 1; cursor: pointer; display: grid; place-items: center; box-shadow: 0 6px 16px -8px rgba(0, 0, 0, 0.4); }
 
-.ekm-mini { max-width: 760px; margin: 22px auto 0; text-align: center; font-size: 0.84rem; line-height: 1.6; color: var(--ink-soft); }
+.ekm-mini { max-width: 760px; margin: 24px auto 0; text-align: center; font-size: 0.86rem; line-height: 1.65; color: var(--ink-soft); }
 
-@media (max-width: 760px) {
+@media (max-width: 860px) {
   .ekm-hot__label { display: none; }
-  /* mobile: popover as a bottom sheet under the image */
-  .ekm-pop { position: fixed; left: 12px; right: 12px; bottom: 12px; top: auto; width: auto; max-width: none; margin: 0; z-index: 200; }
+  /* mobile: large card as a bottom sheet under the image */
+  .ekm-popwrap { position: fixed; left: 12px; right: 12px; bottom: 12px; top: auto; transform: none; width: auto; z-index: 200; }
+  .ekm-pop__img { max-height: 70vh; object-fit: contain; }
   .ekm-pop::before { display: none; }
 }
 
