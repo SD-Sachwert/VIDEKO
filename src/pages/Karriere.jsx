@@ -316,8 +316,8 @@ export default function Karriere() {
                   <label className="field"><span>E-Mail</span><input type="email" required placeholder="name@beispiel.de" /></label>
                 </div>
                 <div className="contact__row">
-                  <label className="field"><span>Telefon</span><input type="tel" placeholder="Optional" /></label>
-                  <label className="field"><span>Bereich</span>
+                  <label className="field"><span>Telefon</span><input type="tel" required placeholder="0160 1234567" /></label>
+                  <label className="field"><span>Wunschbereich</span>
                     <select defaultValue="">
                       <option value="" disabled>Bitte wählen</option>
                       {BEREICHE.map((b) => <option key={b}>{b}</option>)}
@@ -327,7 +327,7 @@ export default function Karriere() {
                 <label className="field"><span>Nachricht</span><textarea rows={4} placeholder="Erzähl uns kurz, wer du bist – ein Satz reicht." /></label>
                 <label className="sfupload">
                   <Upload size={18} strokeWidth={1.7} />
-                  <span>Lebenslauf / Unterlagen hochladen <em>(optional)</em></span>
+                  <span>Lebenslauf / Unterlagen hochladen</span>
                   <input type="file" multiple hidden />
                 </label>
                 <button className="btn btn--primary btn--lg" type="submit">

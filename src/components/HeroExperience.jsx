@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Boxes, Lightbulb, Ruler, Clock, Gem, ShieldCheck, PencilRuler, Wrench } from 'lucide-react'
+import { ArrowRight, Boxes, Lightbulb, Ruler, Clock, Gem, ShieldCheck, PencilRuler, Wrench, Layers, Cpu } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
 import CTAButton from './CTAButton.jsx'
@@ -11,9 +11,11 @@ import cardStyle from '../assets/images/home-hero/card-stylefinder.png'
 import cardBer from '../assets/images/home-hero/card-beratung.png'
 
 const HOTSPOTS = [
-  { icon: Boxes, t: 'Stauraum', d: 'Intelligent geplant. Mehr Platz für das, was zählt.', cls: 'hx-spot--a' },
-  { icon: Lightbulb, t: 'Lichtkonzept', d: 'Stimmung schaffen. Funktion betonen. Atmosphäre formen.', cls: 'hx-spot--b' },
+  { icon: Boxes, t: 'Stauraumplanung', d: 'Mehr Platz für das, was zählt. Und weniger Chaos für das, was nervt.', cls: 'hx-spot--a' },
+  { icon: Lightbulb, t: 'Lichtkonzept', d: 'Stimmung schaffen, Funktion betonen, Atmosphäre formen.', cls: 'hx-spot--b' },
   { icon: Ruler, t: 'Präzise Montage', d: 'Millimetergenau. Sauber. Verlässlich. Ein Stück Handwerkskunst.', cls: 'hx-spot--c' },
+  { icon: Layers, t: 'Materialkonzept', d: 'Oberflächen, die schön aussehen und zum Alltag passen.', cls: 'hx-spot--d' },
+  { icon: Cpu, t: 'Geräteintegration', d: 'Technik da, wo sie Sinn macht. Nicht da, wo sie halt noch reinpasste.', cls: 'hx-spot--e' },
 ]
 
 const ENTRIES = [
@@ -32,14 +34,18 @@ const TRUST = [
 export default function HeroExperience() {
   const baRef = useRef(null)
   const [split, setSplit] = useState(54)
+  const [dragging, setDragging] = useState(false)
 
-  const onMove = (e) => {
+  const setFromClient = (clientX) => {
     const el = baRef.current
     if (!el) return
     const r = el.getBoundingClientRect()
-    const x = ((e.clientX - r.left) / r.width) * 100
-    setSplit(Math.min(88, Math.max(12, x)))
+    const x = ((clientX - r.left) / r.width) * 100
+    setSplit(Math.min(92, Math.max(8, x)))
   }
+  const onDown = (e) => { setDragging(true); setFromClient(e.clientX); if (e.currentTarget.setPointerCapture && e.pointerId != null) try { e.currentTarget.setPointerCapture(e.pointerId) } catch { /* noop */ } }
+  const onMovePtr = (e) => { if (dragging) setFromClient(e.clientX) }
+  const onUp = () => setDragging(false)
 
   return (
     <section className="section section--light hx-sec">
@@ -58,7 +64,7 @@ export default function HeroExperience() {
 
       <div className="container hx-bigwrap">
         <Reveal className="hx-visual" delay={0.1}>
-          <div className="hx-ba" ref={baRef} onMouseMove={onMove} style={{ '--split': `${split}%` }}>
+          <div className={`hx-ba ${dragging ? 'is-dragging' : ''}`} ref={baRef} onPointerDown={onDown} onPointerMove={onMovePtr} onPointerUp={onUp} onPointerLeave={onUp} onPointerCancel={onUp} style={{ '--split': `${split}%` }}>
             <div className="hx-ba__after"><img src={afterImg} alt="Fertige VIDEKO Küche" loading="lazy" /></div>
             <div className="hx-ba__before"><img src={beforeImg} alt="Leerer Raum vor der Planung" loading="lazy" />
               <span className="hx-meas hx-meas--top">3,20 m</span>

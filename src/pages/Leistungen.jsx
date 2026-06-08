@@ -38,9 +38,9 @@ const BAUSTEINE = [
 ]
 
 const STATS = [
-  { v: '98%', l: 'zufriedene Kunden' },
-  { v: '12+', l: 'Jahre Erfahrung' },
-  { v: '500+', l: 'Küchen realisiert' },
+  { v: '0', l: 'Küchenbasar' },
+  { v: '1', l: 'klarer Ablauf' },
+  { v: '7', l: 'Schritte bis zur fertigen Küche' },
 ]
 
 const BENEFITS = [
@@ -57,6 +57,7 @@ const PROCESS6 = [
   { n: '04', title: 'Bestellung', text: 'Wir bestellen Küche und Komponenten in geprüfter Qualität.' },
   { n: '05', title: 'Montage', text: 'Unsere Profis montieren sauber, präzise und termingerecht.' },
   { n: '06', title: 'Feinschliff & Übergabe', text: 'Wir prüfen jedes Detail und übergeben deine Küche sauber.' },
+  { n: '07', title: 'Nachbetreuung & Ansprechpartner', text: 'Küche fertig heißt bei uns nicht: Viel Glück, tschüss. Wir bleiben dein Ansprechpartner.' },
 ]
 
 const KLAR = [
@@ -105,25 +106,21 @@ export default function Leistungen() {
       {/* 2 — INTRO FEATURE (hell) + Video */}
       <section className="section leist-transform">
         <div className="container">
-          <div className="lintro">
-            <Reveal className="lintro__copy">
-              <span className="kicker">Unser Anspruch</span>
-              <h2 className="lintro__title">Mehr als nur Planung –<br /><span className="grad">wir schaffen Klarheit.</span></h2>
-              <p className="lintro__text">Ideen, Maße, Budget, Geräte, Handwerker, Termine – wir sortieren das Ganze und machen daraus einen Ablauf, der für dich Sinn ergibt.</p>
-              <ul className="lstances">
-                {FEATURE.map((c) => <li key={c}><Check size={16} strokeWidth={2.4} /> {c}</li>)}
+          <Reveal className="vfeature">
+            <video className="vfeature__vid" autoPlay muted loop playsInline preload="none" poster={featureImg} aria-hidden="true">
+              <source src={vnVideo} type="video/mp4" />
+            </video>
+            <span className="vfeature__veil" aria-hidden="true" />
+            <div className="vfeature__copy">
+              <span className="kicker kicker--gold">Unser Anspruch</span>
+              <h2 className="vfeature__title">Mehr als nur Planung –<br /><span className="grad">wir schaffen Klarheit.</span></h2>
+              <p className="vfeature__text">Ideen, Maße, Budget, Geräte, Handwerker, Termine – wir sortieren das Ganze und machen daraus einen Ablauf, der für dich Sinn ergibt.</p>
+              <ul className="vfeature__list">
+                {FEATURE.map((c) => <li key={c}><Check size={15} strokeWidth={2.4} /> {c}</li>)}
               </ul>
               <CTAButton to="/ueber-uns">Mehr über uns</CTAButton>
-            </Reveal>
-            <Reveal className="lintro__media" delay={0.08}>
-              <div className="svc-video__frame">
-                <video className="svc-video__vid" autoPlay muted loop playsInline preload="none" poster={featureImg} aria-hidden="true">
-                  <source src={vnVideo} type="video/mp4" />
-                </video>
-                <span className="lintro__rim" aria-hidden="true" />
-              </div>
-            </Reveal>
-          </div>
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -156,36 +153,7 @@ export default function Leistungen() {
         </div>
       </section>
 
-      {/* 4 — PROZESS / TIMELINE */}
-      <section className="section section--light leist-timeline">
-        <div className="container">
-          <div className="ltl">
-            <Reveal className="ltl__intro">
-              <span className="kicker">So läuft's ab</span>
-              <h2 className="lintro__title">Deine neue Küche. <span className="grad">Ein klarer Prozess.</span></h2>
-              <p className="lintro__text">Strukturiert, transparent und persönlich begleitet – von der ersten Idee bis zur letzten Schraube.</p>
-              <div className="ltl__hero">
-                <img src={featureImg} alt="" loading="lazy" />
-                <span className="ltl__overlay"><b>Dein Projekt im Blick</b><i>Wir koordinieren alle Gewerke und halten dich immer auf dem Laufenden.</i></span>
-              </div>
-            </Reveal>
-            <ol className="ltl__list">
-              {PROCESS6.map((b, i) => (
-                <Reveal key={b.title} className="ltl__step" delay={(i % 6) * 0.05}>
-                  <span className="ltl__n">{b.n}</span>
-                  <span className="ltl__body"><span className="ltl__t">{b.title}</span><span className="ltl__d">{b.text}</span></span>
-                </Reveal>
-              ))}
-            </ol>
-            <div className="ltl__cards">
-              <Reveal className="ltl__card"><img src={img3d} alt="" loading="lazy" /><span className="ltl__cardov"><b>Präzise Planung</b><i>für perfekte Ergebnisse.</i></span></Reveal>
-              <Reveal className="ltl__card" delay={0.1}><img src={imgMat} alt="" loading="lazy" /><span className="ltl__cardov"><b>Qualität, die man sieht</b><i>und spürt.</i></span></Reveal>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 5 — VORTEILE / BENEFITS */}
+      {/* 4 — VORTEILE / BENEFITS (erst emotionaler Nutzen) */}
       <section className="section leist-benefits">
         <div className="container">
           <div className="lbf">
@@ -207,6 +175,35 @@ export default function Leistungen() {
               ))}
             </div>
             <Reveal className="lbf__media" delay={0.1}><span className="lbf__img" style={{ backgroundImage: `url(${heroImg})` }} aria-hidden="true" /></Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* 5 — PROZESS / TIMELINE (dann konkreter Ablauf) */}
+      <section className="section section--light leist-timeline">
+        <div className="container">
+          <div className="ltl">
+            <Reveal className="ltl__intro">
+              <span className="kicker">So läuft's ab</span>
+              <h2 className="lintro__title">Deine neue Küche. <span className="grad">Ein klarer Prozess.</span></h2>
+              <p className="lintro__text">Strukturiert, transparent und persönlich begleitet – von der ersten Idee bis zur letzten Schraube.</p>
+              <div className="ltl__hero">
+                <img src={featureImg} alt="" loading="lazy" />
+                <span className="ltl__overlay"><b>Dein Projekt im Blick</b><i>Wir koordinieren alle Gewerke und halten dich immer auf dem Laufenden.</i></span>
+              </div>
+            </Reveal>
+            <ol className="ltl__list">
+              {PROCESS6.map((b, i) => (
+                <Reveal key={b.title} className="ltl__step" delay={(i % 7) * 0.05}>
+                  <span className="ltl__n">{b.n}</span>
+                  <span className="ltl__body"><span className="ltl__t">{b.title}</span><span className="ltl__d">{b.text}</span></span>
+                </Reveal>
+              ))}
+            </ol>
+            <div className="ltl__cards">
+              <Reveal className="ltl__card"><img src={img3d} alt="" loading="lazy" /><span className="ltl__cardov"><b>Präzise Planung</b><i>für perfekte Ergebnisse.</i></span></Reveal>
+              <Reveal className="ltl__card" delay={0.1}><img src={imgMat} alt="" loading="lazy" /><span className="ltl__cardov"><b>Qualität, die man sieht</b><i>und spürt.</i></span></Reveal>
+            </div>
           </div>
         </div>
       </section>

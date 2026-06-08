@@ -151,15 +151,21 @@ export default function UeberUns() {
       <section className="section about-team">
         <div className="container">
           <SectionHeader align="center" kicker="Das Team hinter VIDEKO" title="Mehr als nur drei Gründer." lead="Hinter jeder Küche steht ein ganzes Team, das mitdenkt." />
-          <div className="about-bento">
+          <div className="teamflip">
             {TEAM.map((t, i) => (
-              <Reveal key={t.title} className={`bento-card ${i === 0 ? 'is-big' : ''}`} delay={(i % 3) * 0.06}>
-                <span className="bento-card__img" style={{ backgroundImage: `url(${t.image})` }} aria-hidden="true" />
-                <span className="bento-card__body">
-                  <span className="bento-card__title">{t.title}</span>
-                  <span className="bento-card__text">{t.text}</span>
-                </span>
-                <span className="bento-card__edge" aria-hidden="true" />
+              <Reveal key={t.title} as="div" className={`tflip ${i === 0 ? 'is-big' : ''}`} delay={(i % 3) * 0.06} tabIndex={0} role="button" aria-label={`${t.title} – Details`}>
+                <div className="tflip__inner">
+                  <div className="tflip__front">
+                    <span className="tflip__img" style={{ backgroundImage: `url(${t.image})` }} aria-hidden="true" />
+                    <span className="tflip__scrim" aria-hidden="true" />
+                    <span className="tflip__title">{t.title}</span>
+                  </div>
+                  <div className="tflip__back">
+                    <span className="tflip__bt">{t.title}</span>
+                    <span className="tflip__bx">{t.text}</span>
+                    <span className="tflip__cue">Teil des VIDEKO-Teams</span>
+                  </div>
+                </div>
               </Reveal>
             ))}
           </div>
