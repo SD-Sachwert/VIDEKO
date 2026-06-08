@@ -98,20 +98,19 @@ export default function Karriere() {
   const imgScale = useTransform(scrollYProgress, [0, 1], [1.06, 1.16])
   const [sent, setSent] = useState(false)
   const [activeJob, setActiveJob] = useState(0)
-  const [panelOpen, setPanelOpen] = useState(false)
   const [paused, setPaused] = useState(false)
 
-  const deckNext = () => { setActiveJob((v) => (v + 1) % DECK.length); setPanelOpen(false) }
-  const deckPrev = () => { setActiveJob((v) => (v - 1 + DECK.length) % DECK.length); setPanelOpen(false) }
-  const deckGo = (i) => { setActiveJob(i); setPanelOpen(false) }
+  const deckNext = () => setActiveJob((v) => (v + 1) % DECK.length)
+  const deckPrev = () => setActiveJob((v) => (v - 1 + DECK.length) % DECK.length)
+  const deckGo = (i) => setActiveJob(i)
 
-  // autoplay — pauses on hover or when the detail panel is open; respects reduced-motion
+  // autoplay — pauses on hover; respects reduced-motion
   useEffect(() => {
-    if (paused || panelOpen) return
+    if (paused) return
     if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     const id = setInterval(() => setActiveJob((v) => (v + 1) % DECK.length), 4500)
     return () => clearInterval(id)
-  }, [paused, panelOpen])
+  }, [paused])
 
   const deckRel = (i) => { let d = i - activeJob; const n = DECK.length; if (d > n / 2) d -= n; if (d < -n / 2) d += n; return d }
 
@@ -189,75 +188,74 @@ export default function Karriere() {
         </div>
       </section>
 
-      {/* 3 — KARRIERE-DECK (auto-rotierendes Coverflow) */}
+      {/* 3 — KARRIERE-DECK (Intro oben, Bühne darunter) */}
       <section className="section section--light karr-deck-sec" id="rollen">
-        <div className="container karr-deck">
-          <Reveal className="karr-deck__info">
+        <div className="container">
+          <Reveal className="karr-deck2__intro">
             <span className="kicker">Karriere bei VIDEKO</span>
             <h2 className="lintro__title">Finde deinen Platz. <span className="grad">Nicht irgendeinen.</span></h2>
             <p className="lintro__text">Bei VIDEKO suchen wir Menschen, die mitdenken, anpacken und Lust haben, gemeinsam etwas Besonderes zu schaffen.</p>
             <p className="karr-deck__wink">Auch „keine Ahnung, aber Bock" ist ein ziemlich guter Start.</p>
-            <div className="karr-deck__values">
+            <div className="karr-deck2__values">
               {VALUES.map((v) => (
-                <div key={v.title} className="karr-value">
-                  <span className="karr-value__ic"><v.icon size={18} strokeWidth={1.7} /></span>
-                  <span className="karr-value__body"><span className="karr-value__t">{v.title}</span><span className="karr-value__d">{v.text}</span></span>
+                <div key={v.title} className="karr-value2">
+                  <span className="karr-value2__ic"><v.icon size={18} strokeWidth={1.7} /></span>
+                  <span className="karr-value2__t">{v.title}</span>
                 </div>
               ))}
             </div>
           </Reveal>
+        </div>
 
-          <div className="karr-deck__main" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
-            <div className="cdeck__stage">
-              {DECK.map((r, i) => {
-                const d = deckRel(i)
-                const isActive = d === 0
-                const show = Math.abs(d) <= 2
-                const style = {
-                  transform: `translate(-50%, -50%) translateX(${d * 50}%) scale(${isActive ? 1 : Math.abs(d) === 1 ? 0.8 : 0.64}) rotateY(${d * -13}deg)`,
-                  opacity: show ? (isActive ? 1 : Math.abs(d) === 1 ? 0.7 : 0.4) : 0,
-                  zIndex: 10 - Math.abs(d),
-                  pointerEvents: show ? 'auto' : 'none',
-                }
-                return (
-                  <button key={r.name} type="button" className={`cdeck__card ${isActive ? 'is-active' : ''}`} style={style}
-                    aria-label={isActive ? `${r.name} – Details anzeigen` : `Zu ${r.name} wechseln`}
-                    onClick={() => (isActive ? setPanelOpen((o) => !o) : deckGo(i))}>
-                    <img src={r.img} alt={r.name} loading="lazy" />
-                    {isActive && !panelOpen && <span className="cdeck__more">Mehr zur Rolle <ArrowRight size={14} strokeWidth={2} /></span>}
-                  </button>
-                )
-              })}
+        <div className="cdeck2" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+          <div className="cdeck2__stage">
+            {DECK.map((r, i) => {
+              const d = deckRel(i)
+              const isActive = d === 0
+              const show = Math.abs(d) <= 2
+              const off = d === 0 ? 0 : d > 0 ? 540 + (d - 1) * 230 : -540 + (d + 1) * 230
+              const style = {
+                transform: `translate(-50%, -50%) translateX(${off}px) scale(${isActive ? 1 : Math.abs(d) === 1 ? 0.8 : 0.62})`,
+                opacity: show ? (isActive ? 1 : Math.abs(d) === 1 ? 0.9 : 0.5) : 0,
+                zIndex: isActive ? 20 : 10 - Math.abs(d),
+                pointerEvents: show ? 'auto' : 'none',
+              }
+              return (
+                <div key={r.name} className={`cdeck2__card ${isActive ? 'is-active' : ''}`} style={style} aria-hidden={!show}>
+                  {isActive ? (
+                    <>
+                      <div className="cdeck2__photo"><img src={r.img} alt={r.name} loading="lazy" /></div>
+                      <div className="cdeck2__detail">
+                        <span className="cdeck2__n">{r.n}</span>
+                        <h3 className="cdeck2__title">{r.name}</h3>
+                        <ul className="cdeck2__list">
+                          <li><span>Worum es geht</span>{r.panel.about}</li>
+                          <li><span>Was du ungefähr machst</span>{r.panel.tasks}</li>
+                          <li><span>Was du mitbringen solltest</span>{r.panel.req}</li>
+                          <li><span>Was du bei uns bekommst</span>{r.panel.get}</li>
+                        </ul>
+                        <CTAButton href="#bewerbung">Jetzt initiativ bewerben</CTAButton>
+                      </div>
+                    </>
+                  ) : (
+                    <button type="button" className="cdeck2__preview" onClick={() => deckGo(i)} tabIndex={show ? 0 : -1} aria-label={`Zu ${r.name} wechseln`}>
+                      <img src={r.img} alt={r.name} loading="lazy" />
+                    </button>
+                  )}
+                </div>
+              )
+            })}
+          </div>
 
-              <AnimatePresence>
-                {panelOpen && (
-                  <motion.div className="cdeck__panel" key={activeJob}
-                    initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 30 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}>
-                    <button type="button" className="cdeck__panel-close" onClick={() => setPanelOpen(false)} aria-label="Schließen">×</button>
-                    <span className="cdeck__panel-n">{DECK[activeJob].n}</span>
-                    <h3 className="cdeck__panel-title">{DECK[activeJob].name}</h3>
-                    <ul className="cdeck__panel-list">
-                      <li><span>Worum es geht</span>{DECK[activeJob].panel.about}</li>
-                      <li><span>Was du ungefähr machst</span>{DECK[activeJob].panel.tasks}</li>
-                      <li><span>Was du mitbringen solltest</span>{DECK[activeJob].panel.req}</li>
-                      <li><span>Was du bei uns bekommst</span>{DECK[activeJob].panel.get}</li>
-                    </ul>
-                    <CTAButton href="#bewerbung">Jetzt initiativ bewerben</CTAButton>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+          <div className="cdeck__nav">
+            <button type="button" className="cdeck__arrow" onClick={deckPrev} aria-label="Vorherige Rolle"><ChevronLeft size={20} strokeWidth={2} /></button>
+            <div className="cdeck__dots">
+              {DECK.map((r, i) => (
+                <button key={r.name} type="button" className={`cdeck__dot ${activeJob === i ? 'is-active' : ''}`} onClick={() => deckGo(i)} aria-label={`Rolle ${r.n}`} />
+              ))}
             </div>
-
-            <div className="cdeck__nav">
-              <button type="button" className="cdeck__arrow" onClick={deckPrev} aria-label="Vorherige Rolle"><ChevronLeft size={20} strokeWidth={2} /></button>
-              <div className="cdeck__dots">
-                {DECK.map((r, i) => (
-                  <button key={r.name} type="button" className={`cdeck__dot ${activeJob === i ? 'is-active' : ''}`} onClick={() => deckGo(i)} aria-label={`Rolle ${r.n}`} />
-                ))}
-              </div>
-              <button type="button" className="cdeck__arrow" onClick={deckNext} aria-label="Nächste Rolle"><ChevronRight size={20} strokeWidth={2} /></button>
-              <span className="cdeck__hint">Automatisch wechselnde Rollen</span>
-            </div>
+            <button type="button" className="cdeck__arrow" onClick={deckNext} aria-label="Nächste Rolle"><ChevronRight size={20} strokeWidth={2} /></button>
+            <span className="cdeck__hint">Automatisch wechselnde Rollen</span>
           </div>
         </div>
 

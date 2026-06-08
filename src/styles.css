@@ -10958,6 +10958,45 @@ a.footer__contact-line:hover {
   .karr-deckstats__row { gap: 28px; }
 }
 
+/* === KARRIERE-DECK v2 (intro oben, saubere Bühne, split active card) === */
+.karr-deck2__intro { text-align: center; max-width: 760px; margin: 0 auto; }
+.karr-deck2__intro .lintro__title { margin-top: 8px; }
+.karr-deck2__intro .lintro__text { margin: 14px auto 0; max-width: 600px; }
+.karr-deck2__intro .karr-deck__wink { margin: 12px 0 0; }
+.karr-deck2__values { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 30px; margin-top: 28px; }
+.karr-value2 { display: inline-flex; align-items: center; gap: 10px; }
+.karr-value2__ic { width: 40px; height: 40px; border-radius: 11px; flex: none; display: grid; place-items: center; color: var(--bronze); background: rgba(201, 160, 80, 0.12); border: 1px solid rgba(201, 160, 80, 0.25); }
+.karr-value2__t { font-family: var(--serif); font-weight: 600; color: var(--ink); font-size: 0.98rem; }
+
+.cdeck2 { position: relative; margin-top: 52px; }
+.cdeck2__stage { position: relative; height: 720px; perspective: 1900px; --ch: 480px; }
+.cdeck2__card { position: absolute; top: 50%; left: 50%; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.55s ease; will-change: transform, opacity; }
+.cdeck2__card.is-active { display: flex; height: var(--ch); border-radius: 24px; overflow: hidden; background: var(--cream); box-shadow: 0 64px 120px -46px rgba(120, 90, 40, 0.55); }
+.cdeck2__photo { height: 100%; aspect-ratio: 4 / 3; flex: none; overflow: hidden; }
+.cdeck2__photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cdeck2__detail { width: 380px; flex: none; height: 100%; background: rgba(255, 252, 244, 0.96); backdrop-filter: blur(2px); padding: 30px; display: flex; flex-direction: column; border-left: 1px solid rgba(201, 160, 80, 0.22); }
+.cdeck2__n { font-family: var(--serif); color: var(--bronze); font-size: 1.05rem; }
+.cdeck2__title { font-family: var(--serif); font-size: 1.5rem; color: var(--ink); margin: 2px 0 16px; }
+.cdeck2__list { list-style: none; margin: 0 0 18px; padding: 0; display: flex; flex-direction: column; gap: 11px; flex: 1; }
+.cdeck2__list li { font-size: 0.84rem; line-height: 1.4; color: var(--ink-soft); display: flex; flex-direction: column; gap: 2px; }
+.cdeck2__list li span { font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--bronze); font-weight: 600; }
+.cdeck2__detail > a, .cdeck2__detail > button { align-self: flex-start; }
+.cdeck2__preview { width: clamp(340px, 32vw, 460px); aspect-ratio: 4 / 3; padding: 0; border: none; background: none; cursor: pointer; border-radius: 18px; overflow: hidden; box-shadow: 0 44px 84px -46px rgba(0, 0, 0, 0.5); display: block; }
+.cdeck2__preview img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+@media (max-width: 1100px) {
+  .cdeck2__stage { --ch: 430px; height: 660px; }
+  .cdeck2__detail { width: 340px; }
+}
+@media (max-width: 860px) {
+  .cdeck2__stage { height: auto; perspective: none; display: flex; justify-content: center; padding: 0 16px; }
+  .cdeck2__card { position: static; transform: none !important; opacity: 1 !important; }
+  .cdeck2__card:not(.is-active) { display: none; }
+  .cdeck2__card.is-active { flex-direction: column; height: auto; width: min(440px, 92vw); }
+  .cdeck2__photo { width: 100%; height: auto; aspect-ratio: 4 / 3; }
+  .cdeck2__detail { width: 100%; border-left: none; border-top: 1px solid rgba(201, 160, 80, 0.22); }
+}
+
 /* =====================================================================
    KEYFRAMES
    ===================================================================== */
