@@ -11038,31 +11038,29 @@ a.footer__contact-line:hover {
 }
 
 /* === EXPLODING KITCHEN (sticky scroll signature section) === */
-.ek-sec { position: relative; min-height: 360vh; background: linear-gradient(180deg, #fbf7ee 0%, #f4ece0 100%); }
-.ek-sec { isolation: isolate; }
+.ek-sec { position: relative; min-height: 360vh; isolation: isolate; background: radial-gradient(120% 80% at 50% 38%, #f9f2ea 0%, #f6efe6 60%, #f1e8da 100%); }
 .ek-sticky { width: 100%; height: 100vh; display: flex; flex-direction: column; justify-content: center; overflow: hidden; padding: 36px 0; }
 .ek-grid { display: grid; grid-template-columns: 0.9fr 1.7fr 0.9fr; gap: 28px; align-items: center; }
 .ek-headline { font-family: var(--serif); font-size: clamp(1.7rem, 2.8vw, 2.5rem); line-height: 1.12; color: var(--ink); margin: 8px 0 0; }
 .ek-sub { font-size: 1rem; line-height: 1.6; color: var(--ink-soft); margin: 16px 0 0; max-width: 380px; }
 .ek-note { font-size: 0.86rem; line-height: 1.55; color: var(--bronze); font-style: italic; margin: 16px 0 0; }
-.ek-copy, .ek-info { position: relative; z-index: 20; }
-.ek-stage { position: relative; width: 100%; max-width: 980px; margin: 0 auto; aspect-ratio: 16 / 9; pointer-events: none; z-index: 10; }
-.ek-stage img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; user-select: none; opacity: 1; mix-blend-mode: normal; filter: none; will-change: transform, opacity; }
-.ek-streaks { z-index: 1; mix-blend-mode: screen; }
-.ek-shadow { z-index: 2; }
-.ek-l-base { z-index: 3; }
-.ek-l-tech { z-index: 4; }
-.ek-l-storage { z-index: 5; }
-.ek-l-shell { z-index: 6; }
-.ek-l-frame { z-index: 7; }
-.ek-l-countertop { z-index: 8; }
-.ek-assembled { z-index: 9; }
+.ek-copy, .ek-info { position: relative; z-index: 30; }
+.ek-stage { position: relative; width: 100%; max-width: 980px; margin: 0 auto; aspect-ratio: 16 / 9; pointer-events: none; z-index: 10; isolation: isolate; }
+/* soft radial glow under/around the kitchen for depth (no image rectangle) */
+.ek-glow { position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%); width: 86%; height: 70%; border-radius: 50%; background: radial-gradient(circle, rgba(216, 194, 139, 0.55), rgba(216, 194, 139, 0) 64%); filter: blur(26px); z-index: 1; }
+.ek-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: transparent; mix-blend-mode: normal; filter: none; user-select: none; z-index: 2; will-change: opacity, transform;
+  -webkit-mask-image: radial-gradient(125% 125% at 50% 50%, #000 86%, transparent 100%);
+  mask-image: radial-gradient(125% 125% at 50% 50%, #000 86%, transparent 100%); }
+.ek-img--overview { transform-origin: center 46%; }
+.ek-hot { position: absolute; width: 11px; height: 11px; border-radius: 999px; background: #b6924b; transform: translate(-50%, -50%); z-index: 5; box-shadow: 0 0 0 7px rgba(182, 146, 75, 0.14), 0 0 22px rgba(182, 146, 75, 0.4); transition: opacity 0.4s ease; }
+.ek-hot::after { content: ""; position: absolute; inset: -9px; border-radius: inherit; border: 1px solid rgba(182, 146, 75, 0.4); animation: ekHotPulse 2.4s ease-out infinite; }
+@keyframes ekHotPulse { 0% { transform: scale(0.7); opacity: 0.7; } 100% { transform: scale(1.85); opacity: 0; } }
 .ek-info { display: flex; flex-direction: column; gap: 14px; }
 .ek-card { padding: 16px 18px; border-radius: 16px; background: rgba(255, 255, 255, 0.72); border: 1px solid rgba(120, 95, 45, 0.16); box-shadow: 0 22px 60px -42px rgba(45, 35, 20, 0.4); backdrop-filter: blur(8px); transition: opacity 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease; opacity: 0.55; }
 .ek-card.is-active { opacity: 1; border-color: rgba(184, 149, 79, 0.5); box-shadow: 0 30px 72px -38px rgba(120, 90, 40, 0.5); transform: translateX(-4px); }
 .ek-card__t { display: block; font-family: var(--serif); font-size: 1.06rem; color: var(--ink); }
 .ek-card__d { display: block; font-size: 0.82rem; line-height: 1.45; color: var(--ink-soft); margin-top: 4px; }
-.ek-progress { position: relative; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-top: 22px; flex-wrap: wrap; }
+.ek-progress { position: relative; z-index: 35; display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-top: 22px; flex-wrap: wrap; }
 .ek-steps { position: relative; display: flex; gap: 28px; flex-wrap: wrap; padding-top: 4px; }
 .ek-steps__line { position: absolute; left: 4px; right: 4px; top: 13px; height: 2px; background: rgba(120, 95, 45, 0.16); border-radius: 2px; z-index: 0; overflow: hidden; }
 .ek-steps__line span { display: block; height: 100%; background: var(--grad-gold); transform-origin: left center; transition: transform 0.2s linear; }
