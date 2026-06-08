@@ -11012,6 +11012,31 @@ a.footer__contact-line:hover {
 .lp-transform__more { text-align: center; margin-top: 24px; }
 @media (max-width: 640px) { .lp-transform__stats2 { gap: 26px 34px; } }
 
+/* === HOME middle: warm ivory premium ground + gold detailing === */
+.home-page { position: relative; background:
+    radial-gradient(circle at 14% 6%, rgba(216, 194, 139, 0.16), transparent 28%),
+    radial-gradient(circle at 84% 26%, rgba(255, 255, 255, 0.55), transparent 32%),
+    radial-gradient(circle at 50% 96%, rgba(216, 194, 139, 0.10), transparent 30%),
+    linear-gradient(180deg, #fbf7ee 0%, #f5ede0 100%); }
+.home-page .section--light { background: transparent; position: relative; }
+/* faint gold hairline between the light middle sections */
+.home-page .section--light + .section--light::before { content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: min(1180px, 88%); height: 1px; background: linear-gradient(90deg, transparent, rgba(184, 149, 79, 0.4), transparent); }
+
+/* premium gold shine sweep on the image cards */
+.lpway, .lpgal, .lpteam, .lpjcard { position: relative; }
+.lpway::after, .lpgal::after, .lpteam::after, .lpjcard::after { content: ""; position: absolute; inset: 0; z-index: 4; pointer-events: none; background: linear-gradient(120deg, transparent 0%, rgba(216, 194, 139, 0.26) 45%, transparent 66%); transform: translateX(-130%); transition: transform 0.9s ease; }
+.lpway:hover::after, .lpgal:hover::after, .lpteam:hover::after, .lpjcard:hover::after { transform: translateX(130%); }
+
+/* technik exploded view: gentle float + warm gold glow = signature wow */
+.lp-tech__viz { position: relative; }
+.lp-tech__viz::before { content: ""; position: absolute; inset: 6% 10%; z-index: 0; background: radial-gradient(circle at 50% 55%, rgba(216, 194, 139, 0.4), transparent 62%); filter: blur(18px); }
+.lp-tech__viz img { position: relative; z-index: 1; animation: lpFloat 7s ease-in-out infinite; }
+@keyframes lpFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+@media (prefers-reduced-motion: reduce) {
+  .lp-tech__viz img { animation: none; }
+  .lpway::after, .lpgal::after, .lpteam::after, .lpjcard::after { display: none; }
+}
+
 /* =====================================================================
    KEYFRAMES
    ===================================================================== */
