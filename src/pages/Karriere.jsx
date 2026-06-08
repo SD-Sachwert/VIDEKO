@@ -24,6 +24,8 @@ import jc03 from '../assets/images/karriere/karten/03_montage_handwerk.png'
 import jc04 from '../assets/images/karriere/karten/04_empfang_organisation.png'
 import jc05 from '../assets/images/karriere/karten/05_marketing_social_media.png'
 import jc06 from '../assets/images/karriere/karten/06_quereinsteiger.png'
+import jc07 from '../assets/images/karriere/karten/07_reinigung_studio_service.png'
+import jc08 from '../assets/images/karriere/karten/08_reklamation_service.png'
 
 const DECK = [
   { n: '01', name: 'Beratung & Verkauf', img: jc01, panel: { about: 'Kund:innen beraten & begeistern.', tasks: 'Gespräche führen, Lösungen finden, Angebote erstellen.', req: 'Kommunikationsstärke, Empathie und ein gutes Gespür für Menschen.', get: 'Wertschätzung, Entwicklung und ein Team, das zusammenhält.' } },
@@ -32,6 +34,8 @@ const DECK = [
   { n: '04', name: 'Empfang & Organisation', img: jc04, panel: { about: 'Ordnung, Übersicht und ein professioneller erster Eindruck.', tasks: 'Termine koordinieren, Anfragen betreuen, intern den Überblick behalten.', req: 'Organisationstalent, Freundlichkeit und ein ruhiges Auftreten.', get: 'Verantwortung, Vertrauen und einen wichtigen Platz im Ablauf.' } },
   { n: '05', name: 'Marketing & Social Media', img: jc05, panel: { about: 'Sichtbarkeit, Marke und gutes Storytelling.', tasks: 'Inhalte planen, Content erstellen, Ideen sichtbar machen.', req: 'Kreativität, Stilgefühl und Lust auf hochwertige Kommunikation.', get: 'Freiraum, Entwicklung und eine Marke mit Charakter.' } },
   { n: '06', name: 'Quereinstieg', img: jc06, panel: { about: 'Potenzial statt Schubladendenken.', tasks: 'Je nach Stärken mitarbeiten, lernen, Verantwortung übernehmen und dich entwickeln.', req: 'Motivation, Verlässlichkeit und Lust, etwas zu bewegen.', get: 'Echte Chancen, ehrliches Feedback und Entwicklung im Team.' } },
+  { n: '07', name: 'Reinigung & Studio-Service', img: jc07, panel: { about: 'Ein Studio, das jeden Tag zum Reinkommen einlädt.', tasks: 'Studio pflegen, für Ordnung sorgen und den perfekten ersten Eindruck sichern.', req: 'Sorgfalt, Verlässlichkeit und ein Auge fürs Detail.', get: 'Wertschätzung, ein nettes Team und planbare Zeiten.' } },
+  { n: '08', name: 'Reklamation & Service', img: jc08, panel: { about: 'Aus Problemen wieder Vertrauen machen.', tasks: 'Anliegen aufnehmen, Lösungen finden und Kund:innen souverän begleiten.', req: 'Ruhe, Klarheit und ein gutes Gespür für Menschen.', get: 'Verantwortung, Entwicklung und ein Team, das hinter dir steht.' } },
 ]
 
 const VALUES = [

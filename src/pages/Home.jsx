@@ -7,7 +7,7 @@ import Hero from '../components/Hero.jsx'
 import Reveal from '../components/Reveal.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
 import CTAButton from '../components/CTAButton.jsx'
-import BeforeAfter from '../components/BeforeAfter.jsx'
+import verwandleVideo from '../assets/images/home/verwandle-raum.mp4'
 
 import wayInsp from '../assets/images/inspiration/01_hero_atmosphaerische_kueche.png'
 import waySf from '../assets/images/kuechenwelten/stilfinderhero-kitchen-wide.jpg'
@@ -22,8 +22,6 @@ import gMat from '../assets/images/inspiration/06_materialien_und_details.png'
 import gBer from '../assets/images/ueber-uns/02_why_videko_beratungsszene.png'
 import gTech from '../assets/images/inspiration/09_premium_architektur_kueche.png'
 import gBesicht from '../assets/images/studio/bilder/01_hero_studio_showroom.png'
-import vorherImg from '../assets/images/vorher-nachher/vorher-1.jpg'
-import nachherImg from '../assets/images/vorher-nachher/nachher-1.jpg'
 import pc1 from '../assets/images/leistungen/ls-consulting.png'
 import pc2 from '../assets/images/leistungen/ls-3d.png'
 import pc3 from '../assets/images/leistungen/ls-materials.png'
@@ -227,25 +225,26 @@ export default function Home() {
 
       {/* 5 — TRANSFORMATION */}
       <section className="section section--light lp-transform-sec">
-        <div className="container lp-transform">
-          <Reveal className="lp-transform__copy">
+        <div className="container">
+          <Reveal className="lp-transform__head">
             <span className="kicker">Vorher / Nachher</span>
             <h2 className="lp-h2">Verwandle deinen Raum <span className="grad">in etwas Besonderes.</span></h2>
             <p className="lp-lead">Mit durchdachtem Design und sauberer Planung wird aus einem Raum zum Ankommen mehr.</p>
-            <Link to="/vorher-nachher" className="lp-link">Mehr Transformationen <ArrowRight size={15} strokeWidth={2} /></Link>
           </Reveal>
-          <Reveal className="lp-transform__ba" delay={0.1}>
-            <BeforeAfter before={vorherImg} after={nachherImg} />
+          <Reveal className="lp-transform__video" delay={0.1}>
+            <video src={verwandleVideo} autoPlay muted loop playsInline preload="metadata" aria-label="Küchen-Transformation von VIDEKO" />
           </Reveal>
-          <div className="lp-transform__stats">
+          <div className="lp-transform__stats2">
             {STATS.map((s, i) => (
-              <Reveal key={s.l} className="lpstat" delay={i * 0.08}>
-                <span className="lpstat__v grad">{s.v}</span>
-                <span className="lpstat__l">{s.l}</span>
-                {s.sub && <span className="lpstat__sub">{s.sub}</span>}
+              <Reveal key={s.l} className="lpstat2" delay={i * 0.08}>
+                <span className="lpstat2__v grad">{s.v}</span>
+                <span className="lpstat2__l">{s.l}{s.sub ? <i>{s.sub}</i> : null}</span>
               </Reveal>
             ))}
           </div>
+          <Reveal className="lp-transform__more">
+            <Link to="/vorher-nachher" className="lp-link">Mehr Transformationen <ArrowRight size={15} strokeWidth={2} /></Link>
+          </Reveal>
         </div>
       </section>
 
