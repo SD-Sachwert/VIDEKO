@@ -1,0 +1,144 @@
+KARRIERE-DECK – CONTENT
+
+SECTION-TEXT LINKS
+Kicker:
+Karriere bei VIDEKO
+
+Headline:
+Finde deinen Platz. Nicht irgendeinen.
+
+Text:
+Bei VIDEKO suchen wir Menschen, die mitdenken, anpacken und Lust haben, gemeinsam etwas Besonderes zu schaffen.
+
+Zusatz:
+Auch „keine Ahnung, aber Bock“ ist ein ziemlich guter Start.
+
+VALUES / INFOBAUSTEINE:
+1. Menschen im Mittelpunkt
+Ehrlich, wertschätzend und auf Augenhöhe – im Team und mit unseren Kund:innen.
+
+2. Qualität, die bleibt
+Wir gestalten Wohnräume, die begeistern – bis ins kleinste Detail.
+
+3. Entwicklung, die Sinn macht
+Wachsen. Verantwortung übernehmen. Dinge bewegen – bei VIDEKO.
+
+==================================================
+ROLLEN / KARTEN
+==================================================
+
+01 – Beratung & Verkauf
+Unterzeile:
+Küchen verkaufen? Nein. Wohnräume ermöglichen.
+Kurztext:
+Du begleitest Kund:innen vom ersten Gespräch bis zur Traumküche – mit Stil, Empathie und einem echten Gespür für Menschen.
+Tags:
+Vollzeit / Kundenkontakt / Würzburg
+Panel – Worum es geht:
+Kund:innen beraten & begeistern.
+Panel – Was du ungefähr machst:
+Gespräche führen, Lösungen finden, Angebote erstellen.
+Panel – Was du mitbringen solltest:
+Kommunikationsstärke, Empathie und ein gutes Gespür für Menschen.
+Panel – Was du bei uns bekommst:
+Wertschätzung, Entwicklung und ein Team, das zusammenhält.
+
+02 – Planung & Technik
+Unterzeile:
+Aus Ideen werden Lösungen.
+Kurztext:
+Du denkst Räume, Maße, Funktionen und Alltag zusammen – präzise, strukturiert und mit Blick fürs Ganze.
+Tags:
+Planung / Technik / Würzburg
+Panel – Worum es geht:
+Planung, Präzision und das gute Gefühl, wenn alles passt.
+Panel – Was du ungefähr machst:
+Küchen planen, Details abstimmen, technische Lösungen mitdenken.
+Panel – Was du mitbringen solltest:
+Struktur, Genauigkeit und Freude an sauberer Planung.
+Panel – Was du bei uns bekommst:
+Verantwortung, Entwicklung und spannende Projekte.
+
+03 – Montage & Handwerk
+Unterzeile:
+Geplant ist gut. Sauber gebaut ist besser.
+Kurztext:
+Du sorgst dafür, dass aus Planung Wirklichkeit wird – ordentlich, zuverlässig und mit Anspruch an gute Arbeit.
+Tags:
+Montage / Handwerk / Teamarbeit
+Panel – Worum es geht:
+Saubere Umsetzung und echtes Handwerk.
+Panel – Was du ungefähr machst:
+Küchen montieren, Details sauber umsetzen, Lösungen vor Ort finden.
+Panel – Was du mitbringen solltest:
+Handwerkliches Geschick, Zuverlässigkeit und Lust auf gute Arbeit.
+Panel – Was du bei uns bekommst:
+Wertschätzung, ein starkes Team und sichtbare Ergebnisse.
+
+04 – Empfang & Organisation
+Unterzeile:
+Der erste Eindruck zählt.
+Kurztext:
+Du hältst Abläufe zusammen, koordinierst Termine und sorgst dafür, dass sich Menschen bei VIDEKO von Anfang an gut aufgehoben fühlen.
+Tags:
+Organisation / Empfang / Struktur
+Panel – Worum es geht:
+Ordnung, Übersicht und ein professioneller erster Eindruck.
+Panel – Was du ungefähr machst:
+Termine koordinieren, Anfragen betreuen, intern den Überblick behalten.
+Panel – Was du mitbringen solltest:
+Organisationstalent, Freundlichkeit und ein ruhiges Auftreten.
+Panel – Was du bei uns bekommst:
+Verantwortung, Vertrauen und einen wichtigen Platz im Ablauf.
+
+05 – Marketing & Social Media
+Unterzeile:
+Zeigen, was VIDEKO besonders macht.
+Kurztext:
+Du bringst unsere Projekte, Ideen und Geschichten nach außen – hochwertig, klar und ohne Möbelhaus-Gebrüll.
+Tags:
+Content / Marke / Social Media
+Panel – Worum es geht:
+Sichtbarkeit, Marke und gutes Storytelling.
+Panel – Was du ungefähr machst:
+Inhalte planen, Content erstellen, Ideen sichtbar machen.
+Panel – Was du mitbringen solltest:
+Kreativität, Stilgefühl und Lust auf hochwertige Kommunikation.
+Panel – Was du bei uns bekommst:
+Freiraum, Entwicklung und eine Marke mit Charakter.
+
+06 – Quereinstieg
+Unterzeile:
+Keine Ahnung, aber Bock?
+Kurztext:
+Perfekt. Wenn du mitdenkst, sauber arbeitest und Lust auf Küche hast, reden wir. Nicht jeder gute Start braucht einen klassischen Lebenslauf.
+Tags:
+Quereinstieg / Entwicklung / Chancen
+Panel – Worum es geht:
+Potenzial statt Schubladendenken.
+Panel – Was du ungefähr machst:
+Je nach Stärken mitarbeiten, lernen, Verantwortung übernehmen und dich entwickeln.
+Panel – Was du mitbringen solltest:
+Motivation, Verlässlichkeit und Lust, etwas zu bewegen.
+Panel – Was du bei uns bekommst:
+Echte Chancen, ehrliches Feedback und Entwicklung im Team.
+
+==================================================
+BUTTONS / UI-TEXTE
+==================================================
+
+Kartenbutton:
+Mehr zur Rolle
+
+Panel-Button:
+Jetzt initiativ bewerben
+
+Autoplay-Hinweis:
+Automatisch wechselnde Rollen
+
+Mikro-Stats-Balken:
+VIDEKO in Zahlen
+50+ Mitarbeitende
+1 gemeinsame Vision
+100% Leidenschaft
+Unendlich Möglichkeiten

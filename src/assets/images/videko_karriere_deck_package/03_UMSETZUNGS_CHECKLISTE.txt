@@ -1,0 +1,15 @@
+UMSETZUNGS-CHECKLISTE
+
+[ ] Kein Scroll-Sticky-Experiment
+[ ] Keine riesigen Leerflächen
+[ ] Keine reine Linksklick-Lösung links
+[ ] Eine große aktive Karte sichtbar
+[ ] Seitliche Nebenkarten sichtbar und hochwertig gestapelt
+[ ] Automatischer Kartenwechsel funktioniert stabil
+[ ] Pfeilnavigation vorhanden
+[ ] Progress-/Punktnavigation vorhanden
+[ ] „Mehr zur Rolle“-Interaktion öffnet Detail-Panel
+[ ] Detail-Panel zeigt grobe Rolleninfos, keine übertriebene Stellenbeschreibung
+[ ] Mobile Variante sauber als Slider/Swipe-Lösung umgesetzt
+[ ] Farben, Typografie und Look klar im VIDEKO-Stil
+[ ] Bereich wirkt wie Premium-Webdesign – nicht wie Standard-Karrierekasten

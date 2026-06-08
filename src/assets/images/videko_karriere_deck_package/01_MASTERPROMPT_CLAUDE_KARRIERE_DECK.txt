@@ -1,0 +1,195 @@
+AUFGABE:
+Baue den Karrierebereich auf der VIDEKO-Karriereseite exakt in der Stilrichtung des mitgelieferten Referenzbilds neu auf.
+
+ZIEL:
+Der Bereich soll wie ein hochwertiges, interaktives Premium-Karten-Deck wirken – modern, elegant, technisch stabil und deutlich besser als die bisherige Scroll-/Klicklösung.
+
+WICHTIG:
+- Keine Sticky-Scroll-Story.
+- Keine riesigen Leerflächen.
+- Keine reine Linksliste links, über die sich rechts erst etwas öffnen muss.
+- Keine kaputte Scroll-Mechanik.
+- Stattdessen: ein automatisch rotierendes Karriere-Deck mit großer aktiver Hauptkarte, sichtbaren Nebenkarten, klarer Navigation und einem Detail-Panel.
+
+REFERENZ:
+Nutze das mitgelieferte Referenzbild in assets/karriere-deck-reference.png als klare visuelle Vorlage.
+
+BEREICHSZIEL:
+Bewerber sollen sofort merken:
+- VIDEKO ist hochwertig
+- VIDEKO ist modern
+- VIDEKO denkt anders als Standard-Karriereseiten
+- Die Seite hat Bewegung, aber ohne technischen Müll
+
+SEKTIONSAUFBAU:
+
+1. SECTION-CONTAINER
+- Heller Creme-/Offwhite-Hintergrund im VIDEKO-Stil
+- Viel Weißraum
+- Feine Marmor-/Struktur-Anmutung im Hintergrund möglich, sehr dezent
+- Großzügige Breite
+- Hochwertige Rundungen und Schatten
+
+2. LINKE INFOSPALTE
+Kicker:
+„Karriere bei VIDEKO“
+
+Headline:
+„Finde deinen Platz. Nicht irgendeinen.“
+
+Text:
+„Bei VIDEKO suchen wir Menschen, die mitdenken, anpacken und Lust haben, gemeinsam etwas Besonderes zu schaffen.“
+
+Zusatzsatz / Tonalität:
+„Auch ‚keine Ahnung, aber Bock‘ ist ein ziemlich guter Start.“
+
+Darunter 3 kleine Value-/Info-Bausteine mit Icon:
+- Menschen im Mittelpunkt
+  „Ehrlich, wertschätzend und auf Augenhöhe – im Team und mit unseren Kund:innen.“
+- Qualität, die bleibt
+  „Wir gestalten Wohnräume, die begeistern – bis ins kleinste Detail.“
+- Entwicklung, die Sinn macht
+  „Wachsen. Verantwortung übernehmen. Dinge bewegen – bei VIDEKO.“
+
+3. ZENTRALES KARRIERE-DECK
+Das Herzstück der Section.
+
+Desktop:
+- Eine große aktive Karrierekarte in der Mitte / leicht rechts versetzt.
+- Seitlich sichtbar: weitere Rollen-Karten, kleiner und nach hinten versetzt.
+- Karten wirken wie ein gestapeltes, hochwertiges Card-Deck / Coverflow.
+- Aktive Karte im Fokus.
+- Vorherige und nächste Karten sind sichtbar, aber kleiner / leicht transparent / versetzt.
+- Es dürfen auch 5–6 Rollen im Deck angelegt werden.
+
+ROLLE / KARTEN-INHALTE:
+1. Beratung & Verkauf
+2. Planung & Technik
+3. Montage & Handwerk
+4. Empfang & Organisation
+5. Marketing & Social Media
+6. Quereinstieg
+
+AKTIVE KARTE zeigt:
+- Nummer (z. B. 01)
+- Rollentitel
+- starke kurze Headline oder Unterzeile
+- kurzer erklärender Einstiegstext
+- Bild oder Bild-Platzhalter
+- CTA-Button: „Mehr zur Rolle“
+- kleine Tags/Pills wie z. B. „Vollzeit“, „Kundenkontakt“, „Würzburg“ oder passend zur Rolle
+
+Für die aktive Beispielkarte „Beratung & Verkauf“:
+Titel:
+„Beratung & Verkauf“
+Unterzeile:
+„Küchen verkaufen? Nein. Wohnräume ermöglichen.“
+Kurztext:
+„Du begleitest Kund:innen vom ersten Gespräch bis zur Traumküche – mit Stil, Empathie und einem echten Gespür für Menschen.“
+Button:
+„Mehr zur Rolle“
+Tags:
+„Vollzeit“ / „Kundenkontakt“ / „Würzburg“
+
+4. DETAIL-PANEL / INFO-PANEL
+Wenn die aktive Karte angeklickt wird oder „Mehr zur Rolle“ ausgelöst wird, öffnet sich ein elegantes Detail-Panel / Drawer / Overlay-Card direkt an der aktiven Karte.
+
+Dieses Panel zeigt keine übertrieben genaue Stellenanzeige, sondern eine grobe, sympathische Rollenbeschreibung.
+
+Panel-Inhalte:
+- Worum es geht
+- Was du ungefähr machst
+- Was du mitbringen solltest
+- Was du bei uns bekommst
+- CTA: „Jetzt initiativ bewerben“
+
+Beispiel für Beratung & Verkauf:
+Worum es geht:
+„Kund:innen beraten & begeistern.“
+Was du ungefähr machst:
+„Gespräche führen, Lösungen finden, Angebote erstellen.“
+Was du mitbringen solltest:
+„Kommunikationsstärke, Empathie und ein gutes Gespür für Menschen.“
+Was du bei uns bekommst:
+„Wertschätzung, Entwicklung und ein Team, das zusammenhält.“
+
+Wichtig:
+- Inhalte bewusst flexibel formulieren
+- keine zu konkreten Pflichtenlisten
+- VIDEKO ist im Aufbau, die Rollen dürfen Entwicklungsspielraum haben
+
+5. NAVIGATION / INTERAKTION
+Unter dem Deck:
+- Linker Arrow-Button
+- Punkt-/Progress-Navigation
+- Rechter Arrow-Button
+- Kleiner Hinweistext wie:
+  „Automatisch wechselnde Rollen“
+
+Funktion:
+- Karten wechseln automatisch alle 4–5 Sekunden
+- Nutzer kann per Pfeil manuell wechseln
+- Nutzer kann per Drag/Swipe wechseln, wenn technisch sauber machbar
+- Hover pausiert Autoplay
+- Geöffnetes Detail-Panel pausiert Autoplay
+
+WICHTIG:
+Der Hauptwechsel darf NICHT vom Scrollen abhängen.
+
+6. UNTERER MICRO-STATS-BALKEN (OPTIONAL, WIE IM REFERENZBILD)
+Unterhalb der Hauptsektion kann ein schlanker, hochwertiger Info-Balken integriert werden:
+- „VIDEKO in Zahlen“
+- 50+ Mitarbeitende
+- 1 gemeinsame Vision
+- 100% Leidenschaft
+- Unendlich Möglichkeiten
+
+Falls die Zahlen noch nicht final oder sinnvoll sind, dürfen sie vorläufig als visuelle Platzhalter/Branding-Elemente verwendet werden. In diesem Fall klar strukturiert und leicht austauschbar aufbauen.
+
+DESIGNVORGABEN:
+- Sehr nah am Referenzbild
+- VIDEKO-Stil: warmes Creme, Goldakzente, dunkle Typografie, elegante Serif-Headline, moderne Sans für Fließtext
+- Aktive Karte groß, edel, mit feinem Goldrand und leichtem Schatten
+- Nebenkarten kleiner, leicht versetzt, trotzdem hochwertig
+- Keine billigen Standardkarten
+- Keine Bootstrap-Anmutung
+- Keine harte Grid-Optik
+
+ANIMATIONEN:
+- Nur stabile Animationen verwenden
+- Card-Wechsel über transform, opacity und scale
+- Aktive Karte leicht größer
+- Seitliche Karten kleiner und etwas zurückgesetzt
+- Bild in aktiver Karte darf minimal zoom/parallaxen
+- Detail-Panel weich einblenden
+- Buttons mit leichtem Arrow-Slide bei Hover
+- prefers-reduced-motion beachten
+
+MOBILE:
+- Kein kompliziertes Coverflow mit Chaos
+- Eine Hauptkarte pro View
+- Swipebares Carousel oder sauberer Slider
+- Detailinfos per Accordion, Drawer oder Bottom Sheet
+- Gute Lesbarkeit
+- Keine abgeschnittenen Inhalte
+
+TECHNISCHE HINWEISE:
+- Bestehendes Komponenten-/Designsystem nutzen, wenn vorhanden
+- Inhalte als Datenarray aufbauen, z. B. careerRoles
+- Beispielstruktur pro Rolle:
+  id
+  number
+  title
+  shortHeadline
+  intro
+  tags
+  image
+  about
+  tasks
+  requirements
+  benefits
+- Keine Inhalte wild im JSX verstreuen
+
+WICHTIG ZUM SCHLUSS:
+Dieser Bereich soll ein „Wow, die haben’s drauf“-Moment sein.
+Wenn etwas fancy technisch unsauber wird, bitte lieber die stabile, saubere Premium-Variante bauen – aber optisch unbedingt sehr nah am Referenzbild.
