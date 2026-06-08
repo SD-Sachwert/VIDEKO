@@ -86,15 +86,22 @@ export default function Karriere() {
   const [sent, setSent] = useState(false)
   const [activeJob, setActiveJob] = useState(0)
   const stageRef = useRef(null)
-  const { scrollYProgress: jobProg } = useScroll({ target: stageRef, offset: ['start start', 'end end'] })
 
-  // scroll-driven role switching (desktop only)
+  // scroll-driven role switching (desktop only) — deterministic, evenly spread
   useEffect(() => {
-    return jobProg.on('change', (v) => {
+    const onScroll = () => {
       if (window.innerWidth < 900) return
-      setActiveJob(Math.min(STAGE.length - 1, Math.max(0, Math.round(v * (STAGE.length - 1)))))
-    })
-  }, [jobProg])
+      const el = stageRef.current
+      if (!el) return
+      const total = el.offsetHeight - window.innerHeight
+      if (total <= 0) return
+      const p = Math.min(1, Math.max(0, -el.getBoundingClientRect().top / total))
+      setActiveJob(Math.min(STAGE.length - 1, Math.max(0, Math.round(p * (STAGE.length - 1)))))
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   return (
     <div className="leist-page karr-page">
