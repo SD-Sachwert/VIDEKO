@@ -4,16 +4,24 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Reveal from './Reveal.jsx'
 import mainClosed from '../assets/images/ek-modal/main-closed.png'
 import mainOpen from '../assets/images/ek-modal/main-open.png'
+import card1 from '../assets/images/ek-modal/card1.png'
+import card2 from '../assets/images/ek-modal/card2.png'
+import card3 from '../assets/images/ek-modal/card3.png'
+import card4 from '../assets/images/ek-modal/card4.png'
+import card5 from '../assets/images/ek-modal/card5.png'
+import card6 from '../assets/images/ek-modal/card6.png'
+import card7 from '../assets/images/ek-modal/card7.png'
+import card8 from '../assets/images/ek-modal/card8.png'
 
 const HOTSPOTS = [
-  { n: '01', title: 'Arbeitsplatte & Materialien', category: 'Material', x: 48, y: 51, description: 'Edle Optik trifft Alltagstauglichkeit – in Keramik, Quarz oder Naturstein, pflegeleicht und robust.', bullets: ['Robuste Oberflächen', 'Saubere Kanten & Übergänge', 'Materialauswahl passend zum Stil'] },
-  { n: '02', title: 'Kochfeld auf der Insel', category: 'Kochen', x: 52, y: 61, description: 'Zentral auf der Insel platziert für kurze Wege und freie Bewegung – modernes Induktionskochfeld, bündig integriert.', bullets: ['Zentrale Kochzone', 'Bündig integriert', 'Kurze Wege beim Kochen'] },
-  { n: '03', title: 'Spül- & Wasserzone', category: 'Wasser', x: 50, y: 43, description: 'Die Spüle sitzt bewusst an der Rückwand – ruhig integriert, logisch geplant und alltagstauglich.', bullets: ['Spüle bewusst an der Rückwand', 'Armatur passend zum Material', 'Stauraum unter der Spüle'] },
-  { n: '04', title: 'Besteckauszug', category: 'Ordnung', x: 29, y: 73, description: 'Sauber gegliedert, leise laufend und im Alltag einfach Gold wert. Ordnung in jeder Schublade.', bullets: ['Durchdachte Unterteilung', 'Leiser Lauf', 'Schneller Zugriff im Alltag'] },
-  { n: '05', title: 'Topf- & Pfannenauszug', category: 'Stauraum', x: 72, y: 76, description: 'Große Auszüge schaffen Platz für Töpfe, Pfannen und schweres Kochgeschirr – griffbereit, ohne Bücken.', bullets: ['Tiefe Auszüge', 'Flexible Trennsysteme', 'Starke Vollauszüge'] },
-  { n: '06', title: 'Vorratsschrank & Innenleben', category: 'Hochschrank', x: 16, y: 36, description: 'Mehr Übersicht, weniger Suchen. Auszüge holen Vorräte und Geräte nach vorne.', bullets: ['Vorräte auf einen Blick', 'Höhe clever genutzt', 'Geräte elegant versteckt'] },
-  { n: '07', title: 'Scharniere & Beschläge', category: 'Technik', x: 83, y: 34, description: 'Die wahre Qualität steckt im Detail: hochwertige Scharniere, stabile Auszüge, gedämpfte Beschläge.', bullets: ['Stabile Scharniere', 'Gedämpfte Beschläge', 'Leise Auszugssysteme'] },
-  { n: '08', title: 'Beleuchtung & Atmosphäre', category: 'Licht', x: 67, y: 28, description: 'Gutes Licht macht mehr als hell: indirekte Beleuchtung, Arbeitslicht und stimmungsvolle Akzente.', bullets: ['Indirekte Beleuchtung', 'Arbeitslicht, wo es zählt', 'Warme Akzente für Atmosphäre'] },
+  { n: '01', title: 'Arbeitsplatte & Materialien', x: 48, y: 51, card: card1 },
+  { n: '02', title: 'Kochfeld auf der Insel', x: 52, y: 61, card: card2 },
+  { n: '03', title: 'Spül- & Wasserzone', x: 50, y: 43, card: card3 },
+  { n: '04', title: 'Besteckauszug', x: 29, y: 73, card: card4 },
+  { n: '05', title: 'Topf- & Pfannenauszug', x: 72, y: 76, card: card5 },
+  { n: '06', title: 'Vorratsschrank & Innenleben', x: 16, y: 36, card: card6 },
+  { n: '07', title: 'Scharniere & Beschläge', x: 83, y: 34, card: card7 },
+  { n: '08', title: 'Beleuchtung & Atmosphäre', x: 67, y: 28, card: card8 },
 ]
 
 export default function ExplodingKitchenModal() {
@@ -72,12 +80,7 @@ export default function ExplodingKitchenModal() {
               <motion.div key={active} className={`ekm-pop ${popCls}`} style={popStyle} onClick={(e) => e.stopPropagation()}
                 initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}>
                 <button type="button" className="ekm-pop__close" onClick={() => setActive(null)} aria-label="Schließen">×</button>
-                <span className="ekm-pop__cat">{h.n} · {h.category}</span>
-                <h3 className="ekm-pop__title">{h.title}</h3>
-                <p className="ekm-pop__text">{h.description}</p>
-                <ul className="ekm-pop__list">
-                  {h.bullets.map((b) => <li key={b}>{b}</li>)}
-                </ul>
+                <img className="ekm-pop__img" src={h.card} alt={h.title} />
               </motion.div>
             )}
           </AnimatePresence>
