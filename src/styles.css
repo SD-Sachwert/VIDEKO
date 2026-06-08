@@ -11189,7 +11189,7 @@ a.footer__contact-line:hover {
 
 /* inline popover that pops out of the hotspot (no modal, no overlay) */
 /* large premium side-card that opens beside the hotspot */
-.ekm-popwrap { position: absolute; top: 50%; transform: translateY(-50%); z-index: 9; width: min(645px, 58%); }
+.ekm-popwrap { position: absolute; top: 50%; transform: translateY(-50%); z-index: 9; width: min(677px, 61%); }
 .ekm-pop { position: relative; }
 .ekm-pop__img { width: 100%; height: auto; display: block; border-radius: 20px; border: 1px solid rgba(198, 145, 56, 0.32); box-shadow: 0 50px 110px -38px rgba(45, 35, 20, 0.62); }
 /* gold connector arrow toward the hotspot */
@@ -11214,9 +11214,12 @@ a.footer__contact-line:hover {
 
 /* === HOME HERO EXPERIENCE (before/after + entry cards + trust) === */
 .hx-sec { position: relative; }
-.hx-hero { display: grid; grid-template-columns: 0.92fr 1.25fr; gap: 50px; align-items: center; }
+.hx-introwrap { }
+.hx-intro { max-width: 840px; }
+.hx-bigwrap { margin-top: 40px; }
+.hx-bigwrap .hx-ba { aspect-ratio: 16 / 8.6; }
 .hx-copy { max-width: 520px; }
-.hx-headline { font-family: var(--serif); font-size: clamp(2rem, 3.4vw, 3rem); line-height: 1.12; color: var(--ink); margin: 10px 0 0; }
+.hx-headline { font-family: var(--serif); font-size: clamp(2.1rem, 4vw, 3.4rem); line-height: 1.1; color: var(--ink); margin: 10px 0 0; }
 .hx-sub { font-size: 1.05rem; line-height: 1.6; color: var(--ink-soft); margin: 20px 0 0; }
 .hx-actions { display: flex; flex-wrap: wrap; gap: 14px; margin: 28px 0 16px; }
 .hx-micro { display: inline-flex; align-items: center; gap: 8px; font-size: 0.84rem; color: var(--ink-soft); }
@@ -11241,6 +11244,10 @@ a.footer__contact-line:hover {
 .hx-spot--a { top: 8%; right: -34px; }
 .hx-spot--b { top: 44%; left: -38px; animation-delay: 1.2s; }
 .hx-spot--c { bottom: 6%; right: 4%; animation-delay: 2.2s; }
+/* big-stage variant: keep cards inside the wide module */
+.hx-bigwrap .hx-spot--a { top: 6%; right: 2%; }
+.hx-bigwrap .hx-spot--b { top: 40%; left: 2%; }
+.hx-bigwrap .hx-spot--c { bottom: 6%; right: 3%; }
 .hx-spot__ic { width: 34px; height: 34px; flex: none; border-radius: 9px; display: grid; place-items: center; color: var(--bronze); background: rgba(201, 160, 80, 0.14); border: 1px solid rgba(201, 160, 80, 0.28); }
 .hx-spot__b { display: flex; flex-direction: column; gap: 2px; }
 .hx-spot__t { font-family: var(--serif); font-size: 0.95rem; color: var(--ink); }
@@ -11274,6 +11281,29 @@ a.footer__contact-line:hover {
   .hx-trust { grid-template-columns: 1fr 1fr; gap: 24px 20px; }
 }
 @media (max-width: 560px) { .hx-trust { grid-template-columns: 1fr; } }
+
+/* === KARRIERE obere Sektion — Philosophie-Coverflow === */
+.karr-topshow { overflow: hidden; }
+.karr-topshow__grid { display: grid; grid-template-columns: 0.82fr 1.5fr; gap: 40px; align-items: center; }
+.karr-topshow__intro { max-width: 420px; }
+.karr-topshow__cue { display: inline-block; margin-top: 18px; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; color: var(--bronze); }
+.kts { position: relative; }
+.kts__stage { position: relative; height: 440px; perspective: 1700px; }
+.kts__card { position: absolute; top: 50%; left: 50%; width: 300px; max-width: 76%; aspect-ratio: 4 / 5; padding: 0; border: none; background: none; cursor: pointer; border-radius: 18px; overflow: hidden; box-shadow: 0 44px 90px -46px rgba(120, 90, 40, 0.5); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.55s ease, box-shadow 0.4s ease; will-change: transform, opacity; }
+.kts__card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.kts__card.is-active { box-shadow: 0 56px 112px -40px rgba(120, 90, 40, 0.62); }
+.kts__nav { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 26px; }
+.kts__arrow { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; cursor: pointer; color: var(--ink); background: #fff; border: 1px solid var(--line-dark); box-shadow: 0 10px 24px -16px rgba(0, 0, 0, 0.4); transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease; }
+.kts__arrow:hover { background: var(--soft-black); color: var(--cream); border-color: var(--soft-black); }
+.kts__dots { display: flex; gap: 8px; }
+.kts__dot { width: 9px; height: 9px; border-radius: 50%; border: none; padding: 0; background: rgba(60, 50, 35, 0.22); cursor: pointer; transition: background 0.25s ease, width 0.25s ease; }
+.kts__dot.is-active { background: var(--grad-gold); width: 26px; border-radius: 5px; }
+@media (max-width: 980px) {
+  .karr-topshow__grid { grid-template-columns: 1fr; gap: 26px; }
+  .karr-topshow__intro { max-width: none; }
+  .kts__stage { height: 410px; }
+  .kts__card { width: 264px; }
+}
 
 /* =====================================================================
    KEYFRAMES

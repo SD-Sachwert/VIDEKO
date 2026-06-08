@@ -9,6 +9,7 @@ import {
 import Reveal from '../components/Reveal.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
+import KarriereTopShowcase from '../components/KarriereTopShowcase.jsx'
 import ComparisonTable from '../components/ComparisonTable.jsx'
 
 import heroImg from '../assets/images/karriere/01_hero_team_beratung.png'
@@ -151,27 +152,8 @@ export default function Karriere() {
         </div>
       </section>
 
-      {/* 2 — WARUM VIDEKO (hell, 4 Karten) */}
-      <section className="section karr-why2">
-        <div className="container">
-          <div className="karr-why2__grid">
-            <Reveal className="karr-why2__copy">
-              <span className="kicker">Warum VIDEKO</span>
-              <h2 className="lintro__title">Wir bauen kein Möbelhaus. <span className="grad">Wir bauen ein Team.</span></h2>
-              <p className="lintro__text">Keine Rabattschlachten, kein Drücker-Vibe, kein Konzern-Dschungel. Sondern echte Arbeit, kurze Wege und Menschen, die ihren Job können.</p>
-            </Reveal>
-            <div className="karr-why2__cards">
-              {WHY4.map((wc, i) => (
-                <Reveal key={wc.title} className="karr-whycard2" delay={(i % 2) * 0.06}>
-                  <span className="karr-whycard2__ic"><wc.icon size={20} strokeWidth={1.6} /></span>
-                  <span className="karr-whycard2__title">{wc.title}</span>
-                  <span className="karr-whycard2__text">{wc.text}</span>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* 2 — WARUM GUTE LEUTE (Philosophie-Coverflow) */}
+      <KarriereTopShowcase />
 
       {/* 2b — SO LÄUFT'S BEI UNS WIRKLICH (hell, 3 Schritte) */}
       <section className="section section--light karr-flow">

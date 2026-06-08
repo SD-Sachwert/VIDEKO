@@ -13,7 +13,7 @@ import cardBer from '../assets/images/home-hero/card-beratung.png'
 const HOTSPOTS = [
   { icon: Boxes, t: 'Stauraum', d: 'Intelligent geplant. Mehr Platz für das, was zählt.', cls: 'hx-spot--a' },
   { icon: Lightbulb, t: 'Lichtkonzept', d: 'Stimmung schaffen. Funktion betonen. Atmosphäre formen.', cls: 'hx-spot--b' },
-  { icon: Ruler, t: 'Präzise Montage', d: 'Millimetergenau. Sauber. Verlässlich.', cls: 'hx-spot--c' },
+  { icon: Ruler, t: 'Präzise Montage', d: 'Millimetergenau. Sauber. Verlässlich. Ein Stück Handwerkskunst.', cls: 'hx-spot--c' },
 ]
 
 const ENTRIES = [
@@ -43,8 +43,8 @@ export default function HeroExperience() {
 
   return (
     <section className="section section--light hx-sec">
-      <div className="container hx-hero">
-        <Reveal className="hx-copy">
+      <div className="container hx-introwrap">
+        <Reveal className="hx-intro">
           <span className="kicker">Dein Einstieg</span>
           <h1 className="hx-headline">Aus einem Raum wird nicht einfach eine Küche.<br /><span className="grad">Sondern dein neuer Lieblingsplatz.</span></h1>
           <p className="hx-sub">Von der ersten Idee über Planung, Material, Licht und Montage bis zur fertigen Küche.</p>
@@ -54,8 +54,10 @@ export default function HeroExperience() {
           </div>
           <span className="hx-micro"><Clock size={15} strokeWidth={1.8} /> Dauert kürzer als drei Stunden planlos Küchen googeln.</span>
         </Reveal>
+      </div>
 
-        <Reveal className="hx-visual" delay={0.12}>
+      <div className="container hx-bigwrap">
+        <Reveal className="hx-visual" delay={0.1}>
           <div className="hx-ba" ref={baRef} onMouseMove={onMove} style={{ '--split': `${split}%` }}>
             <div className="hx-ba__after"><img src={afterImg} alt="Fertige VIDEKO Küche" loading="lazy" /></div>
             <div className="hx-ba__before"><img src={beforeImg} alt="Leerer Raum vor der Planung" loading="lazy" />
