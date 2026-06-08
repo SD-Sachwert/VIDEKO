@@ -5,7 +5,6 @@ import { Check, ArrowRight } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
-import ProcessTimeline from '../components/ProcessTimeline.jsx'
 
 import heroImg from '../assets/images/studio/bilder/01_hero_studio_showroom.png'
 import introImg from '../assets/images/studio/bilder/02_intro_showroom_hell.png'
@@ -38,14 +37,6 @@ const JOURNEY = [
 
 const STANCE = ['Diskret & respektvoll', 'Ehrlich & transparent', 'Erfahren & spezialisiert']
 const TEAM_USP = ['Ehrlich & transparent', 'Persönlich & nah', 'Kompetent & erfahren']
-
-const PROCESS = [
-  { title: 'Erstgespräch', text: 'Wir lernen dich und dein Projekt kennen.' },
-  { title: 'Idee & Konzept', text: 'Aus Wünschen wird eine klare Richtung.' },
-  { title: 'Planung & Visualisierung', text: 'Du siehst deine Küche in 3D.' },
-  { title: 'Angebot & Abstimmung', text: 'Transparent, fair und ohne Kleingedrucktes.' },
-  { title: 'Umsetzung & Betreuung', text: 'Wir bleiben dran – bis alles sitzt.' },
-]
 
 const FINAL_HL = ['Individuelle Beratung', 'Premium Materialien', 'Planung auf höchstem Niveau']
 
@@ -184,14 +175,6 @@ export default function Studio() {
               <div className="lintro__frame"><img src={splitImg} alt="VIDEKO Showroom" loading="lazy" /><span className="lintro__rim" aria-hidden="true" /></div>
             </Reveal>
           </div>
-        </div>
-      </section>
-
-      {/* PROZESS (hell) */}
-      <section className="section section--light studio-process">
-        <div className="container">
-          <SectionHeader align="center" kicker="So läuft's" title={<>Klarer Ablauf. <span className="grad">Stressfrei für dich.</span></>} />
-          <ProcessTimeline steps={PROCESS} />
         </div>
       </section>
 
