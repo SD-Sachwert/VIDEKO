@@ -10906,57 +10906,6 @@ a.footer__contact-line:hover {
 }
 
 /* =====================================================================
-   LANDINGPAGE v2 — exact-reference tiles (left header + image tiles)
-   ===================================================================== */
-.lp2-row { display: grid; grid-template-columns: 0.92fr 2.55fr; gap: 44px; align-items: center; }
-.lp2-head { max-width: 420px; }
-.lp2-head .lp-lead { margin: 14px 0 20px; }
-.lp2-head--block { max-width: 640px; margin: 0 0 38px; }
-.lp2-tiles { display: grid; gap: 20px; }
-.lp2-tiles--ways { grid-template-columns: repeat(3, 1fr); align-items: center; }
-.lp2-tiles--gallery { grid-template-columns: repeat(5, 1fr); }
-.lp2-tiles--team { grid-template-columns: repeat(4, 1fr); }
-.lp2-tiles--journal { grid-template-columns: repeat(4, 1fr); }
-.lp2-tiles--ways > *:nth-child(2) { margin-top: -22px; }
-.lp2-tile { display: block; border-radius: 18px; overflow: hidden; box-shadow: 0 32px 62px -42px rgba(120, 90, 40, 0.5); transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease; }
-.lp2-tile img { width: 100%; height: auto; display: block; }
-.lp2-tile:hover { transform: translateY(-6px); box-shadow: 0 48px 86px -44px rgba(120, 90, 40, 0.6); }
-
-/* technik (no exploded) */
-.lp2-tech { display: grid; grid-template-columns: 1fr 1.05fr; gap: 54px; align-items: center; }
-.lp2-tech__callouts { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 34px; }
-
-/* stylefinder visual is now the cropped reference image */
-.lp-sf__visual { min-height: 0; display: block; }
-.lp-sf__visual img { width: 100%; height: auto; display: block; filter: drop-shadow(0 44px 70px rgba(0, 0, 0, 0.22)); }
-
-/* transformation */
-.lp2-transform { display: grid; grid-template-columns: 0.8fr 1.5fr 0.7fr; gap: 36px; align-items: center; }
-.lp2-transform__ba { border-radius: 16px; overflow: hidden; box-shadow: 0 50px 94px -50px rgba(0, 0, 0, 0.5); }
-.lp2-transform__ba img { width: 100%; height: auto; display: block; }
-.lp2-transform__stats { display: flex; flex-direction: column; gap: 26px; }
-
-/* prozess strip */
-.lp2-process__strip img { width: 100%; height: auto; display: block; }
-
-/* team benefit dots */
-.lp-team-benefit__dot { width: 7px; height: 7px; border-radius: 50%; background: var(--grad-gold); display: inline-block; }
-
-@media (max-width: 1024px) {
-  .lp2-row { grid-template-columns: 1fr; gap: 28px; }
-  .lp2-head { max-width: none; }
-  .lp2-tiles--gallery { grid-template-columns: repeat(3, 1fr); }
-  .lp2-tech { grid-template-columns: 1fr; gap: 30px; }
-  .lp2-transform { grid-template-columns: 1fr; }
-  .lp2-transform__stats { flex-direction: row; flex-wrap: wrap; gap: 22px 36px; }
-}
-@media (max-width: 760px) {
-  .lp2-tiles--ways, .lp2-tiles--team, .lp2-tiles--journal, .lp2-tiles--gallery { grid-template-columns: 1fr 1fr; }
-  .lp2-tiles--ways > *:nth-child(2) { margin-top: 0; }
-  .lp2-tech__callouts { grid-template-columns: 1fr; }
-}
-
-/* =====================================================================
    KEYFRAMES
    ===================================================================== */
 @keyframes pulse {
