@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import {
   Store, PencilRuler, Hammer, Ruler, Headset, MessageSquare, Megaphone,
   Sparkles, Rocket, Mail, ArrowRight, MapPin, Upload, Check,
-  Gem, Smile, ShieldCheck, Zap, Coffee, Heart,
+  Gem, Smile, ShieldCheck, Zap, Coffee, Heart, ChevronLeft, ChevronRight,
 } from 'lucide-react'
 
 import Reveal from '../components/Reveal.jsx'
@@ -25,13 +25,26 @@ import jc04 from '../assets/images/karriere/karten/04_empfang_organisation.png'
 import jc05 from '../assets/images/karriere/karten/05_marketing_social_media.png'
 import jc06 from '../assets/images/karriere/karten/06_quereinsteiger.png'
 
-const STAGE = [
-  { n: '01', name: 'Beratung & Verkauf', img: jc01 },
-  { n: '02', name: 'Planung & Technik', img: jc02 },
-  { n: '03', name: 'Montage & Handwerk', img: jc03 },
-  { n: '04', name: 'Empfang & Organisation', img: jc04 },
-  { n: '05', name: 'Marketing & Social Media', img: jc05 },
-  { n: '06', name: 'Quereinsteiger', img: jc06 },
+const DECK = [
+  { n: '01', name: 'Beratung & Verkauf', img: jc01, panel: { about: 'Kund:innen beraten & begeistern.', tasks: 'Gespräche führen, Lösungen finden, Angebote erstellen.', req: 'Kommunikationsstärke, Empathie und ein gutes Gespür für Menschen.', get: 'Wertschätzung, Entwicklung und ein Team, das zusammenhält.' } },
+  { n: '02', name: 'Planung & Technik', img: jc02, panel: { about: 'Planung, Präzision und das gute Gefühl, wenn alles passt.', tasks: 'Küchen planen, Details abstimmen, technische Lösungen mitdenken.', req: 'Struktur, Genauigkeit und Freude an sauberer Planung.', get: 'Verantwortung, Entwicklung und spannende Projekte.' } },
+  { n: '03', name: 'Montage & Handwerk', img: jc03, panel: { about: 'Saubere Umsetzung und echtes Handwerk.', tasks: 'Küchen montieren, Details sauber umsetzen, Lösungen vor Ort finden.', req: 'Handwerkliches Geschick, Zuverlässigkeit und Lust auf gute Arbeit.', get: 'Wertschätzung, ein starkes Team und sichtbare Ergebnisse.' } },
+  { n: '04', name: 'Empfang & Organisation', img: jc04, panel: { about: 'Ordnung, Übersicht und ein professioneller erster Eindruck.', tasks: 'Termine koordinieren, Anfragen betreuen, intern den Überblick behalten.', req: 'Organisationstalent, Freundlichkeit und ein ruhiges Auftreten.', get: 'Verantwortung, Vertrauen und einen wichtigen Platz im Ablauf.' } },
+  { n: '05', name: 'Marketing & Social Media', img: jc05, panel: { about: 'Sichtbarkeit, Marke und gutes Storytelling.', tasks: 'Inhalte planen, Content erstellen, Ideen sichtbar machen.', req: 'Kreativität, Stilgefühl und Lust auf hochwertige Kommunikation.', get: 'Freiraum, Entwicklung und eine Marke mit Charakter.' } },
+  { n: '06', name: 'Quereinstieg', img: jc06, panel: { about: 'Potenzial statt Schubladendenken.', tasks: 'Je nach Stärken mitarbeiten, lernen, Verantwortung übernehmen und dich entwickeln.', req: 'Motivation, Verlässlichkeit und Lust, etwas zu bewegen.', get: 'Echte Chancen, ehrliches Feedback und Entwicklung im Team.' } },
+]
+
+const VALUES = [
+  { icon: Heart, title: 'Menschen im Mittelpunkt', text: 'Ehrlich, wertschätzend und auf Augenhöhe – im Team und mit unseren Kund:innen.' },
+  { icon: Gem, title: 'Qualität, die bleibt', text: 'Wir gestalten Wohnräume, die begeistern – bis ins kleinste Detail.' },
+  { icon: Rocket, title: 'Entwicklung, die Sinn macht', text: 'Wachsen. Verantwortung übernehmen. Dinge bewegen – bei VIDEKO.' },
+]
+
+const STATS_DECK = [
+  { v: '50+', l: 'Mitarbeitende' },
+  { v: '1', l: 'gemeinsame Vision' },
+  { v: '100%', l: 'Leidenschaft' },
+  { v: '∞', l: 'Möglichkeiten' },
 ]
 import imgProzess from '../assets/images/karriere/08_bewerbungsprozess_teammeeting.png'
 import imgFormular from '../assets/images/karriere/09_bewerbung_interior_formular.png'
@@ -85,23 +98,22 @@ export default function Karriere() {
   const imgScale = useTransform(scrollYProgress, [0, 1], [1.06, 1.16])
   const [sent, setSent] = useState(false)
   const [activeJob, setActiveJob] = useState(0)
-  const stageRef = useRef(null)
+  const [panelOpen, setPanelOpen] = useState(false)
+  const [paused, setPaused] = useState(false)
 
-  // scroll-driven role switching (desktop only) — deterministic, evenly spread
+  const deckNext = () => { setActiveJob((v) => (v + 1) % DECK.length); setPanelOpen(false) }
+  const deckPrev = () => { setActiveJob((v) => (v - 1 + DECK.length) % DECK.length); setPanelOpen(false) }
+  const deckGo = (i) => { setActiveJob(i); setPanelOpen(false) }
+
+  // autoplay — pauses on hover or when the detail panel is open; respects reduced-motion
   useEffect(() => {
-    const onScroll = () => {
-      if (window.innerWidth < 900) return
-      const el = stageRef.current
-      if (!el) return
-      const total = el.offsetHeight - window.innerHeight
-      if (total <= 0) return
-      const p = Math.min(1, Math.max(0, -el.getBoundingClientRect().top / total))
-      setActiveJob(Math.min(STAGE.length - 1, Math.max(0, Math.round(p * (STAGE.length - 1)))))
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+    if (paused || panelOpen) return
+    if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const id = setInterval(() => setActiveJob((v) => (v + 1) % DECK.length), 4500)
+    return () => clearInterval(id)
+  }, [paused, panelOpen])
+
+  const deckRel = (i) => { let d = i - activeJob; const n = DECK.length; if (d > n / 2) d -= n; if (d < -n / 2) d += n; return d }
 
   return (
     <div className="leist-page karr-page">
@@ -177,35 +189,84 @@ export default function Karriere() {
         </div>
       </section>
 
-      {/* 3 — JOB-STAGE (scroll-driven, große Karte) */}
-      <section className="karr-jobstage-scroll" id="rollen" ref={stageRef}>
-        <div className="karr-jobstage-sticky">
-          <div className="container">
-            <div className="jobstage">
-              <div className="jobstage__intro">
-                <span className="kicker">Karriere bei VIDEKO</span>
-                <h2 className="lintro__title">Finde deinen Platz. <span className="grad">Nicht irgendeinen.</span></h2>
-                <p className="lintro__text">Bei VIDEKO zählt nicht, dass du schon alles kannst – sondern dass du mitdenkst, anpackst und Lust auf etwas Besonderes hast.</p>
-                <p className="jobstage__wink">Auch „keine Ahnung, aber Bock" ist ein ziemlich guter Start.</p>
-                <div className="jobstage__nav">
-                  {STAGE.map((r, i) => (
-                    <button key={r.name} type="button" className={`jobstage__navitem ${activeJob === i ? 'is-active' : ''}`} onClick={() => setActiveJob(i)}>
-                      <span className="jobstage__navn">{r.n}</span>
-                      <span className="jobstage__navlabel">{r.name}</span>
-                    </button>
-                  ))}
+      {/* 3 — KARRIERE-DECK (auto-rotierendes Coverflow) */}
+      <section className="section section--light karr-deck-sec" id="rollen">
+        <div className="container karr-deck">
+          <Reveal className="karr-deck__info">
+            <span className="kicker">Karriere bei VIDEKO</span>
+            <h2 className="lintro__title">Finde deinen Platz. <span className="grad">Nicht irgendeinen.</span></h2>
+            <p className="lintro__text">Bei VIDEKO suchen wir Menschen, die mitdenken, anpacken und Lust haben, gemeinsam etwas Besonderes zu schaffen.</p>
+            <p className="karr-deck__wink">Auch „keine Ahnung, aber Bock" ist ein ziemlich guter Start.</p>
+            <div className="karr-deck__values">
+              {VALUES.map((v) => (
+                <div key={v.title} className="karr-value">
+                  <span className="karr-value__ic"><v.icon size={18} strokeWidth={1.7} /></span>
+                  <span className="karr-value__body"><span className="karr-value__t">{v.title}</span><span className="karr-value__d">{v.text}</span></span>
                 </div>
-                <span className="jobstage__hint" aria-hidden="true">Scroll dich durch die Rollen ↓</span>
-              </div>
-              <div className="jobstage__stage">
-                <AnimatePresence mode="wait">
-                  <motion.a key={activeJob} href="#bewerbung" className="jobstage__card" aria-label={`${STAGE[activeJob].name} – jetzt initiativ bewerben`}
-                    initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}>
-                    <img src={STAGE[activeJob].img} alt={STAGE[activeJob].name} />
-                  </motion.a>
-                </AnimatePresence>
-              </div>
+              ))}
             </div>
+          </Reveal>
+
+          <div className="karr-deck__main" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+            <div className="cdeck__stage">
+              {DECK.map((r, i) => {
+                const d = deckRel(i)
+                const isActive = d === 0
+                const show = Math.abs(d) <= 2
+                const style = {
+                  transform: `translate(-50%, -50%) translateX(${d * 50}%) scale(${isActive ? 1 : Math.abs(d) === 1 ? 0.8 : 0.64}) rotateY(${d * -13}deg)`,
+                  opacity: show ? (isActive ? 1 : Math.abs(d) === 1 ? 0.7 : 0.4) : 0,
+                  zIndex: 10 - Math.abs(d),
+                  pointerEvents: show ? 'auto' : 'none',
+                }
+                return (
+                  <button key={r.name} type="button" className={`cdeck__card ${isActive ? 'is-active' : ''}`} style={style}
+                    aria-label={isActive ? `${r.name} – Details anzeigen` : `Zu ${r.name} wechseln`}
+                    onClick={() => (isActive ? setPanelOpen((o) => !o) : deckGo(i))}>
+                    <img src={r.img} alt={r.name} loading="lazy" />
+                    {isActive && !panelOpen && <span className="cdeck__more">Mehr zur Rolle <ArrowRight size={14} strokeWidth={2} /></span>}
+                  </button>
+                )
+              })}
+
+              <AnimatePresence>
+                {panelOpen && (
+                  <motion.div className="cdeck__panel" key={activeJob}
+                    initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 30 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}>
+                    <button type="button" className="cdeck__panel-close" onClick={() => setPanelOpen(false)} aria-label="Schließen">×</button>
+                    <span className="cdeck__panel-n">{DECK[activeJob].n}</span>
+                    <h3 className="cdeck__panel-title">{DECK[activeJob].name}</h3>
+                    <ul className="cdeck__panel-list">
+                      <li><span>Worum es geht</span>{DECK[activeJob].panel.about}</li>
+                      <li><span>Was du ungefähr machst</span>{DECK[activeJob].panel.tasks}</li>
+                      <li><span>Was du mitbringen solltest</span>{DECK[activeJob].panel.req}</li>
+                      <li><span>Was du bei uns bekommst</span>{DECK[activeJob].panel.get}</li>
+                    </ul>
+                    <CTAButton href="#bewerbung">Jetzt initiativ bewerben</CTAButton>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            <div className="cdeck__nav">
+              <button type="button" className="cdeck__arrow" onClick={deckPrev} aria-label="Vorherige Rolle"><ChevronLeft size={20} strokeWidth={2} /></button>
+              <div className="cdeck__dots">
+                {DECK.map((r, i) => (
+                  <button key={r.name} type="button" className={`cdeck__dot ${activeJob === i ? 'is-active' : ''}`} onClick={() => deckGo(i)} aria-label={`Rolle ${r.n}`} />
+                ))}
+              </div>
+              <button type="button" className="cdeck__arrow" onClick={deckNext} aria-label="Nächste Rolle"><ChevronRight size={20} strokeWidth={2} /></button>
+              <span className="cdeck__hint">Automatisch wechselnde Rollen</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="container karr-deckstats">
+          <span className="karr-deckstats__label">VIDEKO in Zahlen</span>
+          <div className="karr-deckstats__row">
+            {STATS_DECK.map((s) => (
+              <div key={s.l} className="karr-deckstat"><span className="karr-deckstat__v">{s.v}</span><span className="karr-deckstat__l">{s.l}</span></div>
+            ))}
           </div>
         </div>
       </section>
