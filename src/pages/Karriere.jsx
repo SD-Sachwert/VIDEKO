@@ -41,9 +41,10 @@ const VALUES = [
 ]
 
 const STATS_DECK = [
-  { v: '50+', l: 'Mitarbeitende' },
-  { v: '1', l: 'gemeinsame Vision' },
-  { v: '100%', l: 'Leidenschaft' },
+  { v: '100%', l: 'Leidenschaft für Küchen' },
+  { v: '0', l: 'Möbelhaus-Vibes' },
+  { v: '1', l: 'eingespieltes Team' },
+  { v: '∞', l: 'Tassen Kaffee' },
   { v: '∞', l: 'Möglichkeiten' },
 ]
 import imgProzess from '../assets/images/karriere/08_bewerbungsprozess_teammeeting.png'
@@ -279,7 +280,7 @@ export default function Karriere() {
           </div>
           <div className="jobstage__cta">
             <h3 className="jobstage__cta-title">Nicht sicher, wo du reinpasst?</h3>
-            <p className="jobstage__cta-text">Dann bewirb dich trotzdem. Wir sortieren gemeinsam, ob und wo es passt. Kein Bewerbungstheater, kein Lebenslauf-Bingo.</p>
+            <p className="jobstage__cta-text">Dann bewirb dich trotzdem. Ob Vollzeit, Teilzeit, Minijob oder Quereinstieg – erzähl uns einfach, was du kannst und worauf du Lust hast. Den Rest finden wir gemeinsam heraus. Wir finden schon was für dich. Kein Bewerbungstheater, kein Lebenslauf-Bingo.</p>
             <CTAButton href="#bewerbung">Initiativ bewerben</CTAButton>
           </div>
         </div>
