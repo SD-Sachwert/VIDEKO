@@ -1,36 +1,105 @@
 import { Link } from 'react-router-dom'
-import { ArrowUpRight } from 'lucide-react'
+import {
+  ArrowRight, ArrowUpRight, Check, PenTool, Telescope, Heart, Gem, LifeBuoy,
+} from 'lucide-react'
 
 import Hero from '../components/Hero.jsx'
 import Reveal from '../components/Reveal.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
 import CTAButton from '../components/CTAButton.jsx'
+import BeforeAfter from '../components/BeforeAfter.jsx'
 
-import styleCardImg from '../assets/images/kuechenwelten/stilfinderhero-kitchen-wide.jpg'
-import studioImg from '../assets/images/studio/bilder/01_hero_studio_showroom.png'
-import beratungCardImg from '../assets/images/beratung/cta-light-portal.png'
-import leistImg from '../assets/images/leistungen/04_intro_helle_kueche.png'
-import inspImg from '../assets/images/inspiration/01_hero_atmosphaerische_kueche.png'
-import jrnlImg from '../assets/images/inspiration/06_materialien_und_details.png'
-import vnImg from '../assets/images/vorher-nachher/10_after_neue_kueche.png'
-import karriereImg from '../assets/images/karriere/01_hero_team_beratung.png'
-import ueberImg from '../assets/images/ueber-uns/02_why_videko_beratungsszene.png'
+import wayInsp from '../assets/images/inspiration/01_hero_atmosphaerische_kueche.png'
+import waySf from '../assets/images/kuechenwelten/stilfinderhero-kitchen-wide.jpg'
+import wayBer from '../assets/images/beratung/cta-light-portal.png'
+import explodedImg from '../assets/images/inspiration/insp-exploding-light.png'
+import sfResult from '../assets/images/kuechenwelten/stilfinderresult-modern-warm.jpg'
+import sfCard1 from '../assets/images/kuechenwelten/stilfindercard-modern-warm.jpg'
+import sfCard2 from '../assets/images/kuechenwelten/stilfindercard-zeitlos-elegant.jpg'
+import sfCard3 from '../assets/images/kuechenwelten/stilfindercard-natuerlich-luxurioes.jpg'
+import gKuechen from '../assets/images/inspiration/02_moderne_kueche.png'
+import gMat from '../assets/images/inspiration/06_materialien_und_details.png'
+import gBer from '../assets/images/ueber-uns/02_why_videko_beratungsszene.png'
+import gTech from '../assets/images/inspiration/09_premium_architektur_kueche.png'
+import gBesicht from '../assets/images/studio/bilder/01_hero_studio_showroom.png'
+import vorherImg from '../assets/images/vorher-nachher/vorher-1.jpg'
+import nachherImg from '../assets/images/vorher-nachher/nachher-1.jpg'
+import pc1 from '../assets/images/leistungen/ls-consulting.png'
+import pc2 from '../assets/images/leistungen/ls-3d.png'
+import pc3 from '../assets/images/leistungen/ls-materials.png'
+import pc4 from '../assets/images/leistungen/ls-coordination.png'
+import pc5 from '../assets/images/leistungen/ls-install.png'
+import pc6 from '../assets/images/leistungen/ls-aftercare.png'
+import tm1 from '../assets/images/ueber-uns/06_team_beratung_und_planung.png'
+import tm2 from '../assets/images/ueber-uns/07_team_marketing_und_social_media.png'
+import tm3 from '../assets/images/ueber-uns/08_team_montage_und_handwerk.png'
+import tm4 from '../assets/images/ueber-uns/09_team_organisation_und_partner.png'
+import j1 from '../assets/images/inspiration/09_premium_architektur_kueche.png'
+import j2 from '../assets/images/inspiration/06_materialien_und_details.png'
+import j3 from '../assets/images/inspiration/10_favoriten_wohnkueche_luxus.png'
+import j4 from '../assets/images/inspiration/03_wohnliche_kueche.png'
 import finalImg from '../assets/images/studio/bilder/10_final_cta_studio_banner.png'
 
-// three organic entry cards
-const ENTRIES = [
-  { shape: 'a', kicker: 'Stylefinder', title: 'Finde deinen Küchenstil.', text: 'In wenigen Schritten zu der Richtung, die wirklich zu dir passt.', cta: 'Stilfinder starten', to: '/stylefinder', image: styleCardImg },
-  { shape: 'b', kicker: 'Studio', title: 'Erlebe unser Studio.', text: 'Materialien, Licht und Raumgefühl live in Würzburg – kein Möbelhaus.', cta: 'Studio entdecken', to: '/studio', image: studioImg },
-  { shape: 'c', kicker: 'Beratung', title: 'Persönliche Beratung.', text: 'Ehrlich, individuell und auf Augenhöhe – dein Projekt, dein Tempo.', cta: 'Beratung anfragen', to: '/beratung', image: beratungCardImg },
+const WAYS = [
+  { n: '01', title: 'Inspiration finden', text: 'Entdecke Stile, Materialien und Ideen für die Küche, die zu dir passt.', cta: 'Jetzt entdecken', to: '/inspiration', img: wayInsp },
+  { n: '02', title: 'Stylefinder starten', text: 'In 2 Minuten zu deiner individuellen Küchenrichtung – ohne Geschmackstest mit Gewinner.', cta: 'Jetzt starten', to: '/stylefinder', img: waySf, light: true },
+  { n: '03', title: 'Persönliche Beratung', text: 'Gemeinsam planen wir deine Traumküche – ehrlich und auf Augenhöhe.', cta: 'Termin sichern', to: '/beratung', img: wayBer },
 ]
 
-const TEASERS = [
-  { kicker: 'Leistungen', title: 'Planung, die jeden Tag Sinn ergibt.', text: 'Von der ersten Idee bis zur fertigen Küche – sauber durchdacht.', cta: 'Mehr über Planung', to: '/leistungen', image: leistImg },
-  { kicker: 'Inspiration', title: 'Ideen & Materialien, die bleiben.', text: 'Küchenstile, Oberflächen und Raumideen, die dein Zuhause prägen.', cta: 'Inspiration entdecken', to: '/inspiration', image: inspImg },
-  { kicker: 'Journal', title: 'Wissen, das weiterhilft.', text: 'Tipps, Ideen und Expertenwissen rund um deine Küche.', cta: 'Zum Journal', to: '/journal', image: jrnlImg },
-  { kicker: 'Vorher / Nachher', title: 'Echte Verwandlungen.', text: 'Sieh, was aus Räumen werden kann, wenn alles zusammenpasst.', cta: 'Projekte ansehen', to: '/vorher-nachher', image: vnImg },
-  { kicker: 'Karriere', title: 'Gestalte mit uns die Zukunft.', text: 'Lust auf Küchen, Design und Handwerk ohne Möbelhaus-Zirkus?', cta: 'Mehr erfahren', to: '/karriere', image: karriereImg },
-  { kicker: 'Über uns', title: 'Die Menschen hinter VIDEKO.', text: 'Persönlich, ehrlich und mit echtem Anspruch an gute Küchen.', cta: 'Lern uns kennen', to: '/ueber-uns', image: ueberImg },
+const TECH = [
+  { title: 'Arbeitsplatte', text: 'Premium-Materialien, exakt für deinen Alltag.' },
+  { title: 'Unterkonstruktion', text: 'Verdeckte Tragstruktur für volle Stabilität.' },
+  { title: 'Intelligente Technik', text: 'Vernetzt und durchdacht – wo sie Sinn ergibt.' },
+  { title: 'Maßgefertigte Schubladen', text: 'Jeder Zentimeter sinnvoll genutzt.' },
+  { title: 'Soft-Close System', text: 'Leise schließen statt knallen. Jeden Tag.' },
+  { title: 'Beleuchtungskonzept', text: 'Arbeits-, Stimmungs- und Akzentlicht im Zusammenspiel.' },
+]
+
+const WHY = [
+  { icon: PenTool, title: 'Design mit Haltung', text: 'Klare Linien, warme Materialien – kein Effekt um des Effekts willen.' },
+  { icon: Telescope, title: 'Technik mit Weitblick', text: 'Lösungen, die auch in zehn Jahren noch Sinn ergeben.' },
+  { icon: Heart, title: 'Persönlich & ehrlich', text: 'Echte Beratung auf Augenhöhe statt Verkaufsshow.', highlight: true },
+  { icon: Gem, title: 'Qualität ohne Kompromisse', text: 'Materialien und Verarbeitung, die man täglich spürt.' },
+  { icon: LifeBuoy, title: 'Service, der bleibt', text: 'Auch nach dem Aufbau ein verlässlicher Ansprechpartner.' },
+]
+
+const GALLERY = [
+  { title: 'Küchenwelten', sub: 'Ausstellung & Erleben', img: gKuechen },
+  { title: 'Materialien', sub: 'Sehen & Spüren', img: gMat },
+  { title: 'Persönliche Beratung', sub: 'Augenhöhe & Ehrlichkeit', img: gBer, big: true },
+  { title: 'Technik erleben', sub: 'Detail & Qualität', img: gTech },
+  { title: 'Besichtigung', sub: 'Studio in Würzburg', img: gBesicht },
+]
+
+const STATS = [
+  { v: '+87%', l: 'mehr Stauraum' },
+  { v: '+3', l: 'Lösungen' },
+  { v: '100%', l: 'zufriedene Kunden', sub: 'Basierend auf Kundenprojekten' },
+]
+
+const PROCESS = [
+  { n: '01', title: 'Kennenlernen', text: 'Wir lernen dich und deine Wünsche kennen.', img: pc1 },
+  { n: '02', title: 'Planung', text: 'Kreativ, technisch und durchdacht.', img: pc2 },
+  { n: '03', title: 'Detaillierung', text: 'Jedes Detail wird perfekt abgestimmt.', img: pc3 },
+  { n: '04', title: 'Bemusterung', text: 'Materialien erleben und entscheiden.', img: pc4 },
+  { n: '05', title: 'Umsetzung', text: 'Präzise Fertigung und Montage.', img: pc5 },
+  { n: '06', title: 'Betreuung', text: 'Für dich da – auch danach.', img: pc6 },
+]
+
+const TEAM = [
+  { title: 'Beratung & Planung', role: 'Dein erster Kontakt', img: tm1 },
+  { title: 'Marketing & Social', role: 'Macht VIDEKO sichtbar', img: tm2 },
+  { title: 'Montage & Handwerk', role: 'Bringt Pläne in den Raum', img: tm3 },
+  { title: 'Organisation', role: 'Hält alle Fäden zusammen', img: tm4 },
+]
+
+const TEAM_BENEFITS = ['Erfahren & engagiert', 'Kreativ & individuell', 'Verlässlich & transparent', 'Qualität mit Leidenschaft']
+
+const JOURNAL = [
+  { tag: 'Trends', title: 'Die 7 Küchentrends, die bleiben', img: j1, to: '/journal/7-kuechenfehler-die-du-spaeter-jeden-tag-bereust' },
+  { tag: 'Materialien', title: 'Naturstein in der Küche – zeitlos schön', img: j2, to: '/journal/welche-arbeitsplatte-passt-zu-mir' },
+  { tag: 'Projekt', title: 'Urban Luxury in Würzburg', img: j3, to: '/journal/fronten-farben-materialien' },
+  { tag: 'Licht', title: 'Beleuchtung in der Küche: So geht Atmosphäre', img: j4, to: '/journal/licht-in-der-kueche' },
 ]
 
 export default function Home() {
@@ -38,25 +107,27 @@ export default function Home() {
     <div className="leist-page home-page">
       <Hero />
 
-      {/* DREI EINSTIEGE – organische Premium-Cards */}
-      <section className="section home-entries">
+      {/* 1 — DREI WEGE */}
+      <section className="section section--light lp-ways-sec">
         <div className="container">
-          <SectionHeader
-            align="center"
-            kicker="Dein Einstieg"
-            title={<>Wo möchtest du <span className="grad">beginnen?</span></>}
-            lead="Drei Wege in deine VIDEKO-Küche – finde deinen Stil, erlebe unser Studio oder sprich direkt mit uns."
-          />
-          <div className="orbcards">
-            {ENTRIES.map((c, i) => (
-              <Reveal key={c.to} delay={i * 0.08}>
-                <Link className={`orbcard orbcard--${c.shape}`} to={c.to}>
-                  <span className="orbcard__img" style={{ backgroundImage: `url(${c.image})` }} aria-hidden="true" />
-                  <span className="orbcard__body">
-                    <span className="orbcard__kicker">{c.kicker}</span>
-                    <span className="orbcard__title">{c.title}</span>
-                    <span className="orbcard__text">{c.text}</span>
-                    <span className="orbcard__cta">{c.cta} <ArrowUpRight size={16} strokeWidth={1.9} /></span>
+          <div className="lp-ways-head">
+            <Reveal>
+              <span className="kicker">Dein Einstieg</span>
+              <h2 className="lp-h2">Dein Weg zur Küche, <span className="grad">die zu dir passt.</span></h2>
+              <p className="lp-lead">Drei Wege. Ein Ziel: deine perfekte Küche.</p>
+            </Reveal>
+          </div>
+          <div className="lp-ways">
+            {WAYS.map((c, i) => (
+              <Reveal key={c.n} delay={i * 0.1}>
+                <Link to={c.to} className={`lpway ${c.light ? 'lpway--light' : ''}`}>
+                  <span className="lpway__img" style={{ backgroundImage: `url(${c.img})` }} aria-hidden="true" />
+                  <span className="lpway__scrim" aria-hidden="true" />
+                  <span className="lpway__body">
+                    <span className="lpway__n">{c.n}</span>
+                    <span className="lpway__title">{c.title}</span>
+                    <span className="lpway__text">{c.text}</span>
+                    <span className="lpway__cta">{c.cta} <ArrowRight size={15} strokeWidth={2} /></span>
                   </span>
                 </Link>
               </Reveal>
@@ -65,26 +136,181 @@ export default function Home() {
         </div>
       </section>
 
-      {/* TEASER ZU DEN UNTERSEITEN */}
-      <section className="section home-teasers">
+      {/* 2 — TECHNIK */}
+      <section className="section section--light lp-tech-sec">
+        <div className="container lp-tech">
+          <Reveal className="lp-tech__left">
+            <span className="kicker">Unter der Oberfläche</span>
+            <h2 className="lp-h2">Technik, die man nicht sieht. <span className="grad">Qualität, die man spürt.</span></h2>
+            <p className="lp-lead">Wir planen Küchen bis ins kleinste Detail. Durchdacht, langlebig, perfekt aufeinander abgestimmt.</p>
+            <Link to="/leistungen" className="lp-link">Mehr über unsere Qualität <ArrowRight size={15} strokeWidth={2} /></Link>
+            <span className="lp-tech__teaser"><span className="lp-tech__teaser-dot">360°</span> Exploded View</span>
+          </Reveal>
+          <Reveal className="lp-tech__viz" delay={0.1}>
+            <img src={explodedImg} alt="Aufbau einer VIDEKO Küche im Detail" loading="lazy" />
+          </Reveal>
+          <div className="lp-tech__callouts">
+            {TECH.map((t, i) => (
+              <Reveal key={t.title} as="div" className="lp-callout" delay={i * 0.06}>
+                <span className="lp-callout__dot" aria-hidden="true" />
+                <span className="lp-callout__title">{t.title}</span>
+                <span className="lp-callout__text">{t.text}</span>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 3 — WARUM VIDEKO + STYLEFINDER */}
+      <section className="section section--light lp-why-sec">
         <div className="container">
-          <SectionHeader
-            align="center"
-            kicker="Entdecke VIDEKO"
-            title={<>Deine Küche. Dein Zuhause. <span className="grad">Dein Ding.</span></>}
-            lead="Alles, was du brauchst, um deine Küche zu erleben, zu planen und Wirklichkeit werden zu lassen."
-          />
-          <div className="home-teasergrid">
-            {TEASERS.map((t, i) => (
-              <Reveal key={t.to} delay={(i % 3) * 0.06}>
-                <Link className="lscard hometeaser" to={t.to}>
-                  <span className="lscard__img" style={{ backgroundImage: `url(${t.image})` }} aria-hidden="true" />
-                  <span className="lscard__scrim" aria-hidden="true" />
-                  <span className="lscard__body">
-                    <span className="lscard__kicker">{t.kicker}</span>
-                    <span className="lscard__title">{t.title}</span>
-                    <span className="lscard__text">{t.text}</span>
-                    <span className="hometeaser__cta">{t.cta} <ArrowUpRight size={16} strokeWidth={1.9} /></span>
+          <div className="lp-why-head">
+            <Reveal><span className="kicker">Warum VIDEKO</span><h2 className="lp-h2">Warum VIDEKO <span className="grad">anders plant.</span></h2></Reveal>
+          </div>
+          <div className="lp-why">
+            {WHY.map((b, i) => (
+              <Reveal key={b.title} className={`lpwhy ${b.highlight ? 'lpwhy--hl' : ''}`} delay={i * 0.06}>
+                <span className="lpwhy__ic"><b.icon size={22} strokeWidth={1.6} /></span>
+                <span className="lpwhy__title">{b.title}</span>
+                <span className="lpwhy__text">{b.text}</span>
+              </Reveal>
+            ))}
+          </div>
+
+          <div className="lp-sf">
+            <Reveal className="lp-sf__copy">
+              <span className="kicker">Stylefinder</span>
+              <h3 className="lp-h2">Dein Stil. Deine Küche. <span className="grad">In nur 2 Minuten.</span></h3>
+              <p className="lp-lead">Beantworte ein paar Fragen und entdecke deine persönliche Küchenrichtung – verständlich und ohne Verkaufsdruck.</p>
+              <CTAButton to="/stylefinder">Stylefinder starten</CTAButton>
+            </Reveal>
+            <Reveal className="lp-sf__visual" delay={0.12}>
+              <div className="lp-tablet">
+                <div className="lp-tablet__screen">
+                  <span className="lp-tablet__q">Welcher Stil begeistert dich?</span>
+                  <span className="lp-tablet__grid" style={{ backgroundImage: `url(${sfResult})` }} aria-hidden="true" />
+                </div>
+              </div>
+              <span className="lp-sf__fly lp-sf__fly--1" style={{ backgroundImage: `url(${sfCard1})` }} aria-hidden="true" />
+              <span className="lp-sf__fly lp-sf__fly--2" style={{ backgroundImage: `url(${sfCard2})` }} aria-hidden="true" />
+              <span className="lp-sf__fly lp-sf__fly--3" style={{ backgroundImage: `url(${sfCard3})` }} aria-hidden="true" />
+              <span className="lp-sf__result">
+                <span className="lp-sf__result-k">Dein Ergebnis</span>
+                <span className="lp-sf__result-t">Modern Luxury</span>
+                <span className="lp-sf__result-m">92% Match</span>
+              </span>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* 4 — STUDIO GALERIE */}
+      <section className="section section--light lp-studio-sec">
+        <div className="container lp-studio-head">
+          <Reveal>
+            <span className="kicker">Studio Würzburg</span>
+            <h2 className="lp-h2">Erlebe unser Studio <span className="grad">in Würzburg.</span></h2>
+            <p className="lp-lead">Tausend Bilder ersetzen kein echtes Raumgefühl. Komm vorbei und lass dich inspirieren.</p>
+            <CTAButton to="/studio">Studio virtuell erleben</CTAButton>
+          </Reveal>
+        </div>
+        <div className="lp-gallery">
+          {GALLERY.map((g, i) => (
+            <Reveal key={g.title} className={`lpgal ${g.big ? 'lpgal--big' : ''}`} delay={(i % 5) * 0.05}>
+              <span className="lpgal__img" style={{ backgroundImage: `url(${g.img})` }} aria-hidden="true" />
+              <span className="lpgal__scrim" aria-hidden="true" />
+              <span className="lpgal__body"><span className="lpgal__title">{g.title}</span><span className="lpgal__sub">{g.sub}</span></span>
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      {/* 5 — TRANSFORMATION */}
+      <section className="section section--light lp-transform-sec">
+        <div className="container lp-transform">
+          <Reveal className="lp-transform__copy">
+            <span className="kicker">Vorher / Nachher</span>
+            <h2 className="lp-h2">Verwandle deinen Raum <span className="grad">in etwas Besonderes.</span></h2>
+            <p className="lp-lead">Mit durchdachtem Design und sauberer Planung wird aus einem Raum zum Ankommen mehr.</p>
+            <Link to="/vorher-nachher" className="lp-link">Mehr Transformationen <ArrowRight size={15} strokeWidth={2} /></Link>
+          </Reveal>
+          <Reveal className="lp-transform__ba" delay={0.1}>
+            <BeforeAfter before={vorherImg} after={nachherImg} />
+          </Reveal>
+          <div className="lp-transform__stats">
+            {STATS.map((s, i) => (
+              <Reveal key={s.l} className="lpstat" delay={i * 0.08}>
+                <span className="lpstat__v grad">{s.v}</span>
+                <span className="lpstat__l">{s.l}</span>
+                {s.sub && <span className="lpstat__sub">{s.sub}</span>}
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 6 — PROZESS */}
+      <section className="section section--light lp-process-sec">
+        <div className="container">
+          <div className="lp-process-head">
+            <Reveal><span className="kicker">Unser Prozess</span><h2 className="lp-h2">Unser Weg zu <span className="grad">deiner Traumküche.</span></h2><p className="lp-lead">Klar, strukturiert, persönlich.</p></Reveal>
+          </div>
+          <div className="lp-process">
+            {PROCESS.map((p, i) => (
+              <Reveal key={p.n} className="lpproc" delay={i * 0.07}>
+                <span className="lpproc__node"><img src={p.img} alt="" loading="lazy" /></span>
+                <span className="lpproc__n">{p.n}</span>
+                <span className="lpproc__title">{p.title}</span>
+                <span className="lpproc__text">{p.text}</span>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 7 — TEAM */}
+      <section className="section section--light lp-team-sec">
+        <div className="container">
+          <div className="lp-team-head">
+            <Reveal><span className="kicker">Das Team</span><h2 className="lp-h2">Menschen, die <span className="grad">Küchen lieben.</span></h2></Reveal>
+          </div>
+          <div className="lp-team">
+            {TEAM.map((t, i) => (
+              <Reveal key={t.title} className="lpteam" delay={i * 0.07}>
+                <span className="lpteam__img" style={{ backgroundImage: `url(${t.img})` }} aria-hidden="true" />
+                <span className="lpteam__scrim" aria-hidden="true" />
+                <span className="lpteam__body"><span className="lpteam__title">{t.title}</span><span className="lpteam__role">{t.role}</span></span>
+              </Reveal>
+            ))}
+          </div>
+          <div className="lp-team-benefits">
+            {TEAM_BENEFITS.map((b, i) => (
+              <Reveal key={b} as="span" className="lp-team-benefit" delay={i * 0.05}><Check size={15} strokeWidth={2.4} /> {b}</Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 8 — JOURNAL */}
+      <section className="section section--light lp-journal-sec">
+        <div className="container lp-journal-head">
+          <Reveal>
+            <span className="kicker">Journal</span>
+            <h2 className="lp-h2">Inspiration & Wissen <span className="grad">für deine Küche.</span></h2>
+            <p className="lp-lead">Entdecke Tipps, Trends und spannende Projekte in unserem Journal.</p>
+            <CTAButton to="/journal" variant="dark">Zum Journal</CTAButton>
+          </Reveal>
+        </div>
+        <div className="container">
+          <div className="lp-journal">
+            {JOURNAL.map((a, i) => (
+              <Reveal key={a.title} delay={(i % 4) * 0.06}>
+                <Link to={a.to} className="lpjcard">
+                  <span className="lpjcard__img" style={{ backgroundImage: `url(${a.img})` }} aria-hidden="true" />
+                  <span className="lpjcard__body">
+                    <span className="lpjcard__tag">{a.tag}</span>
+                    <span className="lpjcard__title">{a.title}</span>
+                    <span className="lpjcard__cta">Jetzt lesen <ArrowUpRight size={15} strokeWidth={2} /></span>
                   </span>
                 </Link>
               </Reveal>
@@ -93,7 +319,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FINALER CTA */}
+      {/* 9 — FINALER CTA (dunkel) */}
       <section className="leist-final home-final">
         <div className="leist-final__media" aria-hidden="true">
           <img src={finalImg} alt="" />
@@ -102,16 +328,11 @@ export default function Home() {
         <div className="container leist-final__inner">
           <Reveal>
             <span className="kicker kicker--gold">Bereit?</span>
-            <h2 className="leist-final__title">
-              Bereit für ein<br /><span className="grad">besonderes Küchenerlebnis?</span>
-            </h2>
-            <p className="leist-final__text">
-              Vereinbare deinen persönlichen Beratungstermin und erlebe, wie aus Ideen
-              eine Küche wird, die wirklich zu dir passt.
-            </p>
+            <h2 className="leist-final__title">Deine Küche. Dein Zuhause. <span className="grad">Dein Leben.</span></h2>
+            <p className="leist-final__text">Vereinbare deinen persönlichen Beratungstermin und erlebe, wie aus Ideen eine Küche wird, die wirklich zu dir passt.</p>
             <div className="leist-final__actions">
               <CTAButton to="/beratung">Beratung anfragen</CTAButton>
-              <CTAButton to="/studio" variant="dark">Studio entdecken</CTAButton>
+              <CTAButton to="/studio" variant="dark">Studio besuchen</CTAButton>
             </div>
           </Reveal>
         </div>
