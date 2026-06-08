@@ -11189,7 +11189,7 @@ a.footer__contact-line:hover {
 
 /* inline popover that pops out of the hotspot (no modal, no overlay) */
 /* large premium side-card that opens beside the hotspot */
-.ekm-popwrap { position: absolute; top: 50%; transform: translateY(-50%); z-index: 9; width: min(560px, 50%); }
+.ekm-popwrap { position: absolute; top: 50%; transform: translateY(-50%); z-index: 9; width: min(645px, 58%); }
 .ekm-pop { position: relative; }
 .ekm-pop__img { width: 100%; height: auto; display: block; border-radius: 20px; border: 1px solid rgba(198, 145, 56, 0.32); box-shadow: 0 50px 110px -38px rgba(45, 35, 20, 0.62); }
 /* gold connector arrow toward the hotspot */
