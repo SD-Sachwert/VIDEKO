@@ -8,6 +8,7 @@ import Reveal from '../components/Reveal.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import ExplodingKitchen from '../components/ExplodingKitchen.jsx'
+import HeroExperience from '../components/HeroExperience.jsx'
 import verwandleVideo from '../assets/images/home/verwandle-raum.mp4'
 
 import wayInsp from '../assets/images/inspiration/01_hero_atmosphaerische_kueche.png'
@@ -96,6 +97,9 @@ export default function Home() {
   return (
     <div className="leist-page home-page">
       <Hero />
+
+      {/* 0 — HERO EXPERIENCE (Before/After + Einstiegskarten + Trust) */}
+      <HeroExperience />
 
       {/* 1 — DREI WEGE */}
       <section className="section section--light lp-ways-sec">
