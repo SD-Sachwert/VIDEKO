@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Boxes, Lightbulb, Ruler, Clock, Gem, ShieldCheck, PencilRuler, Wrench, Layers, Cpu } from 'lucide-react'
+import { ArrowRight, Boxes, Lightbulb, Ruler, Clock, Gem, ShieldCheck, PencilRuler, Wrench, Layers, Cpu, Workflow, Sparkles, UserCheck } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
 import CTAButton from './CTAButton.jsx'
@@ -11,11 +11,14 @@ import cardStyle from '../assets/images/home-hero/card-stylefinder.png'
 import cardBer from '../assets/images/home-hero/card-beratung.png'
 
 const HOTSPOTS = [
-  { icon: Boxes, t: 'Stauraumplanung', d: 'Mehr Platz für das, was zählt. Und weniger Chaos für das, was nervt.', cls: 'hx-spot--a' },
-  { icon: Lightbulb, t: 'Lichtkonzept', d: 'Stimmung schaffen, Funktion betonen, Atmosphäre formen.', cls: 'hx-spot--b' },
-  { icon: Ruler, t: 'Präzise Montage', d: 'Millimetergenau. Sauber. Verlässlich. Ein Stück Handwerkskunst.', cls: 'hx-spot--c' },
   { icon: Layers, t: 'Materialkonzept', d: 'Oberflächen, die schön aussehen und zum Alltag passen.', cls: 'hx-spot--d' },
-  { icon: Cpu, t: 'Geräteintegration', d: 'Technik da, wo sie Sinn macht. Nicht da, wo sie halt noch reinpasste.', cls: 'hx-spot--e' },
+  { icon: Boxes, t: 'Stauraumplanung', d: 'Mehr Platz für das, was zählt. Weniger Chaos für das, was nervt.', cls: 'hx-spot--a' },
+  { icon: Lightbulb, t: 'Lichtkonzept', d: 'Stimmung schaffen, Funktion betonen, Atmosphäre formen.', cls: 'hx-spot--b' },
+  { icon: Cpu, t: 'Geräteintegration', d: 'Technik da, wo sie Sinn macht. Nicht da, wo sie reinpasste.', cls: 'hx-spot--f' },
+  { icon: Workflow, t: 'Ablaufplanung', d: 'Damit du beim Kochen nicht jedes Mal Halbmarathon läufst.', cls: 'hx-spot--g' },
+  { icon: Ruler, t: 'Präzise Montage', d: 'Millimetergenau. Sauber. Verlässlich.', cls: 'hx-spot--c' },
+  { icon: Sparkles, t: 'Raumwirkung', d: 'Aus einem neutralen Raum wird ein echter Lieblingsplatz.', cls: 'hx-spot--e' },
+  { icon: UserCheck, t: 'Persönliche Planung', d: 'Keine Lösung von der Stange – sondern für dich.', cls: 'hx-spot--h' },
 ]
 
 const BAUSTEINE = [
@@ -79,8 +82,6 @@ export default function HeroExperience() {
               <span className="hx-meas hx-meas--bottom">5,10 m</span>
             </div>
             <span className="hx-ba__line"><span className="hx-ba__knob"><ArrowRight size={13} strokeWidth={2.4} style={{ transform: 'rotate(180deg)' }} /><ArrowRight size={13} strokeWidth={2.4} /></span></span>
-            <span className="hx-ba__tag hx-ba__tag--l">Vorher</span>
-            <span className="hx-ba__tag hx-ba__tag--r">Nachher</span>
           </div>
 
           {HOTSPOTS.map((h) => (
@@ -89,13 +90,6 @@ export default function HeroExperience() {
               <span className="hx-spot__b"><span className="hx-spot__t">{h.t}</span><span className="hx-spot__d">{h.d}</span></span>
             </div>
           ))}
-        </Reveal>
-
-        <Reveal className="hx-cloud" delay={0.15}>
-          <span className="hx-cloud__lead">Wir denken nicht nur die Küche – sondern den ganzen Raum:</span>
-          <div className="hx-cloud__pills">
-            {BAUSTEINE.map((b) => <span key={b} className="hx-pill">{b}</span>)}
-          </div>
         </Reveal>
       </div>
 

@@ -46,6 +46,7 @@ const TEAM = [
   { title: 'Montage & Handwerk', text: 'Bauen auf, was geplant wurde. Sauber und termintreu.', image: tMontage },
   { title: 'Sachbearbeitung & Organisation', text: 'Halten im Hintergrund alle Fäden zusammen.', image: tOrga },
   { title: 'Partner & Gewerke', text: 'Verlässliche Profis für alles rund um deinen Raum.', image: tOrga },
+  { title: 'Service & Nachbetreuung', text: 'Bleibt erreichbar, wenn andere schon abgewunken hätten.', image: momentImg },
 ]
 
 const RULES = [
@@ -153,7 +154,7 @@ export default function UeberUns() {
           <SectionHeader align="center" kicker="Das Team hinter VIDEKO" title="Mehr als nur drei Gründer." lead="Hinter jeder Küche steht ein ganzes Team, das mitdenkt." />
           <div className="teamflip">
             {TEAM.map((t, i) => (
-              <Reveal key={t.title} as="div" className={`tflip ${i === 0 ? 'is-big' : ''}`} delay={(i % 3) * 0.06} tabIndex={0} role="button" aria-label={`${t.title} – Details`}>
+              <Reveal key={t.title} as="div" className="tflip" delay={(i % 3) * 0.06} tabIndex={0} role="button" aria-label={`${t.title} – Details`}>
                 <div className="tflip__inner">
                   <div className="tflip__front">
                     <span className="tflip__img" style={{ backgroundImage: `url(${t.image})` }} aria-hidden="true" />
@@ -225,10 +226,10 @@ export default function UeberUns() {
               </div>
             </Reveal>
             <Reveal className="standort__map" delay={0.08}>
-              <a className="mapcard" href={MAPS_URL} target="_blank" rel="noopener noreferrer" aria-label="Route zu VIDEKO in Würzburg auf Google Maps planen">
+              <div className="mapcard">
                 <img src={karteImg} alt="Standort VIDEKO – Hertzstraße 4, 97076 Würzburg" loading="lazy" />
-                <span className="mapcard__btn"><MapPin size={16} strokeWidth={1.9} /> Route planen</span>
-              </a>
+                <span className="mapcard__addr"><MapPin size={16} strokeWidth={1.9} /> Hertzstraße 4, 97076 Würzburg</span>
+              </div>
             </Reveal>
           </div>
         </div>

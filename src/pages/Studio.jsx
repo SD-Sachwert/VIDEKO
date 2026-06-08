@@ -98,28 +98,18 @@ export default function Studio() {
       </section>
 
       {/* VIDEO SHOWCASE – Studio im Aufbau */}
-      <section className="studio-video">
-        <div className="studio-video__media" aria-hidden="true">
-          <video
-            className="studio-video__vid"
-            autoPlay
-            muted
-            loop
-            playsInline
-            poster={introImg}
-          >
-            <source src={umbauVideo} type="video/mp4" />
-          </video>
-          <div className="studio-video__veil" />
-        </div>
-        <div className="container studio-video__inner">
-          <Reveal>
-            <span className="kicker kicker--gold">Studio im Aufbau</span>
-            <h2 className="studio-video__title">Hier entsteht<br /><span className="grad">etwas Besonderes.</span></h2>
-            <p className="studio-video__text">
-              Schau uns beim Aufbau über die Schulter – Schritt für Schritt entsteht
-              dein neues Lieblings-Küchenstudio in Würzburg.
-            </p>
+      <section className="section studio-video-sec">
+        <div className="container">
+          <Reveal className="vfeature">
+            <video className="vfeature__vid" autoPlay muted loop playsInline poster={introImg} aria-hidden="true">
+              <source src={umbauVideo} type="video/mp4" />
+            </video>
+            <span className="vfeature__veil" aria-hidden="true" />
+            <div className="vfeature__copy">
+              <span className="kicker kicker--gold">Studio im Aufbau</span>
+              <h2 className="vfeature__title">Hier entsteht<br /><span className="grad">etwas Besonderes.</span></h2>
+              <p className="vfeature__text">Schau uns beim Aufbau über die Schulter – Schritt für Schritt entsteht dein neues Lieblings-Küchenstudio in Würzburg.</p>
+            </div>
           </Reveal>
         </div>
       </section>
