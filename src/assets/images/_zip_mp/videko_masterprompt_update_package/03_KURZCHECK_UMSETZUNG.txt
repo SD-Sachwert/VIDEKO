@@ -1,0 +1,35 @@
+KURZCHECK – NICHT VERGESSEN
+
+JOURNAL
+[ ] Hero, Featured, Filter, Artikelgrid, Experten-Tipp, FAQ, Mythen, Frag VIDEKO, CTA, Footer sauber vorhanden
+[ ] Keine Platzhalter wie „Demnächst“
+[ ] Alle Buttons sinnvoll verlinkt
+[ ] Artikeldaten aus Struktur, nicht wild im Code verteilt
+
+FRAG VIDEKO
+[ ] Zusätzlicher Kontakt-/Verweisbutton integriert
+[ ] Smartphone-Visual hochwertig
+[ ] Akkordeons sauber animiert
+
+CTA
+[ ] Text deutlich lesbar
+[ ] Subline nicht zu blass
+[ ] Buttons heben sich klar ab
+
+SCROLL-KARTENBEREICH
+[ ] Kein Click-Tab-System als Hauptmechanik
+[ ] Keine riesigen Leerflächen
+[ ] Scroll-Story funktioniert stabil oder wurde durch bessere kompakte Lösung ersetzt
+[ ] Mobile ohne Chaos
+
+ÜBER UNS – TEAMBLOCK
+[ ] Nicht einfach stumpfe Kachelreihe
+[ ] Lebendige, editorielle, asymmetrische Inszenierung
+[ ] Platzhalterbilder okay, aber hochwertig gesetzt
+[ ] Gestaffelte Animationen vorhanden
+
+ALLGEMEIN
+[ ] Premium-Look statt Möbelhaus-Standard
+[ ] Animationen dezent und stabil
+[ ] prefers-reduced-motion beachtet
+[ ] Keine halbfertigen Workarounds im Layout

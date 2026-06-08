@@ -1,0 +1,429 @@
+AUFGABE:
+Baue bzw. überarbeite die betroffenen VIDEKO-Seitenbereiche hochwertig neu. Nutze die mitgelieferten Referenzbilder und halte dich konsequent an den bestehenden VIDEKO-Stil: oben dunkler Hero / Footer-Bereich, dazwischen helle hochwertige Contentflächen, warme Goldakzente, edle Animationen, klare Typografie, viel Weißraum, aber kein leerer Friedhof.
+
+WICHTIG:
+- Keine halbfertigen Platzhalter.
+- Keine Lorem-Ipsum-Texte.
+- Keine kaputten Scrollstrecken mit riesigen Leerflächen.
+- Keine stumpfen Kasten nebeneinander, wenn etwas emotionaler, räumlicher und bewegter inszeniert werden kann.
+- Animationen dezent, hochwertig und stabil – kein Kirmesmodus.
+- prefers-reduced-motion beachten.
+
+MITGELIEFERTE REFERENZEN:
+- assets/journal-main-reference.png
+- assets/reference-faq-large.png
+- assets/reference-kuechenmythen.png
+- assets/reference-frag-videko-original.png
+- assets/reference-frag-videko-update.png
+- assets/reference-cta-contrast-problem.png
+- assets/reference-broken-scroll-cards.png
+- assets/reference-about-team-section.png
+
+==================================================
+TEIL A – JOURNAL-SEITE KOMPLETT / FINAL
+==================================================
+
+Die Journal-Seite soll wie ein echter hochwertiger Magazin-/Ratgeberbereich wirken. Die bisherige Journal-Grundidee bleibt bestehen, aber die Sektionen müssen sauber finalisiert und verbessert werden.
+
+JOURNAL-SEITENAUFBAU:
+1. Hero
+2. Featured Artikel
+3. Kategorienfilter
+4. Artikelgrid
+5. Experten-Tipp + Beliebte Themen
+6. FAQ-Großblock
+7. Küchenmythen
+8. Frag VIDEKO
+9. Abschluss-CTA
+10. Footer
+
+--------------------------------------------------
+1) HERO
+--------------------------------------------------
+- Dunkler, luxuriöser Küchen-Hero.
+- Headline:
+  „Wissen, das weiterhilft.“
+- Subline:
+  „Praktische Tipps, ehrliche Planungshilfe und inspirierende Ideen rund um Küche, Materialien, Licht und Alltag.“
+- Buttons:
+  Primär: „Artikel entdecken“
+  Sekundär: „Stylefinder starten“
+- Kleine Floating Card rechts:
+  „Neu im Journal“
+  „7 echte Ratgeber“
+  „Jetzt entdecken →“
+- Dezenter Scroll-Indikator.
+
+Animation:
+- Fade-up beim Laden.
+- Buttons leicht gestaffelt.
+- Floating Card minimaler Float.
+
+--------------------------------------------------
+2) FEATURED ARTIKEL
+--------------------------------------------------
+- Großer horizontaler Featured-Block.
+- Artikel:
+  „7 Küchenfehler, die du später jeden Tag bereust“
+- Kategorie: Planung
+- Lesezeit: 7 Min. Lesezeit
+- Excerpt:
+  „Kleine Entscheidungen, große Wirkung. Diese typischen Fehler kosten täglich Komfort – und lassen sich mit guter Planung vermeiden.“
+- Button: „Artikel lesen“
+- Links großes Bild, rechts helle Textkarte.
+
+--------------------------------------------------
+3) KATEGORIEFILTER
+--------------------------------------------------
+Pills:
+- Alle Themen
+- Planung
+- Materialien
+- Licht
+- Stauraum
+- Geräte
+- Inspiration
+- Pflege
+- Design
+
+Funktion:
+- Clientseitiges Filtern.
+- Aktive Kategorie klar hervorheben.
+- Filterwechsel weich animiert.
+
+--------------------------------------------------
+4) ARTIKELGRID
+--------------------------------------------------
+6 Karten im Grid, Desktop 3 Spalten, Tablet 2, Mobile 1.
+
+Karten:
+A) Licht in der Küche
+B) Welche Arbeitsplatte passt zu mir?
+C) Offene oder geschlossene Küche?
+D) Fronten, Farben, Materialien
+E) Vor dem Beratungstermin: Das solltest du wissen
+F) Mehr Stauraum, weniger Chaos
+
+Hover:
+- leichte Elevation
+- Bild minimal zoom
+- Arrow/Bookmark bewegt sich leicht
+
+--------------------------------------------------
+5) EXPERTEN-TIPP + BELIEBTE THEMEN
+--------------------------------------------------
+- Dunkle Premium-Karte „VIDEKO Experten-Tipp“
+- Quote:
+  „Die perfekte Küche ist selten die größte. Meistens ist sie einfach die, bei der man vorher sauber nachgedacht hat.“
+- Attribution:
+  „VIDEKO Küchenplanung“
+
+Daneben „Beliebte Themen“:
+- Küchenplanung / 7 Artikel
+- Materialien / 4 Artikel
+- Inspiration / 5 Artikel
+
+--------------------------------------------------
+6) FAQ-GROSSBLOCK
+--------------------------------------------------
+Referenz: assets/reference-faq-large.png
+
+- Kicker: „Beliebte Fragen“
+- Große Headline:
+  „Fragen, die fast jeder vor der Küchenplanung hat.“
+- Links darunter ein hochwertiges Küchenbild.
+- Rechts 8 FAQ-Akkordeon-Karten in 2 Spalten.
+
+Fragen:
+1. Wann sollte ich mit der Küchenplanung beginnen?
+2. Kann ich mit einem Grundriss starten?
+3. Was muss ich zum ersten Termin mitbringen?
+4. Plant ihr auch kleinere Küchen?
+5. Wie lange dauert eine Küchenplanung?
+6. Macht ihr Aufmaß und Montage?
+7. Was kostet eine Küche bei VIDEKO?
+8. Bietet ihr auch nach dem Kauf Service an?
+
+Funktion:
+- Plus/Minus sauber animiert.
+- Antworten aus Datenstruktur laden.
+- Mobile sauber untereinander.
+
+--------------------------------------------------
+7) KÜCHENMYTHEN
+--------------------------------------------------
+Referenz: assets/reference-kuechenmythen.png
+
+- Kicker: „Küchenmythen“
+- Headline: „Wahr oder falsch?“
+- Dunkler horizontaler Slider / Carousel mit Mythos-Karten.
+- Rechts ein eleganter Navigationsbutton.
+
+Mythen:
+- Weiße Küchen werden schneller schmutzig.
+- Eine Insel braucht mindestens 40 m².
+- Grifflos ist unpraktisch.
+- Holz in der Küche ist pflegeintensiv.
+- Schwarze Armaturen sind immer empfindlich.
+- Kleine Küchen können nicht hochwertig wirken.
+
+Interaktion:
+- Klick oder Tap öffnet die Auflösung.
+- Kein kindischer Flip-Effekt. Lieber Drawer / Expand / Hover-Reveal.
+
+--------------------------------------------------
+8) FRAG VIDEKO – VERBESSERT
+--------------------------------------------------
+Referenzen:
+- assets/reference-frag-videko-original.png
+- assets/reference-frag-videko-update.png
+
+Dieser Bereich muss gegenüber der bisherigen Version verbessert werden.
+
+Ziel:
+Eine hochwertige, servicenahe FAQ-Sektion mit direkter Weiterleitung zur Kontaktaufnahme.
+
+Layout:
+- 2-spaltig.
+- Links:
+  Kicker: „Frag VIDEKO“
+  Headline:
+  „Deine Fragen. Unsere Antworten.“
+  optional mit goldener Hervorhebung im zweiten Teil der Headline.
+- Darunter 4 Frage-Akkordeons:
+  1. Brauche ich wirklich eine Kochinsel?
+  2. Keramik oder Naturstein – was ist besser?
+  3. Welche Geräte lohnen sich wirklich?
+  4. Matt oder Hochglanz – was ist pflegeleichter?
+
+WICHTIGE ERWEITERUNG:
+Unter den Fragen bzw. unter dem Standardbutton muss ein zusätzlicher Verweisbutton / Kontaktbutton integriert werden, damit Nutzer sich bei weiteren Fragen direkt melden können.
+
+Buttons:
+- Primär: „Alle Fragen ansehen“
+- Sekundär zusätzlich:
+  „Weitere Fragen? Beratung anfragen“
+  oder
+  „Frage stellen / Beratung anfragen“
+
+Hinweis:
+Dieser zweite Button soll nicht gequetscht wirken, sondern klar sichtbar und bewusst als nächster Schritt funktionieren.
+
+Rechte Spalte:
+- Smartphone-/Mockup-Visual mit VIDEKO-Branding.
+- Elegantes Device, kein billiges Mockup.
+- Chat-/FAQ-Feeling im Gerät.
+
+Interaktion:
+- Akkordeons weich öffnen.
+- Rechts Device gerne minimal floaten.
+
+--------------------------------------------------
+9) ABSCHLUSS-CTA – KONTRAST FIXEN
+--------------------------------------------------
+Referenz Problem: assets/reference-cta-contrast-problem.png
+
+Der aktuelle CTA-Bereich ist zu hell und schlecht lesbar. Das muss korrigiert werden.
+
+CTA-Text:
+- Kicker: „Bereit?“
+- Headline:
+  „Bereit für deine Traumküche?“
+- Subline:
+  „Finde deinen Stil oder lass dich persönlich beraten – ohne Küchenlatein-Prüfung.“
+- Buttons:
+  „Stylefinder starten“
+  „Beratung anfragen“
+
+WICHTIG:
+- Textkontrast massiv verbessern.
+- Der Bereich darf nicht edel-unsichtbar sein.
+- Headline, Subline und Kicker müssen klar lesbar sein.
+
+Erlaubte Lösungen:
+A) Hintergrund deutlich abdunkeln und helle Schrift nutzen.
+B) Heller Hintergrund bleiben, aber Text in dunklem Anthrazit und goldene Headline klar lesbar machen.
+C) Sehr dezentes Overlay/Panel hinter dem Text.
+
+Wichtig:
+- Nicht wieder 15 % Opacity auf Fließtext.
+- Subline muss sofort lesbar sein.
+- Buttons stark genug absetzen.
+
+--------------------------------------------------
+10) FOOTER
+--------------------------------------------------
+Bestehenden Footer im VIDEKO-Stil beibehalten.
+
+==================================================
+TEIL B – KAPUTTEN KARTEN-/SCROLLBEREICH ERSETZEN
+==================================================
+
+Referenz Problem:
+- assets/reference-broken-scroll-cards.png
+
+Der aktuelle Karten-/Scrollbereich funktioniert nicht:
+- Man muss links klicken, damit rechts Karten wechseln.
+- Es gibt riesige Leerflächen darunter.
+- Es wirkt unfertig und nicht hochwertig.
+
+Das muss komplett ersetzt werden.
+
+ZIEL:
+Aus dem Bereich wird eine echte, hochwertige Scroll-Story oder alternativ eine kompakte animierte Card-Section – aber auf keinen Fall wieder ein halbgare Tabsystem mit Wüstenfläche.
+
+BEVORZUGTE LÖSUNG (Desktop):
+- Sticky Scroll Story.
+- Links bleibt ein kompakter Textbereich sticky.
+- Rechts oder zentral wechselt eine große Premium-Karte automatisch beim Scrollen.
+- Kein manueller Klick als Hauptlogik.
+- Klicks dürfen ergänzend funktionieren, aber nicht als Hauptmechanik.
+
+Inhalt / Karten:
+01 Beratung & Verkauf
+02 Küchenplanung
+03 Montage & Technik
+04 Projektkoordination
+05 Quereinstieg
+
+Jede Karte:
+- Nummer
+- Titel
+- kurzer Beschreibungstext
+- Bild oder Platzhalterbild
+- CTA / Verweis
+
+Animation:
+- Beim Scrollen weiche Inhaltswechsel.
+- Karte blendet sanft ein.
+- leichter translate-y Effekt.
+- Bild minimal zoom.
+- Fortschrittsanzeige oder Nummernleisten optional.
+
+WICHTIG:
+- Keine riesige leere Scrollfläche.
+- Keine 200vh-Spacer ohne Inhalt.
+- Höhe sauber kalkulieren.
+- Wenn sticky Scroll nicht sauber machbar ist: sichere Alternative wählen.
+
+FALLBACK-LÖSUNG:
+- Horizontale bzw. gestaffelte Premium-Karten.
+- Beim Scrollen erscheinen sie nacheinander mit Reveal-Animation.
+- Kein Leerraum, keine Tab-Mechanik.
+
+MOBILE:
+- Kein sticky Scroll.
+- Stattdessen Swipe-Karten oder sauber gestapelte Cards.
+- Keine Lücken.
+
+==================================================
+TEIL C – ÜBER-UNS-SEITE: TEAM-SEKTION NEU BAUEN
+==================================================
+
+Referenz Problem:
+- assets/reference-about-team-section.png
+
+Der aktuelle Block „Mehr als nur drei Gründer“ mit Bild links und stumpfen Karten rechts ist zu langweilig. Das muss deutlich hochwertiger und lebendiger werden.
+
+ZIEL:
+Eine animierte, moderne, editorielle Team-Sektion, die das Gefühl vermittelt: Hinter VIDEKO steht ein echtes Team. Nicht einfach wieder vier Kästen nebeneinander. Grafiken/Fotos können später geliefert werden – bis dahin mit starken Platzhaltern arbeiten.
+
+NEUER BLOCK:
+Kicker:
+„Das Team hinter VIDEKO“
+
+Headline:
+„Mehr als nur drei Gründer.“
+
+Subline:
+„Hinter jeder Küche steht ein ganzes Team, das mitdenkt.“
+
+GEWÜNSCHTE INSZENIERUNG:
+Keine statische Kachelwand. Stattdessen z. B.:
+
+Variante A – Editorial Mosaic (bevorzugt)
+- Eine asymmetrische, lebendige Komposition.
+- Große Hauptkarte / Hauptvisual.
+- Drumherum kleinere Floating-Info-Cards oder Image-Cards.
+- Cards unterschiedlich groß.
+- Layout wirkt kuratiert, nicht nach Bootstrap-Grid.
+- Leichte Overlaps möglich.
+
+Inhalte / Rollen:
+- Beratung & Planung
+- Marketing & Social Media
+- Montage & Handwerk
+- Sachbearbeitung & Organisation
+- Partner & Gewerke
+
+Texte können zunächst ähnlich bleiben, aber hochwertiger gesetzt.
+
+MÖGLICHE UMSETZUNG:
+- Eine große Hauptstory-Karte links oder mittig.
+- Rechts oder darum gruppiert 4 kleinere Rollen-Cards.
+- Jede Card mit Bild-/Grafik-Platzhalter, Label, Titel, Kurztext.
+- Gerne mit Nummern / Icons / Mini-Badges.
+
+ANIMATIONEN:
+- Section kommt in 2–3 Stufen rein.
+- Große Hauptkarte leicht später.
+- Kleinere Cards gestaffelt.
+- minimale Parallax- / Float-Bewegung bei einigen Elementen.
+- Hover: leichte Elevation / Glanz / Zoom.
+
+WICHTIG:
+- Nicht überladen.
+- Nicht verspielt.
+- Premium, modern, ruhig.
+- Platzhalterbilder und Platzhaltergrafiken erlaubt – aber sauber und edel.
+
+ALTERNATIV / ERGÄNZEND:
+Falls es gut passt, kann man kleine Verbindungslinien, goldene Punktmarker oder subtile Diagramm-/Netzwerk-Anmutung nutzen, damit klar wird: das Team arbeitet zusammen.
+Aber bitte sehr dezent.
+
+MOBILE:
+- Reihenfolge sauber runterbrechen.
+- Große Hauptkarte zuerst.
+- Danach kleinere Rollen-Cards.
+- Kein Chaos.
+
+==================================================
+TECHNISCHE VORGABEN
+==================================================
+
+- Nutze bestehende Komponenten / Designsystem-Elemente, wenn vorhanden.
+- Inhalte als Datenstrukturen anlegen, nicht hart überall verteilt.
+- Empfohlene Datenarrays:
+  - journalArticles
+  - journalFaqs
+  - kitchenMyths
+  - fragVidekoQuestions
+  - roleCards / aboutTeamCards
+  - careerCards oder vergleichbar für den Scrollbereich
+- Animationen am besten mit bestehendem Setup (Framer Motion / CSS / IntersectionObserver), je nachdem was im Projekt schon genutzt wird.
+- Accessibility beachten.
+- prefers-reduced-motion respektieren.
+- Akkordeons semantisch sauber bauen.
+
+==================================================
+SEO / COPY
+==================================================
+
+JOURNAL META TITLE:
+„Journal – Küchenwissen, Planungstipps & Inspiration | VIDEKO Küchen“
+
+JOURNAL META DESCRIPTION:
+„Im VIDEKO Journal findest du ehrliche Tipps zu Küchenplanung, Materialien, Licht, Stauraum und Design – verständlich, praktisch und ohne Möbelhaus-Gelaber.“
+
+TONALITÄT:
+- hochwertig
+- ehrlich
+- modern
+- kein Möbelhaus-Geschrei
+- leicht trocken / sympathisch
+- klar und verständlich
+
+WICHTIG ZUM SCHLUSS:
+Die Umsetzung muss sich wie ein durchdachtes Premium-Weberlebnis anfühlen.
+Nicht wie fünf verschiedene Ideen, die irgendwie zusammengeworfen wurden.
+Wenn etwas fancy nicht stabil funktioniert, bitte lieber sauber, kompakt und hochwertig lösen als technisch gewollt und optisch kaputt.

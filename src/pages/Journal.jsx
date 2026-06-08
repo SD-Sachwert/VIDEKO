@@ -199,7 +199,10 @@ export default function Journal() {
                 </div>
               ))}
             </div>
-            <CTAButton to="/beratung">Alle Fragen ansehen</CTAButton>
+            <div className="jfrag__actions">
+              <CTAButton to="/beratung">Alle Fragen ansehen</CTAButton>
+              <CTAButton to="/beratung" variant="dark">Weitere Fragen? Beratung anfragen</CTAButton>
+            </div>
           </Reveal>
           <Reveal className="jfrag__device" delay={0.1}>
             <div className="jphone">

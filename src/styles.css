@@ -10710,6 +10710,12 @@ a.footer__contact-line:hover {
 .jphone__bubble--q { align-self: flex-end; background: var(--grad-gold); color: var(--soft-black); border-bottom-right-radius: 4px; font-weight: 500; }
 .jphone__bubble--a { align-self: flex-start; background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(232, 201, 120, 0.18); color: rgba(244, 239, 228, 0.88); border-bottom-left-radius: 4px; }
 
+.jfrag__actions { display: flex; gap: 14px; flex-wrap: wrap; }
+/* journal CTA needs its own dark ground (no hero image behind it) */
+.journal-final { background: linear-gradient(155deg, #1a1813 0%, var(--soft-black) 55%, #14120e 100%); }
+.journal-final .leist-final__title { color: var(--cream); }
+.journal-final .leist-final__text { color: rgba(244, 239, 228, 0.82); }
+
 /* journal article detail */
 .jarticle-hero { min-height: 56vh; }
 .jarticle-hero__inner { display: flex; flex-direction: column; }
