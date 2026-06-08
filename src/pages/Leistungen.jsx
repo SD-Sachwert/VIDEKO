@@ -117,14 +117,10 @@ export default function Leistungen() {
             </Reveal>
             <Reveal className="lintro__media" delay={0.08}>
               <div className="svc-video__frame">
-                <div className="svc-video__labels" aria-hidden="true"><span>Vorher</span><span>Planung</span><span>Nachher</span></div>
                 <video className="svc-video__vid" autoPlay muted loop playsInline preload="none" poster={featureImg} aria-hidden="true">
                   <source src={vnVideo} type="video/mp4" />
                 </video>
                 <span className="lintro__rim" aria-hidden="true" />
-                <div className="svc-microusp svc-microusp--over">
-                  <span>Persönliche Planung</span><span>3D-Visualisierung</span><span>Festpreis & Termin</span>
-                </div>
               </div>
             </Reveal>
           </div>

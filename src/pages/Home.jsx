@@ -7,12 +7,12 @@ import Hero from '../components/Hero.jsx'
 import Reveal from '../components/Reveal.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
 import CTAButton from '../components/CTAButton.jsx'
+import ExplodingKitchen from '../components/ExplodingKitchen.jsx'
 import verwandleVideo from '../assets/images/home/verwandle-raum.mp4'
 
 import wayInsp from '../assets/images/inspiration/01_hero_atmosphaerische_kueche.png'
 import waySf from '../assets/images/kuechenwelten/stilfinderhero-kitchen-wide.jpg'
 import wayBer from '../assets/images/beratung/cta-light-portal.png'
-import explodedImg from '../assets/images/home/technik-exploded-kitchen.png'
 import sfResult from '../assets/images/kuechenwelten/stilfinderresult-modern-warm.jpg'
 import sfCard1 from '../assets/images/kuechenwelten/stilfindercard-modern-warm.jpg'
 import sfCard2 from '../assets/images/kuechenwelten/stilfindercard-zeitlos-elegant.jpg'
@@ -44,14 +44,6 @@ const WAYS = [
   { n: '03', title: 'Persönliche Beratung', text: 'Gemeinsam planen wir deine Traumküche – ehrlich und auf Augenhöhe.', cta: 'Termin sichern', to: '/beratung', img: wayBer },
 ]
 
-const TECH = [
-  { title: 'Arbeitsplatte', text: 'Premium-Materialien, exakt für deinen Alltag.' },
-  { title: 'Unterkonstruktion', text: 'Verdeckte Tragstruktur für volle Stabilität.' },
-  { title: 'Intelligente Technik', text: 'Vernetzt und durchdacht – wo sie Sinn ergibt.' },
-  { title: 'Maßgefertigte Schubladen', text: 'Jeder Zentimeter sinnvoll genutzt.' },
-  { title: 'Soft-Close System', text: 'Leise schließen statt knallen. Jeden Tag.' },
-  { title: 'Beleuchtungskonzept', text: 'Arbeits-, Stimmungs- und Akzentlicht im Zusammenspiel.' },
-]
 
 const WHY = [
   { icon: PenTool, title: 'Design mit Haltung', text: 'Klare Linien, warme Materialien – kein Effekt um des Effekts willen.' },
@@ -134,30 +126,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 2 — TECHNIK */}
-      <section className="section section--light lp-tech-sec">
-        <div className="container lp-tech">
-          <Reveal className="lp-tech__left">
-            <span className="kicker">Unter der Oberfläche</span>
-            <h2 className="lp-h2">Technik, die man nicht sieht. <span className="grad">Qualität, die man spürt.</span></h2>
-            <p className="lp-lead">Wir planen Küchen bis ins kleinste Detail. Durchdacht, langlebig, perfekt aufeinander abgestimmt.</p>
-            <Link to="/leistungen" className="lp-link">Mehr über unsere Qualität <ArrowRight size={15} strokeWidth={2} /></Link>
-            <span className="lp-tech__teaser"><span className="lp-tech__teaser-dot">360°</span> Exploded View</span>
-          </Reveal>
-          <Reveal className="lp-tech__viz" delay={0.1}>
-            <img src={explodedImg} alt="Aufbau einer VIDEKO Küche im Detail" loading="lazy" />
-          </Reveal>
-          <div className="lp-tech__callouts">
-            {TECH.map((t, i) => (
-              <Reveal key={t.title} as="div" className="lp-callout" delay={i * 0.06}>
-                <span className="lp-callout__dot" aria-hidden="true" />
-                <span className="lp-callout__title">{t.title}</span>
-                <span className="lp-callout__text">{t.text}</span>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* 2 — TECHNIK / EXPLODING KITCHEN */}
+      <ExplodingKitchen />
 
       {/* 3 — WARUM VIDEKO + STYLEFINDER */}
       <section className="section section--light lp-why-sec">
