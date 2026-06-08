@@ -92,7 +92,7 @@ export default function Karriere() {
   useEffect(() => {
     return jobProg.on('change', (v) => {
       if (window.innerWidth < 900) return
-      setActiveJob(Math.min(STAGE.length - 1, Math.max(0, Math.floor(v * STAGE.length))))
+      setActiveJob(Math.min(STAGE.length - 1, Math.max(0, Math.round(v * (STAGE.length - 1)))))
     })
   }, [jobProg])
 
