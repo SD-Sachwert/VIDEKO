@@ -8,6 +8,8 @@ import Reveal from '../components/Reveal.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import ExplodingKitchen from '../components/ExplodingKitchen.jsx'
+import ExplodingKitchenScroll from '../components/ExplodingKitchenScroll.jsx'
+import ExplodingKitchenModal from '../components/ExplodingKitchenModal.jsx'
 import HeroExperience from '../components/HeroExperience.jsx'
 import verwandleVideo from '../assets/images/home/verwandle-raum.mp4'
 
@@ -130,8 +132,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 2 — TECHNIK / EXPLODING KITCHEN */}
+      {/* 2 — EXPLODING KITCHEN — 3 Varianten zum Vergleich */}
+      <div className="ekv-label"><span>Variante 1 · Scroll-Story</span></div>
+      <ExplodingKitchenScroll />
+      <div className="ekv-label"><span>Variante 2 · Interaktives Showcase</span></div>
       <ExplodingKitchen />
+      <div className="ekv-label"><span>Variante 3 · Toggle &amp; Modal</span></div>
+      <ExplodingKitchenModal />
 
       {/* 3 — WARUM VIDEKO + STYLEFINDER */}
       <section className="section section--light lp-why-sec">
