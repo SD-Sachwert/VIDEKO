@@ -3,7 +3,10 @@ import { ArrowLeft, ArrowUpRight, Clock } from 'lucide-react'
 
 import Reveal from '../components/Reveal.jsx'
 import CTAButton from '../components/CTAButton.jsx'
+import KuechenfehlerGame from '../components/KuechenfehlerGame.jsx'
 import { journalArticles } from '../data/journal.js'
+
+const GAME_SLUG = '7-kuechenfehler-die-du-spaeter-jeden-tag-bereust'
 
 export default function JournalArticle() {
   const { slug } = useParams()
@@ -49,6 +52,9 @@ export default function JournalArticle() {
           </Reveal>
         </div>
       </section>
+
+      {/* INTERAKTIVES MODUL (nur auf der 7-Küchenfehler-Seite) */}
+      {slug === GAME_SLUG && <KuechenfehlerGame />}
 
       {/* RELATED */}
       <section className="section section--light jarticle-related-sec">

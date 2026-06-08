@@ -79,10 +79,10 @@ const PROCESS = [
 ]
 
 const TEAM = [
-  { title: 'Beratung & Planung', role: 'Dein erster Kontakt', img: tm1 },
-  { title: 'Marketing & Social', role: 'Macht VIDEKO sichtbar', img: tm2 },
-  { title: 'Montage & Handwerk', role: 'Bringt Pläne in den Raum', img: tm3 },
-  { title: 'Organisation', role: 'Hält alle Fäden zusammen', img: tm4 },
+  { title: 'Beratung & Planung', role: 'Dein erster Kontakt', story: 'Die Menschen, die zuhören, bevor sie planen.', img: tm1 },
+  { title: 'Marketing & Social', role: 'Macht VIDEKO sichtbar', story: 'Macht sichtbar, was andere nur behaupten.', img: tm2 },
+  { title: 'Montage & Handwerk', role: 'Bringt Pläne in den Raum', story: 'Sorgt dafür, dass aus Planung Realität wird.', img: tm3 },
+  { title: 'Organisation', role: 'Hält alle Fäden zusammen', story: 'Hält die Fäden zusammen, damit du nicht jonglieren musst.', img: tm4 },
 ]
 
 const TEAM_BENEFITS = ['Erfahren & engagiert', 'Kreativ & individuell', 'Verlässlich & transparent', 'Qualität mit Leidenschaft']
@@ -251,10 +251,14 @@ export default function Home() {
           </div>
           <div className="lp-team">
             {TEAM.map((t, i) => (
-              <Reveal key={t.title} className="lpteam" delay={i * 0.07}>
+              <Reveal key={t.title} as={Link} to="/ueber-uns" className="lpteam" delay={i * 0.07}>
                 <span className="lpteam__img" style={{ backgroundImage: `url(${t.img})` }} aria-hidden="true" />
                 <span className="lpteam__scrim" aria-hidden="true" />
-                <span className="lpteam__body"><span className="lpteam__title">{t.title}</span><span className="lpteam__role">{t.role}</span></span>
+                <span className="lpteam__body">
+                  <span className="lpteam__title">{t.title}</span>
+                  <span className="lpteam__role">{t.role}</span>
+                  <span className="lpteam__story">{t.story}</span>
+                </span>
               </Reveal>
             ))}
           </div>
@@ -262,6 +266,9 @@ export default function Home() {
             {TEAM_BENEFITS.map((b, i) => (
               <Reveal key={b} as="span" className="lp-team-benefit" delay={i * 0.05}><Check size={15} strokeWidth={2.4} /> {b}</Reveal>
             ))}
+          </div>
+          <div className="lp-team-cta">
+            <Reveal><CTAButton to="/ueber-uns">Lerne die Menschen hinter VIDEKO kennen</CTAButton></Reveal>
           </div>
         </div>
       </section>

@@ -18,6 +18,13 @@ const HOTSPOTS = [
   { icon: Cpu, t: 'Geräteintegration', d: 'Technik da, wo sie Sinn macht. Nicht da, wo sie halt noch reinpasste.', cls: 'hx-spot--e' },
 ]
 
+const BAUSTEINE = [
+  'Materialkonzept', 'Stauraumplanung', 'Lichtkonzept', 'Geräteintegration', 'Ablaufplanung',
+  'Sitzplatzlösung', 'Raumwirkung', 'Wand- & Deckenkonzept', 'Maßarbeit', 'Präzise Montage',
+  'Gewerke-Koordination', 'Persönliche Planung', 'Design + Funktion', 'Elektroplanung',
+  'Wasser- & Anschlussplanung', 'Handwerkersteuerung', 'Komplettumbau', 'Betreuung von A bis Z',
+]
+
 const ENTRIES = [
   { n: '01', img: cardInsp, title: 'Inspiration finden', text: 'Entdecke Stile, Materialien und Ideen für die Küche, die zu dir passt.', cta: 'Jetzt entdecken', to: '/inspiration' },
   { n: '02', img: cardStyle, title: 'Stylefinder starten', text: 'In 2 Minuten zu deiner individuellen Küchenrichtung.', cta: 'Jetzt starten', to: '/stylefinder' },
@@ -65,8 +72,8 @@ export default function HeroExperience() {
       <div className="container hx-bigwrap">
         <Reveal className="hx-visual" delay={0.1}>
           <div className={`hx-ba ${dragging ? 'is-dragging' : ''}`} ref={baRef} onPointerDown={onDown} onPointerMove={onMovePtr} onPointerUp={onUp} onPointerLeave={onUp} onPointerCancel={onUp} style={{ '--split': `${split}%` }}>
-            <div className="hx-ba__after"><img src={afterImg} alt="Fertige VIDEKO Küche" loading="lazy" /></div>
-            <div className="hx-ba__before"><img src={beforeImg} alt="Leerer Raum vor der Planung" loading="lazy" />
+            <div className="hx-ba__after"><img src={afterImg} alt="Fertige VIDEKO Küche" loading="lazy" draggable={false} /></div>
+            <div className="hx-ba__before"><img src={beforeImg} alt="Leerer Raum vor der Planung" loading="lazy" draggable={false} />
               <span className="hx-meas hx-meas--top">3,20 m</span>
               <span className="hx-meas hx-meas--left">2,80 m</span>
               <span className="hx-meas hx-meas--bottom">5,10 m</span>
@@ -82,6 +89,13 @@ export default function HeroExperience() {
               <span className="hx-spot__b"><span className="hx-spot__t">{h.t}</span><span className="hx-spot__d">{h.d}</span></span>
             </div>
           ))}
+        </Reveal>
+
+        <Reveal className="hx-cloud" delay={0.15}>
+          <span className="hx-cloud__lead">Wir denken nicht nur die Küche – sondern den ganzen Raum:</span>
+          <div className="hx-cloud__pills">
+            {BAUSTEINE.map((b) => <span key={b} className="hx-pill">{b}</span>)}
+          </div>
         </Reveal>
       </div>
 
