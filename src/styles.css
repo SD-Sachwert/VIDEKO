@@ -10483,31 +10483,38 @@ a.footer__contact-line:hover {
 .sf-arc__fg { fill: none; stroke: #c9a050; stroke-width: 2.5; stroke-linecap: round; transition: stroke-dashoffset 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
 .sf-pt { position: absolute; transform: translate(-50%, -50%); width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: #fff; border: 1px solid var(--line-dark); color: var(--ink-soft); font-size: 0.62rem; font-weight: 700; box-shadow: 0 2px 6px -2px rgba(120, 90, 40, 0.3); transition: all 0.3s ease; }
 .sf-pt.is-on { background: var(--grad-gold); color: #20170a; border-color: transparent; box-shadow: 0 4px 10px -3px rgba(168, 122, 40, 0.6); }
-.sf-badge { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); width: 132px; height: 110px; border-radius: 18px; background: linear-gradient(180deg, #232227, #161513); border: 1px solid rgba(232, 201, 120, 0.5); box-shadow: 0 16px 34px -18px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.08); display: grid; place-items: center; }
-.sf-badge__marble { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 96px; height: 96px; border-radius: 50%; background: linear-gradient(150deg, rgba(40,34,22,0.15), rgba(20,18,14,0.35)), url('./assets/images/leistungen/02_referenz_gold_marble_hintergrund.jpg') center / cover; border: 1px solid rgba(232, 201, 120, 0.55); box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.35); }
-.sf-badge img { position: relative; z-index: 2; width: 92px; height: auto; filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5)); }
+.sf-badge { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); width: 118px; height: 118px; display: grid; place-items: center; }
+.sf-badge__marble { position: absolute; inset: 0; border-radius: 50%; background: linear-gradient(150deg, rgba(38,32,20,0.28), rgba(20,17,12,0.5)), url('./assets/images/leistungen/02_referenz_gold_marble_hintergrund.jpg') center / cover; border: 2px solid rgba(232, 201, 120, 0.6); box-shadow: 0 14px 30px -16px rgba(120, 90, 40, 0.5), inset 0 2px 12px rgba(0, 0, 0, 0.3); }
+.sf-badge img { position: relative; z-index: 2; width: 84px; height: auto; filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.55)); }
 .sf-compass2__cap { display: block; text-align: center; font-family: var(--serif); color: var(--bronze); font-size: 1.05rem; font-weight: 700; margin-top: 6px; }
 .sf-compass2__sub { display: block; text-align: center; font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-soft); margin-top: 3px; }
 
 /* LEISTUNGEN — 8-baustein, timeline, benefits */
-.leistbau { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 36px; align-items: start; }
-.leistbau__nav { display: flex; flex-direction: column; gap: 4px; border-left: 1px solid var(--line-dark); }
-.leistbau__item { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: none; border: none; border-left: 2px solid transparent; margin-left: -1px; cursor: pointer; text-align: left; transition: background 0.25s ease, border-color 0.25s ease; }
-.leistbau__item:hover { background: rgba(255, 255, 255, 0.45); }
-.leistbau__item.is-active { background: rgba(255, 255, 255, 0.7); border-left-color: var(--gold); }
-.leistbau__n { font-family: var(--serif); font-size: 0.85rem; color: var(--bronze); width: 22px; flex: none; }
-.leistbau__ic { width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; color: var(--bronze); background: rgba(201, 160, 80, 0.12); border: 1px solid rgba(201, 160, 80, 0.25); flex: none; }
-.leistbau__item.is-active .leistbau__n, .leistbau__item.is-active .leistbau__ic { color: var(--gold-bright); }
-.leistbau__label { font-weight: 600; color: var(--ink-soft); font-size: 0.92rem; }
-.leistbau__item.is-active .leistbau__label { color: var(--ink); }
+.leistbau { display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 40px; align-items: start; }
+.leistbau__nav { display: flex; flex-direction: column; gap: 10px; }
+.leistbau__item { display: flex; align-items: center; gap: 15px; padding: 17px 18px; border: 1px solid var(--line-dark); border-radius: 15px; background: rgba(255, 255, 255, 0.55); cursor: pointer; text-align: left; transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease; }
+.leistbau__item:hover { transform: translateX(3px); border-color: rgba(201, 160, 80, 0.5); box-shadow: 0 16px 36px -28px rgba(120, 90, 40, 0.4); }
+.leistbau__item.is-active { background: var(--soft-black); border-color: var(--soft-black); }
+.leistbau__n { font-family: var(--serif); font-size: 1.05rem; font-weight: 600; color: var(--bronze); width: 24px; flex: none; }
+.leistbau__item.is-active .leistbau__n { color: var(--gold-bright); }
+.leistbau__ic { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; color: var(--bronze); background: rgba(201, 160, 80, 0.12); border: 1px solid rgba(201, 160, 80, 0.25); flex: none; }
+.leistbau__item.is-active .leistbau__ic { color: var(--gold-bright); background: rgba(232, 201, 120, 0.16); border-color: rgba(232, 201, 120, 0.4); }
+.leistbau__body { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.leistbau__label { font-family: var(--serif); font-weight: 600; color: var(--ink); font-size: 1.05rem; }
+.leistbau__item.is-active .leistbau__label { color: var(--cream); }
+.leistbau__sub { font-size: 0.8rem; line-height: 1.4; color: var(--ink-soft); }
+.leistbau__item.is-active .leistbau__sub { color: rgba(244, 239, 228, 0.7); }
 .leistbau__panel { border-radius: 22px; overflow: hidden; box-shadow: 0 50px 90px -50px rgba(120, 90, 40, 0.5); }
 .leistbau__panel a, .leistbau__panel img { display: block; width: 100%; height: auto; }
+
+/* video on text height (intro feature) */
+.leist-transform .lintro { align-items: stretch; }
+.leist-transform .lintro__media { display: flex; flex-direction: column; }
+.leist-transform .svc-video__frame { aspect-ratio: auto; flex: 1; min-height: 360px; max-height: 480px; }
+
 @media (max-width: 900px) {
-  .leistbau { grid-template-columns: 1fr; gap: 20px; }
-  .leistbau__nav { flex-direction: row; flex-wrap: wrap; border-left: none; gap: 6px; }
-  .leistbau__item { border-left: none; border-bottom: 2px solid transparent; margin-left: 0; padding: 8px 10px; border-radius: 8px; }
-  .leistbau__item.is-active { border-left: none; border-bottom-color: var(--gold); }
-  .leistbau__label { font-size: 0.8rem; }
+  .leistbau { grid-template-columns: 1fr; gap: 22px; }
+  .leist-transform .svc-video__frame { aspect-ratio: 16 / 9; min-height: 0; flex: none; }
 }
 
 .ltl { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 44px; align-items: start; }
@@ -10540,6 +10547,10 @@ a.footer__contact-line:hover {
 .lbf__img { display: block; width: 100%; height: 100%; min-height: 300px; border-radius: 18px; background-size: cover; background-position: center; box-shadow: 0 30px 60px -40px rgba(120, 90, 40, 0.5); }
 @media (max-width: 1000px) { .lbf { grid-template-columns: 1fr 1fr; } .lbf__media { grid-column: 1 / -1; } .lbf__img { min-height: 220px; } }
 @media (max-width: 640px) { .lbf { grid-template-columns: 1fr; } .lbf__cards { grid-template-columns: 1fr; } .lbf__stats { flex-wrap: wrap; } }
+
+.karr-microline { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 28px; margin: 0 0 36px; }
+.karr-microline span { display: inline-flex; align-items: center; gap: 8px; font-size: 0.86rem; color: var(--ink-soft); }
+.karr-microline svg { color: var(--bronze); }
 
 /* =====================================================================
    KEYFRAMES

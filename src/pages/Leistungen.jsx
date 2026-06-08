@@ -120,8 +120,11 @@ export default function Leistungen() {
               {BAUSTEINE.map((b, i) => (
                 <button key={b.title} type="button" className={`leistbau__item ${activeL === i ? 'is-active' : ''}`} onClick={() => setActiveL(i)}>
                   <span className="leistbau__n">{b.n}</span>
-                  <span className="leistbau__ic"><b.icon size={17} strokeWidth={1.7} /></span>
-                  <span className="leistbau__label">{b.title}</span>
+                  <span className="leistbau__ic"><b.icon size={20} strokeWidth={1.6} /></span>
+                  <span className="leistbau__body">
+                    <span className="leistbau__label">{b.title}</span>
+                    <span className="leistbau__sub">{b.short}</span>
+                  </span>
                 </button>
               ))}
             </div>

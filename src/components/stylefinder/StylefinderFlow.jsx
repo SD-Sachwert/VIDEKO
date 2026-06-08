@@ -79,14 +79,14 @@ const BUDGETS = [
 ]
 
 const EXPERT_TIPS = [
-  'Vertrau deinem Bauchgefühl – dein erster Eindruck verrät oft am meisten.',
-  'Überleg, was dich im Alltag wirklich nervt. Genau das lösen wir zuerst.',
-  'Materialien dürfen sich beißen – Kontraste machen eine Küche spannend.',
-  'Eine ruhige Basisfarbe + ein Akzent wirkt fast immer hochwertig.',
-  'Kurze Wege zwischen Spüle, Herd und Kühlschrank sparen täglich Nerven.',
-  'Budget heißt Priorisieren – wir holen das Maximum aus deinem Rahmen.',
-  'Was oben steht, planen wir zuerst kompromisslos – der Rest folgt klug.',
-  'Dein Ergebnis ist ein Startpunkt, kein Urteil. Wir verfeinern es gemeinsam.',
+  'Stil ist kein Persönlichkeitstest. Es geht darum, was du jeden Morgen sehen willst, ohne innerlich zu kündigen.',
+  'Mehrwerte sind keine Spielereien. Wenn ein Feature deinen Alltag nicht besser macht, ist es nur Deko mit Preisschild.',
+  'Material ist wie Schuhwerk: Schön bringt wenig, wenn es nach drei Wochen aussieht wie nach einem Festival.',
+  'Mut zur Farbe ist gut. Mut zur Farbe ohne Lichtkonzept ist manchmal nur eine sehr teure Höhle mit Spüle.',
+  'Eine Küche ist kein Möbelkatalog. Laufwege, Stauraum und Griffe entscheiden, ob Kochen Spaß macht oder tägliches Tetris wird.',
+  'Budget ist kein Spaßverderber. Es ist der Türsteher, der verhindert, dass Wunsch und Realität sich vor allen Leuten prügeln.',
+  'Wenn alles wichtig ist, ist nichts wichtig. Hier sortieren wir aus, bevor die Küche aussieht wie ein Wunschzettel mit Fronten.',
+  'Dein Profil ist kein endgültiges Urteil. Es ist die Abkürzung zu einem Gespräch, bei dem wir nicht bei Adam und Arbeitsplatte anfangen.',
 ]
 
 const RESULT = {
@@ -375,7 +375,7 @@ export default function StylefinderFlow() {
                 <span className="sf-profile__muted">Fertig in ca. 1–2 Minuten</span>
               </div>
               <button type="button" className="sf-link sf-save" onClick={saveProgress}><Save size={15} /> {saved ? 'Gespeichert!' : 'Fortschritt speichern'}</button>
-              <div className="sf-tip"><span className="sf-tip__head"><Gem size={13} strokeWidth={2} /> Experten-Tipp</span><p>Dein Profil ist kein Geschmackstest mit Gewinner. Es zeigt, wo deine Küche später kompromisslos sein muss – und wo wir clever abwägen können.</p></div>
+              <div className="sf-tip"><span className="sf-tip__head"><Gem size={13} strokeWidth={2} /> Experten-Tipp</span><p>{EXPERT_TIPS[step]}</p></div>
             </div>
           </aside>
         </div>

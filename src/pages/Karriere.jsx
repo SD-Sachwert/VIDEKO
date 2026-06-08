@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import {
   Store, PencilRuler, Hammer, Ruler, Headset, MessageSquare, Megaphone,
   Sparkles, Rocket, Mail, ArrowRight, MapPin, Upload, Check,
-  Gem, Smile, ShieldCheck, Zap,
+  Gem, Smile, ShieldCheck, Zap, Coffee, Heart,
 } from 'lucide-react'
 
 import Reveal from '../components/Reveal.jsx'
@@ -18,12 +18,12 @@ import jMontage from '../assets/images/karriere/04_job_monteure_aufmass.png'
 import jEmpfang from '../assets/images/karriere/05_job_empfang_service.png'
 import jMarketing from '../assets/images/karriere/06_job_marketing_social_media.png'
 import jReinigung from '../assets/images/karriere/07_job_reinigung_studioservice.png'
-import jc01 from '../assets/images/karriere/jobcards/01_jobcard_beratung_verkauf.png'
-import jc02 from '../assets/images/karriere/jobcards/02_jobcard_planung_technik.png'
-import jc03 from '../assets/images/karriere/jobcards/03_jobcard_montage_handwerk.png'
-import jc04 from '../assets/images/karriere/jobcards/04_jobcard_empfang_organisation.png'
-import jc05 from '../assets/images/karriere/jobcards/05_jobcard_marketing_social_media.png'
-import jc06 from '../assets/images/karriere/jobcards/06_jobcard_quereinsteiger.png'
+import jc01 from '../assets/images/karriere/karten/01_beratung_verkauf.png'
+import jc02 from '../assets/images/karriere/karten/02_planung_technik.png'
+import jc03 from '../assets/images/karriere/karten/03_montage_handwerk.png'
+import jc04 from '../assets/images/karriere/karten/04_empfang_organisation.png'
+import jc05 from '../assets/images/karriere/karten/05_marketing_social_media.png'
+import jc06 from '../assets/images/karriere/karten/06_quereinsteiger.png'
 
 const STAGE = [
   { n: '01', name: 'Beratung & Verkauf', img: jc01 },
@@ -203,12 +203,19 @@ export default function Karriere() {
         </div>
       </section>
 
-      {/* 3b — JOB-STAGE CTA */}
+      {/* 3b — JOB-STAGE CTA + Microcopy */}
       <section className="section karr-jobcta">
-        <div className="container jobstage__cta">
-          <h3 className="jobstage__cta-title">Nicht sicher, wo du reinpasst?</h3>
-          <p className="jobstage__cta-text">Dann bewirb dich trotzdem. Wir sortieren gemeinsam, ob und wo es passt. Kein Bewerbungstheater, kein Lebenslauf-Bingo.</p>
-          <CTAButton href="#bewerbung">Initiativ bewerben</CTAButton>
+        <div className="container">
+          <div className="karr-microline">
+            <span><Coffee size={15} strokeWidth={1.8} /> Keine Sorge, wir haben Kaffee.</span>
+            <span><Smile size={15} strokeWidth={1.8} /> Wir nehmen uns selbst nicht zu ernst – unsere Arbeit schon.</span>
+            <span><Heart size={15} strokeWidth={1.8} /> Wir lieben Küchen. Und gute Laune im Team.</span>
+          </div>
+          <div className="jobstage__cta">
+            <h3 className="jobstage__cta-title">Nicht sicher, wo du reinpasst?</h3>
+            <p className="jobstage__cta-text">Dann bewirb dich trotzdem. Wir sortieren gemeinsam, ob und wo es passt. Kein Bewerbungstheater, kein Lebenslauf-Bingo.</p>
+            <CTAButton href="#bewerbung">Initiativ bewerben</CTAButton>
+          </div>
         </div>
       </section>
 
