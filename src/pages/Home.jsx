@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   ArrowRight, ArrowUpRight, Check, PenTool, Telescope, Heart, Gem, LifeBuoy,
@@ -96,6 +97,7 @@ const JOURNAL = [
 ]
 
 export default function Home() {
+  const [whyActive, setWhyActive] = useState(null)
   return (
     <div className="leist-page home-page">
       <Hero />
@@ -135,7 +137,7 @@ export default function Home() {
       {/* 2 — EXPLODING KITCHEN — 3 Varianten zum Vergleich */}
       <div className="ekv-label"><span>Variante 1 · Scroll-Story</span></div>
       <ExplodingKitchenScroll />
-      <div className="ekv-label"><span>Variante 2 · Interaktives Showcase</span></div>
+      <div className="ekv-label"><span>Variante 2 · Klick-gesteuert (Aufbau wie 1)</span></div>
       <ExplodingKitchen />
       <div className="ekv-label"><span>Variante 3 · Toggle &amp; Modal</span></div>
       <ExplodingKitchenModal />
@@ -148,7 +150,7 @@ export default function Home() {
           </div>
           <div className="lp-why">
             {WHY.map((b, i) => (
-              <Reveal key={b.title} className={`lpwhy ${b.highlight ? 'lpwhy--hl' : ''}`} delay={i * 0.06}>
+              <Reveal key={b.title} as="button" type="button" className={`lpwhy ${whyActive === i ? 'lpwhy--hl' : ''}`} delay={i * 0.06} onClick={() => setWhyActive(whyActive === i ? null : i)}>
                 <span className="lpwhy__ic"><b.icon size={22} strokeWidth={1.6} /></span>
                 <span className="lpwhy__title">{b.title}</span>
                 <span className="lpwhy__text">{b.text}</span>

@@ -10795,7 +10795,8 @@ a.footer__contact-line:hover {
 /* 3 — warum + stylefinder */
 .lp-why-head { text-align: center; margin-bottom: 40px; }
 .lp-why { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; margin-bottom: 84px; }
-.lpwhy { display: flex; flex-direction: column; gap: 10px; padding: 26px 22px; border-radius: 18px; background: rgba(255, 255, 255, 0.55); border: 1px solid var(--line-dark); }
+.lpwhy { display: flex; flex-direction: column; gap: 10px; padding: 26px 22px; border-radius: 18px; background: rgba(255, 255, 255, 0.55); border: 1px solid var(--line-dark); width: 100%; text-align: left; font: inherit; color: inherit; cursor: pointer; transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease; }
+.lpwhy:hover { border-color: rgba(201, 160, 80, 0.45); transform: translateY(-3px); }
 .lpwhy__ic { width: 48px; height: 48px; border-radius: 13px; display: grid; place-items: center; color: var(--bronze); background: rgba(201, 160, 80, 0.12); border: 1px solid rgba(201, 160, 80, 0.25); }
 .lpwhy__title { font-family: var(--serif); font-size: 1.05rem; color: var(--ink); }
 .lpwhy__text { font-size: 0.82rem; line-height: 1.5; color: var(--ink-soft); }
@@ -11102,6 +11103,11 @@ a.footer__contact-line:hover {
 .ek-stage--static { width: 100%; max-width: 820px; margin: 26px 0; }
 .ek-cards--static { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; width: 100%; max-width: 680px; margin-bottom: 26px; }
 .ek-cards--static .ek-card { opacity: 1; cursor: default; }
+
+/* === EXPLODING KITCHEN VARIANT 2 (same build as scroll, but click-driven) === */
+.ek2 .container { max-width: 1360px; }
+.ek2 .ek-img, .ek2 .ek-glow, .ek2 .ek-floor, .ek2 .ek-sweep { transition: opacity 0.7s ease, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
+.ek2 .ek-steps__line span { transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1); }
 
 /* === EXPLODING KITCHEN SHOWCASE (interactive, no scroll) === */
 .eks { position: relative; background: radial-gradient(120% 80% at 50% 30%, #f9f2ea 0%, #f6efe6 60%, #f0e7d8 100%); overflow: hidden; }
