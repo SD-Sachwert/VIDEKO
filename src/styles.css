@@ -11475,6 +11475,48 @@ a.footer__contact-line:hover {
 @media (max-width: 520px) { .teamflip { grid-template-columns: 1fr; grid-auto-rows: 210px; } .tflip.is-big { grid-column: span 1; } }
 @media (prefers-reduced-motion: reduce) { .tflip__inner { transition: none; } }
 
+/* === STUDIO — interaktive "Wähle dein Küchengefühl"-Karte === */
+.lintro--feeling { grid-template-columns: 0.82fr 1.18fr; gap: 48px; align-items: center; }
+.kfeel { width: 100%; }
+.kfeel__card { background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(250, 246, 238, 0.92)); border: 1px solid rgba(201, 160, 80, 0.32); border-radius: 24px; box-shadow: 0 44px 90px -52px rgba(120, 90, 40, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.7); padding: 18px; overflow: hidden; }
+.kfeel__head { display: flex; flex-direction: column; gap: 12px; margin-bottom: 14px; }
+.kfeel__title { font-family: var(--serif); font-size: 1.18rem; color: var(--ink); text-align: center; }
+.kfeel__tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.kfeel__tab { padding: 9px 6px; border-radius: 11px; border: 1px solid var(--line-dark); background: rgba(255, 255, 255, 0.6); cursor: pointer; font: inherit; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.02em; color: var(--ink-soft); transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; }
+.kfeel__tab:hover { border-color: rgba(201, 160, 80, 0.5); color: var(--bronze); }
+.kfeel__tab.is-active { background: var(--grad-gold); border-color: transparent; color: var(--soft-black); box-shadow: 0 10px 22px -10px rgba(168, 122, 40, 0.6); }
+.kfeel__stage { position: relative; aspect-ratio: 16 / 10; border-radius: 16px; overflow: hidden; background: var(--cream); }
+.kfeel__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.kfeel__spot { position: absolute; transform: translate(-50%, -50%); width: 26px; height: 26px; border: none; background: none; padding: 0; cursor: pointer; z-index: 3; }
+.kfeel__spotdot { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 14px; height: 14px; border-radius: 50%; background: var(--grad-gold); box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.6), 0 0 0 7px rgba(216, 180, 106, 0.3); transition: transform 0.25s ease; }
+.kfeel__spot:hover .kfeel__spotdot, .kfeel__spot.is-open .kfeel__spotdot { transform: translate(-50%, -50%) scale(1.18); }
+.kfeel__tip { position: absolute; bottom: 130%; left: 50%; transform: translateX(-50%) translateY(6px); white-space: nowrap; background: rgba(18, 16, 13, 0.92); color: var(--cream); font-size: 0.74rem; padding: 6px 10px; border-radius: 8px; opacity: 0; pointer-events: none; transition: opacity 0.25s ease, transform 0.25s ease; box-shadow: 0 12px 26px -12px rgba(0, 0, 0, 0.6); }
+.kfeel__spot:hover .kfeel__tip, .kfeel__spot.is-open .kfeel__tip { opacity: 1; transform: translateX(-50%) translateY(0); }
+.kfeel__body { padding: 16px 6px 4px; }
+.kfeel__h { display: block; font-family: var(--serif); font-size: 1.4rem; color: var(--ink); }
+.kfeel__bullets { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+.kfeel__bullets li { position: relative; padding-left: 18px; font-size: 0.9rem; line-height: 1.5; color: var(--ink-soft); }
+.kfeel__bullets li::before { content: ""; position: absolute; left: 0; top: 8px; width: 7px; height: 7px; border-radius: 50%; background: var(--grad-gold); }
+.kfeel__foot { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-top: 16px; flex-wrap: wrap; }
+.kfeel__mats { display: flex; gap: 14px; }
+.kfeel__mat { display: flex; flex-direction: column; align-items: center; gap: 5px; width: 56px; text-align: center; }
+.kfeel__swatch { width: 30px; height: 30px; border-radius: 50%; border: 1px solid rgba(120, 95, 45, 0.25); box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.12); }
+.kfeel__matlabel { font-size: 0.62rem; line-height: 1.2; color: var(--ink-soft); }
+.kfeel__details { display: inline-flex; align-items: center; gap: 6px; font-size: 0.76rem; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; color: var(--bronze); text-decoration: none; white-space: nowrap; }
+.kfeel__details svg { transition: transform 0.3s ease; }
+.kfeel__details:hover svg { transform: translateX(3px); }
+.kfeel__hint { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 14px 0 0; font-size: 0.84rem; color: var(--ink-soft); }
+.kfeel__hint svg { color: var(--bronze); }
+@media (max-width: 940px) {
+  .lintro--feeling { grid-template-columns: 1fr; gap: 30px; }
+}
+@media (max-width: 520px) {
+  .kfeel__mats { gap: 8px; }
+  .kfeel__mat { width: 46px; }
+  .kfeel__swatch { width: 26px; height: 26px; }
+  .kfeel__foot { flex-direction: column; align-items: flex-start; }
+}
+
 /* === MATERIALS LAB — helle, warme, freigestellte Platten (Inspiration) === */
 .matlab { position: relative; overflow: hidden; background: radial-gradient(115% 95% at 30% 16%, #ece3d3 0%, #ddd0ba 56%, #d1c4ab 100%); }
 .matlab > .container { position: relative; z-index: 1; }
