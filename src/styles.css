@@ -184,10 +184,20 @@ body {
     0 -10px 24px -14px rgba(80, 50, 10, 0.5) inset;
 }
 
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
 .btn--primary:hover {
   box-shadow: 0 24px 56px -12px rgba(190, 140, 50, 0.7),
     0 2px 0 rgba(255, 255, 255, 0.6) inset,
     0 -10px 24px -14px rgba(80, 50, 10, 0.45) inset;
+}
+.btn--dark:hover {
+  box-shadow: 0 24px 52px -14px rgba(0, 0, 0, 0.75),
+    0 1px 0 rgba(255, 255, 255, 0.1) inset;
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn, .btn__arrow, .btn__shimmer { transition: none; }
+  .btn:hover { transform: none; }
 }
 
 .btn--dark {
@@ -10569,9 +10579,9 @@ a.footer__contact-line:hover {
 
 /* LEISTUNGEN — 8-baustein, timeline, benefits */
 .leistbau { display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 40px; align-items: stretch; }
-.leistbau__nav { display: flex; flex-direction: column; gap: 10px; }
-.leistbau__item { flex: 1 1 0; min-height: 0; display: flex; align-items: center; gap: 15px; padding: 12px 18px; border: 1px solid var(--line-dark); border-radius: 15px; background: rgba(255, 255, 255, 0.55); cursor: pointer; text-align: left; transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease; }
-.leistbau__item:hover { transform: translateX(3px); border-color: rgba(201, 160, 80, 0.5); box-shadow: 0 16px 36px -28px rgba(120, 90, 40, 0.4); }
+.leistbau__nav { display: flex; flex-direction: column; gap: 8px; }
+.leistbau__item { flex: 1 1 0; min-height: 0; display: flex; align-items: center; gap: 14px; padding: 10px 16px; border: 1px solid var(--line-dark); border-radius: 15px; background: rgba(255, 255, 255, 0.55); cursor: pointer; text-align: left; transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease; }
+.leistbau__item:hover { border-color: rgba(201, 160, 80, 0.5); box-shadow: 0 16px 36px -28px rgba(120, 90, 40, 0.4); }
 .leistbau__item.is-active { background: var(--soft-black); border-color: var(--soft-black); }
 .leistbau__n { font-family: var(--serif); font-size: 1.05rem; font-weight: 600; color: var(--bronze); width: 24px; flex: none; }
 .leistbau__item.is-active .leistbau__n { color: var(--gold-bright); }
@@ -10751,7 +10761,7 @@ a.footer__contact-line:hover {
 .jfaqblock__title { font-family: var(--serif); font-size: clamp(1.6rem, 2.8vw, 2.3rem); line-height: 1.15; color: var(--ink); margin: 10px 0 24px; }
 .jfaqblock__img { border-radius: 20px; overflow: hidden; aspect-ratio: 5 / 4; box-shadow: 0 40px 80px -48px rgba(120, 90, 40, 0.5); }
 .jfaqblock__img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.jfaqblock__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-content: start; }
+.jfaqblock__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-content: start; align-items: start; }
 
 /* küchenmythen */
 .journal-myth-sec { background: linear-gradient(180deg, var(--soft-black), #16140f); overflow: hidden; }

@@ -221,15 +221,14 @@ export default function UeberUns() {
         <div className="container">
           <div className="standort__grid">
             <Reveal className="standort__info">
-              <span className="kicker">Aus Würzburg, für die Region</span>
-              <h2 className="lintro__title">Mittendrin statt<br /><span className="grad">nur dabei.</span></h2>
-              <p className="lintro__text">Wir sitzen in Würzburg und planen Küchen für die Menschen aus der Region – nah dran, gut erreichbar und persönlich betreut. Bei uns landest du nicht in einer Warteschleife, sondern bei einem festen Ansprechpartner, der dein Projekt kennt.</p>
-              <p className="lintro__text">Ob aus Würzburg, dem Umland oder ein bisschen weiter weg: Wir nehmen uns Zeit, kommen vorbei, wenn es Sinn ergibt, und bleiben auch nach der Montage erreichbar. Kein anonymer Küchen-Konzern, kein Callcenter – sondern echte Menschen mit Namen, Gesicht und Verantwortung.</p>
+              <span className="kicker">Standort & Reichweite</span>
+              <h2 className="lintro__title">In Würzburg zu Hause.<br /><span className="grad">Nicht darauf begrenzt.</span></h2>
+              <p className="lintro__text">Unser Studio steht in Würzburg. Unsere Planung endet dort nicht. Wir begleiten Küchenprojekte regional und darüber hinaus – persönlich, verbindlich und mit festen Ansprechpartnern.</p>
+              <p className="lintro__text">Ob direkt aus der Region oder ein Stück weiter weg: Entscheidend ist, dass dein Projekt zu unserem Anspruch passt.</p>
             </Reveal>
             <Reveal className="standort__map" delay={0.08}>
               <div className="mapcard mapcard--clean">
-                <img src={karteImg} alt="Standort VIDEKO in Würzburg" loading="lazy" />
-                <span className="mapcard__pin" aria-hidden="true"><MapPin size={20} strokeWidth={2} /></span>
+                <img src={karteImg} alt="" aria-hidden="true" loading="lazy" />
               </div>
             </Reveal>
           </div>

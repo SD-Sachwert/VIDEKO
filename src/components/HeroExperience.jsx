@@ -55,10 +55,10 @@ const ENTRIES = [
 ]
 
 const TRUST = [
-  { icon: Gem, t: 'Premium Qualität', d: 'Ausgewählte Materialien & führende Marken.' },
-  { icon: ShieldCheck, t: 'Persönlich & verlässlich', d: 'Ein Ansprechpartner. Ein Versprechen.' },
-  { icon: PencilRuler, t: 'Individuell geplant', d: 'Maßgeschneiderte Lösungen für deinen Raum.' },
-  { icon: Wrench, t: 'Meisterhaft umgesetzt', d: 'Präzise Montage durch erfahrene Profis.' },
+  { icon: Layers, t: 'Alles aus einer Hand', d: 'Planung, Koordination und Umsetzung zusammen gedacht.' },
+  { icon: Sparkles, t: 'Mehr als nur Küche', d: 'Raum, Licht, Anschlüsse und Gewerke im Blick.' },
+  { icon: Lightbulb, t: 'Vorher klar. Nachher wow.', d: 'Du siehst, was möglich ist, bevor etwas gebaut wird.' },
+  { icon: Workflow, t: 'Weniger Chaos', d: 'Wir steuern den Ablauf, du musst nicht jonglieren.' },
 ]
 
 export default function HeroExperience() {
@@ -109,16 +109,17 @@ export default function HeroExperience() {
             if (idx < 16) {
               const side = idx % 2
               const row = Math.floor(idx / 2) // 0..7 down each side
-              const y = 1 + row * 12.2
+              const y = 0 + row * 12.4
               const rot = [-3, 2.4, -2, 3, -1.4, 2.6, -2.2, 1.8][row] || 0
-              style = { top: `${y}%`, [side ? 'right' : 'left']: `${0.5 + (row % 2) * 1.3}%`, '--r': `${rot}deg` }
+              // weiter nach außen: negative Offsets, Karten ragen über den Bildrand hinaus
+              style = { top: `${y}%`, [side ? 'right' : 'left']: `${-6 + (row % 2) * 1.6}%`, '--r': `${rot}deg` }
             } else {
               const k = idx - 16 // 0..11 → top (0-5) & bottom (6-11) frame
               const onTop = k < 6
-              const cols = [7, 20, 33, 46, 59, 72]
+              const cols = [4, 19, 34, 49, 64, 79]
               const left = cols[k % 6]
               const rot = [-2.4, 2, -1.6, 2.6, -2, 1.6][k % 6]
-              style = { [onTop ? 'top' : 'bottom']: '1%', left: `${left}%`, '--r': `${rot}deg` }
+              style = { [onTop ? 'top' : 'bottom']: '-3%', left: `${left}%`, '--r': `${rot}deg` }
             }
             return (
             <div key={h.t} className="hx-spot" style={style}>
