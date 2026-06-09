@@ -50,7 +50,19 @@ export default function KuechenfehlerGame() {
   const [hint, setHint] = useState(null)
   const wrongTimer = useRef(0)
   const hintTimer = useRef(0)
-  const wrongIdx = useRef(0)
+  const wrongBag = useRef([]) // gemischter "Sack": jeder Spruch genau 1x, bis alle durch sind, dann neu mischen
+
+  const nextWrong = () => {
+    if (wrongBag.current.length === 0) {
+      const arr = WRONG.map((_, i) => i)
+      for (let i = arr.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1))
+        ;[arr[i], arr[j]] = [arr[j], arr[i]]
+      }
+      wrongBag.current = arr
+    }
+    return WRONG[wrongBag.current.pop()]
+  }
 
   const onClick = useCallback((e) => {
     const el = imgRef.current
@@ -61,8 +73,8 @@ export default function KuechenfehlerGame() {
     const hit = HOTSPOTS.find((h) => {
       const dx = ((px - h.x) / 100) * r.width
       const dy = ((py - h.y) / 100) * r.height
-      // größere, fingerfreundliche Hitbox (visuell unverändert)
-      const hitR = Math.max((h.r / 100) * r.width * 1.45, 30)
+      // etwas kleinere, aber noch fingerfreundliche Hitbox (visuell unverändert)
+      const hitR = Math.max((h.r / 100) * r.width * 1.12, 22)
       return Math.hypot(dx, dy) <= hitR
     })
     if (hit) {
@@ -70,11 +82,9 @@ export default function KuechenfehlerGame() {
       setWrong(null)
       setFound((f) => (f.includes(hit.id) ? f : [...f, hit.id]))
     } else {
-      // Popup schließen + zuverlässig rotierenden Spruch zeigen (Position im Bild gehalten)
+      // Popup schließen + zufälligen Spruch (ohne Wiederholung bis alle durch sind) zeigen
       setActive(null)
-      const msg = WRONG[wrongIdx.current % WRONG.length]
-      wrongIdx.current += 1
-      setWrong({ x: Math.min(84, Math.max(16, px)), y: Math.min(86, Math.max(14, py)), msg })
+      setWrong({ x: Math.min(84, Math.max(16, px)), y: Math.min(86, Math.max(14, py)), msg: nextWrong() })
       clearTimeout(wrongTimer.current)
       wrongTimer.current = setTimeout(() => setWrong(null), 2200)
     }
