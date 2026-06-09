@@ -12,9 +12,9 @@ import ExplodingKitchenModal from '../components/ExplodingKitchenModal.jsx'
 import HeroExperience from '../components/HeroExperience.jsx'
 import verwandleVideo from '../assets/images/home/verwandle-raum.mp4'
 
-import wayInsp from '../assets/images/inspiration/01_hero_atmosphaerische_kueche.png'
-import waySf from '../assets/images/kuechenwelten/stilfinderhero-kitchen-wide.jpg'
-import wayBer from '../assets/images/beratung/cta-light-portal.png'
+import wayInsp from '../assets/images/home/way-organic-1.png'
+import waySf from '../assets/images/home/way-organic-2.png'
+import wayBer from '../assets/images/home/way-organic-3.png'
 import sfResult from '../assets/images/kuechenwelten/stilfinderresult-modern-warm.jpg'
 import sfCard1 from '../assets/images/kuechenwelten/stilfindercard-modern-warm.jpg'
 import sfCard2 from '../assets/images/kuechenwelten/stilfindercard-zeitlos-elegant.jpg'
@@ -113,17 +113,16 @@ export default function Home() {
               <p className="lp-lead">Drei Wege. Ein Ziel: deine perfekte Küche.</p>
             </Reveal>
           </div>
-          <div className="lp-ways">
+          <div className="lp-ways lp-ways--organic">
             {WAYS.map((c, i) => (
               <Reveal key={c.n} delay={i * 0.1}>
-                <Link to={c.to} className={`lpway ${c.light ? 'lpway--light' : ''}`}>
-                  <span className="lpway__img" style={{ backgroundImage: `url(${c.img})` }} aria-hidden="true" />
-                  <span className="lpway__scrim" aria-hidden="true" />
-                  <span className="lpway__body">
-                    <span className="lpway__n">{c.n}</span>
-                    <span className="lpway__title">{c.title}</span>
-                    <span className="lpway__text">{c.text}</span>
-                    <span className="lpway__cta">{c.cta} <ArrowRight size={15} strokeWidth={2} /></span>
+                <Link to={c.to} className="lpway2">
+                  <span className="lpway2__blob"><img src={c.img} alt={c.title} loading="lazy" /></span>
+                  <span className="lpway2__cap">
+                    <span className="lpway2__n">{c.n}</span>
+                    <span className="lpway2__title">{c.title}</span>
+                    <span className="lpway2__text">{c.text}</span>
+                    <span className="lpway2__cta">{c.cta} <ArrowRight size={15} strokeWidth={2} /></span>
                   </span>
                 </Link>
               </Reveal>

@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
-import p1 from '../assets/images/karriere/philosophie/p1.png'
-import p2 from '../assets/images/karriere/philosophie/p2.png'
-import p3 from '../assets/images/karriere/philosophie/p3.png'
-import p4 from '../assets/images/karriere/philosophie/p4.png'
-import p5 from '../assets/images/karriere/philosophie/p5.png'
-import p6 from '../assets/images/karriere/philosophie/p6.png'
+import p1 from '../assets/images/karriere/philosophie/VIDEKO_Karte_01_freigestellt.png'
+import p2 from '../assets/images/karriere/philosophie/VIDEKO_Karte_02_freigestellt.png'
+import p3 from '../assets/images/karriere/philosophie/VIDEKO_Karte_03_freigestellt.png'
+import p4 from '../assets/images/karriere/philosophie/VIDEKO_Karte_04_freigestellt.png'
+import p5 from '../assets/images/karriere/philosophie/VIDEKO_Karte_05_freigestellt.png'
+import p6 from '../assets/images/karriere/philosophie/VIDEKO_Karte_06_freigestellt.png'
 
 const CARDS = [
   { img: p1, t: 'Keine Rabatt-Show' },

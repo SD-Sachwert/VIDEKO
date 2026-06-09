@@ -220,15 +220,13 @@ export default function UeberUns() {
             <Reveal className="standort__info">
               <span className="kicker">Aus Würzburg, für die Region</span>
               <h2 className="lintro__title">Mittendrin statt<br /><span className="grad">nur dabei.</span></h2>
-              <p className="lintro__text">Wir sind regional verwurzelt, gut erreichbar und für dich da – mit festen Ansprechpartnern statt Callcenter.</p>
-              <div className="standort__chips">
-                {REGION.map((r) => <span className="chip" key={r}>{r}</span>)}
-              </div>
+              <p className="lintro__text">Wir sitzen in Würzburg und planen Küchen für die Menschen aus der Region – nah dran, gut erreichbar und persönlich betreut. Bei uns landest du nicht in einer Warteschleife, sondern bei einem festen Ansprechpartner, der dein Projekt kennt.</p>
+              <p className="lintro__text">Ob aus Würzburg, dem Umland oder ein bisschen weiter weg: Wir nehmen uns Zeit, kommen vorbei, wenn es Sinn ergibt, und bleiben auch nach der Montage erreichbar. Kein anonymer Küchen-Konzern, kein Callcenter – sondern echte Menschen mit Namen, Gesicht und Verantwortung.</p>
             </Reveal>
             <Reveal className="standort__map" delay={0.08}>
-              <div className="mapcard">
-                <img src={karteImg} alt="Standort VIDEKO – Hertzstraße 4, 97076 Würzburg" loading="lazy" />
-                <span className="mapcard__addr"><MapPin size={16} strokeWidth={1.9} /> Hertzstraße 4, 97076 Würzburg</span>
+              <div className="mapcard mapcard--clean">
+                <img src={karteImg} alt="Standort VIDEKO in Würzburg" loading="lazy" />
+                <span className="mapcard__pin" aria-hidden="true"><MapPin size={20} strokeWidth={2} /></span>
               </div>
             </Reveal>
           </div>

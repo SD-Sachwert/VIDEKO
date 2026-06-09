@@ -11,14 +11,22 @@ import cardStyle from '../assets/images/home-hero/card-stylefinder.png'
 import cardBer from '../assets/images/home-hero/card-beratung.png'
 
 const HOTSPOTS = [
-  { icon: Layers, t: 'Materialkonzept', d: 'Oberflächen, die schön aussehen und zum Alltag passen.', cls: 'hx-spot--d' },
-  { icon: Boxes, t: 'Stauraumplanung', d: 'Mehr Platz für das, was zählt. Weniger Chaos für das, was nervt.', cls: 'hx-spot--a' },
-  { icon: Lightbulb, t: 'Lichtkonzept', d: 'Stimmung schaffen, Funktion betonen, Atmosphäre formen.', cls: 'hx-spot--b' },
-  { icon: Cpu, t: 'Geräteintegration', d: 'Technik da, wo sie Sinn macht. Nicht da, wo sie reinpasste.', cls: 'hx-spot--f' },
-  { icon: Workflow, t: 'Ablaufplanung', d: 'Damit du beim Kochen nicht jedes Mal Halbmarathon läufst.', cls: 'hx-spot--g' },
-  { icon: Ruler, t: 'Präzise Montage', d: 'Millimetergenau. Sauber. Verlässlich.', cls: 'hx-spot--c' },
-  { icon: Sparkles, t: 'Raumwirkung', d: 'Aus einem neutralen Raum wird ein echter Lieblingsplatz.', cls: 'hx-spot--e' },
-  { icon: UserCheck, t: 'Persönliche Planung', d: 'Keine Lösung von der Stange – sondern für dich.', cls: 'hx-spot--h' },
+  { icon: Layers, t: 'Materialkonzept', d: 'Oberflächen, die zum Alltag passen.' },
+  { icon: Boxes, t: 'Stauraumplanung', d: 'Mehr Platz für das, was zählt.' },
+  { icon: Lightbulb, t: 'Lichtkonzept', d: 'Stimmung schaffen, Funktion betonen.' },
+  { icon: Cpu, t: 'Geräteintegration', d: 'Technik da, wo sie Sinn macht.' },
+  { icon: Workflow, t: 'Ablaufplanung', d: 'Kein Halbmarathon beim Kochen.' },
+  { icon: Ruler, t: 'Präzise Montage', d: 'Millimetergenau. Sauber. Verlässlich.' },
+  { icon: Sparkles, t: 'Raumwirkung', d: 'Aus Raum wird Lieblingsplatz.' },
+  { icon: UserCheck, t: 'Persönliche Planung', d: 'Keine Lösung von der Stange.' },
+  { icon: Gem, t: 'Sitzplatzlösung', d: 'Wohnen, kochen, leben zusammen gedacht.' },
+  { icon: PencilRuler, t: 'Wand- & Deckenkonzept', d: 'Licht, Linien, Flächen und Ruhe.' },
+  { icon: Ruler, t: 'Maßarbeit', d: 'Millimetergenau statt „passt schon".' },
+  { icon: Workflow, t: 'Gewerke-Koordination', d: 'Wir steuern, du entspannst.' },
+  { icon: Sparkles, t: 'Design + Funktion', d: 'Schön reicht nicht – es muss laufen.' },
+  { icon: Cpu, t: 'Elektroplanung', d: 'Strom da, wo du ihn brauchst.' },
+  { icon: Wrench, t: 'Komplettumbau', d: 'Wenn nötig, denken wir den ganzen Raum.' },
+  { icon: ShieldCheck, t: 'Nachbetreuung & Service', d: 'Erreichbar, auch nach der Montage.' },
 ]
 
 const BAUSTEINE = [
@@ -84,12 +92,20 @@ export default function HeroExperience() {
             <span className="hx-ba__line"><span className="hx-ba__knob"><ArrowRight size={13} strokeWidth={2.4} style={{ transform: 'rotate(180deg)' }} /><ArrowRight size={13} strokeWidth={2.4} /></span></span>
           </div>
 
-          {HOTSPOTS.map((h) => (
-            <div key={h.t} className={`hx-spot ${h.cls}`}>
-              <span className="hx-spot__ic"><h.icon size={16} strokeWidth={1.8} /></span>
+          {HOTSPOTS.map((h, idx) => {
+            const side = idx % 2
+            const row = Math.floor(idx / 2)
+            const y = 1 + row * 13.6
+            const xj = (row % 3) * 1.7
+            const rot = [-3, 2.4, -2, 3, -1.4, 2.6, -2.6, 1.6][row] || 0
+            const style = { top: `${y}%`, [side ? 'right' : 'left']: `${0.5 + xj}%`, '--r': `${rot}deg` }
+            return (
+            <div key={h.t} className="hx-spot" style={style}>
+              <span className="hx-spot__ic"><h.icon size={15} strokeWidth={1.8} /></span>
               <span className="hx-spot__b"><span className="hx-spot__t">{h.t}</span><span className="hx-spot__d">{h.d}</span></span>
             </div>
-          ))}
+            )
+          })}
         </Reveal>
       </div>
 

@@ -9427,20 +9427,22 @@ a.footer__contact-line:hover {
 
 /* ÜBER UNS — larger, fully visible map card */
 .about-region .standort__grid {
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 48px;
-  align-items: center;
+  grid-template-columns: 1fr 1fr;
+  gap: 44px;
+  align-items: stretch;
 }
+.about-region .standort__info { display: flex; flex-direction: column; justify-content: center; }
+.about-region .standort__map { display: flex; }
 .about-region .mapcard {
+  position: relative;
   width: 100%;
-  max-width: 580px;
-  margin-left: auto;
-  aspect-ratio: 16 / 10;
+  min-height: 360px;
   border-radius: 26px;
   overflow: hidden;
   background: var(--cream);
   box-shadow: 0 24px 50px -36px rgba(120, 90, 40, 0.35);
 }
+.mapcard__pin { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; color: var(--soft-black); background: var(--grad-gold); box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.5), 0 0 0 8px rgba(216, 180, 106, 0.2); }
 .about-region .mapcard img {
   width: 100%;
   height: 100%;
@@ -10559,11 +10561,9 @@ a.footer__contact-line:hover {
 .ltl__overlay { position: absolute; left: 16px; right: 16px; bottom: 16px; display: flex; flex-direction: column; gap: 3px; padding: 14px 16px; border-radius: 14px; background: rgba(14, 13, 11, 0.62); border: 1px solid rgba(232, 201, 120, 0.28); backdrop-filter: blur(8px); }
 .ltl__overlay b { font-family: var(--serif); font-size: 1.02rem; color: var(--cream); }
 .ltl__overlay i { font-style: normal; font-size: 0.8rem; line-height: 1.4; color: rgba(244, 239, 228, 0.78); }
-.ltl__list { list-style: none; margin: 0; padding: 0 0 0 6px; display: flex; flex-direction: column; gap: 0; position: relative; }
-.ltl__step { display: flex; gap: 15px; align-items: flex-start; padding: 0 0 22px; position: relative; }
-.ltl__step::before { content: ''; position: absolute; left: 11px; top: 30px; bottom: -2px; width: 1px; background: linear-gradient(180deg, rgba(201, 160, 80, 0.5), rgba(201, 160, 80, 0.08)); }
-.ltl__step:last-child { padding-bottom: 0; }
-.ltl__step:last-child::before { display: none; }
+.ltl__list { list-style: none; margin: 0; padding: 6px 0 6px 6px; display: flex; flex-direction: column; justify-content: space-between; gap: 18px; position: relative; min-height: 100%; }
+.ltl__list::before { content: ''; position: absolute; left: 17px; top: 22px; bottom: 22px; width: 1px; background: linear-gradient(180deg, rgba(201, 160, 80, 0.5), rgba(201, 160, 80, 0.12)); z-index: 0; }
+.ltl__step { display: flex; gap: 15px; align-items: flex-start; position: relative; z-index: 1; }
 .ltl__n { font-family: var(--serif); font-size: 0.92rem; font-weight: 700; color: var(--gold-bright); flex: none; width: 23px; height: 23px; border-radius: 50%; display: grid; place-items: center; background: rgba(201, 160, 80, 0.12); border: 1px solid rgba(201, 160, 80, 0.4); position: relative; z-index: 1; }
 .ltl__body { display: flex; flex-direction: column; gap: 2px; padding-top: 1px; }
 .ltl__t { font-family: var(--serif); font-size: 1.04rem; font-weight: 600; color: var(--ink); }
@@ -11287,7 +11287,10 @@ a.footer__contact-line:hover {
 .hx-spot--b { top: 44%; left: -38px; animation-delay: 1.2s; }
 .hx-spot--c { bottom: 6%; right: 4%; animation-delay: 2.2s; }
 /* big-stage variant: post-its framing the image (left + right columns) */
-.hx-bigwrap .hx-spot { width: 200px; }
+.hx-bigwrap .hx-spot { width: 178px; padding: 10px 12px; gap: 9px; transform: rotate(var(--r, 0deg)); }
+.hx-bigwrap .hx-spot__ic { width: 30px; height: 30px; }
+.hx-bigwrap .hx-spot__t { font-size: 0.85rem; }
+.hx-bigwrap .hx-spot__d { font-size: 0.7rem; line-height: 1.35; }
 .hx-bigwrap .hx-spot--d { top: 3%; left: 1%; }
 .hx-bigwrap .hx-spot--b { top: 29%; left: 0; animation-delay: 0.6s; }
 .hx-bigwrap .hx-spot--g { top: 55%; left: 0; animation-delay: 1.2s; }
@@ -11304,7 +11307,7 @@ a.footer__contact-line:hover {
 .hx-spot__b { display: flex; flex-direction: column; gap: 2px; }
 .hx-spot__t { font-family: var(--serif); font-size: 0.95rem; color: var(--ink); }
 .hx-spot__d { font-size: 0.74rem; line-height: 1.4; color: var(--ink-soft); }
-@keyframes hxFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+@keyframes hxFloat { 0%, 100% { transform: rotate(var(--r, 0deg)) translateY(0); } 50% { transform: rotate(var(--r, 0deg)) translateY(-8px); } }
 
 .hx-entries { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 64px; }
 .hx-card { display: flex; flex-direction: column; border-radius: 20px; overflow: hidden; background: rgba(255, 255, 255, 0.72); border: 1px solid rgba(120, 95, 45, 0.16); box-shadow: 0 26px 64px -46px rgba(45, 35, 20, 0.4); text-decoration: none; transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease; }
@@ -11408,6 +11411,22 @@ a.footer__contact-line:hover {
 @media (max-width: 900px) { .teamflip { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 180px; } .tflip.is-big { grid-column: span 2; grid-row: span 1; } }
 @media (max-width: 520px) { .teamflip { grid-template-columns: 1fr; grid-auto-rows: 210px; } .tflip.is-big { grid-column: span 1; } }
 @media (prefers-reduced-motion: reduce) { .tflip__inner { transition: none; } }
+
+/* === lp-ways: organic blob cards with caption below === */
+.lp-ways--organic { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; align-items: start; perspective: none; }
+.lpway2 { display: flex; flex-direction: column; align-items: center; text-align: center; text-decoration: none; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+.lpway2:hover { transform: translateY(-7px); }
+.lpway2__blob { width: 100%; line-height: 0; }
+.lpway2__blob img { width: 100%; height: auto; display: block; mix-blend-mode: multiply; transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1); }
+.lpway2:hover .lpway2__blob img { transform: scale(1.035); }
+.lpway2__cap { display: flex; flex-direction: column; align-items: center; margin-top: -4px; }
+.lpway2__n { font-family: var(--serif); font-size: 1.4rem; color: var(--bronze); }
+.lpway2__title { font-family: var(--serif); font-size: 1.3rem; color: var(--ink); margin-top: 2px; }
+.lpway2__text { font-size: 0.88rem; line-height: 1.5; color: var(--ink-soft); margin-top: 8px; max-width: 300px; }
+.lpway2__cta { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; font-size: 0.76rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; color: var(--bronze); }
+.lpway2__cta svg { transition: transform 0.3s ease; }
+.lpway2:hover .lpway2__cta svg { transform: translateX(4px); }
+@media (max-width: 760px) { .lp-ways--organic { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; } }
 
 /* === JOURNAL "Finde die 8 Küchensünden" game === */
 .kfg-head { text-align: center; max-width: 680px; margin: 0 auto 36px; }
