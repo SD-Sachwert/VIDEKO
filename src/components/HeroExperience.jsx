@@ -99,19 +99,20 @@ export default function HeroExperience() {
             let style
             if (idx < 14) {
               const side = idx % 2
-              const row = Math.floor(idx / 2) // 0..6 down each side – mehr Luft
-              const y = 1 + row * 15
+              const row = Math.floor(idx / 2) // 0..6 je Seite
+              const y = 1.5 + row * 14.5
               const rot = [-3, 2.4, -2, 3, -1.4, 2.6, -2.2][row] || 0
-              // weiter nach außen: ragen über den Bildrand hinaus
-              style = { top: `${y}%`, [side ? 'right' : 'left']: `${-8 + (row % 2) * 1.6}%`, '--r': `${rot}deg` }
+              // Spalten deutlich weiter nach außen (über den Bildrand hinaus) -> mehr Luft
+              style = { top: `${y}%`, [side ? 'right' : 'left']: `${-11 + (row % 2) * 1.5}%`, '--r': `${rot}deg` }
             } else {
-              const k = idx - 14 // 0..13 → top (0-6) & bottom (7-13), je 7 gleichmäßig
+              const k = idx - 14 // 0..13 → 7 oben + 7 unten; Ecken bleiben den Spalten überlassen
               const onTop = k < 7
-              // obere Reihe und untere Reihe leicht versetzt, damit nichts an den Ecken überlappt
-              const cols = onTop ? [4, 17, 30, 43, 56, 68, 79] : [7, 19, 31, 44, 57, 70, 81]
+              const cols = [9, 21, 33, 45, 56, 67, 76]
               const left = cols[k % 7]
               const rot = [-2.4, 2, -1.6, 2.6, -2, 1.6, -1.8][k % 7]
-              style = { [onTop ? 'top' : 'bottom']: '-6.5%', left: `${left}%`, '--r': `${rot}deg` }
+              // vertikal leicht gestaffelt, damit sich Nachbarkarten nicht überdecken
+              const yoff = (k % 2) ? -8.5 : -5.5
+              style = { [onTop ? 'top' : 'bottom']: `${yoff}%`, left: `${left}%`, '--r': `${rot}deg` }
             }
             return (
             <div key={h.t} className="hx-spot" style={style}>

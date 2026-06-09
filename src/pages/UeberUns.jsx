@@ -229,6 +229,7 @@ export default function UeberUns() {
             <Reveal className="standort__map" delay={0.08}>
               <div className="mapcard mapcard--clean">
                 <img src={karteImg} alt="" aria-hidden="true" loading="lazy" />
+                <a className="mapcard__route" href={MAPS_URL} target="_blank" rel="noopener noreferrer" aria-label="Route zu VIDEKO öffnen (Hertzstraße 4, Würzburg)">Route öffnen</a>
               </div>
             </Reveal>
           </div>

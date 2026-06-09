@@ -128,7 +128,7 @@ export default function Inspiration() {
             </p>
             <div className="pagehero__actions">
               <CTAButton to="/stylefinder">VIDEKO Stylefinder starten</CTAButton>
-              <CTAButton href="#insp-stilwelten" variant="dark">Inspiration entdecken</CTAButton>
+              <CTAButton href="#materialien" variant="dark">Inspiration entdecken</CTAButton>
             </div>
           </Reveal>
         </div>
@@ -157,56 +157,6 @@ export default function Inspiration() {
         </div>
       </section>
 
-      {/* EXPLODING KITCHEN (hell) */}
-      <section className="section insp-explode">
-        <div className="container">
-          <div className="explode">
-            <Reveal className="explode__copy">
-              <span className="kicker">Konzept</span>
-              <h2 className="lintro__title">Die Küche.<br /><span className="grad">In perfekter Komposition.</span></h2>
-              <p className="lintro__text">Jedes Detail. Jede Funktion. Jedes Material. Entdecke, wie deine Küche aus perfekt aufeinander abgestimmten Elementen entsteht.</p>
-              <CTAButton to="/stylefinder">Küche entdecken</CTAButton>
-            </Reveal>
-            <Reveal className="explode__media" delay={0.08}>
-              <img src={explodeImg} alt="Exploded-View einer VIDEKO-Küche" loading="lazy" />
-            </Reveal>
-          </div>
-          <div className="explode__grid">
-            {EXPLODE.map((e, i) => (
-              <Reveal key={e.title} delay={(i % 3) * 0.05}>
-                <div className="ecard">
-                  <span className="ecard__n">{e.n}</span>
-                  <span className="ecard__ic"><e.icon size={20} strokeWidth={1.6} /></span>
-                  <span className="ecard__title">{e.title}</span>
-                  <span className="ecard__text">{e.text}</span>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* STILWELTEN */}
-      <section className="section insp-stilwelten" id="insp-stilwelten">
-        <div className="container">
-          <SectionHeader kicker="Stilwelten" title={<>Stilwelten, die <span className="grad">inspirieren.</span></>} lead={'Vier Richtungen, die zeigen, wie unterschiedlich „deine“ Küche aussehen kann.'} />
-          <div className="stilwelt-grid">
-            {STILWELTEN.map((c, i) => (
-              <Reveal key={c.title} delay={(i % 2) * 0.06}>
-                <article className="sfinspcard">
-                  <span className="sfinspcard__img" style={{ backgroundImage: `url(${c.img})` }} aria-hidden="true" />
-                  <span className="sfinspcard__scrim" aria-hidden="true" />
-                  <span className="sfinspcard__body">
-                    <span className="sfinspcard__name">{c.title}</span>
-                    <span className="sfinspcard__text">{c.text}</span>
-                    <span className="sfinspcard__foot"><span className="sfinspcard__arrow"><ArrowUpRight size={17} strokeWidth={1.8} /></span></span>
-                  </span>
-                </article>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* MATERIAL-EXPLORER */}
       <section className="section insp-matex" id="materialien">
@@ -262,7 +212,7 @@ export default function Inspiration() {
             <div className="roompanel__body">
               <h3 className="roompanel__title">{room.title}</h3>
               <p className="roompanel__text">{room.text}</p>
-              <CTAButton to="/inspiration#insp-stilwelten" variant="dark">Ideen entdecken</CTAButton>
+              <CTAButton to="/inspiration#materialien" variant="dark">Ideen entdecken</CTAButton>
             </div>
           </div>
         </div>

@@ -9468,6 +9468,9 @@ a.footer__contact-line:hover {
   box-shadow: 0 24px 50px -36px rgba(120, 90, 40, 0.35);
 }
 .mapcard__pin { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; color: var(--soft-black); background: var(--grad-gold); box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.5), 0 0 0 8px rgba(216, 180, 106, 0.2); }
+/* unsichtbarer Klickbereich exakt über dem im Bild gedruckten "Route öffnen"-Button */
+.mapcard__route { position: absolute; left: 50%; bottom: 5%; transform: translateX(-50%); width: 46%; max-width: 240px; height: 14%; min-height: 40px; z-index: 2; font-size: 0; color: transparent; cursor: pointer; border-radius: 999px; }
+.mapcard__route:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 3px; }
 .about-region .mapcard img {
   width: 100%;
   height: 100%;
@@ -10884,8 +10887,8 @@ a.footer__contact-line:hover {
 .lp-callout__text { display: block; font-size: 0.82rem; line-height: 1.45; color: var(--ink-soft); margin-top: 3px; }
 
 /* 3 — warum + stylefinder */
-.lp-why-head { text-align: center; margin-bottom: 40px; }
-.lp-why { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; margin-bottom: 84px; }
+.lp-why-head { text-align: center; margin-bottom: 26px; }
+.lp-why { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; margin-bottom: 64px; }
 .lpwhy { display: flex; flex-direction: column; gap: 10px; padding: 26px 22px; border-radius: 18px; background: rgba(255, 255, 255, 0.55); border: 1px solid var(--line-dark); width: 100%; text-align: left; font: inherit; color: inherit; cursor: pointer; transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease; }
 .lpwhy:hover { border-color: rgba(201, 160, 80, 0.45); transform: translateY(-3px); }
 .lpwhy__ic { width: 48px; height: 48px; border-radius: 13px; display: grid; place-items: center; color: var(--bronze); background: rgba(201, 160, 80, 0.12); border: 1px solid rgba(201, 160, 80, 0.25); }
@@ -11584,10 +11587,10 @@ a.footer__contact-line:hover {
 .matcard3d { position: absolute; top: 50%; left: 50%; width: 420px; aspect-ratio: 1122 / 1402; margin: 0; padding: 0; border: none; background: none; cursor: pointer; border-radius: 0; overflow: visible; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease, filter 0.5s ease; transform-style: preserve-3d; }
 .matcard3d img {
   width: 100%; height: 100%; object-fit: contain; display: block;
-  /* exakt auf die Materialplatte zugeschnitten (Template-Frontflaeche) – kein Wand-/Marmor-/Betonrand */
-  -webkit-clip-path: polygon(25% 18%, 73.5% 9.5%, 73% 78%, 24.5% 84%);
-  clip-path: polygon(25% 18%, 73.5% 9.5%, 73% 78%, 24.5% 84%);
-  filter: drop-shadow(0 22px 26px rgba(72, 53, 28, 0.3)) drop-shadow(0 4px 8px rgba(72, 53, 28, 0.18));
+  /* volle Platten-Silhouette inkl. sichtbarer Materialstaerke/Tiefe – kein Wand-/Marmor-/Betonrand */
+  -webkit-clip-path: polygon(25% 18%, 74% 8%, 80% 14%, 79% 81%, 72% 86%, 24% 84%);
+  clip-path: polygon(25% 18%, 74% 8%, 80% 14%, 79% 81%, 72% 86%, 24% 84%);
+  filter: drop-shadow(0 24px 30px rgba(60, 44, 22, 0.32)) drop-shadow(0 5px 10px rgba(60, 44, 22, 0.2));
 }
 .matcard3d__cap { display: none; }
 .matlab__nav { display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: 14px; }
