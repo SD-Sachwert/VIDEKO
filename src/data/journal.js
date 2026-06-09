@@ -18,15 +18,15 @@ export const categories = [
 export const journalArticles = [
   {
     slug: '7-kuechenfehler-die-du-spaeter-jeden-tag-bereust',
-    title: '7 Küchenfehler, die du später jeden Tag bereust',
+    title: 'Typische Küchenfehler – und welche gar keine sind',
     category: 'Planung',
     read: '7 Min.',
     featured: true,
     image: imgFehler,
-    teaser: 'Kleine Entscheidungen, große Wirkung. Diese typischen Fehler kosten täglich Komfort – und lassen sich mit guter Planung vermeiden.',
-    metaTitle: '7 Küchenfehler, die du später jeden Tag bereust | VIDEKO Küchen',
-    metaDescription: 'Diese typischen Fehler bei der Küchenplanung kosten später täglich Komfort. VIDEKO zeigt, worauf du bei Licht, Stauraum, Laufwegen, Steckdosen und Materialien achten solltest.',
-    intro: 'Eine Küche kann auf den ersten Blick wunderschön aussehen und im Alltag trotzdem nerven. Das Gemeine daran: Viele Fehler merkt man erst, wenn die Küche steht. Dann sind Steckdosen plötzlich Mangelware, die Arbeitsfläche ist zu klein, der Müll steht im Weg und das Licht macht aus jedem Zwiebelwürfeln eine Höhlenexpedition. Hier sind sieben Klassiker, die du vorher vermeiden kannst.',
+    teaser: 'Nicht jede schwierige Lösung ist ein Planungsfehler – manches gibt einfach der Raum vor. Im Fehlersuche-Spiel zeigen wir dir, worauf es wirklich ankommt.',
+    metaTitle: 'Typische Küchenfehler – und welche gar keine sind | VIDEKO Küchen',
+    metaDescription: 'Nicht jede schwierige Küchenlösung ist ein Planungsfehler – manches gibt der Raum vor. VIDEKO zeigt fair und mit Humor, worauf es bei Licht, Stauraum, Laufwegen, Steckdosen und Materialien wirklich ankommt.',
+    intro: 'Eine Küche kann auf den ersten Blick wunderschön aussehen und im Alltag trotzdem nerven. Das Gemeine daran: Viele Dinge merkt man erst, wenn die Küche steht. Aber Hand aufs Herz – nicht jede schwierige Lösung ist gleich ein Fehler. Manchmal gibt der Raum einfach nichts anderes her, und dann ist der gute Kompromiss die beste Planung. Es geht nicht ums Bloßstellen, sondern darum, zu zeigen, worauf man achten sollte. Hier sind ein paar Klassiker, die man kennen – und richtig einordnen – sollte.',
     sections: [
       { h: '1. Zu wenig Arbeitsfläche', p: 'Eine große Küche ist nicht automatisch praktisch. Entscheidend ist, wo die Arbeitsfläche sitzt. Besonders wichtig ist Platz zwischen Spüle und Kochfeld, weil dort im Alltag am meisten passiert: schneiden, vorbereiten, abstellen, würzen, kurz Chaos veranstalten und so tun, als wäre es ein kreativer Prozess.' },
       { h: '2. Licht wird zu spät geplant', p: 'Viele denken zuerst an Fronten, Arbeitsplatte und Geräte. Licht kommt dann irgendwann am Ende. Das ist ungefähr so sinnvoll wie ein Sportwagen mit Teelichtern als Scheinwerfer. Gutes Küchenlicht besteht aus Arbeitslicht, Raumlicht und Stimmungslicht.' },

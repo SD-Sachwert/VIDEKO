@@ -145,7 +145,8 @@ export default function Leistungen() {
               <AnimatePresence mode="wait">
                 <motion.div key={activeL} className="leistbau__panel"
                   initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>
-                  <Link to="/beratung" aria-label={`${BAUSTEINE[activeL].title} – Beratung anfragen`}><img src={BAUSTEINE[activeL].panel} alt={BAUSTEINE[activeL].title} /></Link>
+                  <img src={BAUSTEINE[activeL].panel} alt={BAUSTEINE[activeL].title} draggable={false} />
+                  <Link to="/beratung" className="leistbau__cta" aria-label={`${BAUSTEINE[activeL].title} – Beratung anfragen`}>Beratung anfragen</Link>
                 </motion.div>
               </AnimatePresence>
             </div>

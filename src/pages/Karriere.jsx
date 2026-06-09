@@ -7,6 +7,7 @@ import {
 } from 'lucide-react'
 
 import Reveal from '../components/Reveal.jsx'
+import useCarouselNav from '../hooks/useCarouselNav.js'
 import CTAButton from '../components/CTAButton.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
 import KarriereTopShowcase from '../components/KarriereTopShowcase.jsx'
@@ -109,6 +110,7 @@ export default function Karriere() {
   const deckNext = () => setActiveJob((v) => (v + 1) % DECK.length)
   const deckPrev = () => setActiveJob((v) => (v - 1 + DECK.length) % DECK.length)
   const deckGo = (i) => setActiveJob(i)
+  const deckNav = useCarouselNav(deckNext, deckPrev)
 
   // autoplay — pauses on hover; respects reduced-motion
   useEffect(() => {
@@ -195,7 +197,7 @@ export default function Karriere() {
         </div>
 
         <div className="cdeck2" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
-          <div className="cdeck2__stage">
+          <div className="cdeck2__stage" ref={deckNav.ref} onTouchStart={deckNav.onTouchStart} onTouchEnd={deckNav.onTouchEnd} style={{ touchAction: 'pan-y' }}>
             {DECK.map((r, i) => {
               const d = deckRel(i)
               const isActive = d === 0
@@ -303,7 +305,7 @@ export default function Karriere() {
               <p className="lintro__text">Ein Satz reicht. Roman geht auch. Persönlichkeit zählt bei uns mehr als ein makelloser Lebenslauf.</p>
               <ul className="kapply__contact">
                 <li><Mail size={17} strokeWidth={1.7} /> <a href="mailto:info@videko-kuechen.de">info@videko-kuechen.de</a></li>
-                <li><MapPin size={17} strokeWidth={1.7} /> Würzburg, Hertzstraße 4</li>
+                <li><MapPin size={17} strokeWidth={1.7} /> Hertzstraße 4, 97076 Würzburg <a className="kapply__route" href="https://www.google.com/maps/search/?api=1&query=Hertzstra%C3%9Fe%204%2C%2097076%20W%C3%BCrzburg" target="_blank" rel="noopener noreferrer">Route öffnen</a></li>
                 <li><Headset size={17} strokeWidth={1.7} /> <a href="tel:+491605545818">0160 5545818</a></li>
               </ul>
               <div className="kapply__pic"><img src={imgFormular} alt="" loading="lazy" /></div>

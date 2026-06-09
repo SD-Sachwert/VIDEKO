@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
+import useCarouselNav from '../hooks/useCarouselNav.js'
 import p1 from '../assets/images/karriere/philosophie/VIDEKO_Karte_01_freigestellt.png'
 import p2 from '../assets/images/karriere/philosophie/VIDEKO_Karte_02_freigestellt.png'
 import p3 from '../assets/images/karriere/philosophie/VIDEKO_Karte_03_freigestellt.png'
@@ -24,6 +25,7 @@ export default function KarriereTopShowcase() {
 
   const next = () => setActive((v) => (v + 1) % CARDS.length)
   const prev = () => setActive((v) => (v - 1 + CARDS.length) % CARDS.length)
+  const nav = useCarouselNav(next, prev)
   const rel = (i) => { let d = i - active; const n = CARDS.length; if (d > n / 2) d -= n; if (d < -n / 2) d += n; return d }
 
   useEffect(() => {
@@ -44,7 +46,7 @@ export default function KarriereTopShowcase() {
         </Reveal>
 
         <div className="kts" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
-          <div className="kts__stage">
+          <div className="kts__stage" ref={nav.ref} onTouchStart={nav.onTouchStart} onTouchEnd={nav.onTouchEnd} style={{ touchAction: 'pan-y' }}>
             {CARDS.map((c, i) => {
               const d = rel(i)
               const isActive = d === 0

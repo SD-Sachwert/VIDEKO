@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback } from 'react'
+import { useRef, useState, useCallback, useEffect } from 'react'
 import { Search, Eye, Lightbulb, Check, ArrowRight, Square, Lamp, Plug, Boxes, Trash2, Cpu, Ruler, MoveHorizontal } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
@@ -12,17 +12,23 @@ const HOTSPOTS = [
   { id: 3, title: 'Zu wenig Arbeitsfläche am Kochfeld', x: 47, y: 45, r: 6, text: 'Das Kochfeld nimmt auf der Insel zu viel Platz ein. Für Schneidebrett, Schüsseln, Gewürze oder heiße Töpfe bleibt kaum echte Arbeitsfläche.', hint: 'Wo wird geschnitten und abgestellt, wenn der Topf läuft?' },
   { id: 4, title: 'Steckdose an der Insel fehlt', x: 58, y: 55, r: 5, text: 'Eine Insel ohne Steckdose ist hübsch, aber im Alltag schnell unpraktisch. Mixer, Küchenmaschine oder Laptop brauchen Strom genau dort, wo gearbeitet wird.', hint: 'Kleingeräte brauchen Strom – auch auf der Insel.' },
   { id: 5, title: 'Kein Stauraum unter den Sitzplätzen', x: 45, y: 56, r: 6, text: 'Unter dem Sitzbereich bleibt Stauraum verschenkt. Gerade bei kleinen Küchen zählt jeder sinnvoll genutzte Zentimeter.', hint: 'Schau unter den Sitzbereich.' },
-  { id: 6, title: 'Fenster geht nicht richtig auf', x: 64, y: 15, r: 6, text: 'Der Wasserhahn sitzt ungünstig vor dem Fenster. Wenn das Fenster nicht richtig aufgeht, ist das kein Detailfehler, sondern Alltagstheater.', hint: 'Was passiert, wenn das Fenster aufgehen soll?' },
+  { id: 6, title: 'Wasserhahn vor dem Fenster', x: 63, y: 25, r: 6, text: 'Der Wasserhahn sitzt ungünstig vor dem Fenster. Wenn das Fenster nicht richtig aufgeht, ist das kein Detailfehler, sondern Alltagstheater.', hint: 'Schau, was vor dem Fenster im Weg steht.' },
   { id: 7, title: 'Nur Türenschränke statt Auszüge', x: 63, y: 36, r: 6, text: 'Viele Türenschränke bedeuten: öffnen, bücken, suchen, fluchen. Auszüge wären deutlich ergonomischer und übersichtlicher.', hint: 'Bücken und suchen – oder herausziehen?' },
   { id: 8, title: 'Stauraum an der Wand verschenkt', x: 75, y: 15, r: 7, text: 'Die Wandfläche bleibt ungenutzt. Das sieht luftig aus, verschenkt aber Stauraum – besonders wenn unten ohnehin wenig clever gelöst ist.', hint: 'Die Wandfläche könnte mehr leisten.' },
   { id: 9, title: 'Backofen zu tief geplant', x: 72, y: 43, r: 6, text: 'Der Backofen sitzt zu niedrig. Jedes Blech wird zur Kniebeuge. Kann man machen – muss man aber nicht, wenn man besser plant.', hint: 'Achte auf die Einbauhöhe der Geräte.' },
 ]
 
 const WRONG = [
-  'Knapp vorbei. Sieht verdächtig aus, ist aber diesmal unschuldig.',
   'Fast. Da liegt der Küchenhund heute nicht begraben.',
-  'Guter Versuch. Aber dieser Bereich darf ausnahmsweise weiterleben.',
-  'Nicht schlecht gedacht – aber der Fehler versteckt sich woanders.',
+  'Guter Klick, falscher Tatort.',
+  'Da ist nichts. Außer vielleicht dein Bauchgefühl.',
+  'Knapp daneben ist auch vorbei geplant.',
+  'Hier ist alles sauber. Verdächtig sauber sogar.',
+  'Der Fehler versteckt sich woanders. Der kleine Mistkerl.',
+  'Das war’s nicht. Aber der Ehrgeiz gefällt uns.',
+  'Leider nein. Diese Ecke ist unschuldig.',
+  'Klick war gut. Ziel war frech daneben.',
+  'Noch kein Treffer. Der Raum lacht leise.',
 ]
 
 const HOWTO = [
@@ -44,6 +50,7 @@ export default function KuechenfehlerGame() {
   const [hint, setHint] = useState(null)
   const wrongTimer = useRef(0)
   const hintTimer = useRef(0)
+  const wrongIdx = useRef(0)
 
   const onClick = useCallback((e) => {
     const el = imgRef.current
@@ -54,19 +61,34 @@ export default function KuechenfehlerGame() {
     const hit = HOTSPOTS.find((h) => {
       const dx = ((px - h.x) / 100) * r.width
       const dy = ((py - h.y) / 100) * r.height
-      return Math.hypot(dx, dy) <= (h.r / 100) * r.width
+      // größere, fingerfreundliche Hitbox (visuell unverändert)
+      const hitR = Math.max((h.r / 100) * r.width * 1.45, 30)
+      return Math.hypot(dx, dy) <= hitR
     })
     if (hit) {
       setActive(hit.id)
       setWrong(null)
       setFound((f) => (f.includes(hit.id) ? f : [...f, hit.id]))
     } else {
-      const msg = WRONG[Math.floor((found.length + (wrong ? 1 : 0)) % WRONG.length)]
-      setWrong({ x: px, y: py, msg })
+      // Popup schließen + zuverlässig rotierenden Spruch zeigen (Position im Bild gehalten)
+      setActive(null)
+      const msg = WRONG[wrongIdx.current % WRONG.length]
+      wrongIdx.current += 1
+      setWrong({ x: Math.min(84, Math.max(16, px)), y: Math.min(86, Math.max(14, py)), msg })
       clearTimeout(wrongTimer.current)
-      wrongTimer.current = setTimeout(() => setWrong(null), 2000)
+      wrongTimer.current = setTimeout(() => setWrong(null), 2200)
     }
-  }, [found.length, wrong])
+  }, [])
+
+  // Popup: Klick außerhalb / Escape schließt; X bleibt zusätzlich erhalten
+  useEffect(() => {
+    if (active == null) return
+    const onDoc = (ev) => { if (!ev.target.closest('.kfg-pop') && !ev.target.closest('.kfg-marker')) setActive(null) }
+    const onKey = (ev) => { if (ev.key === 'Escape') setActive(null) }
+    const t = setTimeout(() => document.addEventListener('mousedown', onDoc), 0)
+    document.addEventListener('keydown', onKey)
+    return () => { clearTimeout(t); document.removeEventListener('mousedown', onDoc); document.removeEventListener('keydown', onKey) }
+  }, [active])
 
   const showHint = () => {
     const next = HOTSPOTS.find((h) => !found.includes(h.id))

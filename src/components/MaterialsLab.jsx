@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
+import useCarouselNav from '../hooks/useCarouselNav.js'
 import m01 from '../assets/images/inspiration/materials-lab/m01.png'
 import m02 from '../assets/images/inspiration/materials-lab/m02.png'
 import m03 from '../assets/images/inspiration/materials-lab/m03.png'
@@ -33,6 +34,7 @@ export default function MaterialsLab() {
 
   const next = () => setActive((v) => (v + 1) % n)
   const prev = () => setActive((v) => (v - 1 + n) % n)
+  const nav = useCarouselNav(next, prev)
   const rel = (i) => { let d = i - active; if (d > n / 2) d -= n; if (d < -n / 2) d += n; return d }
 
   useEffect(() => {
@@ -57,7 +59,7 @@ export default function MaterialsLab() {
         </Reveal>
 
         <div className="matlab__stagewrap" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
-          <div className="matlab__stage">
+          <div className="matlab__stage" ref={nav.ref} onTouchStart={nav.onTouchStart} onTouchEnd={nav.onTouchEnd} style={{ touchAction: 'pan-y' }}>
             {MATS.map((m, i) => {
               const d = rel(i)
               const isActive = d === 0
