@@ -179,36 +179,6 @@ export default function Home() {
       {/* 6 — PROZESS (neue Wellen-Sektion) */}
       <ProcessSection />
 
-      {/* 7 — TEAM */}
-      <section className="section section--light lp-team-sec">
-        <div className="container">
-          <div className="lp-team-head">
-            <Reveal><span className="kicker">Das Team</span><h2 className="lp-h2">Menschen, die <span className="grad">Küchen lieben.</span></h2></Reveal>
-          </div>
-          <div className="lp-team">
-            {TEAM.map((t, i) => (
-              <Reveal key={t.title} as={Link} to="/ueber-uns" className="lpteam" delay={i * 0.07}>
-                <span className="lpteam__img" style={{ backgroundImage: `url(${t.img})` }} aria-hidden="true" />
-                <span className="lpteam__scrim" aria-hidden="true" />
-                <span className="lpteam__body">
-                  <span className="lpteam__title">{t.title}</span>
-                  <span className="lpteam__role">{t.role}</span>
-                  <span className="lpteam__story">{t.story}</span>
-                </span>
-              </Reveal>
-            ))}
-          </div>
-          <div className="lp-team-benefits">
-            {TEAM_BENEFITS.map((b, i) => (
-              <Reveal key={b} as="span" className="lp-team-benefit" delay={i * 0.05}><Check size={15} strokeWidth={2.4} /> {b}</Reveal>
-            ))}
-          </div>
-          <div className="lp-team-cta">
-            <Reveal><CTAButton to="/ueber-uns">Lerne die Menschen hinter VIDEKO kennen</CTAButton></Reveal>
-          </div>
-        </div>
-      </section>
-
       {/* 8 — JOURNAL */}
       <section className="section section--light lp-journal-sec">
         <div className="container lp-journal-head">

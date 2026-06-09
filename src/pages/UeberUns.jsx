@@ -204,7 +204,7 @@ export default function UeberUns() {
               <div className="lintro__frame"><img src={momentImg} alt="Persönlicher Moment mit Kund:innen" loading="lazy" /><span className="lintro__rim" aria-hidden="true" /></div>
             </Reveal>
             <Reveal className="lintro__copy" delay={0.08}>
-              <span className="kicker">Was du bei uns merken sollst</span>
+              <span className="kicker">Unser Anspruch</span>
               <h2 className="lintro__title">Du merkst sofort,<br /><span className="grad">dass wir's ernst meinen.</span></h2>
               <p className="lintro__text">
                 Dass wir zuhören. Dass wir mitdenken. Dass wir uns Zeit nehmen und

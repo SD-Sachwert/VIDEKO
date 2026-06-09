@@ -68,6 +68,7 @@ function StyleCard({ active }) {
         <span className="sfresult__badge">92%<i>Match</i></span>
       </div>
       <div className="sfc__ctawrap"><CTAButton to="/stylefinder" size="md">Jetzt Stylefinder starten <ArrowRight size={16} strokeWidth={2} /></CTAButton></div>
+      <span className="sfc__quip"><Clock size={13} strokeWidth={1.9} /> Dauert kürzer als drei Stunden planlos Küchen googeln.</span>
       <div className="sfc__micro"><span><Check size={13} strokeWidth={2.6} /> Kostenlos</span><span><Check size={13} strokeWidth={2.6} /> ca. 2 Minuten</span><span><Check size={13} strokeWidth={2.6} /> Ohne Registrierung</span></div>
     </div>
   )

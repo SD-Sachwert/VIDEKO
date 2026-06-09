@@ -81,14 +81,9 @@ export default function HeroExperience() {
     <section className="section section--light hx-sec">
       <div className="container hx-introwrap">
         <Reveal className="hx-intro">
-          <span className="kicker">Dein Einstieg</span>
+          <span className="kicker">Der ganze Raum</span>
           <h1 className="hx-headline">Aus einem Raum wird nicht einfach eine Küche.<br /><span className="grad">Sondern dein neuer Lieblingsplatz.</span></h1>
           <p className="hx-sub">Von der ersten Idee über Planung, Material, Licht und Montage bis zur fertigen Küche.</p>
-          <div className="hx-actions">
-            <CTAButton to="/stylefinder">Stylefinder starten</CTAButton>
-            <CTAButton to="/beratung" variant="dark">Beratung anfragen</CTAButton>
-          </div>
-          <span className="hx-micro"><Clock size={15} strokeWidth={1.8} /> Dauert kürzer als drei Stunden planlos Küchen googeln.</span>
         </Reveal>
       </div>
 
@@ -110,12 +105,13 @@ export default function HeroExperience() {
               // weiter nach außen: ragen über den Bildrand hinaus
               style = { top: `${y}%`, [side ? 'right' : 'left']: `${-8 + (row % 2) * 1.6}%`, '--r': `${rot}deg` }
             } else {
-              const k = idx - 14 // 0..13 → top (0-6) & bottom (7-13), je 7 entzerrt
+              const k = idx - 14 // 0..13 → top (0-6) & bottom (7-13), je 7 gleichmäßig
               const onTop = k < 7
-              const cols = [4, 16, 28, 40, 52, 64, 76] // obere & untere Reihe leicht nach links
+              // obere Reihe und untere Reihe leicht versetzt, damit nichts an den Ecken überlappt
+              const cols = onTop ? [4, 17, 30, 43, 56, 68, 79] : [7, 19, 31, 44, 57, 70, 81]
               const left = cols[k % 7]
               const rot = [-2.4, 2, -1.6, 2.6, -2, 1.6, -1.8][k % 7]
-              style = { [onTop ? 'top' : 'bottom']: '-5%', left: `${left}%`, '--r': `${rot}deg` }
+              style = { [onTop ? 'top' : 'bottom']: '-6.5%', left: `${left}%`, '--r': `${rot}deg` }
             }
             return (
             <div key={h.t} className="hx-spot" style={style}>

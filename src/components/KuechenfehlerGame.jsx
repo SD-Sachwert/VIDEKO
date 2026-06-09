@@ -7,32 +7,33 @@ import scene from '../assets/images/kuechenfehler/scene.png'
 import ctaBg from '../assets/images/kuechenfehler/cta-bg.png'
 
 const HOTSPOTS = [
-  { id: 1, title: 'Zu wenig Arbeitsfläche', x: 49, y: 48, r: 6, text: 'Die Arbeitsfläche ist zu knapp bemessen. Das macht Kochen und Vorbereiten im Alltag schnell unpraktisch.', hint: 'Dort, wo vorbereitet wird, sollte genug Platz sein.' },
-  { id: 2, title: 'Müllsystem ungünstig platziert', x: 91, y: 67, r: 6, text: 'Wenn der Müll zu weit weg oder ungeschickt sitzt, wird jeder Handgriff unnötig umständlich.', hint: 'Achte auf das, was beim Schnippeln ständig gebraucht wird.' },
-  { id: 3, title: 'Schwaches Arbeitslicht', x: 59, y: 31, r: 7, text: 'Gute Küchenbeleuchtung ist kein Deko-Thema. Wer schlecht sieht, arbeitet schlechter.', hint: 'Nicht nur schönes Licht zählt, sondern brauchbares Licht.' },
-  { id: 4, title: 'Steckdosen nicht da, wo man sie braucht', x: 60, y: 41, r: 6, text: 'Kleingeräte brauchen Strom an sinnvollen Stellen – nicht erst nach einer Kabel-Expedition.', hint: 'Denk an Kaffeemaschine, Toaster, Mixer und Co.' },
-  { id: 5, title: 'Laufwege unpraktisch', x: 68, y: 48, r: 8, text: 'Zwischen Kühlen, Spülen und Kochen sollte die Küche mitdenken – nicht gegen dich arbeiten.', hint: 'Die Küche sollte dich nicht auf Wanderschaft schicken.' },
-  { id: 6, title: 'Geräteposition unergonomisch', x: 84, y: 41, r: 7, text: 'Wenn Geräte zu tief oder unglücklich sitzen, nervt dich das jeden einzelnen Tag.', hint: 'Schau auf die Einbauhöhe der Geräte.' },
-  { id: 7, title: 'Stauraum nicht clever genutzt', x: 80, y: 66, r: 7, text: 'Schöner Look bringt wenig, wenn Stauraum verschenkt wird oder Dinge schwer erreichbar sind.', hint: 'Nicht jeder schöne Bereich ist auch praktisch genutzt.' },
-  { id: 8, title: 'Ergonomie nicht mitgedacht', x: 50, y: 45, r: 6, text: 'Gute Planung fühlt sich im Alltag leicht an. Schlechte Planung merkt man bei jedem Griff.', hint: 'Achte auf die tägliche Nutzungshöhe und Greifzone.' },
+  { id: 1, title: 'Kühlschrank im Abseits', x: 9, y: 42, r: 7, text: 'Der Kühlschrank sitzt zu weit weg vom eigentlichen Arbeitsbereich. Kühlen, Spülen und Kochen werden dadurch unnötig laufintensiv.', hint: 'Achte auf die Wege zwischen Kühlen, Spülen und Kochen.' },
+  { id: 2, title: 'Zu wenig Durchgang', x: 48, y: 35, r: 6, text: 'Die Insel steht zu nah an der Küchenzeile. Sobald jemand kocht, spült oder eine Tür öffnet, wird es hier schnell eng.', hint: 'Wie viel Platz bleibt zwischen Insel und Zeile?' },
+  { id: 3, title: 'Zu wenig Arbeitsfläche am Kochfeld', x: 47, y: 45, r: 6, text: 'Das Kochfeld nimmt auf der Insel zu viel Platz ein. Für Schneidebrett, Schüsseln, Gewürze oder heiße Töpfe bleibt kaum echte Arbeitsfläche.', hint: 'Wo wird geschnitten und abgestellt, wenn der Topf läuft?' },
+  { id: 4, title: 'Steckdose an der Insel fehlt', x: 58, y: 55, r: 5, text: 'Eine Insel ohne Steckdose ist hübsch, aber im Alltag schnell unpraktisch. Mixer, Küchenmaschine oder Laptop brauchen Strom genau dort, wo gearbeitet wird.', hint: 'Kleingeräte brauchen Strom – auch auf der Insel.' },
+  { id: 5, title: 'Kein Stauraum unter den Sitzplätzen', x: 45, y: 56, r: 6, text: 'Unter dem Sitzbereich bleibt Stauraum verschenkt. Gerade bei kleinen Küchen zählt jeder sinnvoll genutzte Zentimeter.', hint: 'Schau unter den Sitzbereich.' },
+  { id: 6, title: 'Fenster geht nicht richtig auf', x: 64, y: 15, r: 6, text: 'Der Wasserhahn sitzt ungünstig vor dem Fenster. Wenn das Fenster nicht richtig aufgeht, ist das kein Detailfehler, sondern Alltagstheater.', hint: 'Was passiert, wenn das Fenster aufgehen soll?' },
+  { id: 7, title: 'Nur Türenschränke statt Auszüge', x: 63, y: 36, r: 6, text: 'Viele Türenschränke bedeuten: öffnen, bücken, suchen, fluchen. Auszüge wären deutlich ergonomischer und übersichtlicher.', hint: 'Bücken und suchen – oder herausziehen?' },
+  { id: 8, title: 'Stauraum an der Wand verschenkt', x: 75, y: 15, r: 7, text: 'Die Wandfläche bleibt ungenutzt. Das sieht luftig aus, verschenkt aber Stauraum – besonders wenn unten ohnehin wenig clever gelöst ist.', hint: 'Die Wandfläche könnte mehr leisten.' },
+  { id: 9, title: 'Backofen zu tief geplant', x: 72, y: 43, r: 6, text: 'Der Backofen sitzt zu niedrig. Jedes Blech wird zur Kniebeuge. Kann man machen – muss man aber nicht, wenn man besser plant.', hint: 'Achte auf die Einbauhöhe der Geräte.' },
 ]
 
 const WRONG = [
-  'Knapp vorbei. Die Pflanze ist unschuldig.',
-  'Schöner Versuch. Aber das ist diesmal nicht der Übeltäter.',
-  'Sieht verdächtig aus, ist aber unschuldig.',
-  'Fast. Da liegt der Hund heute nicht begraben.',
+  'Knapp vorbei. Sieht verdächtig aus, ist aber diesmal unschuldig.',
+  'Fast. Da liegt der Küchenhund heute nicht begraben.',
+  'Guter Versuch. Aber dieser Bereich darf ausnahmsweise weiterleben.',
+  'Nicht schlecht gedacht – aber der Fehler versteckt sich woanders.',
 ]
 
 const HOWTO = [
   { icon: Search, t: 'Küche untersuchen', d: 'Klicke dich durch die Küche und schau genau hin – die Fehler sind gut versteckt.' },
-  { icon: Eye, t: 'Fehler finden', d: 'Entdecke alle 8 Planungsfehler, die den Alltag später unnötig erschweren.' },
+  { icon: Eye, t: 'Fehler finden', d: 'Entdecke alle 9 Planungsfehler, die den Alltag später unnötig erschweren.' },
   { icon: Lightbulb, t: 'Besser planen', d: 'Verstehe typische Stolperfallen – und plane deine Küche von Anfang an richtig.' },
 ]
 
 const THEMES = [
-  { icon: Square, t: 'Arbeitsfläche' }, { icon: MoveHorizontal, t: 'Laufwege' }, { icon: Lamp, t: 'Licht' }, { icon: Plug, t: 'Steckdosen' },
-  { icon: Boxes, t: 'Stauraum' }, { icon: Trash2, t: 'Müllsystem' }, { icon: Cpu, t: 'Geräteposition' }, { icon: Ruler, t: 'Ergonomie' },
+  { icon: Square, t: 'Arbeitsfläche' }, { icon: MoveHorizontal, t: 'Laufwege' }, { icon: Plug, t: 'Steckdosen' }, { icon: Boxes, t: 'Stauraum' },
+  { icon: Lamp, t: 'Fensterplanung' }, { icon: Trash2, t: 'Auszüge' }, { icon: Cpu, t: 'Gerätehöhe' }, { icon: Ruler, t: 'Ergonomie' },
 ]
 
 export default function KuechenfehlerGame() {
@@ -86,7 +87,7 @@ export default function KuechenfehlerGame() {
       <div className="container">
         <Reveal className="kfg-head">
           <span className="kfg-badge">Interaktiv</span>
-          <h2 className="kfg-title">Finde die <span className="grad">8 Küchensünden</span></h2>
+          <h2 className="kfg-title">Finde die <span className="grad">9 Küchensünden</span></h2>
           <p className="kfg-sub">Klicke in die Küche und finde die Planungsfehler, die im Alltag wirklich nerven.</p>
         </Reveal>
 
@@ -108,13 +109,13 @@ export default function KuechenfehlerGame() {
               )}
               {wrong && <div className="kfg-wrong" style={{ left: `${wrong.x}%`, top: `${wrong.y}%` }}>{wrong.msg}</div>}
             </div>
-            <p className="kfg-hinttext">Klicke in die Küche, um versteckte Planungsfehler zu entdecken. <b>Schon {count} von 8 gefunden – weiter so!</b></p>
+            <p className="kfg-hinttext">Klicke in die Küche, um versteckte Planungsfehler zu entdecken. <b>Schon {count} von 9 gefunden – weiter so!</b></p>
           </Reveal>
 
           <Reveal className="kfg-side" delay={0.1}>
             <span className="kfg-side__h">Dein Fortschritt</span>
-            <span className="kfg-side__count">{count} von 8 gefunden</span>
-            <span className="kfg-bar"><span style={{ width: `${(count / 8) * 100}%` }} /></span>
+            <span className="kfg-side__count">{count} von 9 gefunden</span>
+            <span className="kfg-bar"><span style={{ width: `${(count / 9) * 100}%` }} /></span>
             <div className="kfg-circles">
               {HOTSPOTS.map((h) => <span key={h.id} className={`kfg-circle ${found.includes(h.id) ? 'is-on' : ''}`}>{found.includes(h.id) ? <Check size={12} strokeWidth={3} /> : h.id}</span>)}
             </div>
@@ -130,7 +131,7 @@ export default function KuechenfehlerGame() {
             </div>
             <div className="kfg-reward">
               <span className="kfg-reward__t">Kleine Belohnung</span>
-              <span className="kfg-reward__d">Wer alle 8 findet, versteht Küchenplanung besser als so mancher Prospekt. 😉</span>
+              <span className="kfg-reward__d">Wer alle 9 findet, versteht Küchenplanung besser als so mancher Prospekt. 😉</span>
             </div>
           </Reveal>
         </div>

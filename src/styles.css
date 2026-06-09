@@ -5123,7 +5123,7 @@ body {
    ===================================================================== */
 .section {
   position: relative;
-  padding: 92px 0;
+  padding: 70px 0;
 }
 
 .section--light {
@@ -11642,7 +11642,9 @@ a.footer__contact-line:hover {
 .sfresult__badge { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 54px; height: 54px; border-radius: 50%; background: var(--grad-gold); color: var(--soft-black); font-family: var(--serif); font-size: 1.05rem; font-weight: 700; flex: none; line-height: 1; }
 .sfresult__badge i { font-style: normal; font-size: 0.56rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
 .sfc__ctawrap { margin-top: 14px; }
-.sfc__micro { display: flex; flex-wrap: wrap; gap: 7px 16px; margin-top: 11px; }
+.sfc__quip { display: inline-flex; align-items: center; gap: 7px; margin-top: 10px; font-size: 0.8rem; font-style: italic; color: var(--ink-soft); }
+.sfc__quip svg { color: var(--bronze); flex: none; }
+.sfc__micro { display: flex; flex-wrap: wrap; gap: 7px 16px; margin-top: 10px; }
 .sfc__micro span { display: inline-flex; align-items: center; gap: 6px; font-size: 0.78rem; color: var(--ink-soft); }
 .sfc__micro svg { color: var(--bronze); }
 .sfsec__trust { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 24px; padding-top: 18px; border-top: 1px solid rgba(120, 95, 45, 0.16); }
