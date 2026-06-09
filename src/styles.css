@@ -11509,8 +11509,30 @@ a.footer__contact-line:hover {
 .kfeel__tab { padding: 9px 6px; border-radius: 11px; border: 1px solid var(--line-dark); background: rgba(255, 255, 255, 0.6); cursor: pointer; font: inherit; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.02em; color: var(--ink-soft); transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; }
 .kfeel__tab:hover { border-color: rgba(201, 160, 80, 0.5); color: var(--bronze); }
 .kfeel__tab.is-active { background: var(--grad-gold); border-color: transparent; color: var(--soft-black); box-shadow: 0 10px 22px -10px rgba(168, 122, 40, 0.6); }
-.kfeel__stage { position: relative; aspect-ratio: 16 / 10; border-radius: 16px; overflow: hidden; background: var(--cream); }
-.kfeel__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.kfeel__stage { position: relative; aspect-ratio: 16 / 10; border-radius: 16px; overflow: hidden; background: var(--cream); --lv: 0; }
+.kfeel__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
+  filter: brightness(calc(1 - var(--lv) * 0.3)) contrast(calc(1 + var(--lv) * 0.1)) saturate(calc(1 - var(--lv) * 0.1)) sepia(calc(var(--lv) * 0.32));
+  transition: filter 0.3s ease; }
+/* Lichtstimmung: warmer Glow über Insel/Regalen + dezentes Abdunkeln, weich animiert */
+.kfeel__lightveil { position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background:
+    radial-gradient(52% 36% at 50% 70%, rgba(226, 186, 104, calc(var(--lv) * 0.17)), transparent 72%),
+    radial-gradient(34% 26% at 24% 30%, rgba(226, 186, 104, calc(var(--lv) * 0.11)), transparent 72%),
+    radial-gradient(30% 24% at 78% 32%, rgba(226, 186, 104, calc(var(--lv) * 0.1)), transparent 72%),
+    linear-gradient(180deg, rgba(20, 13, 4, calc(var(--lv) * 0.1)), rgba(17, 10, 3, calc(var(--lv) * 0.46)));
+  transition: background 0.3s ease; }
+.kfeel__light { padding: 14px 8px 2px; }
+.kfeel__lighttop { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; margin-bottom: 10px; }
+.kfeel__lightlabel { font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; color: var(--bronze); white-space: nowrap; }
+.kfeel__lightline { font-size: 0.84rem; font-style: italic; color: var(--ink-soft); text-align: right; }
+.kfeel__range { -webkit-appearance: none; appearance: none; width: 100%; height: 5px; border-radius: 999px; cursor: pointer; outline: none;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--gold-bright) var(--p, 0%), rgba(120, 95, 45, 0.2) var(--p, 0%)); }
+.kfeel__range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--grad-gold); border: 2px solid #fff; box-shadow: 0 3px 11px -2px rgba(120, 90, 40, 0.65), 0 0 0 1px rgba(168, 122, 40, 0.4); cursor: pointer; }
+.kfeel__range::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: var(--grad-gold); border: 2px solid #fff; box-shadow: 0 3px 11px -2px rgba(120, 90, 40, 0.65); cursor: pointer; }
+.kfeel__range::-moz-range-track { height: 5px; border-radius: 999px; background: rgba(120, 95, 45, 0.2); }
+.kfeel__range:focus-visible { box-shadow: 0 0 0 3px rgba(216, 180, 106, 0.35); border-radius: 999px; }
+.kfeel__lightscale { display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); }
+@media (prefers-reduced-motion: reduce) { .kfeel__img, .kfeel__lightveil { transition: none; } }
 .kfeel__spot { position: absolute; transform: translate(-50%, -50%); width: 26px; height: 26px; border: none; background: none; padding: 0; cursor: pointer; z-index: 3; }
 .kfeel__spotdot { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 14px; height: 14px; border-radius: 50%; background: var(--grad-gold); box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.6), 0 0 0 7px rgba(216, 180, 106, 0.3); transition: transform 0.25s ease; }
 .kfeel__spot:hover .kfeel__spotdot, .kfeel__spot.is-open .kfeel__spotdot { transform: translate(-50%, -50%) scale(1.18); }

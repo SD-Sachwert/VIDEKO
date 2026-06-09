@@ -49,7 +49,13 @@ const FEELINGS = [
 export default function KitchenFeelingCard() {
   const [active, setActive] = useState(0)
   const [spot, setSpot] = useState(null)
+  const [light, setLight] = useState(0) // 0 = Tag, 50 = Abend, 100 = Mood
   const f = FEELINGS[active]
+  const lightLine = light < 34
+    ? 'Natürlich hell. Klar und offen.'
+    : light < 67
+      ? 'Warm, ruhig und wohnlich.'
+      : 'Gedimmt. Gemütlich. Feierabendmodus.'
 
   return (
     <div className="kfeel">
@@ -66,12 +72,13 @@ export default function KitchenFeelingCard() {
           </div>
         </div>
 
-        <div className="kfeel__stage">
+        <div className="kfeel__stage" style={{ '--lv': light / 100 }}>
           <AnimatePresence mode="wait">
             <motion.img key={f.img} src={f.img} alt={f.h} className="kfeel__img"
               initial={{ opacity: 0, scale: 1.03 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
               transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }} loading="lazy" />
           </AnimatePresence>
+          <span className="kfeel__lightveil" aria-hidden="true" />
           {f.spots.map((sp, i) => (
             <button key={i} type="button" className={`kfeel__spot ${spot === i ? 'is-open' : ''}`} style={{ left: `${sp.x}%`, top: `${sp.y}%` }}
               onMouseEnter={() => setSpot(i)} onMouseLeave={() => setSpot(null)} onClick={() => setSpot(spot === i ? null : i)} aria-label={sp.t}>
@@ -79,6 +86,17 @@ export default function KitchenFeelingCard() {
               <span className="kfeel__tip">{sp.t}</span>
             </button>
           ))}
+        </div>
+
+        <div className="kfeel__light">
+          <div className="kfeel__lighttop">
+            <span className="kfeel__lightlabel">Lichtstimmung</span>
+            <span className="kfeel__lightline">{lightLine}</span>
+          </div>
+          <input className="kfeel__range" type="range" min="0" max="100" value={light}
+            onChange={(e) => setLight(Number(e.target.value))} aria-label="Lichtstimmung"
+            style={{ '--p': `${light}%` }} />
+          <div className="kfeel__lightscale"><span>Tag</span><span>Abend</span><span>Mood</span></div>
         </div>
 
         <div className="kfeel__body">
