@@ -33,14 +33,16 @@ function BeforeAfterMini() {
     <span
       className={`proc2ba ${drag ? 'is-drag' : ''}`}
       ref={ref}
+      style={{ '--split': `${split}%` }}
       aria-label="Vorher / Nachher – Regler ziehen"
       onPointerDown={(e) => { e.preventDefault(); setDrag(true); e.currentTarget.setPointerCapture(e.pointerId); move(e.clientX) }}
       onPointerMove={(e) => { if (drag) move(e.clientX) }}
       onPointerUp={(e) => { setDrag(false); try { e.currentTarget.releasePointerCapture(e.pointerId) } catch { /* noop */ } }}
+      onPointerCancel={() => setDrag(false)}
     >
       <span className="proc2ba__after" style={{ backgroundImage: `url(${nachher})` }} aria-hidden="true" />
-      <span className="proc2ba__before" style={{ backgroundImage: `url(${vorher})`, width: `${split}%` }} aria-hidden="true" />
-      <span className="proc2ba__line" style={{ left: `${split}%` }}><span className="proc2ba__handle"><ArrowLeftRight size={13} strokeWidth={2.4} /></span></span>
+      <span className="proc2ba__before" style={{ backgroundImage: `url(${vorher})` }} aria-hidden="true" />
+      <span className="proc2ba__line"><span className="proc2ba__handle"><ArrowLeftRight size={13} strokeWidth={2.4} /></span></span>
     </span>
   )
 }
