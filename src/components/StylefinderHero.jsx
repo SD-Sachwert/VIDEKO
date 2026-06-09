@@ -67,7 +67,7 @@ function StyleCard({ active }) {
         </span>
         <span className="sfresult__badge">92%<i>Match</i></span>
       </div>
-      <div className="sfc__ctawrap"><CTAButton to="/stylefinder">Jetzt Stylefinder starten <ArrowRight size={16} strokeWidth={2} /></CTAButton></div>
+      <div className="sfc__ctawrap"><CTAButton to="/stylefinder" size="md">Jetzt Stylefinder starten <ArrowRight size={16} strokeWidth={2} /></CTAButton></div>
       <div className="sfc__micro"><span><Check size={13} strokeWidth={2.6} /> Kostenlos</span><span><Check size={13} strokeWidth={2.6} /> ca. 2 Minuten</span><span><Check size={13} strokeWidth={2.6} /> Ohne Registrierung</span></div>
     </div>
   )

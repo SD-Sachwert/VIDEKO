@@ -96,30 +96,26 @@ export default function HeroExperience() {
         <Reveal className="hx-visual" delay={0.1}>
           <div className={`hx-ba ${dragging ? 'is-dragging' : ''}`} ref={baRef} onPointerDown={onDown} onPointerMove={onMovePtr} onPointerUp={onUp} onPointerLeave={onUp} onPointerCancel={onUp} style={{ '--split': `${split}%` }}>
             <div className="hx-ba__after"><img src={afterImg} alt="Fertige VIDEKO Küche" loading="lazy" draggable={false} /></div>
-            <div className="hx-ba__before"><img src={beforeImg} alt="Leerer Raum vor der Planung" loading="lazy" draggable={false} />
-              <span className="hx-meas hx-meas--top">3,20 m</span>
-              <span className="hx-meas hx-meas--left">2,80 m</span>
-              <span className="hx-meas hx-meas--bottom">5,10 m</span>
-            </div>
+            <div className="hx-ba__before"><img src={beforeImg} alt="Leerer Raum vor der Planung" loading="lazy" draggable={false} /></div>
             <span className="hx-ba__line"><span className="hx-ba__knob"><ArrowRight size={13} strokeWidth={2.4} style={{ transform: 'rotate(180deg)' }} /><ArrowRight size={13} strokeWidth={2.4} /></span></span>
           </div>
 
           {HOTSPOTS.map((h, idx) => {
             let style
-            if (idx < 16) {
+            if (idx < 14) {
               const side = idx % 2
-              const row = Math.floor(idx / 2) // 0..7 down each side
-              const y = 0 + row * 12.4
-              const rot = [-3, 2.4, -2, 3, -1.4, 2.6, -2.2, 1.8][row] || 0
-              // weiter nach außen: negative Offsets, Karten ragen über den Bildrand hinaus
-              style = { top: `${y}%`, [side ? 'right' : 'left']: `${-6 + (row % 2) * 1.6}%`, '--r': `${rot}deg` }
+              const row = Math.floor(idx / 2) // 0..6 down each side – mehr Luft
+              const y = 1 + row * 15
+              const rot = [-3, 2.4, -2, 3, -1.4, 2.6, -2.2][row] || 0
+              // weiter nach außen: ragen über den Bildrand hinaus
+              style = { top: `${y}%`, [side ? 'right' : 'left']: `${-8 + (row % 2) * 1.6}%`, '--r': `${rot}deg` }
             } else {
-              const k = idx - 16 // 0..11 → top (0-5) & bottom (6-11) frame
-              const onTop = k < 6
-              const cols = [4, 19, 34, 49, 64, 79]
-              const left = cols[k % 6]
-              const rot = [-2.4, 2, -1.6, 2.6, -2, 1.6][k % 6]
-              style = { [onTop ? 'top' : 'bottom']: '-3%', left: `${left}%`, '--r': `${rot}deg` }
+              const k = idx - 14 // 0..13 → top (0-6) & bottom (7-13), je 7 entzerrt
+              const onTop = k < 7
+              const cols = [10, 22, 34, 46, 58, 70, 82]
+              const left = cols[k % 7]
+              const rot = [-2.4, 2, -1.6, 2.6, -2, 1.6, -1.8][k % 7]
+              style = { [onTop ? 'top' : 'bottom']: '-5%', left: `${left}%`, '--r': `${rot}deg` }
             }
             return (
             <div key={h.t} className="hx-spot" style={style}>
