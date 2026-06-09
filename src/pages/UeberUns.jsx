@@ -37,18 +37,18 @@ const VALUES = [
 ]
 
 const FOUNDERS = [
-  { name: 'Vitali', role: 'Gründer · Vertrieb & Kundenbetreuung', image: fVitali, text: 'Der, der zuhört, bevor er plant. Bei Vitali bist du Mensch, nicht Auftragsnummer.', tags: ['Vertrieb', 'Kundenkontakt', 'Angebote'] },
+  { name: 'Vitali', role: 'Gründer · Vertrieb & Kundenbetreuung', image: fVitali, text: 'Der, der zuhört, bevor er plant. Bei Vitali bist du Mensch, nicht Auftragsnummer.', tags: ['Vertrieb', 'Kontakt', 'Angebote'] },
   { name: 'Dennis', role: 'Gründer · Beratung & Marketing', image: fDennis, text: 'Denkt Küche und Marke zusammen. Holt das Beste aus Raum, Konzept und Auftritt.', tags: ['Beratung', 'Marketing', 'Konzept'] },
   { name: 'Heiko', role: 'Gründer · Technik & Umsetzung', image: fHeiko, text: 'Macht aus Plänen Realität. Aufmaß, Technik, Montage – bei Heiko sitzt jeder Millimeter.', tags: ['Technik', 'Aufmaß', 'Umsetzung'] },
 ]
 
 const TEAM = [
-  { title: 'Beratung & Planung', text: 'Die Menschen, die deine Küche mit dir denken.', image: tBeratung, pos: 'center 45%' },
-  { title: 'Marketing & Social Media', text: 'Sorgen dafür, dass man VIDEKO sieht – und versteht.', image: tMarketing, pos: 'center 50%' },
-  { title: 'Montage & Handwerk', text: 'Bauen auf, was geplant wurde. Sauber und termintreu.', image: tMontage, pos: 'center 52%' },
-  { title: 'Sachbearbeitung & Organisation', text: 'Halten im Hintergrund alle Fäden zusammen.', image: tSach, pos: 'center 50%' },
-  { title: 'Partner & Gewerke', text: 'Verlässliche Profis für alles rund um deinen Raum.', image: tPartner, pos: 'center 48%' },
-  { title: 'Service & Nachbetreuung', text: 'Bleibt erreichbar, wenn andere schon abgewunken hätten.', image: tService, pos: 'center 45%' },
+  { title: 'Beratung & Planung', text: 'Die Menschen, die deine Küche mit dir denken.', image: tBeratung, pos: 'center 26%' },
+  { title: 'Marketing & Social Media', text: 'Sorgen dafür, dass man VIDEKO sieht – und versteht.', image: tMarketing, pos: 'center 28%' },
+  { title: 'Montage & Handwerk', text: 'Bauen auf, was geplant wurde. Sauber und termintreu.', image: tMontage, pos: 'center 30%' },
+  { title: 'Sachbearbeitung & Organisation', text: 'Halten im Hintergrund alle Fäden zusammen.', image: tSach, pos: 'center 28%' },
+  { title: 'Partner & Gewerke', text: 'Verlässliche Profis für alles rund um deinen Raum.', image: tPartner, pos: 'center 28%' },
+  { title: 'Service & Nachbetreuung', text: 'Bleibt erreichbar, wenn andere schon abgewunken hätten.', image: tService, pos: 'center 26%' },
 ]
 
 const RULES = [
@@ -160,6 +160,8 @@ export default function UeberUns() {
                 <div className="tflip__inner">
                   <div className="tflip__front">
                     <span className="tflip__img" style={{ backgroundImage: `url(${t.image})`, backgroundPosition: t.pos }} aria-hidden="true" />
+                    <span className="tflip__scrim" aria-hidden="true" />
+                    <span className="tflip__title">{t.title}</span>
                     <span className="tflip__hint" aria-hidden="true"><Plus size={15} strokeWidth={2.4} /></span>
                   </div>
                   <div className="tflip__back">

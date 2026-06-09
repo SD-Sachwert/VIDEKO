@@ -35,6 +35,10 @@ const HOTSPOTS = [
   { icon: ShieldCheck, t: 'Betreuung von A–Z', d: 'Von erster Idee bis letzter Schraube.' },
   { icon: Lightbulb, t: 'Lichtplanung', d: 'Arbeitslicht, das wirklich arbeitet.' },
   { icon: Ruler, t: 'Ergonomie', d: 'Arbeitshöhe, die deinem Rücken gefällt.' },
+  { icon: Wrench, t: 'Wasserplanung', d: 'Wasser & Abfluss sauber gedacht.' },
+  { icon: Lightbulb, t: 'Akzentbeleuchtung', d: 'Licht, das auch Stimmung kann.' },
+  { icon: Layers, t: 'Rückwand & Spritzschutz', d: 'Rückwand, die was aushält.' },
+  { icon: Boxes, t: 'Ecknutzung', d: 'Jede Ecke arbeitet mit.' },
 ]
 
 const BAUSTEINE = [
@@ -102,19 +106,19 @@ export default function HeroExperience() {
 
           {HOTSPOTS.map((h, idx) => {
             let style
-            if (idx < 14) {
+            if (idx < 16) {
               const side = idx % 2
-              const row = Math.floor(idx / 2) // 0..6 down each side
-              const y = 1.5 + row * 14
-              const rot = [-3, 2.4, -2, 3, -1.4, 2.6, -2.2][row] || 0
-              style = { top: `${y}%`, [side ? 'right' : 'left']: `${0.5 + (row % 2) * 1.4}%`, '--r': `${rot}deg` }
+              const row = Math.floor(idx / 2) // 0..7 down each side
+              const y = 1 + row * 12.2
+              const rot = [-3, 2.4, -2, 3, -1.4, 2.6, -2.2, 1.8][row] || 0
+              style = { top: `${y}%`, [side ? 'right' : 'left']: `${0.5 + (row % 2) * 1.3}%`, '--r': `${rot}deg` }
             } else {
-              const k = idx - 14 // 0..9 → top (0-4) & bottom (5-9) frame
-              const onTop = k < 5
-              const cols = [8, 26, 44, 62, 80]
-              const left = cols[k % 5]
-              const rot = [-2.4, 2, -1.6, 2.6, -2][k % 5]
-              style = { [onTop ? 'top' : 'bottom']: '1.5%', left: `${left}%`, '--r': `${rot}deg` }
+              const k = idx - 16 // 0..11 → top (0-5) & bottom (6-11) frame
+              const onTop = k < 6
+              const cols = [7, 20, 33, 46, 59, 72]
+              const left = cols[k % 6]
+              const rot = [-2.4, 2, -1.6, 2.6, -2, 1.6][k % 6]
+              style = { [onTop ? 'top' : 'bottom']: '1%', left: `${left}%`, '--r': `${rot}deg` }
             }
             return (
             <div key={h.t} className="hx-spot" style={style}>

@@ -80,9 +80,9 @@ export default function StylefinderHero() {
     <section className="section section--light sfsec">
       <div className="container">
         <Reveal className="sfsec__head">
-          <span className="kicker">Dein Weg zur Traumküche</span>
-          <h2 className="lp-h2">Starte mit dem <span className="grad">Stylefinder.</span></h2>
-          <p className="lp-lead">In nur 2 Minuten zu deinem perfekten Küchenstil. Einfach, kostenlos und unverbindlich.</p>
+          <span className="kicker">Dein Einstieg</span>
+          <h2 className="lp-h2">Womit möchtest du <span className="grad">starten?</span></h2>
+          <p className="lp-lead">Inspiration sammeln, deinen Stil finden oder direkt persönlich beraten lassen – such dir deinen Weg aus.</p>
         </Reveal>
 
         <Reveal as="div" className={`sfsec__row sf-a${active}`}>

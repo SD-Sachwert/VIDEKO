@@ -5121,8 +5121,9 @@ body {
   color: var(--ink);
   position: relative;
 }
-/* global fine gold divider between consecutive light sections (Studio-style) */
-.section + .section--light::before {
+/* global fine gold divider between consecutive content sections (Studio-style) */
+.section + .section:not(.section--dark) { position: relative; }
+.section + .section:not(.section--dark)::before {
   content: "";
   position: absolute;
   top: 0;
@@ -8042,9 +8043,10 @@ body {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 22px;
+  align-items: start;
 }
+.founder .lchips { margin-bottom: 0; }
 .founder {
-  height: 100%;
   background: rgba(255, 255, 255, 0.62);
   border: 1px solid var(--line-dark);
   border-radius: 20px;
@@ -11458,6 +11460,40 @@ a.footer__contact-line:hover {
 @media (max-width: 520px) { .teamflip { grid-template-columns: 1fr; grid-auto-rows: 210px; } .tflip.is-big { grid-column: span 1; } }
 @media (prefers-reduced-motion: reduce) { .tflip__inner { transition: none; } }
 
+/* === MATERIALS LAB — coverflow carousel (Inspiration) === */
+.matlab__grid { display: grid; grid-template-columns: 0.92fr 1.08fr; gap: 44px; align-items: center; }
+.matlab__title { font-family: var(--serif); font-size: clamp(1.9rem, 3.4vw, 2.8rem); line-height: 1.1; color: var(--ink); margin: 10px 0 0; }
+.matlab__lead { font-size: 1rem; line-height: 1.6; color: var(--ink-soft); margin: 16px 0 22px; max-width: 420px; }
+.matlab__active { display: inline-flex; align-items: center; gap: 14px; padding: 12px 18px; border-radius: 16px; background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(201, 160, 80, 0.3); box-shadow: 0 18px 40px -30px rgba(120, 90, 40, 0.4); }
+.matlab__active-n { font-family: var(--serif); font-size: 1.7rem; color: var(--bronze); line-height: 1; }
+.matlab__active-b { display: flex; flex-direction: column; }
+.matlab__active-t { font-family: var(--serif); font-size: 1.15rem; color: var(--ink); }
+.matlab__active-d { font-size: 0.82rem; color: var(--ink-soft); }
+.matlab__cta { display: inline-flex; align-items: center; gap: 9px; margin-top: 24px; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; color: var(--bronze); text-decoration: none; }
+.matlab__cta svg { transition: transform 0.3s ease; }
+.matlab__cta:hover svg { transform: translateX(4px); }
+.matlab__stagewrap { min-width: 0; }
+.matlab__stage { position: relative; height: 400px; perspective: 1500px; }
+.matcard3d { position: absolute; top: 50%; left: 50%; width: 252px; height: 332px; margin: 0; padding: 0; border: none; background: none; cursor: pointer; border-radius: 22px; overflow: hidden; box-shadow: 0 44px 80px -40px rgba(40, 30, 15, 0.6); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease, box-shadow 0.4s ease; transform-style: preserve-3d; }
+.matcard3d img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.matcard3d.is-active { box-shadow: 0 54px 100px -38px rgba(120, 90, 40, 0.6); }
+.matcard3d__cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 16px 18px; display: flex; flex-direction: column; gap: 2px; background: linear-gradient(to top, rgba(8, 8, 7, 0.82), transparent); color: var(--cream); opacity: 0; transition: opacity 0.4s ease; }
+.matcard3d.is-active .matcard3d__cap { opacity: 1; }
+.matcard3d__cap b { font-family: var(--serif); font-size: 1.2rem; }
+.matcard3d__cap span { font-size: 0.8rem; color: rgba(244, 239, 228, 0.82); }
+.matlab__nav { display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: 18px; }
+.matlab__arrow { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; cursor: pointer; color: var(--ink); background: rgba(255, 255, 255, 0.7); border: 1px solid var(--line-dark); transition: background 0.25s ease, transform 0.25s ease; }
+.matlab__arrow:hover { background: var(--grad-gold); color: var(--soft-black); transform: translateY(-2px); }
+.matlab__dots { display: flex; gap: 8px; }
+.matlab__dot { width: 8px; height: 8px; border-radius: 50%; border: none; padding: 0; cursor: pointer; background: rgba(120, 95, 45, 0.28); transition: background 0.25s ease, transform 0.25s ease; }
+.matlab__dot.is-active { background: var(--grad-gold); transform: scale(1.3); }
+@media (max-width: 900px) {
+  .matlab__grid { grid-template-columns: 1fr; gap: 24px; }
+  .matlab__stage { height: 340px; }
+  .matcard3d { width: 210px; height: 280px; }
+}
+@media (prefers-reduced-motion: reduce) { .matcard3d { transition: none; } }
+
 /* === PROCESS wave section (6 staggered cards on a gold path) === */
 .proc2__head { text-align: center; max-width: 680px; margin: 0 auto 52px; }
 .proc2__title { font-family: var(--serif); font-size: clamp(1.8rem, 3.2vw, 2.7rem); line-height: 1.15; color: var(--ink); margin-top: 8px; }
@@ -11472,15 +11508,17 @@ a.footer__contact-line:hover {
 .proc2card__node { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 15px; height: 15px; border-radius: 50%; background: var(--grad-gold); box-shadow: 0 0 0 5px rgba(216, 180, 106, 0.2), 0 4px 12px -3px rgba(150, 110, 40, 0.6); }
 .proc2card__node::after { content: ""; position: absolute; inset: 4px; border-radius: 50%; background: rgba(255, 255, 255, 0.85); }
 .proc2card__top { display: flex; align-items: center; justify-content: space-between; }
-.proc2card__ic { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; color: var(--bronze); background: rgba(201, 160, 80, 0.12); border: 1px solid rgba(201, 160, 80, 0.25); }
+.proc2card__ic { width: 46px; height: 46px; border-radius: 13px; display: grid; place-items: center; color: var(--bronze); background: rgba(201, 160, 80, 0.14); border: 1px solid rgba(201, 160, 80, 0.3); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6); }
 .proc2card__n { font-family: var(--serif); font-size: 1.4rem; color: var(--bronze); }
 .proc2card__t { font-family: var(--serif); font-size: 1.04rem; color: var(--ink); line-height: 1.2; }
 .proc2card__d { font-size: 0.8rem; line-height: 1.45; color: var(--ink-soft); }
 .proc2card__media { display: block; height: 100px; border-radius: 12px; background-size: cover; background-position: center; margin-top: 8px; }
-.proc2ba { position: relative; display: block; height: 100px; border-radius: 12px; overflow: hidden; margin-top: 8px; }
+.proc2ba { position: relative; display: block; height: 100px; border-radius: 12px; overflow: hidden; margin-top: 8px; cursor: ew-resize; touch-action: none; -webkit-user-select: none; user-select: none; }
 .proc2ba__after, .proc2ba__before { position: absolute; inset: 0; background-size: cover; background-position: center; }
 .proc2ba__before { width: 50%; }
 .proc2ba__line { position: absolute; top: 0; bottom: 0; left: 50%; transform: translateX(-50%); width: 2px; background: var(--gold-bright); box-shadow: 0 0 10px rgba(214, 176, 95, 0.7); }
+.proc2ba__handle { transition: transform 0.2s ease; }
+.proc2ba.is-drag .proc2ba__handle { transform: translate(-50%, -50%) scale(1.12); }
 .proc2ba__handle { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 24px; height: 24px; border-radius: 50%; background: var(--grad-gold); color: var(--soft-black); display: grid; place-items: center; box-shadow: 0 4px 12px -4px rgba(0, 0, 0, 0.5); }
 @media (max-width: 900px) {
   .proc2__wave { display: none; }

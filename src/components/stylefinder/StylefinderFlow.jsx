@@ -188,7 +188,7 @@ export default function StylefinderFlow() {
           <div className="sf-result__head">
             <span className="kicker kicker--gold">Dein Ergebnis</span>
             <h2 className="sf-result__bighead">Treffer. <span className="grad">Das bist ziemlich genau du.</span></h2>
-            <p className="sf-result__note">Bevor du wieder 47 Küchenbilder screenshottest: Hier ist deine erste, ehrliche Einschätzung – schwarz auf creme.</p>
+            <p className="sf-result__note">Bevor du wieder 47 Screenshots in einem Ordner namens „Küche_final_final2" sammelst: Hier ist deine erste, ehrliche Einschätzung – schick sie uns lieber direkt.</p>
           </div>
           <div className="sf-result__card">
             <div className="sf-result__media"><img src={R.img} alt={resultStyle} />

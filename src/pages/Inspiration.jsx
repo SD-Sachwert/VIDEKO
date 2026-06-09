@@ -9,6 +9,7 @@ import Reveal from '../components/Reveal.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
 import BeforeAfter from '../components/BeforeAfter.jsx'
+import MaterialsLab from '../components/MaterialsLab.jsx'
 
 import heroImg from '../assets/images/inspiration/insp-hero-dark.png'
 import explodeImg from '../assets/images/inspiration/insp-exploding-light.png'
@@ -346,6 +347,9 @@ export default function Inspiration() {
           </div>
         </div>
       </section>
+
+      {/* MATERIALS LAB — Coverflow (zusätzliche Vergleichs-Sektion) */}
+      <MaterialsLab />
 
       {/* FINALER CTA / DUNKLER ABSCHLUSS — 3 Wege */}
       <section className="section section--dark insp-convert">

@@ -102,35 +102,7 @@ export default function Home() {
     <div className="leist-page home-page">
       <Hero />
 
-      {/* 0 — EINSTIEG: Womit möchtest du starten? (organische Karten, primärer Einstieg) */}
-      <section className="section section--light lp-ways-sec">
-        <div className="container">
-          <div className="lp-ways-head">
-            <Reveal>
-              <span className="kicker">Dein Einstieg</span>
-              <h2 className="lp-h2">Womit möchtest du <span className="grad">starten?</span></h2>
-              <p className="lp-lead">Such dir deinen Weg aus – Inspiration sammeln, Stil finden oder direkt persönlich beraten lassen.</p>
-            </Reveal>
-          </div>
-          <div className="lp-ways lp-ways--organic">
-            {WAYS.map((c, i) => (
-              <Reveal key={c.n} delay={i * 0.1}>
-                <Link to={c.to} className="lpway2">
-                  <span className="lpway2__blob"><img src={c.img} alt={c.title} loading="lazy" /></span>
-                  <span className="lpway2__cap">
-                    <span className="lpway2__n">{c.n}</span>
-                    <span className="lpway2__title">{c.title}</span>
-                    <span className="lpway2__text">{c.text}</span>
-                    <span className="lpway2__cta">{c.cta} <ArrowRight size={15} strokeWidth={2} /></span>
-                  </span>
-                </Link>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 0b — STYLEFINDER-EINSTIEG (3 gleich hohe Felder, mittlere aktiv) */}
+      {/* 0 — EINSTIEG: Womit möchtest du starten? (interaktive 3 Felder, primärer Einstieg) */}
       <StylefinderHero />
 
       {/* 1 — SLIDER / RAUMUMBAU (Before/After + Post-its) */}
@@ -155,30 +127,6 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="lp-sf">
-            <Reveal className="lp-sf__copy">
-              <span className="kicker">Stylefinder</span>
-              <h3 className="lp-h2">Dein Stil. Deine Küche. <span className="grad">In nur 2 Minuten.</span></h3>
-              <p className="lp-lead">Beantworte ein paar Fragen und entdecke deine persönliche Küchenrichtung – verständlich und ohne Verkaufsdruck.</p>
-              <CTAButton to="/stylefinder">Stylefinder starten</CTAButton>
-            </Reveal>
-            <Reveal className="lp-sf__visual" delay={0.12}>
-              <div className="lp-tablet">
-                <div className="lp-tablet__screen">
-                  <span className="lp-tablet__q">Welcher Stil begeistert dich?</span>
-                  <span className="lp-tablet__grid" style={{ backgroundImage: `url(${sfResult})` }} aria-hidden="true" />
-                </div>
-              </div>
-              <span className="lp-sf__fly lp-sf__fly--1" style={{ backgroundImage: `url(${sfCard1})` }} aria-hidden="true" />
-              <span className="lp-sf__fly lp-sf__fly--2" style={{ backgroundImage: `url(${sfCard2})` }} aria-hidden="true" />
-              <span className="lp-sf__fly lp-sf__fly--3" style={{ backgroundImage: `url(${sfCard3})` }} aria-hidden="true" />
-              <span className="lp-sf__result">
-                <span className="lp-sf__result-k">Dein Ergebnis</span>
-                <span className="lp-sf__result-t">Modern Luxury</span>
-                <span className="lp-sf__result-m">92% Match</span>
-              </span>
-            </Reveal>
-          </div>
         </div>
       </section>
 
