@@ -43,7 +43,7 @@ export default function MaterialsLab() {
   }, [paused, active, n])
 
   return (
-    <section className="section section--dark matlab">
+    <section className="section section--light matlab">
       <div className="container matlab__grid">
         <Reveal className="matlab__intro">
           <span className="kicker">Materials Lab</span>
@@ -63,8 +63,9 @@ export default function MaterialsLab() {
               const isActive = d === 0
               const show = Math.abs(d) <= 2
               const style = {
-                transform: `translate(-50%, -50%) translateX(${d * 54}%) scale(${isActive ? 1 : Math.abs(d) === 1 ? 0.82 : 0.66}) rotateY(${d * -14}deg)`,
-                opacity: show ? (isActive ? 1 : Math.abs(d) === 1 ? 0.6 : 0.28) : 0,
+                transform: `translate(-50%, -50%) translateX(${d * 50}%) scale(${isActive ? 1 : Math.abs(d) === 1 ? 0.8 : 0.62}) rotateY(${d * -13}deg)`,
+                opacity: show ? (isActive ? 1 : Math.abs(d) === 1 ? 0.85 : 0.5) : 0,
+                filter: isActive ? 'none' : Math.abs(d) === 1 ? 'blur(0.7px)' : 'blur(1.9px)',
                 zIndex: isActive ? 20 : 10 - Math.abs(d),
                 pointerEvents: show ? 'auto' : 'none',
               }
