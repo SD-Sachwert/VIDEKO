@@ -25,7 +25,7 @@ const HOTSPOTS = [
 ]
 
 export default function ExplodingKitchenModal() {
-  const [open, setOpen] = useState(true) // false = geschlossen, true = geöffnet
+  const [open, setOpen] = useState(false) // false = geschlossen/normal (Einstieg), true = geöffnet (Wow)
   const [active, setActive] = useState(null) // hotspot index or null
 
   useEffect(() => {

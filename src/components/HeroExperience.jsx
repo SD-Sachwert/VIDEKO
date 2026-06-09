@@ -93,12 +93,19 @@ export default function HeroExperience() {
           </div>
 
           {HOTSPOTS.map((h, idx) => {
-            const side = idx % 2
-            const row = Math.floor(idx / 2)
-            const y = 1 + row * 13.6
-            const xj = (row % 3) * 1.7
-            const rot = [-3, 2.4, -2, 3, -1.4, 2.6, -2.6, 1.6][row] || 0
-            const style = { top: `${y}%`, [side ? 'right' : 'left']: `${0.5 + xj}%`, '--r': `${rot}deg` }
+            let style
+            if (idx < 12) {
+              const side = idx % 2
+              const row = Math.floor(idx / 2) // 0..5 down each side
+              const y = 2 + row * 16
+              const rot = [-3, 2.4, -2, 3, -1.4, 2.6][row] || 0
+              style = { top: `${y}%`, [side ? 'right' : 'left']: `${0.5 + (row % 2) * 1.4}%`, '--r': `${rot}deg` }
+            } else {
+              const k = idx - 12 // 0..3 → top/bottom frame
+              const onTop = k < 2
+              const left = [33, 57][k % 2]
+              style = { [onTop ? 'top' : 'bottom']: '1.5%', left: `${left}%`, '--r': `${k % 2 ? 2.5 : -2.5}deg` }
+            }
             return (
             <div key={h.t} className="hx-spot" style={style}>
               <span className="hx-spot__ic"><h.icon size={15} strokeWidth={1.8} /></span>
@@ -107,21 +114,6 @@ export default function HeroExperience() {
             )
           })}
         </Reveal>
-      </div>
-
-      <div className="container hx-entries">
-        {ENTRIES.map((c, i) => (
-          <Reveal key={c.n} delay={i * 0.08}>
-            <Link to={c.to} className="hx-card">
-              <span className="hx-card__media"><img src={c.img} alt="" loading="lazy" /><span className="hx-card__n">{c.n}</span></span>
-              <span className="hx-card__body">
-                <span className="hx-card__title">{c.title}</span>
-                <span className="hx-card__text">{c.text}</span>
-                <span className="hx-card__cta">{c.cta} <ArrowRight size={15} strokeWidth={2} /></span>
-              </span>
-            </Link>
-          </Reveal>
-        ))}
       </div>
 
       <div className="container hx-trust">

@@ -10,6 +10,8 @@ import SectionHeader from '../components/SectionHeader.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import ExplodingKitchenModal from '../components/ExplodingKitchenModal.jsx'
 import HeroExperience from '../components/HeroExperience.jsx'
+import StylefinderHero from '../components/StylefinderHero.jsx'
+import ProcessSection from '../components/ProcessSection.jsx'
 import verwandleVideo from '../assets/images/home/verwandle-raum.mp4'
 
 import wayInsp from '../assets/images/home/way-organic-1.png'
@@ -100,17 +102,17 @@ export default function Home() {
     <div className="leist-page home-page">
       <Hero />
 
-      {/* 0 — HERO EXPERIENCE (Before/After + Einstiegskarten + Trust) */}
-      <HeroExperience />
+      {/* 0a — STYLEFINDER-EINSTIEG (3 Karten, mittlere aktiv) */}
+      <StylefinderHero />
 
-      {/* 1 — DREI WEGE */}
+      {/* 0 — EINSTIEG: Womit möchtest du starten? (organische Karten) */}
       <section className="section section--light lp-ways-sec">
         <div className="container">
           <div className="lp-ways-head">
             <Reveal>
               <span className="kicker">Dein Einstieg</span>
-              <h2 className="lp-h2">Dein Weg zur Küche, <span className="grad">die zu dir passt.</span></h2>
-              <p className="lp-lead">Drei Wege. Ein Ziel: deine perfekte Küche.</p>
+              <h2 className="lp-h2">Womit möchtest du <span className="grad">starten?</span></h2>
+              <p className="lp-lead">Such dir deinen Weg aus – Inspiration sammeln, Stil finden oder direkt persönlich beraten lassen.</p>
             </Reveal>
           </div>
           <div className="lp-ways lp-ways--organic">
@@ -130,6 +132,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* 1 — SLIDER / RAUMUMBAU (Before/After + Post-its) */}
+      <HeroExperience />
 
       {/* 2 — EXPLODING KITCHEN */}
       <ExplodingKitchenModal />
@@ -223,24 +228,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 6 — PROZESS */}
-      <section className="section section--light lp-process-sec">
-        <div className="container">
-          <div className="lp-process-head">
-            <Reveal><span className="kicker">Unser Prozess</span><h2 className="lp-h2">Unser Weg zu <span className="grad">deiner Traumküche.</span></h2><p className="lp-lead">Klar, strukturiert, persönlich.</p></Reveal>
-          </div>
-          <div className="lp-process">
-            {PROCESS.map((p, i) => (
-              <Reveal key={p.n} className="lpproc" delay={i * 0.07}>
-                <span className="lpproc__node"><img src={p.img} alt="" loading="lazy" /></span>
-                <span className="lpproc__n">{p.n}</span>
-                <span className="lpproc__title">{p.title}</span>
-                <span className="lpproc__text">{p.text}</span>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* 6 — PROZESS (neue Wellen-Sektion) */}
+      <ProcessSection />
 
       {/* 7 — TEAM */}
       <section className="section section--light lp-team-sec">
