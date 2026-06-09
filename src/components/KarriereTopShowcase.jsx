@@ -51,7 +51,7 @@ export default function KarriereTopShowcase() {
               const show = Math.abs(d) <= 2
               const style = {
                 transform: `translate(-50%, -50%) translateX(${d * 58}%) scale(${isActive ? 1 : Math.abs(d) === 1 ? 0.82 : 0.64}) rotateY(${d * -12}deg)`,
-                opacity: show ? (isActive ? 1 : Math.abs(d) === 1 ? 0.62 : 0.3) : 0,
+                opacity: show ? (isActive ? 1 : Math.abs(d) === 1 ? 0.9 : 0.7) : 0,
                 zIndex: isActive ? 20 : 10 - Math.abs(d),
                 pointerEvents: show ? 'auto' : 'none',
               }

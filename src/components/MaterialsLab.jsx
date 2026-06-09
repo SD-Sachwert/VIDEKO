@@ -43,7 +43,7 @@ export default function MaterialsLab() {
   }, [paused, active, n])
 
   return (
-    <section className="section section--light matlab">
+    <section className="section section--dark matlab">
       <div className="container matlab__grid">
         <Reveal className="matlab__intro">
           <span className="kicker">Materials Lab</span>
