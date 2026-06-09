@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  Sparkles, Check, ArrowRight, ArrowLeft, Lock, Save, RefreshCw, Heart,
+  Sparkles, Check, ArrowRight, ArrowLeft, Lock, Save, RefreshCw, Heart, Printer, Send, Paperclip, Sparkle,
   Users, PartyPopper, ChefHat, Archive, Wind, LayoutGrid, Zap, Droplets, Leaf, Sun, Footprints, Gem, Wallet,
   Maximize, Baby, CircleDot, Cpu, Package, Coffee, Wine, PiggyBank, Coins, BadgeEuro, HelpCircle,
 } from 'lucide-react'
@@ -107,6 +107,9 @@ export default function StylefinderFlow() {
   const [maxReached, setMaxReached] = useState(0)
   const [a, setA] = useState(EMPTY_ANSWERS)
   const [saved, setSaved] = useState(false)
+  const [notes, setNotes] = useState('')
+  const [files, setFiles] = useState([])
+  const [sent, setSent] = useState(false)
   const [liked, setLiked] = useState(() => new Set())
   const toggleLike = (e, label) => { e.stopPropagation(); setLiked((s) => { const n = new Set(s); n.has(label) ? n.delete(label) : n.add(label); return n }) }
   const flowTop = useRef(null)
@@ -142,6 +145,26 @@ export default function StylefinderFlow() {
   const back = () => { if (step > 0) { setStep(step - 1); scrollTop() } }
   const restart = () => { setA(EMPTY_ANSWERS); setStep(0); setMaxReached(0); scrollTop() }
   const saveProgress = () => { try { localStorage.setItem('videko_stylefinder', JSON.stringify(a)) } catch { /* ignore */ } setSaved(true); setTimeout(() => setSaved(false), 2000) }
+  const printResult = () => { if (typeof window !== 'undefined') window.print() }
+  const sendToVideko = () => {
+    const lines = [
+      `Mein Ergebnis aus dem VIDEKO Stylefinder: ${resultStyle}`,
+      `Stil-Charakter: ${R.char}`,
+      '',
+      `Farbwelten: ${a.farbwelten.slice(0, 3).join(', ') || '—'}`,
+      `Materialien: ${a.materials.slice(0, 4).join(', ') || '—'}`,
+      `Funktion: ${a.funktion.slice(0, 3).join(', ') || '—'}`,
+      `Budgetrahmen: ${a.budget || 'noch offen'}`,
+      '',
+      notes ? `Meine Wünsche / Hinweise:\n${notes}` : '',
+      files.length ? `Anhänge (bitte im Mailprogramm anhängen): ${files.map((f) => f.name).join(', ')}` : '',
+      '',
+      'Bitte meldet euch für eine persönliche Beratung. Danke!',
+    ].filter((l) => l !== '')
+    const url = `mailto:info@videko-kuechen.de?subject=${encodeURIComponent(`Stylefinder-Ergebnis: ${resultStyle}`)}&body=${encodeURIComponent(lines.join('\n'))}`
+    if (typeof window !== 'undefined') window.location.href = url
+    setSent(true); setTimeout(() => setSent(false), 4000)
+  }
 
   const resultStyle = computeResultStyle(a)
   const R = RESULT[resultStyle]
@@ -164,13 +187,17 @@ export default function StylefinderFlow() {
         <div className="sf-result">
           <div className="sf-result__head">
             <span className="kicker kicker--gold">Dein Ergebnis</span>
-            <p className="sf-result__note">Wir haben deinen Stil gefunden – und der passt ziemlich gut zu dir.</p>
+            <h2 className="sf-result__bighead">Treffer. <span className="grad">Das bist ziemlich genau du.</span></h2>
+            <p className="sf-result__note">Bevor du wieder 47 Küchenbilder screenshottest: Hier ist deine erste, ehrliche Einschätzung – schwarz auf creme.</p>
           </div>
           <div className="sf-result__card">
-            <div className="sf-result__media"><img src={R.img} alt={resultStyle} /></div>
+            <div className="sf-result__media"><img src={R.img} alt={resultStyle} />
+              <span className="sf-result__match"><b>Dein Stil</b><span>{resultStyle}</span></span>
+            </div>
             <div className="sf-result__body">
               <span className="sf-result__type">{resultStyle}</span>
               <p className="sf-result__blurb">{R.char}</p>
+              <p className="sf-result__why"><Sparkle size={15} strokeWidth={2} /> Warum das passt: Du hast {a.farbwelten[0] ? `bei den Farben „${a.farbwelten[0]}"` : 'klare Farbtendenzen'} gewählt, legst Wert auf {a.funktion[0] || 'durchdachte Funktion'} – und genau dafür ist dieser Stil gemacht. Kein Zufall, sondern dein Bauchgefühl mit Plan.</p>
               <div className="sf-tags">{R.tags.map((t) => <span key={t}>{t}</span>)}</div>
               <ul className="sf-result__facts">
                 <li><span>Farben</span><b>{a.farbwelten.slice(0, 2).join(', ') || '—'}</b></li>
@@ -182,9 +209,24 @@ export default function StylefinderFlow() {
                 {R.mats.map((m, i) => <span key={i} className="sf-result__swatch" style={{ backgroundImage: `url(${m})` }} />)}
                 <span className="sf-result__matlabel">Empfohlene Oberflächen</span>
               </div>
-              <div className="sf-result__cta">
-                <CTAButton to="/beratung">Termin vereinbaren</CTAButton>
-                <CTAButton to="/beratung" variant="dark">Persönliche Beratung anfragen</CTAButton>
+
+              <div className="sf-send">
+                <span className="sf-send__head">Wünsche, Notizen oder Anhänge? Pack alles dazu.</span>
+                <textarea className="sf-send__notes" rows={3} placeholder="z. B. Raummaße, Lieblingsdetails, Wunsch nach Kochinsel – oder was dir sonst wichtig ist …" value={notes} onChange={(e) => setNotes(e.target.value)} />
+                <label className="sf-send__file">
+                  <Paperclip size={15} strokeWidth={2} /> {files.length ? `${files.length} Datei(en) ausgewählt` : 'Grundriss oder Inspirationsbild anhängen'}
+                  <input type="file" multiple accept="image/*,.pdf" onChange={(e) => setFiles(Array.from(e.target.files || []))} hidden />
+                </label>
+              </div>
+
+              <div className="sf-result__actions">
+                <button type="button" className="sf-actbtn" onClick={printResult}><Printer size={16} strokeWidth={2} /> Ergebnis drucken</button>
+                <button type="button" className="sf-actbtn sf-actbtn--gold" onClick={sendToVideko}><Send size={16} strokeWidth={2} /> {sent ? 'Mail geöffnet …' : 'An VIDEKO senden'}</button>
+              </div>
+
+              <div className="sf-result__next">
+                <span className="sf-result__nextlabel">Dein nächster Schritt</span>
+                <CTAButton to="/beratung">Daraus einen echten Plan machen <ArrowRight size={16} strokeWidth={2} /></CTAButton>
               </div>
               <button type="button" className="sf-link sf-restart" onClick={restart}><RefreshCw size={15} /> Neu starten</button>
             </div>

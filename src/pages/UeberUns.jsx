@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import {
-  Handshake, Heart, Gem, Lightbulb, Smile, Wrench, ArrowRight, MapPin,
+  Handshake, Heart, Gem, Lightbulb, Smile, Wrench, ArrowRight, MapPin, Plus,
   ShieldCheck, Zap, Ruler, UserCheck, BadgeCheck, Ban, Layers, MessageSquare,
 } from 'lucide-react'
 
@@ -16,10 +16,12 @@ import whyImg from '../assets/images/ueber-uns/02_why_videko_beratungsszene.png'
 import fVitali from '../assets/images/ueber-uns/05_founder_vitali_placeholder.png'
 import fDennis from '../assets/images/ueber-uns/05_founder_dennis_placeholder.png'
 import fHeiko from '../assets/images/ueber-uns/05_founder_heiko_placeholder.png'
-import tBeratung from '../assets/images/ueber-uns/06_team_beratung_und_planung.png'
-import tMarketing from '../assets/images/ueber-uns/07_team_marketing_und_social_media.png'
-import tMontage from '../assets/images/ueber-uns/08_team_montage_und_handwerk.png'
-import tOrga from '../assets/images/ueber-uns/09_team_organisation_und_partner.png'
+import tBeratung from '../assets/images/ueber-uns/team-neu/t1.png'
+import tMarketing from '../assets/images/ueber-uns/team-neu/t2.png'
+import tMontage from '../assets/images/ueber-uns/team-neu/t3.png'
+import tSach from '../assets/images/ueber-uns/team-neu/t4.png'
+import tPartner from '../assets/images/ueber-uns/team-neu/t5.png'
+import tService from '../assets/images/ueber-uns/team-neu/t6.png'
 import momentImg from '../assets/images/ueber-uns/10_persoenlicher_kundenmoment.png'
 import karteImg from '../assets/images/ueber-uns/karte.png'
 
@@ -35,18 +37,18 @@ const VALUES = [
 ]
 
 const FOUNDERS = [
-  { name: 'Vitali', role: 'Gründer · Beratung & Vertrieb', image: fVitali, text: 'Der, der zuhört, bevor er plant. Bei Vitali bist du Mensch, nicht Auftragsnummer.', tags: ['Beratung', 'Vertrieb', 'Kundenkontakt'] },
-  { name: 'Dennis', role: 'Gründer · Planung & Marketing', image: fDennis, text: 'Denkt Küche und Marke zusammen. Holt das Beste aus Raum, Konzept und Auftritt.', tags: ['Planung', 'Marketing', 'Konzept'] },
+  { name: 'Vitali', role: 'Gründer · Vertrieb & Kundenbetreuung', image: fVitali, text: 'Der, der zuhört, bevor er plant. Bei Vitali bist du Mensch, nicht Auftragsnummer.', tags: ['Vertrieb', 'Kundenkontakt', 'Angebote'] },
+  { name: 'Dennis', role: 'Gründer · Beratung & Marketing', image: fDennis, text: 'Denkt Küche und Marke zusammen. Holt das Beste aus Raum, Konzept und Auftritt.', tags: ['Beratung', 'Marketing', 'Konzept'] },
   { name: 'Heiko', role: 'Gründer · Technik & Umsetzung', image: fHeiko, text: 'Macht aus Plänen Realität. Aufmaß, Technik, Montage – bei Heiko sitzt jeder Millimeter.', tags: ['Technik', 'Aufmaß', 'Umsetzung'] },
 ]
 
 const TEAM = [
-  { title: 'Beratung & Planung', text: 'Die Menschen, die deine Küche mit dir denken.', image: tBeratung },
-  { title: 'Marketing & Social Media', text: 'Sorgen dafür, dass man VIDEKO sieht – und versteht.', image: tMarketing },
-  { title: 'Montage & Handwerk', text: 'Bauen auf, was geplant wurde. Sauber und termintreu.', image: tMontage },
-  { title: 'Sachbearbeitung & Organisation', text: 'Halten im Hintergrund alle Fäden zusammen.', image: tOrga },
-  { title: 'Partner & Gewerke', text: 'Verlässliche Profis für alles rund um deinen Raum.', image: tOrga },
-  { title: 'Service & Nachbetreuung', text: 'Bleibt erreichbar, wenn andere schon abgewunken hätten.', image: momentImg },
+  { title: 'Beratung & Planung', text: 'Die Menschen, die deine Küche mit dir denken.', image: tBeratung, pos: 'center 45%' },
+  { title: 'Marketing & Social Media', text: 'Sorgen dafür, dass man VIDEKO sieht – und versteht.', image: tMarketing, pos: 'center 50%' },
+  { title: 'Montage & Handwerk', text: 'Bauen auf, was geplant wurde. Sauber und termintreu.', image: tMontage, pos: 'center 52%' },
+  { title: 'Sachbearbeitung & Organisation', text: 'Halten im Hintergrund alle Fäden zusammen.', image: tSach, pos: 'center 50%' },
+  { title: 'Partner & Gewerke', text: 'Verlässliche Profis für alles rund um deinen Raum.', image: tPartner, pos: 'center 48%' },
+  { title: 'Service & Nachbetreuung', text: 'Bleibt erreichbar, wenn andere schon abgewunken hätten.', image: tService, pos: 'center 45%' },
 ]
 
 const RULES = [
@@ -129,7 +131,7 @@ export default function UeberUns() {
       {/* KÖPFE HINTER VIDEKO */}
       <section className="section about-founders" id="koepfe">
         <div className="container">
-          <SectionHeader align="center" kicker="Die Köpfe hinter VIDEKO" title="Drei Gründer, eine Haltung." lead="Echte Menschen, keine Hochglanz-Maske. (Fotos folgen – hier siehst du noch Platzhalter.)" />
+          <SectionHeader align="center" kicker="Die Köpfe hinter VIDEKO" title="Drei Gründer, eine Haltung." lead="Echte Menschen, echte Gesichter – kein Stockfoto-Lächeln, sondern die, mit denen du wirklich planst." />
           <div className="founder-grid">
             {FOUNDERS.map((f, i) => (
               <Reveal key={f.name} delay={i * 0.08}>
@@ -157,9 +159,8 @@ export default function UeberUns() {
               <Reveal key={t.title} as="div" className="tflip" delay={(i % 3) * 0.06} tabIndex={0} role="button" aria-label={`${t.title} – Details`}>
                 <div className="tflip__inner">
                   <div className="tflip__front">
-                    <span className="tflip__img" style={{ backgroundImage: `url(${t.image})` }} aria-hidden="true" />
-                    <span className="tflip__scrim" aria-hidden="true" />
-                    <span className="tflip__title">{t.title}</span>
+                    <span className="tflip__img" style={{ backgroundImage: `url(${t.image})`, backgroundPosition: t.pos }} aria-hidden="true" />
+                    <span className="tflip__hint" aria-hidden="true"><Plus size={15} strokeWidth={2.4} /></span>
                   </div>
                   <div className="tflip__back">
                     <span className="tflip__bt">{t.title}</span>

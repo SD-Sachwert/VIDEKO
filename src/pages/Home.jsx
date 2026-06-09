@@ -102,10 +102,7 @@ export default function Home() {
     <div className="leist-page home-page">
       <Hero />
 
-      {/* 0a — STYLEFINDER-EINSTIEG (3 Karten, mittlere aktiv) */}
-      <StylefinderHero />
-
-      {/* 0 — EINSTIEG: Womit möchtest du starten? (organische Karten) */}
+      {/* 0 — EINSTIEG: Womit möchtest du starten? (organische Karten, primärer Einstieg) */}
       <section className="section section--light lp-ways-sec">
         <div className="container">
           <div className="lp-ways-head">
@@ -132,6 +129,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* 0b — STYLEFINDER-EINSTIEG (3 gleich hohe Felder, mittlere aktiv) */}
+      <StylefinderHero />
 
       {/* 1 — SLIDER / RAUMUMBAU (Before/After + Post-its) */}
       <HeroExperience />

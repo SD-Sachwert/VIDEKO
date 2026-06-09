@@ -12,21 +12,29 @@ import cardBer from '../assets/images/home-hero/card-beratung.png'
 
 const HOTSPOTS = [
   { icon: Layers, t: 'Materialkonzept', d: 'Oberflächen, die zum Alltag passen.' },
-  { icon: Boxes, t: 'Stauraumplanung', d: 'Mehr Platz für das, was zählt.' },
-  { icon: Lightbulb, t: 'Lichtkonzept', d: 'Stimmung schaffen, Funktion betonen.' },
+  { icon: Boxes, t: 'Stauraumplanung', d: 'Stauraum ist wie WLAN – fehlt erst auf, wenn’s nervt.' },
+  { icon: Lightbulb, t: 'Lichtkonzept', d: 'Kein Funzel-Drama über der Spüle.' },
   { icon: Cpu, t: 'Geräteintegration', d: 'Technik da, wo sie Sinn macht.' },
   { icon: Workflow, t: 'Ablaufplanung', d: 'Kein Halbmarathon beim Kochen.' },
   { icon: Ruler, t: 'Präzise Montage', d: 'Millimetergenau. Sauber. Verlässlich.' },
   { icon: Sparkles, t: 'Raumwirkung', d: 'Aus Raum wird Lieblingsplatz.' },
   { icon: UserCheck, t: 'Persönliche Planung', d: 'Keine Lösung von der Stange.' },
-  { icon: Gem, t: 'Sitzplatzlösung', d: 'Wohnen, kochen, leben zusammen gedacht.' },
+  { icon: Gem, t: 'Sitzplatzlösung', d: 'Wohnen, kochen, leben – zusammen gedacht.' },
   { icon: PencilRuler, t: 'Wand- & Deckenkonzept', d: 'Licht, Linien, Flächen und Ruhe.' },
   { icon: Ruler, t: 'Maßarbeit', d: 'Millimetergenau statt „passt schon".' },
   { icon: Workflow, t: 'Gewerke-Koordination', d: 'Wir steuern, du entspannst.' },
   { icon: Sparkles, t: 'Design + Funktion', d: 'Schön reicht nicht – es muss laufen.' },
   { icon: Cpu, t: 'Elektroplanung', d: 'Strom da, wo du ihn brauchst.' },
   { icon: Wrench, t: 'Komplettumbau', d: 'Wenn nötig, denken wir den ganzen Raum.' },
-  { icon: ShieldCheck, t: 'Nachbetreuung & Service', d: 'Erreichbar, auch nach der Montage.' },
+  { icon: ShieldCheck, t: 'Nachbetreuung', d: 'Erreichbar, auch nach der Montage.' },
+  { icon: Layers, t: 'Raumkonzept', d: 'Wir denken den Raum, nicht nur Schränke.' },
+  { icon: Gem, t: 'Materialwahl', d: 'Anfassen erlaubt – Bildschirm lecken nicht.' },
+  { icon: Wrench, t: 'Anschlussplanung', d: 'Wasser & Strom dort, wo’s später passt.' },
+  { icon: PencilRuler, t: 'Raumöffnung', d: 'Wand im Weg? Reden wir drüber.' },
+  { icon: Workflow, t: 'Handwerkersteuerung', d: 'Wir jonglieren die Gewerke, nicht du.' },
+  { icon: ShieldCheck, t: 'Betreuung von A–Z', d: 'Von erster Idee bis letzter Schraube.' },
+  { icon: Lightbulb, t: 'Lichtplanung', d: 'Arbeitslicht, das wirklich arbeitet.' },
+  { icon: Ruler, t: 'Ergonomie', d: 'Arbeitshöhe, die deinem Rücken gefällt.' },
 ]
 
 const BAUSTEINE = [
@@ -94,17 +102,19 @@ export default function HeroExperience() {
 
           {HOTSPOTS.map((h, idx) => {
             let style
-            if (idx < 12) {
+            if (idx < 14) {
               const side = idx % 2
-              const row = Math.floor(idx / 2) // 0..5 down each side
-              const y = 2 + row * 16
-              const rot = [-3, 2.4, -2, 3, -1.4, 2.6][row] || 0
+              const row = Math.floor(idx / 2) // 0..6 down each side
+              const y = 1.5 + row * 14
+              const rot = [-3, 2.4, -2, 3, -1.4, 2.6, -2.2][row] || 0
               style = { top: `${y}%`, [side ? 'right' : 'left']: `${0.5 + (row % 2) * 1.4}%`, '--r': `${rot}deg` }
             } else {
-              const k = idx - 12 // 0..3 → top/bottom frame
-              const onTop = k < 2
-              const left = [33, 57][k % 2]
-              style = { [onTop ? 'top' : 'bottom']: '1.5%', left: `${left}%`, '--r': `${k % 2 ? 2.5 : -2.5}deg` }
+              const k = idx - 14 // 0..9 → top (0-4) & bottom (5-9) frame
+              const onTop = k < 5
+              const cols = [8, 26, 44, 62, 80]
+              const left = cols[k % 5]
+              const rot = [-2.4, 2, -1.6, 2.6, -2][k % 5]
+              style = { [onTop ? 'top' : 'bottom']: '1.5%', left: `${left}%`, '--r': `${rot}deg` }
             }
             return (
             <div key={h.t} className="hx-spot" style={style}>
