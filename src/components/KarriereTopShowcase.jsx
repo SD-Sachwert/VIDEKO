@@ -10,12 +10,12 @@ import p5 from '../assets/images/karriere/philosophie/VIDEKO_Karte_05_freigestel
 import p6 from '../assets/images/karriere/philosophie/VIDEKO_Karte_06_freigestellt.png'
 
 const CARDS = [
-  { img: p1, t: 'Keine Rabatt-Show' },
-  { img: p2, t: 'Kurze Wege statt Konzernsprech' },
-  { img: p3, t: 'Mitdenken erwünscht' },
-  { img: p4, t: 'Humor inklusive' },
-  { img: p5, t: 'Premium statt Masse' },
-  { img: p6, t: 'Mitschwimmen? Nicht unser Stil.' },
+  { img: p1, t: 'Keine Rabatt-Show', ar: 922 / 1229 },
+  { img: p2, t: 'Kurze Wege statt Konzernsprech', ar: 942 / 1292 },
+  { img: p3, t: 'Mitdenken erwünscht', ar: 1025 / 1334 },
+  { img: p4, t: 'Humor inklusive', ar: 920 / 1219 },
+  { img: p5, t: 'Premium statt Masse', ar: 942 / 1246 },
+  { img: p6, t: 'Mitschwimmen? Nicht unser Stil.', ar: 909 / 1221 },
 ]
 
 export default function KarriereTopShowcase() {
@@ -54,6 +54,7 @@ export default function KarriereTopShowcase() {
                 opacity: show ? (isActive ? 1 : Math.abs(d) === 1 ? 0.85 : 0.45) : 0,
                 zIndex: isActive ? 20 : 10 - Math.abs(d),
                 pointerEvents: show ? 'auto' : 'none',
+                aspectRatio: c.ar,
               }
               return (
                 <button key={c.t} type="button" className={`kts__card ${isActive ? 'is-active' : ''}`} style={style}

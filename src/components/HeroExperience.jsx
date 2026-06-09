@@ -112,7 +112,7 @@ export default function HeroExperience() {
             } else {
               const k = idx - 14 // 0..13 → top (0-6) & bottom (7-13), je 7 entzerrt
               const onTop = k < 7
-              const cols = [10, 22, 34, 46, 58, 70, 82]
+              const cols = [4, 16, 28, 40, 52, 64, 76] // obere & untere Reihe leicht nach links
               const left = cols[k % 7]
               const rot = [-2.4, 2, -1.6, 2.6, -2, 1.6, -1.8][k % 7]
               style = { [onTop ? 'top' : 'bottom']: '-5%', left: `${left}%`, '--r': `${rot}deg` }

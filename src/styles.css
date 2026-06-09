@@ -10712,6 +10712,8 @@ a.footer__contact-line:hover {
 
 /* article grid */
 .jgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+.jgrid > .reveal { display: flex; }
+.jgrid > .reveal > .jcard { width: 100%; }
 .jgrid__empty { grid-column: 1 / -1; text-align: center; color: var(--ink-soft); padding: 30px 0; }
 .jcard { display: flex; flex-direction: column; border-radius: 20px; overflow: hidden; background: rgba(255, 255, 255, 0.7); border: 1px solid var(--line-dark); text-decoration: none; transition: transform 0.3s ease, box-shadow 0.3s ease; }
 .jcard:hover { transform: translateY(-6px); box-shadow: 0 40px 80px -48px rgba(120, 90, 40, 0.5); }
@@ -10956,6 +10958,9 @@ a.footer__contact-line:hover {
 .lp-journal-head { text-align: center; max-width: 640px; margin: 0 auto 42px; }
 .lp-journal-head .lp-lead { margin: 14px auto 22px; }
 .lp-journal { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+/* Reveal-Wrapper ist das Grid-Item -> flex, damit die Karte auf volle (gleiche) Hoehe streckt */
+.lp-journal > .reveal { display: flex; }
+.lp-journal > .reveal > .lpjcard { width: 100%; }
 .lpjcard { display: flex; flex-direction: column; border-radius: 18px; overflow: hidden; background: rgba(255, 255, 255, 0.7); border: 1px solid var(--line-dark); text-decoration: none; transition: transform 0.3s ease, box-shadow 0.3s ease; }
 .lpjcard:hover { transform: translateY(-6px); box-shadow: 0 40px 80px -48px rgba(120, 90, 40, 0.5); }
 .lpjcard__img { aspect-ratio: 4 / 3; background-size: cover; background-position: center; transition: transform 0.5s ease; }
@@ -11401,7 +11406,7 @@ a.footer__contact-line:hover {
 .kts__stage { position: relative; height: 470px; perspective: 1700px; }
 .kts__card { position: absolute; top: 50%; left: 50%; width: 336px; max-width: 80%; aspect-ratio: 4 / 5; padding: 0; border: none; background: none; cursor: pointer; border-radius: 18px; overflow: hidden; box-shadow: 0 26px 52px -28px rgba(45, 33, 18, 0.5); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.55s ease, box-shadow 0.4s ease; will-change: transform, opacity; }
 .kts__card { aspect-ratio: 0.77; }
-.kts__card img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
+.kts__card img { width: 100%; height: 100%; object-fit: contain; display: block; }
 .kts__card.is-active { box-shadow: 0 34px 64px -32px rgba(45, 33, 18, 0.55); }
 .kts__nav { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 26px; }
 .kts__arrow { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; cursor: pointer; color: var(--ink); background: #fff; border: 1px solid var(--line-dark); box-shadow: 0 10px 24px -16px rgba(0, 0, 0, 0.4); transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease; }
@@ -11601,7 +11606,9 @@ a.footer__contact-line:hover {
 .sfc__micro { display: flex; flex-wrap: wrap; gap: 7px 16px; margin-top: 11px; }
 .sfc__micro span { display: inline-flex; align-items: center; gap: 6px; font-size: 0.78rem; color: var(--ink-soft); }
 .sfc__micro svg { color: var(--bronze); }
-.sfsec__trust { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 24px; padding-top: 18px; border-top: 1px solid rgba(120, 95, 45, 0.16); }
+.sfsec__trust { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 24px; padding-top: 18px; border-top: 1px solid rgba(120, 95, 45, 0.16); }
+/* gegen die alte, kollidierende .sftrust-Regel (grid-column: 1/-1) – Items je eine Spalte */
+.sfsec__trust .sftrust { grid-column: auto; min-width: 0; margin-top: 0; flex-wrap: nowrap; }
 .sftrust { display: flex; align-items: center; gap: 11px; }
 .sftrust__ic { width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center; color: var(--bronze); background: rgba(201, 160, 80, 0.12); border: 1px solid rgba(201, 160, 80, 0.25); flex: none; }
 .sftrust__b { display: flex; flex-direction: column; }
