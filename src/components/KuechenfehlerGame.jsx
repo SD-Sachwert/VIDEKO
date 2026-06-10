@@ -1,8 +1,11 @@
 import { useRef, useState, useCallback, useEffect } from 'react'
-import { Search, Eye, Lightbulb, Check, ArrowRight, Square, Lamp, Plug, Boxes, Trash2, Cpu, Ruler, MoveHorizontal } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { Search, Eye, Lightbulb, Check, ArrowRight, BookOpen, Square, Lamp, Plug, Boxes, Trash2, Cpu, Ruler, MoveHorizontal } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
 import CTAButton from './CTAButton.jsx'
+
+const ARTICLE_URL = '/journal/7-kuechenfehler-die-du-spaeter-jeden-tag-bereust'
 import scene from '../assets/images/kuechenfehler/scene.png'
 import ctaBg from '../assets/images/kuechenfehler/cta-bg.png'
 
@@ -86,7 +89,7 @@ export default function KuechenfehlerGame() {
       setActive(null)
       setWrong({ x: Math.min(84, Math.max(16, px)), y: Math.min(86, Math.max(14, py)), msg: nextWrong() })
       clearTimeout(wrongTimer.current)
-      wrongTimer.current = setTimeout(() => setWrong(null), 2200)
+      wrongTimer.current = setTimeout(() => setWrong(null), 4200)
     }
   }, [])
 
@@ -190,9 +193,12 @@ export default function KuechenfehlerGame() {
         <Reveal className="kfg-cta" style={{ backgroundImage: `url(${ctaBg})` }}>
           <span className="kfg-cta__veil" aria-hidden="true" />
           <div className="kfg-cta__inner">
-            <h3 className="kfg-cta__title">{done ? 'Alle 8 gefunden!' : 'Alle 8 gefunden?'} <span className="grad">Dann wird's Zeit für die echte Planung.</span></h3>
+            <h3 className="kfg-cta__title">{done ? 'Alle 9 gefunden!' : 'Alle 9 gefunden?'} <span className="grad">Dann wird's Zeit für die echte Planung.</span></h3>
             <p className="kfg-cta__text">Wir verwandeln dein Spielerlebnis in eine maßgeschneiderte Küche, die wirklich zu dir, deinem Alltag und deinem Raum passt.</p>
-            <CTAButton to="/beratung">Kostenlosen Küchencheck starten <ArrowRight size={16} strokeWidth={2} /></CTAButton>
+            <div className="kfg-cta__btns">
+              <CTAButton to="/beratung">Kostenlosen Küchencheck starten <ArrowRight size={16} strokeWidth={2} /></CTAButton>
+              <Link to={ARTICLE_URL} className="kfg-cta__article"><BookOpen size={16} strokeWidth={2} /> Die 9 Küchenfehler im Journal nachlesen</Link>
+            </div>
             <div className="kfg-cta__benefits"><span>Unverbindlich</span><span>Individuell</span><span>Persönlich</span></div>
           </div>
         </Reveal>

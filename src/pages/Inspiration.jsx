@@ -12,6 +12,7 @@ import BeforeAfter from '../components/BeforeAfter.jsx'
 import MaterialsLab from '../components/MaterialsLab.jsx'
 import KuechengefuehlSection from '../components/KuechengefuehlSection.jsx'
 import KuechenfehlerGame from '../components/KuechenfehlerGame.jsx'
+import RaumideenSection from '../components/RaumideenSection.jsx'
 
 import heroImg from '../assets/images/inspiration/insp-hero-dark.png'
 import explodeImg from '../assets/images/inspiration/insp-exploding-light.png'
@@ -163,29 +164,8 @@ export default function Inspiration() {
       </section>
 
 
-      {/* RAUMIDEEN */}
-      <section className="section insp-rooms">
-        <div className="container">
-          <SectionHeader kicker="Raumideen" title={<>Mehr als <span className="grad">nur Küche.</span></>} lead="Wir denken nicht nur Küchen, sondern Wohnräume. Jeder Raum. Dein Stil." />
-          <div className="roomtabs">
-            {ROOMS.map((r, i) => (
-              <button key={r.key} type="button" className={`roomtab ${activeRoom === i ? 'is-active' : ''}`} onClick={() => setActiveRoom(i)}>
-                <r.icon size={16} strokeWidth={1.8} /> {r.key}
-              </button>
-            ))}
-          </div>
-          <div className="roompanel">
-            <div className="roompanel__media" style={{ backgroundImage: `url(${room.img})` }} aria-hidden="true">
-              <span className="roompanel__scrim" />
-            </div>
-            <div className="roompanel__body">
-              <h3 className="roompanel__title">{room.title}</h3>
-              <p className="roompanel__text">{room.text}</p>
-              <CTAButton to="/inspiration#materialien" variant="dark">Ideen entdecken</CTAButton>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* RAUMIDEEN — interaktive Sektion */}
+      <RaumideenSection />
 
       {/* MOODBOARD */}
       <section className="section insp-mood">

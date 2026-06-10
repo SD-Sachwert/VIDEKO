@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowRight, Hand } from 'lucide-react'
+import { ArrowRight, Hand, Flame, Waves, Gem, Home } from 'lucide-react'
 
 import warmImg from '../assets/images/studio/feeling/warm.png'
 import ruhigImg from '../assets/images/studio/feeling/ruhig.png'
@@ -13,7 +13,7 @@ import scene4 from '../assets/images/inspiration/Tupper-Tetris.png'
 
 const FEELINGS = [
   {
-    key: 'Warm', img: warmImg, h: 'Warm wohnen.',
+    key: 'Warm', icon: Flame, img: warmImg, h: 'Warm wohnen.',
     bullets: ['Natürliche Materialien schaffen Geborgenheit.', 'Indirektes Licht bringt Ruhe und Tiefe.'],
     mats: [
       { t: 'Eiche natur', c: '#c9a574' }, { t: 'Travertin beige', c: '#dcc9a8' },
@@ -22,7 +22,7 @@ const FEELINGS = [
     spots: [{ x: 30, y: 34, t: 'Indirektes Licht' }, { x: 64, y: 56, t: 'Warme Hölzer' }, { x: 47, y: 78, t: 'Geborgenheit' }],
   },
   {
-    key: 'Ruhig', img: ruhigImg, h: 'Ruhig geplant.',
+    key: 'Ruhig', icon: Waves, img: ruhigImg, h: 'Ruhig geplant.',
     bullets: ['Klare Linien geben dem Raum Gelassenheit.', 'Helle Materialien lassen alles leicht wirken.'],
     mats: [
       { t: 'Eiche hell', c: '#dcc7a0' }, { t: 'Kalkstein sand', c: '#e3d8c0' },
@@ -31,7 +31,7 @@ const FEELINGS = [
     spots: [{ x: 36, y: 40, t: 'Klare Linien' }, { x: 70, y: 50, t: 'Helle Flächen' }, { x: 52, y: 74, t: 'Leichtigkeit' }],
   },
   {
-    key: 'Elegant', img: elegantImg, h: 'Elegant auftreten.',
+    key: 'Elegant', icon: Gem, img: elegantImg, h: 'Elegant auftreten.',
     bullets: ['Dunkle Materialien wirken souverän und hochwertig.', 'Lichtakzente bringen Tiefe und Charakter.'],
     mats: [
       { t: 'Räuchereiche dunkel', c: '#4a3a2c' }, { t: 'Marmor graphit', c: '#3a3a3c' },
@@ -40,7 +40,7 @@ const FEELINGS = [
     spots: [{ x: 32, y: 36, t: 'Lichtakzente' }, { x: 66, y: 52, t: 'Dunkler Stein' }, { x: 48, y: 76, t: 'Charakter' }],
   },
   {
-    key: 'Alltag', img: alltagImg, h: 'Alltag, aber schön.',
+    key: 'Alltag', icon: Home, img: alltagImg, h: 'Alltag, aber schön.',
     bullets: ['Familienfreundlich, offen und einladend.', 'Viel Platz, Stauraum und angenehme Helligkeit.'],
     mats: [
       { t: 'Lack softweiß', c: '#f2efe8' }, { t: 'Eiche natur', c: '#c9a574' },
@@ -116,7 +116,7 @@ export default function KitchenFeelingCard() {
             {FEELINGS.map((x, i) => (
               <button key={x.key} type="button" role="tab" aria-selected={i === active && scene == null}
                 className={`kfeel__tab ${i === active && scene == null ? 'is-active' : ''}`} onClick={() => { setActive(i); setSpot(null); setScene(null) }}>
-                {x.key}
+                <x.icon size={14} strokeWidth={1.9} /> {x.key}
               </button>
             ))}
           </div>
