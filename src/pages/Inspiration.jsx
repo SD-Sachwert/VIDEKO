@@ -163,42 +163,6 @@ export default function Inspiration() {
       </section>
 
 
-      {/* MATERIAL-EXPLORER */}
-      <section className="section insp-matex" id="materialien">
-        <div className="container">
-          <SectionHeader kicker="Material" title={<>Materialien erleben. <span className="grad">Qualität fühlen.</span></>} lead="Klick dich durch unsere Oberflächen – wähle ein Material und sieh, was es kann." />
-          <div className="matex2">
-            <Reveal className="matex2__preview">
-              <div className="matex2__img" style={{ backgroundImage: `url(${mat.img})` }}>
-                <span className="matex2__scrim" aria-hidden="true" />
-                <div className="matex2__overlay">
-                  <span className="matex2__count">Material {activeMat + 1} / {MATERIALS.length}</span>
-                  <h3 className="matex2__name">{mat.key}</h3>
-                  <p className="matex2__text">{mat.text}</p>
-                  <CTAButton to="/beratung">Material im Studio erleben</CTAButton>
-                </div>
-              </div>
-            </Reveal>
-            <div className="matex2__strip" role="tablist" aria-label="Materialien">
-              {MATERIALS.map((m, i) => (
-                <button
-                  key={m.key}
-                  type="button"
-                  role="tab"
-                  aria-selected={activeMat === i}
-                  className={`mtile ${activeMat === i ? 'is-active' : ''}`}
-                  style={{ backgroundImage: `url(${m.img})` }}
-                  onClick={() => setActiveMat(i)}
-                >
-                  <span className="mtile__scrim" aria-hidden="true" />
-                  <span className="mtile__label">{m.key}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* RAUMIDEEN */}
       <section className="section insp-rooms">
         <div className="container">
