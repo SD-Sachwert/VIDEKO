@@ -104,17 +104,24 @@ export default function Beratung() {
           <div className="bf-entries">
             {ENTRIES.map((e, i) => (
               <Reveal key={e.title} className="bf-entry" delay={(i % 3) * 0.07}>
+                <span className="bf-entry__img" style={{ backgroundImage: `url(${e.img})` }} aria-hidden="true">
+                  <span className="bf-entry__ic"><e.icon size={20} strokeWidth={1.7} /></span>
+                </span>
                 <span className="bf-entry__col">
-                  <span className="bf-entry__ic"><e.icon size={22} strokeWidth={1.6} /></span>
                   <span className="bf-entry__title">{e.title}</span>
                   <span className="bf-entry__text">{e.text}</span>
                   {e.to
                     ? <Link className="bf-entry__btn" to={e.to}>{e.cta} <ArrowRight size={15} strokeWidth={1.9} /></Link>
                     : <button type="button" className="bf-entry__btn" onClick={() => pick(e.anliegen)}>{e.cta} <ArrowRight size={15} strokeWidth={1.9} /></button>}
                 </span>
-                <span className="bf-entry__img" style={{ backgroundImage: `url(${e.img})` }} aria-hidden="true" />
               </Reveal>
             ))}
+          </div>
+
+          <div className="bf-trust">
+            <span className="bf-trust__item"><span className="bf-trust__t">Persönlich</span><span className="bf-trust__d">Echte Menschen, ehrliche Beratung.</span></span>
+            <span className="bf-trust__item"><span className="bf-trust__t">Unverbindlich</span><span className="bf-trust__d">Ohne Druck, in deinem Tempo.</span></span>
+            <span className="bf-trust__item"><span className="bf-trust__t">Auf Augenhöhe</span><span className="bf-trust__d">Wir denken mit, nicht nur an Umsatz.</span></span>
           </div>
         </div>
       </section>

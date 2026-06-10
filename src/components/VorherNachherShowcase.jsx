@@ -1,5 +1,6 @@
+import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Wrench, Repeat, Sparkles, ArrowRight } from 'lucide-react'
+import { Wrench, Repeat, Sparkles, ArrowRight, ArrowLeftRight } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
 import vorher1 from '../assets/images/vorher-nachher/vorher-1.jpg'
@@ -21,6 +22,35 @@ const BENEFITS = [
   { icon: Sparkles, t: 'Inspiration' },
 ]
 
+function VncCard({ v, n, pos }) {
+  const ref = useRef(null)
+  const [split, setSplit] = useState(50)
+  const [drag, setDrag] = useState(false)
+
+  const setFromX = (clientX) => {
+    const el = ref.current
+    if (!el) return
+    const r = el.getBoundingClientRect()
+    setSplit(Math.min(94, Math.max(6, ((clientX - r.left) / r.width) * 100)))
+  }
+  const onDown = (e) => { setDrag(true); setFromX(e.clientX); if (e.currentTarget.setPointerCapture && e.pointerId != null) try { e.currentTarget.setPointerCapture(e.pointerId) } catch { /* noop */ } }
+  const onMove = (e) => { if (drag) setFromX(e.clientX) }
+  const onUp = () => setDrag(false)
+
+  return (
+    <div className={`vnc-card vnc-card--${pos} ${drag ? 'is-drag' : ''}`} ref={ref} style={{ '--split': `${split}%` }}
+      onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerLeave={onUp} onPointerCancel={onUp}>
+      <span className="vnc-card__after" style={{ backgroundImage: `url(${n})` }} aria-hidden="true" />
+      <span className="vnc-card__before" style={{ backgroundImage: `url(${v})` }} aria-hidden="true" />
+      <span className="vnc-card__lbl vnc-card__lbl--v">Vorher</span>
+      <span className="vnc-card__lbl vnc-card__lbl--n">Nachher</span>
+      <span className="vnc-card__handle" style={{ left: `var(--split)` }}>
+        <span className="vnc-card__knob"><ArrowLeftRight size={13} strokeWidth={2.4} /></span>
+      </span>
+    </div>
+  )
+}
+
 export default function VorherNachherShowcase() {
   return (
     <section className="section vnc-sec">
@@ -33,15 +63,7 @@ export default function VorherNachherShowcase() {
         </Reveal>
 
         <Reveal className="vnc__cards" delay={0.06}>
-          {CARDS.map((cd, i) => (
-            <div key={i} className={`vnc-card vnc-card--${cd.pos}`}>
-              <span className="vnc-card__after" style={{ backgroundImage: `url(${cd.n})` }} aria-hidden="true" />
-              <span className="vnc-card__before" style={{ backgroundImage: `url(${cd.v})` }} aria-hidden="true" />
-              <span className="vnc-card__edge" aria-hidden="true" />
-              <span className="vnc-card__lbl vnc-card__lbl--v">Vorher</span>
-              <span className="vnc-card__lbl vnc-card__lbl--n">Nachher</span>
-            </div>
-          ))}
+          {CARDS.map((cd, i) => <VncCard key={i} {...cd} />)}
         </Reveal>
 
         <div className="vnc__benefits">
