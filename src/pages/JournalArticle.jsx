@@ -3,10 +3,7 @@ import { ArrowLeft, ArrowUpRight, Clock } from 'lucide-react'
 
 import Reveal from '../components/Reveal.jsx'
 import CTAButton from '../components/CTAButton.jsx'
-import KuechenfehlerGame from '../components/KuechenfehlerGame.jsx'
 import { journalArticles } from '../data/journal.js'
-
-const GAME_SLUG = '7-kuechenfehler-die-du-spaeter-jeden-tag-bereust'
 
 export default function JournalArticle() {
   const { slug } = useParams()
@@ -37,8 +34,8 @@ export default function JournalArticle() {
         <div className="container jarticle">
           <Reveal as="p" className="jarticle__intro">{article.intro}</Reveal>
           {article.sections.map((s, i) => (
-            <Reveal key={s.h} className="jarticle__block" delay={(i % 3) * 0.04}>
-              <h2 className="jarticle__h">{s.h}</h2>
+            <Reveal key={i} className="jarticle__block" delay={(i % 3) * 0.04}>
+              {s.h && <h2 className="jarticle__h">{s.h}</h2>}
               <p className="jarticle__p">{s.p}</p>
             </Reveal>
           ))}
@@ -52,9 +49,6 @@ export default function JournalArticle() {
           </Reveal>
         </div>
       </section>
-
-      {/* INTERAKTIVES MODUL (nur auf der 7-Küchenfehler-Seite) */}
-      {slug === GAME_SLUG && <KuechenfehlerGame />}
 
       {/* RELATED */}
       <section className="section section--light jarticle-related-sec">

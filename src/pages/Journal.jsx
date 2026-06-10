@@ -15,16 +15,13 @@ import {
 } from '../data/journal.js'
 
 export default function Journal() {
-  const featured = journalArticles.find((a) => a.featured) || journalArticles[0]
-  const rest = journalArticles.filter((a) => a !== featured)
-
   const [cat, setCat] = useState('Alle Themen')
   const [openFaq, setOpenFaq] = useState(0)
   const [openMyth, setOpenMyth] = useState(null)
   const [openFrag, setOpenFrag] = useState(0)
   const mythTrack = useRef(null)
 
-  const shown = cat === 'Alle Themen' ? rest : rest.filter((a) => a.category === cat)
+  const shown = cat === 'Alle Themen' ? journalArticles : journalArticles.filter((a) => a.category === cat)
 
   const slideMyth = (dir) => {
     const el = mythTrack.current
@@ -50,36 +47,19 @@ export default function Journal() {
             </div>
           </Reveal>
           <Reveal className="journal-hero__float" delay={0.18}>
-            <Link to={`/journal/${featured.slug}`} className="jfloat">
+            <a href="#artikel" className="jfloat">
               <span className="jfloat__tag"><Sparkles size={13} strokeWidth={2} /> Neu im Journal</span>
-              <span className="jfloat__num">7</span>
+              <span className="jfloat__num">{journalArticles.length}</span>
               <span className="jfloat__label">echte Ratgeber</span>
               <span className="jfloat__cta">Jetzt entdecken <ArrowRight size={15} strokeWidth={2} /></span>
-            </Link>
+            </a>
           </Reveal>
         </div>
         <span className="journal-hero__scroll" aria-hidden="true"><span /></span>
       </section>
 
-      {/* 2 — FEATURED */}
-      <section className="section section--light journal-featured-sec" id="artikel">
-        <div className="container">
-          <Reveal>
-            <Link to={`/journal/${featured.slug}`} className="jfeat">
-              <span className="jfeat__media"><img src={featured.image} alt="" loading="lazy" /></span>
-              <span className="jfeat__body">
-                <span className="jfeat__meta"><span className="jfeat__cat">{featured.category}</span><span className="jfeat__read"><Clock size={13} strokeWidth={2} /> {featured.read} Lesezeit</span></span>
-                <span className="jfeat__title">{featured.title}</span>
-                <span className="jfeat__teaser">{featured.teaser}</span>
-                <span className="jfeat__cta">Artikel lesen <ArrowRight size={16} strokeWidth={2} /></span>
-              </span>
-            </Link>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* 3 — FILTER + 4 — GRID */}
-      <section className="section section--light journal-grid-sec">
+      {/* 2 — ALLE ARTIKEL (Übersicht ganz oben) */}
+      <section className="section section--light journal-grid-sec" id="artikel">
         <div className="container">
           <SectionHeader align="center" kicker="Küchenratgeber" title={<>Alle Artikel <span className="grad">auf einen Blick.</span></>} lead="Filtere nach Thema und finde genau das Wissen, das deine Planung weiterbringt." />
           <div className="jfilter">

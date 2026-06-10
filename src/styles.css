@@ -11395,8 +11395,7 @@ a.footer__contact-line:hover {
 .hx-intro .hx-sub { margin-left: auto; margin-right: auto; max-width: 620px; }
 .hx-intro .hx-actions { justify-content: center; }
 .hx-bigwrap { margin-top: 68px; }
-/* R13: ungewollte Divider rund um Start-/Slider-Bereich entfernen */
-.home-page .hx-sec::before, .home-page .ekm::before { content: none !important; }
+/* R19: kurzer goldener Divider oberhalb der Overline wieder aktiv (Exploding Kitchen + Der ganze Raum) */
 .hx-bigwrap .hx-ba { aspect-ratio: 16 / 8.6; }
 /* slider: no text/image selection, no native image drag */
 .hx-ba, .hx-ba * { -webkit-user-select: none; user-select: none; }
