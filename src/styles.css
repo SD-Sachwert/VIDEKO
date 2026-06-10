@@ -11598,8 +11598,7 @@ a.footer__contact-line:hover {
 .alltag__head { display: block; margin: 26px 0 12px; font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--bronze); }
 .alltag { display: grid; grid-template-columns: repeat(4, 1fr); gap: 11px; }
 .alltag__card { display: flex; flex-direction: column; gap: 7px; }
-.alltag__img { position: relative; display: block; width: 100%; aspect-ratio: 1 / 1; border-radius: 13px; background-size: cover; background-position: center; box-shadow: 0 16px 30px -20px rgba(120, 90, 40, 0.55); border: 1px solid rgba(201, 160, 80, 0.2); }
-.alltag__ic { position: absolute; right: 7px; bottom: 7px; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; color: var(--soft-black); background: var(--grad-gold); box-shadow: 0 5px 12px -5px rgba(120, 90, 40, 0.7); }
+.alltag__img { position: relative; display: block; width: 100%; aspect-ratio: 4 / 3; border-radius: 12px; background-size: cover; background-position: center; box-shadow: 0 16px 30px -20px rgba(120, 90, 40, 0.55); border: 1px solid rgba(201, 160, 80, 0.2); }
 .alltag__t { font-size: 0.68rem; line-height: 1.28; color: var(--ink-soft); }
 @media (max-width: 560px) { .alltag { grid-template-columns: repeat(2, 1fr); } }
 .lintro--feeling .lintro__copy { max-width: 460px; }
@@ -11700,18 +11699,49 @@ a.footer__contact-line:hover {
 .matlab__active-b { display: flex; flex-direction: column; }
 .matlab__active-t { font-family: var(--serif); font-size: 1.15rem; color: var(--ink); }
 .matlab__active-d { font-size: 0.82rem; color: var(--ink-soft); }
-.matlab__intro { min-width: 0; max-width: 480px; }
-/* Material-Info-Panel (erscheint zum aktiven/angeklickten Material) */
-.matinfo { border-radius: 18px; padding: 18px 20px; background: linear-gradient(160deg, rgba(255, 255, 255, 0.66), rgba(250, 245, 236, 0.5)); border: 1px solid rgba(201, 160, 80, 0.34); box-shadow: 0 26px 54px -34px rgba(120, 90, 40, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); animation: matinfoIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-@keyframes matinfoIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-.matinfo__head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px; }
-.matinfo__n { font-family: var(--serif); font-size: 1.4rem; color: var(--bronze); line-height: 1; }
-.matinfo__t { font-family: var(--serif); font-size: 1.35rem; color: var(--ink); }
-.matinfo__row { display: grid; grid-template-columns: 72px 1fr; gap: 10px; margin: 0 0 8px; font-size: 0.86rem; line-height: 1.45; color: var(--ink-soft); }
-.matinfo__row span { font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: var(--bronze); padding-top: 3px; }
-.matinfo__note { margin: 12px 0 0; padding-top: 12px; border-top: 1px solid rgba(201, 160, 80, 0.24); font-size: 0.85rem; line-height: 1.5; color: var(--ink); font-style: italic; }
+.matlab__intro { min-width: 0; max-width: 400px; }
+.matinfo-wrap { min-height: 150px; }
+/* Material-Info-Panel (faehrt beim Klick auf ein Material heraus) – kompakt */
+.matinfo { border-radius: 16px; padding: 14px 16px; background: linear-gradient(160deg, rgba(255, 255, 255, 0.66), rgba(250, 245, 236, 0.5)); border: 1px solid rgba(201, 160, 80, 0.34); box-shadow: 0 22px 46px -32px rgba(120, 90, 40, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.matinfo__head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 9px; }
+.matinfo__n { font-family: var(--serif); font-size: 1.2rem; color: var(--bronze); line-height: 1; }
+.matinfo__t { font-family: var(--serif); font-size: 1.18rem; color: var(--ink); }
+.matinfo__row { display: grid; grid-template-columns: 64px 1fr; gap: 9px; margin: 0 0 6px; font-size: 0.8rem; line-height: 1.4; color: var(--ink-soft); }
+.matinfo__row span { font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--bronze); padding-top: 3px; }
+.matinfo__note { margin: 9px 0 0; padding-top: 9px; border-top: 1px solid rgba(201, 160, 80, 0.24); font-size: 0.79rem; line-height: 1.45; color: var(--ink); font-style: italic; }
 .matinfo__note b { font-style: normal; color: var(--bronze); }
-.matinfo-hint { font-size: 0.88rem; line-height: 1.55; color: var(--ink-soft); font-style: italic; padding: 4px 2px; }
+.matinfo-hint { font-size: 0.85rem; line-height: 1.5; color: var(--ink-soft); font-style: italic; padding: 4px 2px; }
+
+/* === VORHER / NACHHER — Showcase-Galerie (3 Karten) === */
+.vnc-sec { position: relative; overflow: hidden; text-align: center; background: transparent; }
+.vnc-sec__glow { position: absolute; left: 50%; top: 44%; transform: translate(-50%, -50%); width: 70%; height: 64%; z-index: 0; pointer-events: none; background: radial-gradient(closest-side, rgba(216, 180, 106, 0.16), transparent 72%); }
+.vnc-sec > .container { position: relative; z-index: 1; }
+.vnc__head { max-width: 640px; margin: 0 auto; }
+.vnc__title { font-family: var(--serif); font-weight: 600; font-size: clamp(1.9rem, 4.2vw, 3rem); line-height: 1.05; color: var(--ink); margin: 10px 0 12px; }
+.vnc__sub { font-size: 1.02rem; line-height: 1.6; color: var(--ink-soft); max-width: 520px; margin: 0 auto; }
+.vnc__cards { display: flex; align-items: center; justify-content: center; gap: clamp(14px, 2vw, 26px); margin: clamp(28px, 4vw, 46px) 0 clamp(22px, 3vw, 34px); }
+.vnc-card { position: relative; width: clamp(180px, 23vw, 300px); aspect-ratio: 3 / 4; border-radius: 20px; overflow: hidden; box-shadow: 0 40px 80px -46px rgba(60, 44, 22, 0.6), 0 0 0 1px rgba(201, 160, 80, 0.45); }
+.vnc-card--side { transform: translateY(20px) scale(0.92); opacity: 0.94; }
+.vnc-card--center { z-index: 2; box-shadow: 0 56px 100px -44px rgba(168, 122, 40, 0.7), 0 0 0 1.5px rgba(201, 160, 80, 0.7), 0 0 70px -16px rgba(216, 180, 106, 0.55); }
+.vnc-card__after, .vnc-card__before { position: absolute; inset: 0; background-size: cover; background-position: center; }
+.vnc-card__before { clip-path: polygon(0 0, 100% 0, 100% 44%, 0 60%); }
+.vnc-card__edge { position: absolute; inset: 0; clip-path: polygon(0 59%, 100% 43%, 100% 44.6%, 0 60.6%); background: linear-gradient(90deg, var(--gold), var(--gold-bright)); opacity: 0.92; }
+.vnc-card__lbl { position: absolute; left: 12px; z-index: 3; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 5px 11px; border-radius: 999px; }
+.vnc-card__lbl--v { top: 12px; background: rgba(16, 12, 9, 0.78); color: var(--cream); backdrop-filter: blur(4px); }
+.vnc-card__lbl--n { bottom: 12px; background: var(--grad-gold); color: var(--soft-black); box-shadow: 0 8px 18px -8px rgba(168, 122, 40, 0.7); }
+.vnc__benefits { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px 0; }
+.vnc__benefit { display: inline-flex; align-items: center; gap: 8px; padding: 0 22px; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; color: var(--ink-soft); border-right: 1px solid rgba(201, 160, 80, 0.35); }
+.vnc__benefit:last-child { border-right: none; }
+.vnc__benefit svg { color: var(--bronze); }
+.vnc__cta { margin-top: clamp(22px, 3vw, 34px); }
+.vnc__btn { display: inline-flex; align-items: center; gap: 10px; padding: 15px 30px; border-radius: 999px; background: var(--grad-gold); color: var(--soft-black); font-size: 0.92rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; text-decoration: none; box-shadow: 0 20px 40px -16px rgba(168, 122, 40, 0.7); transition: transform 0.2s ease, box-shadow 0.25s ease; }
+.vnc__btn:hover { transform: translateY(-2px); box-shadow: 0 26px 50px -16px rgba(168, 122, 40, 0.85); }
+@media (max-width: 720px) {
+  .vnc__cards { flex-wrap: wrap; gap: 16px; }
+  .vnc-card { width: clamp(150px, 42vw, 240px); }
+  .vnc-card--side { transform: none; opacity: 1; }
+  .vnc__benefit { padding: 0 14px; }
+}
 
 /* === STYLEFINDER — Premium-Style-Coverflow (Finde deinen Küchenstil) === */
 .sfx-sec { position: relative; overflow: hidden; text-align: center; }
@@ -11737,7 +11767,7 @@ a.footer__contact-line:hover {
 .sfxcard__arrow { position: absolute; right: 13px; bottom: 14px; z-index: 3; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; color: var(--cream); background: rgba(255, 255, 255, 0.14); border: 1px solid rgba(255, 255, 255, 0.28); backdrop-filter: blur(5px); transition: background 0.25s ease, color 0.25s ease; }
 .sfxcard:hover .sfxcard__arrow { background: var(--grad-gold); color: var(--soft-black); border-color: transparent; }
 /* aktive Karte */
-.sfxcard.is-active { box-shadow: 0 0 0 2px var(--gold-bright), 0 50px 100px -42px rgba(168, 122, 40, 0.85), 0 0 70px -10px rgba(216, 180, 106, 0.5); }
+.sfxcard.is-active { box-shadow: 0 0 0 3px var(--gold-bright), 0 50px 100px -42px rgba(168, 122, 40, 0.9), 0 0 80px -8px rgba(216, 180, 106, 0.6); }
 .sfxcard.is-active .sfxcard__t { font-size: 1.3rem; }
 .sfxcard.is-active .sfxcard__d { font-size: 0.82rem; color: rgba(244, 239, 228, 0.88); }
 .sfxcard__diamond { position: absolute; left: 15px; top: 15px; z-index: 3; width: 13px; height: 13px; transform: rotate(45deg); background: var(--grad-gold); box-shadow: 0 0 0 4px rgba(216, 180, 106, 0.22), 0 4px 10px -2px rgba(120, 90, 40, 0.6); }

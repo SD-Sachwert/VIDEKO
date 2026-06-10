@@ -1,4 +1,4 @@
-import { Check, Heart } from 'lucide-react'
+import { Check } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
 import KitchenFeelingCard from './KitchenFeelingCard.jsx'
@@ -41,9 +41,7 @@ export default function KuechengefuehlSection() {
             <div className="alltag">
               {ALLTAG.map((a) => (
                 <span key={a.t} className="alltag__card">
-                  <span className="alltag__img" style={{ backgroundImage: `url(${a.img})`, backgroundPosition: a.pos }} aria-hidden="true">
-                    <span className="alltag__ic"><Heart size={11} strokeWidth={2.2} /></span>
-                  </span>
+                  <span className="alltag__img" style={{ backgroundImage: `url(${a.img})`, backgroundPosition: a.pos }} aria-hidden="true" />
                   <span className="alltag__t">{a.t}</span>
                 </span>
               ))}

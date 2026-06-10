@@ -8,7 +8,7 @@ import {
 import Reveal from '../components/Reveal.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
-import BeforeAfter from '../components/BeforeAfter.jsx'
+import VorherNachherShowcase from '../components/VorherNachherShowcase.jsx'
 import MaterialsLab from '../components/MaterialsLab.jsx'
 import KuechenfehlerGame from '../components/KuechenfehlerGame.jsx'
 import RaumideenSection from '../components/RaumideenSection.jsx'
@@ -169,16 +169,8 @@ export default function Inspiration() {
         </div>
       </section>
 
-      {/* VORHER / NACHHER TEASER (hell) */}
-      <section className="section insp-ba">
-        <div className="container">
-          <SectionHeader align="center" kicker="Vorher / Nachher" title={<>Aus alt <span className="grad">wird wow.</span></>} lead="Echte Küchen. Echte Verwandlungen. Zieh am Regler – und sieh, was möglich wird." />
-          <div className="insp-ba__wrap">
-            <BeforeAfter before={iDunkel} after={iHell} beforeAlt="Vorher" afterAlt="Nachher" />
-          </div>
-          <div className="section__cta"><CTAButton to="/vorher-nachher">Mehr Verwandlungen entdecken</CTAButton></div>
-        </div>
-      </section>
+      {/* VORHER / NACHHER — Showcase-Galerie (3 Karten) */}
+      <VorherNachherShowcase />
 
       {/* SO EINFACH GEHT'S (hell) */}
       <section className="section insp-steps">

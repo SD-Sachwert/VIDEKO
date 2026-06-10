@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
 import useCarouselNav from '../hooks/useCarouselNav.js'
@@ -55,17 +56,26 @@ export default function MaterialsLab() {
           <span className="matlab__divider" aria-hidden="true" />
           <span className="kicker">Materials Lab</span>
           <h2 className="matlab__title">Fühlen. Sehen.<br /><span className="grad">Verstehen.</span></h2>
-          <p className="matlab__lead">Echte Materialien. Echte Oberflächen. Außergewöhnliche Strukturen und Qualitäten in einer neuen Dimension.</p>
-          {selected != null ? (
-            <div className="matinfo" key={MATS[selected].t}>
-              <span className="matinfo__head"><span className="matinfo__n">{MATS[selected].n}</span><span className="matinfo__t">{MATS[selected].t}</span></span>
-              <p className="matinfo__row"><span>Wirkung</span>{MATS[selected].wirkung}</p>
-              <p className="matinfo__row"><span>Einsatz</span>{MATS[selected].einsatz}</p>
-              <p className="matinfo__note"><b>VIDEKO-Notiz:</b> {MATS[selected].note}</p>
-            </div>
-          ) : (
-            <p className="matinfo-hint">Tippe auf ein Material im Karussell, um Wirkung, Einsatz und unsere ehrliche Notiz dazu zu sehen.</p>
-          )}
+          <p className="matlab__lead">Echte Materialien. Echte Oberflächen. Außergewöhnliche Strukturen und<br />Qualitäten in einer neuen Dimension.</p>
+          <div className="matinfo-wrap">
+            <AnimatePresence mode="wait" initial={false}>
+              {selected != null ? (
+                <motion.div className="matinfo" key={MATS[selected].t}
+                  initial={{ opacity: 0, x: -24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }}
+                  transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}>
+                  <span className="matinfo__head"><span className="matinfo__n">{MATS[selected].n}</span><span className="matinfo__t">{MATS[selected].t}</span></span>
+                  <p className="matinfo__row"><span>Wirkung</span>{MATS[selected].wirkung}</p>
+                  <p className="matinfo__row"><span>Einsatz</span>{MATS[selected].einsatz}</p>
+                  <p className="matinfo__note"><b>VIDEKO-Notiz:</b> {MATS[selected].note}</p>
+                </motion.div>
+              ) : (
+                <motion.p className="matinfo-hint" key="hint"
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}>
+                  Tippe auf ein Material im Karussell, um Wirkung, Einsatz und unsere ehrliche Notiz dazu zu sehen.
+                </motion.p>
+              )}
+            </AnimatePresence>
+          </div>
         </Reveal>
 
         <div className="matlab__stagewrap" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
@@ -82,7 +92,7 @@ export default function MaterialsLab() {
                 pointerEvents: show ? 'auto' : 'none',
               }
               return (
-                <button key={m.t} type="button" className={`matcard3d ${isActive ? 'is-active' : ''}`} style={style} onClick={() => pick(i)} aria-label={m.t} tabIndex={show ? 0 : -1}>
+                <button key={m.t} type="button" className={`matcard3d ${isActive ? 'is-active' : ''}`} style={style} onClick={() => { setActive(i); setSelected(selected === i ? null : i) }} aria-label={m.t} tabIndex={show ? 0 : -1}>
                   <img src={m.img} alt={m.t} loading="lazy" />
                   <span className="matcard3d__cap"><b>{m.t}</b><span>{m.d}</span></span>
                 </button>

@@ -19,31 +19,30 @@ export default function KfgTeaser() {
   const [miss, setMiss] = useState(null)
   const [popup, setPopup] = useState(false)
   const idx = useRef(0)
+  const clicks = useRef(0)
   const tMiss = useRef(0)
   const tPop = useRef(0)
 
   const onField = (e) => {
-    if (popup) return
+    if (popup || clicks.current >= 2) return // nur 2 Klicks, dann kommt der Hinweis
+    clicks.current += 1
     const r = e.currentTarget.getBoundingClientRect()
     const x = ((e.clientX - r.left) / r.width) * 100
     const y = ((e.clientY - r.top) / r.height) * 100
     setMiss({ x: Math.min(82, Math.max(18, x)), y: Math.min(80, Math.max(20, y)), text: MISS[idx.current % MISS.length] })
     idx.current += 1
     clearTimeout(tMiss.current)
-    tMiss.current = setTimeout(() => setMiss(null), 2800)
-    clearTimeout(tPop.current)
-    tPop.current = setTimeout(() => { setMiss(null); setPopup(true) }, 3000)
+    tMiss.current = setTimeout(() => setMiss(null), 2400)
+    if (clicks.current >= 2) {
+      clearTimeout(tPop.current)
+      tPop.current = setTimeout(() => { setMiss(null); setPopup(true) }, 2500)
+    }
   }
 
   return (
     <Reveal className="kfgteaser" delay={0.1}>
       <div className={`kfgteaser__media ${popup ? 'is-done' : ''}`} style={{ backgroundImage: `url(${scene})` }}
         onClick={onField} role="button" tabIndex={0} aria-label="Küche – tippe und finde die Fehler">
-        {!popup && <>
-          <span className="kfgteaser__dot" style={{ left: '24%', top: '44%' }} />
-          <span className="kfgteaser__dot" style={{ left: '60%', top: '30%' }} />
-          <span className="kfgteaser__dot" style={{ left: '72%', top: '52%' }} />
-        </>}
         {miss && !popup && <span className="kft__miss" style={{ left: `${miss.x}%`, top: `${miss.y}%` }}>{miss.text}</span>}
         {popup && (
           <div className="kfgteaser__popup">
