@@ -118,7 +118,7 @@ export default function KuechenfehlerGame() {
   const done = count === HOTSPOTS.length
 
   return (
-    <section className="section section--light kfg">
+    <section className="section section--light kfg" id="kuechensuenden">
       <div className="container">
         <Reveal className="kfg-head">
           <span className="kfg-badge">Interaktiv</span>

@@ -8,6 +8,7 @@ import Hero from '../components/Hero.jsx'
 import Reveal from '../components/Reveal.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
 import CTAButton from '../components/CTAButton.jsx'
+import KuechenfehlerTrailer from '../components/KuechenfehlerTrailer.jsx'
 import ExplodingKitchenModal from '../components/ExplodingKitchenModal.jsx'
 import HeroExperience from '../components/HeroExperience.jsx'
 import StylefinderHero from '../components/StylefinderHero.jsx'
@@ -130,6 +131,9 @@ export default function Home() {
 
         </div>
       </section>
+
+      {/* 3b — KÜCHENFEHLER-TRAILER (vor Studio) */}
+      <KuechenfehlerTrailer />
 
       {/* 4 — STUDIO GALERIE */}
       <section className="section section--light lp-studio-sec">

@@ -15,17 +15,19 @@ import m09 from '../assets/images/inspiration/materials-lab/m09.png'
 import m10 from '../assets/images/inspiration/materials-lab/m10.png'
 
 const MATS = [
-  { img: m01, n: '01', t: 'Naturstein', d: 'Tief, markant, luxuriös.' },
-  { img: m02, n: '02', t: 'Holz', d: 'Warm, ruhig, charakterstark.' },
-  { img: m03, n: '03', t: 'Travertin', d: 'Sanfte Natürlichkeit.' },
-  { img: m04, n: '04', t: 'Metall', d: 'Gebürstetes Messing mit Wirkung.' },
-  { img: m05, n: '05', t: 'Glas', d: 'Rauchig, elegant, reflektierend.' },
-  { img: m06, n: '06', t: 'Lack', d: 'Ruhig, clean, samtig matt.' },
-  { img: m07, n: '07', t: 'Betonoptik', d: 'Modern, reduziert, architektonisch.' },
-  { img: m08, n: '08', t: 'Marmor', d: 'Helle Eleganz mit feiner Aderung.' },
-  { img: m09, n: '09', t: 'Struktur', d: 'Gerillt, haptisch, besonders.' },
-  { img: m10, n: '10', t: 'Bronze', d: 'Warmes Metall, edler Akzent.' },
+  { img: m01, n: '01', t: 'Naturstein', d: 'Tief, markant, luxuriös.', wirkung: 'Tief, markant und unverwechselbar – jede Platte ein Unikat.', einsatz: 'Stark als Arbeitsplatte oder Rückwand, wenn ein Material den Ton angeben darf.', note: 'Schön und robust. Säure mag er trotzdem nicht – reden wir vorher drüber.' },
+  { img: m02, n: '02', t: 'Holz', d: 'Warm, ruhig, charakterstark.', wirkung: 'Warm, natürlich und wohnlich. Bringt sofort Ruhe in den Raum.', einsatz: 'Ideal für Fronten und Wohnküchen, in denen es weniger nach Möbel und mehr nach Zuhause aussehen soll.', note: 'Holz lebt. Kleine Spuren gehören dazu – das ist Charakter, kein Mangel.' },
+  { img: m03, n: '03', t: 'Travertin', d: 'Sanfte Natürlichkeit.', wirkung: 'Sanft, hell und natürlich strukturiert. Edel, ohne laut zu sein.', einsatz: 'Schön für ruhige, helle Küchen mit mediterraner Note.', note: 'Offenporig und charmant. Eine gute Versiegelung erspart später Ärger.' },
+  { img: m04, n: '04', t: 'Metall', d: 'Gebürstetes Messing mit Wirkung.', wirkung: 'Gebürstetes Messing setzt warme, edle Akzente mit Tiefe.', einsatz: 'Perfekt für Details: Griffe, Armaturen, Nischen – dosiert eingesetzt.', note: 'Als Akzent ein Highlight. Großflächig schnell zu viel des Guten.' },
+  { img: m05, n: '05', t: 'Glas', d: 'Rauchig, elegant, reflektierend.', wirkung: 'Rauchig, elegant und reflektierend. Bringt Leichtigkeit und Tiefe.', einsatz: 'Stark für Rückwände und Vitrinen, wenn der Raum offen wirken soll.', note: 'Sieht edel aus. Fingerabdrücke findet es leider auch spannend.' },
+  { img: m06, n: '06', t: 'Lack', d: 'Ruhig, clean, samtig matt.', wirkung: 'Ruhig, clean und samtig matt. Reduziert und modern.', einsatz: 'Ideal für klare, ruhige Fronten ohne Maserung oder Unruhe.', note: 'Matt ist nicht gleich matt. Die richtige Oberfläche bleibt entspannt im Alltag.' },
+  { img: m07, n: '07', t: 'Betonoptik', d: 'Modern, reduziert, architektonisch.', wirkung: 'Modern, reduziert und architektonisch. Cooler, urbaner Charakter.', einsatz: 'Passt zu klaren Konzepten, in denen Materialien zurückhaltend bleiben sollen.', note: 'Wirkt kühl – mit warmem Holz oder Licht wird daraus echte Wohnlichkeit.' },
+  { img: m08, n: '08', t: 'Marmor', d: 'Helle Eleganz mit feiner Aderung.', wirkung: 'Elegant, hell und ruhig. Lässt den Raum leicht wirken, ohne langweilig zu sein.', einsatz: 'Stark als Statement-Platte oder Rückwand für hochwertige, helle Küchen.', note: 'Schön ist gut. Pflegeleicht ist besser. Am besten beides.' },
+  { img: m09, n: '09', t: 'Struktur', d: 'Gerillt, haptisch, besonders.', wirkung: 'Gerillt, haptisch und besonders. Bringt Spannung über die Oberfläche.', einsatz: 'Spannend für Fronten oder Inseln, die man sehen und fühlen soll.', note: 'Struktur ist ein Erlebnis – aber auch ein kleiner Staubfänger. Ehrlich gesagt.' },
+  { img: m10, n: '10', t: 'Bronze', d: 'Warmes Metall, edler Akzent.', wirkung: 'Warmes Metall mit edlem, tiefem Schimmer.', einsatz: 'Hochwertige Akzente für Griffe, Rahmen und feine Details.', note: 'Ein Hauch Bronze wirkt teuer. Zu viel davon wirkt nur teuer gewollt.' },
 ]
+
+const SECTION_LEAD = 'Ob Front, Arbeitsplatte, Rückwand oder Griff: Oberflächen entscheiden, wie eine Küche im Alltag wirkt. Glänzt sie nur im ersten Moment – oder bleibt sie auch nach Jahren noch stark? Genau deshalb schauen wir bei Materialien nicht nur auf Optik, sondern auch auf Pflege, Haptik, Lichtwirkung und Alltagstauglichkeit. Kurz: schön darf sein. Nervig lieber nicht.'
 
 export default function MaterialsLab() {
   const [active, setActive] = useState(0)
@@ -48,14 +50,16 @@ export default function MaterialsLab() {
     <section className="section section--light matlab">
       <div className="container matlab__grid">
         <Reveal className="matlab__intro">
+          <span className="matlab__divider" aria-hidden="true" />
           <span className="kicker">Materials Lab</span>
           <h2 className="matlab__title">Fühlen. Sehen.<br /><span className="grad">Verstehen.</span></h2>
           <p className="matlab__lead">Echte Materialien. Echte Oberflächen. Außergewöhnliche Strukturen und Qualitäten in einer neuen Dimension.</p>
-          <span className="matlab__active">
-            <span className="matlab__active-n">{MATS[active].n}</span>
-            <span className="matlab__active-b"><span className="matlab__active-t">{MATS[active].t}</span><span className="matlab__active-d">{MATS[active].d}</span></span>
-          </span>
-          <a className="matlab__cta" href="#materialien">Materialien entdecken <ArrowRight size={16} strokeWidth={2} /></a>
+          <div className="matinfo" key={MATS[active].t}>
+            <span className="matinfo__head"><span className="matinfo__n">{MATS[active].n}</span><span className="matinfo__t">{MATS[active].t}</span></span>
+            <p className="matinfo__row"><span>Wirkung</span>{MATS[active].wirkung}</p>
+            <p className="matinfo__row"><span>Einsatz</span>{MATS[active].einsatz}</p>
+            <p className="matinfo__note"><b>VIDEKO-Notiz:</b> {MATS[active].note}</p>
+          </div>
         </Reveal>
 
         <div className="matlab__stagewrap" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
@@ -89,6 +93,11 @@ export default function MaterialsLab() {
             <button type="button" className="matlab__arrow" onClick={next} aria-label="Nächstes Material"><ChevronRight size={20} strokeWidth={2} /></button>
           </div>
         </div>
+
+        <Reveal className="matlab__outro">
+          <h3 className="matlab__outro-title">Material fühlt man, bevor man es versteht.</h3>
+          <p className="matlab__outro-text">{SECTION_LEAD}</p>
+        </Reveal>
       </div>
     </section>
   )
