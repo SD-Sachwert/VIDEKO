@@ -33,9 +33,9 @@ export default function StylefinderHero() {
       <span className="sfx-sec__glow" aria-hidden="true" />
       <div className="container">
         <Reveal className="sfx__head">
-          <span className="kicker kicker--gold">VIDEKO Stylefinder</span>
+          <span className="sfx__pill"><Sparkles size={13} strokeWidth={2.2} /> VIDEKO Stylefinder</span>
           <h2 className="sfx__title">Finde deinen <span className="grad">Küchenstil.</span></h2>
-          <p className="sfx__sub">Wir raten nicht. Wir treffen. Wähle, was dich anspricht – wir zeigen dir Ideen, die dazu passen.</p>
+          <p className="sfx__sub">Beantworte 7 kurze Fragen und wir sagen dir, welche Küche zu dir passt – bevor du dich in 14 Beigetönen verlierst.</p>
         </Reveal>
 
         <Reveal className="sfx__stage" delay={0.08}>

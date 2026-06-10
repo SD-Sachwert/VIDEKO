@@ -10,7 +10,6 @@ import CTAButton from '../components/CTAButton.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
 import BeforeAfter from '../components/BeforeAfter.jsx'
 import MaterialsLab from '../components/MaterialsLab.jsx'
-import KuechengefuehlSection from '../components/KuechengefuehlSection.jsx'
 import KuechenfehlerGame from '../components/KuechenfehlerGame.jsx'
 import RaumideenSection from '../components/RaumideenSection.jsx'
 
@@ -136,9 +135,6 @@ export default function Inspiration() {
           </Reveal>
         </div>
       </section>
-
-      {/* KÜCHENGEFÜHL-MODUL — ganz oben (interaktiver Einstieg) */}
-      <KuechengefuehlSection />
 
       {/* VIDEKO KOMPASS (kompakt) */}
       <section className="section insp-style" id="kompass">

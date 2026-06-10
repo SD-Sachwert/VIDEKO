@@ -121,7 +121,7 @@ export default function Footer() {
           <div className="footer__col footer__col--contact">
             <span className="footer__coltitle">Kontakt</span>
             <span className="footer__contact-name">VIDEKO Küchen eG</span>
-            <span className="footer__contact-line"><MapPin size={15} strokeWidth={1.7} /> Hertzstraße 4, 97076 Würzburg</span>
+            <a href="https://www.google.com/maps/search/?api=1&query=Hertzstra%C3%9Fe%204%2C%2097076%20W%C3%BCrzburg" target="_blank" rel="noopener noreferrer" className="footer__contact-line"><MapPin size={15} strokeWidth={1.7} /> Hertzstraße 4, 97076 Würzburg</a>
             <a href="mailto:info@videko-kuechen.de" className="footer__contact-line"><Mail size={15} strokeWidth={1.7} /> info@videko-kuechen.de</a>
             <a href="tel:+491605545818" className="footer__contact-line"><Phone size={15} strokeWidth={1.7} /> 0160 5545818</a>
           </div>
