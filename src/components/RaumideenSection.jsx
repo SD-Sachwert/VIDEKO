@@ -17,52 +17,76 @@ const ROOMS = [
     key: 'Kochen', icon: ChefHat, img: kochen, title: 'Kochen mit Stil.',
     text: 'Funktion trifft Emotion – Küchen, die mehr können und schöner sind.',
     features: ['Licht & Atmosphäre', 'Stauraum', 'Sitzplatz', 'Offenes Wohnen'],
-    cards: [{ t: 'Offenes Wohnen', d: 'Küche und Raum fließen ineinander.', pos: '50% 40%' }, { t: 'Direkt verbunden', d: 'Kurze Wege, klare Abläufe.', pos: '30% 60%' }],
+    cards: [
+      { t: 'Clevere Details.', d: 'Durchdachter Stauraum für mehr Leichtigkeit.', pos: '50% 42%', plus: 'Auszüge, Innenorganisation und kurze Wege machen die Küche alltagstauglich.' },
+      { t: 'Offen verbunden.', d: 'Kochen, Essen, Wohnen – ein Raumgefühl.', pos: '30% 60%', plus: 'Die Küche wird nicht getrennt geplant, sondern als Teil des gesamten Wohnraums.' },
+    ],
   },
   {
     key: 'Essen', icon: Utensils, img: essen, title: 'Essen mit Atmosphäre.',
     text: 'Gemeinsam genießen – Essbereiche, die verbinden und einladen.',
     features: ['Sitzplatz', 'Beleuchtung', 'Geselligkeit', 'Nähe zur Küche'],
-    cards: [{ t: 'Gute Runde', d: 'Platz für alle, die dazugehören.', pos: '50% 45%' }, { t: 'Warmes Licht', d: 'Stimmung, die zum Bleiben einlädt.', pos: '40% 55%' }],
+    cards: [
+      { t: 'Großzügig tafeln.', d: 'Langer Tisch, viele Gäste – perfekt für besondere Abende.', pos: '50% 45%', plus: 'Essbereiche brauchen Raum, Licht und die richtige Verbindung zur Küche.' },
+      { t: 'Gemütlich genießen.', d: 'Der Lieblingsplatz für Frühstück und Familie.', pos: '40% 55%', plus: 'Auch kleine Essplätze können hochwertig, bequem und alltagstauglich geplant werden.' },
+    ],
   },
   {
     key: 'Wohnen', icon: Sofa, img: wohnen, title: 'Wohnen mit Wärme.',
     text: 'Kochen, leben, ankommen – Wohnbereiche, die offen und ruhig wirken.',
     features: ['Offenheit', 'Materialien', 'Komfort', 'Übergänge'],
-    cards: [{ t: 'Weiche Übergänge', d: 'Vom Kochen ins Wohnen, ohne Bruch.', pos: '50% 50%' }, { t: 'Echte Materialien', d: 'Oberflächen, die man spüren will.', pos: '35% 45%' }],
+    cards: [
+      { t: 'Offen verbunden.', d: 'Fließende Übergänge für ein großzügiges Wohngefühl.', pos: '50% 50%', plus: 'Materialien und Linien verbinden Küche und Wohnen zu einem ruhigen Gesamtbild.' },
+      { t: 'Ruhige Harmonie.', d: 'Natürliche Materialien für Wärme und Beständigkeit.', pos: '35% 45%', plus: 'Wiederkehrende Oberflächen schaffen Ordnung und optische Ruhe.' },
+    ],
   },
   {
     key: 'Homeoffice', icon: Laptop, img: homeoffice, title: 'Homeoffice mit Struktur.',
     text: 'Arbeiten zu Hause – Lösungen, die organisiert, ruhig und wohnlich bleiben.',
     features: ['Arbeitsfläche', 'Stauraum', 'Licht', 'Rückzugsort'],
-    cards: [{ t: 'Klarer Kopf', d: 'Arbeitsfläche, die nicht zumüllt.', pos: '50% 45%' }, { t: 'Rückzugsort', d: 'Feierabend beginnt mit Schranktür zu.', pos: '40% 55%' }],
+    cards: [
+      { t: 'Stauraum, der mitdenkt.', d: 'Alles griffbereit, alles perfekt verstaut.', pos: '50% 45%', plus: 'Ordner, Technik und Kabel verschwinden sauber in geplanten Stauraumlösungen.' },
+      { t: 'Ruhige Nische.', d: 'Fokus finden in einem Raum, der beruhigt.', pos: '40% 55%', plus: 'Ein Arbeitsplatz darf funktional sein, ohne nach Büro auszusehen.' },
+    ],
   },
   {
     key: 'Hauswirtschaft', icon: WashingMachine, img: hauswirtschaft, title: 'Hauswirtschaft mit System.',
     text: 'Waschen, lagern, ordnen – Räume, die den Alltag einfacher machen.',
     features: ['Stauraum', 'Arbeitsfläche', 'Geräteintegration', 'Ordnung'],
-    cards: [{ t: 'Alles am Platz', d: 'Ordnung, die von selbst hält.', pos: '50% 50%' }, { t: 'Geräte integriert', d: 'Waschen und Trocknen, sauber verbaut.', pos: '40% 50%' }],
+    cards: [
+      { t: 'Clever verborgen.', d: 'Versteckter Stauraum für alles, was nicht im Blick sein muss.', pos: '50% 50%', plus: 'Reinigung, Vorräte und Wäsche verschwinden sauber hinter durchdachten Fronten.' },
+      { t: 'Wäsche & Vorrat.', d: 'Alles griffbereit, alles an seinem Platz.', pos: '40% 50%', plus: 'HWR-Räume werden erst stark, wenn Abläufe wirklich mitgedacht sind.' },
+    ],
   },
   {
     key: 'Garderobe', icon: DoorOpen, img: garderobe, title: 'Ankommen mit Ordnung.',
     text: 'Garderoben, die aufräumen, entlasten und direkt gut aussehen.',
     features: ['Stauraum', 'Sitzbank', 'Schuhe', 'Beleuchtung'],
-    cards: [{ t: 'Erster Eindruck', d: 'Aufgeräumt ankommen, jeden Tag.', pos: '50% 45%' }, { t: 'Sitzbank inklusive', d: 'Schuhe an, ohne Balanceakt.', pos: '40% 60%' }],
+    cards: [
+      { t: 'Sitzbank mit Stauraum.', d: 'Platz für alles, was mit euch reinkommt.', pos: '50% 45%', plus: 'Schuhe, Taschen und Jacken bekommen feste Plätze – ohne Flur-Chaos.' },
+      { t: 'Einladend. Aufgeräumt.', d: 'Ein Eingangsbereich, der Ordnung schafft.', pos: '40% 60%', plus: 'Die Garderobe ist der erste Eindruck des Hauses. Sie darf also ruhig gut aussehen.' },
+    ],
   },
   {
     key: 'Schlafen', icon: BedDouble, img: schlafen, title: 'Schlafen mit System.',
     text: 'Aus Küchenmöbeln werden Schränke – clevere Schlafzimmer mit Ruhe und Stauraum.',
     features: ['Kleiderschrank', 'Ruhe', 'Stauraum', 'Licht'],
-    cards: [{ t: 'Viel Stauraum', d: 'Kleiderschrank, der wirklich passt.', pos: '50% 45%' }, { t: 'Ruhe pur', d: 'Materialien, die runterfahren lassen.', pos: '40% 50%' }],
+    cards: [
+      { t: 'Maßarbeit für dich.', d: 'Schränke, die zu deinem Raum und deinem Leben passen.', pos: '50% 45%', plus: 'Kleiderschränke können mit derselben Präzision geplant werden wie Küchen.' },
+      { t: 'Ruhe, die bleibt.', d: 'Durchdachte Lösungen für erholsamen Schlaf.', pos: '40% 50%', plus: 'Weniger sichtbares Chaos, mehr ruhige Flächen und stimmiges Licht.' },
+    ],
   },
 ]
 
+const EASE = [0.16, 1, 0.3, 1]
+
 export default function RaumideenSection() {
   const [active, setActive] = useState(0)
-  const [focus, setFocus] = useState(null) // welcher Mini-Teaser ist in den Fokus geholt
+  const [open, setOpen] = useState([]) // welche Detailkarten sind aufgeklappt
   const r = ROOMS[active]
-  const select = (i) => { setActive(i); setFocus(null) }
+  const select = (i) => { setActive(i); setOpen([]) }
   const go = (dir) => select((active + dir + ROOMS.length) % ROOMS.length)
+  const toggle = (ci) => setOpen((o) => (o.includes(ci) ? o.filter((x) => x !== ci) : [...o, ci]))
   const num = (n) => String(n + 1).padStart(2, '0')
 
   return (
@@ -83,45 +107,72 @@ export default function RaumideenSection() {
           ))}
         </div>
 
-        <div className="rms__stage">
-          <AnimatePresence mode="wait">
-            <motion.div key={r.key} className="rms__grid"
-              initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}>
-              <div className="rms__media">
-                <img src={r.img} alt={r.title} className="rms__img" loading="lazy" draggable={false}
-                  style={focus != null ? { transform: 'scale(1.14)', objectPosition: r.cards[focus].pos } : undefined} />
-                <div className="rms__nav">
-                  <button type="button" className="rms__arrow" onClick={() => go(-1)} aria-label="Vorheriger Bereich"><ArrowLeft size={16} strokeWidth={2} /></button>
-                  <button type="button" className="rms__arrow" onClick={() => go(1)} aria-label="Nächster Bereich"><ArrowRight size={16} strokeWidth={2} /></button>
-                  <span className="rms__count">{num(active)} <span>/ {num(ROOMS.length - 1)}</span></span>
-                </div>
-              </div>
+        <div className="rms__grid">
+          {/* großes Hauptbild links – weicher Crossfade */}
+          <div className="rms__media">
+            <AnimatePresence initial={false}>
+              <motion.img key={r.img} src={r.img} alt={r.title} className="rms__img" loading="lazy" draggable={false}
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                transition={{ duration: 0.5, ease: 'easeOut' }} />
+            </AnimatePresence>
+            <div className="rms__nav">
+              <button type="button" className="rms__arrow" onClick={() => go(-1)} aria-label="Vorheriger Bereich"><ArrowLeft size={16} strokeWidth={2} /></button>
+              <button type="button" className="rms__arrow" onClick={() => go(1)} aria-label="Nächster Bereich"><ArrowRight size={16} strokeWidth={2} /></button>
+              <span className="rms__count">{num(active)} <span>/ {num(ROOMS.length - 1)}</span></span>
+            </div>
+          </div>
 
-              <div className="rms__card">
+          {/* dunkle Content-Karte rechts – bleibt fix, nur Text blendet weich */}
+          <div className="rms__card">
+            <AnimatePresence mode="wait">
+              <motion.div key={r.key} className="rms__cardcontent"
+                initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.38, ease: EASE }}>
                 <h3 className="rms__cardtitle">{r.title}</h3>
                 <p className="rms__cardtext">{r.text}</p>
                 <ul className="rms__features">
                   {r.features.map((f) => <li key={f}><span className="rms__fic"><Check size={13} strokeWidth={3} /></span>{f}</li>)}
                 </ul>
-                <Link to="/beratung" className="rms__cta">Ideen entdecken <ArrowRight size={16} strokeWidth={2} /></Link>
-              </div>
+              </motion.div>
+            </AnimatePresence>
+            <Link to="/beratung" className="rms__cta">Ideen entdecken <ArrowRight size={16} strokeWidth={2} /></Link>
+          </div>
 
-              <div className="rms__minis">
-                {r.cards.map((cd, ci) => (
-                  <div key={cd.t} className={`rms__mini ${focus === ci ? 'is-active' : ''}`}>
-                    <span className="rms__minithumb" style={{ backgroundImage: `url(${r.img})`, backgroundPosition: cd.pos }} aria-hidden="true" />
-                    <span className="rms__minibody">
-                      <span className="rms__minit">{cd.t}</span>
-                      <span className="rms__minid">{cd.d}</span>
-                    </span>
-                    <button type="button" className="rms__miniplus" aria-label={`${cd.t} im Bild zeigen`} aria-pressed={focus === ci}
-                      onClick={() => setFocus(focus === ci ? null : ci)}><Plus size={15} strokeWidth={2.4} /></button>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          </AnimatePresence>
+          {/* zwei kleine überlappende Detailkarten unten rechts */}
+          <div className="rms__minis">
+            <AnimatePresence mode="wait">
+              <motion.div key={r.key} className="rms__minis-inner"
+                initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }}
+                transition={{ duration: 0.4, ease: EASE }}>
+                {r.cards.map((cd, ci) => {
+                  const isOpen = open.includes(ci)
+                  return (
+                    <div key={cd.t} className={`rms__mini ${isOpen ? 'is-open' : ''}`}>
+                      <div className="rms__mini-row">
+                        <span className="rms__minithumb" style={{ backgroundImage: `url(${r.img})`, backgroundPosition: cd.pos }} aria-hidden="true" />
+                        <span className="rms__minibody">
+                          <span className="rms__minit">{cd.t}</span>
+                          <span className="rms__minid">{cd.d}</span>
+                        </span>
+                        <button type="button" className="rms__miniplus" aria-expanded={isOpen} aria-label={`${cd.t} Details`} onClick={() => toggle(ci)}>
+                          <Plus size={15} strokeWidth={2.6} />
+                        </button>
+                      </div>
+                      <AnimatePresence initial={false}>
+                        {isOpen && (
+                          <motion.p className="rms__miniplus-text"
+                            initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.32, ease: EASE }}>
+                            <span>{cd.plus}</span>
+                          </motion.p>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  )
+                })}
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </div>
       </div>
     </section>

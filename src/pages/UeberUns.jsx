@@ -237,7 +237,7 @@ export default function UeberUns() {
       </section>
 
       {/* ABSCHLUSS-CTA */}
-      <section className="section section--dark leist-final2">
+      <section className="section leist-final2 leist-final2--marble">
         <div className="container">
           <Reveal className="lfinal">
             <h2 className="lfinal__title">Genug von uns.<br /><span className="grad">Jetzt bist du dran.</span></h2>

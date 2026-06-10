@@ -63,7 +63,7 @@ const SCENES = [
     ],
   },
   {
-    key: 'Wocheneinkauf', icon: ShoppingCart, img: scene2, h: 'Wocheneinkauf.',
+    key: 'Einkauf', icon: ShoppingCart, img: scene2, h: 'Einkauf.',
     bullets: ['Kurze Wege von der Tür zum Kühlschrank.', 'Ablage da, wenn acht Tüten gleichzeitig kommen.'],
     spots: [
       { x: 40, y: 40, t: 'Acht Tüten, eine Ablage. Reicht.' },
@@ -101,11 +101,16 @@ export default function KitchenFeelingCard() {
   const viewImg = sc ? sc.img : f.img
   const viewH = sc ? sc.h : f.h
   const viewBullets = sc ? sc.bullets : f.bullets
-  const lightLine = light < 34
-    ? 'Natürlich hell. Klar und offen.'
-    : light < 67
-      ? 'Warm, ruhig und wohnlich.'
-      : 'Gedimmt. Gemütlich. Feierabendmodus.'
+  const LIGHT_STOPS = ['Morgen', 'Tag', 'Abend', 'Dimmer', 'Nacht']
+  const lightLine = light < 20
+    ? 'Frischer Morgen. Klar und wach.'
+    : light < 40
+      ? 'Natürlich hell. Klar und offen.'
+      : light < 60
+        ? 'Warm, ruhig und wohnlich.'
+        : light < 80
+          ? 'Gedimmt und gemütlich.'
+          : 'Feierabendmodus. Tief und ruhig.'
 
   return (
     <div className="kfeel">
@@ -152,10 +157,21 @@ export default function KitchenFeelingCard() {
             <span className="kfeel__lightlabel">Lichtstimmung</span>
             <span className="kfeel__lightline">{lightLine}</span>
           </div>
-          <input className="kfeel__range" type="range" min="0" max="100" value={light}
-            onChange={(e) => setLight(Number(e.target.value))} aria-label="Lichtstimmung"
-            style={{ '--p': `${light}%` }} />
-          <div className="kfeel__lightscale"><span>Tag</span><span>Abend</span><span>Mood</span></div>
+          <div className="kfeel__lightslider">
+            <span className="kfeel__lighttrackticks" aria-hidden="true">
+              {LIGHT_STOPS.map((s) => <i key={s} />)}
+            </span>
+            <input className="kfeel__range" type="range" min="0" max="100" value={light}
+              onChange={(e) => setLight(Number(e.target.value))} aria-label="Lichtstimmung"
+              style={{ '--p': `${light}%` }} />
+          </div>
+          <div className="kfeel__lightscale">
+            {LIGHT_STOPS.map((s, i) => {
+              const center = i * 25
+              const on = Math.abs(light - center) <= 12.5
+              return <span key={s} className={`kfeel__lighttick ${on ? 'is-on' : ''}`}>{s}</span>
+            })}
+          </div>
         </div>
 
         <div className="kfeel__body">
