@@ -18,18 +18,24 @@ const MISS = [
 
 export default function KuechenfehlerTrailer() {
   const [miss, setMiss] = useState(null)
+  const [popup, setPopup] = useState(false)
   const idx = useRef(0)
-  const timer = useRef(0)
+  const missTimer = useRef(0)
+  const popTimer = useRef(0)
 
   const onField = (e) => {
+    if (popup) return // weiterklicken geht nicht – im Trailer ist Schluss
     const r = e.currentTarget.getBoundingClientRect()
     const x = ((e.clientX - r.left) / r.width) * 100
     const y = ((e.clientY - r.top) / r.height) * 100
     const text = MISS[idx.current % MISS.length]
     idx.current += 1
     setMiss({ x: Math.min(84, Math.max(16, x)), y: Math.min(82, Math.max(18, y)), text })
-    clearTimeout(timer.current)
-    timer.current = setTimeout(() => setMiss(null), 2600)
+    clearTimeout(missTimer.current)
+    missTimer.current = setTimeout(() => setMiss(null), 2600)
+    // nach der Niete: hier geht's nicht weiter -> Fenster zum echten Spiel
+    clearTimeout(popTimer.current)
+    popTimer.current = setTimeout(() => { setMiss(null); setPopup(true) }, 1400)
   }
 
   return (
@@ -43,11 +49,18 @@ export default function KuechenfehlerTrailer() {
         </Reveal>
 
         <Reveal className="kft__fieldwrap" delay={0.08}>
-          <button type="button" className="kft__field" onClick={onField} aria-label="Trailer – tippe in die Küche">
+          <div className={`kft__field ${popup ? 'is-done' : ''}`} onClick={onField} role="button" tabIndex={0} aria-label="Trailer – tippe in die Küche">
             <img src={scene} alt="Küche – kleiner Vorgeschmack auf das Fehlersuche-Spiel" draggable={false} />
-            <span className="kft__badge"><Search size={14} strokeWidth={2} /> Tippen zum Suchen</span>
-            {miss && <span className="kft__miss" style={{ left: `${miss.x}%`, top: `${miss.y}%` }}>{miss.text}</span>}
-          </button>
+            {!popup && <span className="kft__badge"><Search size={14} strokeWidth={2} /> Tippen zum Suchen</span>}
+            {miss && !popup && <span className="kft__miss" style={{ left: `${miss.x}%`, top: `${miss.y}%` }}>{miss.text}</span>}
+            {popup && (
+              <div className="kft__popup">
+                <span className="kft__popup-t">Das war nur der Trailer.</span>
+                <span className="kft__popup-d">Weiter geht&apos;s im echten Spiel – hier findest du alle 9 Küchenfehler.</span>
+                <Link to="/inspiration#kuechensuenden" className="kft__popup-btn">Zu den 9 Küchenfehlern <ArrowRight size={15} strokeWidth={2} /></Link>
+              </div>
+            )}
+          </div>
         </Reveal>
       </div>
     </section>

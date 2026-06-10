@@ -27,24 +27,26 @@ const MATS = [
   { img: m10, n: '10', t: 'Bronze', d: 'Warmes Metall, edler Akzent.', wirkung: 'Warmes Metall mit edlem, tiefem Schimmer.', einsatz: 'Hochwertige Akzente für Griffe, Rahmen und feine Details.', note: 'Ein Hauch Bronze wirkt teuer. Zu viel davon wirkt nur teuer gewollt.' },
 ]
 
-const SECTION_LEAD = 'Ob Front, Arbeitsplatte, Rückwand oder Griff: Oberflächen entscheiden, wie eine Küche im Alltag wirkt. Glänzt sie nur im ersten Moment – oder bleibt sie auch nach Jahren noch stark? Genau deshalb schauen wir bei Materialien nicht nur auf Optik, sondern auch auf Pflege, Haptik, Lichtwirkung und Alltagstauglichkeit. Kurz: schön darf sein. Nervig lieber nicht.'
+const SECTION_LEAD = 'Oberflächen entscheiden, wie eine Küche im Alltag wirkt – nicht nur optisch, sondern bei Pflege, Haptik und Licht. Kurz: schön darf sein, nervig lieber nicht.'
 
 export default function MaterialsLab() {
   const [active, setActive] = useState(0)
+  const [selected, setSelected] = useState(null) // Infobox erst nach Klick auf ein Material
   const [paused, setPaused] = useState(false)
   const n = MATS.length
 
-  const next = () => setActive((v) => (v + 1) % n)
-  const prev = () => setActive((v) => (v - 1 + n) % n)
+  const pick = (i) => { setActive(i); setSelected(i) }
+  const next = () => pick((active + 1) % n)
+  const prev = () => pick((active - 1 + n) % n)
   const nav = useCarouselNav(next, prev)
   const rel = (i) => { let d = i - active; if (d > n / 2) d -= n; if (d < -n / 2) d += n; return d }
 
   useEffect(() => {
-    if (paused) return
+    if (paused || selected != null) return
     if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     const id = setInterval(() => setActive((v) => (v + 1) % n), 4000)
     return () => clearInterval(id)
-  }, [paused, active, n])
+  }, [paused, selected, active, n])
 
   return (
     <section className="section section--light matlab">
@@ -54,12 +56,16 @@ export default function MaterialsLab() {
           <span className="kicker">Materials Lab</span>
           <h2 className="matlab__title">Fühlen. Sehen.<br /><span className="grad">Verstehen.</span></h2>
           <p className="matlab__lead">Echte Materialien. Echte Oberflächen. Außergewöhnliche Strukturen und Qualitäten in einer neuen Dimension.</p>
-          <div className="matinfo" key={MATS[active].t}>
-            <span className="matinfo__head"><span className="matinfo__n">{MATS[active].n}</span><span className="matinfo__t">{MATS[active].t}</span></span>
-            <p className="matinfo__row"><span>Wirkung</span>{MATS[active].wirkung}</p>
-            <p className="matinfo__row"><span>Einsatz</span>{MATS[active].einsatz}</p>
-            <p className="matinfo__note"><b>VIDEKO-Notiz:</b> {MATS[active].note}</p>
-          </div>
+          {selected != null ? (
+            <div className="matinfo" key={MATS[selected].t}>
+              <span className="matinfo__head"><span className="matinfo__n">{MATS[selected].n}</span><span className="matinfo__t">{MATS[selected].t}</span></span>
+              <p className="matinfo__row"><span>Wirkung</span>{MATS[selected].wirkung}</p>
+              <p className="matinfo__row"><span>Einsatz</span>{MATS[selected].einsatz}</p>
+              <p className="matinfo__note"><b>VIDEKO-Notiz:</b> {MATS[selected].note}</p>
+            </div>
+          ) : (
+            <p className="matinfo-hint">Tippe auf ein Material im Karussell, um Wirkung, Einsatz und unsere ehrliche Notiz dazu zu sehen.</p>
+          )}
         </Reveal>
 
         <div className="matlab__stagewrap" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
@@ -76,7 +82,7 @@ export default function MaterialsLab() {
                 pointerEvents: show ? 'auto' : 'none',
               }
               return (
-                <button key={m.t} type="button" className={`matcard3d ${isActive ? 'is-active' : ''}`} style={style} onClick={() => setActive(i)} aria-label={m.t} tabIndex={show ? 0 : -1}>
+                <button key={m.t} type="button" className={`matcard3d ${isActive ? 'is-active' : ''}`} style={style} onClick={() => pick(i)} aria-label={m.t} tabIndex={show ? 0 : -1}>
                   <img src={m.img} alt={m.t} loading="lazy" />
                   <span className="matcard3d__cap"><b>{m.t}</b><span>{m.d}</span></span>
                 </button>
@@ -87,7 +93,7 @@ export default function MaterialsLab() {
             <button type="button" className="matlab__arrow" onClick={prev} aria-label="Vorheriges Material"><ChevronLeft size={20} strokeWidth={2} /></button>
             <div className="matlab__dots">
               {MATS.map((m, i) => (
-                <button key={m.t} type="button" className={`matlab__dot ${active === i ? 'is-active' : ''}`} onClick={() => setActive(i)} aria-label={m.t} />
+                <button key={m.t} type="button" className={`matlab__dot ${active === i ? 'is-active' : ''}`} onClick={() => pick(i)} aria-label={m.t} />
               ))}
             </div>
             <button type="button" className="matlab__arrow" onClick={next} aria-label="Nächstes Material"><ChevronRight size={20} strokeWidth={2} /></button>
