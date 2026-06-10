@@ -15,8 +15,8 @@ const CARDS = [
   { img: p2, t: 'Kurze Wege statt Konzernsprech', ar: 942 / 1292 },
   { img: p3, t: 'Mitdenken erwünscht', ar: 1025 / 1334 },
   { img: p4, t: 'Humor inklusive', ar: 920 / 1219 },
-  { img: p5, t: 'Premium statt Masse', ar: 942 / 1246 },
   { img: p6, t: 'Mitschwimmen? Nicht unser Stil.', ar: 909 / 1221 },
+  { img: p5, t: 'Premium statt Masse', ar: 942 / 1246 },
 ]
 
 export default function KarriereTopShowcase() {
@@ -45,8 +45,8 @@ export default function KarriereTopShowcase() {
           <span className="karr-topshow__cue">Echte Haltung. Kein Konzernsprech.</span>
         </Reveal>
 
-        <div className="kts" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
-          <div className="kts__stage" ref={nav.ref} onTouchStart={nav.onTouchStart} onTouchEnd={nav.onTouchEnd} style={{ touchAction: 'pan-y' }}>
+        <div className="kts" ref={nav.ref} onTouchStart={nav.onTouchStart} onTouchEnd={nav.onTouchEnd} onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+          <div className="kts__stage" style={{ touchAction: 'pan-y' }}>
             {CARDS.map((c, i) => {
               const d = rel(i)
               const isActive = d === 0

@@ -134,6 +134,9 @@ export default function Inspiration() {
         </div>
       </section>
 
+      {/* MATERIALS LAB — ganz oben */}
+      <MaterialsLab />
+
       {/* VIDEKO KOMPASS (kompakt) */}
       <section className="section insp-style" id="kompass">
         <div className="container">
@@ -297,9 +300,6 @@ export default function Inspiration() {
           </div>
         </div>
       </section>
-
-      {/* MATERIALS LAB — Coverflow (zusätzliche Vergleichs-Sektion) */}
-      <MaterialsLab />
 
       {/* FINALER CTA / DUNKLER ABSCHLUSS — 3 Wege */}
       <section className="section section--dark insp-convert">

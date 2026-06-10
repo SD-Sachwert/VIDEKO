@@ -196,8 +196,8 @@ export default function Karriere() {
           </Reveal>
         </div>
 
-        <div className="cdeck2" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
-          <div className="cdeck2__stage" ref={deckNav.ref} onTouchStart={deckNav.onTouchStart} onTouchEnd={deckNav.onTouchEnd} style={{ touchAction: 'pan-y' }}>
+        <div className="cdeck2" ref={deckNav.ref} onTouchStart={deckNav.onTouchStart} onTouchEnd={deckNav.onTouchEnd} onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+          <div className="cdeck2__stage" style={{ touchAction: 'pan-y' }}>
             {DECK.map((r, i) => {
               const d = deckRel(i)
               const isActive = d === 0

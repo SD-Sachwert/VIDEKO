@@ -103,15 +103,15 @@ export default function HeroExperience() {
               const y = 1.5 + row * 14.5
               const rot = [-3, 2.4, -2, 3, -1.4, 2.6, -2.2][row] || 0
               // Spalten deutlich weiter nach außen (über den Bildrand hinaus) -> mehr Luft
-              style = { top: `${y}%`, [side ? 'right' : 'left']: `${-11 + (row % 2) * 1.5}%`, '--r': `${rot}deg` }
+              style = { top: `${y}%`, [side ? 'right' : 'left']: `${-12.5 + (row % 2) * 1.5}%`, '--r': `${rot}deg` }
             } else {
-              const k = idx - 14 // 0..13 → 7 oben + 7 unten; Ecken bleiben den Spalten überlassen
+              const k = idx - 14 // 0..13 → 7 oben + 7 unten; Außenränder voll ausnutzen
               const onTop = k < 7
-              const cols = [9, 21, 33, 45, 56, 67, 76]
+              const cols = [5, 18, 31, 44, 56, 68, 80]
               const left = cols[k % 7]
               const rot = [-2.4, 2, -1.6, 2.6, -2, 1.6, -1.8][k % 7]
-              // vertikal leicht gestaffelt, damit sich Nachbarkarten nicht überdecken
-              const yoff = (k % 2) ? -8.5 : -5.5
+              // vertikal stärker gestaffelt -> keine Eck-Lücken, nichts überdeckt
+              const yoff = (k % 2) ? -10 : -6
               style = { [onTop ? 'top' : 'bottom']: `${yoff}%`, left: `${left}%`, '--r': `${rot}deg` }
             }
             return (
