@@ -255,36 +255,6 @@ export default function Inspiration() {
         </div>
       </section>
 
-      {/* IDEEN / FAVORITEN */}
-      <section className="section insp-projects">
-        <div className="container">
-          <SectionHeader kicker="Ideen aus echten Projekten" title="Räume, die Lust auf mehr machen." lead="Merk dir, was dir gefällt – das nehmen wir mit ins Gespräch." />
-          <div className="cardgrid cardgrid--4">
-            {PROJECTS.map((p, i) => (
-              <Reveal key={p.title}>
-                <article className="favcard">
-                  <span className="favcard__img" style={{ backgroundImage: `url(${p.img})` }} aria-hidden="true" />
-                  <span className="favcard__scrim" aria-hidden="true" />
-                  <button
-                    type="button"
-                    className={`favcard__heart ${favs.has(i) ? 'is-on' : ''}`}
-                    aria-label="Merken"
-                    aria-pressed={favs.has(i)}
-                    onClick={() => toggleFav(i)}
-                  >
-                    <Heart size={16} strokeWidth={2} fill={favs.has(i) ? 'currentColor' : 'none'} />
-                  </button>
-                  <span className="favcard__body">
-                    <span className="favcard__title">{p.title}</span>
-                    <span className="favcard__text">{p.text}</span>
-                  </span>
-                </article>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* SO EINFACH GEHT'S (hell) */}
       <section className="section insp-steps">
         <div className="container">

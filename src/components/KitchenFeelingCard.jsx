@@ -6,10 +6,10 @@ import warmImg from '../assets/images/studio/feeling/warm.png'
 import ruhigImg from '../assets/images/studio/feeling/ruhig.png'
 import elegantImg from '../assets/images/studio/feeling/elegant.png'
 import alltagImg from '../assets/images/studio/feeling/alltag.png'
-import scene1 from '../assets/images/inspiration/03_wohnliche_kueche.png'
-import scene2 from '../assets/images/inspiration/07_kueche_mit_insel.png'
-import scene3 from '../assets/images/inspiration/08_kleine_kueche_clever_geplant.png'
-import scene4 from '../assets/images/inspiration/05_helle_kueche.png'
+import scene1 from '../assets/images/inspiration/Hausaufgaben.png'
+import scene2 from '../assets/images/inspiration/wocheneinkauf.png'
+import scene3 from '../assets/images/inspiration/backen.png'
+import scene4 from '../assets/images/inspiration/Tupper-Tetris.png'
 
 const FEELINGS = [
   {
@@ -57,36 +57,36 @@ const SCENES = [
     key: 'Hausaufgaben', img: scene1, h: 'Hausaufgaben.',
     bullets: ['Die Insel wird zum Schreibtisch – und das darf sie.', 'Genug Platz für Bücher und Abendbrot zugleich.'],
     spots: [
-      { x: 40, y: 40, t: 'Mathe-Frust. Wenigstens gut beleuchtet.' },
-      { x: 66, y: 58, t: 'Platz für Hefte UND Abendbrot.' },
-      { x: 30, y: 72, t: 'Steckdose für den Taschenrechner-Notfall.' },
+      { x: 54, y: 45, t: 'Mathe-Frust. Wenigstens gut beleuchtet.' },
+      { x: 22, y: 58, t: 'Die Insel als Hausaufgaben-Zentrale.' },
+      { x: 31, y: 80, t: 'Schulranzen-Parkplatz inklusive.' },
     ],
   },
   {
     key: 'Wocheneinkauf', img: scene2, h: 'Wocheneinkauf.',
     bullets: ['Kurze Wege von der Tür zum Kühlschrank.', 'Ablage da, wenn acht Tüten gleichzeitig kommen.'],
     spots: [
-      { x: 34, y: 44, t: 'Acht Tüten, eine Ablage. Reicht.' },
-      { x: 66, y: 36, t: 'Kühlschrank in Reichweite – kein Marathon.' },
-      { x: 50, y: 74, t: 'Pfand-Ecke. Offiziell: Stauraum.' },
+      { x: 40, y: 40, t: 'Acht Tüten, eine Ablage. Reicht.' },
+      { x: 13, y: 40, t: 'Kühlschrank in Reichweite – kein Marathon.' },
+      { x: 22, y: 80, t: 'Pfand-Ecke. Offiziell: Stauraum.' },
     ],
   },
   {
     key: 'Backen', img: scene3, h: 'Backen.',
     bullets: ['Pflegeleichte Oberflächen für den Mehl-Tag.', 'Arbeitshöhe, die den Rücken nicht bestraft.'],
     spots: [
-      { x: 40, y: 42, t: 'Mehlwolke? Die Oberfläche zuckt nicht.' },
-      { x: 68, y: 56, t: 'Arbeitshöhe, die den Rücken schont.' },
-      { x: 28, y: 70, t: 'Platz für Versuch Nummer drei.' },
+      { x: 43, y: 28, t: 'Mehlwolke? Die Oberfläche zuckt nicht.' },
+      { x: 20, y: 52, t: 'Arbeitshöhe, die den Rücken schont.' },
+      { x: 38, y: 44, t: 'Platz für Versuch Nummer drei.' },
     ],
   },
   {
-    key: 'Frühstücken', img: scene4, h: 'Frühstücken.',
-    bullets: ['Offen, hell und mittendrin im Leben.', 'Ein Platz, an dem alle zusammenkommen – auch der Hund.'],
+    key: 'Tupper-Tetris', img: scene4, h: 'Tupper-Tetris.',
+    bullets: ['Genug cleverer Stauraum – jede Dose findet ihren Deckel.', 'Auszüge statt Boden-Chaos. Versprochen.'],
     spots: [
-      { x: 36, y: 38, t: 'Kaffee-Hotspot. Vor allen anderen.' },
-      { x: 66, y: 60, t: 'Hundeblick-sichere Sitzecke.' },
-      { x: 52, y: 24, t: 'Morgenlicht. Ohne Aufpreis.' },
+      { x: 40, y: 38, t: 'Tupper-Tetris. Highscore: nie gewonnen.' },
+      { x: 20, y: 74, t: 'Hier fehlt genau ein cleverer Auszug.' },
+      { x: 58, y: 40, t: 'Deckel sucht Dose. Seit 2019.' },
     ],
   },
 ]
