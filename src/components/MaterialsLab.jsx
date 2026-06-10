@@ -27,7 +27,7 @@ const MATS = [
   { img: m10, n: '10', t: 'Bronze', d: 'Warmes Metall, edler Akzent.', wirkung: 'Warmes Metall mit edlem, tiefem Schimmer.', einsatz: 'Hochwertige Akzente für Griffe, Rahmen und feine Details.', note: 'Ein Hauch Bronze wirkt teuer. Zu viel davon wirkt nur teuer gewollt.' },
 ]
 
-const SECTION_LEAD = 'Oberflächen entscheiden, wie eine Küche im Alltag wirkt – nicht nur optisch, sondern bei Pflege, Haptik und Licht. Kurz: schön darf sein, nervig lieber nicht.'
+const SECTION_LEAD = 'Oberflächen entscheiden, wie eine Küche im Alltag wirkt – bei Licht, Pflege, Haptik und Stimmung. Kurz: schön darf sein. Nervig lieber nicht.'
 
 export default function MaterialsLab() {
   const [active, setActive] = useState(0)

@@ -45,7 +45,7 @@ function StyleCard({ active }) {
     <div className={`sfc sfc--main ${active ? 'is-active' : ''}`}>
       <span className="sfc__label">Empfohlener erster Schritt</span>
       <span className="sfc__title sfc__title--main">Stylefinder starten</span>
-      <span className="sfc__text">Beantworte 7 kurze Fragen und erhalte deinen persönlichen Küchenstil mit 92% Match.</span>
+      <span className="sfc__text">Beantworte 7 kurze Fragen und wir sagen dir, welche Küche zu dir passt – bevor du dich in 14 Beigetönen verlierst.</span>
       <div className="sfq">
         <span className="sfq__prog">Frage 1 von 7</span>
         <span className="sfq__q">Welche Atmosphäre spricht dich am meisten an?</span>

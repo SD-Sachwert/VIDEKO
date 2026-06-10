@@ -33,9 +33,8 @@ export default function StylefinderStyles() {
       <span className="sfx-sec__glow" aria-hidden="true" />
       <div className="container">
         <Reveal className="sfx__head">
-          <span className="sfx__pill"><Sparkles size={13} strokeWidth={2.2} /> VIDEKO Stylefinder</span>
           <h2 className="sfx__title">Finde deinen <span className="grad">Küchenstil.</span></h2>
-          <p className="sfx__sub">Beantworte 7 kurze Fragen und wir sagen dir, welche Küche zu dir passt – bevor du dich in 14 Beigetönen verlierst.</p>
+          <p className="sfx__sub">Entdecke verschiedene Stilwelten auf einen Blick – von warm und wohnlich bis dunkel und markant. So bekommst du schnell ein Gefühl dafür, welche Richtung wirklich zu dir passt.</p>
         </Reveal>
 
         <Reveal className="sfx__stage" delay={0.08}>

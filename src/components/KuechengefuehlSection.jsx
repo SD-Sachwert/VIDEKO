@@ -1,4 +1,4 @@
-import { Check } from 'lucide-react'
+import { Check, Heart } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
 import KitchenFeelingCard from './KitchenFeelingCard.jsx'
@@ -26,6 +26,7 @@ export default function KuechengefuehlSection() {
       <div className="container">
         <div className="lintro lintro--feeling">
           <Reveal className="lintro__copy">
+            <span className="lintro__divider" aria-hidden="true" />
             <span className="kicker">Mehr als ein Küchenstudio</span>
             <h2 className="lintro__title">Wir verkaufen nicht einfach Küchen.<br /><span className="grad">Wir planen dein Zuhause mit dir.</span></h2>
             <p className="lintro__text">
@@ -40,7 +41,9 @@ export default function KuechengefuehlSection() {
             <div className="alltag">
               {ALLTAG.map((a) => (
                 <span key={a.t} className="alltag__card">
-                  <span className="alltag__img" style={{ backgroundImage: `url(${a.img})`, backgroundPosition: a.pos }} aria-hidden="true" />
+                  <span className="alltag__img" style={{ backgroundImage: `url(${a.img})`, backgroundPosition: a.pos }} aria-hidden="true">
+                    <span className="alltag__ic"><Heart size={11} strokeWidth={2.2} /></span>
+                  </span>
                   <span className="alltag__t">{a.t}</span>
                 </span>
               ))}

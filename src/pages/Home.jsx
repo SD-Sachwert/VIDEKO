@@ -8,7 +8,7 @@ import Hero from '../components/Hero.jsx'
 import Reveal from '../components/Reveal.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
 import CTAButton from '../components/CTAButton.jsx'
-import KuechenfehlerTrailer from '../components/KuechenfehlerTrailer.jsx'
+import KfgTeaser from '../components/KfgTeaser.jsx'
 import ExplodingKitchenModal from '../components/ExplodingKitchenModal.jsx'
 import HeroExperience from '../components/HeroExperience.jsx'
 import StylefinderHero from '../components/StylefinderHero.jsx'
@@ -132,9 +132,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3b — KÜCHENFEHLER-TRAILER (vor Studio) */}
-      <KuechenfehlerTrailer />
-
       {/* 4 — STUDIO GALERIE */}
       <section className="section section--light lp-studio-sec">
         <div className="container lp-studio-head">
@@ -209,19 +206,7 @@ export default function Home() {
               </Reveal>
             ))}
           </div>
-          <Reveal as={Link} to="/journal/7-kuechenfehler-die-du-spaeter-jeden-tag-bereust" className="kfgteaser" delay={0.1}>
-            <span className="kfgteaser__media" style={{ backgroundImage: `url(${gameScene})` }} aria-hidden="true">
-              <span className="kfgteaser__dot" style={{ left: '24%', top: '44%' }} />
-              <span className="kfgteaser__dot" style={{ left: '60%', top: '30%' }} />
-              <span className="kfgteaser__dot" style={{ left: '72%', top: '52%' }} />
-            </span>
-            <span className="kfgteaser__body">
-              <span className="kfgteaser__badge">Interaktiv · 9 Fehler versteckt</span>
-              <span className="kfgteaser__title">Findest du die Küchenfehler?</span>
-              <span className="kfgteaser__text">Klick dich durch unser kleines Fehlersuche-Spiel – und sieh, worauf es bei guter Planung wirklich ankommt. Nicht jeder „Fehler“ ist übrigens einer.</span>
-              <span className="kfgteaser__cta">Küchenfehler entdecken <ArrowUpRight size={15} strokeWidth={2} /></span>
-            </span>
-          </Reveal>
+          <KfgTeaser />
         </div>
       </section>
 
