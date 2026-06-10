@@ -10599,7 +10599,7 @@ a.footer__contact-line:hover {
 /* funktionaler Klickbereich über dem eingebackenen "Beratung anfragen"-Button (Bild selbst ist kein Link) */
 .leistbau__cta { position: absolute; left: 5%; bottom: 4.5%; width: 42%; height: 13%; border-radius: 12px; font-size: 0; color: transparent; z-index: 2; }
 .leistbau__cta:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 2px; }
-.leistbau__panel a, .leistbau__panel img { display: block; width: 100%; height: auto; }
+.leistbau__panel img { display: block; width: 100%; height: auto; }
 
 /* video exactly on text-column height (intro feature) */
 .leist-transform .lintro { align-items: stretch; }
@@ -10887,8 +10887,8 @@ a.footer__contact-line:hover {
 .lp-callout__text { display: block; font-size: 0.82rem; line-height: 1.45; color: var(--ink-soft); margin-top: 3px; }
 
 /* 3 — warum + stylefinder */
-.lp-why-sec { padding-top: 40px; }
-.lp-why-head { text-align: center; margin-bottom: 16px; }
+.lp-why-sec { padding-top: 24px; }
+.lp-why-head { text-align: center; margin-bottom: 8px; }
 .lp-why { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; margin-bottom: 64px; }
 .lpwhy { display: flex; flex-direction: column; gap: 10px; padding: 26px 22px; border-radius: 18px; background: rgba(255, 255, 255, 0.55); border: 1px solid var(--line-dark); width: 100%; text-align: left; font: inherit; color: inherit; cursor: pointer; transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease; }
 .lpwhy:hover { border-color: rgba(201, 160, 80, 0.45); transform: translateY(-3px); }

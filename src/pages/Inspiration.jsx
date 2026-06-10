@@ -10,6 +10,8 @@ import CTAButton from '../components/CTAButton.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
 import BeforeAfter from '../components/BeforeAfter.jsx'
 import MaterialsLab from '../components/MaterialsLab.jsx'
+import KuechengefuehlSection from '../components/KuechengefuehlSection.jsx'
+import KuechenfehlerGame from '../components/KuechenfehlerGame.jsx'
 
 import heroImg from '../assets/images/inspiration/insp-hero-dark.png'
 import explodeImg from '../assets/images/inspiration/insp-exploding-light.png'
@@ -134,8 +136,8 @@ export default function Inspiration() {
         </div>
       </section>
 
-      {/* MATERIALS LAB — ganz oben */}
-      <MaterialsLab />
+      {/* KÜCHENGEFÜHL-MODUL — ganz oben (interaktiver Einstieg) */}
+      <KuechengefuehlSection />
 
       {/* VIDEKO KOMPASS (kompakt) */}
       <section className="section insp-style" id="kompass">
@@ -300,6 +302,12 @@ export default function Inspiration() {
           </div>
         </div>
       </section>
+
+      {/* MATERIALS LAB — Material-/Oberflächen-Erlebnis */}
+      <MaterialsLab />
+
+      {/* FINDE DIE 9 KÜCHENSÜNDEN — interaktives Spiel als unterer Abschluss */}
+      <KuechenfehlerGame />
 
       {/* FINALER CTA / DUNKLER ABSCHLUSS — 3 Wege */}
       <section className="section section--dark insp-convert">

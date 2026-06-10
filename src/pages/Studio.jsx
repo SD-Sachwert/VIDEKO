@@ -5,7 +5,7 @@ import { Check, ArrowRight } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
-import KitchenFeelingCard from '../components/KitchenFeelingCard.jsx'
+import KuechengefuehlSection from '../components/KuechengefuehlSection.jsx'
 
 import heroImg from '../assets/images/studio/bilder/01_hero_studio_showroom.png'
 import introImg from '../assets/images/studio/bilder/02_intro_showroom_hell.png'
@@ -77,26 +77,7 @@ export default function Studio() {
       </section>
 
       {/* MEHR ALS EIN KÜCHENSTUDIO — interaktive Küchengefühl-Karte */}
-      <section className="section studio-intro">
-        <div className="container">
-          <div className="lintro lintro--feeling">
-            <Reveal className="lintro__copy">
-              <span className="kicker">Mehr als ein Küchenstudio</span>
-              <h2 className="lintro__title">Wir verkaufen nicht einfach Küchen.<br /><span className="grad">Wir planen dein Zuhause mit dir.</span></h2>
-              <p className="lintro__text">
-                Bei uns geht's nicht um schnelle Abschlüsse, sondern um den Raum, in
-                dem du jeden Tag lebst. In Ruhe, ehrlich und mit echtem Anspruch.
-              </p>
-              <ul className="lstances lstances--2col">
-                {INTRO_USP.map((u) => <li key={u}><Check size={16} strokeWidth={2.4} /> {u}</li>)}
-              </ul>
-            </Reveal>
-            <Reveal className="lintro__feel" delay={0.08}>
-              <KitchenFeelingCard />
-            </Reveal>
-          </div>
-        </div>
-      </section>
+      <KuechengefuehlSection />
 
       {/* VIDEO SHOWCASE – Studio im Aufbau */}
       <section className="section studio-video-sec">
