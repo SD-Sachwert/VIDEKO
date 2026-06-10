@@ -53,10 +53,42 @@ const FEELINGS = [
 // Zusätzliche Alltags-/Humor-Szenen (zweite Reihe unter den Tabs) – steuern primär den Bildwechsel.
 // Hinweis: echte Szenenbilder werden später ausgetauscht; aktuell hochwertige Küchenfotos als Platzhalter.
 const SCENES = [
-  { key: 'Hausaufgaben-Chaos', img: scene1, h: 'Hausaufgaben-Chaos.', bullets: ['Die Insel wird zum Schreibtisch – und das darf sie.', 'Platz für Bücher, Brote und Mathe gleichzeitig.'] },
-  { key: 'Einkauf eskaliert', img: scene2, h: 'Einkauf eskaliert.', bullets: ['Acht Tüten, eine Ablage – gut, wenn sie da ist.', 'Kurze Wege von der Tür zum Kühlschrank.'] },
-  { key: 'Mehlwolke', img: scene3, h: 'Mehlwolke.', bullets: ['Backtag heißt: pflegeleichte Oberflächen.', 'Einmal drüberwischen statt Großputz.'] },
-  { key: 'Frühstück mit Hund', img: scene4, h: 'Frühstück mit Hund.', bullets: ['Offen, hell und mittendrin im Leben.', 'Ein Platz, an dem alle zusammenkommen.'] },
+  {
+    key: 'Hausaufgaben', img: scene1, h: 'Hausaufgaben.',
+    bullets: ['Die Insel wird zum Schreibtisch – und das darf sie.', 'Genug Platz für Bücher und Abendbrot zugleich.'],
+    spots: [
+      { x: 40, y: 40, t: 'Mathe-Frust. Wenigstens gut beleuchtet.' },
+      { x: 66, y: 58, t: 'Platz für Hefte UND Abendbrot.' },
+      { x: 30, y: 72, t: 'Steckdose für den Taschenrechner-Notfall.' },
+    ],
+  },
+  {
+    key: 'Wocheneinkauf', img: scene2, h: 'Wocheneinkauf.',
+    bullets: ['Kurze Wege von der Tür zum Kühlschrank.', 'Ablage da, wenn acht Tüten gleichzeitig kommen.'],
+    spots: [
+      { x: 34, y: 44, t: 'Acht Tüten, eine Ablage. Reicht.' },
+      { x: 66, y: 36, t: 'Kühlschrank in Reichweite – kein Marathon.' },
+      { x: 50, y: 74, t: 'Pfand-Ecke. Offiziell: Stauraum.' },
+    ],
+  },
+  {
+    key: 'Backen', img: scene3, h: 'Backen.',
+    bullets: ['Pflegeleichte Oberflächen für den Mehl-Tag.', 'Arbeitshöhe, die den Rücken nicht bestraft.'],
+    spots: [
+      { x: 40, y: 42, t: 'Mehlwolke? Die Oberfläche zuckt nicht.' },
+      { x: 68, y: 56, t: 'Arbeitshöhe, die den Rücken schont.' },
+      { x: 28, y: 70, t: 'Platz für Versuch Nummer drei.' },
+    ],
+  },
+  {
+    key: 'Frühstücken', img: scene4, h: 'Frühstücken.',
+    bullets: ['Offen, hell und mittendrin im Leben.', 'Ein Platz, an dem alle zusammenkommen – auch der Hund.'],
+    spots: [
+      { x: 36, y: 38, t: 'Kaffee-Hotspot. Vor allen anderen.' },
+      { x: 66, y: 60, t: 'Hundeblick-sichere Sitzecke.' },
+      { x: 52, y: 24, t: 'Morgenlicht. Ohne Aufpreis.' },
+    ],
+  },
 ]
 
 export default function KitchenFeelingCard() {
@@ -88,13 +120,12 @@ export default function KitchenFeelingCard() {
               </button>
             ))}
           </div>
-          <div className="kfeel__scenes" aria-label="Alltagsszenen">
+          <div className="kfeel__tabs kfeel__tabs--scenes" role="tablist" aria-label="Alltagsszenen">
             {SCENES.map((s, i) => (
-              <button key={s.key} type="button" aria-pressed={scene === i}
-                className={`kfeel__scene ${scene === i ? 'is-active' : ''}`}
+              <button key={s.key} type="button" role="tab" aria-selected={scene === i}
+                className={`kfeel__tab ${scene === i ? 'is-active' : ''}`}
                 onClick={() => { setScene(scene === i ? null : i); setSpot(null) }}>
-                <span className="kfeel__scenethumb" style={{ backgroundImage: `url(${s.img})` }} aria-hidden="true" />
-                <span className="kfeel__scenelabel">{s.key}</span>
+                {s.key}
               </button>
             ))}
           </div>
@@ -107,7 +138,7 @@ export default function KitchenFeelingCard() {
               transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }} loading="lazy" />
           </AnimatePresence>
           <span className="kfeel__lightveil" aria-hidden="true" />
-          {(sc ? [] : f.spots).map((sp, i) => (
+          {(sc ? sc.spots : f.spots).map((sp, i) => (
             <button key={i} type="button" className={`kfeel__spot ${spot === i ? 'is-open' : ''}`} style={{ left: `${sp.x}%`, top: `${sp.y}%` }}
               onMouseEnter={() => setSpot(i)} onMouseLeave={() => setSpot(null)} onClick={() => setSpot(spot === i ? null : i)} aria-label={sp.t}>
               <span className="kfeel__spotdot" />
