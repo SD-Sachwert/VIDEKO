@@ -256,29 +256,6 @@ export default function Leistungen() {
         </div>
       </section>
 
-      {/* 8 — FINAL CTA (dunkel) + Kontakt */}
-      <section className="leist-final leist-final--svc">
-        <div className="leist-final__media" aria-hidden="true">
-          <img src={heroImg} alt="" />
-          <div className="leist-final__veil" />
-        </div>
-        <div className="container leist-final__inner">
-          <Reveal>
-            <span className="kicker kicker--gold">Bereit?</span>
-            <h2 className="leist-final__title">Deine Küche. Unser Versprechen.<br /><span className="grad">Wir machen es einfach.</span></h2>
-            <p className="leist-final__text">Unverbindlich, persönlich und auf Augenhöhe.</p>
-            <div className="leist-final__actions">
-              <CTAButton to="/beratung">Termin vereinbaren</CTAButton>
-              <CTAButton to="/studio" variant="dark">Studio erleben</CTAButton>
-            </div>
-            <div className="svc-contact">
-              <span><MapPin size={14} strokeWidth={1.9} /> Hertzstraße 4, 97076 Würzburg</span>
-              <a href="mailto:info@videko-kuechen.de"><Mail size={14} strokeWidth={1.9} /> info@videko-kuechen.de</a>
-              <a href="tel:+4901605545818"><Phone size={14} strokeWidth={1.9} /> 0160 5545818</a>
-            </div>
-          </Reveal>
-        </div>
-      </section>
     </div>
   )
 }

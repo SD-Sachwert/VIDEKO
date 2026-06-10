@@ -189,24 +189,6 @@ export default function VorherNachher() {
         </div>
       </section>
 
-      {/* FINAL CTA */}
-      <section className="leist-final vn-final">
-        <div className="leist-final__media" aria-hidden="true">
-          <img src={heroImg} alt="" />
-          <div className="leist-final__veil" />
-        </div>
-        <div className="container leist-final__inner">
-          <Reveal>
-            <span className="kicker kicker--gold">Bereit für deine Verwandlung?</span>
-            <h2 className="leist-final__title">Aus deinem Zuhause kann mehr werden.<br /><span className="grad">Lass uns gemeinsam loslegen.</span></h2>
-            <p className="leist-final__text">Ehrlich geplant, sauber umgesetzt – dein Projekt ist nur ein Gespräch entfernt.</p>
-            <div className="leist-final__actions">
-              <CTAButton to="/beratung">Projekt anfragen</CTAButton>
-              <CTAButton to="/beratung" variant="dark">Beratung starten</CTAButton>
-            </div>
-          </Reveal>
-        </div>
-      </section>
     </div>
   )
 }

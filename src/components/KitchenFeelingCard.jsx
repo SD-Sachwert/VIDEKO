@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowRight, Hand, Flame, Waves, Gem, Home } from 'lucide-react'
+import { ArrowRight, Hand, Flame, Waves, Gem, Home, GraduationCap, ShoppingCart, CakeSlice, Boxes } from 'lucide-react'
 
 import warmImg from '../assets/images/studio/feeling/warm.png'
 import ruhigImg from '../assets/images/studio/feeling/ruhig.png'
@@ -54,7 +54,7 @@ const FEELINGS = [
 // Hinweis: echte Szenenbilder werden später ausgetauscht; aktuell hochwertige Küchenfotos als Platzhalter.
 const SCENES = [
   {
-    key: 'Hausaufgaben', img: scene1, h: 'Hausaufgaben.',
+    key: 'Hausaufgaben', icon: GraduationCap, img: scene1, h: 'Hausaufgaben.',
     bullets: ['Die Insel wird zum Schreibtisch – und das darf sie.', 'Genug Platz für Bücher und Abendbrot zugleich.'],
     spots: [
       { x: 54, y: 45, t: 'Mathe-Frust. Wenigstens gut beleuchtet.' },
@@ -63,7 +63,7 @@ const SCENES = [
     ],
   },
   {
-    key: 'Wocheneinkauf', img: scene2, h: 'Wocheneinkauf.',
+    key: 'Wocheneinkauf', icon: ShoppingCart, img: scene2, h: 'Wocheneinkauf.',
     bullets: ['Kurze Wege von der Tür zum Kühlschrank.', 'Ablage da, wenn acht Tüten gleichzeitig kommen.'],
     spots: [
       { x: 40, y: 40, t: 'Acht Tüten, eine Ablage. Reicht.' },
@@ -72,7 +72,7 @@ const SCENES = [
     ],
   },
   {
-    key: 'Backen', img: scene3, h: 'Backen.',
+    key: 'Backen', icon: CakeSlice, img: scene3, h: 'Backen.',
     bullets: ['Pflegeleichte Oberflächen für den Mehl-Tag.', 'Arbeitshöhe, die den Rücken nicht bestraft.'],
     spots: [
       { x: 43, y: 28, t: 'Mehlwolke? Die Oberfläche zuckt nicht.' },
@@ -81,7 +81,7 @@ const SCENES = [
     ],
   },
   {
-    key: 'Tupper-Tetris', img: scene4, h: 'Tupper-Tetris.',
+    key: 'Tupper-Tetris', icon: Boxes, img: scene4, h: 'Tupper-Tetris.',
     bullets: ['Genug cleverer Stauraum – jede Dose findet ihren Deckel.', 'Auszüge statt Boden-Chaos. Versprochen.'],
     spots: [
       { x: 40, y: 38, t: 'Tupper-Tetris. Highscore: nie gewonnen.' },
@@ -125,7 +125,7 @@ export default function KitchenFeelingCard() {
               <button key={s.key} type="button" role="tab" aria-selected={scene === i}
                 className={`kfeel__tab ${scene === i ? 'is-active' : ''}`}
                 onClick={() => { setScene(scene === i ? null : i); setSpot(null) }}>
-                {s.key}
+                <s.icon size={14} strokeWidth={1.9} /> {s.key}
               </button>
             ))}
           </div>

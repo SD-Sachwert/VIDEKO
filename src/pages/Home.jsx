@@ -221,24 +221,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 9 — FINALER CTA (dunkel) */}
-      <section className="leist-final home-final">
-        <div className="leist-final__media" aria-hidden="true">
-          <img src={finalImg} alt="" />
-          <div className="leist-final__veil" />
-        </div>
-        <div className="container leist-final__inner">
-          <Reveal>
-            <span className="kicker kicker--gold">Bereit?</span>
-            <h2 className="leist-final__title">Deine Küche. Dein Zuhause. <span className="grad">Dein Leben.</span></h2>
-            <p className="leist-final__text">Vereinbare deinen persönlichen Beratungstermin und erlebe, wie aus Ideen eine Küche wird, die wirklich zu dir passt.</p>
-            <div className="leist-final__actions">
-              <CTAButton to="/beratung">Beratung anfragen</CTAButton>
-              <CTAButton to="/studio" variant="dark">Studio besuchen</CTAButton>
-            </div>
-          </Reveal>
-        </div>
-      </section>
     </div>
   )
 }

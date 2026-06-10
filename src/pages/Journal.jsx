@@ -220,20 +220,6 @@ export default function Journal() {
         </div>
       </section>
 
-      {/* 9 — CTA */}
-      <section className="leist-final journal-final">
-        <div className="container leist-final__inner">
-          <Reveal>
-            <span className="kicker kicker--gold">Bereit?</span>
-            <h2 className="leist-final__title">Bereit für deine <span className="grad">Traumküche?</span></h2>
-            <p className="leist-final__text">Finde deinen Stil oder lass dich persönlich beraten – ohne Küchenlatein-Prüfung.</p>
-            <div className="leist-final__actions">
-              <CTAButton to="/stylefinder">Stylefinder starten</CTAButton>
-              <CTAButton to="/beratung" variant="dark">Beratung anfragen</CTAButton>
-            </div>
-          </Reveal>
-        </div>
-      </section>
     </div>
   )
 }

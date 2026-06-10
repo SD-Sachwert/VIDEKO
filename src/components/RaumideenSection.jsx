@@ -59,8 +59,10 @@ const ROOMS = [
 
 export default function RaumideenSection() {
   const [active, setActive] = useState(0)
+  const [focus, setFocus] = useState(null) // welcher Mini-Teaser ist in den Fokus geholt
   const r = ROOMS[active]
-  const go = (dir) => setActive((a) => (a + dir + ROOMS.length) % ROOMS.length)
+  const select = (i) => { setActive(i); setFocus(null) }
+  const go = (dir) => select((active + dir + ROOMS.length) % ROOMS.length)
   const num = (n) => String(n + 1).padStart(2, '0')
 
   return (
@@ -75,7 +77,7 @@ export default function RaumideenSection() {
         <div className="rms__tabs" role="tablist" aria-label="Wohnbereiche">
           {ROOMS.map((room, i) => (
             <button key={room.key} type="button" role="tab" aria-selected={i === active}
-              className={`rms__tab ${i === active ? 'is-active' : ''}`} onClick={() => setActive(i)}>
+              className={`rms__tab ${i === active ? 'is-active' : ''}`} onClick={() => select(i)}>
               <room.icon size={15} strokeWidth={1.9} /> {room.key}
             </button>
           ))}
@@ -87,7 +89,8 @@ export default function RaumideenSection() {
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}>
               <div className="rms__media">
-                <img src={r.img} alt={r.title} className="rms__img" loading="lazy" draggable={false} />
+                <img src={r.img} alt={r.title} className="rms__img" loading="lazy" draggable={false}
+                  style={focus != null ? { transform: 'scale(1.14)', objectPosition: r.cards[focus].pos } : undefined} />
                 <div className="rms__nav">
                   <button type="button" className="rms__arrow" onClick={() => go(-1)} aria-label="Vorheriger Bereich"><ArrowLeft size={16} strokeWidth={2} /></button>
                   <button type="button" className="rms__arrow" onClick={() => go(1)} aria-label="Nächster Bereich"><ArrowRight size={16} strokeWidth={2} /></button>
@@ -105,14 +108,15 @@ export default function RaumideenSection() {
               </div>
 
               <div className="rms__minis">
-                {r.cards.map((cd) => (
-                  <div key={cd.t} className="rms__mini">
+                {r.cards.map((cd, ci) => (
+                  <div key={cd.t} className={`rms__mini ${focus === ci ? 'is-active' : ''}`}>
                     <span className="rms__minithumb" style={{ backgroundImage: `url(${r.img})`, backgroundPosition: cd.pos }} aria-hidden="true" />
                     <span className="rms__minibody">
                       <span className="rms__minit">{cd.t}</span>
                       <span className="rms__minid">{cd.d}</span>
                     </span>
-                    <button type="button" className="rms__miniplus" aria-label={cd.t} onClick={() => setActive(active)}><Plus size={15} strokeWidth={2.4} /></button>
+                    <button type="button" className="rms__miniplus" aria-label={`${cd.t} im Bild zeigen`} aria-pressed={focus === ci}
+                      onClick={() => setFocus(focus === ci ? null : ci)}><Plus size={15} strokeWidth={2.4} /></button>
                   </div>
                 ))}
               </div>

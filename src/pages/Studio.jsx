@@ -168,27 +168,6 @@ export default function Studio() {
         </div>
       </section>
 
-      {/* FINAL CTA */}
-      <section className="leist-final studio-final">
-        <div className="leist-final__media" aria-hidden="true">
-          <img src={ctaImg} alt="" />
-          <div className="leist-final__veil" />
-        </div>
-        <div className="container leist-final__inner">
-          <Reveal>
-            <span className="kicker kicker--gold">Dein Studio in Würzburg</span>
-            <h2 className="leist-final__title">Deine Küche. Dein Zuhause.<br /><span className="grad">Wir machen es möglich.</span></h2>
-            <p className="leist-final__text">Komm vorbei, fühl die Materialien und erlebe Planung, wie sie sein sollte.</p>
-            <div className="leist-final__actions">
-              <CTAButton to="/beratung">Termin vereinbaren</CTAButton>
-              <CTAButton href="#erlebnis" variant="dark">Studio entdecken</CTAButton>
-            </div>
-            <div className="hero-badges hero-badges--final">
-              {FINAL_HL.map((b) => <span className="hero-badge" key={b}><Check size={13} strokeWidth={2.4} /> {b}</span>)}
-            </div>
-          </Reveal>
-        </div>
-      </section>
     </div>
   )
 }

@@ -343,24 +343,6 @@ export default function Karriere() {
         </div>
       </section>
 
-      {/* 7 — ABSCHLUSS-CTA (dark) */}
-      <section className="leist-final karr-final">
-        <div className="leist-final__media" aria-hidden="true">
-          <img src={imgCta} alt="" />
-          <div className="leist-final__veil" />
-        </div>
-        <div className="container leist-final__inner">
-          <Reveal>
-            <span className="kicker kicker--gold">Werde Teil von VIDEKO</span>
-            <h2 className="leist-final__title">Lust, etwas Besonderes<br /><span className="grad">mit aufzubauen?</span></h2>
-            <p className="leist-final__text">Wir suchen keine Lebensläufe. Wir suchen Menschen. Vielleicht genau dich.</p>
-            <div className="leist-final__actions">
-              <CTAButton href="#bewerbung">Jetzt bewerben</CTAButton>
-              <CTAButton to="/beratung" variant="dark">Beratung anfragen</CTAButton>
-            </div>
-          </Reveal>
-        </div>
-      </section>
     </div>
   )
 }
