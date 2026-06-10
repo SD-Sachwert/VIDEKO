@@ -42,10 +42,10 @@ export default function KuechenfehlerTrailer() {
     <section className="section section--light kft-sec">
       <div className="container kft">
         <Reveal className="kft__copy">
-          <span className="kicker">Mini-Spiel</span>
+          <span className="kicker">Augen auf</span>
           <h2 className="kft__title">Findest du die <span className="grad">Küchenfehler?</span></h2>
-          <p className="kft__lead">Klick ruhig mal in die Küche – hier ist nur der Trailer. Das echte Spiel mit allen 9 Fehlern wartet auf der Inspirationsseite.</p>
-          <Link to="/inspiration#kuechensuenden" className="kft__cta">Küchenfehler-Spiel starten <ArrowRight size={16} strokeWidth={2} /></Link>
+          <p className="kft__lead">Klick dich durch die Küche und schau, was im Alltag später nervt. Die typischen 9 Küchenfehler – und welche gar keine sind – findest du auf der Inspirationsseite.</p>
+          <Link to="/inspiration#kuechensuenden" className="kft__cta">Zu den 9 Küchenfehlern <ArrowRight size={16} strokeWidth={2} /></Link>
         </Reveal>
 
         <Reveal className="kft__fieldwrap" delay={0.08}>
@@ -55,8 +55,8 @@ export default function KuechenfehlerTrailer() {
             {miss && !popup && <span className="kft__miss" style={{ left: `${miss.x}%`, top: `${miss.y}%` }}>{miss.text}</span>}
             {popup && (
               <div className="kft__popup">
-                <span className="kft__popup-t">Das war nur der Trailer.</span>
-                <span className="kft__popup-d">Weiter geht&apos;s im echten Spiel – hier findest du alle 9 Küchenfehler.</span>
+                <span className="kft__popup-t">Neugierig geworden?</span>
+                <span className="kft__popup-d">Die typischen 9 Küchenfehler – und welche gar keine sind – findest du auf der Inspirationsseite.</span>
                 <Link to="/inspiration#kuechensuenden" className="kft__popup-btn">Zu den 9 Küchenfehlern <ArrowRight size={15} strokeWidth={2} /></Link>
               </div>
             )}

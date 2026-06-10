@@ -11570,7 +11570,9 @@ a.footer__contact-line:hover {
 @media (prefers-reduced-motion: reduce) { .kfgteaser__dot::after { animation: none; } }
 
 /* === STUDIO — interaktive "Wähle dein Küchengefühl"-Karte === */
-.lintro--feeling { grid-template-columns: 1fr 1fr; gap: 52px; align-items: center; }
+.lintro--feeling { grid-template-columns: 1fr 1fr; gap: 52px; align-items: start; }
+/* Haken-Punkte untereinander + Textspalte oben buendig mit dem Bild */
+.lintro--feeling .lstances--2col { grid-template-columns: 1fr; }
 .lintro--feeling .lintro__copy { max-width: 460px; }
 .lintro--feeling .kfeel { max-width: 540px; margin-left: auto; }
 .kfeel { width: 100%; }

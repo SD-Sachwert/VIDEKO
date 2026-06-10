@@ -12,6 +12,8 @@ import BeforeAfter from '../components/BeforeAfter.jsx'
 import MaterialsLab from '../components/MaterialsLab.jsx'
 import KuechenfehlerGame from '../components/KuechenfehlerGame.jsx'
 import RaumideenSection from '../components/RaumideenSection.jsx'
+import KuechengefuehlSection from '../components/KuechengefuehlSection.jsx'
+import StylefinderStyles from '../components/StylefinderStyles.jsx'
 
 import heroImg from '../assets/images/inspiration/insp-hero-dark.png'
 import explodeImg from '../assets/images/inspiration/insp-exploding-light.png'
@@ -136,28 +138,11 @@ export default function Inspiration() {
         </div>
       </section>
 
-      {/* VIDEKO KOMPASS (kompakt) */}
-      <section className="section insp-style" id="kompass">
-        <div className="container">
-          <SectionHeader align="center" kicker="VIDEKO Stylefinder" title="Finde deinen Küchenstil." lead="Wir raten nicht. Wir treffen. Wähle, was dich anspricht – wir zeigen dir Ideen, die dazu passen." />
-          <div className="stylerow">
-            {STYLES.map((sObj) => (
-              <button
-                key={sObj.key}
-                type="button"
-                className={`stylepick ${activeStyle === sObj.key ? 'stylepick--active' : ''}`}
-                onClick={() => setActiveStyle(sObj.key)}
-              >
-                <span className="stylepick__img" style={{ backgroundImage: `url(${sObj.img})` }} aria-hidden="true" />
-                <span className="stylepick__label">{sObj.label}</span>
-              </button>
-            ))}
-          </div>
-          <div className="section__cta">
-            <CTAButton to="/stylefinder">Stylefinder starten</CTAButton>
-          </div>
-        </div>
-      </section>
+      {/* KÜCHENGEFÜHL-MODUL */}
+      <KuechengefuehlSection />
+
+      {/* VIDEKO STYLEFINDER — Premium-Style-Coverflow */}
+      <StylefinderStyles />
 
 
       {/* RAUMIDEEN — interaktive Sektion */}
