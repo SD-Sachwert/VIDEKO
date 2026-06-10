@@ -82,11 +82,10 @@ const EASE = [0.16, 1, 0.3, 1]
 
 export default function RaumideenSection() {
   const [active, setActive] = useState(0)
-  const [open, setOpen] = useState([]) // welche Detailkarten sind aufgeklappt
+  const [openCard, setOpenCard] = useState(null) // welche Detailkarte ist im Drawer offen
   const r = ROOMS[active]
-  const select = (i) => { setActive(i); setOpen([]) }
+  const select = (i) => { setActive(i); setOpenCard(null) }
   const go = (dir) => select((active + dir + ROOMS.length) % ROOMS.length)
-  const toggle = (ci) => setOpen((o) => (o.includes(ci) ? o.filter((x) => x !== ci) : [...o, ci]))
   const num = (n) => String(n + 1).padStart(2, '0')
 
   return (
@@ -122,7 +121,7 @@ export default function RaumideenSection() {
             </div>
           </div>
 
-          {/* dunkle Content-Karte rechts – bleibt fix, nur Text blendet weich */}
+          {/* helle Content-Karte rechts – fester Aufbau: Text, CTA, Detailkarten, Drawer */}
           <div className="rms__card">
             <AnimatePresence mode="wait">
               <motion.div key={r.key} className="rms__cardcontent"
@@ -135,42 +134,36 @@ export default function RaumideenSection() {
                 </ul>
               </motion.div>
             </AnimatePresence>
-            <Link to="/beratung" className="rms__cta">Ideen entdecken <ArrowRight size={16} strokeWidth={2} /></Link>
-          </div>
 
-          {/* zwei kleine überlappende Detailkarten unten rechts */}
-          <div className="rms__minis">
-            <AnimatePresence mode="wait">
-              <motion.div key={r.key} className="rms__minis-inner"
-                initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }}
-                transition={{ duration: 0.4, ease: EASE }}>
-                {r.cards.map((cd, ci) => {
-                  const isOpen = open.includes(ci)
-                  return (
-                    <div key={cd.t} className={`rms__mini ${isOpen ? 'is-open' : ''}`}>
-                      <div className="rms__mini-row">
-                        <span className="rms__minithumb" style={{ backgroundImage: `url(${r.img})`, backgroundPosition: cd.pos }} aria-hidden="true" />
-                        <span className="rms__minibody">
-                          <span className="rms__minit">{cd.t}</span>
-                          <span className="rms__minid">{cd.d}</span>
-                        </span>
-                        <button type="button" className="rms__miniplus" aria-expanded={isOpen} aria-label={`${cd.t} Details`} onClick={() => toggle(ci)}>
-                          <Plus size={15} strokeWidth={2.6} />
-                        </button>
-                      </div>
-                      <AnimatePresence initial={false}>
-                        {isOpen && (
-                          <motion.p className="rms__miniplus-text"
-                            initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.32, ease: EASE }}>
-                            <span>{cd.plus}</span>
-                          </motion.p>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  )
-                })}
-              </motion.div>
+            <Link to="/beratung" className="rms__cta">Ideen entdecken <ArrowRight size={16} strokeWidth={2} /></Link>
+
+            <div className="rms__details">
+              {r.cards.map((cd, ci) => {
+                const isOpen = openCard === ci
+                return (
+                  <button key={cd.t} type="button" className={`rms__dcard ${isOpen ? 'is-active' : ''}`}
+                    aria-expanded={isOpen} onClick={() => setOpenCard(isOpen ? null : ci)}>
+                    <span className="rms__dthumb" style={{ backgroundImage: `url(${r.img})`, backgroundPosition: cd.pos }} aria-hidden="true" />
+                    <span className="rms__dbody">
+                      <span className="rms__dt">{cd.t}</span>
+                      <span className="rms__dd">{cd.d}</span>
+                    </span>
+                    <span className="rms__dplus">{isOpen ? <Check size={14} strokeWidth={3} /> : <Plus size={14} strokeWidth={2.6} />}</span>
+                  </button>
+                )
+              })}
+            </div>
+
+            <AnimatePresence initial={false}>
+              {openCard != null && (
+                <motion.div key={`${r.key}-${openCard}`} className="rms__drawer"
+                  initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.32, ease: EASE }}>
+                  <span className="rms__drawer-in">
+                    <b>{r.cards[openCard].t}</b> {r.cards[openCard].plus}
+                  </span>
+                </motion.div>
+              )}
             </AnimatePresence>
           </div>
         </div>

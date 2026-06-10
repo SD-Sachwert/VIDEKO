@@ -35,7 +35,7 @@ export default function StylefinderStyles() {
         <Reveal className="sfx__head">
           <span className="sfx__pill"><Sparkles size={13} strokeWidth={2.2} /> VIDEKO Stylefinder</span>
           <h2 className="sfx__title">Finde deinen <span className="grad">Küchenstil.</span></h2>
-          <p className="sfx__sub">Wir raten nicht. Wir treffen. Wähle, was dich anspricht – wir zeigen dir Ideen, die dazu passen.</p>
+          <p className="sfx__sub">Beantworte 7 kurze Fragen und wir sagen dir, welche Küche zu dir passt – bevor du dich in 14 Beigetönen verlierst.</p>
         </Reveal>
 
         <Reveal className="sfx__stage" delay={0.08}>
@@ -69,6 +69,7 @@ export default function StylefinderStyles() {
 
         <Reveal className="sfx__cta" delay={0.12}>
           <Link to="/stylefinder" className="sfx__btn">Stylefinder starten <ArrowRight size={17} strokeWidth={2.2} /></Link>
+          <span className="sfx__note">Dauert nur 2 Minuten</span>
         </Reveal>
 
         <div className="sfx__trust">

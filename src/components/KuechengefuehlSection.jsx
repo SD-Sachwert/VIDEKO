@@ -2,10 +2,21 @@ import { Check } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
 import KitchenFeelingCard from './KitchenFeelingCard.jsx'
+import alltag1 from '../assets/images/inspiration/Hausaufgaben.png'
+import alltag2 from '../assets/images/inspiration/wocheneinkauf.png'
+import alltag3 from '../assets/images/inspiration/backen.png'
+import alltag4 from '../assets/images/inspiration/Tupper-Tetris.png'
 
 const USP = [
   'Individuelle Beratung', 'Planung mit Feingefühl', 'Realistische Planung',
   'Premium Materialien', 'Alles aus einer Hand',
+]
+
+const ALLTAG = [
+  { img: alltag1, t: 'Hausaufgaben hier, Pasta dort.', pos: '50% 45%' },
+  { img: alltag2, t: 'Einkauf rein, Chaos raus.', pos: '45% 42%' },
+  { img: alltag3, t: 'Teamwork mit Mehlwolke.', pos: '45% 32%' },
+  { img: alltag4, t: 'Gute Aussicht auf Frühstück.', pos: '50% 40%' },
 ]
 
 /** Wiederverwendbares "Wähle dein Küchengefühl"-Modul (Studio + Inspiration). */
@@ -24,6 +35,16 @@ export default function KuechengefuehlSection() {
             <ul className="lstances lstances--2col">
               {USP.map((u) => <li key={u}><Check size={16} strokeWidth={2.4} /> {u}</li>)}
             </ul>
+
+            <span className="alltag__head">So fühlt sich Alltag an.</span>
+            <div className="alltag">
+              {ALLTAG.map((a) => (
+                <span key={a.t} className="alltag__card">
+                  <span className="alltag__img" style={{ backgroundImage: `url(${a.img})`, backgroundPosition: a.pos }} aria-hidden="true" />
+                  <span className="alltag__t">{a.t}</span>
+                </span>
+              ))}
+            </div>
           </Reveal>
           <Reveal className="lintro__feel" delay={0.08}>
             <KitchenFeelingCard />
