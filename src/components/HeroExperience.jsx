@@ -105,13 +105,13 @@ export default function HeroExperience() {
               // Spalten deutlich weiter nach außen (über den Bildrand hinaus) -> mehr Luft
               style = { top: `${y}%`, [side ? 'right' : 'left']: `${-12.5 + (row % 2) * 1.5}%`, '--r': `${rot}deg` }
             } else {
-              const k = idx - 14 // 0..13 → 7 oben + 7 unten; Außenränder voll ausnutzen
+              const k = idx - 14 // 0..13 → 7 oben + 7 unten
               const onTop = k < 7
-              const cols = [3, 17, 31, 45, 57, 69, 82]
+              // obere & untere Reihe horizontal ~5% weiter nach links/rechts entzerrt (vertikal wieder moderat)
+              const cols = [0, 14, 29, 44, 57, 71, 85]
               const left = cols[k % 7]
               const rot = [-2.4, 2, -1.6, 2.6, -2, 1.6, -1.8][k % 7]
-              // obere & untere Reihe ~10% weiter nach außen gezogen
-              const yoff = (k % 2) ? -16 : -12
+              const yoff = (k % 2) ? -7 : -5
               style = { [onTop ? 'top' : 'bottom']: `${yoff}%`, left: `${left}%`, '--r': `${rot}deg` }
             }
             return (

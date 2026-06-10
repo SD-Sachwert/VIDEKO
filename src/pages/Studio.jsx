@@ -5,7 +5,6 @@ import { Check, ArrowRight } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
-import KuechengefuehlSection from '../components/KuechengefuehlSection.jsx'
 
 import heroImg from '../assets/images/studio/bilder/01_hero_studio_showroom.png'
 import introImg from '../assets/images/studio/bilder/02_intro_showroom_hell.png'
@@ -75,9 +74,6 @@ export default function Studio() {
           </Reveal>
         </div>
       </section>
-
-      {/* MEHR ALS EIN KÜCHENSTUDIO — interaktive Küchengefühl-Karte */}
-      <KuechengefuehlSection />
 
       {/* VIDEO SHOWCASE – Studio im Aufbau */}
       <section className="section studio-video-sec">
