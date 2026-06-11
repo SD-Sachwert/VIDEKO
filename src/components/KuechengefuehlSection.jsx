@@ -1,4 +1,4 @@
-import { Check } from 'lucide-react'
+import { Check, Heart, ShoppingBag, Cloud } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
 import KitchenFeelingCard from './KitchenFeelingCard.jsx'
@@ -13,10 +13,10 @@ const USP = [
 ]
 
 const ALLTAG = [
-  { img: alltag1, t: 'Hausaufgaben hier, Pasta dort.', pos: '50% 45%' },
-  { img: alltag2, t: 'Einkauf rein, Chaos raus.', pos: '45% 42%' },
-  { img: alltag3, t: 'Teamwork mit Mehlwolke.', pos: '45% 32%' },
-  { img: alltag4, t: 'Gute Aussicht auf Frühstück.', pos: '50% 40%' },
+  { img: alltag1, t: 'Hausaufgaben hier, Pasta dort.', icon: Heart, pos: '50% 45%' },
+  { img: alltag2, t: 'Einkauf rein, Chaos raus.', icon: ShoppingBag, pos: '45% 42%' },
+  { img: alltag3, t: 'Teamwork mit Mehlwolke.', icon: Cloud, pos: '45% 32%' },
+  { img: alltag4, t: 'Gute Aussicht auf Frühstück.', icon: Heart, pos: '50% 40%' },
 ]
 
 /** Wiederverwendbares "Wähle dein Küchengefühl"-Modul (Studio + Inspiration). */
@@ -42,7 +42,10 @@ export default function KuechengefuehlSection() {
               {ALLTAG.map((a) => (
                 <span key={a.t} className="alltag__card">
                   <span className="alltag__img" style={{ backgroundImage: `url(${a.img})`, backgroundPosition: a.pos }} aria-hidden="true" />
-                  <span className="alltag__t">{a.t}</span>
+                  <span className="alltag__cap">
+                    <span className="alltag__t">{a.t}</span>
+                    <span className="alltag__ic"><a.icon size={12} strokeWidth={2} /></span>
+                  </span>
                 </span>
               ))}
             </div>

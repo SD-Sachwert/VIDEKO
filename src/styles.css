@@ -11621,15 +11621,18 @@ a.footer__contact-line:hover {
 @media (prefers-reduced-motion: reduce) { .kfgteaser__dot::after { animation: none; } }
 
 /* === STUDIO — interaktive "Wähle dein Küchengefühl"-Karte === */
-.lintro--feeling { grid-template-columns: 1fr 1fr; gap: 52px; align-items: start; }
+.lintro--feeling { grid-template-columns: 1fr 1fr; gap: 52px; align-items: stretch; }
+.lintro--feeling .lintro__copy { display: flex; flex-direction: column; }
 /* feiner goldener Divider oben links über der Overline */
 .lintro__divider { display: block; width: 50px; height: 2px; border-radius: 2px; margin-bottom: 18px; background: linear-gradient(90deg, var(--gold), var(--gold-bright)); }
-/* 4 Alltagskarten links unter dem Text */
-.alltag__head { display: block; margin: 26px 0 12px; font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--bronze); }
+/* 4 Alltagskarten links unter dem Text – nach unten gedrückt, damit beide Spalten gemeinsam abschließen */
+.alltag__head { display: block; margin: 26px 0 12px; margin-top: auto; font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--bronze); }
 .alltag { display: grid; grid-template-columns: repeat(4, 1fr); gap: 11px; }
 .alltag__card { display: flex; flex-direction: column; gap: 7px; }
 .alltag__img { position: relative; display: block; width: 100%; aspect-ratio: 4 / 3; border-radius: 12px; background-size: cover; background-position: center; box-shadow: 0 16px 30px -20px rgba(120, 90, 40, 0.55); border: 1px solid rgba(201, 160, 80, 0.2); }
-.alltag__t { font-size: 0.68rem; line-height: 1.28; color: var(--ink-soft); }
+.alltag__cap { display: flex; align-items: flex-start; justify-content: space-between; gap: 6px; }
+.alltag__t { font-size: 0.68rem; line-height: 1.28; color: var(--ink-soft); text-align: left; }
+.alltag__ic { flex: none; margin-top: 1px; color: var(--bronze); opacity: 0.65; }
 @media (max-width: 560px) { .alltag { grid-template-columns: repeat(2, 1fr); } }
 .lintro--feeling .lintro__copy { max-width: 460px; }
 .lintro--feeling .kfeel { max-width: 540px; margin-left: auto; }
@@ -11696,8 +11699,8 @@ a.footer__contact-line:hover {
 .kfeel__bullets li::before { content: ""; position: absolute; left: 0; top: 8px; width: 7px; height: 7px; border-radius: 50%; background: var(--grad-gold); }
 .kfeel__foot { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-top: 16px; flex-wrap: wrap; }
 .kfeel__mats { display: flex; gap: 10px; flex-wrap: wrap; }
-.kfeel__mat { display: flex; flex-direction: column; align-items: stretch; gap: 7px; width: 70px; text-align: center; }
-.kfeel__swatch { position: relative; width: 100%; height: 52px; border-radius: 13px; border: 1px solid rgba(201, 160, 80, 0.42); overflow: hidden; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.42), 0 7px 15px -9px rgba(60, 44, 22, 0.55); transition: transform 0.25s ease, box-shadow 0.25s ease; }
+.kfeel__mat { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 56px; text-align: center; }
+.kfeel__swatch { position: relative; width: 100%; aspect-ratio: 1; height: auto; border-radius: 12px; border: 1px solid rgba(201, 160, 80, 0.42); overflow: hidden; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.42), 0 7px 15px -9px rgba(60, 44, 22, 0.55); transition: transform 0.25s ease, box-shadow 0.25s ease; }
 .kfeel__swatch::after { content: ""; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255, 255, 255, 0.34), transparent 46%); }
 .kfeel__mat:hover .kfeel__swatch { transform: translateY(-2px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.42), 0 12px 22px -10px rgba(168, 122, 40, 0.55); }
 .kfeel__matlabel { font-size: 0.62rem; line-height: 1.2; color: var(--ink-soft); }
@@ -11796,7 +11799,7 @@ a.footer__contact-line:hover {
 }
 
 /* === STYLEFINDER — Premium-Style-Coverflow (Finde deinen Küchenstil) === */
-.sfx-sec { position: relative; overflow: hidden; text-align: center; }
+.sfx-sec { position: relative; overflow: hidden; text-align: center; background: radial-gradient(135% 120% at 50% 46%, transparent 52%, rgba(243, 238, 227, 0.85) 100%); }
 .sfx-sec__glow { position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); width: 78%; height: 70%; z-index: 0; pointer-events: none;
   background: radial-gradient(closest-side, rgba(216, 180, 106, 0.22), rgba(216, 180, 106, 0.08) 55%, transparent 72%); }
 .sfx-sec > .container { position: relative; z-index: 1; }
