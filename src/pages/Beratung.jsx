@@ -184,6 +184,22 @@ export default function Beratung() {
                   )}
                 </AnimatePresence>
 
+                <div className="bf-group bf-uploadgroup">
+                  <span className="bf-label">Dateien anhängen <em>(optional)</em></span>
+                  <label className="bf-upload">
+                    <input type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.heic,image/*,application/pdf"
+                      onChange={(e) => setFiles([...e.target.files])} />
+                    <span className="bf-upload__ic"><Upload size={18} strokeWidth={1.9} /></span>
+                    <span className="bf-upload__main">Grundriss, Fotos &amp; weitere Dateien anhängen</span>
+                    <span className="bf-upload__hint">PDF, JPG, PNG, HEIC – Mehrfachauswahl möglich</span>
+                  </label>
+                  {files.length > 0 && (
+                    <ul className="bf-files">
+                      {files.map((x, i) => <li key={i}><FileText size={13} strokeWidth={2} /> {x.name}</li>)}
+                    </ul>
+                  )}
+                </div>
+
                 <button className="btn btn--primary btn--lg bf-submit" type="submit">
                   <span className="btn__shimmer" aria-hidden="true" /><span className="btn__label">Anfrage absenden</span>
                 </button>
@@ -194,27 +210,6 @@ export default function Beratung() {
 
             <Reveal className="bf-aside" delay={0.08}>
               <div className="bf-ablauf">
-                <AnimatePresence initial={false}>
-                  {showDetails && (
-                    <motion.div className="bf-upbox" initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}>
-                      <div className="bf-upbox__in">
-                        <span className="kicker kicker--gold">Dateien hochladen <em>(optional)</em></span>
-                        <label className="bf-upload bf-upload--dark">
-                          <input type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.heic,image/*,application/pdf"
-                            onChange={(e) => setFiles([...e.target.files])} />
-                          <span className="bf-upload__ic"><Upload size={18} strokeWidth={1.9} /></span>
-                          <span className="bf-upload__main">Grundriss, Fotos &amp; weitere Dateien anhängen</span>
-                          <span className="bf-upload__hint">PDF, JPG, PNG, HEIC – Mehrfachauswahl möglich</span>
-                        </label>
-                        {files.length > 0 && (
-                          <ul className="bf-files">
-                            {files.map((x, i) => <li key={i}><FileText size={13} strokeWidth={2} /> {x.name}</li>)}
-                          </ul>
-                        )}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
                 <span className="kicker kicker--gold">Was nach deiner Anfrage passiert</span>
                 <ol className="bf-steps">
                   {ABLAUF.map((s, i) => (

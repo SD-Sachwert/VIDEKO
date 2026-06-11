@@ -180,8 +180,8 @@ export default function Journal() {
               ))}
             </div>
             <div className="jfrag__actions">
-              <CTAButton to="/beratung">Alle Fragen ansehen</CTAButton>
-              <CTAButton to="/beratung" variant="dark">Weitere Fragen? Beratung anfragen</CTAButton>
+              <CTAButton href="https://wa.me/491605545818?text=Hallo%20VIDEKO%2C%20ich%20habe%20eine%20Frage%20zur%20K%C3%BCchenplanung." target="_blank" rel="noopener noreferrer">Noch eine Frage? Schreib uns.</CTAButton>
+              <CTAButton to="/beratung" variant="dark">Beratung anfragen</CTAButton>
             </div>
           </Reveal>
           <Reveal className="jfrag__device" delay={0.1}>
