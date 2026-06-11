@@ -41,12 +41,12 @@ export default function StylefinderStyles() {
           {STYLES.map((s, i) => {
             const d = i - active
             const ad = Math.abs(d)
-            const scale = ad === 0 ? 1.14 : ad === 1 ? 0.82 : ad === 2 ? 0.67 : 0.56
+            const scale = ad === 0 ? 1.16 : ad === 1 ? 0.78 : ad === 2 ? 0.62 : 0.5
             const style = {
-              transform: `translate(-50%, -50%) translateX(${d * 52}%) scale(${scale}) rotateY(${d * -10}deg)`,
-              opacity: ad === 0 ? 1 : ad <= 2 ? 0.88 : 0.66,
+              transform: `translate(-50%, -50%) translateX(${(d === 0 ? 0 : (d > 0 ? 1 : -1) * (54 + (ad - 1) * 40))}%) scale(${scale}) rotateY(${d * -9}deg)`,
+              opacity: ad === 0 ? 1 : ad === 1 ? 0.85 : 0.6,
               zIndex: 30 - ad,
-              filter: ad === 0 ? 'none' : ad === 1 ? 'brightness(0.88)' : 'brightness(0.78)',
+              filter: ad === 0 ? 'none' : ad === 1 ? 'brightness(0.86)' : 'brightness(0.74)',
             }
             const isActive = d === 0
             return (

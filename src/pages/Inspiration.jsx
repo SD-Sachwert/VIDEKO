@@ -8,7 +8,7 @@ import {
 import Reveal from '../components/Reveal.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
-import VorherNachherShowcase from '../components/VorherNachherShowcase.jsx'
+import TransformingKitchen from '../components/TransformingKitchen.jsx'
 import MaterialsLab from '../components/MaterialsLab.jsx'
 import KuechenfehlerGame from '../components/KuechenfehlerGame.jsx'
 import RaumideenSection from '../components/RaumideenSection.jsx'
@@ -169,8 +169,8 @@ export default function Inspiration() {
         </div>
       </section>
 
-      {/* VORHER / NACHHER — Showcase-Galerie (3 Karten) */}
-      <VorherNachherShowcase />
+      {/* TRANSFORMING KITCHEN — Video-Sektion */}
+      <TransformingKitchen />
 
       {/* SO EINFACH GEHT'S (hell) */}
       <section className="section insp-steps">
@@ -196,29 +196,6 @@ export default function Inspiration() {
       {/* FINDE DIE 9 KÜCHENSÜNDEN — interaktives Spiel als unterer Abschluss */}
       <KuechenfehlerGame />
 
-      {/* FINALER CTA / DUNKLER ABSCHLUSS — 3 Wege */}
-      <section className="section section--dark insp-convert">
-        <div className="container">
-          <SectionHeader tone="light" align="center" kicker="Drei Wege" title={<>Ideen sind der Anfang. <span className="grad">Deine Küche ist das Ziel.</span></>} lead="Wähle den Weg, der zu dir passt – schnell & einfach oder persönlich & individuell." />
-          <div className="convert-grid">
-            {CONVERT.map((c, i) => (
-              <Reveal key={c.title} delay={(i % 3) * 0.07}>
-                <div className="convcard">
-                  <span className="convcard__tag">{c.tag}</span>
-                  <span className="convcard__ic"><c.icon size={22} strokeWidth={1.6} /></span>
-                  <span className="convcard__title">{c.title}</span>
-                  <span className="convcard__text">{c.text}</span>
-                  <ul className="convcard__points">
-                    {c.points.map((p) => <li key={p}><Check size={13} strokeWidth={2.6} /> {p}</li>)}
-                  </ul>
-                  <CTAButton to={c.to}>{c.cta}</CTAButton>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-          <p className="convert-note">Kein Druck. Keine Verpflichtung. Nur ehrliche Ideen für deine Küche.</p>
-        </div>
-      </section>
     </div>
   )
 }

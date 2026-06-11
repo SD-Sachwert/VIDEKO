@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { MapPin, Mail, Phone, Check, ArrowRight, Compass, PhoneCall, Store, ChevronDown, ShieldCheck } from 'lucide-react'
+import { MapPin, Mail, Phone, Check, ArrowRight, Compass, PhoneCall, Store, ChevronDown, ShieldCheck, Upload, FileText } from 'lucide-react'
 
 import Reveal from '../components/Reveal.jsx'
 import heroImg from '../assets/images/leistungen/ls-hero.png'
@@ -54,6 +54,27 @@ export default function Beratung() {
   const [showDetails, setShowDetails] = useState(false)
   const [f, setF] = useState({ anliegen: '', kueche: '', status: '', zeit: '', budget: '', grundriss: '' })
   const set = (k, v) => setF((p) => ({ ...p, [k]: p[k] === v ? '' : v }))
+  const [files, setFiles] = useState([])
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    const fd = new FormData(e.target)
+    const body = [
+      `Name: ${fd.get('name') || ''}`,
+      `Telefon: ${fd.get('telefon') || ''}`,
+      `E-Mail: ${fd.get('email') || ''}`,
+      f.anliegen && `Anliegen: ${f.anliegen}`,
+      f.kueche && `Küchenart: ${f.kueche}`,
+      f.status && `Projektstatus: ${f.status}`,
+      f.zeit && `Zeitplan: ${f.zeit}`,
+      f.budget && `Budget: ${f.budget}`,
+      f.grundriss && `Grundriss vorhanden: ${f.grundriss}`,
+      files.length && `Dateien (bitte im Mailprogramm anhängen): ${files.map((x) => x.name).join(', ')}`,
+      '', 'Nachricht:', fd.get('nachricht') || '',
+    ].filter(Boolean).join('\n')
+    window.location.href = `mailto:info@videko-kuechen.de?subject=${encodeURIComponent('Küchenanfrage über videko.de')}&body=${encodeURIComponent(body)}`
+    setSent(true)
+  }
 
   const scrollToForm = () => {
     formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -118,10 +139,10 @@ export default function Beratung() {
             ))}
           </div>
 
-          <div className="bf-trust">
-            <span className="bf-trust__item"><span className="bf-trust__t">Persönlich</span><span className="bf-trust__d">Echte Menschen, ehrliche Beratung.</span></span>
-            <span className="bf-trust__item"><span className="bf-trust__t">Unverbindlich</span><span className="bf-trust__d">Ohne Druck, in deinem Tempo.</span></span>
-            <span className="bf-trust__item"><span className="bf-trust__t">Auf Augenhöhe</span><span className="bf-trust__d">Wir denken mit, nicht nur an Umsatz.</span></span>
+          <div className="bf-bene">
+            <span className="bf-bene__item"><span className="bf-bene__t">Persönlich</span><span className="bf-bene__d">Echte Menschen, ehrliche Beratung.</span></span>
+            <span className="bf-bene__item"><span className="bf-bene__t">Unverbindlich</span><span className="bf-bene__d">Ohne Druck, in deinem Tempo.</span></span>
+            <span className="bf-bene__item"><span className="bf-bene__t">Auf Augenhöhe</span><span className="bf-bene__d">Wir denken mit, nicht nur an Umsatz.</span></span>
           </div>
         </div>
       </section>
@@ -131,22 +152,38 @@ export default function Beratung() {
         <div className="container">
           <div className="bf">
             <Reveal className="bf-form">
-              <form onSubmit={(e) => { e.preventDefault(); setSent(true) }}>
+              <form onSubmit={handleSubmit}>
                 <h2 className="bf-form__title">Kurz reicht. <span className="grad">Wirklich.</span></h2>
                 <p className="bf-form__sub">Wir brauchen keinen Küchen-Essay. Ein paar Infos genügen.</p>
 
                 <div className="contact__row">
-                  <label className="field"><span>Name *</span><input type="text" required placeholder="Dein Name" /></label>
-                  <label className="field"><span>Telefon *</span><input type="tel" required placeholder="Für den Rückruf" /></label>
+                  <label className="field"><span>Name *</span><input type="text" name="name" required placeholder="Dein Name" /></label>
+                  <label className="field"><span>Telefon *</span><input type="tel" name="telefon" required placeholder="Für den Rückruf" /></label>
                 </div>
-                <label className="field"><span>E-Mail *</span><input type="email" required placeholder="name@beispiel.de" /></label>
+                <label className="field"><span>E-Mail *</span><input type="email" name="email" required placeholder="name@beispiel.de" /></label>
 
                 <div className="bf-group">
                   <span className="bf-label">Dein Anliegen</span>
                   <div className="bf-chips">{ANLIEGEN.map((o) => <Chip key={o} active={f.anliegen === o} onClick={() => set('anliegen', o)}>{o}</Chip>)}</div>
                 </div>
 
-                <label className="field"><span>Nachricht</span><textarea rows={4} placeholder="Ein Satz reicht. Roman geht auch. Wir urteilen nicht." /></label>
+                <label className="field"><span>Nachricht</span><textarea name="nachricht" rows={4} placeholder="Ein Satz reicht. Roman geht auch. Wir urteilen nicht." /></label>
+
+                <div className="bf-group">
+                  <span className="bf-label">Dateien hochladen <em>(optional)</em></span>
+                  <label className="bf-upload">
+                    <input type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.heic,image/*,application/pdf"
+                      onChange={(e) => setFiles([...e.target.files])} />
+                    <span className="bf-upload__ic"><Upload size={18} strokeWidth={1.9} /></span>
+                    <span className="bf-upload__main">Grundriss, Fotos &amp; weitere Dateien anhängen</span>
+                    <span className="bf-upload__hint">PDF, JPG, PNG, HEIC – Mehrfachauswahl möglich</span>
+                  </label>
+                  {files.length > 0 && (
+                    <ul className="bf-files">
+                      {files.map((x, i) => <li key={i}><FileText size={13} strokeWidth={2} /> {x.name}</li>)}
+                    </ul>
+                  )}
+                </div>
 
                 <button type="button" className="bf-toggle" onClick={() => setShowDetails((v) => !v)} aria-expanded={showDetails}>
                   Mehr Details angeben (optional) <ChevronDown size={16} strokeWidth={2} className={showDetails ? 'is-open' : ''} />

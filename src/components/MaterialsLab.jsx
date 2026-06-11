@@ -57,6 +57,7 @@ export default function MaterialsLab() {
           <span className="kicker">Materials Lab</span>
           <h2 className="matlab__title">Fühlen. Sehen.<br /><span className="grad">Verstehen.</span></h2>
           <p className="matlab__lead">Echte Materialien. Echte Oberflächen. Außergewöhnliche Strukturen und<br />Qualitäten in einer neuen Dimension.</p>
+          <p className="matlab__more">{SECTION_LEAD}</p>
           <div className="matinfo-wrap">
             <AnimatePresence mode="wait" initial={false}>
               {selected != null ? (
@@ -109,11 +110,6 @@ export default function MaterialsLab() {
             <button type="button" className="matlab__arrow" onClick={next} aria-label="Nächstes Material"><ChevronRight size={20} strokeWidth={2} /></button>
           </div>
         </div>
-
-        <Reveal className="matlab__outro">
-          <h3 className="matlab__outro-title">Material fühlt man, bevor man es versteht.</h3>
-          <p className="matlab__outro-text">{SECTION_LEAD}</p>
-        </Reveal>
       </div>
     </section>
   )
