@@ -7325,6 +7325,20 @@ body {
   font-style: italic;
 }
 
+/* legal pages: kein dunkler Hero – Titel startet oben, mit Abstand zur fixen Nav */
+.legal-page { padding-top: 150px; }
+.legal-head { max-width: 760px; margin-bottom: 30px; }
+.legal-head__title {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(2.4rem, 5vw, 3.4rem);
+  line-height: 1.04;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin: 10px 0 0;
+}
+@media (max-width: 640px) { .legal-page { padding-top: 124px; } }
+
 /* footer additions */
 .footer__inner {
   grid-template-columns: minmax(170px, auto) 1fr minmax(190px, auto);

@@ -1,4 +1,3 @@
-import PageHero from '../components/PageHero.jsx'
 import Reveal from '../components/Reveal.jsx'
 import legalText from './datenschutz-text.txt?raw'
 
@@ -16,9 +15,12 @@ const ELEMENTS = legalText
 export default function Datenschutz() {
   return (
     <>
-      <PageHero kicker="Rechtliches" title="Datenschutz" />
-      <section className="section section--light">
+      <section className="section section--light legal-page">
         <div className="container">
+          <Reveal className="legal-head">
+            <span className="kicker kicker--gold">Rechtliches</span>
+            <h1 className="legal-head__title">Datenschutz</h1>
+          </Reveal>
           <Reveal className="legal legal--doc">
             {ELEMENTS.map((el) =>
               el.tag === 'h2' ? <h2 key={el.key}>{el.text}</h2>

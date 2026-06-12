@@ -1,12 +1,14 @@
-import PageHero from '../components/PageHero.jsx'
 import Reveal from '../components/Reveal.jsx'
 
 export default function Impressum() {
   return (
     <>
-      <PageHero kicker="Rechtliches" title="Impressum" />
-      <section className="section section--light">
+      <section className="section section--light legal-page">
         <div className="container">
+          <Reveal className="legal-head">
+            <span className="kicker kicker--gold">Rechtliches</span>
+            <h1 className="legal-head__title">Impressum</h1>
+          </Reveal>
           <Reveal className="legal legal--doc">
             <h2>Angaben gemäß § 5 TMG</h2>
             <p>

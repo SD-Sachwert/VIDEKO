@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import { Menu, X, MapPin, ChevronDown } from 'lucide-react'
 import logoMain from '../assets/brand/logo-main.png'
 
@@ -28,6 +28,11 @@ export default function Header() {
   const [open, setOpen] = useState(false)
   const [openMenu, setOpenMenu] = useState(null)
   const close = () => { setOpen(false); setOpenMenu(null) }
+
+  // Seiten ohne dunklen Hero: Header dauerhaft im hellen "solid"-Zustand,
+  // damit die Navigation auch ganz oben lesbar bleibt.
+  const { pathname } = useLocation()
+  const solidRoute = pathname === '/impressum' || pathname === '/datenschutz'
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -59,7 +64,7 @@ export default function Header() {
   }, [open])
 
   return (
-    <header className={`header ${scrolled ? 'header--scrolled' : ''}`}>
+    <header className={`header ${scrolled || solidRoute ? 'header--scrolled' : ''}`}>
       <div className="container header__inner">
         <Link className="brand" to="/" aria-label="VIDEKO Küchen — Startseite" onClick={close}>
           <img className="brand__logo" src={logoMain} alt="VIDEKO Küchen" />
