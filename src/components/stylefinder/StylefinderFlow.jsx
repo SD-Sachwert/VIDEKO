@@ -6,7 +6,6 @@ import {
   Maximize, Baby, CircleDot, Cpu, Package, Coffee, Wine, PiggyBank, Coins, BadgeEuro, HelpCircle,
 } from 'lucide-react'
 
-import CTAButton from '../CTAButton.jsx'
 import logoMain from '../../assets/brand/logo-main.png'
 import { EMPTY_ANSWERS, PRIORITY_LIST, computeProfile, computeResultStyle } from './stylefinderLogic.js'
 
@@ -98,6 +97,11 @@ const RESULT = {
   'Statement / Industrial': { img: sIndustrial, char: 'Roh, markant, urban – Küche mit Haltung.', tags: ['Industrial', 'Markant', 'Urban', 'Stark'], mats: [mMetall, mNaturstein, mBronze] },
 }
 
+// "An VIDEKO senden" ist vorerst ausgeblendet – Code bleibt erhalten, einfach auf true setzen.
+const SHOW_MAIL_SEND = false
+const MODAL_INPUT = { width: '100%', background: 'rgba(255,255,255,.05)', border: '1px solid rgba(255,255,255,.14)', borderRadius: '10px', padding: '11px 13px', color: '#f4f1ea', fontSize: '.95rem', marginTop: '4px', boxSizing: 'border-box', fontFamily: 'inherit' }
+const MODAL_LABEL = { display: 'block', fontSize: '.82rem', color: '#a89f90', marginBottom: '12px' }
+
 function Chip({ active, onClick, children }) {
   return <button type="button" className={`sf-chip ${active ? 'is-active' : ''}`} onClick={onClick} aria-pressed={active}>{active && <Check size={14} strokeWidth={2.6} />} {children}</button>
 }
@@ -110,6 +114,11 @@ export default function StylefinderFlow() {
   const [notes, setNotes] = useState('')
   const [files, setFiles] = useState([])
   const [sent, setSent] = useState(false)
+  const [showPlan, setShowPlan] = useState(false)
+  const [planForm, setPlanForm] = useState({ name: '', email: '', telefon: '' })
+  const [planSending, setPlanSending] = useState(false)
+  const [planSent, setPlanSent] = useState(false)
+  const [planError, setPlanError] = useState(false)
   const [liked, setLiked] = useState(() => new Set())
   const toggleLike = (e, label) => { e.stopPropagation(); setLiked((s) => { const n = new Set(s); n.has(label) ? n.delete(label) : n.add(label); return n }) }
   const flowTop = useRef(null)
@@ -169,6 +178,52 @@ export default function StylefinderFlow() {
   const resultStyle = computeResultStyle(a)
   const R = RESULT[resultStyle]
 
+  // Dateien direkt in Supabase Storage hochladen, Pfade zurückgeben
+  const uploadFiles = async (fileList) => {
+    const base = import.meta.env.VITE_SUPABASE_URL
+    const key = import.meta.env.VITE_SUPABASE_ANON_KEY
+    if (!base || !key || !fileList.length) return []
+    const out = []
+    for (const file of fileList) {
+      const safe = file.name.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 80)
+      const path = `stylefinder/${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${safe}`
+      try {
+        const r = await fetch(`${base}/storage/v1/object/lead-uploads/${path}`, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${key}`, apikey: key, 'Content-Type': file.type || 'application/octet-stream' },
+          body: file,
+        })
+        if (r.ok) out.push({ name: file.name, path })
+      } catch { /* einzelne Datei überspringen */ }
+    }
+    return out
+  }
+
+  const submitPlan = async (e) => {
+    e.preventDefault()
+    const fd = new FormData(e.target)
+    if (fd.get('website')) return // Honeypot
+    setPlanSending(true); setPlanError(false)
+    try {
+      const uploads = await uploadFiles(files)
+      const res = await fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source: 'stylefinder',
+          name: planForm.name, email: planForm.email, telefon: planForm.telefon,
+          budget: a.budget, nachricht: notes,
+          stylefinder: { stil: resultStyle, farben: a.farbwelten, materialien: a.materials, funktion: a.funktion, tags: R.tags },
+          uploads,
+        }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (res.ok && data.ok) setPlanSent(true)
+      else setPlanError(true)
+    } catch { setPlanError(true) }
+    setPlanSending(false)
+  }
+
   return (
     <div className="sf-wrap" ref={flowTop}>
       {/* stepper */}
@@ -221,14 +276,64 @@ export default function StylefinderFlow() {
 
               <div className="sf-result__actions">
                 <button type="button" className="sf-actbtn" onClick={printResult}><Printer size={16} strokeWidth={2} /> Ergebnis drucken</button>
-                <button type="button" className="sf-actbtn sf-actbtn--gold" onClick={sendToVideko}><Send size={16} strokeWidth={2} /> {sent ? 'Mail geöffnet …' : 'An VIDEKO senden'}</button>
+                {SHOW_MAIL_SEND && (
+                  <button type="button" className="sf-actbtn sf-actbtn--gold" onClick={sendToVideko}><Send size={16} strokeWidth={2} /> {sent ? 'Mail geöffnet …' : 'An VIDEKO senden'}</button>
+                )}
               </div>
 
               <div className="sf-result__next">
                 <span className="sf-result__nextlabel">Dein nächster Schritt</span>
-                <CTAButton to="/beratung">Daraus einen echten Plan machen <ArrowRight size={16} strokeWidth={2} /></CTAButton>
+                <button type="button" className="sf-actbtn sf-actbtn--gold" style={{ width: '100%', justifyContent: 'center' }} onClick={() => { setPlanForm({ name: '', email: '', telefon: '' }); setPlanSent(false); setPlanError(false); setShowPlan(true) }}>Daraus einen echten Plan machen <ArrowRight size={16} strokeWidth={2} /></button>
               </div>
               <button type="button" className="sf-link sf-restart" onClick={restart}><RefreshCw size={15} /> Neu starten</button>
+
+              <AnimatePresence>
+                {showPlan && (
+                  <motion.div role="dialog" aria-modal="true" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                    onClick={() => !planSending && setShowPlan(false)}
+                    style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(5,5,7,.74)', backdropFilter: 'blur(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+                    <motion.div initial={{ y: 22, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 22, opacity: 0 }} transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                      onClick={(e) => e.stopPropagation()}
+                      style={{ width: '100%', maxWidth: '520px', maxHeight: '92vh', overflowY: 'auto', background: '#121212', color: '#f4f1ea', border: '1px solid rgba(202,160,90,.28)', borderRadius: '18px', padding: '28px 26px', boxShadow: '0 30px 80px rgba(0,0,0,.6)' }}>
+                      {!planSent ? (
+                        <form onSubmit={submitPlan}>
+                          <span className="kicker kicker--gold">Dein nächster Schritt</span>
+                          <h3 style={{ fontFamily: 'var(--font-cormorant, Georgia, serif)', fontSize: '1.75rem', lineHeight: 1.15, margin: '8px 0 6px' }}>Daraus machen wir deinen <span className="grad">echten Plan.</span></h3>
+                          <p style={{ color: '#b9b2a6', fontSize: '.95rem', margin: '0 0 18px' }}>Wir erstellen dir auf Basis deiner Auswahl einen persönlichen Vorschlag. Sag uns nur kurz, wie wir dich erreichen – den Rest hast du schon gemacht.</p>
+                          <div style={{ background: 'rgba(255,255,255,.04)', border: '1px solid rgba(255,255,255,.08)', borderRadius: '12px', padding: '12px 14px', marginBottom: '18px', fontSize: '.88rem' }}>
+                            {[['Stil', resultStyle], ['Farben', a.farbwelten.slice(0, 2).join(', ') || '—'], ['Materialien', a.materials.slice(0, 3).join(', ') || '—'], ['Funktion', a.funktion.slice(0, 2).join(', ') || '—'], ['Budget', a.budget || 'noch offen']].map(([k, v]) => (
+                              <div key={k} style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', padding: '3px 0' }}><span style={{ color: '#8f897e' }}>{k}</span><b style={{ textAlign: 'right' }}>{v}</b></div>
+                            ))}
+                          </div>
+                          <label style={MODAL_LABEL}>Name *<input style={MODAL_INPUT} type="text" required value={planForm.name} onChange={(e) => setPlanForm((p) => ({ ...p, name: e.target.value }))} placeholder="Dein Name" /></label>
+                          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                            <label style={{ ...MODAL_LABEL, flex: '1 1 180px' }}>E-Mail *<input style={MODAL_INPUT} type="email" required value={planForm.email} onChange={(e) => setPlanForm((p) => ({ ...p, email: e.target.value }))} placeholder="name@beispiel.de" /></label>
+                            <label style={{ ...MODAL_LABEL, flex: '1 1 140px' }}>Telefon *<input style={MODAL_INPUT} type="tel" required value={planForm.telefon} onChange={(e) => setPlanForm((p) => ({ ...p, telefon: e.target.value }))} placeholder="Für den Rückruf" /></label>
+                          </div>
+                          <label style={MODAL_LABEL}>Wünsche / Notizen<textarea style={{ ...MODAL_INPUT, resize: 'vertical' }} rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="z. B. Raummaße, Kochinsel, Lieblingsdetails …" /></label>
+                          <label className="sf-send__file" style={{ display: 'inline-flex', marginBottom: '14px' }}>
+                            <Paperclip size={15} strokeWidth={2} /> {files.length ? `${files.length} Datei(en) angehängt` : 'Grundriss / Inspirationsbild anhängen'}
+                            <input type="file" multiple accept="image/*,.pdf" onChange={(e) => setFiles(Array.from(e.target.files || []))} hidden />
+                          </label>
+                          <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }} />
+                          <button className="btn btn--primary btn--lg" type="submit" disabled={planSending} style={{ width: '100%' }}>
+                            <span className="btn__shimmer" aria-hidden="true" /><span className="btn__label">{planSending ? 'Wird gesendet …' : 'Jetzt an VIDEKO senden'}</span>
+                          </button>
+                          {planError && <p style={{ color: '#e0795f', fontSize: '.88rem', marginTop: '12px' }} role="alert">Hoppla, das hat nicht geklappt. Versuch's bitte nochmal – oder ruf uns kurz an: 0160 5545818.</p>}
+                          <button type="button" onClick={() => setShowPlan(false)} style={{ display: 'block', margin: '14px auto 0', background: 'none', border: 'none', color: '#8f897e', fontSize: '.85rem', cursor: 'pointer' }}>Abbrechen</button>
+                        </form>
+                      ) : (
+                        <div style={{ textAlign: 'center', padding: '12px 0' }}>
+                          <div style={{ fontSize: '2.4rem', marginBottom: '8px' }}>🙌</div>
+                          <h3 style={{ fontFamily: 'var(--font-cormorant, Georgia, serif)', fontSize: '1.8rem', margin: '0 0 8px' }}>Ist raus!</h3>
+                          <p style={{ color: '#b9b2a6', margin: '0 0 20px', lineHeight: 1.6 }}>Wir haben deine Auswahl{files.length ? ' samt Unterlagen' : ''} bekommen und melden uns ganz schnell persönlich. Schau gern in dein Postfach. 🙌</p>
+                          <button type="button" className="btn btn--primary" onClick={() => setShowPlan(false)}><span className="btn__label">Alles klar</span></button>
+                        </div>
+                      )}
+                    </motion.div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </div>
