@@ -101,8 +101,8 @@ export default function Beratung() {
             <span className="kicker kicker--gold">Beratung anfragen</span>
             <h1 className="pagehero__title">Erzähl uns groß,<br /><span className="grad">wir sortieren den Rest.</span></h1>
             <p className="pagehero__lead">
-              Keine Hotline. Kein Rabatt-Gebrüll. Kein Küchenlatein mit 47 Abkürzungen. Nur ehrliche
-              Beratung, klare nächste Schritte und eine Küche, die zu deinem Leben passt.
+              Kein Verkaufstheater, kein künstlicher Druck, kein Fachchinesisch. Nur ehrliche
+              Beratung, klare nächste Schritte und eine Küche, die zu deinem Alltag passt.
             </p>
             <div className="pagehero__actions">
               <button type="button" className="btn btn--primary btn--lg" onClick={scrollToForm}>

@@ -207,6 +207,9 @@ export const journalFaqs = [
   { q: 'Soll ich auch Fotos vom Raum mitbringen?', a: 'Unbedingt. Fotos helfen enorm – vor allem bei Fenstern, Heizkörpern, Dachschrägen, Vorsprüngen oder Anschlüssen. Ein Bild ersetzt nicht jedes Maß, aber oft zehn Rückfragen.' },
   { q: 'Welche technischen Punkte sollte ich vorab prüfen?', a: 'Wasseranschluss, Abfluss, Steckdosen, Starkstrom, Abluft/Umluft, Heizkörper, Fensteröffnung und Raumhöhe. Das klingt erstmal unromantisch – ist aber genau der Stoff, aus dem gute Küchenplanung gemacht ist.' },
   { q: 'Muss ich schon genau wissen, was ich will?', a: 'Nein. Du musst nicht mit dem perfekten Plan kommen. Aber je klarer dein Alltag, deine Wünsche und dein Budget sind, desto besser können wir dich beraten. Es geht nicht darum, schon alles zu wissen – nur darum, nicht komplett im Nebel anzureisen.' },
+  { q: 'Ist die Deckenhöhe für die Planung wichtig?', a: 'Ja. Gerade bei hohen Schränken, Beleuchtung, Trockenbau oder Sonderlösungen ist die Deckenhöhe kein Deko-Wissen, sondern Planungsgrundlage. Lieber einmal nachmessen als später feststellen, dass der Hochschrank rechnerisch im Erdgeschoss endet.' },
+  { q: 'Was sollte ich bei Neubau oder Sanierung beachten?', a: 'Bei Neubau und Sanierung lassen sich Anschlüsse oft noch sinnvoll verschieben. Genau deshalb lohnt es sich, die Küche früh zu planen – bevor Wand, Elektrik und Wasser schon entschieden haben, wo später alles stehen muss.' },
+  { q: 'Was, wenn ich die Maße nicht genau weiß?', a: 'Kein Drama. Wir helfen dir, die richtigen Punkte zu finden. Aber je mehr brauchbare Infos du mitbringst, desto genauer und ehrlicher wird die erste Planung. Pi mal Daumen ist bei Küchen ein eher schlechter Architekt.' },
 ]
 
 export const kitchenMyths = [

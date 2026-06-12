@@ -75,7 +75,7 @@ const TRUST = ['Ehrliche Orientierung', 'Ca. 2 Minuten', 'Unverbindlich']
 
 function profileFor(a) {
   const stil = STILE.find((s) => s.key === a.stil)
-  let name = 'Deine individuelle Traumküche'
+  let name = 'Deine individuelle Küche'
   if (a.nutzer === 'familie') name = 'Die moderne Familienküche'
   else if (a.nutzer === 'paar') name = 'Die elegante Wohnküche'
   else if (a.nutzer === 'hobbykoch') name = 'Die Küche für Genießer'
@@ -201,7 +201,7 @@ export default function StylefinderWizard() {
           </div>
 
           <form className="sfform" onSubmit={(e) => e.preventDefault()}>
-            <h3 className="sfform__title">Lass uns deine Traumküche planen.</h3>
+            <h3 className="sfform__title">Lass uns deine Küche planen.</h3>
             <div className="sfform__row">
               <label className="field"><span>Name</span><input type="text" placeholder="Dein Name" required /></label>
               <label className="field"><span>E-Mail</span><input type="email" placeholder="name@beispiel.de" required /></label>

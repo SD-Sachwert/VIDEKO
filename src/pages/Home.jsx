@@ -47,7 +47,7 @@ import finalImg from '../assets/images/studio/bilder/10_final_cta_studio_banner.
 const WAYS = [
   { n: '01', title: 'Inspiration finden', text: 'Entdecke Stile, Materialien und Ideen für die Küche, die zu dir passt.', cta: 'Jetzt entdecken', to: '/inspiration', img: wayInsp },
   { n: '02', title: 'Stylefinder starten', text: 'In 2 Minuten zu deiner individuellen Küchenrichtung – ohne Geschmackstest mit Gewinner.', cta: 'Jetzt starten', to: '/stylefinder', img: waySf, light: true },
-  { n: '03', title: 'Persönliche Beratung', text: 'Gemeinsam planen wir deine Traumküche – ehrlich und auf Augenhöhe.', cta: 'Termin sichern', to: '/beratung', img: wayBer },
+  { n: '03', title: 'Persönliche Beratung', text: 'Gemeinsam planen wir deine Küche – ehrlich und auf Augenhöhe.', cta: 'Termin sichern', to: '/beratung', img: wayBer },
 ]
 
 

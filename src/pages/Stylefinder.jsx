@@ -13,7 +13,7 @@ export default function Stylefinder() {
       <PageHero
         kicker="VIDEKO Stylefinder"
         title={<>Dein Stil. Deine Küche.<br /><span className="grad">Deine erste Einschätzung.</span></>}
-        lead="Finde in wenigen Minuten heraus, welcher Küchenstil zu dir passt – und was daraus realistisch entstehen kann. Kein Möbelhaus-Blabla: Wir raten nicht ins Blaue, wir planen lieber sauber."
+        lead="Finde in wenigen Minuten heraus, welcher Küchenstil zu dir passt – und was daraus realistisch entstehen kann. Wir raten nicht ins Blaue, wir planen lieber sauber."
         image={heroPoster}
       >
         <CTAButton href="#sf-start">Stylefinder starten</CTAButton>
@@ -40,7 +40,7 @@ export default function Stylefinder() {
             align="center"
             kicker="Bereit?"
             title={<>Genug eingeschätzt? <span className="grad">Jetzt machen wir daraus einen echten Plan.</span></>}
-            lead="Kein Druck, kein Möbelhaus-Theater – nur ehrliche Planung auf Augenhöhe."
+            lead="Kein Druck, kein Verkaufstheater – nur ehrliche Planung auf Augenhöhe."
           />
           <div className="sf-final__actions">
             <CTAButton to="/beratung">Beratung anfragen</CTAButton>

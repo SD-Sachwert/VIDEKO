@@ -61,7 +61,7 @@ const TIERS = [
   },
   {
     key: 'luxus', range: '35.000 €+', label: 'Luxus',
-    text: 'Maßarbeit ohne Kompromisse, außergewöhnliche Materialien und klare Statement-Küchen.',
+    text: 'Maßarbeit ohne Kompromisse, hochwertige Materialien und klare Statement-Küchen.',
     images: [l01, l02, l03, l04], compass: { pos: 'bottom', angle: 180, image: segLuxury },
   },
 ]

@@ -56,7 +56,7 @@ export default function MaterialsLab() {
           <span className="matlab__divider" aria-hidden="true" />
           <span className="kicker">Materials Lab</span>
           <h2 className="matlab__title">Fühlen. Sehen.<br /><span className="grad">Verstehen.</span></h2>
-          <p className="matlab__lead">Echte Materialien. Echte Oberflächen. Außergewöhnliche Strukturen und<br />Qualitäten in einer neuen Dimension.</p>
+          <p className="matlab__lead">Echte Materialien. Echte Oberflächen. Strukturen, Haptik und Oberflächen –<br />zum Anfassen, nicht nur zum Anschauen.</p>
           <p className="matlab__more">{SECTION_LEAD}</p>
           <div className="matinfo-wrap">
             <AnimatePresence mode="wait" initial={false}>

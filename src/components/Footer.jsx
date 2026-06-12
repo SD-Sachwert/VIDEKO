@@ -2,11 +2,14 @@ import { Link, useLocation } from 'react-router-dom'
 import { MapPin, Mail, Phone, ArrowRight } from 'lucide-react'
 import logoMark from '../assets/brand/logo-main.png'
 
-import bgDefault from '../assets/images/home/footer/footer-experience-bg-wide.png'
-import bgHome from '../assets/images/inspiration/10_favoriten_wohnkueche_luxus.png'
-import bgJournal from '../assets/images/inspiration/09_premium_architektur_kueche.png'
-import bgKarriere from '../assets/images/karriere/10_cta_footer_premium_showroom.png'
-import bgLeistungen from '../assets/images/leistungen/04_intro_helle_kueche.png'
+import kitchenVision from '../assets/images/kitchen-vision-1.png'
+
+// "Kitchen Vision" als einheitlicher Footer-Hintergrund auf allen Seiten
+const bgDefault = kitchenVision
+const bgHome = kitchenVision
+const bgJournal = kitchenVision
+const bgKarriere = kitchenVision
+const bgLeistungen = kitchenVision
 
 const NAV = [
   { label: 'Stylefinder', to: '/stylefinder' },
@@ -35,8 +38,8 @@ const VARIANTS = {
   },
   journal: {
     img: bgJournal, pos: 'center 32%', tone: 'deep', kicker: 'Inspiration trifft Planung.',
-    t1: 'Bereit für deine ', t2: 'Traumküche?',
-    sub: 'Finde deinen Stil oder lass dich persönlich beraten – ohne Küchenlatein-Prüfung.',
+    t1: 'Bereit für deine ', t2: 'neue Küche?',
+    sub: 'Finde deinen Stil oder lass dich persönlich beraten – ehrlich, ohne Verkaufstheater.',
     primary: { label: 'Stylefinder starten', to: '/stylefinder' }, secondary: { label: 'Beratung anfragen', to: '/beratung' },
   },
   karriere: {

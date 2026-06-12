@@ -16,7 +16,7 @@ const STYLES = [
   { img: dunkel, t: 'Dunkel & elegant', d: 'Zeitlos. Markant. Ausdrucksstark.' },
   { img: hell, t: 'Hell & leicht', d: 'Frisch. Offen. Leicht.' },
   { img: natuerlich, t: 'Natürlich', d: 'Echt. Nachhaltig. Ausgewogen.' },
-  { img: luxurioes, t: 'Luxuriös', d: 'Exklusiv. Hochwertig. Außergewöhnlich.' },
+  { img: luxurioes, t: 'Luxuriös', d: 'Hochwertig. Edel. Mit Charakter.' },
 ]
 
 const TRUST = [

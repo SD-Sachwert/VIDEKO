@@ -51,7 +51,7 @@ const BAUSTEINE = [
 const ENTRIES = [
   { n: '01', img: cardInsp, title: 'Inspiration finden', text: 'Entdecke Stile, Materialien und Ideen für die Küche, die zu dir passt.', cta: 'Jetzt entdecken', to: '/inspiration' },
   { n: '02', img: cardStyle, title: 'Stylefinder starten', text: 'In 2 Minuten zu deiner individuellen Küchenrichtung.', cta: 'Jetzt starten', to: '/stylefinder' },
-  { n: '03', img: cardBer, title: 'Persönliche Beratung', text: 'Gemeinsam planen wir deine Traumküche – ehrlich und auf Augenhöhe.', cta: 'Termin sichern', to: '/beratung' },
+  { n: '03', img: cardBer, title: 'Persönliche Beratung', text: 'Gemeinsam planen wir deine Küche – ehrlich und auf Augenhöhe.', cta: 'Termin sichern', to: '/beratung' },
 ]
 
 const TRUST = [

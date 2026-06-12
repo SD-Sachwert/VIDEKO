@@ -94,7 +94,7 @@ export default function StylefinderHero() {
             <StyleCard active={active === 1} />
           </div>
           <div className="sfslot is-clickable" onClick={() => setActive(2)} role="button" tabIndex={0}>
-            <SideCard img={berImg} title="Persönliche Beratung" text="Gemeinsam planen wir deine Traumküche – ehrlich, persönlich und auf Augenhöhe." cta="Beratung anfragen" to="/beratung" active={active === 2} />
+            <SideCard img={berImg} title="Persönliche Beratung" text="Gemeinsam planen wir deine Küche – ehrlich, persönlich und auf Augenhöhe." cta="Beratung anfragen" to="/beratung" active={active === 2} />
           </div>
         </Reveal>
 

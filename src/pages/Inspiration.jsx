@@ -175,7 +175,7 @@ export default function Inspiration() {
       {/* SO EINFACH GEHT'S (hell) */}
       <section className="section insp-steps">
         <div className="container">
-          <SectionHeader align="center" kicker="So einfach geht's" title={<>In 4 Schritten zu <span className="grad">deiner Traumküche.</span></>} lead="Klar, persönlich und transparent – damit aus deiner Idee ein Raum wird, der bleibt." />
+          <SectionHeader align="center" kicker="So einfach geht's" title={<>In 4 Schritten zu <span className="grad">deiner neuen Küche.</span></>} lead="Klar, persönlich und transparent – damit aus deiner Idee ein Raum wird, der bleibt." />
           <div className="istep-grid">
             {STEPS4.map((s, i) => (
               <Reveal key={s.n} delay={(i % 4) * 0.06}>
