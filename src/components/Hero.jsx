@@ -7,7 +7,7 @@ import heroImg from '../assets/images/shared/hero-videko-final-16x9.png'
 import heroMobileImg from '../assets/images/home/Mobile.png'
 import heroVideo from '../assets/images/home/Header.mp4'
 
-const LINES = ['Für Menschen, die das', 'Besondere erleben wollen.']
+const LINES = ['Küchenplanung aus Würzburg –', 'für dein Zuhause,', 'nicht fürs Schaufenster.']
 
 /**
  * HERO
@@ -112,7 +112,7 @@ export default function Hero() {
               <span className="hero__line" key={line}>
                 <span
                   className={
-                    i === LINES.length - 1 ? 'hero__line-in grad' : 'hero__line-in'
+                    i >= 1 ? 'hero__line-in grad' : 'hero__line-in'
                   }
                 >
                   {line}

@@ -385,7 +385,7 @@ body {
 
 .brand__logo {
   width: auto;
-  height: 72px;
+  height: 79px;
   object-fit: contain;
   filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.38));
 }
@@ -782,8 +782,8 @@ body {
 .hero__title {
   font-family: var(--serif);
   font-weight: 600;
-  font-size: clamp(2.9rem, 6vw, 5.2rem);
-  line-height: 0.98;
+  font-size: clamp(2.1rem, 4.3vw, 3.6rem);
+  line-height: 1.02;
   letter-spacing: -0.015em;
   margin: 0 0 26px;
 }
@@ -1480,7 +1480,7 @@ body {
   padding-top: clamp(28px, 4vw, 44px); border-top: 1px solid rgba(244, 239, 228, 0.14);
 }
 .footer__brand { display: flex; flex-direction: column; gap: 16px; }
-.footer__logo { width: 60px; height: 60px; object-fit: contain; }
+.footer__logo { width: 69px; height: 69px; object-fit: contain; }
 .footer__brand p { margin: 0; font-family: var(--serif); font-size: 1.32rem; line-height: 1.2; color: var(--gold-bright); }
 
 .footer__col { display: flex; flex-direction: column; gap: 12px; }
@@ -7408,7 +7408,7 @@ body {
 
 @media (max-width: 720px) {
   .header__actions .pill--cta { display: none; }
-  .brand__logo { width: auto; height: 56px; }
+  .brand__logo { width: auto; height: 62px; }
   .luxury {
     padding: 60px 0 50px;
   }
@@ -12219,7 +12219,7 @@ a.footer__contact-line:hover {
     display: inline-flex;
   }
   .header__inner { height: 92px; }
-  .brand__logo { width: 60px; height: 60px; }
+  .brand__logo { width: 66px; height: 66px; }
   .brand__name { font-size: 1.7rem; }
   .paths__grid {
     grid-template-columns: 1fr;
