@@ -1480,7 +1480,7 @@ body {
   padding-top: clamp(28px, 4vw, 44px); border-top: 1px solid rgba(244, 239, 228, 0.14);
 }
 .footer__brand { display: flex; flex-direction: column; gap: 16px; }
-.footer__logo { width: 69px; height: 69px; object-fit: contain; }
+.footer__logo { width: 83px; height: 83px; object-fit: contain; }
 .footer__brand p { margin: 0; font-family: var(--serif); font-size: 1.32rem; line-height: 1.2; color: var(--gold-bright); }
 
 .footer__col { display: flex; flex-direction: column; gap: 12px; }
