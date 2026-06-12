@@ -104,8 +104,33 @@ export default function Karriere() {
   const imgY = useTransform(scrollYProgress, [0, 1], ['0%', '16%'])
   const imgScale = useTransform(scrollYProgress, [0, 1], [1.06, 1.16])
   const [sent, setSent] = useState(false)
+  const [sending, setSending] = useState(false)
+  const [error, setError] = useState(false)
   const [activeJob, setActiveJob] = useState(0)
   const [paused, setPaused] = useState(false)
+
+  const handleApply = async (e) => {
+    e.preventDefault()
+    const fd = new FormData(e.target)
+    if (fd.get('website')) return // Honeypot
+    const fileInput = e.target.querySelector('input[type="file"]')
+    const dateien = fileInput ? [...fileInput.files].map((x) => x.name) : []
+    setSending(true); setError(false)
+    try {
+      const res = await fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source: 'karriere',
+          name: fd.get('name'), email: fd.get('email'), telefon: fd.get('telefon'),
+          bereich: fd.get('bereich'), nachricht: fd.get('nachricht'), dateien,
+        }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (res.ok && data.ok) { setSent(true); e.target.reset() } else setError(true)
+    } catch { setError(true) }
+    setSending(false)
+  }
 
   const deckNext = () => setActiveJob((v) => (v + 1) % DECK.length)
   const deckPrev = () => setActiveJob((v) => (v - 1 + DECK.length) % DECK.length)
@@ -312,31 +337,33 @@ export default function Karriere() {
             </Reveal>
 
             <Reveal className="kapply__formwrap" delay={0.08}>
-              <form className="contact__form" onSubmit={(e) => { e.preventDefault(); setSent(true) }}>
+              <form className="contact__form" onSubmit={handleApply}>
                 <div className="contact__row">
-                  <label className="field"><span>Name</span><input type="text" required placeholder="Dein Name" /></label>
-                  <label className="field"><span>E-Mail</span><input type="email" required placeholder="name@beispiel.de" /></label>
+                  <label className="field"><span>Name</span><input type="text" name="name" required placeholder="Dein Name" /></label>
+                  <label className="field"><span>E-Mail</span><input type="email" name="email" required placeholder="name@beispiel.de" /></label>
                 </div>
                 <div className="contact__row">
-                  <label className="field"><span>Telefon</span><input type="tel" required placeholder="0160 1234567" /></label>
+                  <label className="field"><span>Telefon</span><input type="tel" name="telefon" required placeholder="0160 1234567" /></label>
                   <label className="field"><span>Wunschbereich</span>
-                    <select defaultValue="">
+                    <select name="bereich" defaultValue="">
                       <option value="" disabled>Bitte wählen</option>
                       {BEREICHE.map((b) => <option key={b}>{b}</option>)}
                     </select>
                   </label>
                 </div>
-                <label className="field"><span>Nachricht</span><textarea rows={4} placeholder="Erzähl uns kurz, wer du bist – ein Satz reicht." /></label>
+                <label className="field"><span>Nachricht</span><textarea name="nachricht" rows={4} placeholder="Erzähl uns kurz, wer du bist – ein Satz reicht." /></label>
                 <label className="sfupload">
                   <Upload size={18} strokeWidth={1.7} />
                   <span>Lebenslauf / Unterlagen hochladen</span>
                   <input type="file" multiple hidden />
                 </label>
-                <button className="btn btn--primary btn--lg" type="submit">
+                <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }} />
+                <button className="btn btn--primary btn--lg" type="submit" disabled={sending}>
                   <span className="btn__shimmer" aria-hidden="true" />
-                  <span className="btn__label">Jetzt initiativ bewerben</span>
+                  <span className="btn__label">{sending ? 'Wird gesendet …' : 'Jetzt initiativ bewerben'}</span>
                 </button>
-                {sent && <p className="contact__ok" role="status">Danke! Deine Bewerbung ist da – wir melden uns persönlich. Kein Bot, kein Küchen-Orakel.<br /><em>(Demo-Formular – Versand wird später angebunden.)</em></p>}
+                {sent && <p className="contact__ok" role="status">Danke! Deine Bewerbung ist da – wir melden uns persönlich. Kein Bot, kein Küchen-Orakel. 🙌</p>}
+                {error && <p className="contact__err" role="alert">Hoppla, das hat nicht geklappt. Versuch's bitte nochmal – oder schreib direkt an info@videko-kuechen.de.</p>}
               </form>
             </Reveal>
           </div>

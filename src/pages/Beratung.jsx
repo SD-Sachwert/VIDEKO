@@ -51,29 +51,38 @@ export default function Beratung() {
   const imgScale = useTransform(scrollYProgress, [0, 1], [1.06, 1.16])
 
   const [sent, setSent] = useState(false)
+  const [sending, setSending] = useState(false)
+  const [error, setError] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
   const [f, setF] = useState({ anliegen: '', kueche: '', status: '', zeit: '', budget: '', grundriss: '' })
   const set = (k, v) => setF((p) => ({ ...p, [k]: p[k] === v ? '' : v }))
   const [files, setFiles] = useState([])
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     const fd = new FormData(e.target)
-    const body = [
-      `Name: ${fd.get('name') || ''}`,
-      `Telefon: ${fd.get('telefon') || ''}`,
-      `E-Mail: ${fd.get('email') || ''}`,
-      f.anliegen && `Anliegen: ${f.anliegen}`,
-      f.kueche && `Küchenart: ${f.kueche}`,
-      f.status && `Projektstatus: ${f.status}`,
-      f.zeit && `Zeitplan: ${f.zeit}`,
-      f.budget && `Budget: ${f.budget}`,
-      f.grundriss && `Grundriss vorhanden: ${f.grundriss}`,
-      files.length && `Dateien (bitte im Mailprogramm anhängen): ${files.map((x) => x.name).join(', ')}`,
-      '', 'Nachricht:', fd.get('nachricht') || '',
-    ].filter(Boolean).join('\n')
-    window.location.href = `mailto:info@videko-kuechen.de?subject=${encodeURIComponent('Küchenanfrage über videko.de')}&body=${encodeURIComponent(body)}`
-    setSent(true)
+    if (fd.get('website')) return // Honeypot
+    setSending(true); setError(false)
+    try {
+      const res = await fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source: 'beratung',
+          name: fd.get('name'), telefon: fd.get('telefon'), email: fd.get('email'),
+          nachricht: fd.get('nachricht'),
+          anliegen: f.anliegen, kueche: f.kueche, status: f.status,
+          zeitraum: f.zeit, budget: f.budget, grundriss: f.grundriss,
+          dateien: files.map((x) => x.name),
+        }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (res.ok && data.ok) {
+        setSent(true); e.target.reset()
+        setF({ anliegen: '', kueche: '', status: '', zeit: '', budget: '', grundriss: '' }); setFiles([])
+      } else setError(true)
+    } catch { setError(true) }
+    setSending(false)
   }
 
   const scrollToForm = () => {
@@ -200,11 +209,13 @@ export default function Beratung() {
                   )}
                 </div>
 
-                <button className="btn btn--primary btn--lg bf-submit" type="submit">
-                  <span className="btn__shimmer" aria-hidden="true" /><span className="btn__label">Anfrage absenden</span>
+                <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }} />
+                <button className="btn btn--primary btn--lg bf-submit" type="submit" disabled={sending}>
+                  <span className="btn__shimmer" aria-hidden="true" /><span className="btn__label">{sending ? 'Wird gesendet …' : 'Anfrage absenden'}</span>
                 </button>
                 <p className="bf-trust"><ShieldCheck size={14} strokeWidth={1.8} /> Deine Daten sind sicher. Kein Spam, kein Weiterverkauf.</p>
-                {sent && <p className="contact__ok" role="status">Anfrage ist raus. Wir melden uns persönlich – kein Bot, kein Küchen-Orakel.<br /><em>(Demo-Formular – Versand wird später angebunden.)</em></p>}
+                {sent && <p className="contact__ok" role="status">Anfrage ist raus. Wir melden uns persönlich – kein Bot, kein Küchen-Orakel. Schau gern in dein Postfach. 🙌</p>}
+                {error && <p className="contact__err" role="alert">Hoppla, da ist was schiefgelaufen. Versuch's bitte nochmal – oder ruf uns kurz an: 0160 5545818.</p>}
               </form>
             </Reveal>
 
