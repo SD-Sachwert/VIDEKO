@@ -1,0 +1,45 @@
+{
+  "_hinweis": "Vorbereitete Größentabellen. Die Werte sind Richtwerte in Zentimetern und vor dem Verkaufsstart mit den tatsächlichen Herstellerangaben abzugleichen.",
+  "_status": "vorbereitet",
+  "guides": {
+    "unisex": {
+      "id": "unisex",
+      "title": "Unisex / Herren",
+      "note": "Gemessen am flach liegenden Kleidungsstück. Brustweite als Umfang.",
+      "columns": ["Größe", "Brust (cm)", "Länge (cm)", "Ärmel (cm)"],
+      "rows": [
+        ["S", "96–100", "70", "20"],
+        ["M", "102–106", "72", "21"],
+        ["L", "108–112", "74", "22"],
+        ["XL", "114–118", "76", "23"],
+        ["XXL", "120–124", "78", "24"]
+      ]
+    },
+    "women": {
+      "id": "women",
+      "title": "Damen",
+      "note": "Körpernahe Schnitte. Bei Crop-Modellen ist die Länge bewusst kürzer.",
+      "columns": ["Größe", "Brust (cm)", "Taille (cm)", "Länge (cm)"],
+      "rows": [
+        ["XS", "80–84", "62–66", "60"],
+        ["S", "86–90", "68–72", "62"],
+        ["M", "92–96", "74–78", "64"],
+        ["L", "98–102", "80–84", "66"],
+        ["XL", "104–108", "86–90", "68"]
+      ]
+    },
+    "polo": {
+      "id": "polo",
+      "title": "Polo / Oberbekleidung",
+      "note": "Etwas schmaler geschnitten als das T-Shirt. Im Zweifel eine Größe größer wählen.",
+      "columns": ["Größe", "Brust (cm)", "Länge (cm)", "Schulter (cm)"],
+      "rows": [
+        ["S", "94–98", "70", "43"],
+        ["M", "100–104", "72", "45"],
+        ["L", "106–110", "74", "47"],
+        ["XL", "112–116", "76", "49"],
+        ["XXL", "118–122", "78", "51"]
+      ]
+    }
+  }
+}

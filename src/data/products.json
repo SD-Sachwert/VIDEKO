@@ -1,0 +1,5013 @@
+[
+  {
+    "id": "signature_t_shirt_black",
+    "sku": "VK-SIGNATURE-T-SHIRT-BLACK",
+    "slug": "signature-t-shirt-black",
+    "name": "Signature T-Shirt Schwarz",
+    "kicker": "T-Shirt",
+    "collection": "SIGNATURE",
+    "line": "signature",
+    "audience": "unisex",
+    "productType": "tshirt",
+    "category": "Bekleidung",
+    "status": "live",
+    "price": 4.99,
+    "priceNote": null,
+    "personalizable": true,
+    "personalization_price": 3.99,
+    "personalization": {
+      "enabled": true,
+      "price": 3.99,
+      "maxLength": 20,
+      "position": "Obere Rückseite, unterhalb des Nackens",
+      "allowEmoji": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Regular",
+    "fitNote": "Fällt normal aus.",
+    "sizeGuide": "unisex",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "signature-tee",
+    "refinement": "print",
+    "logoPlacement": "front",
+    "placements": [
+      {
+        "key": "front",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": null,
+        "image": "signature-tee-schwarz-front.webp",
+        "gallery": [
+          "signature-tee-schwarz-front.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": null,
+        "image": "signature-tee-schwarz-brust.webp",
+        "gallery": [
+          "signature-tee-schwarz-brust.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      }
+    ],
+    "image": "signature-tee-schwarz-front.webp",
+    "gallery": [
+      "signature-tee-schwarz-front.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": true,
+    "material": "100% Baumwolle",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "7–14 Tage",
+    "tagline": "Unser Klassiker mit vollständigem VIDEKO Küchen Logo.",
+    "description": "Unser Klassiker mit vollständigem VIDEKO Küchen Logo. Teil der SIGNATURE Linie. Schnitt: Regular – fällt normal aus.",
+    "usps": [
+      "Regular geschnitten",
+      "100% Baumwolle",
+      "Teil der SIGNATURE Linie"
+    ],
+    "rank": 0
+  },
+  {
+    "id": "signature_t_shirt_white",
+    "sku": "VK-SIGNATURE-T-SHIRT-WHITE",
+    "slug": "signature-t-shirt-white",
+    "name": "Signature T-Shirt Weiß",
+    "kicker": "T-Shirt",
+    "collection": "SIGNATURE",
+    "line": "signature",
+    "audience": "unisex",
+    "productType": "tshirt",
+    "category": "Bekleidung",
+    "status": "live",
+    "price": 4.99,
+    "priceNote": null,
+    "personalizable": true,
+    "personalization_price": 3.99,
+    "personalization": {
+      "enabled": true,
+      "price": 3.99,
+      "maxLength": 20,
+      "position": "Obere Rückseite, unterhalb des Nackens",
+      "allowEmoji": false
+    },
+    "colors": [
+      {
+        "key": "white",
+        "label": "Weiß",
+        "hex": "#f4f2ee"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Regular",
+    "fitNote": "Fällt normal aus.",
+    "sizeGuide": "unisex",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "signature-tee",
+    "refinement": "print",
+    "logoPlacement": "front",
+    "placements": [
+      {
+        "key": "front",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": null,
+        "image": "signature-tee-weiss-front.webp",
+        "gallery": [
+          "signature-tee-weiss-front.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": null,
+        "image": "signature-tee-weiss-brust.webp",
+        "gallery": [
+          "signature-tee-weiss-brust.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      }
+    ],
+    "image": "signature-tee-weiss-front.webp",
+    "gallery": [
+      "signature-tee-weiss-front.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": true,
+    "material": "100% Baumwolle",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "7–14 Tage",
+    "tagline": "Der Klassiker in Weiß mit vollständigem VIDEKO Küchen Logo.",
+    "description": "Der Klassiker in Weiß mit vollständigem VIDEKO Küchen Logo. Teil der SIGNATURE Linie. Schnitt: Regular – fällt normal aus.",
+    "usps": [
+      "Regular geschnitten",
+      "100% Baumwolle",
+      "Teil der SIGNATURE Linie"
+    ],
+    "rank": 1
+  },
+  {
+    "id": "signature_vneck_black",
+    "sku": "VK-SIGNATURE-VNECK-BLACK",
+    "slug": "signature-vneck-black",
+    "name": "SIGNATURE V-Neck Schwarz",
+    "kicker": "V-Neck",
+    "collection": "SIGNATURE",
+    "line": "signature",
+    "audience": "unisex",
+    "productType": "vneck",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": true,
+    "personalization_price": 3.99,
+    "personalization": {
+      "enabled": true,
+      "price": 3.99,
+      "maxLength": 20,
+      "position": "Obere Rückseite, unterhalb des Nackens",
+      "allowEmoji": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Regular",
+    "fitNote": "Fällt normal aus.",
+    "sizeGuide": "unisex",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "signature-vneck",
+    "refinement": "print",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "chest",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": null,
+        "image": "signature-vneck-schwarz-brust.webp",
+        "gallery": [
+          "signature-vneck-schwarz-brust.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      }
+    ],
+    "image": "signature-vneck-schwarz-brust.webp",
+    "gallery": [
+      "signature-vneck-schwarz-brust.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": true,
+    "material": "100% Baumwolle",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "7–14 Tage",
+    "tagline": "Klassisches VIDEKO KÜCHEN Logo – jetzt auch als V-Neck.",
+    "description": "Klassisches VIDEKO KÜCHEN Logo als V-Neck. Teil der SIGNATURE Linie.",
+    "usps": [
+      "Regular geschnitten",
+      "100% Baumwolle",
+      "Teil der SIGNATURE Linie"
+    ],
+    "rank": 6
+  },
+  {
+    "id": "signature_vneck_white",
+    "sku": "VK-SIGNATURE-VNECK-WHITE",
+    "slug": "signature-vneck-white",
+    "name": "SIGNATURE V-Neck Weiß",
+    "kicker": "V-Neck",
+    "collection": "SIGNATURE",
+    "line": "signature",
+    "audience": "unisex",
+    "productType": "vneck",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": true,
+    "personalization_price": 3.99,
+    "personalization": {
+      "enabled": true,
+      "price": 3.99,
+      "maxLength": 20,
+      "position": "Obere Rückseite, unterhalb des Nackens",
+      "allowEmoji": false
+    },
+    "colors": [
+      {
+        "key": "white",
+        "label": "Weiß",
+        "hex": "#F4F1EA"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Regular",
+    "fitNote": "Fällt normal aus.",
+    "sizeGuide": "unisex",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "signature-vneck",
+    "refinement": "print",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "chest",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": null,
+        "image": "signature-vneck-weiss-brust.webp",
+        "gallery": [
+          "signature-vneck-weiss-brust.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      }
+    ],
+    "image": "signature-vneck-weiss-brust.webp",
+    "gallery": [
+      "signature-vneck-weiss-brust.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": true,
+    "material": "100% Baumwolle",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "7–14 Tage",
+    "tagline": "Klassisches VIDEKO KÜCHEN Logo – jetzt auch als V-Neck.",
+    "description": "Klassisches VIDEKO KÜCHEN Logo als V-Neck. Teil der SIGNATURE Linie.",
+    "usps": [
+      "Regular geschnitten",
+      "100% Baumwolle",
+      "Teil der SIGNATURE Linie"
+    ],
+    "rank": 7
+  },
+  {
+    "id": "signature_polo_black",
+    "sku": "VK-SIGNATURE-POLO-BLACK",
+    "slug": "signature-polo-black",
+    "name": "Signature Polo Schwarz",
+    "kicker": "Polo",
+    "collection": "SIGNATURE",
+    "line": "signature",
+    "audience": "unisex",
+    "productType": "polo",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Polo",
+    "fitNote": "Normal bis leicht körpernah.",
+    "sizeGuide": "polo",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "signature-polo",
+    "refinement": "print",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "chest",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": null,
+        "image": "signature-polo-schwarz-brust.webp",
+        "gallery": [
+          "signature-polo-schwarz-brust.webp"
+        ],
+        "imageStatus": "placeholder",
+        "regenNote": "Signature Polo Schwarz – Foto folgt"
+      }
+    ],
+    "image": "signature-polo-schwarz-brust.webp",
+    "gallery": [
+      "signature-polo-schwarz-brust.webp"
+    ],
+    "imageStatus": "placeholder",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "Piqué, 100% Baumwolle",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Polohemd mit vollständigem VIDEKO Küchen Logo.",
+    "description": "Polohemd mit vollständigem VIDEKO Küchen Logo. Teil der SIGNATURE Linie. Schnitt: Polo – normal bis leicht körpernah.",
+    "usps": [
+      "Polo geschnitten",
+      "Piqué, 100% Baumwolle",
+      "Teil der SIGNATURE Linie"
+    ],
+    "rank": 4,
+    "regenNote": "Signature Polo Schwarz – Foto folgt"
+  },
+  {
+    "id": "signature_polo_beige",
+    "sku": "VK-SIGNATURE-POLO-BEIGE",
+    "slug": "signature-polo-beige",
+    "name": "Signature Polo Beige",
+    "kicker": "Polo",
+    "collection": "SIGNATURE",
+    "line": "signature",
+    "audience": "unisex",
+    "productType": "polo",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "beige",
+        "label": "Beige",
+        "hex": "#D8C4A6"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Polo",
+    "fitNote": "Normal bis leicht körpernah.",
+    "sizeGuide": "polo",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "signature-polo",
+    "refinement": "print",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "chest",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": null,
+        "image": "signature-polo-beige-brust.webp",
+        "gallery": [
+          "signature-polo-beige-brust.webp"
+        ],
+        "imageStatus": "final",
+        "regenNote": null
+      }
+    ],
+    "image": "signature-polo-beige-brust.webp",
+    "gallery": [
+      "signature-polo-beige-brust.webp"
+    ],
+    "imageStatus": "final",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "Piqué, 100% Baumwolle",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Polohemd in Beige mit vollständigem VIDEKO Küchen Logo.",
+    "description": "Polohemd in Beige mit vollständigem VIDEKO Küchen Logo. Teil der SIGNATURE Linie. Schnitt: Polo – normal bis leicht körpernah.",
+    "usps": [
+      "Polo geschnitten",
+      "Piqué, 100% Baumwolle",
+      "Teil der SIGNATURE Linie"
+    ],
+    "rank": 5
+  },
+  {
+    "id": "signature_hoodie_black",
+    "sku": "VK-SIGNATURE-HOODIE-BLACK",
+    "slug": "signature-hoodie-black",
+    "name": "Signature Hoodie Schwarz",
+    "kicker": "Hoodie",
+    "collection": "SIGNATURE",
+    "line": "signature",
+    "audience": "unisex",
+    "productType": "hoodie",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Regular",
+    "fitNote": "Fällt normal aus.",
+    "sizeGuide": "unisex",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "signature-hoodie",
+    "refinement": "print",
+    "logoPlacement": "front",
+    "placements": [
+      {
+        "key": "front",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": null,
+        "image": "signature-hoodie-schwarz-front.webp",
+        "gallery": [
+          "signature-hoodie-schwarz-front.webp"
+        ],
+        "imageStatus": "final",
+        "regenNote": null
+      }
+    ],
+    "image": "signature-hoodie-schwarz-front.webp",
+    "gallery": [
+      "signature-hoodie-schwarz-front.webp"
+    ],
+    "imageStatus": "final",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "80% Baumwolle / 20% Polyester",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Schwerer Hoodie mit vollständigem VIDEKO Küchen Logo.",
+    "description": "Schwerer Hoodie mit vollständigem VIDEKO Küchen Logo. Teil der SIGNATURE Linie. Schnitt: Regular – fällt normal aus.",
+    "usps": [
+      "Regular geschnitten",
+      "80% Baumwolle / 20% Polyester",
+      "Teil der SIGNATURE Linie"
+    ],
+    "rank": 6
+  },
+  {
+    "id": "signature_hoodie_white",
+    "sku": "VK-SIGNATURE-HOODIE-WHITE",
+    "slug": "signature-hoodie-white",
+    "name": "Signature Hoodie Weiß",
+    "kicker": "Hoodie",
+    "collection": "SIGNATURE",
+    "line": "signature",
+    "audience": "unisex",
+    "productType": "hoodie",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "white",
+        "label": "Weiß",
+        "hex": "#f4f2ee"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Regular",
+    "fitNote": "Fällt normal aus.",
+    "sizeGuide": "unisex",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "signature-hoodie",
+    "refinement": "print",
+    "logoPlacement": "front",
+    "placements": [
+      {
+        "key": "front",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": null,
+        "image": "signature-hoodie-weiss-front.webp",
+        "gallery": [
+          "signature-hoodie-weiss-front.webp"
+        ],
+        "imageStatus": "final",
+        "regenNote": null
+      }
+    ],
+    "image": "signature-hoodie-weiss-front.webp",
+    "gallery": [
+      "signature-hoodie-weiss-front.webp"
+    ],
+    "imageStatus": "final",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "80% Baumwolle / 20% Polyester",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Schwerer Hoodie in Weiß mit vollständigem VIDEKO Küchen Logo.",
+    "description": "Schwerer Hoodie in Weiß mit vollständigem VIDEKO Küchen Logo. Teil der SIGNATURE Linie. Schnitt: Regular – fällt normal aus.",
+    "usps": [
+      "Regular geschnitten",
+      "80% Baumwolle / 20% Polyester",
+      "Teil der SIGNATURE Linie"
+    ],
+    "rank": 7
+  },
+  {
+    "id": "signature_hoodie_beige",
+    "sku": "VK-SIGNATURE-HOODIE-BEIGE",
+    "slug": "signature-hoodie-beige",
+    "name": "Signature Hoodie Beige",
+    "kicker": "Hoodie",
+    "collection": "SIGNATURE",
+    "line": "signature",
+    "audience": "unisex",
+    "productType": "hoodie",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "beige",
+        "label": "Beige",
+        "hex": "#D8C4A6"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Regular",
+    "fitNote": "Fällt normal aus.",
+    "sizeGuide": "unisex",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "signature-hoodie",
+    "refinement": "print",
+    "logoPlacement": "front",
+    "placements": [
+      {
+        "key": "front",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": null,
+        "image": "signature-hoodie-beige-front.webp",
+        "gallery": [
+          "signature-hoodie-beige-front.webp"
+        ],
+        "imageStatus": "final",
+        "regenNote": null
+      }
+    ],
+    "image": "signature-hoodie-beige-front.webp",
+    "gallery": [
+      "signature-hoodie-beige-front.webp"
+    ],
+    "imageStatus": "final",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "80% Baumwolle / 20% Polyester",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Schwerer Hoodie in Beige mit vollständigem VIDEKO Küchen Logo.",
+    "description": "Schwerer Hoodie in Beige mit vollständigem VIDEKO Küchen Logo. Teil der SIGNATURE Linie. Schnitt: Regular – fällt normal aus.",
+    "usps": [
+      "Regular geschnitten",
+      "80% Baumwolle / 20% Polyester",
+      "Teil der SIGNATURE Linie"
+    ],
+    "rank": 8
+  },
+  {
+    "id": "signature_zip_hoodie_black",
+    "sku": "VK-SIGNATURE-ZIP-HOODIE-BLACK",
+    "slug": "signature-zip-hoodie-black",
+    "name": "Signature Zip Hoodie Schwarz",
+    "kicker": "Hoodie",
+    "collection": "SIGNATURE",
+    "line": "signature",
+    "audience": "unisex",
+    "productType": "zip-hoodie",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Regular",
+    "fitNote": "Fällt normal aus.",
+    "sizeGuide": "unisex",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": null,
+    "refinement": "print",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "chest",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": null,
+        "image": "signature-ziphoodie-schwarz-brust.webp",
+        "gallery": [
+          "signature-ziphoodie-schwarz-brust.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      }
+    ],
+    "image": "signature-ziphoodie-schwarz-brust.webp",
+    "gallery": [
+      "signature-ziphoodie-schwarz-brust.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": true,
+    "material": "80% Baumwolle / 20% Polyester",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Zip Hoodie mit kleinem Signature-Logo.",
+    "description": "Zip Hoodie mit kleinem Signature-Logo. Teil der SIGNATURE Linie. Schnitt: Regular – fällt normal aus.",
+    "usps": [
+      "Regular geschnitten",
+      "80% Baumwolle / 20% Polyester",
+      "Teil der SIGNATURE Linie"
+    ],
+    "rank": 7
+  },
+  {
+    "id": "signature_crewneck_black",
+    "sku": "VK-SIGNATURE-CREWNECK-BLACK",
+    "slug": "signature-crewneck-black",
+    "name": "Signature Crewneck Schwarz",
+    "kicker": "Sweatshirt",
+    "collection": "SIGNATURE",
+    "line": "signature",
+    "audience": "unisex",
+    "productType": "crewneck",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Regular",
+    "fitNote": "Fällt normal aus.",
+    "sizeGuide": "unisex",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": null,
+    "refinement": "print",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "chest",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": null,
+        "image": "signature-crewneck-schwarz-brust.webp",
+        "gallery": [
+          "signature-crewneck-schwarz-brust.webp"
+        ],
+        "imageStatus": "final",
+        "regenNote": null
+      }
+    ],
+    "image": "signature-crewneck-schwarz-brust.webp",
+    "gallery": [
+      "signature-crewneck-schwarz-brust.webp"
+    ],
+    "imageStatus": "final",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "80% Baumwolle / 20% Polyester",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Rundhals-Sweatshirt mit kleinem Signature-Logo.",
+    "description": "Rundhals-Sweatshirt mit kleinem Signature-Logo. Teil der SIGNATURE Linie. Schnitt: Regular – fällt normal aus.",
+    "usps": [
+      "Regular geschnitten",
+      "80% Baumwolle / 20% Polyester",
+      "Teil der SIGNATURE Linie"
+    ],
+    "rank": 8
+  },
+  {
+    "id": "pure_tee_black",
+    "sku": "VK-PURE-TEE-BLACK",
+    "slug": "pure-tee-black",
+    "name": "PURE T-Shirt Schwarz",
+    "kicker": "T-Shirt",
+    "collection": "PURE",
+    "line": "pure",
+    "audience": "unisex",
+    "productType": "tshirt",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Regular",
+    "fitNote": "Fällt normal aus.",
+    "sizeGuide": "unisex",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "pure-tee",
+    "refinement": "print",
+    "logoPlacement": "front",
+    "placements": [
+      {
+        "key": "front-schwarz",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "schwarz",
+        "image": "pure-tee-schwarz-front-schwarz.webp",
+        "gallery": [
+          "pure-tee-schwarz-front-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-schwarz",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "schwarz",
+        "image": "pure-tee-schwarz-brust-schwarz.webp",
+        "gallery": [
+          "pure-tee-schwarz-brust-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "front-weiss",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "weiss",
+        "image": "pure-tee-schwarz-front-weiss.webp",
+        "gallery": [
+          "pure-tee-schwarz-front-weiss.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-weiss",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "weiss",
+        "image": "pure-tee-schwarz-brust-weiss.webp",
+        "gallery": [
+          "pure-tee-schwarz-brust-weiss.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "front-gold",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "gold",
+        "image": "pure-tee-schwarz-front-gold.webp",
+        "gallery": [
+          "pure-tee-schwarz-front-gold.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-gold",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "gold",
+        "image": "pure-tee-schwarz-brust-gold.webp",
+        "gallery": [
+          "pure-tee-schwarz-brust-gold.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "front-silber",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "silber",
+        "image": "pure-tee-schwarz-front-silber.webp",
+        "gallery": [
+          "pure-tee-schwarz-front-silber.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-silber",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "silber",
+        "image": "pure-tee-schwarz-brust-silber.webp",
+        "gallery": [
+          "pure-tee-schwarz-brust-silber.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "front-classic",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "classic",
+        "image": "pure-tee-schwarz-front-classic.webp",
+        "gallery": [
+          "pure-tee-schwarz-front-classic.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-classic",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "classic",
+        "image": null,
+        "gallery": [],
+        "imageStatus": "placeholder",
+        "regenNote": "classic-Bild fehlt noch"
+      }
+    ],
+    "image": "pure-tee-schwarz-brust-schwarz.webp",
+    "gallery": [
+      "pure-tee-schwarz-brust-schwarz.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "100% Baumwolle",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Emblem und VIDEKO, ohne KÜCHEN.",
+    "description": "Emblem und VIDEKO, ohne KÜCHEN. Teil der PURE Linie. Schnitt: Regular – fällt normal aus.",
+    "usps": [
+      "Regular geschnitten",
+      "100% Baumwolle",
+      "Teil der PURE Linie"
+    ],
+    "rank": 9
+  },
+  {
+    "id": "pure_tee_white",
+    "sku": "VK-PURE-TEE-WHITE",
+    "slug": "pure-tee-white",
+    "name": "PURE T-Shirt Weiß",
+    "kicker": "T-Shirt",
+    "collection": "PURE",
+    "line": "pure",
+    "audience": "unisex",
+    "productType": "tshirt",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "white",
+        "label": "Weiß",
+        "hex": "#f4f2ee"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Regular",
+    "fitNote": "Fällt normal aus.",
+    "sizeGuide": "unisex",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "pure-tee",
+    "refinement": "print",
+    "logoPlacement": "front",
+    "placements": [
+      {
+        "key": "front-schwarz",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "schwarz",
+        "image": "pure-tee-weiss-front-schwarz.webp",
+        "gallery": [
+          "pure-tee-weiss-front-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-schwarz",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "schwarz",
+        "image": "pure-tee-weiss-brust-schwarz.webp",
+        "gallery": [
+          "pure-tee-weiss-brust-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "front-weiss",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "weiss",
+        "image": "pure-tee-weiss-front-weiss.webp",
+        "gallery": [
+          "pure-tee-weiss-front-weiss.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-weiss",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "weiss",
+        "image": "pure-tee-weiss-brust-weiss.webp",
+        "gallery": [
+          "pure-tee-weiss-brust-weiss.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "front-gold",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "gold",
+        "image": "pure-tee-weiss-front-gold.webp",
+        "gallery": [
+          "pure-tee-weiss-front-gold.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-gold",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "gold",
+        "image": "pure-tee-weiss-brust-gold.webp",
+        "gallery": [
+          "pure-tee-weiss-brust-gold.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "front-silber",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "silber",
+        "image": "pure-tee-weiss-front-silber.webp",
+        "gallery": [
+          "pure-tee-weiss-front-silber.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-silber",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "silber",
+        "image": "pure-tee-weiss-brust-silber.webp",
+        "gallery": [
+          "pure-tee-weiss-brust-silber.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "front-classic",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "classic",
+        "image": "pure-tee-weiss-front-classic.webp",
+        "gallery": [
+          "pure-tee-weiss-front-classic.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-classic",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "classic",
+        "image": null,
+        "gallery": [],
+        "imageStatus": "placeholder",
+        "regenNote": "classic-Bild fehlt noch"
+      }
+    ],
+    "image": "pure-tee-weiss-front-schwarz.webp",
+    "gallery": [
+      "pure-tee-weiss-front-schwarz.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "100% Baumwolle",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Emblem und VIDEKO, ohne KÜCHEN.",
+    "description": "Emblem und VIDEKO, ohne KÜCHEN. Teil der PURE Linie. Schnitt: Regular – fällt normal aus.",
+    "usps": [
+      "Regular geschnitten",
+      "100% Baumwolle",
+      "Teil der PURE Linie"
+    ],
+    "rank": 10
+  },
+  {
+    "id": "pure_tee_beige",
+    "sku": "VK-PURE-TEE-BEIGE",
+    "slug": "pure-tee-beige",
+    "name": "PURE T-Shirt Beige",
+    "kicker": "T-Shirt",
+    "collection": "PURE",
+    "line": "pure",
+    "audience": "unisex",
+    "productType": "tshirt",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "beige",
+        "label": "Beige",
+        "hex": "#D8C4A6"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Regular",
+    "fitNote": "Fällt normal aus.",
+    "sizeGuide": "unisex",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "pure-tee",
+    "refinement": "print",
+    "logoPlacement": "front",
+    "placements": [
+      {
+        "key": "front-schwarz",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "schwarz",
+        "image": "v5-coming-soon.webp",
+        "gallery": [
+          "v5-coming-soon.webp"
+        ],
+        "imageStatus": "placeholder",
+        "regenNote": "PURE Beige – Bild folgt"
+      },
+      {
+        "key": "chest-schwarz",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "schwarz",
+        "image": "pure-tee-beige-brust-schwarz.webp",
+        "gallery": [
+          "pure-tee-beige-brust-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "front-weiss",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "weiss",
+        "image": "v5-coming-soon.webp",
+        "gallery": [
+          "v5-coming-soon.webp"
+        ],
+        "imageStatus": "placeholder",
+        "regenNote": "PURE Beige – Bild folgt"
+      },
+      {
+        "key": "chest-weiss",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "weiss",
+        "image": "v5-coming-soon.webp",
+        "gallery": [
+          "v5-coming-soon.webp"
+        ],
+        "imageStatus": "placeholder",
+        "regenNote": "PURE Beige – Bild folgt"
+      },
+      {
+        "key": "front-gold",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "gold",
+        "image": "pure-tee-beige-front-gold.webp",
+        "gallery": [
+          "pure-tee-beige-front-gold.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-gold",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "gold",
+        "image": "v5-coming-soon.webp",
+        "gallery": [
+          "v5-coming-soon.webp"
+        ],
+        "imageStatus": "placeholder",
+        "regenNote": "PURE Beige – Bild folgt"
+      },
+      {
+        "key": "front-silber",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "silber",
+        "image": "v5-coming-soon.webp",
+        "gallery": [
+          "v5-coming-soon.webp"
+        ],
+        "imageStatus": "placeholder",
+        "regenNote": "PURE Beige – Bild folgt"
+      },
+      {
+        "key": "chest-silber",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "silber",
+        "image": "pure-tee-beige-brust-silber.webp",
+        "gallery": [
+          "pure-tee-beige-brust-silber.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "front-classic",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "classic",
+        "image": null,
+        "gallery": [],
+        "imageStatus": "placeholder",
+        "regenNote": "classic-Bild fehlt noch"
+      },
+      {
+        "key": "chest-classic",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "classic",
+        "image": null,
+        "gallery": [],
+        "imageStatus": "placeholder",
+        "regenNote": "classic-Bild fehlt noch"
+      }
+    ],
+    "image": "pure-tee-beige-brust-schwarz.webp",
+    "gallery": [
+      "pure-tee-beige-brust-schwarz.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": true,
+    "material": "100% Baumwolle",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Emblem und VIDEKO, ohne KÜCHEN.",
+    "description": "Emblem und VIDEKO, ohne KÜCHEN. Teil der PURE Linie. Schnitt: Regular – fällt normal aus.",
+    "usps": [
+      "Regular geschnitten",
+      "100% Baumwolle",
+      "Teil der PURE Linie"
+    ],
+    "rank": 109
+  },
+  {
+    "id": "pure_vneck_black",
+    "sku": "VK-PURE-VNECK-BLACK",
+    "slug": "pure-vneck-black",
+    "name": "PURE V-Neck Schwarz",
+    "kicker": "V-Neck",
+    "collection": "PURE",
+    "line": "pure",
+    "audience": "unisex",
+    "productType": "vneck",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Regular V-Neck",
+    "fitNote": "V-Ausschnitt, fällt normal aus.",
+    "sizeGuide": "unisex",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "pure-vneck",
+    "refinement": "print",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "front-schwarz",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "schwarz",
+        "image": "pure-vneck-schwarz-front-schwarz.webp",
+        "gallery": [
+          "pure-vneck-schwarz-front-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-schwarz",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "schwarz",
+        "image": "pure-vneck-schwarz-brust-schwarz.webp",
+        "gallery": [
+          "pure-vneck-schwarz-brust-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "front-weiss",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "weiss",
+        "image": "pure-vneck-schwarz-front-weiss.webp",
+        "gallery": [
+          "pure-vneck-schwarz-front-weiss.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-weiss",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "weiss",
+        "image": "pure-vneck-schwarz-brust-weiss.webp",
+        "gallery": [
+          "pure-vneck-schwarz-brust-weiss.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "front-gold",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "gold",
+        "image": "pure-vneck-schwarz-front-gold.webp",
+        "gallery": [
+          "pure-vneck-schwarz-front-gold.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-gold",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "gold",
+        "image": null,
+        "gallery": [],
+        "imageStatus": "placeholder",
+        "regenNote": "V-Neck-Brustbild (Gold) folgt"
+      },
+      {
+        "key": "front-silber",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "silber",
+        "image": "pure-vneck-schwarz-front-silber.webp",
+        "gallery": [
+          "pure-vneck-schwarz-front-silber.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-silber",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "silber",
+        "image": "pure-vneck-schwarz-brust-silber.webp",
+        "gallery": [
+          "pure-vneck-schwarz-brust-silber.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "front-classic",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "classic",
+        "image": null,
+        "gallery": [],
+        "imageStatus": "placeholder",
+        "regenNote": "classic-Bild fehlt noch"
+      },
+      {
+        "key": "chest-classic",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "classic",
+        "image": null,
+        "gallery": [],
+        "imageStatus": "placeholder",
+        "regenNote": "classic-Bild fehlt noch"
+      }
+    ],
+    "image": "pure-vneck-schwarz-brust-schwarz.webp",
+    "gallery": [
+      "pure-vneck-schwarz-brust-schwarz.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "100% Baumwolle",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "V-Ausschnitt mit reduziertem PURE Brustlogo.",
+    "description": "V-Ausschnitt mit reduziertem PURE Brustlogo. Teil der PURE Linie. Schnitt: Regular V-Neck – v-ausschnitt, fällt normal aus.",
+    "usps": [
+      "Regular V-Neck geschnitten",
+      "100% Baumwolle",
+      "Teil der PURE Linie"
+    ],
+    "rank": 11
+  },
+  {
+    "id": "pure_vneck_white",
+    "sku": "VK-PURE-VNECK-WHITE",
+    "slug": "pure-vneck-white",
+    "name": "PURE V-Neck Weiß",
+    "kicker": "V-Neck",
+    "collection": "PURE",
+    "line": "pure",
+    "audience": "unisex",
+    "productType": "vneck",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "white",
+        "label": "Weiß",
+        "hex": "#f4f2ee"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Regular V-Neck",
+    "fitNote": "V-Ausschnitt, fällt normal aus.",
+    "sizeGuide": "unisex",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "pure-vneck",
+    "refinement": "print",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "front-schwarz",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "schwarz",
+        "image": "pure-vneck-weiss-front-schwarz.webp",
+        "gallery": [
+          "pure-vneck-weiss-front-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-schwarz",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "schwarz",
+        "image": null,
+        "gallery": [],
+        "imageStatus": "placeholder",
+        "regenNote": "V-Neck-Brustbild (Schwarz) folgt"
+      },
+      {
+        "key": "front-weiss",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "weiss",
+        "image": "pure-vneck-weiss-front-weiss.webp",
+        "gallery": [
+          "pure-vneck-weiss-front-weiss.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-weiss",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "weiss",
+        "image": null,
+        "gallery": [],
+        "imageStatus": "placeholder",
+        "regenNote": "V-Neck-Brustbild (Weiß) folgt"
+      },
+      {
+        "key": "front-gold",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "gold",
+        "image": "pure-vneck-weiss-front-gold.webp",
+        "gallery": [
+          "pure-vneck-weiss-front-gold.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-gold",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "gold",
+        "image": null,
+        "gallery": [],
+        "imageStatus": "placeholder",
+        "regenNote": "V-Neck-Brustbild (Gold) folgt"
+      },
+      {
+        "key": "front-silber",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "silber",
+        "image": "pure-vneck-weiss-front-silber.webp",
+        "gallery": [
+          "pure-vneck-weiss-front-silber.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-silber",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "silber",
+        "image": "pure-vneck-weiss-brust-silber.webp",
+        "gallery": [
+          "pure-vneck-weiss-brust-silber.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "front-classic",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "classic",
+        "image": null,
+        "gallery": [],
+        "imageStatus": "placeholder",
+        "regenNote": "classic-Bild fehlt noch"
+      },
+      {
+        "key": "chest-classic",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "classic",
+        "image": null,
+        "gallery": [],
+        "imageStatus": "placeholder",
+        "regenNote": "classic-Bild fehlt noch"
+      }
+    ],
+    "image": "pure-vneck-weiss-front-schwarz.webp",
+    "gallery": [
+      "pure-vneck-weiss-front-schwarz.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "100% Baumwolle",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "V-Ausschnitt mit reduziertem PURE Brustlogo.",
+    "description": "V-Ausschnitt mit reduziertem PURE Brustlogo. Teil der PURE Linie. Schnitt: Regular V-Neck – v-ausschnitt, fällt normal aus.",
+    "usps": [
+      "Regular V-Neck geschnitten",
+      "100% Baumwolle",
+      "Teil der PURE Linie"
+    ],
+    "rank": 12
+  },
+  {
+    "id": "pure_vneck_beige",
+    "sku": "VK-PURE-VNECK-BEIGE",
+    "slug": "pure-vneck-beige",
+    "name": "PURE V-Neck Beige",
+    "kicker": "V-Neck",
+    "collection": "PURE",
+    "line": "pure",
+    "audience": "unisex",
+    "productType": "vneck",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "beige",
+        "label": "Beige",
+        "hex": "#D8C4A6"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Regular V-Neck",
+    "fitNote": "V-Ausschnitt, fällt normal aus.",
+    "sizeGuide": "unisex",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "pure-vneck",
+    "refinement": "print",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "front-schwarz",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "schwarz",
+        "image": "v5-coming-soon.webp",
+        "gallery": [
+          "v5-coming-soon.webp"
+        ],
+        "imageStatus": "placeholder",
+        "regenNote": "PURE Beige – Bild folgt"
+      },
+      {
+        "key": "chest-schwarz",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "schwarz",
+        "image": "pure-vneck-beige-brust-schwarz.webp",
+        "gallery": [
+          "pure-vneck-beige-brust-schwarz.webp"
+        ],
+        "imageStatus": "placeholder",
+        "regenNote": "PURE Beige – Bild folgt"
+      },
+      {
+        "key": "front-weiss",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "weiss",
+        "image": "v5-coming-soon.webp",
+        "gallery": [
+          "v5-coming-soon.webp"
+        ],
+        "imageStatus": "placeholder",
+        "regenNote": "PURE Beige – Bild folgt"
+      },
+      {
+        "key": "chest-weiss",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "weiss",
+        "image": "v5-coming-soon.webp",
+        "gallery": [
+          "v5-coming-soon.webp"
+        ],
+        "imageStatus": "placeholder",
+        "regenNote": "PURE Beige – Bild folgt"
+      },
+      {
+        "key": "front-gold",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "gold",
+        "image": "pure-vneck-beige-front-gold.webp",
+        "gallery": [
+          "pure-vneck-beige-front-gold.webp"
+        ],
+        "imageStatus": "placeholder",
+        "regenNote": "PURE Beige – Bild folgt"
+      },
+      {
+        "key": "chest-gold",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "gold",
+        "image": "v5-coming-soon.webp",
+        "gallery": [
+          "v5-coming-soon.webp"
+        ],
+        "imageStatus": "placeholder",
+        "regenNote": "PURE Beige – Bild folgt"
+      },
+      {
+        "key": "front-silber",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "silber",
+        "image": "v5-coming-soon.webp",
+        "gallery": [
+          "v5-coming-soon.webp"
+        ],
+        "imageStatus": "placeholder",
+        "regenNote": "PURE Beige – Bild folgt"
+      },
+      {
+        "key": "chest-silber",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "silber",
+        "image": "v5-coming-soon.webp",
+        "gallery": [
+          "v5-coming-soon.webp"
+        ],
+        "imageStatus": "placeholder",
+        "regenNote": "PURE Beige – Bild folgt"
+      },
+      {
+        "key": "front-classic",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "classic",
+        "image": null,
+        "gallery": [],
+        "imageStatus": "placeholder",
+        "regenNote": "classic-Bild fehlt noch"
+      },
+      {
+        "key": "chest-classic",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "classic",
+        "image": null,
+        "gallery": [],
+        "imageStatus": "placeholder",
+        "regenNote": "classic-Bild fehlt noch"
+      }
+    ],
+    "image": "pure-vneck-beige-brust-schwarz.webp",
+    "gallery": [
+      "pure-vneck-beige-brust-schwarz.webp"
+    ],
+    "imageStatus": "placeholder",
+    "requiresFinalPhotography": true,
+    "requiresRerender": true,
+    "material": "100% Baumwolle",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "V-Ausschnitt mit reduziertem PURE Brustlogo.",
+    "description": "V-Ausschnitt mit reduziertem PURE Brustlogo. Teil der PURE Linie. Schnitt: Regular V-Neck – v-ausschnitt, fällt normal aus.",
+    "usps": [
+      "Regular V-Neck geschnitten",
+      "100% Baumwolle",
+      "Teil der PURE Linie"
+    ],
+    "rank": 111
+  },
+  {
+    "id": "pure_polo_black",
+    "sku": "VK-PURE-POLO-BLACK",
+    "slug": "pure-polo-black",
+    "name": "PURE Polo Schwarz",
+    "kicker": "Polo",
+    "collection": "PURE",
+    "line": "pure",
+    "audience": "unisex",
+    "productType": "polo",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Polo",
+    "fitNote": "Normal bis leicht körpernah.",
+    "sizeGuide": "polo",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "pure-polo",
+    "refinement": "print",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "chest-gold",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "gold",
+        "image": "pure-polo-schwarz-brust-gold.webp",
+        "gallery": [
+          "pure-polo-schwarz-brust-gold.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-classic",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "classic",
+        "image": "pure-polo-schwarz-brust-classic.webp",
+        "gallery": [
+          "pure-polo-schwarz-brust-classic.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      }
+    ],
+    "image": "pure-polo-schwarz-brust-gold.webp",
+    "gallery": [
+      "pure-polo-schwarz-brust-gold.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "Piqué, 100% Baumwolle",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Polohemd mit reduziertem PURE Brustlogo.",
+    "description": "Polohemd mit reduziertem PURE Brustlogo. Teil der PURE Linie. Schnitt: Polo – normal bis leicht körpernah.",
+    "usps": [
+      "Polo geschnitten",
+      "Piqué, 100% Baumwolle",
+      "Teil der PURE Linie"
+    ],
+    "rank": 13
+  },
+  {
+    "id": "pure_polo_white",
+    "sku": "VK-PURE-POLO-WHITE",
+    "slug": "pure-polo-white",
+    "name": "PURE Polo Weiß",
+    "kicker": "Polo",
+    "collection": "PURE",
+    "line": "pure",
+    "audience": "unisex",
+    "productType": "polo",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "white",
+        "label": "Weiß",
+        "hex": "#f4f2ee"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Polo",
+    "fitNote": "Normal bis leicht körpernah.",
+    "sizeGuide": "polo",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "pure-polo",
+    "refinement": "print",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "chest-schwarz",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "schwarz",
+        "image": "pure-polo-weiss-brust-schwarz.webp",
+        "gallery": [
+          "pure-polo-weiss-brust-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-weiss",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "weiss",
+        "image": "pure-polo-weiss-brust-weiss.webp",
+        "gallery": [
+          "pure-polo-weiss-brust-weiss.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-gold",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "gold",
+        "image": "pure-polo-weiss-brust-gold.webp",
+        "gallery": [
+          "pure-polo-weiss-brust-gold.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-classic",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "classic",
+        "image": "pure-polo-weiss-brust-classic.webp",
+        "gallery": [
+          "pure-polo-weiss-brust-classic.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      }
+    ],
+    "image": "pure-polo-weiss-brust-schwarz.webp",
+    "gallery": [
+      "pure-polo-weiss-brust-schwarz.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "Piqué, 100% Baumwolle",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Polohemd in Weiß mit reduziertem PURE Brustlogo.",
+    "description": "Polohemd in Weiß mit reduziertem PURE Brustlogo. Teil der PURE Linie. Schnitt: Polo – normal bis leicht körpernah.",
+    "usps": [
+      "Polo geschnitten",
+      "Piqué, 100% Baumwolle",
+      "Teil der PURE Linie"
+    ],
+    "rank": 14
+  },
+  {
+    "id": "pure_hoodie_black",
+    "sku": "VK-PURE-HOODIE-BLACK",
+    "slug": "pure-hoodie-black",
+    "name": "PURE Hoodie Schwarz",
+    "kicker": "Hoodie",
+    "collection": "PURE",
+    "line": "pure",
+    "audience": "unisex",
+    "productType": "hoodie",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Regular",
+    "fitNote": "Fällt normal aus.",
+    "sizeGuide": "unisex",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "pure-hoodie",
+    "refinement": "print",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "front-schwarz",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "schwarz",
+        "image": "pure-hoodie-schwarz-front-schwarz.webp",
+        "gallery": [
+          "pure-hoodie-schwarz-front-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-schwarz",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "schwarz",
+        "image": "pure-hoodie-schwarz-brust-schwarz.webp",
+        "gallery": [
+          "pure-hoodie-schwarz-brust-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "front-weiss",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "weiss",
+        "image": "pure-hoodie-schwarz-front-weiss.webp",
+        "gallery": [
+          "pure-hoodie-schwarz-front-weiss.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-weiss",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "weiss",
+        "image": "pure-hoodie-schwarz-brust-weiss.webp",
+        "gallery": [
+          "pure-hoodie-schwarz-brust-weiss.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "front-gold",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "gold",
+        "image": "pure-hoodie-schwarz-front-gold.webp",
+        "gallery": [
+          "pure-hoodie-schwarz-front-gold.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-gold",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "gold",
+        "image": "pure-hoodie-schwarz-brust-gold.webp",
+        "gallery": [
+          "pure-hoodie-schwarz-brust-gold.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "front-silber",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "silber",
+        "image": "pure-hoodie-schwarz-front-silber.webp",
+        "gallery": [
+          "pure-hoodie-schwarz-front-silber.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-silber",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "silber",
+        "image": "pure-hoodie-schwarz-brust-silber.webp",
+        "gallery": [
+          "pure-hoodie-schwarz-brust-silber.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "front-classic",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "classic",
+        "image": "pure-hoodie-schwarz-front-classic.webp",
+        "gallery": [
+          "pure-hoodie-schwarz-front-classic.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-classic",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "classic",
+        "image": null,
+        "gallery": [],
+        "imageStatus": "placeholder",
+        "regenNote": "classic-Bild fehlt noch"
+      }
+    ],
+    "image": "pure-hoodie-schwarz-brust-schwarz.webp",
+    "gallery": [
+      "pure-hoodie-schwarz-brust-schwarz.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "80% Baumwolle / 20% Polyester",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Hoodie mit reduziertem PURE Brustlogo.",
+    "description": "Hoodie mit reduziertem PURE Brustlogo. Teil der PURE Linie. Schnitt: Regular – fällt normal aus.",
+    "usps": [
+      "Regular geschnitten",
+      "80% Baumwolle / 20% Polyester",
+      "Teil der PURE Linie"
+    ],
+    "rank": 15
+  },
+  {
+    "id": "pure_hoodie_white",
+    "sku": "VK-PURE-HOODIE-WHITE",
+    "slug": "pure-hoodie-white",
+    "name": "PURE Hoodie Weiß",
+    "kicker": "Hoodie",
+    "collection": "PURE",
+    "line": "pure",
+    "audience": "unisex",
+    "productType": "hoodie",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "white",
+        "label": "Weiß",
+        "hex": "#f4f2ee"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Regular",
+    "fitNote": "Fällt normal aus.",
+    "sizeGuide": "unisex",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "pure-hoodie",
+    "refinement": "print",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "front-schwarz",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "schwarz",
+        "image": "pure-hoodie-weiss-front-schwarz.webp",
+        "gallery": [
+          "pure-hoodie-weiss-front-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-schwarz",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "schwarz",
+        "image": "pure-hoodie-weiss-brust-schwarz.webp",
+        "gallery": [
+          "pure-hoodie-weiss-brust-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "front-weiss",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "weiss",
+        "image": "pure-hoodie-weiss-front-weiss.webp",
+        "gallery": [
+          "pure-hoodie-weiss-front-weiss.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-weiss",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "weiss",
+        "image": "pure-hoodie-weiss-brust-weiss.webp",
+        "gallery": [
+          "pure-hoodie-weiss-brust-weiss.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "front-gold",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "gold",
+        "image": "pure-hoodie-weiss-front-gold.webp",
+        "gallery": [
+          "pure-hoodie-weiss-front-gold.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-gold",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "gold",
+        "image": "pure-hoodie-weiss-brust-gold.webp",
+        "gallery": [
+          "pure-hoodie-weiss-brust-gold.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "front-silber",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "silber",
+        "image": "pure-hoodie-weiss-front-silber.webp",
+        "gallery": [
+          "pure-hoodie-weiss-front-silber.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-silber",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "silber",
+        "image": "pure-hoodie-weiss-brust-silber.webp",
+        "gallery": [
+          "pure-hoodie-weiss-brust-silber.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "front-classic",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "classic",
+        "image": "pure-hoodie-weiss-front-classic.webp",
+        "gallery": [
+          "pure-hoodie-weiss-front-classic.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-classic",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "classic",
+        "image": null,
+        "gallery": [],
+        "imageStatus": "placeholder",
+        "regenNote": "classic-Bild fehlt noch"
+      }
+    ],
+    "image": "pure-hoodie-weiss-front-schwarz.webp",
+    "gallery": [
+      "pure-hoodie-weiss-front-schwarz.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "80% Baumwolle / 20% Polyester",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Hoodie in Weiß mit reduziertem PURE Brustlogo.",
+    "description": "Hoodie in Weiß mit reduziertem PURE Brustlogo. Teil der PURE Linie. Schnitt: Regular – fällt normal aus.",
+    "usps": [
+      "Regular geschnitten",
+      "80% Baumwolle / 20% Polyester",
+      "Teil der PURE Linie"
+    ],
+    "rank": 16
+  },
+  {
+    "id": "pure_crewneck_black",
+    "sku": "VK-PURE-CREWNECK-BLACK",
+    "slug": "pure-crewneck-black",
+    "name": "PURE Crewneck Schwarz",
+    "kicker": "Sweatshirt",
+    "collection": "PURE",
+    "line": "pure",
+    "audience": "unisex",
+    "productType": "crewneck",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Regular",
+    "fitNote": "Fällt normal aus.",
+    "sizeGuide": "unisex",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "pure-crewneck",
+    "refinement": "print",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "chest",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": null,
+        "image": "pure-crewneck-schwarz-brust.webp",
+        "gallery": [
+          "pure-crewneck-schwarz-brust.webp"
+        ],
+        "imageStatus": "final",
+        "regenNote": null
+      }
+    ],
+    "image": "pure-crewneck-schwarz-brust.webp",
+    "gallery": [
+      "pure-crewneck-schwarz-brust.webp"
+    ],
+    "imageStatus": "final",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "80% Baumwolle / 20% Polyester",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Rundhals-Sweatshirt mit reduziertem PURE Brustlogo.",
+    "description": "Rundhals-Sweatshirt mit reduziertem PURE Brustlogo. Teil der PURE Linie. Schnitt: Regular – fällt normal aus.",
+    "usps": [
+      "Regular geschnitten",
+      "80% Baumwolle / 20% Polyester",
+      "Teil der PURE Linie"
+    ],
+    "rank": 17
+  },
+  {
+    "id": "pure_crewneck_white",
+    "sku": "VK-PURE-CREWNECK-WHITE",
+    "slug": "pure-crewneck-white",
+    "name": "PURE Crewneck Weiß",
+    "kicker": "Sweatshirt",
+    "collection": "PURE",
+    "line": "pure",
+    "audience": "unisex",
+    "productType": "crewneck",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "white",
+        "label": "Weiß",
+        "hex": "#f4f2ee"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Regular",
+    "fitNote": "Fällt normal aus.",
+    "sizeGuide": "unisex",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "pure-crewneck",
+    "refinement": "print",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "chest",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": null,
+        "image": "pure-crewneck-weiss-brust.webp",
+        "gallery": [
+          "pure-crewneck-weiss-brust.webp"
+        ],
+        "imageStatus": "final",
+        "regenNote": null
+      }
+    ],
+    "image": "pure-crewneck-weiss-brust.webp",
+    "gallery": [
+      "pure-crewneck-weiss-brust.webp"
+    ],
+    "imageStatus": "final",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "80% Baumwolle / 20% Polyester",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Rundhals-Sweatshirt in Weiß mit reduziertem PURE Brustlogo.",
+    "description": "Rundhals-Sweatshirt in Weiß mit reduziertem PURE Brustlogo. Teil der PURE Linie. Schnitt: Regular – fällt normal aus.",
+    "usps": [
+      "Regular geschnitten",
+      "80% Baumwolle / 20% Polyester",
+      "Teil der PURE Linie"
+    ],
+    "rank": 18
+  },
+  {
+    "id": "pure_zip_hoodie_black",
+    "sku": "VK-PURE-ZIP-HOODIE-BLACK",
+    "slug": "pure-zip-hoodie-black",
+    "name": "PURE Zip Hoodie Schwarz",
+    "kicker": "Hoodie",
+    "collection": "PURE",
+    "line": "pure",
+    "audience": "unisex",
+    "productType": "zip-hoodie",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Regular",
+    "fitNote": "Fällt normal aus.",
+    "sizeGuide": "unisex",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "pure-zip",
+    "refinement": "print",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "chest",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": null,
+        "image": "pure-ziphoodie-schwarz-brust.webp",
+        "gallery": [
+          "pure-ziphoodie-schwarz-brust.webp"
+        ],
+        "imageStatus": "final",
+        "regenNote": null
+      }
+    ],
+    "image": "pure-ziphoodie-schwarz-brust.webp",
+    "gallery": [
+      "pure-ziphoodie-schwarz-brust.webp"
+    ],
+    "imageStatus": "final",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "80% Baumwolle / 20% Polyester",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Zip Hoodie mit reduziertem PURE Brustlogo.",
+    "description": "Zip Hoodie mit reduziertem PURE Brustlogo. Teil der PURE Linie. Schnitt: Regular – fällt normal aus.",
+    "usps": [
+      "Regular geschnitten",
+      "80% Baumwolle / 20% Polyester",
+      "Teil der PURE Linie"
+    ],
+    "rank": 19
+  },
+  {
+    "id": "pure_zip_hoodie_white",
+    "sku": "VK-PURE-ZIP-HOODIE-WHITE",
+    "slug": "pure-zip-hoodie-white",
+    "name": "PURE Zip Hoodie Weiß",
+    "kicker": "Hoodie",
+    "collection": "PURE",
+    "line": "pure",
+    "audience": "unisex",
+    "productType": "zip-hoodie",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "white",
+        "label": "Weiß",
+        "hex": "#f4f2ee"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Regular",
+    "fitNote": "Fällt normal aus.",
+    "sizeGuide": "unisex",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "pure-zip",
+    "refinement": "print",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "chest",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": null,
+        "image": "pure-ziphoodie-weiss-brust.webp",
+        "gallery": [
+          "pure-ziphoodie-weiss-brust.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      }
+    ],
+    "image": "pure-ziphoodie-weiss-brust.webp",
+    "gallery": [
+      "pure-ziphoodie-weiss-brust.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "80% Baumwolle / 20% Polyester",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Zip Hoodie in Weiß mit reduziertem PURE Brustlogo.",
+    "description": "Zip Hoodie in Weiß mit reduziertem PURE Brustlogo. Teil der PURE Linie. Schnitt: Regular – fällt normal aus.",
+    "usps": [
+      "Regular geschnitten",
+      "80% Baumwolle / 20% Polyester",
+      "Teil der PURE Linie"
+    ],
+    "rank": 20
+  },
+  {
+    "id": "one_tee_black",
+    "sku": "VK-ONE-TEE-BLACK",
+    "slug": "one-tee-black",
+    "name": "ONE T-Shirt Schwarz",
+    "kicker": "T-Shirt",
+    "collection": "ONE",
+    "line": "one",
+    "audience": "unisex",
+    "productType": "tshirt",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Regular",
+    "fitNote": "Fällt normal aus.",
+    "sizeGuide": "unisex",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "one-tee",
+    "refinement": "print",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "chest-schwarz",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "schwarz",
+        "image": "one-tee-schwarz-brust-schwarz.webp",
+        "gallery": [
+          "one-tee-schwarz-brust-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-weiss",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "weiss",
+        "image": "one-tee-schwarz-brust-weiss.webp",
+        "gallery": [
+          "one-tee-schwarz-brust-weiss.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-gold",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "gold",
+        "image": null,
+        "gallery": [],
+        "imageStatus": "placeholder",
+        "regenNote": "ONE Gold – Bild folgt"
+      },
+      {
+        "key": "chest-classic",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "classic",
+        "image": "one-tee-schwarz-brust-classic.webp",
+        "gallery": [
+          "one-tee-schwarz-brust-classic.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      }
+    ],
+    "image": "one-tee-schwarz-brust-classic.webp",
+    "gallery": [
+      "one-tee-schwarz-brust-classic.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "100% Baumwolle",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Nur das Emblem – klein auf der Brust.",
+    "description": "Nur das Emblem – klein auf der Brust. Teil der ONE Linie. Schnitt: Regular – fällt normal aus.",
+    "usps": [
+      "Regular geschnitten",
+      "100% Baumwolle",
+      "Teil der ONE Linie"
+    ],
+    "rank": 21
+  },
+  {
+    "id": "one_tee_white",
+    "sku": "VK-ONE-TEE-WHITE",
+    "slug": "one-tee-white",
+    "name": "ONE T-Shirt Weiß",
+    "kicker": "T-Shirt",
+    "collection": "ONE",
+    "line": "one",
+    "audience": "unisex",
+    "productType": "tshirt",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "white",
+        "label": "Weiß",
+        "hex": "#f4f2ee"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Regular",
+    "fitNote": "Fällt normal aus.",
+    "sizeGuide": "unisex",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "one-tee",
+    "refinement": "print",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "chest-schwarz",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "schwarz",
+        "image": "one-tee-weiss-brust-schwarz.webp",
+        "gallery": [
+          "one-tee-weiss-brust-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-weiss",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "weiss",
+        "image": "one-tee-weiss-brust-weiss.webp",
+        "gallery": [
+          "one-tee-weiss-brust-weiss.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-gold",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "gold",
+        "image": null,
+        "gallery": [],
+        "imageStatus": "placeholder",
+        "regenNote": "ONE Gold – Bild folgt"
+      },
+      {
+        "key": "chest-classic",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "classic",
+        "image": "one-tee-weiss-brust-classic.webp",
+        "gallery": [
+          "one-tee-weiss-brust-classic.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      }
+    ],
+    "image": "one-tee-weiss-brust-classic.webp",
+    "gallery": [
+      "one-tee-weiss-brust-classic.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "100% Baumwolle",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Nur das Emblem – klein auf der Brust.",
+    "description": "Nur das Emblem – klein auf der Brust. Teil der ONE Linie. Schnitt: Regular – fällt normal aus.",
+    "usps": [
+      "Regular geschnitten",
+      "100% Baumwolle",
+      "Teil der ONE Linie"
+    ],
+    "rank": 22
+  },
+  {
+    "id": "prestige_tee_black",
+    "sku": "VK-PRESTIGE-TEE-BLACK",
+    "slug": "prestige-tee-black",
+    "name": "PRESTIGE T-Shirt Schwarz",
+    "kicker": "T-Shirt",
+    "collection": "PRESTIGE",
+    "line": "prestige",
+    "audience": "unisex",
+    "productType": "tshirt",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Regular",
+    "fitNote": "Fällt normal aus.",
+    "sizeGuide": "unisex",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "prestige-tee",
+    "refinement": "flock",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "chest-weiss",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "weiss",
+        "image": "prestige-tee-schwarz-brust-weiss.webp",
+        "gallery": [
+          "prestige-tee-schwarz-brust-weiss.webp",
+          "prestige-tee-schwarz-brust-weiss-nah.webp"
+        ],
+        "imageStatus": "final",
+        "regenNote": null
+      },
+      {
+        "key": "chest-schwarz",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "schwarz",
+        "image": "prestige-tee-schwarz-brust-schwarz.webp",
+        "gallery": [
+          "prestige-tee-schwarz-brust-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-silber",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "silber",
+        "image": "prestige-tee-schwarz-brust-silber.webp",
+        "gallery": [
+          "prestige-tee-schwarz-brust-silber.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-gold",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "gold",
+        "image": "prestige-tee-schwarz-brust-gold.webp",
+        "gallery": [
+          "prestige-tee-schwarz-brust-gold.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      }
+    ],
+    "image": "prestige-tee-schwarz-brust-weiss.webp",
+    "gallery": [
+      "prestige-tee-schwarz-brust-weiss.webp"
+    ],
+    "imageStatus": "final",
+    "requiresFinalPhotography": true,
+    "requiresRerender": true,
+    "material": "100% Baumwolle · kontrastierender Flock-Aufdruck",
+    "care": "Auf links bei 30 °C waschen. Nicht auf den Flock bügeln, nicht im Trockner.",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Kontrastierender, samtiger Flock statt klassischem Druck.",
+    "description": "Kontrastierender, samtiger Flock statt klassischem Druck. Teil der PRESTIGE Linie. Schnitt: Regular – fällt normal aus.",
+    "usps": [
+      "Regular geschnitten",
+      "100% Baumwolle · kontrastierender Flock-Aufdruck",
+      "Teil der PRESTIGE Linie"
+    ],
+    "rank": 23
+  },
+  {
+    "id": "prestige_tee_white",
+    "sku": "VK-PRESTIGE-TEE-WHITE",
+    "slug": "prestige-tee-white",
+    "name": "PRESTIGE T-Shirt Weiß",
+    "kicker": "T-Shirt",
+    "collection": "PRESTIGE",
+    "line": "prestige",
+    "audience": "unisex",
+    "productType": "tshirt",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "white",
+        "label": "Weiß",
+        "hex": "#f4f2ee"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Regular",
+    "fitNote": "Fällt normal aus.",
+    "sizeGuide": "unisex",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "prestige-tee",
+    "refinement": "flock",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "chest-weiss",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "weiss",
+        "image": "prestige-tee-weiss-brust-weiss.webp",
+        "gallery": [
+          "prestige-tee-weiss-brust-weiss.webp",
+          "prestige-tee-weiss-brust-weiss-nah.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-schwarz",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "schwarz",
+        "image": "prestige-tee-weiss-brust-schwarz.webp",
+        "gallery": [
+          "prestige-tee-weiss-brust-schwarz.webp",
+          "prestige-tee-weiss-brust-schwarz-nah.webp"
+        ],
+        "imageStatus": "final",
+        "regenNote": null
+      },
+      {
+        "key": "chest-silber",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "silber",
+        "image": "prestige-tee-weiss-brust-silber.webp",
+        "gallery": [
+          "prestige-tee-weiss-brust-silber.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-gold",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "gold",
+        "image": "prestige-tee-weiss-brust-gold.webp",
+        "gallery": [
+          "prestige-tee-weiss-brust-gold.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      }
+    ],
+    "image": "prestige-tee-weiss-brust-schwarz.webp",
+    "gallery": [
+      "prestige-tee-weiss-brust-schwarz.webp"
+    ],
+    "imageStatus": "final",
+    "requiresFinalPhotography": true,
+    "requiresRerender": true,
+    "material": "100% Baumwolle · kontrastierender Flock-Aufdruck",
+    "care": "Auf links bei 30 °C waschen. Nicht auf den Flock bügeln, nicht im Trockner.",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Kontrastierender, samtiger Flock statt klassischem Druck.",
+    "description": "Kontrastierender, samtiger Flock statt klassischem Druck. Teil der PRESTIGE Linie. Schnitt: Regular – fällt normal aus.",
+    "usps": [
+      "Regular geschnitten",
+      "100% Baumwolle · kontrastierender Flock-Aufdruck",
+      "Teil der PRESTIGE Linie"
+    ],
+    "rank": 24
+  },
+  {
+    "id": "prestige_vneck_black",
+    "sku": "VK-PRESTIGE-VNECK-BLACK",
+    "slug": "prestige-vneck-black",
+    "name": "PRESTIGE V-Neck Schwarz",
+    "kicker": "V-Neck",
+    "collection": "PRESTIGE",
+    "line": "prestige",
+    "audience": "unisex",
+    "productType": "vneck",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Regular V-Neck",
+    "fitNote": "V-Ausschnitt, fällt normal aus.",
+    "sizeGuide": "unisex",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "prestige-vneck",
+    "refinement": "flock",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "chest-weiss",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "weiss",
+        "image": "prestige-vneck-schwarz-brust-weiss.webp",
+        "gallery": [
+          "prestige-vneck-schwarz-brust-weiss.webp"
+        ],
+        "imageStatus": "final",
+        "regenNote": null
+      },
+      {
+        "key": "chest-schwarz",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "schwarz",
+        "image": "prestige-vneck-schwarz-brust-schwarz.webp",
+        "gallery": [
+          "prestige-vneck-schwarz-brust-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-silber",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "silber",
+        "image": "v5-coming-soon.webp",
+        "gallery": [
+          "v5-coming-soon.webp"
+        ],
+        "imageStatus": "needs_regeneration",
+        "regenNote": "PRESTIGE Schwarz – Silber- Flock neu generieren"
+      },
+      {
+        "key": "chest-gold",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "gold",
+        "image": "v5-coming-soon.webp",
+        "gallery": [
+          "v5-coming-soon.webp"
+        ],
+        "imageStatus": "needs_regeneration",
+        "regenNote": "PRESTIGE Schwarz – Goldener Flock neu generieren"
+      }
+    ],
+    "image": "prestige-vneck-schwarz-brust-weiss.webp",
+    "gallery": [
+      "prestige-vneck-schwarz-brust-weiss.webp"
+    ],
+    "imageStatus": "final",
+    "requiresFinalPhotography": true,
+    "requiresRerender": true,
+    "material": "100% Baumwolle · kontrastierender Flock-Aufdruck",
+    "care": "Auf links bei 30 °C waschen. Nicht auf den Flock bügeln, nicht im Trockner.",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Kontrastierender, samtiger Flock statt klassischem Druck.",
+    "description": "Kontrastierender, samtiger Flock statt klassischem Druck. Teil der PRESTIGE Linie. Schnitt: Regular V-Neck – v-ausschnitt, fällt normal aus.",
+    "usps": [
+      "Regular V-Neck geschnitten",
+      "100% Baumwolle · kontrastierender Flock-Aufdruck",
+      "Teil der PRESTIGE Linie"
+    ],
+    "rank": 25
+  },
+  {
+    "id": "prestige_vneck_white",
+    "sku": "VK-PRESTIGE-VNECK-WHITE",
+    "slug": "prestige-vneck-white",
+    "name": "PRESTIGE V-Neck Weiß",
+    "kicker": "V-Neck",
+    "collection": "PRESTIGE",
+    "line": "prestige",
+    "audience": "unisex",
+    "productType": "vneck",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "white",
+        "label": "Weiß",
+        "hex": "#f4f2ee"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Regular V-Neck",
+    "fitNote": "V-Ausschnitt, fällt normal aus.",
+    "sizeGuide": "unisex",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "prestige-vneck",
+    "refinement": "flock",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "chest-weiss",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "weiss",
+        "image": "prestige-vneck-weiss-brust-weiss.webp",
+        "gallery": [
+          "prestige-vneck-weiss-brust-weiss.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-schwarz",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "schwarz",
+        "image": "prestige-vneck-weiss-brust-schwarz.webp",
+        "gallery": [
+          "prestige-vneck-weiss-brust-schwarz.webp"
+        ],
+        "imageStatus": "final",
+        "regenNote": null
+      },
+      {
+        "key": "chest-silber",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "silber",
+        "image": "v5-coming-soon.webp",
+        "gallery": [
+          "v5-coming-soon.webp"
+        ],
+        "imageStatus": "needs_regeneration",
+        "regenNote": "PRESTIGE Weiß – Silber- Flock neu generieren"
+      },
+      {
+        "key": "chest-gold",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "gold",
+        "image": "v5-coming-soon.webp",
+        "gallery": [
+          "v5-coming-soon.webp"
+        ],
+        "imageStatus": "needs_regeneration",
+        "regenNote": "PRESTIGE Weiß – Goldener Flock neu generieren"
+      }
+    ],
+    "image": "prestige-vneck-weiss-brust-schwarz.webp",
+    "gallery": [
+      "prestige-vneck-weiss-brust-schwarz.webp"
+    ],
+    "imageStatus": "final",
+    "requiresFinalPhotography": true,
+    "requiresRerender": true,
+    "material": "100% Baumwolle · kontrastierender Flock-Aufdruck",
+    "care": "Auf links bei 30 °C waschen. Nicht auf den Flock bügeln, nicht im Trockner.",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Kontrastierender, samtiger Flock statt klassischem Druck.",
+    "description": "Kontrastierender, samtiger Flock statt klassischem Druck. Teil der PRESTIGE Linie. Schnitt: Regular V-Neck – v-ausschnitt, fällt normal aus.",
+    "usps": [
+      "Regular V-Neck geschnitten",
+      "100% Baumwolle · kontrastierender Flock-Aufdruck",
+      "Teil der PRESTIGE Linie"
+    ],
+    "rank": 26
+  },
+  {
+    "id": "prestige_polo_black",
+    "sku": "VK-PRESTIGE-POLO-BLACK",
+    "slug": "prestige-polo-black",
+    "name": "PRESTIGE Polo Schwarz",
+    "kicker": "Polo",
+    "collection": "PRESTIGE",
+    "line": "prestige",
+    "audience": "unisex",
+    "productType": "polo",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Polo",
+    "fitNote": "Normal bis leicht körpernah.",
+    "sizeGuide": "polo",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "prestige-polo",
+    "refinement": "flock",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "chest-weiss",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "weiss",
+        "image": "prestige-polo-schwarz-brust-weiss.webp",
+        "gallery": [
+          "prestige-polo-schwarz-brust-weiss.webp"
+        ],
+        "imageStatus": "placeholder",
+        "regenNote": "PRESTIGE Polo Schwarz – Bild folgt"
+      },
+      {
+        "key": "chest-schwarz",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "schwarz",
+        "image": "prestige-polo-schwarz-brust-schwarz.webp",
+        "gallery": [
+          "prestige-polo-schwarz-brust-schwarz.webp"
+        ],
+        "imageStatus": "placeholder",
+        "regenNote": "PRESTIGE Polo Schwarz – Bild folgt"
+      },
+      {
+        "key": "chest-silber",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "silber",
+        "image": "prestige-polo-schwarz-brust-silber.webp",
+        "gallery": [
+          "prestige-polo-schwarz-brust-silber.webp"
+        ],
+        "imageStatus": "placeholder",
+        "regenNote": "PRESTIGE Polo Schwarz – Bild folgt"
+      },
+      {
+        "key": "chest-gold",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "gold",
+        "image": "prestige-polo-schwarz-brust-gold.webp",
+        "gallery": [
+          "prestige-polo-schwarz-brust-gold.webp"
+        ],
+        "imageStatus": "placeholder",
+        "regenNote": "PRESTIGE Polo Schwarz – Bild folgt"
+      }
+    ],
+    "image": "prestige-polo-schwarz-brust-weiss.webp",
+    "gallery": [
+      "prestige-polo-schwarz-brust-weiss.webp"
+    ],
+    "imageStatus": "placeholder",
+    "requiresFinalPhotography": true,
+    "requiresRerender": true,
+    "material": "100% Baumwolle · kontrastierender Flock-Aufdruck",
+    "care": "Auf links bei 30 °C waschen. Nicht auf den Flock bügeln, nicht im Trockner.",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Polohemd mit kontrastierendem, samtigem Flock.",
+    "description": "Polohemd mit kontrastierendem, samtigem Flock. Teil der PRESTIGE Linie. Schnitt: Polo – normal bis leicht körpernah.",
+    "usps": [
+      "Polo geschnitten",
+      "100% Baumwolle · kontrastierender Flock-Aufdruck",
+      "Teil der PRESTIGE Linie"
+    ],
+    "rank": 27,
+    "regenNote": "PRESTIGE Polo Schwarz – Bild folgt"
+  },
+  {
+    "id": "prestige_polo_white",
+    "sku": "VK-PRESTIGE-POLO-WHITE",
+    "slug": "prestige-polo-white",
+    "name": "PRESTIGE Polo Weiß",
+    "kicker": "Polo",
+    "collection": "PRESTIGE",
+    "line": "prestige",
+    "audience": "unisex",
+    "productType": "polo",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "white",
+        "label": "Weiß",
+        "hex": "#f4f2ee"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Polo",
+    "fitNote": "Normal bis leicht körpernah.",
+    "sizeGuide": "polo",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "prestige-polo",
+    "refinement": "flock",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "chest-weiss",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "weiss",
+        "image": "prestige-polo-weiss-brust-weiss.webp",
+        "gallery": [
+          "prestige-polo-weiss-brust-weiss.webp"
+        ],
+        "imageStatus": "placeholder",
+        "regenNote": "PRESTIGE Polo Weiß – Bild folgt"
+      },
+      {
+        "key": "chest-schwarz",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "schwarz",
+        "image": "prestige-polo-weiss-brust-schwarz.webp",
+        "gallery": [
+          "prestige-polo-weiss-brust-schwarz.webp"
+        ],
+        "imageStatus": "placeholder",
+        "regenNote": "PRESTIGE Polo Weiß – Bild folgt"
+      },
+      {
+        "key": "chest-silber",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "silber",
+        "image": "prestige-polo-weiss-brust-silber.webp",
+        "gallery": [
+          "prestige-polo-weiss-brust-silber.webp"
+        ],
+        "imageStatus": "placeholder",
+        "regenNote": "PRESTIGE Polo Weiß – Bild folgt"
+      },
+      {
+        "key": "chest-gold",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "gold",
+        "image": "prestige-polo-weiss-brust-gold.webp",
+        "gallery": [
+          "prestige-polo-weiss-brust-gold.webp"
+        ],
+        "imageStatus": "placeholder",
+        "regenNote": "PRESTIGE Polo Weiß – Bild folgt"
+      }
+    ],
+    "image": "prestige-polo-weiss-brust-schwarz.webp",
+    "gallery": [
+      "prestige-polo-weiss-brust-schwarz.webp"
+    ],
+    "imageStatus": "placeholder",
+    "requiresFinalPhotography": true,
+    "requiresRerender": true,
+    "material": "100% Baumwolle · kontrastierender Flock-Aufdruck",
+    "care": "Auf links bei 30 °C waschen. Nicht auf den Flock bügeln, nicht im Trockner.",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Polohemd in Weiß mit kontrastierendem, samtigem Flock.",
+    "description": "Polohemd in Weiß mit kontrastierendem, samtigem Flock. Teil der PRESTIGE Linie. Schnitt: Polo – normal bis leicht körpernah.",
+    "usps": [
+      "Polo geschnitten",
+      "100% Baumwolle · kontrastierender Flock-Aufdruck",
+      "Teil der PRESTIGE Linie"
+    ],
+    "rank": 28,
+    "regenNote": "PRESTIGE Polo Weiß – Bild folgt"
+  },
+  {
+    "id": "workwear_polo_black",
+    "sku": "VK-WORKWEAR-POLO-BLACK",
+    "slug": "workwear-polo-black",
+    "name": "Workwear Polo Schwarz",
+    "kicker": "Polo",
+    "collection": "WORKWEAR",
+    "line": "workwear",
+    "audience": "unisex",
+    "productType": "polo",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Workwear",
+    "fitNote": "Robust und etwas weiter geschnitten.",
+    "sizeGuide": "polo",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "workwear-polo",
+    "refinement": "print",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "chest",
+        "label": "Kleines Brustlogo",
+        "image": "workwear-polo-schwarz.webp",
+        "gallery": [
+          "workwear-polo-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup"
+      }
+    ],
+    "image": "workwear-polo-schwarz.webp",
+    "gallery": [
+      "workwear-polo-schwarz.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "Mischgewebe, verstärkte Nähte",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Robustes Polohemd für den Arbeitsalltag.",
+    "description": "Robustes Polohemd für den Arbeitsalltag. Teil der WORKWEAR Linie. Schnitt: Workwear – robust und etwas weiter geschnitten.",
+    "usps": [
+      "Workwear geschnitten",
+      "Mischgewebe, verstärkte Nähte",
+      "Teil der WORKWEAR Linie"
+    ],
+    "rank": 29
+  },
+  {
+    "id": "workwear_polo_white",
+    "sku": "VK-WORKWEAR-POLO-WHITE",
+    "slug": "workwear-polo-white",
+    "name": "Workwear Polo Weiß",
+    "kicker": "Polo",
+    "collection": "WORKWEAR",
+    "line": "workwear",
+    "audience": "unisex",
+    "productType": "polo",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "white",
+        "label": "Weiß",
+        "hex": "#f4f2ee"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Workwear",
+    "fitNote": "Robust und etwas weiter geschnitten.",
+    "sizeGuide": "polo",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "workwear-polo",
+    "refinement": "print",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "chest",
+        "label": "Kleines Brustlogo",
+        "image": "workwear-polo-weiss.webp",
+        "gallery": [
+          "workwear-polo-weiss.webp"
+        ],
+        "imageStatus": "ai_mockup"
+      }
+    ],
+    "image": "workwear-polo-weiss.webp",
+    "gallery": [
+      "workwear-polo-weiss.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "Mischgewebe, verstärkte Nähte",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Robustes Polohemd in Weiß.",
+    "description": "Robustes Polohemd in Weiß. Teil der WORKWEAR Linie. Schnitt: Workwear – robust und etwas weiter geschnitten.",
+    "usps": [
+      "Workwear geschnitten",
+      "Mischgewebe, verstärkte Nähte",
+      "Teil der WORKWEAR Linie"
+    ],
+    "rank": 30
+  },
+  {
+    "id": "workwear_t_shirt_black",
+    "sku": "VK-WORKWEAR-T-SHIRT-BLACK",
+    "slug": "workwear-t-shirt-black",
+    "name": "Workwear T-Shirt Schwarz",
+    "kicker": "T-Shirt",
+    "collection": "WORKWEAR",
+    "line": "workwear",
+    "audience": "unisex",
+    "productType": "tshirt",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Workwear",
+    "fitNote": "Robust und etwas weiter geschnitten.",
+    "sizeGuide": "polo",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": null,
+    "refinement": "print",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "chest",
+        "label": "Kleines Brustlogo",
+        "image": "workwear-tee-schwarz.webp",
+        "gallery": [
+          "workwear-tee-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup"
+      }
+    ],
+    "image": "workwear-tee-schwarz.webp",
+    "gallery": [
+      "workwear-tee-schwarz.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "Schwere Baumwolle, verstärkte Nähte",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Strapazierfähiges Arbeitsshirt.",
+    "description": "Strapazierfähiges Arbeitsshirt. Teil der WORKWEAR Linie. Schnitt: Workwear – robust und etwas weiter geschnitten.",
+    "usps": [
+      "Workwear geschnitten",
+      "Schwere Baumwolle, verstärkte Nähte",
+      "Teil der WORKWEAR Linie"
+    ],
+    "rank": 31
+  },
+  {
+    "id": "softshelljacke_black",
+    "sku": "VK-SOFTSHELLJACKE-BLACK",
+    "slug": "softshelljacke-black",
+    "name": "Softshelljacke Schwarz",
+    "kicker": "Jacke",
+    "collection": "WORKWEAR",
+    "line": "workwear",
+    "audience": "unisex",
+    "productType": "jacket",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Workwear",
+    "fitNote": "Robust und etwas weiter geschnitten.",
+    "sizeGuide": "polo",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": null,
+    "refinement": "print",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "chest",
+        "label": "Kleines Brustlogo",
+        "image": "workwear-softshelljacke-schwarz.webp",
+        "gallery": [
+          "workwear-softshelljacke-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup"
+      }
+    ],
+    "image": "workwear-softshelljacke-schwarz.webp",
+    "gallery": [
+      "workwear-softshelljacke-schwarz.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "Softshell, wind- und wasserabweisend",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Wind- und wasserabweisende Jacke.",
+    "description": "Wind- und wasserabweisende Jacke. Teil der WORKWEAR Linie. Schnitt: Workwear – robust und etwas weiter geschnitten.",
+    "usps": [
+      "Workwear geschnitten",
+      "Softshell, wind- und wasserabweisend",
+      "Teil der WORKWEAR Linie"
+    ],
+    "rank": 32
+  },
+  {
+    "id": "softshellweste_black",
+    "sku": "VK-SOFTSHELLWESTE-BLACK",
+    "slug": "softshellweste-black",
+    "name": "Softshellweste Schwarz",
+    "kicker": "Weste",
+    "collection": "WORKWEAR",
+    "line": "workwear",
+    "audience": "unisex",
+    "productType": "jacket",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Workwear",
+    "fitNote": "Robust und etwas weiter geschnitten.",
+    "sizeGuide": "polo",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": null,
+    "refinement": "print",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "chest",
+        "label": "Kleines Brustlogo",
+        "image": "workwear-softshellweste-schwarz.webp",
+        "gallery": [
+          "workwear-softshellweste-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup"
+      }
+    ],
+    "image": "workwear-softshellweste-schwarz.webp",
+    "gallery": [
+      "workwear-softshellweste-schwarz.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "Softshell, wind- und wasserabweisend",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Ärmellose Softshellweste.",
+    "description": "Ärmellose Softshellweste. Teil der WORKWEAR Linie. Schnitt: Workwear – robust und etwas weiter geschnitten.",
+    "usps": [
+      "Workwear geschnitten",
+      "Softshell, wind- und wasserabweisend",
+      "Teil der WORKWEAR Linie"
+    ],
+    "rank": 33
+  },
+  {
+    "id": "overshirt_arbeitshemd_black",
+    "sku": "VK-OVERSHIRT-ARBEITSHEMD-BLACK",
+    "slug": "overshirt-arbeitshemd-black",
+    "name": "Overshirt / Arbeitshemd Schwarz",
+    "kicker": "Hemd",
+    "collection": "WORKWEAR",
+    "line": "workwear",
+    "audience": "unisex",
+    "productType": "shirt",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Workwear",
+    "fitNote": "Robust und etwas weiter geschnitten.",
+    "sizeGuide": "polo",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": null,
+    "refinement": "print",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "chest",
+        "label": "Kleines Brustlogo",
+        "image": "workwear-overshirt-schwarz.webp",
+        "gallery": [
+          "workwear-overshirt-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup"
+      }
+    ],
+    "image": "workwear-overshirt-schwarz.webp",
+    "gallery": [
+      "workwear-overshirt-schwarz.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "Schweres Baumwollgewebe",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Hemdjacke für den Arbeitsalltag.",
+    "description": "Hemdjacke für den Arbeitsalltag. Teil der WORKWEAR Linie. Schnitt: Workwear – robust und etwas weiter geschnitten.",
+    "usps": [
+      "Workwear geschnitten",
+      "Schweres Baumwollgewebe",
+      "Teil der WORKWEAR Linie"
+    ],
+    "rank": 34
+  },
+  {
+    "id": "cap_black",
+    "sku": "VK-CAP-BLACK",
+    "slug": "cap-black",
+    "name": "Cap Black",
+    "kicker": "Accessoire",
+    "collection": "ACCESSOIRES",
+    "line": "accessoires",
+    "audience": "unisex",
+    "productType": "accessory",
+    "category": "Accessoires",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "One Size"
+    ],
+    "fit": "One Size",
+    "fitNote": "Einheitsgröße.",
+    "sizeGuide": null,
+    "modelHeight": null,
+    "modelSize": null,
+    "variantGroup": null,
+    "refinement": "print",
+    "logoPlacement": "single",
+    "placements": [
+      {
+        "key": "single",
+        "label": "Standard",
+        "image": "accessoire-cap-schwarz.webp",
+        "gallery": [
+          "accessoire-cap-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup"
+      }
+    ],
+    "image": "accessoire-cap-schwarz.webp",
+    "gallery": [
+      "accessoire-cap-schwarz.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "Baumwolle",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Schwarze Cap mit VIDEKO Logo.",
+    "description": "Schwarze Cap mit VIDEKO Logo. Teil der ACCESSOIRES Linie. Schnitt: One Size – einheitsgröße.",
+    "usps": [
+      "One Size geschnitten",
+      "Baumwolle",
+      "Teil der ACCESSOIRES Linie"
+    ],
+    "rank": 35
+  },
+  {
+    "id": "beanie_black",
+    "sku": "VK-BEANIE-BLACK",
+    "slug": "beanie-black",
+    "name": "Beanie Black",
+    "kicker": "Accessoire",
+    "collection": "ACCESSOIRES",
+    "line": "accessoires",
+    "audience": "unisex",
+    "productType": "accessory",
+    "category": "Accessoires",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "One Size"
+    ],
+    "fit": "One Size",
+    "fitNote": "Einheitsgröße.",
+    "sizeGuide": null,
+    "modelHeight": null,
+    "modelSize": null,
+    "variantGroup": null,
+    "refinement": "print",
+    "logoPlacement": "single",
+    "placements": [
+      {
+        "key": "single",
+        "label": "Standard",
+        "image": "accessoire-beanie-schwarz.webp",
+        "gallery": [
+          "accessoire-beanie-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup"
+      }
+    ],
+    "image": "accessoire-beanie-schwarz.webp",
+    "gallery": [
+      "accessoire-beanie-schwarz.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "Acryl / Wolle",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Schlichte schwarze Beanie.",
+    "description": "Schlichte schwarze Beanie. Teil der ACCESSOIRES Linie. Schnitt: One Size – einheitsgröße.",
+    "usps": [
+      "One Size geschnitten",
+      "Acryl / Wolle",
+      "Teil der ACCESSOIRES Linie"
+    ],
+    "rank": 36
+  },
+  {
+    "id": "tote_bag_black",
+    "sku": "VK-TOTE-BAG-BLACK",
+    "slug": "tote-bag-black",
+    "name": "Tote Bag Black",
+    "kicker": "Accessoire",
+    "collection": "ACCESSOIRES",
+    "line": "accessoires",
+    "audience": "unisex",
+    "productType": "accessory",
+    "category": "Accessoires",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "One Size"
+    ],
+    "fit": "One Size",
+    "fitNote": "Einheitsgröße.",
+    "sizeGuide": null,
+    "modelHeight": null,
+    "modelSize": null,
+    "variantGroup": null,
+    "refinement": "print",
+    "logoPlacement": "single",
+    "placements": [
+      {
+        "key": "single",
+        "label": "Standard",
+        "image": "accessoire-tote-bag-schwarz.webp",
+        "gallery": [
+          "accessoire-tote-bag-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup"
+      }
+    ],
+    "image": "accessoire-tote-bag-schwarz.webp",
+    "gallery": [
+      "accessoire-tote-bag-schwarz.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "Baumwolle",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Schwarze Tote Bag mit großem Logo.",
+    "description": "Schwarze Tote Bag mit großem Logo. Teil der ACCESSOIRES Linie. Schnitt: One Size – einheitsgröße.",
+    "usps": [
+      "One Size geschnitten",
+      "Baumwolle",
+      "Teil der ACCESSOIRES Linie"
+    ],
+    "rank": 37
+  },
+  {
+    "id": "schuerze_black",
+    "sku": "VK-SCHUERZE-BLACK",
+    "slug": "schuerze-black",
+    "name": "Schürze Black",
+    "kicker": "Accessoire",
+    "collection": "ACCESSOIRES",
+    "line": "accessoires",
+    "audience": "unisex",
+    "productType": "accessory",
+    "category": "Accessoires",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "One Size"
+    ],
+    "fit": "One Size",
+    "fitNote": "Einheitsgröße.",
+    "sizeGuide": null,
+    "modelHeight": null,
+    "modelSize": null,
+    "variantGroup": null,
+    "refinement": "print",
+    "logoPlacement": "single",
+    "placements": [
+      {
+        "key": "single",
+        "label": "Standard",
+        "image": "accessoire-schuerze-schwarz.webp",
+        "gallery": [
+          "accessoire-schuerze-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup"
+      }
+    ],
+    "image": "accessoire-schuerze-schwarz.webp",
+    "gallery": [
+      "accessoire-schuerze-schwarz.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "Baumwolle / Mischgewebe",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "VIDEKO Schürze für Küche und Grill.",
+    "description": "VIDEKO Schürze für Küche und Grill. Teil der ACCESSOIRES Linie. Schnitt: One Size – einheitsgröße.",
+    "usps": [
+      "One Size geschnitten",
+      "Baumwolle / Mischgewebe",
+      "Teil der ACCESSOIRES Linie"
+    ],
+    "rank": 38
+  },
+  {
+    "id": "handtuch_black",
+    "sku": "VK-HANDTUCH-BLACK",
+    "slug": "handtuch-black",
+    "name": "Handtuch Black",
+    "kicker": "Accessoire",
+    "collection": "ACCESSOIRES",
+    "line": "accessoires",
+    "audience": "unisex",
+    "productType": "accessory",
+    "category": "Accessoires",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "One Size"
+    ],
+    "fit": "One Size",
+    "fitNote": "Einheitsgröße.",
+    "sizeGuide": null,
+    "modelHeight": null,
+    "modelSize": null,
+    "variantGroup": null,
+    "refinement": "print",
+    "logoPlacement": "single",
+    "placements": [
+      {
+        "key": "single",
+        "label": "Standard",
+        "image": "accessoire-handtuch-schwarz.webp",
+        "gallery": [
+          "accessoire-handtuch-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup"
+      }
+    ],
+    "image": "accessoire-handtuch-schwarz.webp",
+    "gallery": [
+      "accessoire-handtuch-schwarz.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "Baumwolle",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Schwarzes Handtuch mit VIDEKO Branding.",
+    "description": "Schwarzes Handtuch mit VIDEKO Branding. Teil der ACCESSOIRES Linie. Schnitt: One Size – einheitsgröße.",
+    "usps": [
+      "One Size geschnitten",
+      "Baumwolle",
+      "Teil der ACCESSOIRES Linie"
+    ],
+    "rank": 39
+  },
+  {
+    "id": "badehose_black",
+    "sku": "VK-BADEHOSE-BLACK",
+    "slug": "badehose-black",
+    "name": "Badehose Black",
+    "kicker": "Accessoire",
+    "collection": "ACCESSOIRES",
+    "line": "accessoires",
+    "audience": "unisex",
+    "productType": "accessory",
+    "category": "Accessoires",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "fit": "One Size",
+    "fitNote": "Einheitsgröße.",
+    "sizeGuide": null,
+    "modelHeight": null,
+    "modelSize": null,
+    "variantGroup": null,
+    "refinement": "print",
+    "logoPlacement": "single",
+    "placements": [
+      {
+        "key": "single",
+        "label": "Standard",
+        "image": "accessoire-badehose-schwarz.webp",
+        "gallery": [
+          "accessoire-badehose-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup"
+      }
+    ],
+    "image": "accessoire-badehose-schwarz.webp",
+    "gallery": [
+      "accessoire-badehose-schwarz.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "Polyester",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Schwarze Badehose mit kleinem Logo.",
+    "description": "Schwarze Badehose mit kleinem Logo. Teil der ACCESSOIRES Linie. Schnitt: One Size – einheitsgröße.",
+    "usps": [
+      "One Size geschnitten",
+      "Polyester",
+      "Teil der ACCESSOIRES Linie"
+    ],
+    "rank": 40
+  },
+  {
+    "id": "regenschirm_black",
+    "sku": "VK-REGENSCHIRM-BLACK",
+    "slug": "regenschirm-black",
+    "name": "Regenschirm Black",
+    "kicker": "Accessoire",
+    "collection": "ACCESSOIRES",
+    "line": "accessoires",
+    "audience": "unisex",
+    "productType": "accessory",
+    "category": "Accessoires",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "One Size"
+    ],
+    "fit": "One Size",
+    "fitNote": "Einheitsgröße.",
+    "sizeGuide": null,
+    "modelHeight": null,
+    "modelSize": null,
+    "variantGroup": null,
+    "refinement": "print",
+    "logoPlacement": "single",
+    "placements": [
+      {
+        "key": "single",
+        "label": "Standard",
+        "image": "accessoire-regenschirm-schwarz.webp",
+        "gallery": [
+          "accessoire-regenschirm-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup"
+      }
+    ],
+    "image": "accessoire-regenschirm-schwarz.webp",
+    "gallery": [
+      "accessoire-regenschirm-schwarz.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "Mischgewebe / Metall",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Schwarzer Regenschirm mit VIDEKO Logo.",
+    "description": "Schwarzer Regenschirm mit VIDEKO Logo. Teil der ACCESSOIRES Linie. Schnitt: One Size – einheitsgröße.",
+    "usps": [
+      "One Size geschnitten",
+      "Mischgewebe / Metall",
+      "Teil der ACCESSOIRES Linie"
+    ],
+    "rank": 41
+  },
+  {
+    "id": "sneaker_videko",
+    "sku": "VK-SNEAKER-VIDEKO",
+    "slug": "sneaker-videko",
+    "name": "Sneaker VIDEKO",
+    "kicker": "Accessoire",
+    "collection": "ACCESSOIRES",
+    "line": "accessoires",
+    "audience": "unisex",
+    "productType": "accessory",
+    "category": "Accessoires",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "white-gold",
+        "label": "Weiß · Gold-Logo",
+        "hex": "#efece6"
+      },
+      {
+        "key": "white",
+        "label": "Weiß · Ton-in-Ton",
+        "hex": "#f4f2ee"
+      }
+    ],
+    "sizes": [
+      "39",
+      "40",
+      "41",
+      "42",
+      "43",
+      "44",
+      "45",
+      "46",
+      "47"
+    ],
+    "fit": "One Size",
+    "fitNote": "Einheitsgröße.",
+    "sizeGuide": null,
+    "modelHeight": null,
+    "modelSize": null,
+    "variantGroup": null,
+    "refinement": "print",
+    "logoPlacement": "single",
+    "placements": [
+      {
+        "key": "single",
+        "label": "Standard",
+        "image": "accessoire-sneaker-weiss-gold.webp",
+        "gallery": [
+          "accessoire-sneaker-weiss-gold.webp",
+          "accessoire-sneaker-weiss-gold-view2.webp"
+        ],
+        "imageStatus": "ai_mockup"
+      }
+    ],
+    "image": "accessoire-sneaker-weiss-gold.webp",
+    "gallery": [
+      "accessoire-sneaker-weiss-gold.webp",
+      "accessoire-sneaker-weiss-gold-view2.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "Kunstleder / Gummi",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Weißer Sneaker mit VIDEKO-Logo – in Gold oder dezent Ton-in-Ton.",
+    "description": "Weißer Sneaker in zwei Ausführungen: mit goldenem VIDEKO-Logo oder dezent ton-in-ton. Teil der ACCESSOIRES Linie. Schnitt: One Size – Einheitsgröße.",
+    "usps": [
+      "One Size geschnitten",
+      "Kunstleder / Gummi",
+      "Teil der ACCESSOIRES Linie"
+    ],
+    "rank": 42
+  },
+  {
+    "id": "tasse_black",
+    "sku": "VK-TASSE-BLACK",
+    "slug": "tasse-black",
+    "name": "Mug / Tasse Black",
+    "kicker": "Accessoire",
+    "collection": "ACCESSOIRES",
+    "line": "accessoires",
+    "audience": "unisex",
+    "productType": "accessory",
+    "category": "Accessoires",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "One Size"
+    ],
+    "fit": "One Size",
+    "fitNote": "Einheitsgröße.",
+    "sizeGuide": null,
+    "modelHeight": null,
+    "modelSize": null,
+    "variantGroup": null,
+    "refinement": "print",
+    "logoPlacement": "single",
+    "placements": [
+      {
+        "key": "single",
+        "label": "Standard",
+        "image": "accessoire-tasse-schwarz.webp",
+        "gallery": [
+          "accessoire-tasse-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup"
+      }
+    ],
+    "image": "accessoire-tasse-schwarz.webp",
+    "gallery": [
+      "accessoire-tasse-schwarz.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "Keramik",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Schwarze VIDEKO Tasse.",
+    "description": "Schwarze VIDEKO Tasse. Teil der ACCESSOIRES Linie. Schnitt: One Size – einheitsgröße.",
+    "usps": [
+      "One Size geschnitten",
+      "Keramik",
+      "Teil der ACCESSOIRES Linie"
+    ],
+    "rank": 43
+  },
+  {
+    "id": "trinkflasche_black",
+    "sku": "VK-TRINKFLASCHE-BLACK",
+    "slug": "trinkflasche-black",
+    "name": "Bottle / Trinkflasche Black",
+    "kicker": "Accessoire",
+    "collection": "ACCESSOIRES",
+    "line": "accessoires",
+    "audience": "unisex",
+    "productType": "accessory",
+    "category": "Accessoires",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "One Size"
+    ],
+    "fit": "One Size",
+    "fitNote": "Einheitsgröße.",
+    "sizeGuide": null,
+    "modelHeight": null,
+    "modelSize": null,
+    "variantGroup": null,
+    "refinement": "print",
+    "logoPlacement": "single",
+    "placements": [
+      {
+        "key": "single",
+        "label": "Standard",
+        "image": "accessoire-trinkflasche-schwarz.webp",
+        "gallery": [
+          "accessoire-trinkflasche-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup"
+      }
+    ],
+    "image": "accessoire-trinkflasche-schwarz.webp",
+    "gallery": [
+      "accessoire-trinkflasche-schwarz.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "Edelstahl",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Mattschwarze Trinkflasche.",
+    "description": "Mattschwarze Trinkflasche. Teil der ACCESSOIRES Linie. Schnitt: One Size – einheitsgröße.",
+    "usps": [
+      "One Size geschnitten",
+      "Edelstahl",
+      "Teil der ACCESSOIRES Linie"
+    ],
+    "rank": 44
+  },
+  {
+    "id": "boss_battle",
+    "sku": "VK-BOSS-BATTLE",
+    "slug": "boss-battle",
+    "name": "Boss-BATTLE",
+    "kicker": "Spiel",
+    "collection": "ACCESSOIRES",
+    "line": "accessoires",
+    "audience": "unisex",
+    "productType": "game",
+    "category": "Accessoires",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "black-gold",
+        "label": "Schwarz / Gold",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "One Size"
+    ],
+    "fit": "One Size",
+    "fitNote": "Einheitsgröße.",
+    "sizeGuide": null,
+    "modelHeight": null,
+    "modelSize": null,
+    "variantGroup": null,
+    "refinement": "print",
+    "logoPlacement": "single",
+    "placements": [
+      {
+        "key": "single",
+        "label": "Standard",
+        "image": "accessoire-boss-battle-schwarz-gold.webp",
+        "gallery": [
+          "accessoire-boss-battle-schwarz-gold.webp"
+        ],
+        "imageStatus": "ai_mockup"
+      }
+    ],
+    "image": "accessoire-boss-battle-schwarz-gold.webp",
+    "gallery": [
+      "accessoire-boss-battle-schwarz-gold.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "Karton / Spielkarten",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Das strategische Kartenspiel für Planungs-Profis & Küchen-Versteher.",
+    "description": "Das strategische Kartenspiel für Planungs-Profis & Küchen-Versteher. Teil der ACCESSOIRES Linie. Schnitt: One Size – einheitsgröße.",
+    "usps": [
+      "One Size geschnitten",
+      "Karton / Spielkarten",
+      "Teil der ACCESSOIRES Linie"
+    ],
+    "rank": 45
+  },
+  {
+    "id": "pure-hoodie-beige",
+    "sku": "VK-PURE-HOODIE-WHITE",
+    "slug": "pure-hoodie-beige",
+    "name": "PURE Hoodie Beige",
+    "kicker": "Hoodie",
+    "collection": "PURE",
+    "line": "pure",
+    "audience": "unisex",
+    "productType": "hoodie",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "beige",
+        "label": "Beige",
+        "hex": "#D8C4A6"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Regular",
+    "fitNote": "Fällt normal aus.",
+    "sizeGuide": "unisex",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "pure-hoodie",
+    "refinement": "print",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "front-schwarz",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "schwarz",
+        "image": "pure-hoodie-beige-front-schwarz.webp",
+        "gallery": [
+          "pure-hoodie-beige-front-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-schwarz",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "schwarz",
+        "image": "pure-hoodie-beige-brust-schwarz.webp",
+        "gallery": [
+          "pure-hoodie-beige-brust-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "front-weiss",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "weiss",
+        "image": "pure-hoodie-beige-front-weiss.webp",
+        "gallery": [
+          "pure-hoodie-beige-front-weiss.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-weiss",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "weiss",
+        "image": "pure-hoodie-beige-brust-weiss.webp",
+        "gallery": [
+          "pure-hoodie-beige-brust-weiss.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "front-gold",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "gold",
+        "image": "pure-hoodie-beige-front-gold.webp",
+        "gallery": [
+          "pure-hoodie-beige-front-gold.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-gold",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "gold",
+        "image": "pure-hoodie-beige-brust-gold.webp",
+        "gallery": [
+          "pure-hoodie-beige-brust-gold.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "front-silber",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "silber",
+        "image": "pure-hoodie-beige-front-silber.webp",
+        "gallery": [
+          "pure-hoodie-beige-front-silber.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "chest-silber",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "silber",
+        "image": "pure-hoodie-beige-brust-silber.webp",
+        "gallery": [
+          "pure-hoodie-beige-brust-silber.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
+      },
+      {
+        "key": "front-classic",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": "classic",
+        "image": null,
+        "gallery": [],
+        "imageStatus": "placeholder",
+        "regenNote": "classic-Bild fehlt noch"
+      },
+      {
+        "key": "chest-classic",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": "classic",
+        "image": null,
+        "gallery": [],
+        "imageStatus": "placeholder",
+        "regenNote": "classic-Bild fehlt noch"
+      }
+    ],
+    "image": "pure-hoodie-beige-front-schwarz.webp",
+    "gallery": [
+      "pure-hoodie-beige-front-schwarz.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "80% Baumwolle / 20% Polyester",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Hoodie in Weiß mit reduziertem PURE Brustlogo.",
+    "description": "Hoodie in Weiß mit reduziertem PURE Brustlogo. Teil der PURE Linie. Schnitt: Regular – fällt normal aus.",
+    "usps": [
+      "Regular geschnitten",
+      "80% Baumwolle / 20% Polyester",
+      "Teil der PURE Linie"
+    ],
+    "rank": 116
+  }
+]

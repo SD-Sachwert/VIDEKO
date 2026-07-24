@@ -1,41 +1,114 @@
-import { useEffect } from 'react'
-import { Outlet, useLocation } from 'react-router-dom'
+import { useEffect, useLayoutEffect, useRef } from 'react'
+import { Outlet, useLocation, useNavigationType } from 'react-router-dom'
 import { useLenis } from 'lenis/react'
 
 import AmbientBackground from './AmbientBackground.jsx'
 import Header from './Header.jsx'
 import Footer from './Footer.jsx'
+import CartDrawer from './merch/CartDrawer.jsx'
+import NotifyModal from './merch/NotifyModal.jsx'
+import { CartProvider } from '../shop/CartContext.jsx'
+
+// Scrollposition je History-Eintrag (location.key) in sessionStorage sichern.
+// Das ist dasselbe Muster wie React Routers eingebautes <ScrollRestoration>
+// und funktioniert daher auch mit dem Browser-Zurueck-Button und nach Reload.
+const SCROLL_PREFIX = 'videko:scroll:'
+
+const leseScroll = (key) => {
+  try {
+    const roh = sessionStorage.getItem(SCROLL_PREFIX + key)
+    return roh == null ? null : (parseFloat(roh) || 0)
+  } catch { return null }
+}
+const schreibeScroll = (key, wert) => {
+  try { sessionStorage.setItem(SCROLL_PREFIX + key, String(Math.round(wert))) } catch { /* Storage evtl. gesperrt */ }
+}
 
 export default function Layout() {
-  const { pathname, hash } = useLocation()
+  const { pathname, hash, key } = useLocation()
+  const navType = useNavigationType() // 'POP' = Verlaufssprung (Zurueck/Vorwaerts, auch Browser-Button)
   const lenis = useLenis()
 
-  // reset scroll to top on route change – oder zu einem #anker scrollen, falls vorhanden
-  useEffect(() => {
-    if (hash) {
-      const id = hash.slice(1)
-      const t = setTimeout(() => {
-        const el = document.getElementById(id)
-        if (el) {
-          if (lenis) lenis.scrollTo(el, { offset: -80 })
-          else el.scrollIntoView({ behavior: 'smooth' })
-        }
-      }, 320)
-      return () => clearTimeout(t)
+  // Laufende Scrollposition des aktuellen Eintrags festhalten.
+  const scrollRef = useRef(0)
+  const keyRef = useRef(key)
+  keyRef.current = key
+  const letzterWrite = useRef(0)
+
+  useLenis((l) => {
+    scrollRef.current = l.scroll
+    // Gedrosselt persistieren (Reload-Sicherheit); die exakte Position beim
+    // Verlassen sichert zusaetzlich der Cleanup weiter unten.
+    const jetzt = performance.now()
+    if (jetzt - letzterWrite.current > 200) {
+      letzterWrite.current = jetzt
+      schreibeScroll(keyRef.current, l.scroll)
     }
-    if (lenis) lenis.scrollTo(0, { immediate: true })
-    else window.scrollTo(0, 0)
-    return undefined
-  }, [pathname, hash, lenis])
+  })
+
+  // Scroll-Wiederherstellung VOR dem Paint, damit es kein sichtbares Springen
+  // oder kurzes Scrollen von oben gibt. Bei einem #anker uebernimmt der Effekt
+  // darunter (weiches Scrollen zum Ziel).
+  useLayoutEffect(() => {
+    if (hash) return
+    // Nur bei Verlaufsspruengen (POP) die gemerkte Position wiederherstellen,
+    // ansonsten (neue Seite via Link) an den Anfang.
+    const gemerkt = navType === 'POP' ? leseScroll(key) : null
+    const ziel = gemerkt != null ? gemerkt : 0
+
+    let raf
+    let versuche = 0
+    const anwenden = () => {
+      if (lenis) {
+        lenis.resize()
+        lenis.scrollTo(ziel, { immediate: true, force: true })
+      } else {
+        window.scrollTo(0, ziel)
+      }
+      // Nur falls die Zielseite noch Hoehe aufbaut, ueber wenige Frames
+      // nachfuehren – aber nur bis die Position erreicht ist.
+      const ist = lenis ? lenis.scroll : window.scrollY
+      versuche += 1
+      if (ziel > 0 && Math.abs(ist - ziel) > 2 && versuche < 20) {
+        raf = requestAnimationFrame(anwenden)
+      }
+    }
+    anwenden()
+
+    return () => {
+      if (raf) cancelAnimationFrame(raf)
+      // Beim Verlassen dieses Eintrags die exakte Endposition sichern.
+      schreibeScroll(key, scrollRef.current)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname, key, lenis])
+
+  // #anker aus Footer-/Sektions-Links anspringen (weiches Scrollen).
+  useEffect(() => {
+    if (!hash) return
+    const id = hash.slice(1)
+    const t = setTimeout(() => {
+      const el = document.getElementById(id)
+      if (el) {
+        if (lenis) lenis.scrollTo(el, { offset: -80 })
+        else el.scrollIntoView({ behavior: 'smooth' })
+      }
+    }, 320)
+    return () => clearTimeout(t)
+  }, [hash, key, lenis])
 
   return (
-    <div className="app" id="top">
-      <AmbientBackground />
-      <Header />
-      <main>
-        <Outlet />
-      </main>
-      <Footer />
-    </div>
+    <CartProvider>
+      <div className="app" id="top">
+        <AmbientBackground />
+        <Header />
+        <main>
+          <Outlet />
+        </main>
+        <Footer />
+        <CartDrawer />
+        <NotifyModal />
+      </div>
+    </CartProvider>
   )
 }

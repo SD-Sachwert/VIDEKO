@@ -1,0 +1,3183 @@
+{
+  "generatedFor": "VIDEKO Merch – Bild-Manifest je auswählbarer Variante",
+  "imageStatusVocab": [
+    "real_photo",
+    "ai_mockup",
+    "placeholder",
+    "missing"
+  ],
+  "totalSelectableVariants": 142,
+  "statistics": {
+    "real_photo": 0,
+    "ai_mockup": 111,
+    "placeholder": 11,
+    "missing": 20
+  },
+  "variants": [
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "t_shirt_small_logo_black",
+      "productName": "Signature T-Shirt Schwarz · Brustlogo",
+      "logoStyle": "SIGNATURE",
+      "color": "Schwarz",
+      "productType": "tshirt",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "missing",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto",
+        "rueckansicht",
+        "druckdetail",
+        "stoff_naht_detail",
+        "lifestyle_getragen",
+        "passform_groesse",
+        "personalisierungsbeispiel"
+      ],
+      "desiredFileName": "v3-tshirt-regular-signature-black-chest.webp",
+      "notes": "Brustlogo-Zielbreite 6 cm (7–9 % der Kleidungsbreite) · requiresRerender: Logo/Flock exakt neu rendern"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "signature_t_shirt_black",
+      "productName": "Signature T-Shirt Schwarz",
+      "logoStyle": "SIGNATURE",
+      "color": "Schwarz",
+      "productType": "tshirt",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "missing",
+      "usedInGrid": true,
+      "usedAsDefault": true,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto",
+        "rueckansicht",
+        "druckdetail",
+        "stoff_naht_detail",
+        "lifestyle_getragen",
+        "passform_groesse",
+        "personalisierungsbeispiel"
+      ],
+      "desiredFileName": "v3-tshirt-regular-signature-black-front.webp",
+      "notes": "requiresRerender: Logo/Flock exakt neu rendern"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "t_shirt_small_logo_white",
+      "productName": "Signature T-Shirt Weiß · Brustlogo",
+      "logoStyle": "SIGNATURE",
+      "color": "Weiß",
+      "productType": "tshirt",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "missing",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto",
+        "rueckansicht",
+        "druckdetail",
+        "stoff_naht_detail",
+        "lifestyle_getragen",
+        "passform_groesse",
+        "personalisierungsbeispiel"
+      ],
+      "desiredFileName": "v3-tshirt-regular-signature-white-chest.webp",
+      "notes": "Brustlogo-Zielbreite 6 cm (7–9 % der Kleidungsbreite) · requiresRerender: Logo/Flock exakt neu rendern"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "signature_t_shirt_white",
+      "productName": "Signature T-Shirt Weiß",
+      "logoStyle": "SIGNATURE",
+      "color": "Weiß",
+      "productType": "tshirt",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "missing",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto",
+        "rueckansicht",
+        "druckdetail",
+        "stoff_naht_detail",
+        "lifestyle_getragen",
+        "passform_groesse",
+        "personalisierungsbeispiel"
+      ],
+      "desiredFileName": "v3-tshirt-regular-signature-white-front.webp",
+      "notes": "requiresRerender: Logo/Flock exakt neu rendern"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "pure_tee_beige",
+      "productName": "PURE T-Shirt Beige",
+      "logoStyle": "PURE",
+      "color": "Beige",
+      "productType": "tshirt",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "placeholder",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "primaeres_packshot"
+      ],
+      "desiredFileName": "v3-tshirt-regular-pure-beige-main.webp",
+      "notes": "Platzhalterkachel – noch kein Produktbild · requiresRerender: Logo/Flock exakt neu rendern"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "pure_tee_beige",
+      "productName": "PURE T-Shirt Beige",
+      "logoStyle": "PURE",
+      "color": "Beige",
+      "productType": "tshirt",
+      "primaryImage": "gen-pure-tee-beige-chest-black.webp",
+      "galleryImages": [
+        "gen-pure-tee-beige-chest-black.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-pure-beige-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen · requiresRerender: Logo/Flock exakt neu rendern"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "pure_tee_beige",
+      "productName": "PURE T-Shirt Beige",
+      "logoStyle": "PURE",
+      "color": "Beige",
+      "productType": "tshirt",
+      "primaryImage": "gen-b17-pure_tee_beige_silver_chest.webp",
+      "galleryImages": [
+        "gen-b17-pure_tee_beige_silver_chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-pure-beige-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen · requiresRerender: Logo/Flock exakt neu rendern"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "pure_tee_beige",
+      "productName": "PURE T-Shirt Beige",
+      "logoStyle": "PURE",
+      "color": "Beige",
+      "productType": "tshirt",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "placeholder",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "primaeres_packshot"
+      ],
+      "desiredFileName": "v3-tshirt-regular-pure-beige-main.webp",
+      "notes": "Platzhalterkachel – noch kein Produktbild · requiresRerender: Logo/Flock exakt neu rendern"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "pure_tee_beige",
+      "productName": "PURE T-Shirt Beige",
+      "logoStyle": "PURE",
+      "color": "Beige",
+      "productType": "tshirt",
+      "primaryImage": "gen-b17-pure_tee_beige_gold_front.webp",
+      "galleryImages": [
+        "gen-b17-pure_tee_beige_gold_front.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-pure-beige-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen · requiresRerender: Logo/Flock exakt neu rendern"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "pure_tee_beige",
+      "productName": "PURE T-Shirt Beige",
+      "logoStyle": "PURE",
+      "color": "Beige",
+      "productType": "tshirt",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "placeholder",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "primaeres_packshot"
+      ],
+      "desiredFileName": "v3-tshirt-regular-pure-beige-main.webp",
+      "notes": "Platzhalterkachel – noch kein Produktbild · requiresRerender: Logo/Flock exakt neu rendern"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "pure_tee_beige",
+      "productName": "PURE T-Shirt Beige",
+      "logoStyle": "PURE",
+      "color": "Beige",
+      "productType": "tshirt",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "placeholder",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "primaeres_packshot"
+      ],
+      "desiredFileName": "v3-tshirt-regular-pure-beige-main.webp",
+      "notes": "Platzhalterkachel – noch kein Produktbild · requiresRerender: Logo/Flock exakt neu rendern"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "pure_tee_beige",
+      "productName": "PURE T-Shirt Beige",
+      "logoStyle": "PURE",
+      "color": "Beige",
+      "productType": "tshirt",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "placeholder",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "primaeres_packshot"
+      ],
+      "desiredFileName": "v3-tshirt-regular-pure-beige-main.webp",
+      "notes": "Platzhalterkachel – noch kein Produktbild · requiresRerender: Logo/Flock exakt neu rendern"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "pure_tee_black",
+      "productName": "PURE T-Shirt Schwarz",
+      "logoStyle": "PURE",
+      "color": "Schwarz",
+      "productType": "tshirt",
+      "primaryImage": "gen-pure-tee-black-chest-gold.webp",
+      "galleryImages": [
+        "gen-pure-tee-black-chest-gold.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-pure-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "pure_tee_black",
+      "productName": "PURE T-Shirt Schwarz",
+      "logoStyle": "PURE",
+      "color": "Schwarz",
+      "productType": "tshirt",
+      "primaryImage": "v4-pure-tee-black-chest.webp",
+      "galleryImages": [
+        "v4-pure-tee-black-chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-pure-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "pure_tee_black",
+      "productName": "PURE T-Shirt Schwarz",
+      "logoStyle": "PURE",
+      "color": "Schwarz",
+      "productType": "tshirt",
+      "primaryImage": "gen-pure-tee-black-chest-black.webp",
+      "galleryImages": [
+        "gen-pure-tee-black-chest-black.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-pure-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "pure_tee_black",
+      "productName": "PURE T-Shirt Schwarz",
+      "logoStyle": "PURE",
+      "color": "Schwarz",
+      "productType": "tshirt",
+      "primaryImage": "gen-b16-pure_tee_black_silver_chest.webp",
+      "galleryImages": [
+        "gen-b16-pure_tee_black_silver_chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-pure-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "pure_tee_black",
+      "productName": "PURE T-Shirt Schwarz",
+      "logoStyle": "PURE",
+      "color": "Schwarz",
+      "productType": "tshirt",
+      "primaryImage": "gen-pure-tee-black-chest-white.webp",
+      "galleryImages": [
+        "gen-pure-tee-black-chest-white.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-pure-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "pure_tee_black",
+      "productName": "PURE T-Shirt Schwarz",
+      "logoStyle": "PURE",
+      "color": "Schwarz",
+      "productType": "tshirt",
+      "primaryImage": "gen-pure-tee-black-front-gold.webp",
+      "galleryImages": [
+        "gen-pure-tee-black-front-gold.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-pure-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "pure_tee_black",
+      "productName": "PURE T-Shirt Schwarz",
+      "logoStyle": "PURE",
+      "color": "Schwarz",
+      "productType": "tshirt",
+      "primaryImage": "gen-pure-tee-black-front-black.webp",
+      "galleryImages": [
+        "gen-pure-tee-black-front-black.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-pure-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "pure_tee_black",
+      "productName": "PURE T-Shirt Schwarz",
+      "logoStyle": "PURE",
+      "color": "Schwarz",
+      "productType": "tshirt",
+      "primaryImage": "gen-pure-tee-black-front-silver.webp",
+      "galleryImages": [
+        "gen-pure-tee-black-front-silver.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-pure-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "pure_tee_black",
+      "productName": "PURE T-Shirt Schwarz",
+      "logoStyle": "PURE",
+      "color": "Schwarz",
+      "productType": "tshirt",
+      "primaryImage": "gen-pure-tee-black-front-white.webp",
+      "galleryImages": [
+        "gen-pure-tee-black-front-white.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-pure-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "pure_tee_white",
+      "productName": "PURE T-Shirt Weiß",
+      "logoStyle": "PURE",
+      "color": "Weiß",
+      "productType": "tshirt",
+      "primaryImage": "gen-pure-tee-white-chest-gold.webp",
+      "galleryImages": [
+        "gen-pure-tee-white-chest-gold.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-pure-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "pure_tee_white",
+      "productName": "PURE T-Shirt Weiß",
+      "logoStyle": "PURE",
+      "color": "Weiß",
+      "productType": "tshirt",
+      "primaryImage": "gen-pure-tee-white-chest-normal.webp",
+      "galleryImages": [
+        "gen-pure-tee-white-chest-normal.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-pure-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "pure_tee_white",
+      "productName": "PURE T-Shirt Weiß",
+      "logoStyle": "PURE",
+      "color": "Weiß",
+      "productType": "tshirt",
+      "primaryImage": "gen-pure-tee-white-chest-black.webp",
+      "galleryImages": [
+        "gen-pure-tee-white-chest-black.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-pure-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "pure_tee_white",
+      "productName": "PURE T-Shirt Weiß",
+      "logoStyle": "PURE",
+      "color": "Weiß",
+      "productType": "tshirt",
+      "primaryImage": "gen-b16-pure_tee_white_silver_chest.webp",
+      "galleryImages": [
+        "gen-b16-pure_tee_white_silver_chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-pure-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "pure_tee_white",
+      "productName": "PURE T-Shirt Weiß",
+      "logoStyle": "PURE",
+      "color": "Weiß",
+      "productType": "tshirt",
+      "primaryImage": "gen-pure-tee-white-chest-white.webp",
+      "galleryImages": [
+        "gen-pure-tee-white-chest-white.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-pure-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "pure_tee_white",
+      "productName": "PURE T-Shirt Weiß",
+      "logoStyle": "PURE",
+      "color": "Weiß",
+      "productType": "tshirt",
+      "primaryImage": "gen-pure-tee-white-front-gold.webp",
+      "galleryImages": [
+        "gen-pure-tee-white-front-gold.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-pure-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "pure_tee_white",
+      "productName": "PURE T-Shirt Weiß",
+      "logoStyle": "PURE",
+      "color": "Weiß",
+      "productType": "tshirt",
+      "primaryImage": "gen-pure-tee-white-front-black.webp",
+      "galleryImages": [
+        "gen-pure-tee-white-front-black.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-pure-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "pure_tee_white",
+      "productName": "PURE T-Shirt Weiß",
+      "logoStyle": "PURE",
+      "color": "Weiß",
+      "productType": "tshirt",
+      "primaryImage": "gen-pure-tee-white-front-silver.webp",
+      "galleryImages": [
+        "gen-pure-tee-white-front-silver.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-pure-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "pure_tee_white",
+      "productName": "PURE T-Shirt Weiß",
+      "logoStyle": "PURE",
+      "color": "Weiß",
+      "productType": "tshirt",
+      "primaryImage": "gen-pure-tee-white-front-white.webp",
+      "galleryImages": [
+        "gen-pure-tee-white-front-white.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-pure-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "one_tee_black",
+      "productName": "ONE T-Shirt Schwarz",
+      "logoStyle": "ONE",
+      "color": "Schwarz",
+      "productType": "tshirt",
+      "primaryImage": "v4-one-tee-black.webp",
+      "galleryImages": [
+        "v4-one-tee-black.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-one-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "one_tee_black",
+      "productName": "ONE T-Shirt Schwarz",
+      "logoStyle": "ONE",
+      "color": "Schwarz",
+      "productType": "tshirt",
+      "primaryImage": "gen-b16-one_tee_black_black_chest.webp",
+      "galleryImages": [
+        "gen-b16-one_tee_black_black_chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-one-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "one_tee_black",
+      "productName": "ONE T-Shirt Schwarz",
+      "logoStyle": "ONE",
+      "color": "Schwarz",
+      "productType": "tshirt",
+      "primaryImage": "gen-b16-one_tee_black_white_chest.webp",
+      "galleryImages": [
+        "gen-b16-one_tee_black_white_chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-one-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "one_tee_white",
+      "productName": "ONE T-Shirt Weiß",
+      "logoStyle": "ONE",
+      "color": "Weiß",
+      "productType": "tshirt",
+      "primaryImage": "v4-one-tee-white.webp",
+      "galleryImages": [
+        "v4-one-tee-white.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-one-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "one_tee_white",
+      "productName": "ONE T-Shirt Weiß",
+      "logoStyle": "ONE",
+      "color": "Weiß",
+      "productType": "tshirt",
+      "primaryImage": "gen-b16-one_tee_white_black_chest.webp",
+      "galleryImages": [
+        "gen-b16-one_tee_white_black_chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-one-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "one_tee_white",
+      "productName": "ONE T-Shirt Weiß",
+      "logoStyle": "ONE",
+      "color": "Weiß",
+      "productType": "tshirt",
+      "primaryImage": "gen-b17-one_tee_white_white_chest.webp",
+      "galleryImages": [
+        "gen-b17-one_tee_white_white_chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-one-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "prestige_tee_black",
+      "productName": "PRESTIGE T-Shirt Schwarz",
+      "logoStyle": "PRESTIGE",
+      "color": "Schwarz",
+      "productType": "tshirt",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "missing",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-prestige-black-main.webp",
+      "notes": "requiresRerender: Logo/Flock exakt neu rendern · Veredelung: Flock (kontrastierend)"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "prestige_tee_black",
+      "productName": "PRESTIGE T-Shirt Schwarz",
+      "logoStyle": "PRESTIGE",
+      "color": "Schwarz",
+      "productType": "tshirt",
+      "primaryImage": "gen-b15-prestige_tee_black_black_flock_chest.webp",
+      "galleryImages": [
+        "gen-b15-prestige_tee_black_black_flock_chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-prestige-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen · requiresRerender: Logo/Flock exakt neu rendern · Veredelung: Flock (kontrastierend)"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "prestige_tee_black",
+      "productName": "PRESTIGE T-Shirt Schwarz",
+      "logoStyle": "PRESTIGE",
+      "color": "Schwarz",
+      "productType": "tshirt",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "missing",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-prestige-black-main.webp",
+      "notes": "requiresRerender: Logo/Flock exakt neu rendern · Veredelung: Flock (kontrastierend)"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "prestige_tee_black",
+      "productName": "PRESTIGE T-Shirt Schwarz",
+      "logoStyle": "PRESTIGE",
+      "color": "Schwarz",
+      "productType": "tshirt",
+      "primaryImage": "v4-prestige-tee-black-chest.webp",
+      "galleryImages": [
+        "v4-prestige-tee-black-chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-prestige-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen · requiresRerender: Logo/Flock exakt neu rendern · Veredelung: Flock (kontrastierend)"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "prestige_tee_white",
+      "productName": "PRESTIGE T-Shirt Weiß",
+      "logoStyle": "PRESTIGE",
+      "color": "Weiß",
+      "productType": "tshirt",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "missing",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-prestige-white-main.webp",
+      "notes": "requiresRerender: Logo/Flock exakt neu rendern · Veredelung: Flock (kontrastierend)"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "prestige_tee_white",
+      "productName": "PRESTIGE T-Shirt Weiß",
+      "logoStyle": "PRESTIGE",
+      "color": "Weiß",
+      "productType": "tshirt",
+      "primaryImage": "v4-prestige-tee-white-chest.webp",
+      "galleryImages": [
+        "v4-prestige-tee-white-chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-prestige-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen · requiresRerender: Logo/Flock exakt neu rendern · Veredelung: Flock (kontrastierend)"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "prestige_tee_white",
+      "productName": "PRESTIGE T-Shirt Weiß",
+      "logoStyle": "PRESTIGE",
+      "color": "Weiß",
+      "productType": "tshirt",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "missing",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-prestige-white-main.webp",
+      "notes": "requiresRerender: Logo/Flock exakt neu rendern · Veredelung: Flock (kontrastierend)"
+    },
+    {
+      "familyId": "tshirt-regular",
+      "familyName": "T-Shirt Regular",
+      "productId": "prestige_tee_white",
+      "productName": "PRESTIGE T-Shirt Weiß",
+      "logoStyle": "PRESTIGE",
+      "color": "Weiß",
+      "productType": "tshirt",
+      "primaryImage": "gen-b15-prestige_tee_white_white_flock_chest.webp",
+      "galleryImages": [
+        "gen-b15-prestige_tee_white_white_flock_chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tshirt-regular-prestige-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen · requiresRerender: Logo/Flock exakt neu rendern · Veredelung: Flock (kontrastierend)"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "signature_vneck_black",
+      "productName": "SIGNATURE V-Neck Schwarz",
+      "logoStyle": "SIGNATURE",
+      "color": "Schwarz",
+      "productType": "vneck",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "missing",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-vneck-signature-black-chest.webp",
+      "notes": "Brustlogo-Zielbreite 6 cm (7–9 % der Kleidungsbreite) · requiresRerender: Logo/Flock exakt neu rendern"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "signature_vneck_white",
+      "productName": "SIGNATURE V-Neck Weiß",
+      "logoStyle": "SIGNATURE",
+      "color": "Weiß",
+      "productType": "vneck",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "missing",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-vneck-signature-white-chest.webp",
+      "notes": "Brustlogo-Zielbreite 6 cm (7–9 % der Kleidungsbreite) · requiresRerender: Logo/Flock exakt neu rendern"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "pure_vneck_beige",
+      "productName": "PURE V-Neck Beige",
+      "logoStyle": "PURE",
+      "color": "Beige",
+      "productType": "vneck",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "placeholder",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "primaeres_packshot"
+      ],
+      "desiredFileName": "v3-vneck-pure-beige-main.webp",
+      "notes": "Platzhalterkachel – noch kein Produktbild · requiresRerender: Logo/Flock exakt neu rendern"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "pure_vneck_beige",
+      "productName": "PURE V-Neck Beige",
+      "logoStyle": "PURE",
+      "color": "Beige",
+      "productType": "vneck",
+      "primaryImage": "gen-pure-vneck-beige-chest-black.webp",
+      "galleryImages": [
+        "gen-pure-vneck-beige-chest-black.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": true,
+      "usedAsDefault": true,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-vneck-pure-beige-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen · requiresRerender: Logo/Flock exakt neu rendern"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "pure_vneck_beige",
+      "productName": "PURE V-Neck Beige",
+      "logoStyle": "PURE",
+      "color": "Beige",
+      "productType": "vneck",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "placeholder",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "primaeres_packshot"
+      ],
+      "desiredFileName": "v3-vneck-pure-beige-main.webp",
+      "notes": "Platzhalterkachel – noch kein Produktbild · requiresRerender: Logo/Flock exakt neu rendern"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "pure_vneck_beige",
+      "productName": "PURE V-Neck Beige",
+      "logoStyle": "PURE",
+      "color": "Beige",
+      "productType": "vneck",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "placeholder",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "primaeres_packshot"
+      ],
+      "desiredFileName": "v3-vneck-pure-beige-main.webp",
+      "notes": "Platzhalterkachel – noch kein Produktbild · requiresRerender: Logo/Flock exakt neu rendern"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "pure_vneck_beige",
+      "productName": "PURE V-Neck Beige",
+      "logoStyle": "PURE",
+      "color": "Beige",
+      "productType": "vneck",
+      "primaryImage": "gen-b17-pure_vneck_beige_gold_front.webp",
+      "galleryImages": [
+        "gen-b17-pure_vneck_beige_gold_front.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-vneck-pure-beige-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen · requiresRerender: Logo/Flock exakt neu rendern"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "pure_vneck_beige",
+      "productName": "PURE V-Neck Beige",
+      "logoStyle": "PURE",
+      "color": "Beige",
+      "productType": "vneck",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "placeholder",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "primaeres_packshot"
+      ],
+      "desiredFileName": "v3-vneck-pure-beige-main.webp",
+      "notes": "Platzhalterkachel – noch kein Produktbild · requiresRerender: Logo/Flock exakt neu rendern"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "pure_vneck_beige",
+      "productName": "PURE V-Neck Beige",
+      "logoStyle": "PURE",
+      "color": "Beige",
+      "productType": "vneck",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "placeholder",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "primaeres_packshot"
+      ],
+      "desiredFileName": "v3-vneck-pure-beige-main.webp",
+      "notes": "Platzhalterkachel – noch kein Produktbild · requiresRerender: Logo/Flock exakt neu rendern"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "pure_vneck_beige",
+      "productName": "PURE V-Neck Beige",
+      "logoStyle": "PURE",
+      "color": "Beige",
+      "productType": "vneck",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "placeholder",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "primaeres_packshot"
+      ],
+      "desiredFileName": "v3-vneck-pure-beige-main.webp",
+      "notes": "Platzhalterkachel – noch kein Produktbild · requiresRerender: Logo/Flock exakt neu rendern"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "pure_vneck_black",
+      "productName": "PURE V-Neck Schwarz",
+      "logoStyle": "PURE",
+      "color": "Schwarz",
+      "productType": "vneck",
+      "primaryImage": "gen-pure-vneck-black-chest-gold.webp",
+      "galleryImages": [
+        "gen-pure-vneck-black-chest-gold.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-vneck-pure-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "pure_vneck_black",
+      "productName": "PURE V-Neck Schwarz",
+      "logoStyle": "PURE",
+      "color": "Schwarz",
+      "productType": "vneck",
+      "primaryImage": "v4-pure-vneck-black-chest.webp",
+      "galleryImages": [
+        "v4-pure-vneck-black-chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-vneck-pure-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "pure_vneck_black",
+      "productName": "PURE V-Neck Schwarz",
+      "logoStyle": "PURE",
+      "color": "Schwarz",
+      "productType": "vneck",
+      "primaryImage": "gen-b17-pure_vneck_black_black_chest.webp",
+      "galleryImages": [
+        "gen-b17-pure_vneck_black_black_chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-vneck-pure-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "pure_vneck_black",
+      "productName": "PURE V-Neck Schwarz",
+      "logoStyle": "PURE",
+      "color": "Schwarz",
+      "productType": "vneck",
+      "primaryImage": "gen-b16-pure_vneck_black_silver_chest.webp",
+      "galleryImages": [
+        "gen-b16-pure_vneck_black_silver_chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-vneck-pure-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "pure_vneck_black",
+      "productName": "PURE V-Neck Schwarz",
+      "logoStyle": "PURE",
+      "color": "Schwarz",
+      "productType": "vneck",
+      "primaryImage": "gen-b16-pure_vneck_black_white_chest.webp",
+      "galleryImages": [
+        "gen-b16-pure_vneck_black_white_chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-vneck-pure-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "pure_vneck_black",
+      "productName": "PURE V-Neck Schwarz",
+      "logoStyle": "PURE",
+      "color": "Schwarz",
+      "productType": "vneck",
+      "primaryImage": "gen-pure-vneck-black-front-gold.webp",
+      "galleryImages": [
+        "gen-pure-vneck-black-front-gold.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-vneck-pure-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "pure_vneck_black",
+      "productName": "PURE V-Neck Schwarz",
+      "logoStyle": "PURE",
+      "color": "Schwarz",
+      "productType": "vneck",
+      "primaryImage": "gen-b3-pure_vneck_black_black_front.webp",
+      "galleryImages": [
+        "gen-b3-pure_vneck_black_black_front.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-vneck-pure-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "pure_vneck_black",
+      "productName": "PURE V-Neck Schwarz",
+      "logoStyle": "PURE",
+      "color": "Schwarz",
+      "productType": "vneck",
+      "primaryImage": "gen-b3-pure_vneck_black_silver_front.webp",
+      "galleryImages": [
+        "gen-b3-pure_vneck_black_silver_front.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-vneck-pure-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "pure_vneck_black",
+      "productName": "PURE V-Neck Schwarz",
+      "logoStyle": "PURE",
+      "color": "Schwarz",
+      "productType": "vneck",
+      "primaryImage": "gen-b3-pure_vneck_black_white_front.webp",
+      "galleryImages": [
+        "gen-b3-pure_vneck_black_white_front.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-vneck-pure-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "pure_vneck_white",
+      "productName": "PURE V-Neck Weiß",
+      "logoStyle": "PURE",
+      "color": "Weiß",
+      "productType": "vneck",
+      "primaryImage": "gen-b3-pure_vneck_white_gold_chest.webp",
+      "galleryImages": [
+        "gen-b3-pure_vneck_white_gold_chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-vneck-pure-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "pure_vneck_white",
+      "productName": "PURE V-Neck Weiß",
+      "logoStyle": "PURE",
+      "color": "Weiß",
+      "productType": "vneck",
+      "primaryImage": "v4-pure-vneck-white-chest.webp",
+      "galleryImages": [
+        "v4-pure-vneck-white-chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-vneck-pure-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "pure_vneck_white",
+      "productName": "PURE V-Neck Weiß",
+      "logoStyle": "PURE",
+      "color": "Weiß",
+      "productType": "vneck",
+      "primaryImage": "gen-b3-pure_vneck_white_black_chest.webp",
+      "galleryImages": [
+        "gen-b3-pure_vneck_white_black_chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-vneck-pure-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "pure_vneck_white",
+      "productName": "PURE V-Neck Weiß",
+      "logoStyle": "PURE",
+      "color": "Weiß",
+      "productType": "vneck",
+      "primaryImage": "gen-pure-vneck-white-chest-silver.webp",
+      "galleryImages": [
+        "gen-pure-vneck-white-chest-silver.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-vneck-pure-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "pure_vneck_white",
+      "productName": "PURE V-Neck Weiß",
+      "logoStyle": "PURE",
+      "color": "Weiß",
+      "productType": "vneck",
+      "primaryImage": "gen-b3-pure_vneck_white_white_chest.webp",
+      "galleryImages": [
+        "gen-b3-pure_vneck_white_white_chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-vneck-pure-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "pure_vneck_white",
+      "productName": "PURE V-Neck Weiß",
+      "logoStyle": "PURE",
+      "color": "Weiß",
+      "productType": "vneck",
+      "primaryImage": "gen-pure-vneck-white-front-gold.webp",
+      "galleryImages": [
+        "gen-pure-vneck-white-front-gold.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-vneck-pure-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "pure_vneck_white",
+      "productName": "PURE V-Neck Weiß",
+      "logoStyle": "PURE",
+      "color": "Weiß",
+      "productType": "vneck",
+      "primaryImage": "gen-b3-pure_vneck_white_black_front.webp",
+      "galleryImages": [
+        "gen-b3-pure_vneck_white_black_front.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-vneck-pure-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "pure_vneck_white",
+      "productName": "PURE V-Neck Weiß",
+      "logoStyle": "PURE",
+      "color": "Weiß",
+      "productType": "vneck",
+      "primaryImage": "gen-b3-pure_vneck_white_silver_front.webp",
+      "galleryImages": [
+        "gen-b3-pure_vneck_white_silver_front.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-vneck-pure-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "pure_vneck_white",
+      "productName": "PURE V-Neck Weiß",
+      "logoStyle": "PURE",
+      "color": "Weiß",
+      "productType": "vneck",
+      "primaryImage": "gen-b16-pure_vneck_white_white_front.webp",
+      "galleryImages": [
+        "gen-b16-pure_vneck_white_white_front.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-vneck-pure-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "prestige_vneck_black",
+      "productName": "PRESTIGE V-Neck Schwarz",
+      "logoStyle": "PRESTIGE",
+      "color": "Schwarz",
+      "productType": "vneck",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "missing",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-vneck-prestige-black-main.webp",
+      "notes": "requiresRerender: Logo/Flock exakt neu rendern · Veredelung: Flock (kontrastierend)"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "prestige_vneck_black",
+      "productName": "PRESTIGE V-Neck Schwarz",
+      "logoStyle": "PRESTIGE",
+      "color": "Schwarz",
+      "productType": "vneck",
+      "primaryImage": "gen-b15-prestige_vneck_black_black_flock_chest.webp",
+      "galleryImages": [
+        "gen-b15-prestige_vneck_black_black_flock_chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-vneck-prestige-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen · requiresRerender: Logo/Flock exakt neu rendern · Veredelung: Flock (kontrastierend)"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "prestige_vneck_black",
+      "productName": "PRESTIGE V-Neck Schwarz",
+      "logoStyle": "PRESTIGE",
+      "color": "Schwarz",
+      "productType": "vneck",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "missing",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-vneck-prestige-black-main.webp",
+      "notes": "requiresRerender: Logo/Flock exakt neu rendern · Veredelung: Flock (kontrastierend)"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "prestige_vneck_black",
+      "productName": "PRESTIGE V-Neck Schwarz",
+      "logoStyle": "PRESTIGE",
+      "color": "Schwarz",
+      "productType": "vneck",
+      "primaryImage": "v4-prestige-vneck-black-chest.webp",
+      "galleryImages": [
+        "v4-prestige-vneck-black-chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-vneck-prestige-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen · requiresRerender: Logo/Flock exakt neu rendern · Veredelung: Flock (kontrastierend)"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "prestige_vneck_white",
+      "productName": "PRESTIGE V-Neck Weiß",
+      "logoStyle": "PRESTIGE",
+      "color": "Weiß",
+      "productType": "vneck",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "missing",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-vneck-prestige-white-main.webp",
+      "notes": "requiresRerender: Logo/Flock exakt neu rendern · Veredelung: Flock (kontrastierend)"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "prestige_vneck_white",
+      "productName": "PRESTIGE V-Neck Weiß",
+      "logoStyle": "PRESTIGE",
+      "color": "Weiß",
+      "productType": "vneck",
+      "primaryImage": "v4-prestige-vneck-white-chest.webp",
+      "galleryImages": [
+        "v4-prestige-vneck-white-chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-vneck-prestige-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen · requiresRerender: Logo/Flock exakt neu rendern · Veredelung: Flock (kontrastierend)"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "prestige_vneck_white",
+      "productName": "PRESTIGE V-Neck Weiß",
+      "logoStyle": "PRESTIGE",
+      "color": "Weiß",
+      "productType": "vneck",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "missing",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-vneck-prestige-white-main.webp",
+      "notes": "requiresRerender: Logo/Flock exakt neu rendern · Veredelung: Flock (kontrastierend)"
+    },
+    {
+      "familyId": "vneck",
+      "familyName": "V-Neck",
+      "productId": "prestige_vneck_white",
+      "productName": "PRESTIGE V-Neck Weiß",
+      "logoStyle": "PRESTIGE",
+      "color": "Weiß",
+      "productType": "vneck",
+      "primaryImage": "gen-b15-prestige_vneck_white_white_flock_chest.webp",
+      "galleryImages": [
+        "gen-b15-prestige_vneck_white_white_flock_chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-vneck-prestige-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen · requiresRerender: Logo/Flock exakt neu rendern · Veredelung: Flock (kontrastierend)"
+    },
+    {
+      "familyId": "polo",
+      "familyName": "Polo",
+      "productId": "signature_polo_black",
+      "productName": "Signature Polo Schwarz",
+      "logoStyle": "SIGNATURE",
+      "color": "Schwarz",
+      "productType": "polo",
+      "primaryImage": "v4-signature-polo-black-chest.webp",
+      "galleryImages": [
+        "v4-signature-polo-black-chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-polo-signature-black-chest.webp",
+      "notes": "Brustlogo-Zielbreite 6 cm (7–9 % der Kleidungsbreite) · KI-Mockup – vor Verkauf durch echtes Foto ersetzen · Logo für Produktionsfoto kleiner ausführen (Zielbreite s. o.)"
+    },
+    {
+      "familyId": "polo",
+      "familyName": "Polo",
+      "productId": "signature_polo_white",
+      "productName": "Signature Polo Weiß",
+      "logoStyle": "SIGNATURE",
+      "color": "Weiß",
+      "productType": "polo",
+      "primaryImage": "v4-signature-polo-white-chest.webp",
+      "galleryImages": [
+        "v4-signature-polo-white-chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-polo-signature-white-chest.webp",
+      "notes": "Brustlogo-Zielbreite 6 cm (7–9 % der Kleidungsbreite) · KI-Mockup – vor Verkauf durch echtes Foto ersetzen · Logo für Produktionsfoto kleiner ausführen (Zielbreite s. o.)"
+    },
+    {
+      "familyId": "polo",
+      "familyName": "Polo",
+      "productId": "pure_polo_black",
+      "productName": "PURE Polo Schwarz",
+      "logoStyle": "PURE",
+      "color": "Schwarz",
+      "productType": "polo",
+      "primaryImage": "v4-pure-polo-black-chest.webp",
+      "galleryImages": [
+        "v4-pure-polo-black-chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-polo-pure-black-chest.webp",
+      "notes": "Brustlogo-Zielbreite 6 cm (7–9 % der Kleidungsbreite) · KI-Mockup – vor Verkauf durch echtes Foto ersetzen · Logo für Produktionsfoto kleiner ausführen (Zielbreite s. o.)"
+    },
+    {
+      "familyId": "polo",
+      "familyName": "Polo",
+      "productId": "pure_polo_white",
+      "productName": "PURE Polo Weiß",
+      "logoStyle": "PURE",
+      "color": "Weiß",
+      "productType": "polo",
+      "primaryImage": "v4-pure-polo-white-chest.webp",
+      "galleryImages": [
+        "v4-pure-polo-white-chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-polo-pure-white-chest.webp",
+      "notes": "Brustlogo-Zielbreite 6 cm (7–9 % der Kleidungsbreite) · KI-Mockup – vor Verkauf durch echtes Foto ersetzen · Logo für Produktionsfoto kleiner ausführen (Zielbreite s. o.)"
+    },
+    {
+      "familyId": "polo",
+      "familyName": "Polo",
+      "productId": "prestige_polo_black",
+      "productName": "PRESTIGE Polo Schwarz",
+      "logoStyle": "PRESTIGE",
+      "color": "Schwarz",
+      "productType": "polo",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "missing",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-polo-prestige-black-main.webp",
+      "notes": "requiresRerender: Logo/Flock exakt neu rendern · Veredelung: Flock (kontrastierend)"
+    },
+    {
+      "familyId": "polo",
+      "familyName": "Polo",
+      "productId": "prestige_polo_black",
+      "productName": "PRESTIGE Polo Schwarz",
+      "logoStyle": "PRESTIGE",
+      "color": "Schwarz",
+      "productType": "polo",
+      "primaryImage": "gen-b15-prestige_polo_black_black_flock_chest.webp",
+      "galleryImages": [
+        "gen-b15-prestige_polo_black_black_flock_chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": true,
+      "usedAsDefault": true,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-polo-prestige-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen · requiresRerender: Logo/Flock exakt neu rendern · Veredelung: Flock (kontrastierend)"
+    },
+    {
+      "familyId": "polo",
+      "familyName": "Polo",
+      "productId": "prestige_polo_black",
+      "productName": "PRESTIGE Polo Schwarz",
+      "logoStyle": "PRESTIGE",
+      "color": "Schwarz",
+      "productType": "polo",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "missing",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-polo-prestige-black-main.webp",
+      "notes": "requiresRerender: Logo/Flock exakt neu rendern · Veredelung: Flock (kontrastierend)"
+    },
+    {
+      "familyId": "polo",
+      "familyName": "Polo",
+      "productId": "prestige_polo_black",
+      "productName": "PRESTIGE Polo Schwarz",
+      "logoStyle": "PRESTIGE",
+      "color": "Schwarz",
+      "productType": "polo",
+      "primaryImage": "v4-prestige-polo-black-chest.webp",
+      "galleryImages": [
+        "v4-prestige-polo-black-chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-polo-prestige-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen · requiresRerender: Logo/Flock exakt neu rendern · Veredelung: Flock (kontrastierend)"
+    },
+    {
+      "familyId": "polo",
+      "familyName": "Polo",
+      "productId": "prestige_polo_white",
+      "productName": "PRESTIGE Polo Weiß",
+      "logoStyle": "PRESTIGE",
+      "color": "Weiß",
+      "productType": "polo",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "missing",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-polo-prestige-white-main.webp",
+      "notes": "requiresRerender: Logo/Flock exakt neu rendern · Veredelung: Flock (kontrastierend)"
+    },
+    {
+      "familyId": "polo",
+      "familyName": "Polo",
+      "productId": "prestige_polo_white",
+      "productName": "PRESTIGE Polo Weiß",
+      "logoStyle": "PRESTIGE",
+      "color": "Weiß",
+      "productType": "polo",
+      "primaryImage": "v4-prestige-polo-white-chest.webp",
+      "galleryImages": [
+        "v4-prestige-polo-white-chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-polo-prestige-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen · requiresRerender: Logo/Flock exakt neu rendern · Veredelung: Flock (kontrastierend)"
+    },
+    {
+      "familyId": "polo",
+      "familyName": "Polo",
+      "productId": "prestige_polo_white",
+      "productName": "PRESTIGE Polo Weiß",
+      "logoStyle": "PRESTIGE",
+      "color": "Weiß",
+      "productType": "polo",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "missing",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-polo-prestige-white-main.webp",
+      "notes": "requiresRerender: Logo/Flock exakt neu rendern · Veredelung: Flock (kontrastierend)"
+    },
+    {
+      "familyId": "polo",
+      "familyName": "Polo",
+      "productId": "prestige_polo_white",
+      "productName": "PRESTIGE Polo Weiß",
+      "logoStyle": "PRESTIGE",
+      "color": "Weiß",
+      "productType": "polo",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "missing",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-polo-prestige-white-main.webp",
+      "notes": "requiresRerender: Logo/Flock exakt neu rendern · Veredelung: Flock (kontrastierend)"
+    },
+    {
+      "familyId": "hoodie",
+      "familyName": "Hoodie",
+      "productId": "signature_hoodie_black",
+      "productName": "Signature Hoodie Schwarz",
+      "logoStyle": "SIGNATURE",
+      "color": "Schwarz",
+      "productType": "hoodie",
+      "primaryImage": "v4-signature-hoodie-black-front.webp",
+      "galleryImages": [
+        "v4-signature-hoodie-black-front.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": true,
+      "usedAsDefault": true,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-hoodie-signature-black-front.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "hoodie",
+      "familyName": "Hoodie",
+      "productId": "pure-hoodie-beige",
+      "productName": "PURE Hoodie Beige",
+      "logoStyle": "PURE",
+      "color": "Beige",
+      "productType": "hoodie",
+      "primaryImage": "gen-b14-pure_hoodie_beige_gold_chest.webp",
+      "galleryImages": [
+        "gen-b14-pure_hoodie_beige_gold_chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-hoodie-pure-beige-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "hoodie",
+      "familyName": "Hoodie",
+      "productId": "pure-hoodie-beige",
+      "productName": "PURE Hoodie Beige",
+      "logoStyle": "PURE",
+      "color": "Beige",
+      "productType": "hoodie",
+      "primaryImage": "gen-b14-pure_hoodie_beige_onyx_chest.webp",
+      "galleryImages": [
+        "gen-b14-pure_hoodie_beige_onyx_chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-hoodie-pure-beige-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "hoodie",
+      "familyName": "Hoodie",
+      "productId": "pure-hoodie-beige",
+      "productName": "PURE Hoodie Beige",
+      "logoStyle": "PURE",
+      "color": "Beige",
+      "productType": "hoodie",
+      "primaryImage": "gen-b17-pure_hoodie_beige_silver_chest.webp",
+      "galleryImages": [
+        "gen-b17-pure_hoodie_beige_silver_chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-hoodie-pure-beige-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "hoodie",
+      "familyName": "Hoodie",
+      "productId": "pure-hoodie-beige",
+      "productName": "PURE Hoodie Beige",
+      "logoStyle": "PURE",
+      "color": "Beige",
+      "productType": "hoodie",
+      "primaryImage": "gen-b14-pure_hoodie_beige_ivory_chest.webp",
+      "galleryImages": [
+        "gen-b14-pure_hoodie_beige_ivory_chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-hoodie-pure-beige-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "hoodie",
+      "familyName": "Hoodie",
+      "productId": "pure-hoodie-beige",
+      "productName": "PURE Hoodie Beige",
+      "logoStyle": "PURE",
+      "color": "Beige",
+      "productType": "hoodie",
+      "primaryImage": "gen-b14-pure_hoodie_beige_gold_front.webp",
+      "galleryImages": [
+        "gen-b14-pure_hoodie_beige_gold_front.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-hoodie-pure-beige-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "hoodie",
+      "familyName": "Hoodie",
+      "productId": "pure-hoodie-beige",
+      "productName": "PURE Hoodie Beige",
+      "logoStyle": "PURE",
+      "color": "Beige",
+      "productType": "hoodie",
+      "primaryImage": "gen-b14-pure_hoodie_beige_onyx_front.webp",
+      "galleryImages": [
+        "gen-b14-pure_hoodie_beige_onyx_front.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-hoodie-pure-beige-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "hoodie",
+      "familyName": "Hoodie",
+      "productId": "pure-hoodie-beige",
+      "productName": "PURE Hoodie Beige",
+      "logoStyle": "PURE",
+      "color": "Beige",
+      "productType": "hoodie",
+      "primaryImage": "gen-b14-pure_hoodie_beige_silver_front.webp",
+      "galleryImages": [
+        "gen-b14-pure_hoodie_beige_silver_front.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-hoodie-pure-beige-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "hoodie",
+      "familyName": "Hoodie",
+      "productId": "pure-hoodie-beige",
+      "productName": "PURE Hoodie Beige",
+      "logoStyle": "PURE",
+      "color": "Beige",
+      "productType": "hoodie",
+      "primaryImage": "gen-b16-pure_hoodie_beige_white_front.webp",
+      "galleryImages": [
+        "gen-b16-pure_hoodie_beige_white_front.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-hoodie-pure-beige-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "hoodie",
+      "familyName": "Hoodie",
+      "productId": "pure_hoodie_black",
+      "productName": "PURE Hoodie Schwarz",
+      "logoStyle": "PURE",
+      "color": "Schwarz",
+      "productType": "hoodie",
+      "primaryImage": "gen-b14-pure_hoodie_black_gold_chest.webp",
+      "galleryImages": [
+        "gen-b14-pure_hoodie_black_gold_chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-hoodie-pure-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "hoodie",
+      "familyName": "Hoodie",
+      "productId": "pure_hoodie_black",
+      "productName": "PURE Hoodie Schwarz",
+      "logoStyle": "PURE",
+      "color": "Schwarz",
+      "productType": "hoodie",
+      "primaryImage": "v3-pure-hoodie-black-chest.webp",
+      "galleryImages": [
+        "v3-pure-hoodie-black-chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-hoodie-pure-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "hoodie",
+      "familyName": "Hoodie",
+      "productId": "pure_hoodie_black",
+      "productName": "PURE Hoodie Schwarz",
+      "logoStyle": "PURE",
+      "color": "Schwarz",
+      "productType": "hoodie",
+      "primaryImage": "gen-b14-pure_hoodie_black_onyx_chest.webp",
+      "galleryImages": [
+        "gen-b14-pure_hoodie_black_onyx_chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-hoodie-pure-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "hoodie",
+      "familyName": "Hoodie",
+      "productId": "pure_hoodie_black",
+      "productName": "PURE Hoodie Schwarz",
+      "logoStyle": "PURE",
+      "color": "Schwarz",
+      "productType": "hoodie",
+      "primaryImage": "gen-b14-pure_hoodie_black_silver_chest.webp",
+      "galleryImages": [
+        "gen-b14-pure_hoodie_black_silver_chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-hoodie-pure-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "hoodie",
+      "familyName": "Hoodie",
+      "productId": "pure_hoodie_black",
+      "productName": "PURE Hoodie Schwarz",
+      "logoStyle": "PURE",
+      "color": "Schwarz",
+      "productType": "hoodie",
+      "primaryImage": "gen-b14-pure_hoodie_black_ivory_chest.webp",
+      "galleryImages": [
+        "gen-b14-pure_hoodie_black_ivory_chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-hoodie-pure-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "hoodie",
+      "familyName": "Hoodie",
+      "productId": "pure_hoodie_black",
+      "productName": "PURE Hoodie Schwarz",
+      "logoStyle": "PURE",
+      "color": "Schwarz",
+      "productType": "hoodie",
+      "primaryImage": "gen-b14-pure_hoodie_black_gold_front.webp",
+      "galleryImages": [
+        "gen-b14-pure_hoodie_black_gold_front.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-hoodie-pure-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "hoodie",
+      "familyName": "Hoodie",
+      "productId": "pure_hoodie_black",
+      "productName": "PURE Hoodie Schwarz",
+      "logoStyle": "PURE",
+      "color": "Schwarz",
+      "productType": "hoodie",
+      "primaryImage": "gen-b14-pure_hoodie_black_onyx_front.webp",
+      "galleryImages": [
+        "gen-b14-pure_hoodie_black_onyx_front.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-hoodie-pure-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "hoodie",
+      "familyName": "Hoodie",
+      "productId": "pure_hoodie_black",
+      "productName": "PURE Hoodie Schwarz",
+      "logoStyle": "PURE",
+      "color": "Schwarz",
+      "productType": "hoodie",
+      "primaryImage": "gen-b14-pure_hoodie_black_silver_front.webp",
+      "galleryImages": [
+        "gen-b14-pure_hoodie_black_silver_front.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-hoodie-pure-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "hoodie",
+      "familyName": "Hoodie",
+      "productId": "pure_hoodie_black",
+      "productName": "PURE Hoodie Schwarz",
+      "logoStyle": "PURE",
+      "color": "Schwarz",
+      "productType": "hoodie",
+      "primaryImage": "gen-b14-pure_hoodie_black_ivory_front.webp",
+      "galleryImages": [
+        "gen-b14-pure_hoodie_black_ivory_front.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-hoodie-pure-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "hoodie",
+      "familyName": "Hoodie",
+      "productId": "pure_hoodie_white",
+      "productName": "PURE Hoodie Weiß",
+      "logoStyle": "PURE",
+      "color": "Weiß",
+      "productType": "hoodie",
+      "primaryImage": "gen-b14-pure_hoodie_white_gold_chest.webp",
+      "galleryImages": [
+        "gen-b14-pure_hoodie_white_gold_chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-hoodie-pure-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "hoodie",
+      "familyName": "Hoodie",
+      "productId": "pure_hoodie_white",
+      "productName": "PURE Hoodie Weiß",
+      "logoStyle": "PURE",
+      "color": "Weiß",
+      "productType": "hoodie",
+      "primaryImage": "gen-pure-hoodie-white-chest-normal.webp",
+      "galleryImages": [
+        "gen-pure-hoodie-white-chest-normal.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-hoodie-pure-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "hoodie",
+      "familyName": "Hoodie",
+      "productId": "pure_hoodie_white",
+      "productName": "PURE Hoodie Weiß",
+      "logoStyle": "PURE",
+      "color": "Weiß",
+      "productType": "hoodie",
+      "primaryImage": "gen-b14-pure_hoodie_white_onyx_chest.webp",
+      "galleryImages": [
+        "gen-b14-pure_hoodie_white_onyx_chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-hoodie-pure-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "hoodie",
+      "familyName": "Hoodie",
+      "productId": "pure_hoodie_white",
+      "productName": "PURE Hoodie Weiß",
+      "logoStyle": "PURE",
+      "color": "Weiß",
+      "productType": "hoodie",
+      "primaryImage": "gen-b17-pure_hoodie_white_silver_chest.webp",
+      "galleryImages": [
+        "gen-b17-pure_hoodie_white_silver_chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-hoodie-pure-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "hoodie",
+      "familyName": "Hoodie",
+      "productId": "pure_hoodie_white",
+      "productName": "PURE Hoodie Weiß",
+      "logoStyle": "PURE",
+      "color": "Weiß",
+      "productType": "hoodie",
+      "primaryImage": "gen-b14-pure_hoodie_white_ivory_chest.webp",
+      "galleryImages": [
+        "gen-b14-pure_hoodie_white_ivory_chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-hoodie-pure-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "hoodie",
+      "familyName": "Hoodie",
+      "productId": "pure_hoodie_white",
+      "productName": "PURE Hoodie Weiß",
+      "logoStyle": "PURE",
+      "color": "Weiß",
+      "productType": "hoodie",
+      "primaryImage": "gen-b14-pure_hoodie_white_gold_front.webp",
+      "galleryImages": [
+        "gen-b14-pure_hoodie_white_gold_front.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-hoodie-pure-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "hoodie",
+      "familyName": "Hoodie",
+      "productId": "pure_hoodie_white",
+      "productName": "PURE Hoodie Weiß",
+      "logoStyle": "PURE",
+      "color": "Weiß",
+      "productType": "hoodie",
+      "primaryImage": "gen-b14-pure_hoodie_white_onyx_front.webp",
+      "galleryImages": [
+        "gen-b14-pure_hoodie_white_onyx_front.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-hoodie-pure-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "hoodie",
+      "familyName": "Hoodie",
+      "productId": "pure_hoodie_white",
+      "productName": "PURE Hoodie Weiß",
+      "logoStyle": "PURE",
+      "color": "Weiß",
+      "productType": "hoodie",
+      "primaryImage": "gen-b14-pure_hoodie_white_silver_front.webp",
+      "galleryImages": [
+        "gen-b14-pure_hoodie_white_silver_front.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-hoodie-pure-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "hoodie",
+      "familyName": "Hoodie",
+      "productId": "pure_hoodie_white",
+      "productName": "PURE Hoodie Weiß",
+      "logoStyle": "PURE",
+      "color": "Weiß",
+      "productType": "hoodie",
+      "primaryImage": "gen-b14-pure_hoodie_white_ivory_front.webp",
+      "galleryImages": [
+        "gen-b14-pure_hoodie_white_ivory_front.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-hoodie-pure-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "zip-hoodie",
+      "familyName": "Zip Hoodie",
+      "productId": "signature_zip_hoodie_black",
+      "productName": "Signature Zip Hoodie Schwarz",
+      "logoStyle": "SIGNATURE",
+      "color": "Schwarz",
+      "productType": "zip-hoodie",
+      "primaryImage": "v5-coming-soon.webp",
+      "galleryImages": [
+        "v5-coming-soon.webp"
+      ],
+      "imageStatus": "missing",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-zip-hoodie-signature-black-chest.webp",
+      "notes": "Brustlogo-Zielbreite 6 cm (7–9 % der Kleidungsbreite) · requiresRerender: Logo/Flock exakt neu rendern"
+    },
+    {
+      "familyId": "zip-hoodie",
+      "familyName": "Zip Hoodie",
+      "productId": "pure_zip_hoodie_black",
+      "productName": "PURE Zip Hoodie Schwarz",
+      "logoStyle": "PURE",
+      "color": "Schwarz",
+      "productType": "zip-hoodie",
+      "primaryImage": "v3-pure-zip-hoodie-black-chest.webp",
+      "galleryImages": [
+        "v3-pure-zip-hoodie-black-chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": true,
+      "usedAsDefault": true,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-zip-hoodie-pure-black-chest.webp",
+      "notes": "Brustlogo-Zielbreite 6 cm (7–9 % der Kleidungsbreite) · KI-Mockup – vor Verkauf durch echtes Foto ersetzen · Logo für Produktionsfoto kleiner ausführen (Zielbreite s. o.)"
+    },
+    {
+      "familyId": "zip-hoodie",
+      "familyName": "Zip Hoodie",
+      "productId": "pure_zip_hoodie_white",
+      "productName": "PURE Zip Hoodie Weiß",
+      "logoStyle": "PURE",
+      "color": "Weiß",
+      "productType": "zip-hoodie",
+      "primaryImage": "gen-pure-zip-hoodie-white-chest.webp",
+      "galleryImages": [
+        "gen-pure-zip-hoodie-white-chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-zip-hoodie-pure-white-chest.webp",
+      "notes": "Brustlogo-Zielbreite 6 cm (7–9 % der Kleidungsbreite) · KI-Mockup – vor Verkauf durch echtes Foto ersetzen · Logo für Produktionsfoto kleiner ausführen (Zielbreite s. o.)"
+    },
+    {
+      "familyId": "crewneck",
+      "familyName": "Crewneck",
+      "productId": "signature_crewneck_black",
+      "productName": "Signature Crewneck Schwarz",
+      "logoStyle": "SIGNATURE",
+      "color": "Schwarz",
+      "productType": "crewneck",
+      "primaryImage": "v4-signature-crewneck-black-chest.webp",
+      "galleryImages": [
+        "v4-signature-crewneck-black-chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": true,
+      "usedAsDefault": true,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-crewneck-signature-black-chest.webp",
+      "notes": "Brustlogo-Zielbreite 6 cm (7–9 % der Kleidungsbreite) · KI-Mockup – vor Verkauf durch echtes Foto ersetzen · Logo für Produktionsfoto kleiner ausführen (Zielbreite s. o.)"
+    },
+    {
+      "familyId": "crewneck",
+      "familyName": "Crewneck",
+      "productId": "pure_crewneck_black",
+      "productName": "PURE Crewneck Schwarz",
+      "logoStyle": "PURE",
+      "color": "Schwarz",
+      "productType": "crewneck",
+      "primaryImage": "v3-pure-crewneck-black-chest.webp",
+      "galleryImages": [
+        "v3-pure-crewneck-black-chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-crewneck-pure-black-chest.webp",
+      "notes": "Brustlogo-Zielbreite 6 cm (7–9 % der Kleidungsbreite) · KI-Mockup – vor Verkauf durch echtes Foto ersetzen · Logo für Produktionsfoto kleiner ausführen (Zielbreite s. o.)"
+    },
+    {
+      "familyId": "crewneck",
+      "familyName": "Crewneck",
+      "productId": "pure_crewneck_white",
+      "productName": "PURE Crewneck Weiß",
+      "logoStyle": "PURE",
+      "color": "Weiß",
+      "productType": "crewneck",
+      "primaryImage": "v3-pure-crewneck-white-chest.webp",
+      "galleryImages": [
+        "v3-pure-crewneck-white-chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": false,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-crewneck-pure-white-chest.webp",
+      "notes": "Brustlogo-Zielbreite 6 cm (7–9 % der Kleidungsbreite) · KI-Mockup – vor Verkauf durch echtes Foto ersetzen · Logo für Produktionsfoto kleiner ausführen (Zielbreite s. o.)"
+    },
+    {
+      "familyId": "workwear",
+      "familyName": "Workwear (Teaser)",
+      "productId": "workwear_polo_black",
+      "productName": "Workwear Polo Schwarz",
+      "logoStyle": null,
+      "color": "Schwarz",
+      "placement": "Kleines Brustlogo",
+      "productType": "polo",
+      "primaryImage": "v3-workwear-polo-black-chest.webp",
+      "galleryImages": [
+        "v3-workwear-polo-black-chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": true,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-workwear-polo-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "workwear",
+      "familyName": "Workwear (Teaser)",
+      "productId": "workwear_polo_white",
+      "productName": "Workwear Polo Weiß",
+      "logoStyle": null,
+      "color": "Weiß",
+      "placement": "Kleines Brustlogo",
+      "productType": "polo",
+      "primaryImage": "v3-workwear-polo-white-chest.webp",
+      "galleryImages": [
+        "v3-workwear-polo-white-chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": true,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-workwear-polo-white-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "workwear",
+      "familyName": "Workwear (Teaser)",
+      "productId": "workwear_t_shirt_black",
+      "productName": "Workwear T-Shirt Schwarz",
+      "logoStyle": null,
+      "color": "Schwarz",
+      "placement": "Kleines Brustlogo",
+      "productType": "tshirt",
+      "primaryImage": "v3-workwear-tshirt-black-chest.webp",
+      "galleryImages": [
+        "v3-workwear-tshirt-black-chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": true,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-workwear-t-shirt-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "workwear",
+      "familyName": "Workwear (Teaser)",
+      "productId": "softshelljacke_black",
+      "productName": "Softshelljacke Schwarz",
+      "logoStyle": null,
+      "color": "Schwarz",
+      "placement": "Kleines Brustlogo",
+      "productType": "jacket",
+      "primaryImage": "v4-workwear-softshelljacke-black-chest.webp",
+      "galleryImages": [
+        "v4-workwear-softshelljacke-black-chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": true,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-softshelljacke-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "workwear",
+      "familyName": "Workwear (Teaser)",
+      "productId": "softshellweste_black",
+      "productName": "Softshellweste Schwarz",
+      "logoStyle": null,
+      "color": "Schwarz",
+      "placement": "Kleines Brustlogo",
+      "productType": "jacket",
+      "primaryImage": "v4-workwear-softshellweste-black-chest.webp",
+      "galleryImages": [
+        "v4-workwear-softshellweste-black-chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": true,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-softshellweste-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "workwear",
+      "familyName": "Workwear (Teaser)",
+      "productId": "overshirt_arbeitshemd_black",
+      "productName": "Overshirt / Arbeitshemd Schwarz",
+      "logoStyle": null,
+      "color": "Schwarz",
+      "placement": "Kleines Brustlogo",
+      "productType": "shirt",
+      "primaryImage": "v4-workwear-overshirt-black-chest.webp",
+      "galleryImages": [
+        "v4-workwear-overshirt-black-chest.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": false,
+      "usedAsDefault": true,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-overshirt-arbeitshemd-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "accessoires",
+      "familyName": "Accessoires",
+      "productId": "cap_black",
+      "productName": "Cap Black",
+      "logoStyle": null,
+      "color": "Schwarz",
+      "placement": "Standard",
+      "productType": "accessory",
+      "primaryImage": "v3-cap-black.webp",
+      "galleryImages": [
+        "v3-cap-black.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": true,
+      "usedAsDefault": true,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-cap-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "accessoires",
+      "familyName": "Accessoires",
+      "productId": "beanie_black",
+      "productName": "Beanie Black",
+      "logoStyle": null,
+      "color": "Schwarz",
+      "placement": "Standard",
+      "productType": "accessory",
+      "primaryImage": "v3-beanie-black.webp",
+      "galleryImages": [
+        "v3-beanie-black.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": true,
+      "usedAsDefault": true,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-beanie-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "accessoires",
+      "familyName": "Accessoires",
+      "productId": "tote_bag_black",
+      "productName": "Tote Bag Black",
+      "logoStyle": null,
+      "color": "Schwarz",
+      "placement": "Standard",
+      "productType": "accessory",
+      "primaryImage": "v3-tote-bag-black.webp",
+      "galleryImages": [
+        "v3-tote-bag-black.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": true,
+      "usedAsDefault": true,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tote-bag-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "accessoires",
+      "familyName": "Accessoires",
+      "productId": "schuerze_black",
+      "productName": "Schürze Black",
+      "logoStyle": null,
+      "color": "Schwarz",
+      "placement": "Standard",
+      "productType": "accessory",
+      "primaryImage": "v3-apron-black.webp",
+      "galleryImages": [
+        "v3-apron-black.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": true,
+      "usedAsDefault": true,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-schuerze-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "accessoires",
+      "familyName": "Accessoires",
+      "productId": "handtuch_black",
+      "productName": "Handtuch Black",
+      "logoStyle": null,
+      "color": "Schwarz",
+      "placement": "Standard",
+      "productType": "accessory",
+      "primaryImage": "v3-towel-black.webp",
+      "galleryImages": [
+        "v3-towel-black.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": true,
+      "usedAsDefault": true,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-handtuch-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "accessoires",
+      "familyName": "Accessoires",
+      "productId": "badehose_black",
+      "productName": "Badehose Black",
+      "logoStyle": null,
+      "color": "Schwarz",
+      "placement": "Standard",
+      "productType": "accessory",
+      "primaryImage": "v3-swimshorts-black.webp",
+      "galleryImages": [
+        "v3-swimshorts-black.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": true,
+      "usedAsDefault": true,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-badehose-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "accessoires",
+      "familyName": "Accessoires",
+      "productId": "regenschirm_black",
+      "productName": "Regenschirm Black",
+      "logoStyle": null,
+      "color": "Schwarz",
+      "placement": "Standard",
+      "productType": "accessory",
+      "primaryImage": "v3-umbrella-black.webp",
+      "galleryImages": [
+        "v3-umbrella-black.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": true,
+      "usedAsDefault": true,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-regenschirm-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "accessoires",
+      "familyName": "Accessoires",
+      "productId": "sneaker_videko",
+      "productName": "Sneaker VIDEKO",
+      "logoStyle": null,
+      "color": "Schwarz",
+      "placement": "Standard",
+      "productType": "accessory",
+      "primaryImage": "v3-sneaker-black.webp",
+      "galleryImages": [
+        "v3-sneaker-black.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": true,
+      "usedAsDefault": true,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-sneaker-videko-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "accessoires",
+      "familyName": "Accessoires",
+      "productId": "tasse_black",
+      "productName": "Mug / Tasse Black",
+      "logoStyle": null,
+      "color": "Schwarz",
+      "placement": "Standard",
+      "productType": "accessory",
+      "primaryImage": "v3-mug-black.webp",
+      "galleryImages": [
+        "v3-mug-black.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": true,
+      "usedAsDefault": true,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-tasse-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "accessoires",
+      "familyName": "Accessoires",
+      "productId": "trinkflasche_black",
+      "productName": "Bottle / Trinkflasche Black",
+      "logoStyle": null,
+      "color": "Schwarz",
+      "placement": "Standard",
+      "productType": "accessory",
+      "primaryImage": "v3-waterbottle-black.webp",
+      "galleryImages": [
+        "v3-waterbottle-black.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": true,
+      "usedAsDefault": true,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-trinkflasche-black-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    },
+    {
+      "familyId": "accessoires",
+      "familyName": "Accessoires",
+      "productId": "boss_battle",
+      "productName": "Boss-BATTLE",
+      "logoStyle": null,
+      "color": "Schwarz / Gold",
+      "placement": "Standard",
+      "productType": "game",
+      "primaryImage": "v3-boss-battle.webp",
+      "galleryImages": [
+        "v3-boss-battle.webp"
+      ],
+      "imageStatus": "ai_mockup",
+      "usedInGrid": true,
+      "usedAsDefault": true,
+      "requiresFinalPhotography": true,
+      "missingImageTypes": [
+        "echtes_primaerfoto"
+      ],
+      "desiredFileName": "v3-boss-battle-main.webp",
+      "notes": "KI-Mockup – vor Verkauf durch echtes Foto ersetzen"
+    }
+  ]
+}

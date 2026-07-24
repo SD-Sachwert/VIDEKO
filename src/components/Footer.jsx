@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { MapPin, Mail, Phone, ArrowRight } from 'lucide-react'
-import logoMark from '../assets/brand/logo-main.png'
+import logoMark from '../assets/brand/logo-main-v2.png'
 
 import kitchenVision from '../assets/images/kitchen-vision-1.png'
 
@@ -16,8 +16,18 @@ const NAV = [
   { label: 'Inspiration', to: '/inspiration' },
   { label: 'Journal', to: '/journal' },
   { label: 'Vorher / Nachher', to: '/vorher-nachher' },
+  { label: 'Merch', to: '/merch' },
   { label: 'Karriere', to: '/karriere' },
   { label: 'Über uns', to: '/ueber-uns' },
+]
+// Nur im Shop: die Links, die Kunden dort erwarten.
+const SHOP = [
+  { label: 'Alle Produkte', to: '/merch#shop' },
+  { label: 'T-Shirts', to: '/merch/signature-t-shirt-black' },
+  { label: 'Boss-BATTLE', to: '/merch/boss-battle' },
+  { label: 'Versand & Lieferung', to: '/versand-lieferung' },
+  { label: 'Rückgabe & Widerruf', to: '/rueckgabe-widerruf' },
+  { label: 'FAQ', to: '/merch#faq' },
 ]
 const SERVICE = [
   { label: 'Beratung', to: '/beratung' },
@@ -87,6 +97,7 @@ function variantFor(path) {
 export default function Footer() {
   const { pathname } = useLocation()
   const v = variantFor(pathname)
+  const imShop = pathname.startsWith('/merch')
 
   return (
     <footer className={`footer footer--cinematic footer--${v.tone}`} id="footer">
@@ -111,9 +122,9 @@ export default function Footer() {
             <p>Küchen.<br />Die Kunst des Lebens.</p>
           </div>
 
-          <nav className="footer__col" aria-label="Navigation">
-            <span className="footer__coltitle">Navigation</span>
-            {NAV.map((n) => <Link key={n.label} to={n.to}>{n.label}</Link>)}
+          <nav className="footer__col" aria-label={imShop ? 'Shop' : 'Navigation'}>
+            <span className="footer__coltitle">{imShop ? 'Shop' : 'Navigation'}</span>
+            {(imShop ? SHOP : NAV).map((n) => <Link key={n.label} to={n.to}>{n.label}</Link>)}
           </nav>
 
           <nav className="footer__col" aria-label="Service">
@@ -135,6 +146,9 @@ export default function Footer() {
           <div className="footer__legal">
             <Link to="/impressum">Impressum</Link>
             <Link to="/datenschutz">Datenschutz</Link>
+            <Link to="/agb">AGB</Link>
+            <Link to="/versand-lieferung">Versand &amp; Lieferung</Link>
+            <Link to="/rueckgabe-widerruf">Rückgabe &amp; Widerruf</Link>
           </div>
         </div>
       </div>

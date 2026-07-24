@@ -12,7 +12,7 @@ import bgMobile from '../assets/images/home/footer/footer-experience-bg-mobile.p
 import avatar1 from '../assets/images/home/footer/review-avatar-01.png'
 import avatar2 from '../assets/images/home/footer/review-avatar-02.png'
 import avatar3 from '../assets/images/home/footer/review-avatar-03.png'
-import logoMark from '../assets/brand/logo-main.png'
+import logoMark from '../assets/brand/logo-main-v2.png'
 
 const AVATARS = [avatar1, avatar2, avatar3]
 

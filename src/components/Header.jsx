@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import { Menu, X, MapPin, ChevronDown } from 'lucide-react'
-import logoMain from '../assets/brand/logo-main.png'
+import { Menu, X, MapPin, ChevronDown, ShoppingBag } from 'lucide-react'
+import logoMain from '../assets/brand/logo-main-v2.png'
+import { useCart } from '../shop/cart-context.js'
 
 const MAIN = [
   { label: 'Studio', to: '/studio' },
@@ -9,6 +10,7 @@ const MAIN = [
   { label: 'Leistungen', to: '/leistungen' },
   { label: 'Über uns', to: '/ueber-uns', menu: 'about' },
   { label: 'Journal', to: '/journal' },
+  { label: 'Merch', to: '/merch' },
 ]
 
 const DROPDOWN = {
@@ -32,7 +34,16 @@ export default function Header() {
   // Seiten ohne dunklen Hero: Header dauerhaft im hellen "solid"-Zustand,
   // damit die Navigation auch ganz oben lesbar bleibt.
   const { pathname } = useLocation()
-  const solidRoute = pathname === '/impressum' || pathname === '/datenschutz'
+  // Seiten, die direkt mit hellem Inhalt beginnen: Der Header braucht dort von
+  // Anfang an seinen festen Hintergrund, sonst steht helle Navigation auf Creme.
+  const HELLE_SEITEN = [
+    '/impressum', '/datenschutz', '/agb', '/versand-lieferung', '/rueckgabe-widerruf',
+  ]
+  const solidRoute = HELLE_SEITEN.includes(pathname)
+
+  // Warenkorb nur im Shop zeigen – auf den Markenseiten waere er ein Fremdkoerper
+  const { count, setOpen: setCartOpen } = useCart()
+  const imShop = pathname.startsWith('/merch')
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -102,6 +113,17 @@ export default function Header() {
         </nav>
 
         <div className="header__actions">
+          {imShop && (
+            <button
+              type="button"
+              className="header__cart"
+              onClick={() => setCartOpen(true)}
+              aria-label={count > 0 ? `Warenkorb öffnen, ${count} Artikel` : 'Warenkorb öffnen'}
+            >
+              <ShoppingBag size={19} strokeWidth={1.7} />
+              {count > 0 && <span className="header__cartcount">{count}</span>}
+            </button>
+          )}
           <Link className="pill pill--cta" to="/beratung">
             <MapPin size={15} strokeWidth={1.8} />
             Beratung anfragen

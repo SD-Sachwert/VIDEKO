@@ -1,0 +1,32 @@
+productId,productName,family,collection,textileColor,logoColor,placement,refinement,currentStatus,reason,priority,desiredFilename
+pure_tee_beige,PURE T-Shirt Beige,T-Shirt Regular,PURE,Beige,Gold,chest,print,placeholder,PURE Beige – Bild folgt,3,pure_tee_beige_gold_chest.webp
+pure_tee_beige,PURE T-Shirt Beige,T-Shirt Regular,PURE,Beige,Ivory,chest,print,placeholder,PURE Beige – Bild folgt,3,pure_tee_beige_white_chest.webp
+pure_tee_beige,PURE T-Shirt Beige,T-Shirt Regular,PURE,Beige,Silver,front,print,placeholder,PURE Beige – Bild folgt,3,pure_tee_beige_silver_front.webp
+pure_tee_beige,PURE T-Shirt Beige,T-Shirt Regular,PURE,Beige,Onyx,front,print,placeholder,PURE Beige – Bild folgt,3,pure_tee_beige_black_front.webp
+pure_tee_beige,PURE T-Shirt Beige,T-Shirt Regular,PURE,Beige,Ivory,front,print,placeholder,PURE Beige – Bild folgt,3,pure_tee_beige_white_front.webp
+pure_vneck_beige,PURE V-Neck Beige,V-Neck,PURE,Beige,Gold,chest,print,placeholder,PURE Beige – Bild folgt,3,pure_vneck_beige_gold_chest.webp
+pure_vneck_beige,PURE V-Neck Beige,V-Neck,PURE,Beige,Silver,chest,print,placeholder,PURE Beige – Bild folgt,3,pure_vneck_beige_silver_chest.webp
+pure_vneck_beige,PURE V-Neck Beige,V-Neck,PURE,Beige,Ivory,chest,print,placeholder,PURE Beige – Bild folgt,3,pure_vneck_beige_white_chest.webp
+pure_vneck_beige,PURE V-Neck Beige,V-Neck,PURE,Beige,Silver,front,print,placeholder,PURE Beige – Bild folgt,3,pure_vneck_beige_silver_front.webp
+pure_vneck_beige,PURE V-Neck Beige,V-Neck,PURE,Beige,Onyx,front,print,placeholder,PURE Beige – Bild folgt,3,pure_vneck_beige_black_front.webp
+pure_vneck_beige,PURE V-Neck Beige,V-Neck,PURE,Beige,Ivory,front,print,placeholder,PURE Beige – Bild folgt,3,pure_vneck_beige_white_front.webp
+prestige_tee_black,PRESTIGE T-Shirt Schwarz,T-Shirt Regular,PRESTIGE,Schwarz,Gold,chest,flock,needs_regeneration,PRESTIGE Schwarz – Goldener Flock neu generieren,3,prestige_tee_black_gold_flock_chest.webp
+prestige_tee_black,PRESTIGE T-Shirt Schwarz,T-Shirt Regular,PRESTIGE,Schwarz,Silver,chest,flock,needs_regeneration,PRESTIGE Schwarz – Silber- Flock neu generieren,3,prestige_tee_black_silver_flock_chest.webp
+prestige_tee_white,PRESTIGE T-Shirt Weiß,T-Shirt Regular,PRESTIGE,Weiß,Gold,chest,flock,needs_regeneration,PRESTIGE Weiß – Goldener Flock neu generieren,3,prestige_tee_white_gold_flock_chest.webp
+prestige_tee_white,PRESTIGE T-Shirt Weiß,T-Shirt Regular,PRESTIGE,Weiß,Silver,chest,flock,needs_regeneration,PRESTIGE Weiß – Silber- Flock neu generieren,3,prestige_tee_white_silver_flock_chest.webp
+prestige_vneck_black,PRESTIGE V-Neck Schwarz,V-Neck,PRESTIGE,Schwarz,Gold,chest,flock,needs_regeneration,PRESTIGE Schwarz – Goldener Flock neu generieren,3,prestige_vneck_black_gold_flock_chest.webp
+prestige_vneck_black,PRESTIGE V-Neck Schwarz,V-Neck,PRESTIGE,Schwarz,Silver,chest,flock,needs_regeneration,PRESTIGE Schwarz – Silber- Flock neu generieren,3,prestige_vneck_black_silver_flock_chest.webp
+prestige_vneck_white,PRESTIGE V-Neck Weiß,V-Neck,PRESTIGE,Weiß,Gold,chest,flock,needs_regeneration,PRESTIGE Weiß – Goldener Flock neu generieren,3,prestige_vneck_white_gold_flock_chest.webp
+prestige_vneck_white,PRESTIGE V-Neck Weiß,V-Neck,PRESTIGE,Weiß,Silver,chest,flock,needs_regeneration,PRESTIGE Weiß – Silber- Flock neu generieren,3,prestige_vneck_white_silver_flock_chest.webp
+prestige_polo_black,PRESTIGE Polo Schwarz,Polo,PRESTIGE,Schwarz,Gold,chest,flock,needs_regeneration,PRESTIGE Schwarz – Goldener Flock neu generieren,3,prestige_polo_black_gold_flock_chest.webp
+prestige_polo_black,PRESTIGE Polo Schwarz,Polo,PRESTIGE,Schwarz,Silver,chest,flock,needs_regeneration,PRESTIGE Schwarz – Silber- Flock neu generieren,3,prestige_polo_black_silver_flock_chest.webp
+prestige_polo_white,PRESTIGE Polo Weiß,Polo,PRESTIGE,Weiß,Gold,chest,flock,needs_regeneration,PRESTIGE Weiß – Goldener Flock neu generieren,3,prestige_polo_white_gold_flock_chest.webp
+prestige_polo_white,PRESTIGE Polo Weiß,Polo,PRESTIGE,Weiß,Silver,chest,flock,needs_regeneration,PRESTIGE Weiß – Silber- Flock neu generieren,3,prestige_polo_white_silver_flock_chest.webp
+prestige_polo_white,PRESTIGE Polo Weiß,Polo,PRESTIGE,Weiß,Ivory,chest,flock,needs_regeneration,PRESTIGE Weiß – Weißer Flock neu generieren,3,prestige_polo_white_white_flock_chest.webp
+t_shirt_small_logo_black,Signature T-Shirt Schwarz · Brustlogo,T-Shirt Regular,SIGNATURE,Schwarz,Standard,chest,print,needs_regeneration,SIGNATURE Schwarz – Kleines Brustlogo neu generieren,3,t_shirt_small_logo_black_chest.webp
+signature_t_shirt_black,Signature T-Shirt Schwarz,T-Shirt Regular,SIGNATURE,Schwarz,Standard,front,print,needs_regeneration,SIGNATURE Schwarz – Großes Frontlogo neu generieren,3,signature_t_shirt_black_front.webp
+t_shirt_small_logo_white,Signature T-Shirt Weiß · Brustlogo,T-Shirt Regular,SIGNATURE,Weiß,Standard,chest,print,needs_regeneration,SIGNATURE Weiß – Kleines Brustlogo neu generieren,3,t_shirt_small_logo_white_chest.webp
+signature_t_shirt_white,Signature T-Shirt Weiß,T-Shirt Regular,SIGNATURE,Weiß,Standard,front,print,needs_regeneration,SIGNATURE Weiß – Großes Frontlogo neu generieren,3,signature_t_shirt_white_front.webp
+signature_vneck_black,SIGNATURE V-Neck Schwarz,V-Neck,SIGNATURE,Schwarz,Standard,chest,print,needs_regeneration,SIGNATURE Schwarz – Kleines Brustlogo neu generieren,3,signature_vneck_black_chest.webp
+signature_vneck_white,SIGNATURE V-Neck Weiß,V-Neck,SIGNATURE,Weiß,Standard,chest,print,needs_regeneration,SIGNATURE Weiß – Kleines Brustlogo neu generieren,3,signature_vneck_white_chest.webp
+signature_zip_hoodie_black,Signature Zip Hoodie Schwarz,Zip Hoodie,SIGNATURE,Schwarz,Standard,chest,print,needs_regeneration,SIGNATURE Schwarz – Kleines Brustlogo neu generieren,3,signature_zip_hoodie_black_chest.webp

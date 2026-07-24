@@ -30,3 +30,8 @@ dist-ssr
 
 # Vercel
 .vercel
+
+# Arbeits-/Quellmaterial, kein Teil des Builds
+*.bak-*
+_asset-source-packages/
+review-merch-assets/

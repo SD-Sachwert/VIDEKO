@@ -6,7 +6,7 @@ import {
   Maximize, Baby, CircleDot, Cpu, Package, Coffee, Wine, PiggyBank, Coins, BadgeEuro, HelpCircle,
 } from 'lucide-react'
 
-import logoMain from '../../assets/brand/logo-main.png'
+import logoMain from '../../assets/brand/logo-main-v2.png'
 import { EMPTY_ANSWERS, PRIORITY_LIST, computeProfile, computeResultStyle } from './stylefinderLogic.js'
 
 import sModern from '../../assets/images/stylefinder-assets/02_stil_hell_modern_minimal.png'
