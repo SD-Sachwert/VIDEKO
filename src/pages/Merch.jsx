@@ -86,8 +86,8 @@ const FAQ = [
     // gibt es bewusst noch keinen Anfrage-Button. Der Ablauf wird erst
     // beschrieben, wenn die Anfrage tatsächlich aktiv ist (Stufe 'inquiry').
     a: inquiryReady
-      ? 'Ganz unverbindlich per E-Mail. Auf der Produktseite tippst du auf „Unverbindlich per E-Mail anfragen“ – es öffnet sich eine vorbereitete Mail mit deiner Auswahl (Farbe, Größe, Logoausführung, Anzahl). Es gibt keinen Warenkorb und keinen Online-Checkout. Mit dem Absenden entsteht noch keine Bestellung; wir melden uns anschließend mit einem individuellen Angebot.'
-      : 'Der Merch-Bereich ist aktuell eine unverbindliche Produktvorschau. Es gibt bewusst noch keinen Warenkorb, keinen Online-Checkout und keine Anfrage- oder Bestellfunktion. Sobald die Anfrage freigeschaltet ist, kannst du dein Wunschprodukt unverbindlich per E-Mail anfragen und erhältst anschließend ein individuelles Angebot.',
+      ? 'Du legst dein Wunschprodukt (Farbe, Größe, Logoausführung, Anzahl) in den Warenkorb. Beim Absenden öffnet sich eine vorbereitete E-Mail mit deiner Auswahl – bewusst noch ohne Online-Bezahlung. Mit dem Absenden entsteht noch keine verbindliche Bestellung; wir melden uns anschließend mit einem individuellen Angebot (inkl. Versandkosten).'
+      : 'Der Merch-Bereich ist aktuell eine unverbindliche Produktvorschau. Es gibt noch keinen aktiven Warenkorb und keine Bestellfunktion. Sobald der Verkauf freigeschaltet ist, legst du dein Wunschprodukt in den Warenkorb und schickst die Auswahl unverbindlich per E-Mail ab; anschließend erhältst du ein individuelles Angebot.',
   },
   {
     q: 'Was kostet ein Shirt und wie hoch ist der Versand?',

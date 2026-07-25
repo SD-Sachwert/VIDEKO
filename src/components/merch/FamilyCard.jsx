@@ -72,7 +72,7 @@ export default function FamilyCard({ family, delay = 0 }) {
         <span className={`pcard__price ${(!family.isSignature && (!SHOW_PUBLIC_PRICES || family.priceFrom == null)) ? 'pcard__price--offen' : ''}`.trim()}>
           {preis}
           {pv?.showRegularStrike && (
-            <s className="pcard__price-strike" title="Regulärer Preis nach der Eröffnung">{formatPrice(pv.regularPrice)}</s>
+            <s className="pcard__price-strike" title="Regulärer Preis nach dem Launch">{formatPrice(pv.regularPrice)}</s>
           )}
           {pv?.badge && <span className="pcard__pricebadge">{pv.badge}</span>}
         </span>
@@ -107,7 +107,7 @@ export default function FamilyCard({ family, delay = 0 }) {
           </Link>
         ) : (
           <Link className={`pcard__add ${family.isSignature ? '' : 'pcard__add--ghost'}`.trim()} to={`/merch/${ziel}`}>
-            {family.isSignature ? 'Auswählen & anfragen' : 'Modell ansehen'} <ArrowRight size={14} strokeWidth={1.9} />
+            {family.isSignature ? 'In den Warenkorb' : 'Modell ansehen'} <ArrowRight size={14} strokeWidth={1.9} />
           </Link>
         )}
       </div>

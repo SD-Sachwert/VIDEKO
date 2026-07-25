@@ -193,7 +193,7 @@ function StickyBuyBar({ soon, kannAnfragen, onAdd, onNotify, priceLabel }) {
         </button>
       ) : kannAnfragen ? (
         <button type="button" className="pdp__stickycta" onClick={onAdd}>
-          Zur Anfrageliste <ShoppingBag size={16} strokeWidth={1.8} />
+          In den Warenkorb <ShoppingBag size={16} strokeWidth={1.8} />
         </button>
       ) : (
         <span className="pdp__stickycta pdp__stickycta--soon" aria-disabled="true">
@@ -441,7 +441,7 @@ function Konfigurator({ family, start }) {
                 <span className="pdp__price pdp__price--offen">{PRICE_ON_REQUEST}</span>
               )}
               {pv?.showRegularStrike && (
-                <s className="pdp__price-strike" title="Regulärer Preis nach der Eröffnung">{formatPrice(pv.regularPrice)}</s>
+                <s className="pdp__price-strike" title="Regulärer Preis nach dem Launch">{formatPrice(pv.regularPrice)}</s>
               )}
               {pv?.badge && <span className="pdp__badge pdp__badge--opening">{pv.badge}</span>}
               {unit.refinement === 'flock' && <span className="pdp__badge pdp__badge--flock">PRESTIGE · FLOCK</span>}
@@ -457,8 +457,8 @@ function Konfigurator({ family, start }) {
                 </span>
                 {pv?.opening && (
                   <p className="pdp__opening">
-                    <strong>Eröffnungspreis</strong> für die ersten {pv.openingStock} Shirts – noch {pv.remaining} zum Eröffnungspreis verfügbar.
-                    Regulärer Preis nach der Eröffnung: {formatPrice(pv.regularPrice)}.
+                    <strong>Launch-Preis</strong> für die ersten {pv.openingStock} Shirts – noch {pv.remaining} zum Launch-Preis verfügbar.
+                    Regulärer Preis nach dem Launch: {formatPrice(pv.regularPrice)}.
                   </p>
                 )}
               </>
@@ -584,8 +584,8 @@ function Konfigurator({ family, start }) {
                 </button>
               ) : kannAnfragen ? (
                 <button type="button" className={`pdp__cta ${justAdded ? 'is-added' : ''}`.trim()} onClick={anfragen}>
-                  {justAdded ? (<><Check size={17} strokeWidth={2} /> Zur Anfrageliste hinzugefügt</>)
-                    : (<>Zur Anfrageliste hinzufügen <ShoppingBag size={17} strokeWidth={1.8} /></>)}
+                  {justAdded ? (<><Check size={17} strokeWidth={2} /> Im Warenkorb</>)
+                    : (<>In den Warenkorb <ShoppingBag size={17} strokeWidth={1.8} /></>)}
                 </button>
               ) : (
                 <span className="pdp__cta pdp__cta--soon" aria-disabled="true">
@@ -799,8 +799,8 @@ function Einzelseite({ product }) {
                 </button>
               ) : kannAnfragen ? (
                 <button type="button" className={`pdp__cta ${justAdded ? 'is-added' : ''}`.trim()} onClick={anfragen}>
-                  {justAdded ? (<><Check size={17} strokeWidth={2} /> Zur Anfrageliste hinzugefügt</>)
-                    : (<>Zur Anfrageliste hinzufügen <ShoppingBag size={17} strokeWidth={1.8} /></>)}
+                  {justAdded ? (<><Check size={17} strokeWidth={2} /> Im Warenkorb</>)
+                    : (<>In den Warenkorb <ShoppingBag size={17} strokeWidth={1.8} /></>)}
                 </button>
               ) : (
                 <span className="pdp__cta pdp__cta--soon" aria-disabled="true">

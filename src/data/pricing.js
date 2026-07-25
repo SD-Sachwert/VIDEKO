@@ -133,7 +133,7 @@ export function priceView(now = new Date()) {
   return {
     price: activeUnitPrice(now), // aktuell gültiger Preis (Cent)
     opening, // Eröffnungsaktion aktiv?
-    badge: opening && !isReference ? 'ERÖFFNUNGSPREIS' : null,
+    badge: opening && !isReference ? 'LAUNCH-PREIS' : null,
     regularPrice: SIGNATURE_PRICING.referencePrice, // 17,99 € (Cent)
     // Regulären Normalpreis (17,99 €) während der Eröffnung durchgestrichen
     // anzeigen – ehrlich als regulärer Preis, ohne %-Angabe / ohne „statt".

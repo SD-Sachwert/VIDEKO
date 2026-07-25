@@ -122,7 +122,7 @@ export default function Header() {
               type="button"
               className="header__anfrage"
               onClick={openAnfrage}
-              aria-label={`Deine Anfrageliste${inquiryCount ? ` (${inquiryCount})` : ''}`}
+              aria-label={`Dein Warenkorb${inquiryCount ? ` (${inquiryCount})` : ''}`}
             >
               <ShoppingBag size={19} strokeWidth={1.8} />
               {inquiryCount > 0 && <span className="header__anfragecount">{inquiryCount}</span>}

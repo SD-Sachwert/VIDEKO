@@ -39,25 +39,25 @@ export default function AnfragelisteDrawer() {
   const alleMitPreis = inquiryItems.every((i) => i.unitPrice != null)
 
   return (
-    <div className="anfrage" role="dialog" aria-modal="true" aria-label="Deine Anfrageliste">
+    <div className="anfrage" role="dialog" aria-modal="true" aria-label="Dein Warenkorb">
       <button type="button" className="anfrage__backdrop" aria-label="Schließen" onClick={closeAnfrage} />
       <aside className="anfrage__panel">
         <header className="anfrage__head">
           <h2 className="anfrage__title">
-            <ShoppingBag size={18} strokeWidth={1.9} /> Deine Anfrageliste
+            <ShoppingBag size={18} strokeWidth={1.9} /> Dein Warenkorb
           </h2>
-          <button type="button" className="anfrage__close" onClick={closeAnfrage} aria-label="Anfrageliste schließen">
+          <button type="button" className="anfrage__close" onClick={closeAnfrage} aria-label="Warenkorb schließen">
             <X size={20} strokeWidth={1.9} />
           </button>
         </header>
 
         {leer ? (
           <div className="anfrage__empty">
-            <p>Deine Anfrageliste ist noch leer.</p>
+            <p>Dein Warenkorb ist noch leer.</p>
             <p className="anfrage__emptysub">
               Wähle auf einer Produktseite Farbe, Größe und Logoausführung und lege die
-              Variante in die Anfrageliste. Von hier aus stellst du daraus eine
-              unverbindliche Sammelanfrage per E-Mail.
+              Variante in den Warenkorb. Von hier aus schickst du deine Auswahl
+              unverbindlich per E-Mail ab – wir melden uns mit einem Angebot.
             </p>
             <Link className="anfrage__shoplink" to="/merch" onClick={closeAnfrage}>Zu den Shirts</Link>
           </div>

@@ -122,7 +122,7 @@ export default function ProductCard({ product, delay = 0 }) {
           </Link>
         ) : kannAnfragen ? (
           <Link className="pcard__add" to={`/merch/${product.slug}`}>
-            Auswählen &amp; anfragen <ShoppingBag size={14} strokeWidth={1.9} />
+            In den Warenkorb <ShoppingBag size={14} strokeWidth={1.9} />
           </Link>
         ) : (
           <Link className="pcard__add pcard__add--preview" to={`/merch/${product.slug}`}>
