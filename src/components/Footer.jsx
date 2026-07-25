@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom'
 import { MapPin, Mail, Phone, ArrowRight } from 'lucide-react'
-import logoMark from '../assets/brand/logo-main.png'
+import logoMark from '../assets/brand/logo-main-v2.png'
+import { BRAND, ACTIVE_OPERATOR, OPERATOR_NOTICE } from '../data/company.js'
 
 import kitchenVision from '../assets/images/kitchen-vision-1.png'
 
@@ -16,8 +17,18 @@ const NAV = [
   { label: 'Inspiration', to: '/inspiration' },
   { label: 'Journal', to: '/journal' },
   { label: 'Vorher / Nachher', to: '/vorher-nachher' },
+  { label: 'Merch', to: '/merch' },
   { label: 'Karriere', to: '/karriere' },
   { label: 'Über uns', to: '/ueber-uns' },
+]
+// Nur im Shop: die Links, die Kunden dort erwarten.
+const SHOP = [
+  { label: 'Alle Produkte', to: '/merch#shop' },
+  { label: 'T-Shirts', to: '/merch/signature-t-shirt-black' },
+  { label: 'Boss-BATTLE', to: '/merch/boss-battle' },
+  { label: 'Versand & Lieferung', to: '/versand-lieferung' },
+  { label: 'Rückgabe & Widerruf', to: '/rueckgabe-widerruf' },
+  { label: 'FAQ', to: '/merch#faq' },
 ]
 const SERVICE = [
   { label: 'Beratung', to: '/beratung' },
@@ -87,6 +98,7 @@ function variantFor(path) {
 export default function Footer() {
   const { pathname } = useLocation()
   const v = variantFor(pathname)
+  const imShop = pathname.startsWith('/merch')
 
   return (
     <footer className={`footer footer--cinematic footer--${v.tone}`} id="footer">
@@ -111,9 +123,9 @@ export default function Footer() {
             <p>Küchen.<br />Die Kunst des Lebens.</p>
           </div>
 
-          <nav className="footer__col" aria-label="Navigation">
-            <span className="footer__coltitle">Navigation</span>
-            {NAV.map((n) => <Link key={n.label} to={n.to}>{n.label}</Link>)}
+          <nav className="footer__col" aria-label={imShop ? 'Shop' : 'Navigation'}>
+            <span className="footer__coltitle">{imShop ? 'Shop' : 'Navigation'}</span>
+            {(imShop ? SHOP : NAV).map((n) => <Link key={n.label} to={n.to}>{n.label}</Link>)}
           </nav>
 
           <nav className="footer__col" aria-label="Service">
@@ -123,20 +135,25 @@ export default function Footer() {
 
           <div className="footer__col footer__col--contact">
             <span className="footer__coltitle">Kontakt</span>
-            <span className="footer__contact-name">VIDEKO Küchen eG</span>
-            <a href="https://www.google.com/maps/search/?api=1&query=Hertzstra%C3%9Fe%204%2C%2097076%20W%C3%BCrzburg" target="_blank" rel="noopener noreferrer" className="footer__contact-line"><MapPin size={15} strokeWidth={1.7} /> Hertzstraße 4, 97076 Würzburg</a>
-            <a href="mailto:info@videko-kuechen.de" className="footer__contact-line"><Mail size={15} strokeWidth={1.7} /> info@videko-kuechen.de</a>
-            <a href="tel:+491605545818" className="footer__contact-line"><Phone size={15} strokeWidth={1.7} /> 0160 5545818</a>
+            <span className="footer__contact-name">{BRAND.name}</span>
+            <a href="https://www.google.com/maps/search/?api=1&query=Hertzstra%C3%9Fe%204%2C%2097076%20W%C3%BCrzburg" target="_blank" rel="noopener noreferrer" className="footer__contact-line"><MapPin size={15} strokeWidth={1.7} /> {BRAND.studio.street}, {BRAND.studio.postalCode} {BRAND.studio.city}</a>
+            <a href={`mailto:${BRAND.contactEmail}`} className="footer__contact-line"><Mail size={15} strokeWidth={1.7} /> {BRAND.contactEmail}</a>
+            <a href={`tel:${BRAND.phoneHref}`} className="footer__contact-line"><Phone size={15} strokeWidth={1.7} /> {BRAND.phone}</a>
           </div>
         </div>
 
         <div className="footer__meta">
-          <span>© {new Date().getFullYear()} VIDEKO Küchen eG · Würzburg</span>
+          <span>© {new Date().getFullYear()} {ACTIVE_OPERATOR.legalName} · {BRAND.name}</span>
           <div className="footer__legal">
             <Link to="/impressum">Impressum</Link>
             <Link to="/datenschutz">Datenschutz</Link>
+            <Link to="/agb">AGB</Link>
+            <Link to="/versand-lieferung">Versand &amp; Lieferung</Link>
+            <Link to="/rueckgabe-widerruf">Rückgabe &amp; Widerruf</Link>
           </div>
         </div>
+
+        <p className="footer__operatornote">{OPERATOR_NOTICE} <Link to="/impressum">Impressum</Link></p>
       </div>
     </footer>
   )

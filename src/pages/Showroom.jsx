@@ -24,7 +24,7 @@ export default function Showroom() {
               <ul className="standort__list">
                 <li>
                   <MapPin size={18} strokeWidth={1.7} />
-                  <span><strong>VIDEKO Küchen eG</strong><br />Hertzstraße 4<br />97076 Würzburg</span>
+                  <span><strong>VIDEKO Küchen</strong><br />Hertzstraße 4<br />97076 Würzburg</span>
                 </li>
                 <li>
                   <Mail size={18} strokeWidth={1.7} />

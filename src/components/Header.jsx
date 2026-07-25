@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { Menu, X, MapPin, ChevronDown } from 'lucide-react'
-import logoMain from '../assets/brand/logo-main.png'
+import logoMain from '../assets/brand/logo-main-v2.png'
 
 const MAIN = [
   { label: 'Studio', to: '/studio' },
@@ -9,6 +9,7 @@ const MAIN = [
   { label: 'Leistungen', to: '/leistungen' },
   { label: 'Über uns', to: '/ueber-uns', menu: 'about' },
   { label: 'Journal', to: '/journal' },
+  { label: 'Merch', to: '/merch' },
 ]
 
 const DROPDOWN = {
@@ -32,7 +33,16 @@ export default function Header() {
   // Seiten ohne dunklen Hero: Header dauerhaft im hellen "solid"-Zustand,
   // damit die Navigation auch ganz oben lesbar bleibt.
   const { pathname } = useLocation()
-  const solidRoute = pathname === '/impressum' || pathname === '/datenschutz'
+  // Seiten, die direkt mit hellem Inhalt beginnen: Der Header braucht dort von
+  // Anfang an seinen festen Hintergrund, sonst steht helle Navigation auf Creme.
+  const HELLE_SEITEN = [
+    '/impressum', '/datenschutz', '/agb', '/versand-lieferung', '/rueckgabe-widerruf',
+  ]
+  const solidRoute = HELLE_SEITEN.includes(pathname)
+
+  // Kein Warenkorb-Icon mehr: Der Merch-Bereich läuft im Anfragemodell ohne
+  // Warenkorb/Checkout (Livegang-Audit). Es gibt bewusst keinen Einstiegspunkt
+  // in einen Warenkorb im Header.
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)

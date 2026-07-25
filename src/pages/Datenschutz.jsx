@@ -1,6 +1,25 @@
 import Reveal from '../components/Reveal.jsx'
 import legalText from './datenschutz-text.txt?raw'
 
+/**
+ * ACHTUNG – INTERNER STATUS (nicht im öffentlichen Text sichtbar):
+ *
+ * Diese Datenschutzerklärung ist eine FAKTISCHE ROHFASSUNG. Sie wurde technisch
+ * bereinigt (falsche Dienste Strato-Hosting, „Real Cookie Banner“ und Google
+ * Drive entfernt, defektes HTML-Markup beseitigt) und benennt nur die
+ * tatsächlich eingesetzten Dienste (Vercel, Supabase inkl. Datei-Speicher,
+ * SMTP-Mailversand, funktionaler localStorage, lokale Google Fonts,
+ * mailto-Anfrage im Merch-Bereich, Kontakt-/Beratungs-/Bewerbungs-/
+ * Stilfinder-Formulare über /api/lead).
+ *
+ * Sie ist NOCH NICHT anwaltlich bzw. durch einen Rechtstexte-Anbieter geprüft
+ * und bleibt damit ein Livegang-Blocker. Vor Freischaltung offen (siehe
+ * docs/compliance/DATENSCHUTZ-RECHTSTEXTE-CHECKLISTE.md): AV-Verträge nach
+ * Art. 28 DSGVO (Vercel, Supabase, ggf. SMTP-Anbieter), Bestätigung der
+ * Anbieteranschriften und Drittland-/Transfermechanismen sowie die finale
+ * juristische Prüfung des Gesamttextes.
+ */
+
 // line-based parser: numbered lines -> h2, short heading-like lines -> h3, rest -> p
 const ELEMENTS = legalText
   .split('\n')

@@ -1,0 +1,15 @@
+{
+  "_hinweis": "Zentrale Shop-Konfiguration. Preise stehen ausschliesslich in products.json, hier nur shopweite Werte. Alle Betraege in Euro.",
+  "currency": "EUR",
+  "shipping": {
+    "cost": 4.9,
+    "freeFrom": 50.0,
+    "leadTimeDefault": "7–14 Tage",
+    "leadTimePersonalized": "7–14 Tage"
+  },
+  "personalization": {
+    "maxLength": 20,
+    "label": "Eigenen Namen hinzufügen"
+  },
+  "inquiryMail": "shop@videko-kuechen.de"
+}

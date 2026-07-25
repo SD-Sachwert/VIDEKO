@@ -231,7 +231,7 @@ export default function Beratung() {
                   ))}
                 </ol>
                 <div className="bf-contact">
-                  <h3>VIDEKO Küchen eG</h3>
+                  <h3>VIDEKO Küchen</h3>
                   <ul>
                     <li><MapPin size={16} strokeWidth={1.7} /> <span>Hertzstraße 4, 97076 Würzburg</span></li>
                     <li><Mail size={16} strokeWidth={1.7} /> <a href="mailto:info@videko-kuechen.de">info@videko-kuechen.de</a></li>

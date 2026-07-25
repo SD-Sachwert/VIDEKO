@@ -9,10 +9,15 @@ import VorherNachher from './pages/VorherNachher.jsx'
 import Karriere from './pages/Karriere.jsx'
 import UeberUns from './pages/UeberUns.jsx'
 import Beratung from './pages/Beratung.jsx'
+import Merch from './pages/Merch.jsx'
+import ProductDetail from './pages/ProductDetail.jsx'
 import Journal from './pages/Journal.jsx'
 import JournalArticle from './pages/JournalArticle.jsx'
 import Impressum from './pages/Impressum.jsx'
 import Datenschutz from './pages/Datenschutz.jsx'
+import VersandLieferung from './pages/VersandLieferung.jsx'
+import RueckgabeWiderruf from './pages/RueckgabeWiderruf.jsx'
+import AGB from './pages/AGB.jsx'
 import Experience from './pages/Experience.jsx'
 
 // kept (reachable via the homepage teasers/cards)
@@ -37,6 +42,8 @@ export default function App() {
         <Route path="/karriere" element={<Karriere />} />
         <Route path="/ueber-uns" element={<UeberUns />} />
         <Route path="/beratung" element={<Beratung />} />
+        <Route path="/merch" element={<Merch />} />
+        <Route path="/merch/:slug" element={<ProductDetail />} />
 
         {/* immersive 3D experience (opt-in route) */}
         <Route path="/experience" element={<Experience />} />
@@ -44,6 +51,9 @@ export default function App() {
         {/* legal */}
         <Route path="/impressum" element={<Impressum />} />
         <Route path="/datenschutz" element={<Datenschutz />} />
+        <Route path="/versand-lieferung" element={<VersandLieferung />} />
+        <Route path="/rueckgabe-widerruf" element={<RueckgabeWiderruf />} />
+        <Route path="/agb" element={<AGB />} />
 
         {/* kept feature pages (linked from homepage) */}
         <Route path="/stylefinder" element={<Stylefinder />} />
