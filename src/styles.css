@@ -1,4 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+/* Schriften werden lokal eingebunden (DSGVO – keine externe Google-Anfrage).
+   Quelle/Regeneration: scripts/fetch-fonts.mjs, Dateien in src/assets/fonts/. */
+@import './fonts.css';
 
 /* =====================================================================
    VIDEKO Küchen — Premium brand world
@@ -13636,3 +13638,20 @@ a.footer__contact-line:hover {
   .perf-card__body { padding: 12px 12px 14px; }
   .perf-card__sub { display: none; }
 }
+
+/* Pflichtangaben-Liste auf der Produktseite (Hersteller, SKU, Material, Herkunft) */
+.pdp__facts { margin: 0; display: grid; gap: 10px; }
+.pdp__facts > div { display: grid; grid-template-columns: 190px 1fr; gap: 6px 18px; align-items: start; }
+.pdp__facts dt { margin: 0; font-weight: 600; color: var(--ink, #1a1a1a); }
+.pdp__facts dd { margin: 0; color: var(--ink-soft, #55514b); line-height: 1.5; }
+.pdp__facts dd em { font-style: italic; opacity: .8; }
+.pdp__facts a { color: inherit; text-decoration: underline; }
+@media (max-width: 560px) {
+  .pdp__facts > div { grid-template-columns: 1fr; gap: 2px; }
+  .pdp__facts dt { font-size: .82rem; }
+}
+
+/* Rechts-Links im Warenkorb-Footer */
+.cartdr__legal { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(0,0,0,.08); }
+.cartdr__legal a { font-size: .8rem; color: var(--ink-soft, #55514b); text-decoration: underline; }
+.cartdr__legal a:hover { color: var(--ink, #1a1a1a); }

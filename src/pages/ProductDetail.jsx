@@ -19,6 +19,7 @@ import {
   PERSONALIZATION_MAX, PERSONALIZATION_LABEL, FREE_SHIPPING_FROM, LOGO_STYLE_INFO,
   LOGO_COLOR_ORDER, isPlaceholderStatus, IMAGE_STATUS_TITLE,
 } from '../data/merch.js'
+import { publicCompliance } from '../data/compliance.js'
 
 /**
  * Erlaubt nur Zeichen, die sich sauber drucken lassen: Buchstaben, Ziffern,
@@ -64,8 +65,10 @@ export default function ProductDetail() {
    Gemeinsame Bausteine
    ============================================================ */
 
-function InfoBloecke({ material, care, lead, soon, size, sizeGuide }) {
+function InfoBloecke({ product, material, care, lead, soon, size, sizeGuide }) {
   const [offen, setOffen] = useState(0)
+  const comp = publicCompliance(product)
+  const m = comp.manufacturer
   const infos = [
     { title: 'Material & Pflege', text: `${material}. ${care}.` },
     {
@@ -78,6 +81,33 @@ function InfoBloecke({ material, care, lead, soon, size, sizeGuide }) {
       title: 'Rückgabe & Widerruf',
       text: 'Du kannst deine Bestellung innerhalb von 14 Tagen widerrufen. Bei personalisierten Artikeln gelten Einschränkungen – die Einzelheiten stehen auf unserer Seite „Rückgabe & Widerruf".',
     },
+    {
+      // Pflichtangaben nach Textilkennzeichnungs-VO und GPSR Art. 16
+      // (Hersteller/verantwortliches Unternehmen mit Anschrift & Kontakt).
+      title: 'Hersteller & Produktangaben',
+      body: (
+        <dl className="pdp__facts">
+          <div><dt>Marke</dt><dd>{comp.brand}</dd></div>
+          <div><dt>Produktart</dt><dd>{comp.productType}</dd></div>
+          <div><dt>Artikelnummer</dt><dd>{comp.sku || <em>wird ergänzt</em>}</dd></div>
+          <div><dt>Material</dt><dd>{comp.material || <em>wird ergänzt</em>}</dd></div>
+          <div><dt>Pflege</dt><dd>{comp.care || <em>wird ergänzt</em>}</dd></div>
+          <div><dt>Herkunft</dt><dd>{comp.countryOfOrigin || <em>wird vor Verkaufsstart ergänzt</em>}</dd></div>
+          <div>
+            <dt>Hersteller / verantwortliches Unternehmen</dt>
+            <dd>
+              {m.companyName}<br />
+              {m.street}<br />
+              {m.postalCode} {m.city}, {m.country}<br />
+              <a href={`mailto:${m.email}`}>{m.email}</a>
+            </dd>
+          </div>
+          {comp.safetyNotice && (
+            <div><dt>Sicherheitshinweis</dt><dd>{comp.safetyNotice}</dd></div>
+          )}
+        </dl>
+      ),
+    },
   ]
   return (
     <section className="pdp__infos">
@@ -88,7 +118,7 @@ function InfoBloecke({ material, care, lead, soon, size, sizeGuide }) {
               <span>{b.title}</span>
               <span className="jacc__icon">{offen === i ? <Minus size={16} strokeWidth={2.2} /> : <Plus size={16} strokeWidth={2.2} />}</span>
             </button>
-            <div className="jacc__a"><div className="jacc__a-in"><p>{b.text}</p></div></div>
+            <div className="jacc__a"><div className="jacc__a-in">{b.body ? b.body : <p>{b.text}</p>}</div></div>
           </div>
         ))}
 
@@ -500,7 +530,7 @@ function Konfigurator({ family, start }) {
         </div>
       </section>
 
-      <InfoBloecke material={unit.material} care={quelle.care} lead={quelle.lead_time} soon={unit.soon} size={groesse} sizeGuide={sizeGuide} />
+      <InfoBloecke product={quelle} material={unit.material} care={quelle.care} lead={quelle.lead_time} soon={unit.soon} size={groesse} sizeGuide={sizeGuide} />
       <RelatedFamilies current={family} />
       <ServiceStrip />
       <StickyBuyBar price={stueck} priceNote={unit.priceNote} soon={unit.soon} gemeldet={gemeldet} onAdd={hinzufuegen} onNotify={vormerken} />
@@ -637,7 +667,7 @@ function Einzelseite({ product }) {
         </div>
       </section>
 
-      <InfoBloecke material={product.material} care={product.care} lead={product.lead_time} soon={product.soon} size={size} sizeGuide={sizeGuide} />
+      <InfoBloecke product={product} material={product.material} care={product.care} lead={product.lead_time} soon={product.soon} size={size} sizeGuide={sizeGuide} />
 
       {related.length > 0 && (
         <section className="pdp__related">

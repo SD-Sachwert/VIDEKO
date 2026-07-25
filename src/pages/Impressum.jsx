@@ -37,18 +37,17 @@ export default function Impressum() {
               Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz: wird final ergänzt
             </p>
 
-            <h2>EU-Streitschlichtung</h2>
-            <p>
-              Die Europäische Kommission stellt eine Plattform zur Online-Streit­beilegung (OS)
-              bereit: <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noreferrer">https://ec.europa.eu/consumers/odr/</a>.
-              Unsere E-Mail-Adresse findest du oben im Impressum.
-            </p>
-
             <h2>Verbraucherstreitbeilegung / Universalschlichtungsstelle</h2>
             <p>
               Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer
               Verbraucherschlichtungsstelle teilzunehmen.
             </p>
+            {/*
+              Kein Hinweis auf die frühere EU-Online-Streitbeilegungsplattform (OS-Plattform,
+              ec.europa.eu/consumers/odr): Die Plattform wurde von der EU-Kommission zum
+              20.07.2025 eingestellt. Ein Link oder Hinweis darauf ist veraltet und wird
+              bewusst NICHT eingebunden.
+            */}
 
             <p className="legal__note">Hinweis: Register- und USt-Angaben werden final ergänzt.</p>
           </Reveal>

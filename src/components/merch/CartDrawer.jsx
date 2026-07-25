@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { X, Minus, Plus, Trash2, ShoppingBag } from 'lucide-react'
 
 import { useCart } from '../../shop/cart-context.js'
@@ -27,6 +28,7 @@ export default function CartDrawer() {
         className={`cartdr ${open ? 'is-open' : ''}`}
         aria-label="Warenkorb"
         aria-hidden={!open}
+        inert={!open}
       >
         <header className="cartdr__head">
           <span className="cartdr__title">Dein Warenkorb ({lines.length})</span>
@@ -100,8 +102,15 @@ export default function CartDrawer() {
               </p>
               <p className="cartdr__note">
                 Der Online-Checkout ist noch nicht angebunden – „Zur Kasse“ öffnet eine
-                vorausgefüllte Bestell-Mail an uns.
+                vorausgefüllte Bestell-Mail an uns. Der Kaufvertrag kommt erst mit unserer
+                Auftragsbestätigung zustande.
               </p>
+              <nav className="cartdr__legal" aria-label="Rechtliche Informationen">
+                <Link to="/agb" onClick={() => setOpen(false)}>AGB</Link>
+                <Link to="/rueckgabe-widerruf" onClick={() => setOpen(false)}>Widerruf</Link>
+                <Link to="/versand-lieferung" onClick={() => setOpen(false)}>Versand</Link>
+                <Link to="/datenschutz" onClick={() => setOpen(false)}>Datenschutz</Link>
+              </nav>
             </footer>
           </>
         )}
