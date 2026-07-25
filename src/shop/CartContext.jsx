@@ -53,6 +53,8 @@ export function CartProvider({ children }) {
   })
   // Reine UI-Sichtbarkeit des Anfragelisten-Panels (nicht persistiert).
   const [anfrageOpen, setAnfrageOpen] = useState(false)
+  // Sichtbarkeit des geführten Anfrage-Dialogs (Kontakt-/Lieferdaten → Absenden).
+  const [checkoutOpen, setCheckoutOpen] = useState(false)
 
   useEffect(() => writeStore(WISH_KEY, wishlist), [wishlist])
   useEffect(() => writeStore(INQUIRY_KEY, inquiryItems), [inquiryItems])
@@ -82,6 +84,10 @@ export function CartProvider({ children }) {
 
   const openAnfrage = useCallback(() => setAnfrageOpen(true), [])
   const closeAnfrage = useCallback(() => setAnfrageOpen(false), [])
+
+  // Vom Warenkorb-Panel aus in den geführten Anfrage-Dialog wechseln.
+  const openCheckout = useCallback(() => { setAnfrageOpen(false); setCheckoutOpen(true) }, [])
+  const closeCheckout = useCallback(() => setCheckoutOpen(false), [])
 
   const removeInquiry = useCallback((sku) => {
     setInquiryItems((prev) => prev.filter((i) => i.sku !== sku))
@@ -121,11 +127,15 @@ export function CartProvider({ children }) {
       anfrageOpen,
       openAnfrage,
       closeAnfrage,
+      checkoutOpen,
+      openCheckout,
+      closeCheckout,
     }),
     [
       wishlist, toggleWish, inquiryItems, addInquiry, removeInquiry,
       updateInquiryQty, clearInquiry, hasInquiry, inquiryCount, inquirySubtotal,
       anfrageOpen, openAnfrage, closeAnfrage,
+      checkoutOpen, openCheckout, closeCheckout,
     ],
   )
 

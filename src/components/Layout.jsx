@@ -10,6 +10,7 @@ import Footer from './Footer.jsx'
 // Bestellung, keine Server-Speicherung.
 import { CartProvider } from '../shop/CartContext.jsx'
 import AnfragelisteDrawer from './merch/AnfragelisteDrawer.jsx'
+import CheckoutDialog from './merch/CheckoutDialog.jsx'
 
 // Scrollposition je History-Eintrag (location.key) in sessionStorage sichern.
 // Das ist dasselbe Muster wie React Routers eingebautes <ScrollRestoration>
@@ -109,6 +110,7 @@ export default function Layout() {
         </main>
         <Footer />
         <AnfragelisteDrawer />
+        <CheckoutDialog />
       </div>
     </CartProvider>
   )

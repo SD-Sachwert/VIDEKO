@@ -4,7 +4,7 @@ import { X, Minus, Plus, Trash2, Mail, ShoppingBag } from 'lucide-react'
 
 import { useCart } from '../../shop/cart-context.js'
 import { formatPrice } from '../../data/merch.js'
-import { openInquiryList, INQUIRY_DISCLAIMER } from '../../shop/inquiry.js'
+import { INQUIRY_DISCLAIMER } from '../../shop/inquiry.js'
 
 /**
  * „Deine Anfrageliste" (§ 3/§ 4).
@@ -18,7 +18,7 @@ import { openInquiryList, INQUIRY_DISCLAIMER } from '../../shop/inquiry.js'
 export default function AnfragelisteDrawer() {
   const {
     inquiryItems, updateInquiryQty, removeInquiry, clearInquiry,
-    inquiryCount, inquirySubtotal, anfrageOpen, closeAnfrage,
+    inquiryCount, inquirySubtotal, anfrageOpen, closeAnfrage, openCheckout,
   } = useCart()
 
   useEffect(() => {
@@ -100,8 +100,8 @@ export default function AnfragelisteDrawer() {
               </div>
               <p className="anfrage__shipnote">zzgl. Versand – die Versandkosten nennen wir mit dem individuellen Angebot.</p>
 
-              <button type="button" className="anfrage__send" onClick={() => openInquiryList(inquiryItems)}>
-                Unverbindliche Anfrage per E-Mail senden <Mail size={16} strokeWidth={1.9} />
+              <button type="button" className="anfrage__send" onClick={openCheckout}>
+                Weiter zur Anfrage <Mail size={16} strokeWidth={1.9} />
               </button>
               <p className="anfrage__disclaimer">{INQUIRY_DISCLAIMER}</p>
 
