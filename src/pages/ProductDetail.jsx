@@ -392,7 +392,7 @@ function Konfigurator({ family, start }) {
   // wird EINMALIG anonymes Interesse gemeldet – ohne jegliche personenbezogene
   // Daten. Das reine Merken bleibt lokal; ein Fehler blockiert nichts.
   const merkenUndInteresse = () => {
-    if (unit.soon && !gemerkt) {
+    if (!gemerkt) {
       sendInterest({ productName: family.label, productId: quelle.id, variant: `${unit.styleLabel} · ${color}` })
     }
     toggleWish(quelle.id)
@@ -697,7 +697,7 @@ function Einzelseite({ product }) {
 
   // § 7: anonymes Interesse beim Aktivieren des Herzens auf Coming-soon-Produkten.
   const merkenUndInteresse = () => {
-    if (product.soon && !gemerkt) {
+    if (!gemerkt) {
       sendInterest({ productName: product.name, productId: product.id, variant: '' })
     }
     toggleWish(product.id)

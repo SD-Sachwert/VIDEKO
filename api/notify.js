@@ -17,10 +17,12 @@ import nodemailer from 'nodemailer'
  *       interne Mail „Neue Produktvormerkung" an info@. Kein Newsletter.
  *
  *  B) „Herz / Interesse" – ANONYMES Produktinteresse (§ 7).
- *     - action 'interest': schickt eine interne Mail „Anonymes Produktinteresse".
- *       Es werden KEINE personenbezogenen Daten verarbeitet: keine IP, kein
- *       User-Agent, kein Fingerprint, kein Name, keine E-Mail, kein Standort.
- *       Nur Produktname/-ID, optionale Variante und Datum.
+ *     - action 'interest': (1) schreibt das Interesse in eine anonyme
+ *       Nachfrage-Liste (videko_interest_events) fort, damit ersichtlich ist,
+ *       welche Artikel oft nachgefragt werden, und (2) schickt eine interne
+ *       Sofort-Mail. Es werden KEINE personenbezogenen Daten verarbeitet: keine
+ *       IP, kein User-Agent, kein Fingerprint, kein Name, keine E-Mail, kein
+ *       Standort. Nur Produktname/-ID, optionale Variante und Datum.
  *
  * Alle Secrets ausschließlich aus Environment-Variablen. Fehlt die Konfiguration
  * (SMTP/NOTIFY_SECRET), antwortet der Endpoint ehrlich mit configured:false,
@@ -111,6 +113,26 @@ async function storeVormerkung(row) {
   } catch { return false }
 }
 
+// Anonyme Nachfrage-Liste (Herzbutton). Append-only Ereignis-Log, damit wir sehen,
+// welche Artikel oft nachgefragt werden – rein produktbezogen, KEINE
+// personenbezogenen Daten (keine IP, kein User-Agent, kein Name/E-Mail).
+// Tabelle `videko_interest_events` (anzulegen):
+//   id uuid default gen_random_uuid(), product_id text, product_name text,
+//   variant text, created_at timestamptz default now()
+// Auswertung „Top-Artikel": select product_id, product_name, count(*)
+//   from videko_interest_events group by 1,2 order by 3 desc;
+async function storeInterest(row) {
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) return false
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/videko_interest_events`, {
+      method: 'POST',
+      headers: { apikey: SUPABASE_SERVICE_KEY, Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+      body: JSON.stringify(row),
+    })
+    return r.ok
+  } catch { return false }
+}
+
 // ───────────── Handler ─────────────
 export default async function handler(req, res) {
   if (req.method !== 'POST') { res.status(405).json({ ok: false, error: 'method-not-allowed' }); return }
@@ -127,26 +149,32 @@ export default async function handler(req, res) {
     const productId = clean(b.productId, 80)
     const variant = clean(b.variant, 160)
     if (!productName && !productId) { res.status(422).json({ ok: false, error: 'missing-product' }); return }
-    // BEWUSST keine Speicherung/Verarbeitung personenbezogener Daten. Nur intern melden.
+
+    // 1) Anonyme Nachfrage-Liste fortschreiben (nur Produktbezug, keine Personendaten).
+    const stored = await storeInterest({ product_id: productId, product_name: productName, variant })
+
+    // 2) Interne Sofort-Benachrichtigung per E-Mail.
     let mailed = false
     try {
       if (mailReady) {
         const t = transport()
         const text =
-          `Anonymes Produktinteresse über den Herzbutton.\n\n` +
+          `❤️ Neues Produktinteresse über den Herzbutton.\n\n` +
           `Produkt: ${productName || '—'}\nProdukt-ID: ${productId || '—'}\n` +
           `Variante: ${variant || '—'}\n\n` +
+          `Diese Merkung wurde in der Nachfrage-Liste (videko_interest_events) erfasst, ` +
+          `damit ihr seht, welche Artikel oft nachgefragt werden.\n\n` +
           `Hinweis: Es wurden bewusst KEINE personenbezogenen Daten erfasst ` +
           `(keine IP, kein User-Agent, kein Name, keine E-Mail).`
         await t.sendMail({
           from: FROM(), to: LEAD_NOTIFY_TO,
-          subject: 'Anonymes Produktinteresse',
+          subject: `❤️ Produktinteresse: ${productName || productId}`,
           text,
         })
         mailed = true
       }
     } catch { /* Nutzeraktion nie blockieren */ }
-    res.status(200).json({ ok: true, configured: mailReady, mailed })
+    res.status(200).json({ ok: true, configured: mailReady, mailed, stored })
     return
   }
 

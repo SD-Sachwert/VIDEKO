@@ -13755,7 +13755,7 @@ a.footer__contact-line:hover {
   font-size: 0.64rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
   color: #20170a; background: var(--grad-gold); vertical-align: middle;
 }
-/* Regulaerer Normalpreis (17,99 €) durchgestrichen neben dem Eroeffnungspreis. */
+/* Regulaerer Normalpreis (12,99 €) durchgestrichen neben dem Eroeffnungspreis. */
 .pcard__price-strike {
   margin-left: 8px; font-weight: 500; color: var(--muted, #8a8378);
   text-decoration: line-through; text-decoration-color: rgba(138, 131, 122, 0.8);
@@ -13880,6 +13880,8 @@ a.footer__contact-line:hover {
 .checkout__field--plz { max-width: 100%; }
 
 .checkout__err { margin: 2px 0 6px; font-size: 0.76rem; color: #b4472f; }
+.checkout__ferr { display: block; margin-top: 5px; font-style: normal; font-size: 0.74rem; line-height: 1.4; color: #b4472f; }
+.checkout__field.has-err input, .checkout__field.has-err textarea { border-color: rgba(180, 71, 47, 0.7); background: rgba(180, 71, 47, 0.04); }
 
 .checkout__review { list-style: none; margin: 0 0 12px; padding: 0; display: flex; flex-direction: column; gap: 10px; }
 .checkout__review li { display: flex; align-items: center; gap: 11px; }

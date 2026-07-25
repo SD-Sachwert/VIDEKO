@@ -24,7 +24,7 @@ export default function ProductCard({ product, delay = 0 }) {
   // § 7: Herz auf Coming-soon-Produkten meldet beim Aktivieren einmalig
   // anonymes Interesse (ohne personenbezogene Daten). Sonst nur lokal merken.
   const merkenUndInteresse = () => {
-    if (product.soon && !gemerkt) sendInterest({ productName: product.name, productId: product.id, variant: '' })
+    if (!gemerkt) sendInterest({ productName: product.name, productId: product.id, variant: '' })
     toggleWish(product.id)
   }
 

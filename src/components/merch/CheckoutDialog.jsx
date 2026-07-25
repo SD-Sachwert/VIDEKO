@@ -18,9 +18,30 @@ import { submitOrder, buildOrderMailto } from '../../shop/order.js'
  */
 
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/
+// Adress-Plausibilität (gegen Fantasie-Eingaben) – gleiche Regeln wie serverseitig.
+const L = "A-Za-zÀ-ÖØ-öø-ÿ"
+const RE_NAME = new RegExp(`^[${L}][${L} .'-]{1,}$`)
+const RE_ORT = RE_NAME
+const RE_PLZ_DE = /^\d{5}$/
+const hatBuchstabe = (s) => new RegExp(`[${L}]`).test(s)
+const istDeutschland = (land) => !land || /deutsch|germany|^de$/i.test(String(land).trim())
+
 const leer = {
   name: '', email: '', telefon: '', firma: '',
   strasse: '', plz: '', ort: '', land: 'Deutschland', anmerkung: '',
+}
+
+/** Feldweise Formatprüfung; liefert { feld: 'Meldung' }. */
+function pruefeFelder(f) {
+  const e = {}
+  if (!RE_NAME.test(f.name.trim())) e.name = 'Bitte gib deinen vollständigen Namen an (Buchstaben, keine Zahlen).'
+  if (!EMAIL_RE.test(f.email.trim())) e.email = 'Bitte gib eine gültige E-Mail-Adresse an.'
+  const s = f.strasse.trim()
+  if (!(hatBuchstabe(s) && /\d/.test(s) && s.length >= 5)) e.strasse = 'Bitte Straße und Hausnummer angeben, z. B. „Musterstraße 12".'
+  const de = istDeutschland(f.land)
+  if (de ? !RE_PLZ_DE.test(f.plz.trim()) : f.plz.trim().length < 3) e.plz = de ? 'Bitte eine gültige 5-stellige PLZ angeben.' : 'Bitte eine gültige PLZ angeben.'
+  if (!RE_ORT.test(f.ort.trim())) e.ort = 'Bitte einen gültigen Ort angeben (Buchstaben, keine Zahlen).'
+  return e
 }
 
 export default function CheckoutDialog() {
@@ -55,10 +76,17 @@ export default function CheckoutDialog() {
     return () => { document.body.style.overflow = prev; window.removeEventListener('keydown', onKey) }
   }, [checkoutOpen, closeCheckout, busy])
 
-  const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }))
+  // Serverseitige Feldmeldung (z. B. „PLZ passt nicht zum Ort") pro Feld.
+  const [serverFeld, setServerFeld] = useState({})
+  const set = (k) => (e) => {
+    setForm((f) => ({ ...f, [k]: e.target.value }))
+    if (serverFeld[k]) setServerFeld((s) => { const n = { ...s }; delete n[k]; return n })
+  }
 
-  const kontaktOk = form.name.trim() && EMAIL_RE.test(form.email.trim())
-  const lieferOk = form.strasse.trim() && form.plz.trim() && form.ort.trim()
+  const errs = pruefeFelder(form)
+  const meldung = (k) => serverFeld[k] || (touched ? errs[k] : null)
+  const kontaktOk = !errs.name && !errs.email
+  const lieferOk = !errs.strasse && !errs.plz && !errs.ort
 
   const anschrift = useMemo(
     () => [form.strasse, `${form.plz} ${form.ort}`.trim(), form.land].filter(Boolean).join(' · '),
@@ -103,8 +131,13 @@ export default function CheckoutDialog() {
     if (res.ok) {
       clearInquiry()
       setStep(3)
+    } else if (res.error === 'address' && res.field) {
+      // Der Server hat die Adresse als unplausibel erkannt (z. B. PLZ ≠ Ort).
+      // Kein mailto-Rückfall – zurück zum passenden Schritt und Feld markieren.
+      setServerFeld((s) => ({ ...s, [res.field]: res.message || 'Bitte prüfe diese Angabe.' }))
+      setStep(['name', 'email'].includes(res.field) ? 0 : 1)
     } else {
-      // Rückfall: vorbelegte Mail, damit die Anfrage nie verloren geht.
+      // Echter Server-/Netzausfall → vorbelegte Mail, damit nichts verloren geht.
       setFallbackHref(buildOrderMailto({ contact: form, items: inquiryItems }))
       setFehler('Die automatische Übermittlung hat gerade nicht geklappt. Du kannst deine Anfrage mit einem Klick als fertig ausgefüllte E-Mail senden – wir bekommen sie genauso.')
     }
@@ -133,13 +166,15 @@ export default function CheckoutDialog() {
           <div className="checkout__body">
             <h2 className="checkout__h">Wie können wir dich erreichen?</h2>
             <p className="checkout__lead">Damit wir dir dein persönliches Angebot schicken können.</p>
-            <label className="checkout__field">
+            <label className={`checkout__field ${meldung('name') ? 'has-err' : ''}`}>
               <span>Name *</span>
               <input type="text" value={form.name} onChange={set('name')} autoComplete="name" placeholder="Vor- und Nachname" />
+              {meldung('name') && <em className="checkout__ferr">{meldung('name')}</em>}
             </label>
-            <label className="checkout__field">
+            <label className={`checkout__field ${meldung('email') ? 'has-err' : ''}`}>
               <span>E-Mail *</span>
               <input type="email" value={form.email} onChange={set('email')} autoComplete="email" placeholder="name@beispiel.de" />
+              {meldung('email') && <em className="checkout__ferr">{meldung('email')}</em>}
             </label>
             <div className="checkout__grid2">
               <label className="checkout__field">
@@ -151,9 +186,6 @@ export default function CheckoutDialog() {
                 <input type="text" value={form.firma} onChange={set('firma')} autoComplete="organization" placeholder="Falls geschäftlich" />
               </label>
             </div>
-            {touched && !kontaktOk && (
-              <p className="checkout__err">Bitte gib deinen Namen und eine gültige E-Mail-Adresse an.</p>
-            )}
           </div>
         )}
 
@@ -162,18 +194,21 @@ export default function CheckoutDialog() {
           <div className="checkout__body">
             <h2 className="checkout__h">Wohin dürfen wir liefern?</h2>
             <p className="checkout__lead">Wir brauchen die Adresse, um dir die Versandkosten im Angebot exakt zu nennen.</p>
-            <label className="checkout__field">
+            <label className={`checkout__field ${meldung('strasse') ? 'has-err' : ''}`}>
               <span>Straße &amp; Hausnummer *</span>
               <input type="text" value={form.strasse} onChange={set('strasse')} autoComplete="street-address" placeholder="Musterstraße 12" />
+              {meldung('strasse') && <em className="checkout__ferr">{meldung('strasse')}</em>}
             </label>
             <div className="checkout__grid2">
-              <label className="checkout__field checkout__field--plz">
+              <label className={`checkout__field checkout__field--plz ${meldung('plz') ? 'has-err' : ''}`}>
                 <span>PLZ *</span>
                 <input type="text" value={form.plz} onChange={set('plz')} autoComplete="postal-code" inputMode="numeric" placeholder="12345" />
+                {meldung('plz') && <em className="checkout__ferr">{meldung('plz')}</em>}
               </label>
-              <label className="checkout__field">
+              <label className={`checkout__field ${meldung('ort') ? 'has-err' : ''}`}>
                 <span>Ort *</span>
                 <input type="text" value={form.ort} onChange={set('ort')} autoComplete="address-level2" placeholder="Musterstadt" />
+                {meldung('ort') && <em className="checkout__ferr">{meldung('ort')}</em>}
               </label>
             </div>
             <label className="checkout__field">
@@ -184,9 +219,6 @@ export default function CheckoutDialog() {
               <span>Anmerkung <em>(optional)</em></span>
               <textarea rows={3} value={form.anmerkung} onChange={set('anmerkung')} placeholder="Wunschtermin, Sonderwünsche, Fragen …" />
             </label>
-            {touched && !lieferOk && (
-              <p className="checkout__err">Bitte gib Straße, PLZ und Ort an.</p>
-            )}
           </div>
         )}
 

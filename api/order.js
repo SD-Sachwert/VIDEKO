@@ -38,6 +38,63 @@ const euro = (cent) =>
     ? null
     : (Number(cent) / 100).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })
 
+// ── Adress-Plausibilität (gegen Fantasie-Eingaben) ────────────────────
+// Erlaubte Buchstaben inkl. Umlaute/Akzente. Bewusst KEINE volle Geocodierung
+// (die würde echte Kunden fälschlich abweisen) – wir prüfen Format + einen
+// echten PLZ↔Ort-Abgleich über die offene openPLZ-API.
+const L = 'A-Za-zÀ-ÖØ-öø-ÿ'
+const RE_NAME = new RegExp(`^[${L}][${L} .'-]{1,}$`)
+const RE_ORT = new RegExp(`^[${L}][${L} .'-]{1,}$`)
+const RE_PLZ_DE = /^\d{5}$/
+const hasLetter = (s) => new RegExp(`[${L}]`).test(s)
+const isGermany = (land) => !land || /deutsch|germany|^de$/i.test(String(land).trim())
+
+const normOrt = (s) =>
+  String(s).toLowerCase().replace(/ß/g, 'ss').replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/[^a-z]/g, '')
+
+/** Format-Prüfung; gibt {field, message} des ersten Fehlers zurück oder null. */
+function validateAddressFormat(d) {
+  if (!RE_NAME.test(d.name)) return { field: 'name', message: 'Bitte gib deinen vollständigen Namen an (Buchstaben, keine Zahlen).' }
+  if (!(hasLetter(d.strasse) && /\d/.test(d.strasse) && d.strasse.trim().length >= 5))
+    return { field: 'strasse', message: 'Bitte Straße und Hausnummer angeben, z. B. „Musterstraße 12".' }
+  if (isGermany(d.land)) {
+    if (!RE_PLZ_DE.test(d.plz)) return { field: 'plz', message: 'Bitte eine gültige 5-stellige Postleitzahl angeben.' }
+  } else if (d.plz.trim().length < 3) {
+    return { field: 'plz', message: 'Bitte eine gültige Postleitzahl angeben.' }
+  }
+  if (!RE_ORT.test(d.ort)) return { field: 'ort', message: 'Bitte einen gültigen Ort angeben (Buchstaben, keine Zahlen).' }
+  return null
+}
+
+/**
+ * Echter PLZ↔Ort-Abgleich für Deutschland über die offene openPLZ-API.
+ * Ergebnis:
+ *   'ok'        – PLZ existiert und passt zum Ort
+ *   'notfound'  – PLZ existiert nachweislich nicht (Fantasie-PLZ)
+ *   'mismatch'  – PLZ existiert, aber Ort passt nicht (mit Vorschlägen in `names`)
+ *   'unknown'   – API nicht erreichbar → NICHT blockieren (Format hat schon geprüft)
+ */
+async function checkPlzOrtDE(plz, ort) {
+  try {
+    const r = await fetch(`https://openplzapi.org/de/Localities?postalCode=${encodeURIComponent(plz)}`, {
+      headers: { Accept: 'application/json' },
+    })
+    if (!r.ok) return { status: 'unknown' }
+    const arr = await r.json()
+    if (!Array.isArray(arr)) return { status: 'unknown' }
+    if (arr.length === 0) return { status: 'notfound' }
+    const want = normOrt(ort)
+    const names = arr.map((x) => x && x.name).filter(Boolean)
+    const match = names.some((n) => {
+      const nn = normOrt(n)
+      return nn && (nn === want || nn.includes(want) || want.includes(nn))
+    })
+    return { status: match ? 'ok' : 'mismatch', names }
+  } catch {
+    return { status: 'unknown' }
+  }
+}
+
 async function readBody(req) {
   if (req.body && typeof req.body === 'object') return req.body
   if (typeof req.body === 'string') { try { return JSON.parse(req.body) } catch { return {} } }
@@ -197,8 +254,21 @@ export default async function handler(req, res) {
   }
 
   const emailOk = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email)
-  if (!d.name || !emailOk || !d.strasse || !d.plz || !d.ort || items.length === 0) {
-    res.status(422).json({ ok: false, error: 'invalid' }); return
+  if (!emailOk) { res.status(422).json({ ok: false, error: 'address', field: 'email', message: 'Bitte gib eine gültige E-Mail-Adresse an.' }); return }
+  if (items.length === 0) { res.status(422).json({ ok: false, error: 'invalid' }); return }
+
+  // Adresse gegen Fantasie-Eingaben absichern: erst Format, dann echter PLZ↔Ort-Abgleich.
+  const formatErr = validateAddressFormat(d)
+  if (formatErr) { res.status(422).json({ ok: false, error: 'address', ...formatErr }); return }
+  if (isGermany(d.land)) {
+    const chk = await checkPlzOrtDE(d.plz, d.ort)
+    if (chk.status === 'notfound') {
+      res.status(422).json({ ok: false, error: 'address', field: 'plz', message: `Die Postleitzahl ${d.plz} gibt es nicht. Bitte prüfe deine PLZ.` }); return
+    }
+    if (chk.status === 'mismatch') {
+      const vorschlag = (chk.names || []).slice(0, 3).join(', ')
+      res.status(422).json({ ok: false, error: 'address', field: 'ort', message: `Die PLZ ${d.plz} gehört zu ${vorschlag || 'einem anderen Ort'}. Bitte prüfe PLZ und Ort.` }); return
+    }
   }
 
   // 1) Best-effort Supabase-Speicherung (gleiche Tabelle wie Leads)

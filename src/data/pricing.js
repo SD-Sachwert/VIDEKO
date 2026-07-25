@@ -9,18 +9,18 @@
  * - `referencePrice` = regulärer Preis (Standardpreis) NACH der Eröffnung.
  * - `lowestPriceLast30Days` = niedrigster tatsächlich verlangter Gesamtpreis der
  *   letzten 30 Tage. NUR belegbare Werte eintragen (§ 11 PAngV). Solange der Shop
- *   neu ist und 17,99 € noch nie tatsächlich verlangt wurde, bleibt dieser Wert
+ *   neu ist und 12,99 € noch nie tatsächlich verlangt wurde, bleibt dieser Wert
  *   `null` und es wird KEIN Preisverlauf erfunden.
  *
- * WICHTIG – 17,99 € ist (noch) KEIN nachgewiesener vorheriger Verkaufspreis:
+ * WICHTIG – 12,99 € ist (noch) KEIN nachgewiesener vorheriger Verkaufspreis:
  *   -> `promotionType: 'opening'` (Eröffnungspreis).
- *   -> Der reguläre Preis 17,99 € wird durchgestrichen dargestellt und ehrlich
+ *   -> Der reguläre Preis 12,99 € wird durchgestrichen dargestellt und ehrlich
  *      als *regulärer Preis (nach der Eröffnung)* benannt – NICHT als „statt"
  *      oder vorheriger Verkaufspreis. Es wird bewusst KEIN Prozentrabatt und
  *      KEIN erfundener 30-Tage-Tiefstpreis ausgewiesen; der aktuelle Preis
  *      trägt zusätzlich das Badge „ERÖFFNUNGSPREIS". Der Streichpreis
  *      kennzeichnet damit nur den regulären Normalpreis, kein Rabattversprechen.
- *   -> Erst wenn 17,99 € nachweislich als tatsächlicher Verkaufspreis verlangt
+ *   -> Erst wenn 12,99 € nachweislich als tatsächlicher Verkaufspreis verlangt
  *      wurde, darf `promotionType` auf `'reference'` gestellt und
  *      `lowestPriceLast30Days` belastbar gefüllt werden. Dann (und nur dann) ist
  *      eine durchgestrichene Darstellung mit korrektem 30-Tage-Tiefstpreis zulässig.
@@ -45,11 +45,11 @@ const euroToCent = (euro) => (euro == null ? null : Math.round(euro * 100))
  */
 export const SIGNATURE_PRICING = {
   currentPrice: euroToCent(4.99), // Eröffnungspreis (Gesamtpreis inkl. USt.)
-  referencePrice: euroToCent(17.99), // regulärer Preis nach der Eröffnung
-  // Kein belegter 30-Tage-Tiefstpreis (Shop neu, 17,99 € noch nie verlangt).
+  referencePrice: euroToCent(12.99), // regulärer Preis nach der Eröffnung
+  // Kein belegter 30-Tage-Tiefstpreis (Shop neu, 12,99 € noch nie verlangt).
   lowestPriceLast30Days: null,
   // 'opening' = Eröffnungspreis-Badge (kein Streichpreis). 'reference' erst,
-  // wenn 17,99 € nachweislich vorher verlangt wurde.
+  // wenn 12,99 € nachweislich vorher verlangt wurde.
   promotionType: 'opening',
   // Aktionsbeginn (Eröffnung). Fester Kalendertag – kein dynamisches Datum.
   promotionStart: '2026-07-25',
@@ -123,7 +123,7 @@ export function activeUnitPrice(now = new Date()) {
  * Gebündelte Preisdarstellung für die UI. Bewusst OHNE erfundene Angaben:
  *   - showStrike/percent nur bei promotionType 'reference' UND belegtem
  *     30-Tage-Tiefstpreis.
- *   - regularAfterOpening: 17,99 € als *regulärer Preis nach der Eröffnung*
+ *   - regularAfterOpening: 12,99 € als *regulärer Preis nach der Eröffnung*
  *     (kein Streichpreis).
  */
 export function priceView(now = new Date()) {
@@ -134,11 +134,11 @@ export function priceView(now = new Date()) {
     price: activeUnitPrice(now), // aktuell gültiger Preis (Cent)
     opening, // Eröffnungsaktion aktiv?
     badge: opening && !isReference ? 'LAUNCH-PREIS' : null,
-    regularPrice: SIGNATURE_PRICING.referencePrice, // 17,99 € (Cent)
-    // Regulären Normalpreis (17,99 €) während der Eröffnung durchgestrichen
+    regularPrice: SIGNATURE_PRICING.referencePrice, // 12,99 € (Cent)
+    // Regulären Normalpreis (12,99 €) während der Eröffnung durchgestrichen
     // anzeigen – ehrlich als regulärer Preis, ohne %-Angabe / ohne „statt".
     showRegularStrike: opening,
-    // Streichpreis + %-Ersparnis NUR, wenn 17,99 € nachweislich vorher verlangt
+    // Streichpreis + %-Ersparnis NUR, wenn 12,99 € nachweislich vorher verlangt
     // wurde (promotionType 'reference'); sonst bewusst null.
     strikePrice: opening && isReference ? SIGNATURE_PRICING.referencePrice : null,
     lowestPriceLast30Days: isReference ? SIGNATURE_PRICING.lowestPriceLast30Days : null,

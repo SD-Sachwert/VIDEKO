@@ -56,7 +56,7 @@ export async function submitOrder({ contact, items }) {
     let data = {}
     try { data = await res.json() } catch { /* leere/ungültige Antwort */ }
     if (res.ok && data.ok) return { ok: true, mailed: data.mailed, stored: data.stored }
-    return { ok: false, error: data.error || `http-${res.status}` }
+    return { ok: false, error: data.error || `http-${res.status}`, field: data.field, message: data.message }
   } catch {
     return { ok: false, error: 'network' }
   }
