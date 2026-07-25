@@ -13755,9 +13755,19 @@ a.footer__contact-line:hover {
   font-size: 0.64rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
   color: #20170a; background: var(--grad-gold); vertical-align: middle;
 }
+/* Regulaerer Normalpreis (17,99 €) durchgestrichen neben dem Eroeffnungspreis. */
+.pcard__price-strike {
+  margin-left: 8px; font-weight: 500; color: var(--muted, #8a8378);
+  text-decoration: line-through; text-decoration-color: rgba(138, 131, 122, 0.8);
+  vertical-align: middle;
+}
 
 /* --- PDP: Eroeffnungspreis-Badge + Countdown-Hinweis --- */
 .pdp__badge--opening { background: var(--grad-gold); color: #20170a; border: none; }
+.pdp__price-strike {
+  font-size: 1.05rem; font-weight: 500; color: var(--muted, #8a8378);
+  text-decoration: line-through; text-decoration-color: rgba(138, 131, 122, 0.85);
+}
 .pdp__opening {
   margin-top: 10px; font-size: 0.84rem; line-height: 1.55; color: var(--ink);
   padding: 11px 14px; border-radius: 10px;

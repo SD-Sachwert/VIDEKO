@@ -483,15 +483,15 @@
         "gallery": [
           "signature-polo-schwarz-brust.webp"
         ],
-        "imageStatus": "placeholder",
-        "regenNote": "Signature Polo Schwarz – Foto folgt"
+        "imageStatus": "final",
+        "regenNote": null
       }
     ],
     "image": "signature-polo-schwarz-brust.webp",
     "gallery": [
       "signature-polo-schwarz-brust.webp"
     ],
-    "imageStatus": "placeholder",
+    "imageStatus": "final",
     "requiresFinalPhotography": true,
     "requiresRerender": false,
     "material": "Piqué, 100% Baumwolle",
@@ -505,7 +505,7 @@
       "Teil der SIGNATURE Linie"
     ],
     "rank": 4,
-    "regenNote": "Signature Polo Schwarz – Foto folgt"
+    "regenNote": null
   },
   {
     "id": "signature_polo_beige",
@@ -630,19 +630,19 @@
         "slot": "chest",
         "slotLabel": "Kleines Brustlogo",
         "logoColor": null,
-        "image": "v5-coming-soon.webp",
+        "image": "signature-polo-weiss-brust.webp",
         "gallery": [
-          "v5-coming-soon.webp"
+          "signature-polo-weiss-brust.webp"
         ],
-        "imageStatus": "placeholder",
-        "regenNote": "Signature Polo Weiß – Foto folgt"
+        "imageStatus": "final",
+        "regenNote": null
       }
     ],
-    "image": "v5-coming-soon.webp",
+    "image": "signature-polo-weiss-brust.webp",
     "gallery": [
-      "v5-coming-soon.webp"
+      "signature-polo-weiss-brust.webp"
     ],
-    "imageStatus": "placeholder",
+    "imageStatus": "final",
     "requiresFinalPhotography": true,
     "requiresRerender": false,
     "material": "Piqué, 100% Baumwolle",
@@ -656,7 +656,7 @@
       "Teil der SIGNATURE Linie"
     ],
     "rank": 6,
-    "regenNote": "Signature Polo Weiß – Foto folgt"
+    "regenNote": null
   },
   {
     "id": "signature_hoodie_black",

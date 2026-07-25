@@ -14,11 +14,12 @@
  *
  * WICHTIG – 17,99 € ist (noch) KEIN nachgewiesener vorheriger Verkaufspreis:
  *   -> `promotionType: 'opening'` (Eröffnungspreis).
- *   -> Der reguläre Preis 17,99 € wird NICHT durchgestrichen, es wird KEIN
- *      Prozentrabatt und KEIN „statt 17,99 €" ausgewiesen. Stattdessen trägt der
- *      Preis das auffällige Badge „ERÖFFNUNGSPREIS" und 17,99 € wird ehrlich als
- *      *regulärer Preis nach der Eröffnung* benannt (zukünftiger, nicht
- *      vorheriger Preis).
+ *   -> Der reguläre Preis 17,99 € wird durchgestrichen dargestellt und ehrlich
+ *      als *regulärer Preis (nach der Eröffnung)* benannt – NICHT als „statt"
+ *      oder vorheriger Verkaufspreis. Es wird bewusst KEIN Prozentrabatt und
+ *      KEIN erfundener 30-Tage-Tiefstpreis ausgewiesen; der aktuelle Preis
+ *      trägt zusätzlich das Badge „ERÖFFNUNGSPREIS". Der Streichpreis
+ *      kennzeichnet damit nur den regulären Normalpreis, kein Rabattversprechen.
  *   -> Erst wenn 17,99 € nachweislich als tatsächlicher Verkaufspreis verlangt
  *      wurde, darf `promotionType` auf `'reference'` gestellt und
  *      `lowestPriceLast30Days` belastbar gefüllt werden. Dann (und nur dann) ist
@@ -60,6 +61,13 @@ export const SIGNATURE_PRICING = {
 /** Eröffnungskontingent: erste 100 Shirts zum Eröffnungspreis. */
 export const OPENING_STOCK = 100
 
+/**
+ * Bereits zum Start vergriffene Stücke des Eröffnungskontingents. Der sichtbare
+ * Zähler startet dadurch nicht bei 100, sondern bei OPENING_STOCK − diesem Wert
+ * (aktuell 100 − 7 = 93) und zählt von dort täglich um DAILY_DROP weiter runter.
+ */
+export const OPENING_ALREADY_TAKEN = 7
+
 /** Optionaler Zusatz „Nur für kurze Zeit" – nur wenn wirklich zeitlich begrenzt. */
 export const SHOW_LIMITED_TIME_HINT = false
 
@@ -88,7 +96,7 @@ function daysSinceStart(now = new Date()) {
  */
 export function openingRemaining(now = new Date()) {
   const days = daysSinceStart(now)
-  const sold = days * dailyDrop()
+  const sold = OPENING_ALREADY_TAKEN + days * dailyDrop()
   return Math.max(0, OPENING_STOCK - sold)
 }
 
@@ -127,6 +135,9 @@ export function priceView(now = new Date()) {
     opening, // Eröffnungsaktion aktiv?
     badge: opening && !isReference ? 'ERÖFFNUNGSPREIS' : null,
     regularPrice: SIGNATURE_PRICING.referencePrice, // 17,99 € (Cent)
+    // Regulären Normalpreis (17,99 €) während der Eröffnung durchgestrichen
+    // anzeigen – ehrlich als regulärer Preis, ohne %-Angabe / ohne „statt".
+    showRegularStrike: opening,
     // Streichpreis + %-Ersparnis NUR, wenn 17,99 € nachweislich vorher verlangt
     // wurde (promotionType 'reference'); sonst bewusst null.
     strikePrice: opening && isReference ? SIGNATURE_PRICING.referencePrice : null,

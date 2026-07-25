@@ -440,6 +440,9 @@ function Konfigurator({ family, start }) {
               ) : (
                 <span className="pdp__price pdp__price--offen">{PRICE_ON_REQUEST}</span>
               )}
+              {pv?.showRegularStrike && (
+                <s className="pdp__price-strike" title="Regulärer Preis nach der Eröffnung">{formatPrice(pv.regularPrice)}</s>
+              )}
               {pv?.badge && <span className="pdp__badge pdp__badge--opening">{pv.badge}</span>}
               {unit.refinement === 'flock' && <span className="pdp__badge pdp__badge--flock">PRESTIGE · FLOCK</span>}
               {unit.soon && <span className="pdp__badge">Coming Soon</span>}

@@ -71,6 +71,9 @@ export default function FamilyCard({ family, delay = 0 }) {
         <Link className="pcard__name" to={`/merch/${ziel}`}>{family.label}</Link>
         <span className={`pcard__price ${(!family.isSignature && (!SHOW_PUBLIC_PRICES || family.priceFrom == null)) ? 'pcard__price--offen' : ''}`.trim()}>
           {preis}
+          {pv?.showRegularStrike && (
+            <s className="pcard__price-strike" title="Regulärer Preis nach der Eröffnung">{formatPrice(pv.regularPrice)}</s>
+          )}
           {pv?.badge && <span className="pcard__pricebadge">{pv.badge}</span>}
         </span>
 
