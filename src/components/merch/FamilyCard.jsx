@@ -28,7 +28,7 @@ export default function FamilyCard({ family, delay = 0 }) {
   // wenn SHOW_PUBLIC_PRICES für die übrigen Produkte false ist).
   const pv = family.isSignature ? priceView() : null
   const preis = family.isSignature
-    ? `ab ${formatPrice(pv.price)}`
+    ? formatPrice(pv.price)
     : !SHOW_PUBLIC_PRICES
       ? PRICE_ON_REQUEST
       : family.priceFrom == null

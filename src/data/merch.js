@@ -388,7 +388,7 @@ function baueFamilien() {
       // Fallback-Kartenbild = Detail-Startbild der Repraesentanten-Farbe (siehe oben).
       image: repOption.image,
       imageStatus: repOption.imageStatus,
-      badge: isSignature ? 'Jetzt anfragbar' : units.some((u) => !u.soon) ? null : 'Coming Soon',
+      badge: isSignature ? 'Jetzt erhältlich' : units.some((u) => !u.soon) ? null : 'Coming Soon',
       badgeTone: isSignature ? 'live' : 'soon',
       rank: FAMILY_ORDER.indexOf(key),
     }
