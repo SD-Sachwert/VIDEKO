@@ -5060,5 +5060,249 @@
       "Teil der PURE Linie"
     ],
     "rank": 116
+  },
+  {
+    "id": "badeschlappen_white",
+    "sku": "VK-BADESCHLAPPEN-WHITE",
+    "slug": "badeschlappen-white",
+    "name": "Badeschlappen White",
+    "kicker": "Accessoire",
+    "collection": "ACCESSOIRES",
+    "line": "accessoires",
+    "audience": "unisex",
+    "productType": "accessory",
+    "category": "Accessoires",
+    "status": "coming_soon",
+    "purchasable": false,
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "white-gold",
+        "label": "Weiß · Gold-Logo",
+        "hex": "#efece6"
+      },
+      {
+        "key": "white",
+        "label": "Weiß · Ton-in-Ton",
+        "hex": "#f4f2ee"
+      }
+    ],
+    "sizes": [
+      "37",
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43",
+      "44",
+      "45",
+      "46"
+    ],
+    "fit": "One Size",
+    "fitNote": "Einheitsgröße.",
+    "sizeGuide": null,
+    "modelHeight": null,
+    "modelSize": null,
+    "variantGroup": null,
+    "refinement": "print",
+    "logoPlacement": "single",
+    "placements": [
+      {
+        "key": "single",
+        "label": "Standard",
+        "image": "accessoire-badeschlappen-weiss.webp",
+        "gallery": [
+          "accessoire-badeschlappen-weiss.webp",
+          "accessoire-badeschlappen-weiss-uni.webp"
+        ],
+        "imageStatus": "ai_mockup"
+      }
+    ],
+    "image": "accessoire-badeschlappen-weiss.webp",
+    "gallery": [
+      "accessoire-badeschlappen-weiss.webp",
+      "accessoire-badeschlappen-weiss-uni.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "EVA / Gummi",
+    "care": "Feucht abwischen, an der Luft trocknen",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Weiße Badeschlappen mit VIDEKO-Logo – in Gold oder dezent Ton-in-Ton.",
+    "description": "Weiße Badeschlappen in zwei Ausführungen: mit goldenem VIDEKO-Logo oder dezent ton-in-ton. Teil der ACCESSOIRES Linie. Schnitt: One Size – Einheitsgröße.",
+    "usps": [
+      "Leichtes EVA",
+      "Weiß mit VIDEKO-Logo",
+      "Teil der ACCESSOIRES Linie"
+    ],
+    "rank": 46
+  },
+  {
+    "id": "badeschlappen_black",
+    "sku": "VK-BADESCHLAPPEN-BLACK",
+    "slug": "badeschlappen-black",
+    "name": "Badeschlappen Black",
+    "kicker": "Accessoire",
+    "collection": "ACCESSOIRES",
+    "line": "accessoires",
+    "audience": "unisex",
+    "productType": "accessory",
+    "category": "Accessoires",
+    "status": "coming_soon",
+    "purchasable": false,
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "black",
+        "label": "Schwarz",
+        "hex": "#141312"
+      }
+    ],
+    "sizes": [
+      "37",
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43",
+      "44",
+      "45",
+      "46"
+    ],
+    "fit": "One Size",
+    "fitNote": "Einheitsgröße.",
+    "sizeGuide": null,
+    "modelHeight": null,
+    "modelSize": null,
+    "variantGroup": null,
+    "refinement": "print",
+    "logoPlacement": "single",
+    "placements": [
+      {
+        "key": "single",
+        "label": "Standard",
+        "image": "accessoire-badeschlappen-schwarz.webp",
+        "gallery": [
+          "accessoire-badeschlappen-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup"
+      }
+    ],
+    "image": "accessoire-badeschlappen-schwarz.webp",
+    "gallery": [
+      "accessoire-badeschlappen-schwarz.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "EVA / Gummi",
+    "care": "Feucht abwischen, an der Luft trocknen",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Schwarze Badeschlappen mit VIDEKO-Logo.",
+    "description": "Schwarze Badeschlappen mit Silber-Gold VIDEKO-Logo. Teil der ACCESSOIRES Linie. Schnitt: One Size – Einheitsgröße.",
+    "usps": [
+      "Leichtes EVA",
+      "Schwarz mit VIDEKO-Logo",
+      "Teil der ACCESSOIRES Linie"
+    ],
+    "rank": 47
+  },
+  {
+    "id": "laufschuh_white",
+    "sku": "VK-LAUFSCHUH-WHITE",
+    "slug": "laufschuh-white",
+    "name": "Laufschuh White",
+    "kicker": "Performance",
+    "collection": "ACCESSOIRES",
+    "line": "accessoires",
+    "audience": "unisex",
+    "productType": "accessory",
+    "category": "Accessoires",
+    "status": "coming_soon",
+    "purchasable": false,
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "white-gold",
+        "label": "Weiß · Gold-Logo",
+        "hex": "#efece6"
+      },
+      {
+        "key": "white",
+        "label": "Weiß · Ton-in-Ton",
+        "hex": "#f4f2ee"
+      }
+    ],
+    "sizes": [
+      "39",
+      "40",
+      "41",
+      "42",
+      "43",
+      "44",
+      "45",
+      "46",
+      "47"
+    ],
+    "fit": "One Size",
+    "fitNote": "Einheitsgröße.",
+    "sizeGuide": null,
+    "modelHeight": null,
+    "modelSize": null,
+    "variantGroup": null,
+    "refinement": "print",
+    "logoPlacement": "single",
+    "placements": [
+      {
+        "key": "single",
+        "label": "Standard",
+        "image": "accessoire-laufschuh-weiss-gold.webp",
+        "gallery": [
+          "accessoire-laufschuh-weiss-gold.webp",
+          "accessoire-laufschuh-weiss.webp"
+        ],
+        "imageStatus": "ai_mockup"
+      }
+    ],
+    "image": "accessoire-laufschuh-weiss-gold.webp",
+    "gallery": [
+      "accessoire-laufschuh-weiss-gold.webp",
+      "accessoire-laufschuh-weiss.webp"
+    ],
+    "imageStatus": "ai_mockup",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "Textil / Gummi",
+    "care": "Feucht abwischen, an der Luft trocknen",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Weißer Performance-Laufschuh mit VIDEKO-Logo – in Gold oder dezent Ton-in-Ton.",
+    "description": "Weißer Laufschuh aus der Performance-Reihe: mit goldenem VIDEKO-Logo oder dezent ton-in-ton. Teil der ACCESSOIRES Linie. Schnitt: One Size – Einheitsgröße.",
+    "usps": [
+      "Leichter Performance-Laufschuh",
+      "Weiß mit VIDEKO-Logo",
+      "Teil der Performance-Reihe"
+    ],
+    "rank": 48
   }
 ]

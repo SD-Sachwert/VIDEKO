@@ -4,9 +4,9 @@ _Automatisch erzeugt von scripts/check-products.mjs. Nicht von Hand pflegen._
 
 Aktueller Verkaufsumfang: **eine Blankware-Produktfamilie** (SOL'S Imperial 11500). Nur kaufbare Produkte (`purchasable: true`) werden gegen die gesetzlichen Launch-Gates geprüft. Coming-soon-Produkte blockieren den aktuellen Verkauf **nicht**.
 
-- Produkte gesamt: **51**
+- Produkte gesamt: **54**
 - Aktuell kaufbar: **2**
-- Coming soon (nicht kaufbar): **49**
+- Coming soon (nicht kaufbar): **52**
 - Kaufbare mit Rechts-/GPSR-Blocker: **2**
 - Kaufbare mit Qualitäts-Blocker: **2**
 
@@ -19,9 +19,9 @@ Aktueller Verkaufsumfang: **eine Blankware-Produktfamilie** (SOL'S Imperial 1150
 
 ## B. Coming-soon-Produkte (kein Verkaufs-Blocker)
 
-Gesamt: **49**. Nach Produktart:
+Gesamt: **52**. Nach Produktart:
 
-- accessory: 10
+- accessory: 13
 - polo: 8
 - tshirt: 8
 - vneck: 7
