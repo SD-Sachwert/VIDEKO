@@ -56,7 +56,10 @@ const TYPE_LABEL = {
 const ROH = [
   { id: 'perf-core-tee', name: 'Performance Core', type: 'shirt', color: ONYX,
     sub: 'Cleaner Performance-Schnitt mit dezenter Gold-Paspel.',
-    files: ['perf-core-tee-black.webp'] },
+    files: ['perf-core-tee-black.webp', 'perf-core-tee-black-back.webp'] },
+  { id: 'perf-core-alt-tee', name: 'Performance Core (Alternative)', type: 'shirt', color: ONYX,
+    sub: 'Alternative Front: VIDEKO-Emblem mit Schriftzug, mit Gold-Paspel.',
+    files: ['perf-core-alt-tee-black.webp'] },
   { id: 'perf-apex-tee', name: 'Performance Apex', type: 'shirt', color: ONYX,
     sub: 'Sublimierte Gold-Geometrie an der Schulter.',
     files: ['perf-apex-tee-black.webp'] },

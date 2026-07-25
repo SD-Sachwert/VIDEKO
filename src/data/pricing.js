@@ -29,9 +29,9 @@
  * ------------------------------------------------------------------------
  * Der Eröffnungspreis gilt für die ersten `OPENING_STOCK` (100) Shirts. Auf der
  * Seite läuft ein Countdown der noch zum Eröffnungspreis verfügbaren Stücke. Er
- * startet bei 100 und nimmt pro Tag deterministisch 1–3 Stück ab (gleicher Wert
- * für alle Besucher am selben Tag, kein Zufall pro Reload). Ist das Kontingent
- * aufgebraucht, greift automatisch der reguläre Preis.
+ * startet bei 100 und nimmt pro Tag genau `DAILY_DROP` (3) Stück ab (gleicher
+ * Wert für alle Besucher am selben Tag, kein Zufall pro Reload). Ist das
+ * Kontingent aufgebraucht, greift automatisch der reguläre Preis.
  *
  * Alle Beträge intern in Cent.
  */
@@ -63,14 +63,15 @@ export const OPENING_STOCK = 100
 /** Optionaler Zusatz „Nur für kurze Zeit" – nur wenn wirklich zeitlich begrenzt. */
 export const SHOW_LIMITED_TIME_HINT = false
 
+/** Fester Tages-Abzug: der Zähler nimmt jeden Tag genau 3 Stück ab. */
+export const DAILY_DROP = 3
+
 /**
- * Deterministischer Tages-Abzug 1–3 anhand des Tagesindex. Gleicher Tag ⇒
- * gleicher Wert für alle Besucher; wirkt organisch, ohne echten Zufall.
+ * Tages-Abzug für den Eröffnungszähler: konstant `DAILY_DROP` (3) Stück pro Tag.
+ * Gleicher Tag ⇒ gleicher Wert für alle Besucher, kein Zufall pro Reload.
  */
-function dailyDrop(dayIndex) {
-  let x = Math.sin((dayIndex + 1) * 12.9898) * 43758.5453
-  x = x - Math.floor(x) // 0..1
-  return 1 + Math.floor(x * 3) // 1..3
+function dailyDrop() {
+  return DAILY_DROP // genau 3 pro Tag
 }
 
 /** Ganze Tage seit Aktionsbeginn (0 am Starttag, nie negativ). */
@@ -83,15 +84,11 @@ function daysSinceStart(now = new Date()) {
 
 /**
  * Noch zum Eröffnungspreis verfügbare Stücke (Countdown). Startet bei
- * OPENING_STOCK und sinkt täglich deterministisch um 1–3, min. 0.
+ * OPENING_STOCK und sinkt täglich um genau DAILY_DROP (3), min. 0.
  */
 export function openingRemaining(now = new Date()) {
   const days = daysSinceStart(now)
-  let sold = 0
-  for (let d = 0; d < days; d++) {
-    sold += dailyDrop(d)
-    if (sold >= OPENING_STOCK) return 0
-  }
+  const sold = days * dailyDrop()
   return Math.max(0, OPENING_STOCK - sold)
 }
 
