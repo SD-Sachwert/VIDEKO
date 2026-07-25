@@ -8,16 +8,27 @@
  *   2. INTERN      – Dokumentation, die vorgehalten, aber nicht öffentlich
  *      gezeigt werden muss (Lieferkette, Risikoanalyse, Nachweise, Rückruf).
  *
- * GRUNDREGEL: Hier werden KEINE Pflichtangaben erfunden. Was nicht sicher
- * bekannt ist, bleibt `null` und wird über den `status`/die Prüf-Skripte als
- * unvollständig ausgewiesen. Bekannte, aus Impressum/Handelsregister belegte
- * Unternehmensdaten sind übernommen.
+ * GRUNDREGEL: Hier werden KEINE Pflichtangaben, Farben, Zertifikate oder
+ * Lieferantendaten erfunden. Was nicht sicher belegt ist, bleibt `null`/`false`
+ * und wird über die Prüf-Skripte als unvollständig ausgewiesen.
+ *
+ * AKTUELLER VERKAUFSUMFANG (Stand: nur diese eine Blankware wird verkauft):
+ *   -> Produktfamilie SOLS-IMPERIAL-11500 (Herren-T-Shirt, Blankware SOL'S
+ *      Imperial 11500). Alle Logo-, Farb- und Größenvarianten dieses Shirts
+ *      gehören zu DIESER einen Familie – es sind keine 51 Einzelprodukte.
+ *   Alle übrigen Artikel sind „Coming soon" (nicht kaufbar) und noch nicht
+ *   vollständig dokumentiert.
  */
 
 /**
  * Verantwortlicher Wirtschaftsakteur i. S. d. GPSR (Art. 16) und
- * verantwortliches Unternehmen für die Textilkennzeichnung.
+ * verantwortliches Unternehmen für die Textilkennzeichnung des FERTIGEN,
+ * unter der Marke VIDEKO angebotenen Produkts.
  * Quelle: Impressum (VIDEKO Küchen eG, Würzburg).
+ *
+ * WICHTIG: Die rechtlich korrekten, vollständigen Unternehmensdaten (u. a.
+ * Register-/USt-Angaben, USt-Status) bleiben ein Pflicht-TODO und werden NICHT
+ * erfunden – siehe docs/compliance/unternehmensdaten-todo.md.
  */
 export const RESPONSIBLE_OPERATOR = {
   companyName: 'VIDEKO Küchen eG',
@@ -28,26 +39,23 @@ export const RESPONSIBLE_OPERATOR = {
   email: 'info@videko-kuechen.de',
   phone: '0160 5545818',
   brand: 'VIDEKO',
-  // GPSR Art. 16: Wird ein Produkt aus einem Nicht-EU-Land bezogen, muss ein in
-  // der EU niedergelassener Wirtschaftsakteur (Hersteller, Importeur, Bevoll-
-  // mächtigter oder Fulfilment-Dienstleister) benannt sein. Ob VIDEKO diese
-  // Rolle vollständig ausfüllt oder ein separater Hersteller/Importeur zu nennen
-  // ist, hängt von der je Produkt noch zu bestätigenden Lieferkette ab.
+  // VIDEKO veredelt selbst und bringt das fertige Shirt in Verkehr, ist also der
+  // verantwortliche Wirtschaftsakteur des Endprodukts. Ob zusätzlich ein
+  // Importeur/Bevollmächtigter für die Blankware zu benennen ist, hängt von der
+  // Lieferkette der Blankware ab (siehe PRODUCT_FAMILIES).
   operatorRoleConfirmed: false, // TODO extern klären (siehe docs/compliance)
 }
 
 /**
  * Herkunftsland je Produkt bzw. Produktfamilie. BEWUSST leer: die tatsächliche
- * Fertigungsherkunft der Blankware (Lieferant) ist noch nicht bestätigt.
- * Sobald belegt, hier per Produkt-`id` oder `variantGroup` eintragen
- * (z. B. 'signature-tee': 'Bangladesch'). `publicCompliance()` gibt null zurück,
- * solange nichts eingetragen ist – es wird KEIN Land geraten.
+ * Fertigungsherkunft der Blankware ist noch nicht belegt. Sobald bekannt, hier
+ * per Produkt-`id` oder `variantGroup` eintragen. `publicCompliance()` gibt
+ * null zurück, solange nichts eingetragen ist – es wird KEIN Land geraten.
  *
  * WICHTIG: Eine Herkunftsangabe ist für Textilien in der EU KEINE generelle
- * Pflicht. Sie wird hier nur intern erfasst und angezeigt, sobald bekannt. Ein
- * fehlendes Herkunftsland ist daher KEIN Compliance-Blocker (siehe
- * scripts/check-products.mjs) – es sei denn, im Einzelfall besteht eine konkrete
- * Kennzeichnungspflicht oder es wurde bereits eine Herkunft ausgelobt.
+ * Pflicht. Ein fehlendes Herkunftsland ist daher KEIN Compliance-Blocker – es
+ * sei denn, im Einzelfall besteht eine konkrete Kennzeichnungspflicht oder es
+ * wurde bereits eine Herkunft ausgelobt.
  */
 export const COUNTRY_OF_ORIGIN = {
   // 'variantGroup-oder-id': 'Land',
@@ -66,12 +74,10 @@ export function publicCompliance(product) {
     productName: product.name,
     productType: product.kicker || product.productType,
     sku: product.sku || null,
-    material: product.material || null, // z. B. "80 % Baumwolle, 20 % Polyester"
+    material: product.material || null, // z. B. "100 % Baumwolle"
     care: product.care || null,
     countryOfOrigin: COUNTRY_OF_ORIGIN[originKey] ?? null,
     manufacturer: RESPONSIBLE_OPERATOR,
-    // Warn-/Sicherheitshinweise: bei normaler Bekleidung i. d. R. keine; bei
-    // Produkten mit Kleinteilen/Kordeln (z. B. Hoodie-Kordel) prüfen -> intern.
     safetyNotice: SAFETY_NOTICE[product.productType] ?? null,
   }
 }
@@ -81,50 +87,149 @@ export function publicCompliance(product) {
  * was zutrifft und belegt ist. Leer = kein Hinweis erforderlich/bekannt.
  */
 export const SAFETY_NOTICE = {
-  // 'hoodie': 'Kordelzug – nicht für Kleinkinder geeignet.', // Beispiel, erst nach Prüfung
+  // 'hoodie': 'Kordelzug – nicht für Kleinkinder geeignet.', // erst nach Prüfung
+}
+
+/* ============================================================================
+ *  BLANKWARE-PRODUKTFAMILIEN (interne GPSR-/Produktakte)
+ * ==========================================================================*/
+
+/**
+ * Vorlage für ein VEREDELUNGSPROFIL. Die Veredelung (Druck/Flock/Stick) macht
+ * VIDEKO Küchen eG selbst. Pro tatsächlich eingesetztem Verfahren wird ein
+ * Profil geführt. Nur wirklich verwendete Verfahren anlegen – nichts erfinden.
+ */
+export const FINISHING_PROFILE_TEMPLATE = {
+  method: null, // konkretes Verfahren: 'DTF' | 'Flex' | 'Flock' | 'Siebdruck' | 'Stick'
+  partner: 'VIDEKO Küchen eG', // Veredelung erfolgt im eigenen Haus
+  materialName: null, // eingesetztes Druck-/Flex-/Flockmaterial
+  materialManufacturer: null, // Hersteller des Veredelungsmaterials
+  materialProductName: null, // Produktbezeichnung des Materials
+  materialColor: null,
+  adhesiveOrCarrier: null, // Klebstoff/Trägermaterial
+  safetyProof: null, // Sicherheits-/Schadstoffnachweis (z. B. OEKO-TEX des Materials)
+  processingParams: null, // Verarbeitungstemperatur/-parameter, falls verfügbar
+  care: null, // Pflegehinweise des fertig veredelten Shirts
+  batchProof: null, // Lieferanten-/Chargennachweis des Veredelungsmaterials
+  approvalStatus: 'offen', // 'offen' | 'freigegeben'
 }
 
 /**
- * Vorlage für die INTERNE GPSR-/Produktakte je Produktfamilie. Alle Felder
- * null = noch zu beschaffen. NICHT öffentlich. Wird von check-products.mjs
- * gegen die tatsächlich vorhandenen Daten geprüft.
+ * Verkaufsrelevante Blankware-Produktfamilien.
+ *
+ * Die Varianten (Logo/Farbe/Größe) ERBEN aus der Familie:
+ *   Blankware-Hersteller, -Modell, Grundmaterial, Flächengewicht,
+ *   Grundkonstruktion, allgemeine Pflege, techn. Datenblätter,
+ *   Blankware-Zertifikate, allgemeine Risikoanalyse.
+ * Variantenbezogen bleiben: SKU, Farbe+Farbcode, Größe, Logoausführung,
+ *   Druck-/Flockfarbe, Veredelungsverfahren, ggf. abweichende Pflege,
+ *   Produktbild, Verkaufspreis.
  */
-export const INTERNAL_RECORD_TEMPLATE = {
-  manufacturerName: null, // tatsächlicher Hersteller der Blankware
-  manufacturerAddress: null,
-  manufacturerEmail: null,
-  supplier: null, // Lieferant/Großhändler
-  productionPartner: null, // Veredelung/Druck (falls extern)
-  productIdentification: null, // Modell-/Typbezeichnung der Blankware
-  batchOrModelNumber: null, // Artikel-, Modell- oder Chargennummer
-  materialProof: null, // Nachweis Materialzusammensetzung (Lieferantenerklärung/Etikett)
-  technicalDocumentation: null, // Ablageort der technischen Unterlagen
-  riskAnalysis: null, // Risikoanalyse je Produktfamilie (Dokumentverweis)
-  qualityChecks: null, // Qualitätsprüfungen
-  dateAddedToShop: null, // Datum der Aufnahme in den Shop (ISO)
-  documentStore: 'docs/compliance/produktakten/', // Ablageordner
-  complaints: [], // Beschwerden / Sicherheitsmeldungen
-  recallStatus: 'kein Rückruf', // 'kein Rückruf' | 'in Prüfung' | 'Rückruf aktiv'
-  complete: false,
+export const PRODUCT_FAMILIES = {
+  'SOLS-IMPERIAL-11500': {
+    id: 'SOLS-IMPERIAL-11500',
+    productType: 'Herren-T-Shirt',
+    // Interne variantGroup(s) aus products.json, die zu dieser Blankware gehören.
+    variantGroups: ['signature-tee'],
+
+    // --- Blankware / Lieferkette -------------------------------------------
+    blankware: {
+      brand: "SOL'S",
+      line: 'Imperial',
+      model: '11500',
+      // Hersteller der Blankware laut offizieller Anbieterinformation.
+      manufacturer: {
+        name: 'SOLO INVEST SAS',
+        source: 'offizielle Anbieterinformation SOL’S',
+        verified: false, // durch Datenblatt/Etikett bestätigen
+      },
+      // Bezugsquelle (Händler/Großhändler), NICHT der Hersteller.
+      supplier: { name: 'Gröner-Schulze', role: 'Lieferant/Händler' },
+      // Verbindliche Blankware-Referenz (vom Auftraggeber gesendeter Produktlink).
+      referenceLink: null, // TODO: konkrete URL intern hinterlegen
+    },
+
+    // --- Grundmaterial der Blankware ---------------------------------------
+    material: {
+      base: '100 % halbgekämmte, ringgesponnene Baumwolle',
+      construction: 'Single Jersey, Rundstrick ohne Seitennaht',
+      weightGsm: 190,
+      collar: 'Rippstrickkragen mit Elasthan',
+      neckTape: true,
+      // Abweichende Zusammensetzung NUR bei bestimmten Blankware-Farben.
+      // Diese Farben werden aktuell NICHT verkauft (siehe colorsInUse).
+      colorExceptions: {
+        '300 Ash': '98 % Baumwolle, 2 % Viskose',
+        '350 Grey Melange': '85 % Baumwolle, 15 % Viskose',
+      },
+    },
+
+    // --- Tatsächlich bezogene Farben ---------------------------------------
+    // KEINE Farbcodes geraten. Zuordnung erst anhand Bestellung/Rechnung.
+    // Weder 102 White noch 117 Absolute White noch Deep Black 309 sind bisher
+    // durch einen Beleg bestätigt.
+    colorsInUse: [
+      {
+        internalKey: 'black', label: 'Schwarz',
+        solsColorName: null, solsColorCode: null,
+        material: '100 % Baumwolle', // Schwarz zählt nicht zu den Ausnahmen
+        confirmedByInvoice: false,
+        note: 'Vermutlich „Deep Black 309" – anhand Lieferantenrechnung bestätigen.',
+      },
+      {
+        internalKey: 'white', label: 'Weiß',
+        solsColorName: null, solsColorCode: null,
+        material: '100 % Baumwolle', // Weiß zählt nicht zu den Ausnahmen
+        confirmedByInvoice: false,
+        note: 'Weißton offen: „102 White" vs. „117 Absolute White" – anhand Rechnung klären.',
+      },
+    ],
+
+    // Tatsächlich angebotene Größen laut Bestellung – zu bestätigen.
+    sizesInUse: null,
+
+    // --- Zertifikate (NUR intern, nicht automatisch fürs Endprodukt) -------
+    // Gelten für die BLANKWARE. Dürfen NICHT ungeprüft für das fertig
+    // veredelte VIDEKO-Shirt beworben werden.
+    certificates: [
+      { name: 'OEKO-TEX Standard 100', scope: 'Blankware (Modell/Farbe zu prüfen)', verified: false, publiclyClaimable: false },
+      { name: 'PETA Approved Vegan', scope: 'Blankware', verified: false, publiclyClaimable: false },
+    ],
+    certificatesPubliclyClaimable: false,
+
+    // --- Veredelung (macht VIDEKO Küchen eG selbst) ------------------------
+    finishing: {
+      partner: 'VIDEKO Küchen eG',
+      partnerIsResponsibleOperator: true,
+      // Nur tatsächlich verwendete Profile. Die Signature-Tees werden bedruckt
+      // ('print'); das KONKRETE Verfahren (DTF/Flex/Siebdruck/…) ist noch zu
+      // bestätigen und wird NICHT geraten.
+      profiles: {
+        print: { ...FINISHING_PROFILE_TEMPLATE, method: null },
+      },
+    },
+
+    // Verantwortlicher Wirtschaftsakteur des fertigen Produkts.
+    responsibleOperator: 'VIDEKO Küchen eG',
+
+    // Ist die Blankware-/Veredelungsakte vollständig belegt? Erst true, wenn
+    // Nachweise (Rechnung, Datenblatt, Etiketten, Veredelungsmaterial,
+    // Risikoanalyse) vorliegen – siehe docs/compliance/sols-imperial-11500-unterlagen.md.
+    complete: false,
+  },
 }
+
+/** variantGroup -> Familien-ID (für schnelle Zuordnung einer Variante). */
+const FAMILY_BY_VARIANT_GROUP = Object.fromEntries(
+  Object.values(PRODUCT_FAMILIES).flatMap((f) => (f.variantGroups || []).map((vg) => [vg, f.id])),
+)
 
 /**
- * Interne Produktakten je Produktfamilie (Key = productType). Bewusst mit der
- * Vorlage vorbelegt (alle Nachweise offen). Sobald Nachweise vorliegen, hier
- * die Felder füllen und `complete: true` setzen.
+ * Löst ein Produkt zu seiner Blankware-Produktfamilie auf (oder null, wenn das
+ * Produkt keiner verkaufsrelevanten Familie zugeordnet ist – z. B. Coming-soon-
+ * Artikel ohne belegte Blankware).
  */
-export const INTERNAL_RECORDS = {
-  tshirt: { ...INTERNAL_RECORD_TEMPLATE },
-  vneck: { ...INTERNAL_RECORD_TEMPLATE },
-  polo: { ...INTERNAL_RECORD_TEMPLATE },
-  hoodie: { ...INTERNAL_RECORD_TEMPLATE },
-  crewneck: { ...INTERNAL_RECORD_TEMPLATE },
-  sneaker: { ...INTERNAL_RECORD_TEMPLATE },
-  accessory: { ...INTERNAL_RECORD_TEMPLATE },
-  workwear: { ...INTERNAL_RECORD_TEMPLATE },
+export const getProductFamily = (product) => {
+  const id = FAMILY_BY_VARIANT_GROUP[product.variantGroup]
+  return id ? PRODUCT_FAMILIES[id] : null
 }
-
-export const getInternalRecord = (product) =>
-  INTERNAL_RECORDS[product.productType] || INTERNAL_RECORDS[
-    product.category === 'Accessoires' ? 'accessory' : 'tshirt'
-  ]

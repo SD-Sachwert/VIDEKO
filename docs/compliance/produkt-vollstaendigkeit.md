@@ -2,65 +2,46 @@
 
 _Automatisch erzeugt von scripts/check-products.mjs. Nicht von Hand pflegen._
 
-Zwei getrennte Ebenen:
-- **Recht/GPSR** – gesetzliche Pflichtangaben (Textilkennzeichnung, GPSR-Produktakte, Preisangaben).
-- **Qualität/Freigabe** – interne Verkaufsfreigabe (z. B. verlässliche Produktdarstellung). Keine Gesetzespflicht.
+Aktueller Verkaufsumfang: **eine Blankware-Produktfamilie** (SOL'S Imperial 11500). Nur kaufbare Produkte (`purchasable: true`) werden gegen die gesetzlichen Launch-Gates geprüft. Coming-soon-Produkte blockieren den aktuellen Verkauf **nicht**.
 
 - Produkte gesamt: **51**
-- Live blockiert (Recht oder Qualität): **2**
-- Mit Recht-/GPSR-Lücken: **51**
-- Mit Qualitäts-/Freigabe-Lücken: **39**
+- Aktuell kaufbar: **2**
+- Coming soon (nicht kaufbar): **49**
+- Kaufbare mit Rechts-/GPSR-Blocker: **2**
+- Kaufbare mit Qualitäts-Blocker: **2**
 
-| Produkt | Status | Recht/GPSR offen | Qualität/Freigabe offen |
+## A. Aktuell kaufbare Produkte
+
+| Produkt | Familie | Recht/GPSR offen | Qualität/Freigabe offen |
 |---|---|---|---|
-| signature_t_shirt_black | live | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| signature_t_shirt_white | live | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| signature_vneck_black | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| signature_vneck_white | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| signature_polo_black | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: placeholder) |
-| signature_polo_beige | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | – |
-| signature_hoodie_black | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | – |
-| signature_hoodie_white | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | – |
-| signature_hoodie_beige | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | – |
-| signature_zip_hoodie_black | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| signature_crewneck_black | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | – |
-| pure_tee_black | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| pure_tee_white | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| pure_tee_beige | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| pure_vneck_black | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| pure_vneck_white | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| pure_vneck_beige | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: placeholder) |
-| pure_polo_black | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| pure_polo_white | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| pure_hoodie_black | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| pure_hoodie_white | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| pure_crewneck_black | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | – |
-| pure_crewneck_white | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | – |
-| pure_zip_hoodie_black | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | – |
-| pure_zip_hoodie_white | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| one_tee_black | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| one_tee_white | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| prestige_tee_black | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | – |
-| prestige_tee_white | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | – |
-| prestige_vneck_black | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | – |
-| prestige_vneck_white | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | – |
-| prestige_polo_black | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: placeholder) |
-| prestige_polo_white | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: placeholder) |
-| workwear_polo_black | coming_soon | Material ohne %-Angabe ("Mischgewebe, verstärkte Nähte"); GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| workwear_polo_white | coming_soon | Material ohne %-Angabe ("Mischgewebe, verstärkte Nähte"); GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| workwear_t_shirt_black | coming_soon | Material ohne %-Angabe ("Schwere Baumwolle, verstärkte Nähte"); GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| softshelljacke_black | coming_soon | Material ohne %-Angabe ("Softshell, wind- und wasserabweisend"); GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| softshellweste_black | coming_soon | Material ohne %-Angabe ("Softshell, wind- und wasserabweisend"); GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| overshirt_arbeitshemd_black | coming_soon | Material ohne %-Angabe ("Schweres Baumwollgewebe"); GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| cap_black | coming_soon | Material ohne %-Angabe ("Baumwolle"); GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| beanie_black | coming_soon | Material ohne %-Angabe ("Acryl / Wolle"); GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| tote_bag_black | coming_soon | Material ohne %-Angabe ("Baumwolle"); GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| schuerze_black | coming_soon | Material ohne %-Angabe ("Baumwolle / Mischgewebe"); GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| handtuch_black | coming_soon | Material ohne %-Angabe ("Baumwolle"); GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| badehose_black | coming_soon | Material ohne %-Angabe ("Polyester"); GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| regenschirm_black | coming_soon | Material ohne %-Angabe ("Mischgewebe / Metall"); GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| sneaker_videko | coming_soon | Material ohne %-Angabe ("Kunstleder / Gummi"); GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| tasse_black | coming_soon | Material ohne %-Angabe ("Keramik"); GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| trinkflasche_black | coming_soon | Material ohne %-Angabe ("Edelstahl"); GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| boss_battle | coming_soon | Material ohne %-Angabe ("Karton / Spielkarten"); GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
-| pure-hoodie-beige | coming_soon | GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
+| signature_t_shirt_black | SOLS-IMPERIAL-11500 | Blankware-/GPSR-Akte „SOLS-IMPERIAL-11500" unvollständig (Lieferkette/Veredelung/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
+| signature_t_shirt_white | SOLS-IMPERIAL-11500 | Blankware-/GPSR-Akte „SOLS-IMPERIAL-11500" unvollständig (Lieferkette/Veredelung/Nachweise offen) | Keine verlässliche Produktdarstellung (imageStatus: ai_mockup) |
+
+## B. Coming-soon-Produkte (kein Verkaufs-Blocker)
+
+Gesamt: **49**. Nach Produktart:
+
+- accessory: 10
+- polo: 8
+- tshirt: 8
+- vneck: 7
+- hoodie: 6
+- zip-hoodie: 3
+- crewneck: 3
+- jacket: 2
+- shirt: 1
+- game: 1
+
+## C. Rechtliche Blocker für den aktuellen Verkaufsstart
+
+- **signature_t_shirt_black**: Blankware-/GPSR-Akte „SOLS-IMPERIAL-11500" unvollständig (Lieferkette/Veredelung/Nachweise offen)
+- **signature_t_shirt_white**: Blankware-/GPSR-Akte „SOLS-IMPERIAL-11500" unvollständig (Lieferkette/Veredelung/Nachweise offen)
+
+## D. Interne Qualitätsblocker für den aktuellen Verkaufsstart
+
+- **signature_t_shirt_black**: Keine verlässliche Produktdarstellung (imageStatus: ai_mockup)
+- **signature_t_shirt_white**: Keine verlässliche Produktdarstellung (imageStatus: ai_mockup)
+
+## E. Spätere Aufgaben (vor Aktivierung der Coming-soon-Produkte)
+
+Vor der „live"-Schaltung einer Coming-soon-Familie sind Blankware-/Veredelungsakte, Materialnachweise, eine verlässliche Produktdarstellung sowie Preis und Größen zu belegen.

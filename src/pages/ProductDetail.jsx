@@ -522,8 +522,10 @@ function Konfigurator({ family, start }) {
                 ? `Für diese Variante liegt noch kein Produktbild vor${unit.regenNote ? ` – ${unit.regenNote}` : ''}.`
                 : isPlaceholderStatus(unit.imageStatus)
                   ? `Dieses Bild wird neu erstellt${unit.regenNote ? ` – ${unit.regenNote}` : ''}. Bis dahin zeigen wir bewusst kein vorläufiges Bild.`
-                  : unit.imageStatus === 'existing_but_review'
-                    ? `Vorschau als KI-Muster${unit.regenNote ? ` · ${unit.regenNote}` : ''} – echte Produktfotos folgen vor dem Verkauf.`
+                  : unit.soon
+                    // Coming-soon: unverbindliche Produktvorschau (KI-Muster).
+                    ? 'Produktvorschau – Abbildung kann vom späteren Produkt abweichen.'
+                    // Kaufbarer Artikel: KI-Muster ist interner Verkaufs-Blocker.
                     : 'Vorschau als KI-Muster – echte Produktfotos folgen vor dem Verkauf.'}
             </p>
           </div>
@@ -660,7 +662,9 @@ function Einzelseite({ product }) {
                 <Info size={14} strokeWidth={1.8} />
                 {product.imageStatus === 'placeholder'
                   ? 'Platzhalter – für dieses Produkt liegt noch kein Bild vor.'
-                  : 'Vorschau als KI-Muster – echte Produktfotos folgen vor dem Verkauf.'}
+                  : product.soon
+                    ? 'Produktvorschau – Abbildung kann vom späteren Produkt abweichen.'
+                    : 'Vorschau als KI-Muster – echte Produktfotos folgen vor dem Verkauf.'}
               </p>
             )}
           </div>

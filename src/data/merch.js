@@ -144,6 +144,10 @@ const basis = roh.map((p) => ({
   price: cent(p.price),
   personalizationPrice: cent(p.personalization_price) || 0,
   soon: p.status !== 'live',
+  // Kaufbarkeit ist eine EIGENE Wahrheit aus products.json (nicht nur aus dem
+  // Status abgeleitet). Nur `purchasable: true` darf in den Warenkorb/Checkout.
+  // Fehlt das Feld, gilt bewusst NICHT kaufbar (Fail-safe).
+  purchasable: p.purchasable === true,
   family: familyKey(p),
   familyLabel: FAMILY_LABEL[familyKey(p)] || null,
   logoStyle: LOGO_STYLE[p.collection] || null,

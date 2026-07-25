@@ -17,6 +17,12 @@ Rechnungen, Bestellbestätigung, Checkout, Produktseite (Hersteller).
 Diese Werte stehen zentral in `src/data/compliance.js` (`RESPONSIBLE_OPERATOR`)
 und im Impressum. Beim Ändern **immer beide Stellen** angleichen.
 
+**Rolle von VIDEKO Küchen eG im Produkt:** VIDEKO ist **Veredelungspartner**
+(die Veredelung erfolgt im eigenen Haus) **und verantwortlicher Wirtschaftsakteur
+des fertigen Produkts** (GPSR Art. 16). Die Blankware kommt von SOL'S (Hersteller
+SOLO INVEST SAS) über den Lieferanten Gröner-Schulze. Rollen-Details:
+`produktfamilien-uebersicht.md`.
+
 ## Angaben, die NUR dann Pflicht sind, wenn sie existieren/erforderlich sind
 
 Diese Nummern sind **nur anzugeben, wenn sie für VIDEKO tatsächlich existieren bzw.

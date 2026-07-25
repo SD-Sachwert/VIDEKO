@@ -1,9 +1,14 @@
 # Shop-Launch-Checkliste
 
-Vor dem Verkaufsstart an Verbraucher müssen **alle** Punkte bestätigt sein. Kein
-Punkt wird abgehakt, solange kein Nachweis vorliegt. Legende: ✅ technisch erledigt ·
-⚠️ teilweise · ❌ offen · 🏢 externe Aufgabe (nicht im Code lösbar). Unterschieden wird
-zwischen **gesetzlichen** Anforderungen und **interner Verkaufsfreigabe** (Qualität).
+Diese Checkliste bezieht sich auf den **aktuellen Verkaufsumfang**: die einzige
+kaufbare Blankware-Produktfamilie **SOL'S Imperial 11500** (T-Shirt, Schwarz/Weiß).
+Coming-soon-Produkte sind **nicht** Teil dieses Verkaufsstarts und blockieren ihn
+nicht (siehe `produktfamilien-uebersicht.md`).
+
+Kein Punkt wird abgehakt, solange kein Nachweis vorliegt. Legende: ✅ technisch
+erledigt · ⚠️ teilweise · ❌ offen · 🏢 externe Aufgabe (nicht im Code lösbar) ·
+ℹ️ kein Blocker. Unterschieden wird zwischen **gesetzlichen** Anforderungen und
+**interner Verkaufsfreigabe** (Qualität).
 
 ## Rechtliches & Unternehmen
 
@@ -21,26 +26,40 @@ zwischen **gesetzlichen** Anforderungen und **interner Verkaufsfreigabe** (Quali
 - [x] ✅ Rechts-Seiten im Footer verlinkt und erreichbar
 - [x] ✅ Rechts-Links auch im Warenkorb erreichbar (AGB/Widerruf/Versand/Datenschutz)
 
-## Produkte / Kennzeichnung (gesetzlich)
+## Produktumfang / Kaufbarkeit
+
+- [x] ✅ Nur die SOL'S-Imperial-Familie ist kaufbar (`purchasable: true` für die
+      2 Signature-Tees); alle 49 übrigen Artikel `purchasable: false`
+- [x] ✅ Coming-soon-Artikel: kein Warenkorb, kein Checkout, kein Preis
+      (`add()` + Cart-Ableitung dreifach gesperrt); Button „Benachrichtige mich"
+- [x] ✅ Coming-soon-Bild als unverbindliche Vorschau gekennzeichnet
+      („Abbildung kann vom späteren Produkt abweichen")
+
+## Produkte / Kennzeichnung (gesetzlich) – nur SOL'S Imperial 11500
 
 - [x] ✅ Produktseite zeigt Marke, Produktart, SKU, Material, Pflege, Hersteller
-- [x] ✅ Material mit exakten %-Angaben im Datenbestand (Check erzwingt %-Angabe)
-- [ ] ℹ️ Herkunftsland je Produkt intern erfassen/anzeigen, **sobald bekannt**
+- [x] ✅ Material mit exakten %-Angaben (Schwarz/Weiß = 100 % Baumwolle, Single
+      Jersey 190 g/m²); Check erzwingt %-Angabe
+- [ ] ❌ Tatsächliche Farbcodes/Weißton (102 vs. 117) + Größen per Rechnung belegen
+      (siehe `sols-imperial-11500-unterlagen.md`)
+- [ ] ℹ️ Herkunftsland intern erfassen/anzeigen, **sobald bekannt**
       (`COUNTRY_OF_ORIGIN`). **Kein** genereller Pflicht-Blocker
-- [x] ✅ Veröffentlichungsschutz: `npm run check:products` blockt Live-Produkte mit
-      Recht- **oder** Qualitätslücke
+- [x] ✅ Veröffentlichungsschutz: `npm run check:products` blockt kaufbare Produkte
+      mit Recht- **oder** Qualitätslücke; Coming-soon zählt nicht als Blocker
 
-## Produktsicherheit (GPSR, gesetzlich)
+## Produktsicherheit (GPSR, gesetzlich) – nur kaufbare Familie
 
-- [x] ✅ Datenstruktur öffentlich/intern vorhanden (`compliance.js`)
-- [ ] ❌ Interne Produktakten je Familie vollständig (`complete: true`)
-- [ ] 🏢 Verantwortlicher Wirtschaftsakteur je Produkt bestätigt (`operatorRoleConfirmed`)
-- [ ] 🏢 Risikoanalysen, Lieferantenerklärungen, Materialnachweise abgelegt
+- [x] ✅ Blankware-Familienstruktur vorhanden (`PRODUCT_FAMILIES`, `compliance.js`)
+- [ ] ❌ Blankware-/Veredelungsakte `SOLS-IMPERIAL-11500` vollständig (`complete: true`)
+- [ ] 🏢 Rollen bestätigt: Hersteller SOLO INVEST SAS, Lieferant Gröner-Schulze,
+      Veredelung + verantw. Wirtschaftsakteur VIDEKO Küchen eG (`operatorRoleConfirmed`)
+- [ ] 🏢 Risikoanalyse fertiges Shirt, Veredelungsmaterial-Nachweise, Etikettenfotos
+- [ ] ℹ️ OEKO-TEX / PETA Vegan nur intern – nicht ungeprüft fürs Endprodukt bewerben
 
 ## Interne Verkaufsfreigabe (Qualität, keine Gesetzespflicht)
 
-- [ ] ❌ Verlässliche Produktdarstellung statt KI-Mockup (`imageStatus` aktuell
-      `ai_mockup`/`placeholder`). Interner Launch-Blocker – **kein GPSR-Nachweis**
+- [ ] ❌ Verlässliche Produktdarstellung des kaufbaren Shirts statt KI-Mockup
+      (`imageStatus` aktuell `ai_mockup`). Interner Launch-Blocker – **kein GPSR-Nachweis**
 
 ## Checkout / Preise / Zahlung
 

@@ -13,6 +13,8 @@ gehört nicht in den öffentlichen Shop.
 
 | Datei / Ordner | Inhalt |
 |---|---|
+| `produktfamilien-uebersicht.md` | Aktueller Verkaufsumfang: **eine** kaufbare Blankware-Familie (SOL'S Imperial 11500) vs. Coming-soon; Rollen + Vererbung |
+| `sols-imperial-11500-unterlagen.md` | Konkrete Liste der noch fehlenden Unterlagen **nur** für die kaufbare Familie |
 | `gpsr-checklist.md` | Produktsicherheit (GPSR EU 2023/988) – Pflichten je Produkt |
 | `verpackungsgesetz-lucid-checklist.md` | Verpackungsgesetz, LUCID-Registrierung, duales System |
 | `unternehmensdaten-todo.md` | Konsistenz Firmendaten + offene Gewerbe-Erweiterung |
@@ -33,35 +35,46 @@ gehört nicht in den öffentlichen Shop.
 
 Die maschinenlesbare Struktur liegt in `src/data/compliance.js`:
 
-- **`RESPONSIBLE_OPERATOR`** – verantwortliches Unternehmen (aus Impressum belegt).
+- **`RESPONSIBLE_OPERATOR`** – verantwortliches Unternehmen (aus Impressum belegt):
+  VIDEKO Küchen eG (zugleich Veredelungspartner).
 - **`publicCompliance(product)`** – die Angaben, die auf der Produktseite erscheinen
   (Marke, Produktart, SKU, Material, Pflege, Herkunft, Hersteller). Fehlt etwas,
   wird `null` zurückgegeben und die UI zeigt einen ehrlichen Hinweis statt einer Erfindung.
-- **`INTERNAL_RECORDS`** – die interne Produktakte je Produktfamilie. Alle Felder
-  stehen zunächst auf `null` / `complete: false`.
+- **`PRODUCT_FAMILIES`** – die interne Blankware-/GPSR-Akte je **Produktfamilie**
+  (aktuell nur `SOLS-IMPERIAL-11500`). Enthält Blankware (Hersteller SOLO INVEST SAS /
+  Marke SOL'S, Lieferant Gröner-Schulze), Material, Farben/Größen (nicht geraten),
+  Veredelungsprofile (VIDEKO selbst), Zertifikate (intern) und `complete: false`.
+  Kaufbare Varianten erben von der Familie; nur variantenspezifische Felder (SKU,
+  Farbe, Größe, Logo, Veredelung, Bild, Preis) weichen ab. `getProductFamily(product)`
+  liefert die Familie zu einem Produkt.
 
 ## Veröffentlichungsschutz
 
-`scripts/check-products.mjs` (`npm run check:products`) prüft jedes Produkt auf zwei
-getrennten Ebenen:
+`scripts/check-products.mjs` (`npm run check:products`) prüft **nur kaufbare Produkte**
+(`purchasable: true` bzw. `status: live`) auf zwei getrennten Ebenen:
 
 - **Recht/GPSR (gesetzlich):** Pflichtangaben (Textilkennzeichnung, Preisangaben) +
-  vollständige interne GPSR-Produktakte.
+  Zuordnung zur Blankware-Familie + vollständige Familienakte (`complete: true`).
 - **Interne Qualitäts-/Verkaufsfreigabe (keine Gesetzespflicht):** z. B. verlässliche
   Produktdarstellung statt KI-Mockup.
 
-Ein als `live` markiertes Produkt mit einer Recht- **oder** Qualitätslücke lässt den
-Check mit Exit-Code 1 fehlschlagen. Das Skript ist als Launch-Gate gedacht (manuell
-oder in CI vor einem produktiven Release), damit **unvollständige Produkte nicht in
-den echten Verkauf gehen**. Ein fehlendes **Herkunftsland ist bewusst KEIN Blocker**.
+Ein kaufbares Produkt mit einer Recht- **oder** Qualitätslücke lässt den Check mit
+Exit-Code 1 fehlschlagen. **Coming-soon-Produkte werden nur informativ gelistet und
+blockieren nie** (Ausgabe-Abschnitte A kaufbar · B coming soon · C Rechtsblocker ·
+D Qualitätsblocker · E spätere Aufgaben). Das Skript ist als Launch-Gate gedacht,
+damit **unvollständige kaufbare Produkte nicht in den echten Verkauf gehen**. Ein
+fehlendes **Herkunftsland ist bewusst KEIN Blocker**.
 
-## Nächste Schritte, um ein Produkt „verkaufsfertig" zu machen
+## Nächste Schritte, um die kaufbare Familie „verkaufsfertig" zu machen
 
-1. Blankware-Hersteller, Lieferant und (falls extern) Druck-/Veredelungspartner
-   dokumentieren → `Produktionsinfos/` + `INTERNAL_RECORDS[...]`.
-2. Materialzusammensetzung per Lieferantenerklärung/Etikett belegen →
-   `Lieferantenerklaerungen/` + `Materialnachweise/`.
+Bezieht sich **nur** auf `SOLS-IMPERIAL-11500` – konkrete Liste:
+`sols-imperial-11500-unterlagen.md`.
+
+1. Blankware-Hersteller (SOLO INVEST SAS), Lieferant (Gröner-Schulze) und Veredelung
+   (VIDEKO selbst) dokumentieren → `Produktionsinfos/` + `PRODUCT_FAMILIES[...]`.
+2. Materialzusammensetzung + Farbcodes/Größen per Rechnung/Etikett belegen (nicht
+   raten) → `Lieferantenerklaerungen/` + `Materialnachweise/`.
 3. Herkunftsland bestätigen → `COUNTRY_OF_ORIGIN` in `compliance.js` eintragen.
-4. Risikoanalyse je Produktfamilie anlegen → `Risikoanalysen/`.
+4. Risikoanalyse des fertig veredelten Shirts anlegen → `Risikoanalysen/`.
 5. Echtes Produktfoto statt KI-Muster (`imageStatus` auf `real_photo`/`final`).
-6. Produktakte auf `complete: true` setzen und `npm run check:products` grün bekommen.
+6. Familienakte auf `complete: true` setzen und `npm run check:products` grün bekommen.

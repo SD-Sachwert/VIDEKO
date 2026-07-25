@@ -1,116 +1,169 @@
 /**
  * Produkt-Vollständigkeits- und Veröffentlichungsprüfung.
  *
- * Trennt bewusst ZWEI Ebenen (siehe docs/compliance):
- *   A) RECHT/GPSR – gesetzliche Pflichtangaben für den Verkauf an Verbraucher
- *      (Textilkennzeichnungsverordnung EU 1007/2011, GPSR EU 2023/988, Preisangaben)
- *      sowie die interne GPSR-Produktakte (Lieferkette/Nachweise).
- *   B) INTERNE QUALITÄTS-/VERKAUFSFREIGABE – keine gesetzliche Pflicht, aber von
- *      uns gesetzte Freigabekriterien (z. B. verlässliche Produktdarstellung statt
- *      KI-Mockup). Blockt den Launch, ist aber KEIN GPSR-Nachweis.
+ * AKTUELLER VERKAUFSUMFANG: Es wird nur EINE Blankware-Produktfamilie verkauft
+ * (SOL'S Imperial 11500, siehe src/data/compliance.js). Nur Produkte, die
+ * tatsächlich kaufbar sind (`purchasable: true`, i. d. R. auch `status: live`),
+ * werden gegen die gesetzlichen Launch-Gates geprüft.
+ *
+ * Coming-soon-Produkte (`purchasable: false`) BLOCKIEREN den aktuellen
+ * Shirt-Launch NICHT. Sie werden separat als „noch nicht für den Verkauf
+ * dokumentiert" ausgewiesen und erst vor ihrer späteren Aktivierung vollständig
+ * belegt.
+ *
+ * Zwei Ebenen für kaufbare Produkte:
+ *   RECHT/GPSR – gesetzliche Pflichtangaben (Textilkennzeichnung EU 1007/2011,
+ *     Preisangaben) + vollständige interne Blankware-/GPSR-Produktakte.
+ *   QUALITÄT   – interne Verkaufsfreigabe (z. B. verlässliche Produktdarstellung
+ *     statt KI-Mockup). Keine Gesetzespflicht, aber selbst gesetzter Blocker.
  *
  * Erfindet nichts – meldet nur Lücken.
  *
  *   node scripts/check-products.mjs            # Bericht in die Konsole
  *   node scripts/check-products.mjs --md       # zusätzlich Markdown-Report schreiben
  *
- * Exit-Code 1, sobald ein als `live` markiertes Produkt eine Recht- ODER
- * Qualitäts-Lücke hat. Dadurch als Launch-Gate (CI / pre-deploy) verwendbar.
+ * Exit-Code 1, sobald ein KAUFBARES Produkt eine Recht- ODER Qualitäts-Lücke
+ * hat. Dadurch als Launch-Gate (CI / pre-deploy) verwendbar.
  */
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
 
 const roh = JSON.parse(readFileSync(new URL('../src/data/products.json', import.meta.url)))
-const { INTERNAL_RECORDS } = await import('../src/data/compliance.js')
+const { PRODUCT_FAMILIES } = await import('../src/data/compliance.js')
 
-const internalRecord = (p) =>
-  INTERNAL_RECORDS[p.productType] ||
-  INTERNAL_RECORDS[p.category === 'Accessoires' ? 'accessory' : 'tshirt']
+const FAMILY_BY_VG = Object.fromEntries(
+  Object.values(PRODUCT_FAMILIES).flatMap((f) => (f.variantGroups || []).map((vg) => [vg, f])),
+)
+const familyOf = (p) => FAMILY_BY_VG[p.variantGroup] || null
+
+// Kaufbar = explizit purchasable. Fail-safe: ohne Flag NICHT kaufbar.
+const istKaufbar = (p) => p.purchasable === true
 
 const REAL_IMAGE = new Set(['final', 'real_photo'])
 
-function pruefe(p) {
-  const recht = [] // A) gesetzliche Pflicht (Textil/GPSR/Preisangaben)
-  const quali = [] // B) interne Qualitäts-/Verkaufsfreigabe (keine Gesetzespflicht)
+/** Gesetzliche + interne Prüfung eines KAUFBAREN Produkts. */
+function pruefeKaufbar(p) {
+  const recht = [] // gesetzliche Pflicht (Textil/GPSR/Preisangaben)
+  const quali = [] // interne Qualitäts-/Verkaufsfreigabe (keine Gesetzespflicht)
 
-  // --- A) Rechtliche Pflichtangaben ---------------------------------------
   if (!p.name) recht.push('Produktname')
   if (!p.sku) recht.push('SKU/Artikelnummer')
   if (!p.productType) recht.push('Produktart')
   if (!p.colors?.length) recht.push('Farbe')
   if (!p.sizes?.length && p.category !== 'Accessoires') recht.push('Größe(n)')
 
-  // Material MIT Prozentangabe – Textilkennzeichnung verlangt exakte Anteile;
-  // "hochwertiger Baumwollmix" o. Ä. reicht nicht.
+  // Material MIT Prozentangabe (Textilkennzeichnung verlangt exakte Anteile).
   if (!p.material) recht.push('Materialzusammensetzung')
   else if (!/\d\s*%/.test(p.material)) recht.push(`Material ohne %-Angabe ("${p.material}")`)
 
   if (!p.care) recht.push('Pflegehinweise')
   if (!p.lead_time) recht.push('Lieferzeit')
+  if (p.price == null || Number.isNaN(p.price)) recht.push('Preis (inkl. USt)')
 
-  // Preis: live-Produkte brauchen einen Preis inkl. USt (Preisangabenverordnung).
-  if (p.status === 'live' && (p.price == null || Number.isNaN(p.price))) recht.push('Preis (inkl. USt)')
+  // Interne Blankware-/GPSR-Produktakte der Familie (Lieferkette/Nachweise/
+  // Veredelung/Risikoanalyse). Herkunftsland ist bewusst KEIN Pflicht-Blocker.
+  const fam = familyOf(p)
+  if (!fam) recht.push('Keiner belegten Blankware-Produktfamilie zugeordnet')
+  else if (fam.complete !== true) recht.push(`Blankware-/GPSR-Akte „${fam.id}" unvollständig (Lieferkette/Veredelung/Nachweise offen)`)
 
-  // Interne GPSR-Produktakte (Lieferant/Hersteller/Nachweise/Risikoanalyse).
-  // Das IST rechtliche Compliance (Rückverfolgbarkeit/Produktsicherheit).
-  // HINWEIS: Herkunftsland ist bewusst KEIN pauschaler Pflicht-Blocker – es wird
-  // intern erfasst und angezeigt, sobald bekannt (siehe compliance.js).
-  const rec = internalRecord(p)
-  const gpsrOffen = !rec || rec.complete !== true
-  if (gpsrOffen) recht.push('GPSR-Produktakte intern unvollständig (Lieferant/Hersteller/Nachweise offen)')
-
-  // --- B) Interne Qualitäts-/Verkaufsfreigabe -----------------------------
-  // Echtes/verlässliches Produktfoto statt KI-Mockup. KEIN GPSR-Nachweis,
-  // sondern unsere eigene Freigabe für eine seriöse Produktdarstellung.
+  // Verlässliche Produktdarstellung statt KI-Mockup (KEIN GPSR-Nachweis).
   if (!REAL_IMAGE.has(p.imageStatus)) quali.push(`Keine verlässliche Produktdarstellung (imageStatus: ${p.imageStatus || 'fehlt'})`)
 
   return { recht, quali }
 }
 
-const ergebnisse = roh.map((p) => ({ p, ...pruefe(p) }))
-// Ein live-Produkt gilt als NICHT veröffentlichungsfähig, wenn eine Recht- ODER
-// eine Qualitätslücke besteht.
-const liveBlockiert = ergebnisse.filter(
-  (r) => r.p.status === 'live' && (r.recht.length || r.quali.length),
-)
-const rechtLuecken = ergebnisse.filter((r) => r.recht.length)
-const qualiLuecken = ergebnisse.filter((r) => r.quali.length)
+const kaufbar = roh.filter(istKaufbar).map((p) => ({ p, ...pruefeKaufbar(p) }))
+const comingSoon = roh.filter((p) => !istKaufbar(p))
 
-console.log(`\nGeprüfte Produkte: ${roh.length}`)
-console.log(`Davon live: ${roh.filter((p) => p.status === 'live').length}`)
-console.log(`Live blockiert (Recht oder Qualität): ${liveBlockiert.length}`)
-console.log(`Mit Recht-/GPSR-Lücken: ${rechtLuecken.length}`)
-console.log(`Mit Qualitäts-/Freigabe-Lücken: ${qualiLuecken.length}\n`)
+const rechtBlocker = kaufbar.filter((r) => r.recht.length)
+const qualiBlocker = kaufbar.filter((r) => r.quali.length)
+const blockiert = kaufbar.filter((r) => r.recht.length || r.quali.length)
 
-for (const r of ergebnisse) {
-  if (!r.recht.length && !r.quali.length) continue
-  const liveBlock = r.p.status === 'live' && (r.recht.length || r.quali.length)
-  const flag = liveBlock ? '❌ LIVE-STOPP' : r.recht.length ? '⚠️  Recht offen' : 'ℹ️  Qualität offen'
-  console.log(`${flag}  ${r.p.id}  (${r.p.status})`)
-  r.recht.forEach((f) => console.log(`     Recht/GPSR: ${f}`))
-  r.quali.forEach((w) => console.log(`     Qualität:   ${w}`))
+// Coming-soon nach Produkttyp gruppieren (nur informativ, kein Blocker).
+const soonNachTyp = {}
+for (const p of comingSoon) {
+  const t = p.productType || 'sonstige'
+  soonNachTyp[t] = (soonNachTyp[t] || 0) + 1
 }
+
+console.log(`\nProdukte gesamt: ${roh.length}`)
+console.log(`Aktuell kaufbar (purchasable): ${kaufbar.length}`)
+console.log(`Coming soon (nicht kaufbar): ${comingSoon.length}`)
+console.log(`Kaufbare mit Rechts-/GPSR-Blocker: ${rechtBlocker.length}`)
+console.log(`Kaufbare mit Qualitäts-Blocker: ${qualiBlocker.length}`)
+
+console.log(`\nA. Aktuell kaufbare Produkte`)
+if (!kaufbar.length) console.log('   (keine)')
+for (const r of kaufbar) {
+  const status = r.recht.length || r.quali.length ? '❌ nicht freigabefähig' : '✅ vollständig'
+  console.log(`   ${status}  ${r.p.id}  [${familyOf(r.p)?.id || 'ohne Familie'}]`)
+}
+
+console.log(`\nB. Coming-soon-Produkte (blockieren den aktuellen Verkauf NICHT)`)
+console.log(`   Gesamt: ${comingSoon.length}`)
+for (const [typ, n] of Object.entries(soonNachTyp).sort((a, b) => b[1] - a[1])) {
+  console.log(`   – ${typ}: ${n}`)
+}
+
+console.log(`\nC. Rechtliche Blocker für den aktuellen Verkaufsstart`)
+if (!rechtBlocker.length) console.log('   (keine)')
+for (const r of rechtBlocker) {
+  console.log(`   ${r.p.id}`)
+  r.recht.forEach((f) => console.log(`      · ${f}`))
+}
+
+console.log(`\nD. Interne Qualitätsblocker für den aktuellen Verkaufsstart`)
+if (!qualiBlocker.length) console.log('   (keine)')
+for (const r of qualiBlocker) {
+  console.log(`   ${r.p.id}`)
+  r.quali.forEach((f) => console.log(`      · ${f}`))
+}
+
+console.log(`\nE. Spätere Aufgaben vor Aktivierung der Coming-soon-Produkte`)
+console.log(`   Vor „live"-Schaltung je Coming-soon-Familie: Blankware-/Veredelungsakte,`)
+console.log(`   Materialnachweise, verlässliche Produktdarstellung, Preis und Größen belegen.`)
 
 if (process.argv.includes('--md')) {
   mkdirSync(new URL('../docs/compliance/', import.meta.url), { recursive: true })
   let md = `# Produkt-Vollständigkeit\n\n`
   md += `_Automatisch erzeugt von scripts/check-products.mjs. Nicht von Hand pflegen._\n\n`
-  md += `Zwei getrennte Ebenen:\n`
-  md += `- **Recht/GPSR** – gesetzliche Pflichtangaben (Textilkennzeichnung, GPSR-Produktakte, Preisangaben).\n`
-  md += `- **Qualität/Freigabe** – interne Verkaufsfreigabe (z. B. verlässliche Produktdarstellung). Keine Gesetzespflicht.\n\n`
+  md += `Aktueller Verkaufsumfang: **eine Blankware-Produktfamilie** (SOL'S Imperial 11500). `
+  md += `Nur kaufbare Produkte (\`purchasable: true\`) werden gegen die gesetzlichen Launch-Gates geprüft. `
+  md += `Coming-soon-Produkte blockieren den aktuellen Verkauf **nicht**.\n\n`
   md += `- Produkte gesamt: **${roh.length}**\n`
-  md += `- Live blockiert (Recht oder Qualität): **${liveBlockiert.length}**\n`
-  md += `- Mit Recht-/GPSR-Lücken: **${rechtLuecken.length}**\n`
-  md += `- Mit Qualitäts-/Freigabe-Lücken: **${qualiLuecken.length}**\n\n`
-  md += `| Produkt | Status | Recht/GPSR offen | Qualität/Freigabe offen |\n|---|---|---|---|\n`
-  for (const r of ergebnisse) {
-    if (!r.recht.length && !r.quali.length) continue
-    md += `| ${r.p.id} | ${r.p.status} | ${r.recht.join('; ') || '–'} | ${r.quali.join('; ') || '–'} |\n`
+  md += `- Aktuell kaufbar: **${kaufbar.length}**\n`
+  md += `- Coming soon (nicht kaufbar): **${comingSoon.length}**\n`
+  md += `- Kaufbare mit Rechts-/GPSR-Blocker: **${rechtBlocker.length}**\n`
+  md += `- Kaufbare mit Qualitäts-Blocker: **${qualiBlocker.length}**\n\n`
+
+  md += `## A. Aktuell kaufbare Produkte\n\n`
+  md += `| Produkt | Familie | Recht/GPSR offen | Qualität/Freigabe offen |\n|---|---|---|---|\n`
+  for (const r of kaufbar) {
+    md += `| ${r.p.id} | ${familyOf(r.p)?.id || '–'} | ${r.recht.join('; ') || '–'} | ${r.quali.join('; ') || '–'} |\n`
   }
+
+  md += `\n## B. Coming-soon-Produkte (kein Verkaufs-Blocker)\n\n`
+  md += `Gesamt: **${comingSoon.length}**. Nach Produktart:\n\n`
+  for (const [typ, n] of Object.entries(soonNachTyp).sort((a, b) => b[1] - a[1])) {
+    md += `- ${typ}: ${n}\n`
+  }
+
+  md += `\n## C. Rechtliche Blocker für den aktuellen Verkaufsstart\n\n`
+  if (!rechtBlocker.length) md += `Keine.\n`
+  for (const r of rechtBlocker) md += `- **${r.p.id}**: ${r.recht.join('; ')}\n`
+
+  md += `\n## D. Interne Qualitätsblocker für den aktuellen Verkaufsstart\n\n`
+  if (!qualiBlocker.length) md += `Keine.\n`
+  for (const r of qualiBlocker) md += `- **${r.p.id}**: ${r.quali.join('; ')}\n`
+
+  md += `\n## E. Spätere Aufgaben (vor Aktivierung der Coming-soon-Produkte)\n\n`
+  md += `Vor der „live"-Schaltung einer Coming-soon-Familie sind Blankware-/Veredelungsakte, `
+  md += `Materialnachweise, eine verlässliche Produktdarstellung sowie Preis und Größen zu belegen.\n`
+
   writeFileSync(new URL('../docs/compliance/produkt-vollstaendigkeit.md', import.meta.url), md)
   console.log('\ndocs/compliance/produkt-vollstaendigkeit.md geschrieben.')
 }
 
-if (liveBlockiert.length) {
-  console.error(`\nAbbruch: ${liveBlockiert.length} als "live" markierte(s) Produkt(e) sind nicht veröffentlichungsfähig.`)
+if (blockiert.length) {
+  console.error(`\nAbbruch: ${blockiert.length} kaufbare(s) Produkt(e) sind nicht veröffentlichungsfähig.`)
   process.exit(1)
 }

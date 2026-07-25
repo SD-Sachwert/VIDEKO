@@ -50,7 +50,9 @@ export function CartProvider({ children }) {
   useEffect(() => writeStore(NOTIFY_KEY, notified), [notified])
 
   const add = useCallback((product, opts = {}) => {
-    if (product.soon || product.price == null) return
+    // Dreifach abgesichert: nur explizit kaufbare, live geschaltete Artikel mit
+    // Preis dürfen in den Warenkorb. Coming-soon-Artikel sind hier hart gesperrt.
+    if (product.soon || product.price == null || !product.purchasable) return
     const { size = null, color = null, qty = 1, placement = null, placementLabel = null } = opts
     const pers = product.personalizable && opts.pers
       ? String(opts.pers).trim().slice(0, PERSONALIZATION_MAX)
@@ -102,7 +104,9 @@ export function CartProvider({ children }) {
       lines
         .map((l) => {
           const product = MERCH_PRODUCTS.find((p) => p.id === l.id)
-          if (!product || product.price == null) return null
+          // Nicht-kaufbare/coming-soon-Zeilen (z. B. aus altem localStorage)
+          // fallen hier raus – sie erreichen weder Summe noch Checkout.
+          if (!product || product.price == null || !product.purchasable) return null
           const unit = product.price + (l.pers ? personalizationPrice(product) : 0)
           return { ...l, product, unit, total: unit * l.qty }
         })
