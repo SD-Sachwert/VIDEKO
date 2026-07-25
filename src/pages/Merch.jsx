@@ -19,6 +19,7 @@ import {
   PERSONALIZATION_MAX, PERSONALIZATION_LABEL, LEAD_TIME_PERSONALIZED,
   SHOW_PUBLIC_PRICES, PRICE_ON_REQUEST,
 } from '../data/merch.js'
+import { inquiryReady } from '../data/release.js'
 
 import heroBanner from '../assets/images/merch/_shared/merch-hero.webp'
 import pBossBattle from '../assets/images/merch/accessories/accessoire-boss-battle-schwarz-gold.webp'
@@ -81,7 +82,12 @@ const workwearTeaser = getProduct('workwear-polo-black') // Sammel-CTA der Workw
 const FAQ = [
   {
     q: 'Wie läuft eine Anfrage ab?',
-    a: 'Ganz unverbindlich per E-Mail. Auf der Produktseite tippst du auf „Unverbindlich per E-Mail anfragen“ – es öffnet sich eine vorbereitete Mail mit deiner Auswahl (Farbe, Größe, Logoausführung, Anzahl). Es gibt keinen Warenkorb und keinen Online-Checkout. Mit dem Absenden entsteht noch keine Bestellung; wir melden uns anschließend mit einem individuellen Angebot.',
+    // Solange nur die Produktvorschau (RELEASE_STAGE='preview') freigegeben ist,
+    // gibt es bewusst noch keinen Anfrage-Button. Der Ablauf wird erst
+    // beschrieben, wenn die Anfrage tatsächlich aktiv ist (Stufe 'inquiry').
+    a: inquiryReady
+      ? 'Ganz unverbindlich per E-Mail. Auf der Produktseite tippst du auf „Unverbindlich per E-Mail anfragen“ – es öffnet sich eine vorbereitete Mail mit deiner Auswahl (Farbe, Größe, Logoausführung, Anzahl). Es gibt keinen Warenkorb und keinen Online-Checkout. Mit dem Absenden entsteht noch keine Bestellung; wir melden uns anschließend mit einem individuellen Angebot.'
+      : 'Der Merch-Bereich ist aktuell eine unverbindliche Produktvorschau. Es gibt bewusst noch keinen Warenkorb, keinen Online-Checkout und keine Anfrage- oder Bestellfunktion. Sobald die Anfrage freigeschaltet ist, kannst du dein Wunschprodukt unverbindlich per E-Mail anfragen und erhältst anschließend ein individuelles Angebot.',
   },
   {
     q: 'Was kostet ein Shirt und wie hoch ist der Versand?',
