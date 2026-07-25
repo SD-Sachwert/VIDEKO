@@ -113,9 +113,11 @@ function InfoBloecke({ product, material, care, lead, soon, size, sizeGuide }) {
           <div>
             <dt>Hersteller / verantwortliches Unternehmen</dt>
             <dd>
+              {m.brandLine}<br />
+              {m.roleLine}<br />
               {m.companyName}<br />
-              {m.street}<br />
-              {m.postalCode} {m.city}, {m.country}<br />
+              {m.street && <>{m.street}<br /></>}
+              {(m.postalCode || m.city) && <>{m.postalCode} {m.city}, {m.country}<br /></>}
               <a href={`mailto:${m.email}`}>{m.email}</a>
             </dd>
           </div>

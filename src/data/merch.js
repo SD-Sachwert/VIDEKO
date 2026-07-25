@@ -53,7 +53,8 @@ export const INQUIRY_MAIL = config.inquiryMail
  * Der Merch-Bereich ist eine öffentliche Vorschau mit UNVERBINDLICHER
  * E-Mail-Anfrage – kein Web-Checkout. Ein verbindlicher Preis entsteht erst im
  * individuellen Angebot per E-Mail. Solange der Umsatzsteuer-Status der
- * VIDEKO Küchen eG nicht zweifelsfrei belegt ist (siehe
+ * rechtlichen Betreiberin (Süddeutsche Sachwert eG) im Hinblick auf den
+ * Merch-/Textilverkauf nicht zweifelsfrei belegt ist (siehe
  * docs/compliance/unternehmensdaten-todo.md), werden öffentlich KEINE Preise und
  * KEIN pauschaler „inkl. MwSt."-Hinweis ausgegeben. Wird der USt-Status später
  * belastbar bestätigt, kann diese Konstante auf `true` gesetzt werden – dann

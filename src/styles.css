@@ -1500,6 +1500,11 @@ body {
 .footer__legal { display: flex; gap: 22px; }
 .footer__legal a { color: rgba(244, 239, 228, 0.6); text-decoration: none; transition: color 0.25s ease; }
 .footer__legal a:hover { color: var(--gold-bright); }
+.footer__operatornote {
+  margin-top: 14px; font-size: 0.74rem; line-height: 1.5; color: rgba(244, 239, 228, 0.42);
+}
+.footer__operatornote a { color: rgba(244, 239, 228, 0.6); text-decoration: underline; text-underline-offset: 2px; }
+.footer__operatornote a:hover { color: var(--gold-bright); }
 
 @media (max-width: 860px) {
   .footer__cols { grid-template-columns: 1fr 1fr; gap: 32px; }

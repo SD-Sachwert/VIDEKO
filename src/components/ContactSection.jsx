@@ -88,7 +88,7 @@ export default function ContactSection() {
         </Reveal>
 
         <Reveal className="contact__info" delay={0.08}>
-          <h3 className="contact__info-title">VIDEKO Küchen eG</h3>
+          <h3 className="contact__info-title">VIDEKO Küchen</h3>
           <ul className="contact__list">
             <li>
               <MapPin size={17} strokeWidth={1.7} />

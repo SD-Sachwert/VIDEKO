@@ -20,31 +20,41 @@
  *   vollständig dokumentiert.
  */
 
+import { MANUFACTURER, ACTIVE_OPERATOR, BRAND } from './company.js'
+
 /**
  * Verantwortlicher Wirtschaftsakteur i. S. d. GPSR (Art. 16) und
  * verantwortliches Unternehmen für die Textilkennzeichnung des FERTIGEN,
  * unter der Marke VIDEKO angebotenen Produkts.
- * Quelle: Impressum (VIDEKO Küchen eG, Würzburg).
  *
- * WICHTIG: Die rechtlich korrekten, vollständigen Unternehmensdaten (u. a.
- * Register-/USt-Angaben, USt-Status) bleiben ein Pflicht-TODO und werden NICHT
- * erfunden – siehe docs/compliance/unternehmensdaten-todo.md.
+ * Rechtlicher Träger = aktuelle Betreiberin (`ACTIVE_OPERATOR` in company.js):
+ * bis zur Eintragung der VIDEKO Küchen eG die »Süddeutsche Sachwert eG«.
+ * Die Marke „VIDEKO Küchen" wird als Geschäftsbereich dieser Genossenschaft
+ * ausgewiesen. Alle Werte ziehen zentral aus company.js – hier wird nichts
+ * dupliziert oder erfunden.
  */
 export const RESPONSIBLE_OPERATOR = {
-  companyName: 'VIDEKO Küchen eG',
-  street: 'Hertzstraße 4',
-  postalCode: '97076',
-  city: 'Würzburg',
-  country: 'Deutschland',
-  email: 'info@videko-kuechen.de',
-  phone: '0160 5545818',
-  brand: 'VIDEKO',
-  // VIDEKO veredelt selbst und bringt das fertige Shirt in Verkehr, ist also der
-  // verantwortliche Wirtschaftsakteur des Endprodukts. Ob zusätzlich ein
+  // Öffentliche Herstellerdarstellung: Marke + Trägergesellschaft.
+  brandLine: MANUFACTURER.brandLine, // 'VIDEKO Küchen'
+  roleLine: MANUFACTURER.roleLine, // 'ein Geschäftsbereich der Süddeutsche Sachwert eG'
+  companyName: MANUFACTURER.legalName, // rechtlicher Träger (aktuell SD Sachwert eG)
+  street: MANUFACTURER.street,
+  postalCode: MANUFACTURER.postalCode,
+  city: MANUFACTURER.city,
+  country: MANUFACTURER.country,
+  email: MANUFACTURER.email,
+  phone: BRAND.phone,
+  brand: BRAND.shortName,
+  // Die Veredelung erfolgt im eigenen Haus (Geschäftsbereich VIDEKO Küchen der
+  // Betreiberin); die Betreiberin bringt das fertige Shirt in Verkehr und ist
+  // damit verantwortlicher Wirtschaftsakteur des Endprodukts. Ob zusätzlich ein
   // Importeur/Bevollmächtigter für die Blankware zu benennen ist, hängt von der
   // Lieferkette der Blankware ab (siehe PRODUCT_FAMILIES).
   operatorRoleConfirmed: false, // TODO extern klären (siehe docs/compliance)
 }
+
+/** Name des Veredelungs-/Verantwortungsträgers (Marke + aktuelle Betreiberin). */
+const FINISHING_PARTNER = `${BRAND.name} (${ACTIVE_OPERATOR.legalName})`
 
 /**
  * Herkunftsland je Produkt bzw. Produktfamilie. BEWUSST leer: die tatsächliche
@@ -96,12 +106,13 @@ export const SAFETY_NOTICE = {
 
 /**
  * Vorlage für ein VEREDELUNGSPROFIL. Die Veredelung (Druck/Flock/Stick) macht
- * VIDEKO Küchen eG selbst. Pro tatsächlich eingesetztem Verfahren wird ein
- * Profil geführt. Nur wirklich verwendete Verfahren anlegen – nichts erfinden.
+ * der Geschäftsbereich VIDEKO Küchen (Trägergesellschaft = aktuelle Betreiberin)
+ * selbst. Pro tatsächlich eingesetztem Verfahren wird ein Profil geführt. Nur
+ * wirklich verwendete Verfahren anlegen – nichts erfinden.
  */
 export const FINISHING_PROFILE_TEMPLATE = {
   method: null, // konkretes Verfahren: 'DTF' | 'Flex' | 'Flock' | 'Siebdruck' | 'Stick'
-  partner: 'VIDEKO Küchen eG', // Veredelung erfolgt im eigenen Haus
+  partner: FINISHING_PARTNER, // Veredelung erfolgt im eigenen Haus
   materialName: null, // eingesetztes Druck-/Flex-/Flockmaterial
   materialManufacturer: null, // Hersteller des Veredelungsmaterials
   materialProductName: null, // Produktbezeichnung des Materials
@@ -197,9 +208,9 @@ export const PRODUCT_FAMILIES = {
     ],
     certificatesPubliclyClaimable: false,
 
-    // --- Veredelung (macht VIDEKO Küchen eG selbst) ------------------------
+    // --- Veredelung (macht der Geschäftsbereich VIDEKO Küchen selbst) ------
     finishing: {
-      partner: 'VIDEKO Küchen eG',
+      partner: FINISHING_PARTNER,
       partnerIsResponsibleOperator: true,
       // Nur tatsächlich verwendete Profile. Die Signature-Tees werden bedruckt
       // ('print'); das KONKRETE Verfahren (DTF/Flex/Siebdruck/…) ist noch zu
@@ -210,7 +221,7 @@ export const PRODUCT_FAMILIES = {
     },
 
     // Verantwortlicher Wirtschaftsakteur des fertigen Produkts.
-    responsibleOperator: 'VIDEKO Küchen eG',
+    responsibleOperator: FINISHING_PARTNER,
 
     // Ist die Blankware-/Veredelungsakte vollständig belegt? Erst true, wenn
     // Nachweise (Rechnung, Datenblatt, Etiketten, Veredelungsmaterial,
