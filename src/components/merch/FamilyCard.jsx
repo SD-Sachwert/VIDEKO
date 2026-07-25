@@ -4,7 +4,7 @@ import { Heart, ArrowRight } from 'lucide-react'
 
 import Reveal from '../Reveal.jsx'
 import { useCart } from '../../shop/cart-context.js'
-import { formatPrice, LOGO_STYLE_INFO } from '../../data/merch.js'
+import { formatPrice, LOGO_STYLE_INFO, SHOW_PUBLIC_PRICES, PRICE_ON_REQUEST } from '../../data/merch.js'
 
 /**
  * Karte einer Produktfamilie im Grid.
@@ -16,7 +16,11 @@ import { formatPrice, LOGO_STYLE_INFO } from '../../data/merch.js'
 export default function FamilyCard({ family, delay = 0 }) {
   const { wishlist, toggleWish } = useCart()
   const gemerkt = wishlist.includes(family.slug)
-  const preis = family.priceFrom == null ? 'Preis folgt' : `ab ${formatPrice(family.priceFrom)}`
+  const preis = !SHOW_PUBLIC_PRICES
+    ? PRICE_ON_REQUEST
+    : family.priceFrom == null
+      ? 'Preis folgt'
+      : `ab ${formatPrice(family.priceFrom)}`
 
   // Farbwechsel direkt in der Karte: die gewaehlte Farbe bestimmt Bild und den
   // Einstiegs-Slug. Start ist die repraesentative Farbe (dieselbe wie das
@@ -52,7 +56,7 @@ export default function FamilyCard({ family, delay = 0 }) {
       <div className="pcard__body">
         <span className="pcard__coll">{family.styles.map((s) => LOGO_STYLE_INFO[s].label).join(' · ')}</span>
         <Link className="pcard__name" to={`/merch/${ziel}`}>{family.label}</Link>
-        <span className={`pcard__price ${family.priceFrom == null ? 'pcard__price--offen' : ''}`.trim()}>{preis}</span>
+        <span className={`pcard__price ${!SHOW_PUBLIC_PRICES || family.priceFrom == null ? 'pcard__price--offen' : ''}`.trim()}>{preis}</span>
 
         {mehrfarbig ? (
           <div className="pcard__colors" role="group" aria-label="Farbe wählen">

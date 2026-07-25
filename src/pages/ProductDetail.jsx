@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams, useSearchParams, useNavigate, useLocation, Navigate } from 'react-router-dom'
 import {
-  ShoppingBag, Heart, Bell, Check, Minus, Plus, Truck, Info,
-  ShieldCheck, RotateCcw, Headphones, Ruler, ArrowLeft,
+  Mail, Heart, Minus, Plus, Truck, Info,
+  ShieldCheck, Headphones, Ruler, ArrowLeft, Clock,
 } from 'lucide-react'
 
 import Reveal from '../components/Reveal.jsx'
@@ -18,8 +18,11 @@ import {
   formatPrice, personalizationPrice, getSizeGuide,
   PERSONALIZATION_MAX, PERSONALIZATION_LABEL, FREE_SHIPPING_FROM, LOGO_STYLE_INFO,
   LOGO_COLOR_ORDER, isPlaceholderStatus, IMAGE_STATUS_TITLE,
+  SHOW_PUBLIC_PRICES, PRICE_ON_REQUEST, PRICE_INQUIRY_NOTE,
 } from '../data/merch.js'
-import { publicCompliance } from '../data/compliance.js'
+import { openInquiry, INQUIRY_DISCLAIMER } from '../shop/inquiry.js'
+import { publicCompliance, getProductFamily } from '../data/compliance.js'
+import { canInquire, materialConfirmed, PREVIEW_NOTE } from '../data/release.js'
 
 /**
  * Erlaubt nur Zeichen, die sich sauber drucken lassen: Buchstaben, Ziffern,
@@ -27,11 +30,14 @@ import { publicCompliance } from '../data/compliance.js'
  */
 const nurDruckbar = (text) => text.replace(/[^\p{L}\p{N} .,'&-]/gu, '')
 
+// Anfragemodell: keine Kauf-/Versand-/Zahlungs-Zusagen mehr auf der Produktseite.
+// Preis, Versandkosten und Widerrufsbedingungen entstehen erst mit dem
+// individuellen Angebot per E-Mail.
 const SERVICE = [
-  { icon: ShieldCheck, title: 'Sicher bezahlen', text: 'SSL-verschlüsselte Übertragung' },
-  { icon: Truck, title: 'Versandkostenfrei', text: `ab ${formatPrice(FREE_SHIPPING_FROM)} Bestellwert` },
-  { icon: RotateCcw, title: 'Rückgabe', text: '14 Tage Widerrufsrecht' },
-  { icon: Headphones, title: 'Kundenservice', text: 'Mo – Fr von 9 – 18 Uhr' },
+  { icon: Mail, title: 'Unverbindlich anfragen', text: 'Du erhältst ein individuelles Angebot' },
+  { icon: Info, title: 'Keine Bestellung', text: 'Die Anfrage löst keinen Kauf aus' },
+  { icon: ShieldCheck, title: 'Sichere Verbindung', text: 'SSL-verschlüsselte Übertragung' },
+  { icon: Headphones, title: 'Kontakt', text: 'Antwort persönlich per E-Mail' },
 ]
 
 /**
@@ -69,17 +75,28 @@ function InfoBloecke({ product, material, care, lead, soon, size, sizeGuide }) {
   const [offen, setOffen] = useState(0)
   const comp = publicCompliance(product)
   const m = comp.manufacturer
+  // § 9: Material nur dann als Tatsache zeigen, wenn es für ein verkaufsrelevantes
+  // Produkt durch einen echten Beleg bestätigt ist. Reine Coming-soon-Vorschauen
+  // ohne Blankware-Familie zeigen ihre Materialangabe weiter als Vorschauwert.
+  const family = getProductFamily(product)
+  const materialOk = !family || materialConfirmed(product)
+  const materialPending = 'Die genaue Materialzusammensetzung wird vor dem Verkaufsstart anhand der Lieferantenangaben bestätigt.'
   const infos = [
-    { title: 'Material & Pflege', text: `${material}. ${care}.` },
+    {
+      title: 'Material & Pflege',
+      text: materialOk ? `${material}. ${care}.` : `${care}. ${materialPending}`,
+    },
     {
       title: 'Lieferzeit & Versand',
       text: soon
         ? `Dieser Artikel ist noch nicht bestellbar. ${lead}.`
-        : `Versand innerhalb von ${lead}. Ab ${formatPrice(FREE_SHIPPING_FROM)} Bestellwert liefern wir versandkostenfrei.`,
+        : SHOW_PUBLIC_PRICES
+          ? `Versand innerhalb von ${lead}. Ab ${formatPrice(FREE_SHIPPING_FROM)} Bestellwert liefern wir versandkostenfrei.`
+          : `Die voraussichtliche Fertigungs- und Lieferzeit beträgt ${lead}. Die genauen Versandkosten nennen wir dir mit unserem individuellen Angebot.`,
     },
     {
       title: 'Rückgabe & Widerruf',
-      text: 'Du kannst deine Bestellung innerhalb von 14 Tagen widerrufen. Bei personalisierten Artikeln gelten Einschränkungen – die Einzelheiten stehen auf unserer Seite „Rückgabe & Widerruf".',
+      text: 'Über die Website kommt kein Kauf zustande – du sendest nur eine unverbindliche Anfrage. Kommt später auf Basis unseres Angebots ein Kauf zustande, gelten die gesetzlichen Widerrufsbedingungen; die Einzelheiten – auch die Einschränkungen bei personalisierten Artikeln – erhältst du mit dem Angebot.',
     },
     {
       // Pflichtangaben nach Textilkennzeichnungs-VO und GPSR Art. 16
@@ -90,7 +107,7 @@ function InfoBloecke({ product, material, care, lead, soon, size, sizeGuide }) {
           <div><dt>Marke</dt><dd>{comp.brand}</dd></div>
           <div><dt>Produktart</dt><dd>{comp.productType}</dd></div>
           <div><dt>Artikelnummer</dt><dd>{comp.sku || <em>wird ergänzt</em>}</dd></div>
-          <div><dt>Material</dt><dd>{comp.material || <em>wird ergänzt</em>}</dd></div>
+          <div><dt>Material</dt><dd>{materialOk ? (comp.material || <em>wird ergänzt</em>) : <em>wird vor Verkaufsstart bestätigt</em>}</dd></div>
           <div><dt>Pflege</dt><dd>{comp.care || <em>wird ergänzt</em>}</dd></div>
           <div><dt>Herkunft</dt><dd>{comp.countryOfOrigin || <em>wird vor Verkaufsstart ergänzt</em>}</dd></div>
           <div>
@@ -159,21 +176,24 @@ function InfoBloecke({ product, material, care, lead, soon, size, sizeGuide }) {
  * Feste Kaufleiste am unteren Rand – nur mobil sichtbar (CSS). Zeigt Preis und
  * die primäre Aktion, damit sie beim Scrollen durch die Varianten erreichbar bleibt.
  */
-function StickyBuyBar({ price, priceNote, soon, gemeldet, onAdd, onNotify }) {
+function StickyBuyBar({ soon, kannAnfragen, onInquire }) {
   return (
-    <div className="pdp__stickybar" role="region" aria-label="Kaufaktion">
+    <div className="pdp__stickybar" role="region" aria-label="Anfrage">
       <div className="pdp__stickyprice">
-        <span>{price == null ? priceNote : formatPrice(price)}</span>
-        {price != null && <small>inkl. MwSt.</small>}
+        <span>{PRICE_ON_REQUEST}</span>
       </div>
       {soon ? (
-        <button type="button" className={`pdp__stickycta pdp__stickycta--notify ${gemeldet ? 'is-done' : ''}`.trim()} onClick={onNotify}>
-          {gemeldet ? (<><Check size={16} strokeWidth={2} /> Vorgemerkt</>) : (<><Bell size={16} strokeWidth={1.8} /> Benachrichtige mich</>)}
+        <span className="pdp__stickycta pdp__stickycta--soon" aria-disabled="true">
+          <Clock size={16} strokeWidth={1.8} /> Demnächst verfügbar
+        </span>
+      ) : kannAnfragen ? (
+        <button type="button" className="pdp__stickycta" onClick={onInquire}>
+          Unverbindlich per E-Mail anfragen <Mail size={16} strokeWidth={1.8} />
         </button>
       ) : (
-        <button type="button" className="pdp__stickycta" onClick={onAdd}>
-          In den Warenkorb <ShoppingBag size={16} strokeWidth={1.8} />
-        </button>
+        <span className="pdp__stickycta pdp__stickycta--soon" aria-disabled="true">
+          <Info size={16} strokeWidth={1.8} /> Produktvorschau
+        </span>
       )}
     </div>
   )
@@ -202,7 +222,7 @@ function PersBlock({ product, persAn, setPersAn, persName, setPersName }) {
       <span className="pdp__label">Personalisierung</span>
       <label className="pdp__check">
         <input type="checkbox" checked={persAn} onChange={(e) => setPersAn(e.target.checked)} />
-        <span>{PERSONALIZATION_LABEL} (+{formatPrice(personalizationPrice(product))})</span>
+        <span>{PERSONALIZATION_LABEL}{SHOW_PUBLIC_PRICES ? ` (+${formatPrice(personalizationPrice(product))})` : ''}</span>
       </label>
       {persAn && (
         <>
@@ -249,7 +269,7 @@ function RelatedFamilies({ current }) {
 
 function Konfigurator({ family, start }) {
   const zurueck = useZurueck()
-  const { add, wishlist, toggleWish, notified, notify } = useCart()
+  const { wishlist, toggleWish } = useCart()
   // Die Variantenauswahl lebt in der URL (?style&color=&placement=&size=).
   // Dadurch ist sie teilbar, per Reload wiederherstellbar und die Zurück-/
   // Vorwärtsnavigation des Browsers funktioniert. Ungültige Werte werden beim
@@ -318,23 +338,28 @@ function Konfigurator({ family, start }) {
   const sizeParam = (params.get('size') || '').toUpperCase()
   const groesse = unit.sizes.includes(sizeParam) ? sizeParam : (unit.sizes[2] || unit.sizes[0])
   const gemerkt = wishlist.includes(quelle.id)
-  const gemeldet = notified.includes(quelle.id)
+  const kannAnfragen = canInquire(quelle)
   const aufpreis = unit.personalizable && persAn && persName.trim() ? unit.personalizationPrice : 0
   const stueck = unit.price == null ? null : unit.price + aufpreis
-  const logoColorSuffix = logoColors.length > 1 && unit.logoColorLabel ? ` · ${isFlock ? 'Flock' : 'Logo'} ${unit.logoColorLabel}` : ''
-  const variantLabel = `${family.label} · ${unit.styleLabel} · ${color}${places.length > 1 ? ' · ' + unit.placementLabel : ''}${logoColorSuffix}`
 
-  const cartPlacementLabel = [places.length > 1 ? unit.placementLabel : null, logoColors.length > 1 && unit.logoColorLabel ? `${isFlock ? 'Flock' : 'Logo'} ${unit.logoColorLabel}` : null].filter(Boolean).join(' · ') || null
-  const hinzufuegen = () => add(quelle, {
-    size: groesse, color, qty: menge,
-    pers: persAn ? persName : null,
-    placement: cartPlacementLabel ? unit.placementKey : null,
-    placementLabel: cartPlacementLabel,
+  const logoAusfuehrung = [
+    unit.styleLabel,
+    places.length > 1 ? unit.placementLabel : null,
+    logoColors.length > 1 && unit.logoColorLabel ? `${isFlock ? 'Flock' : 'Logo'} ${unit.logoColorLabel}` : null,
+  ].filter(Boolean).join(' · ')
+  // Anfragemodell: öffnet eine unverbindliche E-Mail-Anfrage. KEIN Warenkorb,
+  // KEINE Bestellung, KEINE Speicherung, KEINE Zahlungsaufforderung.
+  const anfragen = () => openInquiry({
+    productName: `${family.label} · ${unit.styleLabel} · ${color}`,
+    color,
+    size: groesse,
+    logo: logoAusfuehrung,
+    qty: menge,
+    note: persAn && persName.trim() ? `Namensdruck: ${persName.trim()}` : '',
   })
-  const vormerken = () => notify(quelle, variantLabel)
 
   const ld = useMemo(
-    () => familyJsonLd(family, family.priceFrom == null ? null : family.priceFrom / 100),
+    () => familyJsonLd(family, SHOW_PUBLIC_PRICES && family.priceFrom != null ? family.priceFrom / 100 : null),
     [family],
   )
 
@@ -370,19 +395,27 @@ function Konfigurator({ family, start }) {
             <p className="pdp__tagline">{quelle.tagline}</p>
 
             <div className="pdp__priceline">
-              <span className={`pdp__price ${unit.price == null ? 'pdp__price--offen' : ''}`.trim()}>
-                {unit.price == null ? unit.priceNote : formatPrice(stueck)}
-              </span>
+              {SHOW_PUBLIC_PRICES ? (
+                <span className={`pdp__price ${unit.price == null ? 'pdp__price--offen' : ''}`.trim()}>
+                  {unit.price == null ? unit.priceNote : formatPrice(stueck)}
+                </span>
+              ) : (
+                <span className="pdp__price pdp__price--offen">{PRICE_ON_REQUEST}</span>
+              )}
               {unit.refinement === 'flock' && <span className="pdp__badge pdp__badge--flock">PRESTIGE · FLOCK</span>}
               {unit.soon && <span className="pdp__badge">Coming Soon</span>}
             </div>
             {unit.refinement === 'flock' && (
               <p className="pdp__flocknote">PRESTIGE wird nicht bedruckt, sondern mit samtigem Flock veredelt – erhaben, matt und deutlich hochwertiger. Kontrastierend in Weiß oder Schwarz, auf Wunsch in edlem Gold.</p>
             )}
-            {unit.price != null && (
-              <span className="pdp__vat">
-                inkl. MwSt. zzgl. Versand{aufpreis > 0 && ` · enthält ${formatPrice(aufpreis)} Namensdruck`}
-              </span>
+            {SHOW_PUBLIC_PRICES ? (
+              unit.price != null && (
+                <span className="pdp__vat">
+                  inkl. MwSt. zzgl. Versand{aufpreis > 0 && ` · enthält ${formatPrice(aufpreis)} Namensdruck`}
+                </span>
+              )
+            ) : (
+              <span className="pdp__vat">{PRICE_INQUIRY_NOTE}</span>
             )}
 
             {/* --- Logo-Stil --- */}
@@ -498,22 +531,36 @@ function Konfigurator({ family, start }) {
 
             <div className="pdp__actions">
               {unit.soon ? (
-                <button type="button" className={`pdp__cta pdp__cta--notify ${gemeldet ? 'is-done' : ''}`.trim()} onClick={vormerken}>
-                  {gemeldet ? (<><Check size={17} strokeWidth={2} /> Vorgemerkt</>) : (<><Bell size={17} strokeWidth={1.8} /> Benachrichtige mich</>)}
+                <span className="pdp__cta pdp__cta--soon" aria-disabled="true">
+                  <Clock size={17} strokeWidth={1.8} /> Demnächst verfügbar
+                </span>
+              ) : kannAnfragen ? (
+                <button type="button" className="pdp__cta" onClick={anfragen}>
+                  Unverbindlich per E-Mail anfragen <Mail size={17} strokeWidth={1.8} />
                 </button>
               ) : (
-                <button type="button" className="pdp__cta" onClick={hinzufuegen}>
-                  In den Warenkorb <ShoppingBag size={17} strokeWidth={1.8} />
-                </button>
+                <span className="pdp__cta pdp__cta--soon" aria-disabled="true">
+                  <Info size={17} strokeWidth={1.8} /> Produktvorschau
+                </span>
               )}
               <button type="button" className={`pdp__wish ${gemerkt ? 'is-on' : ''}`.trim()} onClick={() => toggleWish(quelle.id)} aria-pressed={gemerkt} aria-label={gemerkt ? 'Von der Merkliste entfernen' : 'Merken'}>
                 <Heart size={18} strokeWidth={1.8} fill={gemerkt ? 'currentColor' : 'none'} />
               </button>
             </div>
 
+            {!unit.soon && kannAnfragen && (
+              <p className="pdp__inquirynote">{INQUIRY_DISCLAIMER}</p>
+            )}
+            {!unit.soon && !kannAnfragen && (
+              <p className="pdp__previewnote">
+                {PREVIEW_NOTE} Eine unverbindliche Anfrage ist möglich, sobald die
+                finalen Produktangaben bestätigt sind.
+              </p>
+            )}
+
             <p className="pdp__ship">
               <Truck size={16} strokeWidth={1.7} />
-              {unit.soon ? 'Noch nicht bestellbar – wir melden uns, sobald es losgeht.' : `Lieferzeit ${quelle.lead_time}`}
+              {unit.soon ? 'Noch nicht bestellbar – wir melden uns, sobald es losgeht.' : `Voraussichtliche Lieferzeit ${quelle.lead_time}`}
             </p>
 
             <p className="pdp__mockup">
@@ -535,7 +582,7 @@ function Konfigurator({ family, start }) {
       <InfoBloecke product={quelle} material={unit.material} care={quelle.care} lead={quelle.lead_time} soon={unit.soon} size={groesse} sizeGuide={sizeGuide} />
       <RelatedFamilies current={family} />
       <ServiceStrip />
-      <StickyBuyBar price={stueck} priceNote={unit.priceNote} soon={unit.soon} gemeldet={gemeldet} onAdd={hinzufuegen} onNotify={vormerken} />
+      <StickyBuyBar soon={unit.soon} kannAnfragen={kannAnfragen} onInquire={anfragen} />
     </main>
   )
 }
@@ -546,7 +593,7 @@ function Konfigurator({ family, start }) {
 
 function Einzelseite({ product }) {
   const zurueck = useZurueck()
-  const { add, wishlist, toggleWish, notified, notify } = useCart()
+  const { wishlist, toggleWish } = useCart()
   const mehrereGroessen = product.sizes?.length > 1
   const [size, setSize] = useState(product.sizes ? product.sizes[2] || product.sizes[0] : null)
   const [menge, setMenge] = useState(1)
@@ -556,23 +603,34 @@ function Einzelseite({ product }) {
   const related = useMemo(() => getRelated(product, 5).filter((p) => p.category === 'Accessoires' || p.collection === 'WORKWEAR'), [product])
   const sizeGuide = getSizeGuide(product.sizeGuide)
   const gemerkt = wishlist.includes(product.id)
-  const gemeldet = notified.includes(product.id)
-  const hinzufuegen = () => add(product, { size, color: product.colors?.[0]?.label, qty: menge })
-  const vormerken = () => notify(product)
+  const kannAnfragen = canInquire(product)
+  const anfragen = () => openInquiry({
+    productName: product.name,
+    color: product.colors?.[0]?.label,
+    size,
+    qty: menge,
+  })
 
-  const ld = useMemo(() => ({
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: `${product.name} – VIDEKO Merch`,
-    brand: { '@type': 'Brand', name: 'VIDEKO' },
-    category: product.productType,
-    offers: {
-      '@type': 'Offer',
-      priceCurrency: 'EUR',
-      availability: product.soon ? 'https://schema.org/PreOrder' : 'https://schema.org/InStock',
-      ...(product.price != null ? { price: (product.price / 100).toFixed(2) } : {}),
-    },
-  }), [product])
+  const ld = useMemo(() => {
+    const base = {
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: `${product.name} – VIDEKO Merch`,
+      brand: { '@type': 'Brand', name: 'VIDEKO' },
+      category: product.productType,
+    }
+    // Anfragemodell: Ohne oeffentlichen Preis kein schema.org/Offer (ein Offer
+    // ohne Preis waere ungueltig, „InStock" ohne Kaufmoeglichkeit irrefuehrend).
+    if (SHOW_PUBLIC_PRICES && product.price != null) {
+      base.offers = {
+        '@type': 'Offer',
+        priceCurrency: 'EUR',
+        availability: product.soon ? 'https://schema.org/PreOrder' : 'https://schema.org/InStock',
+        price: (product.price / 100).toFixed(2),
+      }
+    }
+    return base
+  }, [product])
 
   return (
     <main className="pdp">
@@ -607,11 +665,16 @@ function Einzelseite({ product }) {
             <p className="pdp__tagline">{product.tagline}</p>
 
             <div className="pdp__priceline">
-              <span className={`pdp__price ${product.price == null ? 'pdp__price--offen' : ''}`.trim()}>
-                {product.price == null ? product.priceNote : formatPrice(product.price)}
-              </span>
+              {SHOW_PUBLIC_PRICES ? (
+                <span className={`pdp__price ${product.price == null ? 'pdp__price--offen' : ''}`.trim()}>
+                  {product.price == null ? product.priceNote : formatPrice(product.price)}
+                </span>
+              ) : (
+                <span className="pdp__price pdp__price--offen">{PRICE_ON_REQUEST}</span>
+              )}
               {product.badge && <span className="pdp__badge">{product.badge}</span>}
             </div>
+            {!SHOW_PUBLIC_PRICES && <span className="pdp__vat">{PRICE_INQUIRY_NOTE}</span>}
 
             <p className="pdp__desc">{product.description}</p>
 
@@ -639,22 +702,36 @@ function Einzelseite({ product }) {
 
             <div className="pdp__actions">
               {product.soon ? (
-                <button type="button" className={`pdp__cta pdp__cta--notify ${gemeldet ? 'is-done' : ''}`.trim()} onClick={vormerken}>
-                  {gemeldet ? (<><Check size={17} strokeWidth={2} /> Vorgemerkt</>) : (<><Bell size={17} strokeWidth={1.8} /> Benachrichtige mich</>)}
+                <span className="pdp__cta pdp__cta--soon" aria-disabled="true">
+                  <Clock size={17} strokeWidth={1.8} /> Demnächst verfügbar
+                </span>
+              ) : kannAnfragen ? (
+                <button type="button" className="pdp__cta" onClick={anfragen}>
+                  Unverbindlich per E-Mail anfragen <Mail size={17} strokeWidth={1.8} />
                 </button>
               ) : (
-                <button type="button" className="pdp__cta" onClick={hinzufuegen}>
-                  In den Warenkorb <ShoppingBag size={17} strokeWidth={1.8} />
-                </button>
+                <span className="pdp__cta pdp__cta--soon" aria-disabled="true">
+                  <Info size={17} strokeWidth={1.8} /> Produktvorschau
+                </span>
               )}
               <button type="button" className={`pdp__wish ${gemerkt ? 'is-on' : ''}`.trim()} onClick={() => toggleWish(product.id)} aria-pressed={gemerkt} aria-label={gemerkt ? 'Von der Merkliste entfernen' : 'Merken'}>
                 <Heart size={18} strokeWidth={1.8} fill={gemerkt ? 'currentColor' : 'none'} />
               </button>
             </div>
 
+            {!product.soon && kannAnfragen && (
+              <p className="pdp__inquirynote">{INQUIRY_DISCLAIMER}</p>
+            )}
+            {!product.soon && !kannAnfragen && (
+              <p className="pdp__previewnote">
+                {PREVIEW_NOTE} Eine unverbindliche Anfrage ist möglich, sobald die
+                finalen Produktangaben bestätigt sind.
+              </p>
+            )}
+
             <p className="pdp__ship">
               <Truck size={16} strokeWidth={1.7} />
-              {product.soon ? 'Noch nicht bestellbar – wir melden uns, sobald es losgeht.' : `Lieferzeit ${product.lead_time}`}
+              {product.soon ? 'Noch nicht bestellbar – wir melden uns, sobald es losgeht.' : `Voraussichtliche Lieferzeit ${product.lead_time}`}
             </p>
 
             {product.imageStatus !== 'real_photo' && (
@@ -688,7 +765,7 @@ function Einzelseite({ product }) {
       )}
 
       <ServiceStrip />
-      <StickyBuyBar price={product.price} priceNote={product.priceNote} soon={product.soon} gemeldet={gemeldet} onAdd={hinzufuegen} onNotify={vormerken} />
+      <StickyBuyBar soon={product.soon} kannAnfragen={kannAnfragen} onInquire={anfragen} />
     </main>
   )
 }

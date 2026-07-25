@@ -6,21 +6,26 @@ const BASE = 'https://videko-kuechen.de'
 
 /** Baut ein schema.org/Product-Objekt fuer eine Produktfamilie. */
 export function familyJsonLd(family, priceEuro) {
-  const offers = {
-    '@type': 'Offer',
-    priceCurrency: 'EUR',
-    // Coming-Soon nicht als verfuegbar auszeichnen
-    availability: family.anyLive ? 'https://schema.org/InStock' : 'https://schema.org/PreOrder',
-    url: BASE + '/merch/' + family.slug,
-  }
-  if (priceEuro != null) offers.price = priceEuro.toFixed(2)
-  return {
+  const ld = {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: family.label + ' – VIDEKO Merch',
     brand: { '@type': 'Brand', name: 'VIDEKO' },
     category: family.productType,
     image: BASE + '/merch/' + family.slug,
-    offers,
   }
+  // Anfragemodell (Livegang-Audit): Ohne oeffentlichen Preis wird KEIN
+  // schema.org/Offer ausgezeichnet. Ein Offer ohne Preis waere ungueltig und
+  // ein „InStock"-Angebot ohne Kaufmoeglichkeit irrefuehrend. Erst wenn
+  // oeffentliche Preise freigegeben sind (priceEuro != null), entsteht ein Offer.
+  if (priceEuro != null) {
+    ld.offers = {
+      '@type': 'Offer',
+      priceCurrency: 'EUR',
+      availability: family.anyLive ? 'https://schema.org/InStock' : 'https://schema.org/PreOrder',
+      url: BASE + '/merch/' + family.slug,
+      price: priceEuro.toFixed(2),
+    }
+  }
+  return ld
 }

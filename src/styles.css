@@ -13109,6 +13109,18 @@ a.footer__contact-line:hover {
 }
 .pdp__mockup svg { flex: none; color: var(--bronze); }
 
+/* Anfragemodell: Hinweis direkt an der Anfrage-Aktion. */
+.pdp__inquirynote {
+  margin: 12px 0 0;
+  padding: 11px 14px;
+  border: 1px solid var(--line-dark);
+  border-radius: 12px;
+  background: rgba(43, 41, 37, 0.03);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
 .footer__legal { flex-wrap: wrap; }
 
 @media (max-width: 980px) {
@@ -13655,3 +13667,60 @@ a.footer__contact-line:hover {
 .cartdr__legal { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(0,0,0,.08); }
 .cartdr__legal a { font-size: .8rem; color: var(--ink-soft, #55514b); text-decoration: underline; }
 .cartdr__legal a:hover { color: var(--ink, #1a1a1a); }
+
+/* ============================================================
+   Anfragemodell (Livegang-Audit): statische Status-Labels.
+   Ersetzen die früheren „Benachrichtige mich"-/Kauf-Buttons. Sie sind
+   bewusst NICHT interaktiv – reine Kennzeichnung, kein Klick, kein Versand.
+   ============================================================ */
+
+/* „Demnächst verfügbar" – gedämpft, nicht klickbar. Überschreibt die
+   Gold-/Farbflächen der Basis-Buttons, damit klar nichts passiert. */
+.pdp__cta--soon,
+.pdp__stickycta--soon,
+.pcard__add--soon,
+.perf-card__notify--soon,
+.mfeat__cta--soon,
+.mwork__cta--soon,
+.mgames__cta--soon {
+  cursor: default;
+  pointer-events: none;
+  color: var(--ink-soft, #6b665f);
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--line-dark, rgba(0, 0, 0, 0.12));
+  box-shadow: none;
+  background-image: none;
+  letter-spacing: normal;
+  text-transform: none;
+  font-weight: 600;
+}
+
+/* In der mobilen Sticky-Bar sitzt der Hinweis auf dunklem Grund. */
+@media (max-width: 720px) {
+  .pdp__stickycta--soon {
+    color: rgba(255, 255, 255, 0.62);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.16);
+  }
+}
+
+/* „Vorschau ansehen" (Karte): bleibt ein klickbarer, dezenter Sekundär-Link. */
+.pcard__add--preview {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.6);
+  border-color: var(--line-dark);
+  text-decoration: none;
+}
+.pcard__add--preview:hover { background: rgba(255, 255, 255, 0.95); border-color: rgba(201, 160, 80, 0.7); }
+
+/* Sichtbarer Vorschau-Hinweis unter der Aktionszeile (nicht versteckt). */
+.pdp__previewnote {
+  margin-top: 12px;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--ink-soft, #6b665f);
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--line-dark, rgba(0, 0, 0, 0.1));
+}

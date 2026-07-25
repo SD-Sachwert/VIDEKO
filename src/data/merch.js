@@ -43,8 +43,28 @@ export const LEAD_TIME_DEFAULT = config.shipping.leadTimeDefault
 export const LEAD_TIME_PERSONALIZED = config.shipping.leadTimePersonalized
 export const PERSONALIZATION_MAX = config.personalization.maxLength
 export const PERSONALIZATION_LABEL = config.personalization.label
-export const ORDER_MAIL = config.orderMail
-export const NOTIFY_MAIL = config.notifyMail
+// Anfragemodell (Livegang-Audit): kein Bestell-/Benachrichtigungsversand mehr.
+// Es bleibt nur die Zieladresse der unverbindlichen E-Mail-Anfrage.
+export const INQUIRY_MAIL = config.inquiryMail
+
+/**
+ * Öffentliche Preise (Anfragemodell / Livegang-Audit).
+ *
+ * Der Merch-Bereich ist eine öffentliche Vorschau mit UNVERBINDLICHER
+ * E-Mail-Anfrage – kein Web-Checkout. Ein verbindlicher Preis entsteht erst im
+ * individuellen Angebot per E-Mail. Solange der Umsatzsteuer-Status der
+ * VIDEKO Küchen eG nicht zweifelsfrei belegt ist (siehe
+ * docs/compliance/unternehmensdaten-todo.md), werden öffentlich KEINE Preise und
+ * KEIN pauschaler „inkl. MwSt."-Hinweis ausgegeben. Wird der USt-Status später
+ * belastbar bestätigt, kann diese Konstante auf `true` gesetzt werden – dann
+ * müssen Steuer- und Versandhinweis sachlich korrekt sein.
+ */
+export const SHOW_PUBLIC_PRICES = false
+/** Ersatztext, wo sonst ein Preis stünde (Anfragemodell). */
+export const PRICE_ON_REQUEST = 'Preis auf Anfrage'
+/** Ausführlicher Hinweis auf der Produktseite statt eines Preises. */
+export const PRICE_INQUIRY_NOTE =
+  'Preis und Versandkosten erhältst du mit unserem individuellen Angebot.'
 
 export const SIZE_GUIDES = sizeGuides.guides
 export const getSizeGuide = (id) => (id ? SIZE_GUIDES[id] || null : null)

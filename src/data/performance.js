@@ -33,6 +33,7 @@ export const PERFORMANCE_CATEGORIES = [
   { key: 'cap', label: 'Caps' },
   { key: 'socks', label: 'Socken' },
   { key: 'bag', label: 'Taschen' },
+  { key: 'shoe', label: 'Schuhe' },
 ]
 
 const TYPE_LABEL = {
@@ -44,6 +45,7 @@ const TYPE_LABEL = {
   cap: 'Cap',
   socks: 'Socken',
   bag: 'Sporttasche',
+  shoe: 'Performance Schuh',
 }
 
 /**
@@ -94,6 +96,15 @@ const ROH = [
   { id: 'perf-bag', name: 'Performance Duffle Bag', type: 'bag', color: ONYX,
     sub: 'Geräumige Sporttasche mit VIDEKO-Schriftzug.',
     files: ['perf-bag-black.webp'] },
+  // Schuhe: aus dem Accessoires-Bereich in die Performance-Reihe verschoben.
+  // Bewusst nur EIN Bild je Schuh (kein Vorder-/Rückseiten-Umschalter), damit
+  // keine zweite Ansicht faelschlich als „Rückseite" ausgegeben wird.
+  { id: 'perf-sneaker', name: 'Performance Sneaker', type: 'shoe', color: IVORY,
+    sub: 'Weißer Sneaker mit VIDEKO-Logo – in Gold oder dezent Ton-in-Ton.',
+    files: ['perf-sneaker-white.webp'] },
+  { id: 'perf-laufschuh', name: 'Performance Laufschuh', type: 'shoe', color: IVORY,
+    sub: 'Leichter Laufschuh mit VIDEKO-Logo – in Gold oder dezent Ton-in-Ton.',
+    files: ['perf-laufschuh-white.webp'] },
 ]
 
 export const PERFORMANCE_PRODUCTS = ROH.map((p) => {

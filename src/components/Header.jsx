@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import { Menu, X, MapPin, ChevronDown, ShoppingBag } from 'lucide-react'
+import { Menu, X, MapPin, ChevronDown } from 'lucide-react'
 import logoMain from '../assets/brand/logo-main-v2.png'
-import { useCart } from '../shop/cart-context.js'
 
 const MAIN = [
   { label: 'Studio', to: '/studio' },
@@ -41,9 +40,9 @@ export default function Header() {
   ]
   const solidRoute = HELLE_SEITEN.includes(pathname)
 
-  // Warenkorb nur im Shop zeigen – auf den Markenseiten waere er ein Fremdkoerper
-  const { count, setOpen: setCartOpen } = useCart()
-  const imShop = pathname.startsWith('/merch')
+  // Kein Warenkorb-Icon mehr: Der Merch-Bereich läuft im Anfragemodell ohne
+  // Warenkorb/Checkout (Livegang-Audit). Es gibt bewusst keinen Einstiegspunkt
+  // in einen Warenkorb im Header.
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -113,17 +112,6 @@ export default function Header() {
         </nav>
 
         <div className="header__actions">
-          {imShop && (
-            <button
-              type="button"
-              className="header__cart"
-              onClick={() => setCartOpen(true)}
-              aria-label={count > 0 ? `Warenkorb öffnen, ${count} Artikel` : 'Warenkorb öffnen'}
-            >
-              <ShoppingBag size={19} strokeWidth={1.7} />
-              {count > 0 && <span className="header__cartcount">{count}</span>}
-            </button>
-          )}
           <Link className="pill pill--cta" to="/beratung">
             <MapPin size={15} strokeWidth={1.8} />
             Beratung anfragen

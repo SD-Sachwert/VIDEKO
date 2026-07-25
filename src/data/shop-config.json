@@ -11,6 +11,5 @@
     "maxLength": 20,
     "label": "Eigenen Namen hinzufügen"
   },
-  "orderMail": "shop@videko-kuechen.de",
-  "notifyMail": "shop@videko-kuechen.de"
+  "inquiryMail": "shop@videko-kuechen.de"
 }

@@ -14,9 +14,10 @@ Cookie-/Consent-Banner nötig ist.
 | YouTube / Vimeo / Spotify-Embeds | **nein** | – | – |
 | Externe Bilder / CDN-Skripte | **nein** (alle Assets lokal gebündelt) | – | nein |
 | Social-Media-Buttons mit Tracking | **nein** | – | – |
-| Warenkorb (`localStorage`) | **ja** | technisch notwendig / funktional | **nein** |
-| Kontakt-/Lead-Formular → `api/lead` | **ja** | Auftragsverarbeitung (E-Mail/Supabase) | nein (Vertragsanbahnung) |
-| Bestell-/Interesse-Meldung → `api/notify` | **ja** | Auftragsverarbeitung (E-Mail/Supabase) | nein (Vertragsanbahnung) |
+| Merkliste (`localStorage`) | **ja** | technisch notwendig / funktional | **nein** |
+| Kontakt-/Lead-Formulare → `api/lead` (Beratung, Bewerbung inkl. Upload, Stilfinder inkl. Bild) | **ja** | Auftragsverarbeitung (E-Mail/Supabase inkl. Storage) | nein (Vertragsanbahnung) |
+| ~~Bestell-/Interesse-Meldung → `api/notify`~~ | **nein – entfernt** | Merch nutzt nur noch mailto-Anfrage (kein Backend) | – |
+| Merch-Anfrage (mailto) | **ja** | Übermittlung direkt an das eigene Postfach | nein (Vertragsanbahnung) |
 | Hosting (Vercel) | **ja** | Server-Logs / Auslieferung | AV-Vertrag prüfen |
 | Supabase (Datenspeicher) | **ja, falls konfiguriert** | Auftragsverarbeitung | AV-Vertrag prüfen |
 | SMTP-Versand (Nodemailer) | **ja, falls konfiguriert** | Auftragsverarbeitung | AV-Vertrag prüfen |
@@ -24,7 +25,7 @@ Cookie-/Consent-Banner nötig ist.
 ## Bewertung Cookie-/Consent-Banner
 
 Aktuell werden **keine nicht-notwendigen Cookies oder Tracker** gesetzt. Es gibt nur
-funktional notwendigen `localStorage` (Warenkorb). Nach § 25 Abs. 2 TDDDG ist dafür
+funktional notwendigen `localStorage` (Merkliste im Merch-Bereich). Nach § 25 Abs. 2 TDDDG ist dafür
 **keine Einwilligung** erforderlich → ein Cookie-Consent-Banner ist derzeit **nicht
 zwingend**.
 

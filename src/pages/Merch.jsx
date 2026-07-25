@@ -2,8 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import {
-  ArrowRight, Search, SlidersHorizontal, BadgeCheck, Truck, ShieldCheck, RotateCcw,
-  Bell, Check, Plus, Minus, Sparkles, Leaf, Clock, Heart,
+  ArrowRight, Search, SlidersHorizontal, BadgeCheck, Mail, ShieldCheck, Info,
+  Plus, Minus, Sparkles, Leaf, Clock, Heart,
 } from 'lucide-react'
 
 import Reveal from '../components/Reveal.jsx'
@@ -12,12 +12,12 @@ import ProductCard from '../components/merch/ProductCard.jsx'
 import FamilyCard from '../components/merch/FamilyCard.jsx'
 import ProductGallery from '../components/merch/ProductGallery.jsx'
 import PerformanceSection from '../components/merch/PerformanceSection.jsx'
-import { useCart } from '../shop/cart-context.js'
 import {
   MERCH_FAMILIES, ACCESSORY_PRODUCTS, MERCH_TABS, MERCH_SORTS, passtZuTab,
   LOGO_STYLE_ORDER, LOGO_STYLE_INFO, WORKWEAR_PRODUCTS,
-  formatPrice, getProduct, personalizationPrice,
-  PERSONALIZATION_MAX, PERSONALIZATION_LABEL, FREE_SHIPPING_FROM, LEAD_TIME_PERSONALIZED,
+  formatPrice, getProduct,
+  PERSONALIZATION_MAX, PERSONALIZATION_LABEL, LEAD_TIME_PERSONALIZED,
+  SHOW_PUBLIC_PRICES, PRICE_ON_REQUEST,
 } from '../data/merch.js'
 
 import heroBanner from '../assets/images/merch/_shared/merch-hero.webp'
@@ -56,11 +56,14 @@ const speichereShopState = (key, state) => {
   try { sessionStorage.setItem(STATE_PREFIX + key, JSON.stringify(state)) } catch { /* Storage evtl. gesperrt */ }
 }
 
+// Anfragemodell (Livegang-Audit, § 2): KEINE Kauf-/Zahlungs-/Versand-/Widerrufs-
+// Zusagen mehr. Preis, Versand und Widerrufsbedingungen entstehen erst mit dem
+// individuellen Angebot per E-Mail.
 const BENEFITS = [
   { icon: BadgeCheck, title: 'Premium Qualität', text: 'Hochwertige Materialien für langen Tragekomfort.' },
-  { icon: Truck, title: 'Versand', text: 'Innerhalb Deutschlands in 7–14 Tagen.' },
-  { icon: ShieldCheck, title: 'Sichere Bezahlung', text: 'Verschlüsselte Übertragung deiner Daten.' },
-  { icon: RotateCcw, title: 'Rückgabe', text: '14 Tage Widerrufsrecht.' },
+  { icon: Mail, title: 'Unverbindlich anfragen', text: 'Individuelles Angebot per E-Mail – ganz ohne Bestellung.' },
+  { icon: ShieldCheck, title: 'Sichere Verbindung', text: 'SSL-verschlüsselte Übertragung deiner Angaben.' },
+  { icon: Info, title: 'Persönliche Antwort', text: 'Wir melden uns individuell per E-Mail zurück.' },
 ]
 
 const WERTE = [
@@ -77,24 +80,24 @@ const workwearTeaser = getProduct('workwear-polo-black') // Sammel-CTA der Workw
 
 const FAQ = [
   {
-    q: 'Wie lange dauert der Versand?',
-    a: `Innerhalb Deutschlands versenden wir in der Regel in ${signature.lead_time}. Personalisierte Shirts werden einzeln bedruckt, dort rechne bitte mit ${LEAD_TIME_PERSONALIZED}. Ab ${formatPrice(FREE_SHIPPING_FROM)} Bestellwert entfallen die Versandkosten. Alle Einzelheiten stehen auf der Seite „Versand & Lieferung“.`,
+    q: 'Wie läuft eine Anfrage ab?',
+    a: 'Ganz unverbindlich per E-Mail. Auf der Produktseite tippst du auf „Unverbindlich per E-Mail anfragen“ – es öffnet sich eine vorbereitete Mail mit deiner Auswahl (Farbe, Größe, Logoausführung, Anzahl). Es gibt keinen Warenkorb und keinen Online-Checkout. Mit dem Absenden entsteht noch keine Bestellung; wir melden uns anschließend mit einem individuellen Angebot.',
   },
   {
-    q: 'Welche Zahlungsarten werden akzeptiert?',
-    a: 'Aktuell läuft die Bestellung per Mail: Du legst alles in den Warenkorb, wir schicken dir eine Rechnung mit den Überweisungsdaten. Der Online-Checkout mit Karte und PayPal kommt mit dem Verkaufsstart der übrigen Kollektion.',
+    q: 'Was kostet ein Shirt und wie hoch ist der Versand?',
+    a: 'Preis und Versandkosten nennen wir dir mit unserem individuellen Angebot per E-Mail. So können wir Anzahl, Farbe, Größe und Logoausführung sauber berücksichtigen.',
   },
   {
-    q: 'Kann ich ein Produkt zurückgeben?',
-    a: 'Du hast ein 14-tägiges Widerrufsrecht. Bei personalisierten Artikeln kann es eingeschränkt sein, weil sie eigens für dich angefertigt werden. Die verbindlichen Angaben findest du unter „Rückgabe & Widerruf“.',
+    q: 'Wie lange dauert die Lieferung?',
+    a: `Die voraussichtliche Fertigungs- und Lieferzeit beträgt ${signature.lead_time}; personalisierte Shirts werden einzeln veredelt, dort rechne bitte mit ${LEAD_TIME_PERSONALIZED}. Die verbindlichen Angaben erhältst du mit deinem individuellen Angebot.`,
   },
   {
     q: 'Warum sind so viele Produkte „Coming Soon“?',
-    a: 'Weil wir sie noch nicht in der Hand hatten. Wir geben nichts frei, was wir nicht selbst getragen oder benutzt haben. Die T-Shirts sind durch, der Rest folgt Stück für Stück. Über „Benachrichtige mich“ melden wir uns, sobald ein Artikel bestellbar ist.',
+    a: 'Weil wir sie noch nicht in der Hand hatten. Wir geben nichts frei, was wir nicht selbst getragen oder benutzt haben. Die T-Shirts sind durch, der Rest folgt Stück für Stück. Bis dahin sind diese Artikel als „Demnächst verfügbar“ gekennzeichnet.',
   },
   {
     q: 'Wie funktioniert die Personalisierung?',
-    a: `Auf der Produktseite hakst du „${PERSONALIZATION_LABEL}“ an und tippst den Namen ein – bis zu ${PERSONALIZATION_MAX} Zeichen. Der Aufpreis von ${formatPrice(personalizationPrice(signature))} wird sofort im Preis berücksichtigt.`,
+    a: `Auf der Produktseite hakst du „${PERSONALIZATION_LABEL}“ an und tippst den Namen ein – bis zu ${PERSONALIZATION_MAX} Zeichen. Ein möglicher Aufpreis für die Personalisierung wird im individuellen Angebot ausgewiesen.`,
   },
   {
     q: 'Sind die abgebildeten Produkte schon final?',
@@ -108,7 +111,6 @@ export default function Merch() {
   const imgY = useTransform(scrollYProgress, [0, 1], ['0%', '8%'])
   const imgScale = useTransform(scrollYProgress, [0, 1], [1.03, 1.1])
 
-  const { notified, notify } = useCart()
   const { hash, key } = useLocation()
 
   // Anker aus dem Footer (#shop, #faq) anspringen – der Router tut das nicht von selbst
@@ -172,9 +174,6 @@ export default function Merch() {
   const sichtbar = gefiltert.slice(0, anzahl)
   const ACC_VORSCHAU = 8
   const accSichtbar = accAlle ? ACCESSORY_PRODUCTS : ACCESSORY_PRODUCTS.slice(0, ACC_VORSCHAU)
-  const hoodieGemeldet = notified.includes(featured.id)
-  const bossGemeldet = notified.includes(bossBattle.id)
-  const workGemeldet = notified.includes(workwearTeaser.id)
 
   return (
     <main className="merch">
@@ -286,7 +285,7 @@ export default function Merch() {
             <p className="mfeat__variant">{featured.tagline}</p>
 
             <div className="mfeat__priceline">
-              <span className="mfeat__price">{featured.price == null ? featured.priceNote : formatPrice(featured.price)}</span>
+              <span className="mfeat__price">{!SHOW_PUBLIC_PRICES ? PRICE_ON_REQUEST : featured.price == null ? featured.priceNote : formatPrice(featured.price)}</span>
               <span className="mfeat__badge"><Clock size={12} strokeWidth={2} /> {featured.badge}</span>
             </div>
 
@@ -311,15 +310,9 @@ export default function Merch() {
               ))}
             </div>
 
-            <button
-              type="button"
-              className={`mfeat__cta ${hoodieGemeldet ? 'is-done' : ''}`.trim()}
-              onClick={() => notify(featured, `Größe ${hoodieSize}`)}
-            >
-              {hoodieGemeldet
-                ? (<><Check size={16} strokeWidth={2} /> Vorgemerkt</>)
-                : (<><Bell size={16} strokeWidth={1.8} /> Benachrichtige mich</>)}
-            </button>
+            <span className="mfeat__cta mfeat__cta--soon" aria-disabled="true">
+              <Clock size={16} strokeWidth={1.8} /> Demnächst verfügbar
+            </span>
 
             <div style={{ display: 'flex', gap: '22px', flexWrap: 'wrap', alignItems: 'center' }}>
               <Link className="mfeat__more" to={`/merch/${featured.slug}`}>
@@ -376,7 +369,7 @@ export default function Merch() {
                 checked={nurVerfuegbar}
                 onChange={(e) => { setNurVerfuegbar(e.target.checked); setAnzahl(SEITE) }}
               />
-              <span>Nur sofort bestellbar</span>
+              <span>Nur sofort verfügbar</span>
             </label>
 
             <label className="mshop__sort">
@@ -423,15 +416,9 @@ export default function Merch() {
               Polo, Softshell, Overshirt und mehr folgen. Robust genug für die Baustelle.
               Sauber genug fürs Studio.
             </p>
-            <button
-              type="button"
-              className={`mwork__cta ${workGemeldet ? 'is-done' : ''}`.trim()}
-              onClick={() => notify(workwearTeaser)}
-            >
-              {workGemeldet
-                ? (<><Check size={16} strokeWidth={2} /> Vorgemerkt</>)
-                : (<><Bell size={16} strokeWidth={1.8} /> Benachrichtige mich</>)}
-            </button>
+            <span className="mwork__cta mwork__cta--soon" aria-disabled="true">
+              <Clock size={16} strokeWidth={1.8} /> Demnächst verfügbar
+            </span>
           </Reveal>
           <Reveal className="mwork__list" delay={0.08}>
             {[...new Set(WORKWEAR_PRODUCTS.map((w) => w.name.replace(/ Schwarz| Weiß/g, '')))].map((name) => (
@@ -492,15 +479,9 @@ export default function Merch() {
               .
             </p>
             <div className="mgames__actions">
-              <button
-                type="button"
-                className={`mgames__cta ${bossGemeldet ? 'is-done' : ''}`.trim()}
-                onClick={() => notify(bossBattle)}
-              >
-                {bossGemeldet
-                  ? (<><Check size={15} strokeWidth={2} /> Vorgemerkt</>)
-                  : (<><Bell size={15} strokeWidth={1.8} /> Benachrichtige mich</>)}
-              </button>
+              <span className="mgames__cta mgames__cta--soon" aria-disabled="true">
+                <Clock size={15} strokeWidth={1.8} /> Demnächst verfügbar
+              </span>
               <Link className="mgames__link" to={`/merch/${bossBattle.slug}`}>
                 Zum Produkt <ArrowRight size={14} strokeWidth={2} />
               </Link>

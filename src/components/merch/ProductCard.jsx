@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Heart, ShoppingBag, Bell, Check } from 'lucide-react'
+import { Heart, Mail, Clock, Eye } from 'lucide-react'
 
 import Reveal from '../Reveal.jsx'
 import { useCart } from '../../shop/cart-context.js'
-import { formatPrice } from '../../data/merch.js'
+import { formatPrice, SHOW_PUBLIC_PRICES, PRICE_ON_REQUEST } from '../../data/merch.js'
+import { openInquiry } from '../../shop/inquiry.js'
+import { canInquire } from '../../data/release.js'
 
 /**
  * Produktkarte im Grid.
@@ -13,11 +15,11 @@ import { formatPrice } from '../../data/merch.js'
  * gleicher Schnitt, andere Farbe ist ein eigenes Produkt mit eigenem Slug.
  */
 export default function ProductCard({ product, delay = 0 }) {
-  const { add, wishlist, toggleWish, notified, notify } = useCart()
+  const { wishlist, toggleWish } = useCart()
   const mehrereGroessen = product.sizes?.length > 1
   const [size, setSize] = useState(product.sizes ? product.sizes[2] || product.sizes[0] : null)
   const gemerkt = wishlist.includes(product.id)
-  const gemeldet = notified.includes(product.id)
+  const kannAnfragen = canInquire(product)
 
   // Farbwechsel innerhalb desselben Produkts (z. B. Sneaker Gold-Logo /
   // Ton-in-Ton): mehrere Farben, die 1:1 auf die Galeriebilder abgebildet sind.
@@ -53,8 +55,8 @@ export default function ProductCard({ product, delay = 0 }) {
       <div className="pcard__body">
         <span className="pcard__coll">{product.collection}</span>
         <Link className="pcard__name" to={`/merch/${product.slug}`}>{product.name}</Link>
-        <span className={`pcard__price ${product.price == null ? 'pcard__price--offen' : ''}`.trim()}>
-          {product.price == null ? product.priceNote : formatPrice(product.price)}
+        <span className={`pcard__price ${!SHOW_PUBLIC_PRICES || product.price == null ? 'pcard__price--offen' : ''}`.trim()}>
+          {!SHOW_PUBLIC_PRICES ? PRICE_ON_REQUEST : product.price == null ? product.priceNote : formatPrice(product.price)}
         </span>
 
         {geschwister ? (
@@ -109,17 +111,21 @@ export default function ProductCard({ product, delay = 0 }) {
         )}
 
         {product.soon ? (
+          <span className="pcard__add pcard__add--soon" aria-disabled="true">
+            <Clock size={14} strokeWidth={1.9} /> Demnächst verfügbar
+          </span>
+        ) : kannAnfragen ? (
           <button
             type="button"
-            className={`pcard__add pcard__add--notify ${gemeldet ? 'is-done' : ''}`.trim()}
-            onClick={() => notify(product)}
+            className="pcard__add"
+            onClick={() => openInquiry({ productName: product.name, color: warenkorbFarbe, size })}
           >
-            {gemeldet ? (<><Check size={14} strokeWidth={2} /> Vorgemerkt</>) : (<><Bell size={14} strokeWidth={1.9} /> Benachrichtigen</>)}
+            Per E-Mail anfragen <Mail size={14} strokeWidth={1.9} />
           </button>
         ) : (
-          <button type="button" className="pcard__add" onClick={() => add(product, { size, color: warenkorbFarbe })}>
-            In den Warenkorb <ShoppingBag size={14} strokeWidth={1.9} />
-          </button>
+          <Link className="pcard__add pcard__add--preview" to={`/merch/${product.slug}`}>
+            Vorschau ansehen <Eye size={14} strokeWidth={1.9} />
+          </Link>
         )}
       </div>
     </Reveal>

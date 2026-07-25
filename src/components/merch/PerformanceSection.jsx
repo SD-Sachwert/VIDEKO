@@ -1,8 +1,7 @@
 import { useMemo, useState } from 'react'
-import { ArrowRight, Clock, Repeat, Bell, Check } from 'lucide-react'
+import { ArrowRight, Clock, Repeat } from 'lucide-react'
 
 import Reveal from '../Reveal.jsx'
-import { useCart } from '../../shop/cart-context.js'
 import {
   PERFORMANCE_PRODUCTS,
   PERFORMANCE_CATEGORIES,
@@ -16,11 +15,9 @@ import {
  * so bleibt es EINE Karte pro Produkt statt doppelter Bilder.
  */
 function PerfCard({ product, delay = 0 }) {
-  const { notify, notified } = useCart()
   const [idx, setIdx] = useState(0)
   const bild = product.images[idx] || product.images[0]
   const seite = idx === 0 ? 'Vorderseite' : 'Rückseite'
-  const gemeldet = notified.includes(product.id)
 
   return (
     <Reveal className="perf-card" delay={delay}>
@@ -54,15 +51,9 @@ function PerfCard({ product, delay = 0 }) {
           <span className="perf-card__dot" style={{ background: product.color.hex }} aria-hidden="true" />
           {product.color.label}
         </span>
-        <button
-          type="button"
-          className={`perf-card__notify ${gemeldet ? 'is-done' : ''}`.trim()}
-          onClick={() => notify(product, product.color?.label || null)}
-        >
-          {gemeldet
-            ? (<><Check size={14} strokeWidth={2} /> Vorgemerkt</>)
-            : (<><Bell size={14} strokeWidth={1.8} /> Benachrichtige mich</>)}
-        </button>
+        <span className="perf-card__notify perf-card__notify--soon" aria-disabled="true">
+          <Clock size={14} strokeWidth={1.8} /> Demnächst verfügbar
+        </span>
       </div>
     </Reveal>
   )

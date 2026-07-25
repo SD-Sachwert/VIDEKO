@@ -5,8 +5,9 @@ import { useLenis } from 'lenis/react'
 import AmbientBackground from './AmbientBackground.jsx'
 import Header from './Header.jsx'
 import Footer from './Footer.jsx'
-import CartDrawer from './merch/CartDrawer.jsx'
-import NotifyModal from './merch/NotifyModal.jsx'
+// Anfragemodell ohne Warenkorb/Checkout und ohne „Benachrichtige mich"
+// (Livegang-Audit): weder CartDrawer noch NotifyModal existieren noch. Der
+// CartProvider führt nur noch die rein lokale Merkliste.
 import { CartProvider } from '../shop/CartContext.jsx'
 
 // Scrollposition je History-Eintrag (location.key) in sessionStorage sichern.
@@ -106,8 +107,6 @@ export default function Layout() {
           <Outlet />
         </main>
         <Footer />
-        <CartDrawer />
-        <NotifyModal />
       </div>
     </CartProvider>
   )
