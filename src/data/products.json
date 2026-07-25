@@ -182,6 +182,98 @@
     "rank": 1
   },
   {
+    "id": "signature_t_shirt_beige",
+    "sku": "VK-SIGNATURE-T-SHIRT-BEIGE",
+    "slug": "signature-t-shirt-beige",
+    "name": "Signature T-Shirt Beige",
+    "kicker": "T-Shirt",
+    "collection": "SIGNATURE",
+    "line": "signature",
+    "audience": "unisex",
+    "productType": "tshirt",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "purchasable": false,
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": true,
+    "personalization_price": 3.99,
+    "personalization": {
+      "enabled": true,
+      "price": 3.99,
+      "maxLength": 20,
+      "position": "Obere Rückseite, unterhalb des Nackens",
+      "allowEmoji": false
+    },
+    "colors": [
+      {
+        "key": "beige",
+        "label": "Beige",
+        "hex": "#D8C4A6"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Regular",
+    "fitNote": "Fällt normal aus.",
+    "sizeGuide": "unisex",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "signature-tee",
+    "refinement": "print",
+    "logoPlacement": "front",
+    "placements": [
+      {
+        "key": "front",
+        "slot": "front",
+        "slotLabel": "Großes Frontlogo",
+        "logoColor": null,
+        "image": "v5-coming-soon.webp",
+        "gallery": [
+          "v5-coming-soon.webp"
+        ],
+        "imageStatus": "placeholder",
+        "regenNote": "Signature T-Shirt Beige – Bild folgt"
+      },
+      {
+        "key": "chest",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": null,
+        "image": "v5-coming-soon.webp",
+        "gallery": [
+          "v5-coming-soon.webp"
+        ],
+        "imageStatus": "placeholder",
+        "regenNote": "Signature T-Shirt Beige – Bild folgt"
+      }
+    ],
+    "image": "v5-coming-soon.webp",
+    "gallery": [
+      "v5-coming-soon.webp"
+    ],
+    "imageStatus": "placeholder",
+    "requiresFinalPhotography": true,
+    "requiresRerender": true,
+    "material": "100% Baumwolle",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Unser Klassiker in Beige mit vollständigem VIDEKO Küchen Logo.",
+    "description": "Unser Klassiker in Beige mit vollständigem VIDEKO Küchen Logo. Teil der SIGNATURE Linie. Schnitt: Regular – fällt normal aus.",
+    "usps": [
+      "Regular geschnitten",
+      "100% Baumwolle",
+      "Teil der SIGNATURE Linie"
+    ],
+    "rank": 2,
+    "regenNote": "Signature T-Shirt Beige – Bild folgt"
+  },
+  {
     "id": "signature_vneck_black",
     "sku": "VK-SIGNATURE-VNECK-BLACK",
     "slug": "signature-vneck-black",
@@ -489,6 +581,82 @@
       "Teil der SIGNATURE Linie"
     ],
     "rank": 5
+  },
+  {
+    "id": "signature_polo_white",
+    "sku": "VK-SIGNATURE-POLO-WHITE",
+    "slug": "signature-polo-white",
+    "name": "Signature Polo Weiß",
+    "kicker": "Polo",
+    "collection": "SIGNATURE",
+    "line": "signature",
+    "audience": "unisex",
+    "productType": "polo",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "purchasable": false,
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "white",
+        "label": "Weiß",
+        "hex": "#f4f2ee"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Polo",
+    "fitNote": "Normal bis leicht körpernah.",
+    "sizeGuide": "polo",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": "signature-polo",
+    "refinement": "print",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "chest",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": null,
+        "image": "v5-coming-soon.webp",
+        "gallery": [
+          "v5-coming-soon.webp"
+        ],
+        "imageStatus": "placeholder",
+        "regenNote": "Signature Polo Weiß – Foto folgt"
+      }
+    ],
+    "image": "v5-coming-soon.webp",
+    "gallery": [
+      "v5-coming-soon.webp"
+    ],
+    "imageStatus": "placeholder",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "Piqué, 100% Baumwolle",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Polohemd in Weiß mit vollständigem VIDEKO Küchen Logo.",
+    "description": "Polohemd in Weiß mit vollständigem VIDEKO Küchen Logo. Teil der SIGNATURE Linie. Schnitt: Polo – normal bis leicht körpernah.",
+    "usps": [
+      "Polo geschnitten",
+      "Piqué, 100% Baumwolle",
+      "Teil der SIGNATURE Linie"
+    ],
+    "rank": 6,
+    "regenNote": "Signature Polo Weiß – Foto folgt"
   },
   {
     "id": "signature_hoodie_black",
