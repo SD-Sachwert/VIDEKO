@@ -19,19 +19,25 @@
  *                Website-Automatik – rein manueller Prozess.
  *   'shipping' – Zusätzlich: Versand (LUCID/VerpackG, Versand-/Rücksendeprozess).
  *
- * AKTUELLE FREIGABE: 'preview'.
- * Begründung: Die konkrete SOL'S-Imperial-Bestellung (Farbcode, Rechnung,
- * Etikett) ist noch nicht belegt (compliance.js → colorsInUse.confirmedByInvoice
- * = false). Nach § 9 der Vorgabe bleibt der Anfrage-Button gesperrt, bis das
- * Material anhand echter Lieferantenangaben bestätigt ist. Sobald der Beleg
- * vorliegt und in compliance.js eingetragen ist, genügt hier die Umstellung auf
- * 'inquiry', um die unverbindliche Anfrage zu aktivieren.
+ * AKTUELLE FREIGABE: 'inquiry' (auf Branch `merch-shop` / Preview-Deploy).
+ * Begründung: Das Material der SOL'S-Imperial-Blankware ist über die vom
+ * Auftraggeber benannten, autorisierten Lieferanten-Produktseiten (Gröner-Schulze)
+ * belegt (compliance.js → colorsInUse.confirmedBySource = true; Farben „309 deep
+ * black" / „117 absolute white", 100 % Baumwolle, 190 g/m²). Damit sind die
+ * öffentlichen Pflichtangaben für die Signature-Shirts belastbar und der
+ * unverbindliche E-Mail-Anfrage-Button ist freigegeben.
+ *
+ * WICHTIG: `main` (Live-Domain) bleibt hiervon UNBERÜHRT und weiter auf 'preview'
+ * – diese Stufe gilt nur auf dem Merch-Branch, bis der Auftraggeber die
+ * Live-Aktivierung freigibt (siehe verbleibende Blocker im Abschlussbericht:
+ * bestätigtes Anfrage-Postfach info@videko-kuechen.de, Versandkostenentscheidung,
+ * Backend-ENV für Vormerkung/Interesse). 'sale'/'shipping' bleiben gesperrt.
  */
 import { getProductFamily } from './compliance.js'
 
 const STAGES = ['preview', 'inquiry', 'sale', 'shipping']
 
-export const RELEASE_STAGE = 'preview'
+export const RELEASE_STAGE = 'inquiry'
 
 const stageIndex = STAGES.indexOf(RELEASE_STAGE)
 
@@ -45,9 +51,11 @@ export const saleReady = stageIndex >= 2
 export const shippingReady = stageIndex >= 3
 
 /**
- * Ist die Materialzusammensetzung des Produkts durch einen echten Beleg
- * (Lieferantenrechnung/Etikett) bestätigt? Nur dann darf sie als Tatsache
- * öffentlich stehen und nur dann darf der Anfrage-Button erscheinen (§ 9).
+ * Ist die Materialzusammensetzung des Produkts belegt? Als Beleg zählt entweder
+ * eine Lieferantenrechnung/ein Etikett (`confirmedByInvoice`) ODER die vom
+ * Auftraggeber benannte, autorisierte Lieferanten-Produktseite
+ * (`confirmedBySource`). Nur dann darf die Materialangabe als Tatsache öffentlich
+ * stehen und nur dann darf der Anfrage-Button erscheinen (§ 9).
  *
  * Produkte ohne verkaufsrelevante Blankware-Familie (reine Coming-soon-Vorschau)
  * liefern `false` – sie sind ohnehin nicht anfragbar.
@@ -56,7 +64,8 @@ export function materialConfirmed(product) {
   const fam = getProductFamily(product)
   if (!fam) return false
   const colors = fam.colorsInUse || []
-  return colors.length > 0 && colors.every((c) => c.confirmedByInvoice === true)
+  return colors.length > 0
+    && colors.every((c) => c.confirmedByInvoice === true || c.confirmedBySource === true)
 }
 
 /**

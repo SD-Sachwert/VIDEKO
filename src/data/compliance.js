@@ -156,8 +156,12 @@ export const PRODUCT_FAMILIES = {
       },
       // Bezugsquelle (Händler/Großhändler), NICHT der Hersteller.
       supplier: { name: 'Gröner-Schulze', role: 'Lieferant/Händler' },
-      // Verbindliche Blankware-Referenz (vom Auftraggeber gesendeter Produktlink).
-      referenceLink: null, // TODO: konkrete URL intern hinterlegen
+      // Verbindliche Blankware-Referenz (vom Auftraggeber gesendete Produktlinks
+      // beim Lieferanten Gröner-Schulze – autorisierte Materialquelle).
+      referenceLink: {
+        black: 'https://www.groener-schulze.de/sol-s-imperial-herren-t-shirt-11500',
+        white: 'https://www.groener-schulze.de/sol-s-imperial-herren-t-shirt-11500',
+      },
     },
 
     // --- Grundmaterial der Blankware ---------------------------------------
@@ -176,28 +180,36 @@ export const PRODUCT_FAMILIES = {
     },
 
     // --- Tatsächlich bezogene Farben ---------------------------------------
-    // KEINE Farbcodes geraten. Zuordnung erst anhand Bestellung/Rechnung.
-    // Weder 102 White noch 117 Absolute White noch Deep Black 309 sind bisher
-    // durch einen Beleg bestätigt.
+    // Farb-/Materialdaten anhand der vom Auftraggeber benannten, autorisierten
+    // Lieferanten-Produktseiten (Gröner-Schulze) belegt → `confirmedBySource`.
+    // `confirmedByInvoice` bleibt getrennt und false, bis zusätzlich die
+    // Lieferanten-Rechnung/Charge vorliegt (ehrliche Unterscheidung der
+    // Nachweistiefe). Beide Farben sind das Standard-Modell aus 100 % Baumwolle;
+    // die Viskose-Mischungen (Ash/Grey Melange) werden NICHT bezogen.
     colorsInUse: [
       {
         internalKey: 'black', label: 'Schwarz',
-        solsColorName: null, solsColorCode: null,
+        solsColorName: 'Deep Black', solsColorCode: '309',
+        hex: '#2D2927', pantone: '19-4006 TCX',
         material: '100 % Baumwolle', // Schwarz zählt nicht zu den Ausnahmen
-        confirmedByInvoice: false,
-        note: 'Vermutlich „Deep Black 309" – anhand Lieferantenrechnung bestätigen.',
+        confirmedBySource: true, // Lieferanten-Produktseite (Gröner-Schulze)
+        confirmedByInvoice: false, // Rechnung/Charge noch offen
+        note: 'SOL’S Imperial 11500, Farbe „309 – deep black" laut Lieferanten-Produktseite (Gröner-Schulze).',
       },
       {
         internalKey: 'white', label: 'Weiß',
-        solsColorName: null, solsColorCode: null,
+        solsColorName: 'Absolute White', solsColorCode: '117',
+        hex: '#F4F9FE', pantone: '11-0601 TCX',
         material: '100 % Baumwolle', // Weiß zählt nicht zu den Ausnahmen
-        confirmedByInvoice: false,
-        note: 'Weißton offen: „102 White" vs. „117 Absolute White" – anhand Rechnung klären.',
+        confirmedBySource: true, // Lieferanten-Produktseite (Gröner-Schulze)
+        confirmedByInvoice: false, // Rechnung/Charge noch offen
+        note: 'SOL’S Imperial 11500, Farbe „117 – absolute white" laut Lieferanten-Produktseite (Gröner-Schulze).',
       },
     ],
 
-    // Tatsächlich angebotene Größen laut Bestellung – zu bestätigen.
-    sizesInUse: null,
+    // Bei Gröner-Schulze verfügbar: XS–5XL. VIDEKO bietet S–XXL an (Quelle:
+    // Lieferanten-Produktseite). Endgültige Bestätigung je Größe via Rechnung.
+    sizesInUse: ['S', 'M', 'L', 'XL', 'XXL'],
 
     // --- Zertifikate (NUR intern, nicht automatisch fürs Endprodukt) -------
     // Gelten für die BLANKWARE. Dürfen NICHT ungeprüft für das fertig

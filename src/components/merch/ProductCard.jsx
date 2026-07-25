@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Heart, Mail, Clock, Eye } from 'lucide-react'
+import { Heart, Eye, ShoppingBag, BellRing } from 'lucide-react'
 
 import Reveal from '../Reveal.jsx'
 import { useCart } from '../../shop/cart-context.js'
 import { formatPrice, SHOW_PUBLIC_PRICES, PRICE_ON_REQUEST } from '../../data/merch.js'
-import { openInquiry } from '../../shop/inquiry.js'
 import { canInquire } from '../../data/release.js'
+import { sendInterest } from '../../shop/notify.js'
 
 /**
  * Produktkarte im Grid.
@@ -21,6 +21,13 @@ export default function ProductCard({ product, delay = 0 }) {
   const gemerkt = wishlist.includes(product.id)
   const kannAnfragen = canInquire(product)
 
+  // § 7: Herz auf Coming-soon-Produkten meldet beim Aktivieren einmalig
+  // anonymes Interesse (ohne personenbezogene Daten). Sonst nur lokal merken.
+  const merkenUndInteresse = () => {
+    if (product.soon && !gemerkt) sendInterest({ productName: product.name, productId: product.id, variant: '' })
+    toggleWish(product.id)
+  }
+
   // Farbwechsel innerhalb desselben Produkts (z. B. Sneaker Gold-Logo /
   // Ton-in-Ton): mehrere Farben, die 1:1 auf die Galeriebilder abgebildet sind.
   // Nur wenn es KEINE Schwesterprodukte (variantGroup) gibt – die sind eigene
@@ -33,7 +40,6 @@ export default function ProductCard({ product, delay = 0 }) {
   const [farbIdx, setFarbIdx] = useState(0)
   const aktiveFarbe = intraFarben ? intraFarben[farbIdx] : null
   const kartenBild = aktiveFarbe?.image ?? product.image
-  const warenkorbFarbe = aktiveFarbe?.label ?? product.colors?.[0]?.label
 
   return (
     <Reveal className={`pcard ${product.soon ? 'pcard--soon' : ''}`.trim()} delay={delay}>
@@ -45,9 +51,9 @@ export default function ProductCard({ product, delay = 0 }) {
       <button
         type="button"
         className={`pcard__wish ${gemerkt ? 'is-on' : ''}`.trim()}
-        onClick={() => toggleWish(product.id)}
+        onClick={merkenUndInteresse}
         aria-pressed={gemerkt}
-        aria-label={gemerkt ? `${product.name} von der Merkliste entfernen` : `${product.name} merken`}
+        aria-label={gemerkt ? `${product.name} von der Merkliste entfernen` : product.soon ? `Interesse an ${product.name} markieren` : `${product.name} merken`}
       >
         <Heart size={15} strokeWidth={1.8} fill={gemerkt ? 'currentColor' : 'none'} />
       </button>
@@ -111,17 +117,13 @@ export default function ProductCard({ product, delay = 0 }) {
         )}
 
         {product.soon ? (
-          <span className="pcard__add pcard__add--soon" aria-disabled="true">
-            <Clock size={14} strokeWidth={1.9} /> Demnächst verfügbar
-          </span>
+          <Link className="pcard__add pcard__add--notify" to={`/merch/${product.slug}?benachrichtigen=1`}>
+            Benachrichtige mich <BellRing size={14} strokeWidth={1.9} />
+          </Link>
         ) : kannAnfragen ? (
-          <button
-            type="button"
-            className="pcard__add"
-            onClick={() => openInquiry({ productName: product.name, color: warenkorbFarbe, size })}
-          >
-            Per E-Mail anfragen <Mail size={14} strokeWidth={1.9} />
-          </button>
+          <Link className="pcard__add" to={`/merch/${product.slug}`}>
+            Auswählen &amp; anfragen <ShoppingBag size={14} strokeWidth={1.9} />
+          </Link>
         ) : (
           <Link className="pcard__add pcard__add--preview" to={`/merch/${product.slug}`}>
             Vorschau ansehen <Eye size={14} strokeWidth={1.9} />

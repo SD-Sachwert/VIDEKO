@@ -11,6 +11,7 @@ import UeberUns from './pages/UeberUns.jsx'
 import Beratung from './pages/Beratung.jsx'
 import Merch from './pages/Merch.jsx'
 import ProductDetail from './pages/ProductDetail.jsx'
+import VormerkungBestaetigen from './pages/VormerkungBestaetigen.jsx'
 import Journal from './pages/Journal.jsx'
 import JournalArticle from './pages/JournalArticle.jsx'
 import Impressum from './pages/Impressum.jsx'
@@ -44,6 +45,7 @@ export default function App() {
         <Route path="/beratung" element={<Beratung />} />
         <Route path="/merch" element={<Merch />} />
         <Route path="/merch/:slug" element={<ProductDetail />} />
+        <Route path="/vormerkung-bestaetigen" element={<VormerkungBestaetigen />} />
 
         {/* immersive 3D experience (opt-in route) */}
         <Route path="/experience" element={<Experience />} />

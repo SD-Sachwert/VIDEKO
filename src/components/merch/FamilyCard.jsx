@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Heart, ArrowRight } from 'lucide-react'
+import { Heart, ArrowRight, BellRing } from 'lucide-react'
 
 import Reveal from '../Reveal.jsx'
 import { useCart } from '../../shop/cart-context.js'
 import { formatPrice, LOGO_STYLE_INFO, SHOW_PUBLIC_PRICES, PRICE_ON_REQUEST } from '../../data/merch.js'
+import { priceView } from '../../data/pricing.js'
+import { sendInterest } from '../../shop/notify.js'
 
 /**
  * Karte einer Produktfamilie im Grid.
@@ -16,11 +18,22 @@ import { formatPrice, LOGO_STYLE_INFO, SHOW_PUBLIC_PRICES, PRICE_ON_REQUEST } fr
 export default function FamilyCard({ family, delay = 0 }) {
   const { wishlist, toggleWish } = useCart()
   const gemerkt = wishlist.includes(family.slug)
-  const preis = !SHOW_PUBLIC_PRICES
-    ? PRICE_ON_REQUEST
-    : family.priceFrom == null
-      ? 'Preis folgt'
-      : `ab ${formatPrice(family.priceFrom)}`
+  // § 7: Coming-soon-Familie → Herz meldet beim Aktivieren einmalig anonymes
+  // Interesse (keine personenbezogenen Daten). Sonst nur lokales Merken.
+  const merkenUndInteresse = () => {
+    if (family.allSoon && !gemerkt) sendInterest({ productName: family.label, productId: family.slug, variant: '' })
+    toggleWish(family.slug)
+  }
+  // Signature-Familie: öffentlicher Preis aus der zentralen Preislogik (auch
+  // wenn SHOW_PUBLIC_PRICES für die übrigen Produkte false ist).
+  const pv = family.isSignature ? priceView() : null
+  const preis = family.isSignature
+    ? `ab ${formatPrice(pv.price)}`
+    : !SHOW_PUBLIC_PRICES
+      ? PRICE_ON_REQUEST
+      : family.priceFrom == null
+        ? 'Preis folgt'
+        : `ab ${formatPrice(family.priceFrom)}`
 
   // Farbwechsel direkt in der Karte: die gewaehlte Farbe bestimmt Bild und den
   // Einstiegs-Slug. Start ist die repraesentative Farbe (dieselbe wie das
@@ -40,15 +53,15 @@ export default function FamilyCard({ family, delay = 0 }) {
     <Reveal className={`pcard pcard--family ${family.allSoon ? 'pcard--soon' : ''}`.trim()} delay={delay}>
       <Link className="pcard__media" to={`/merch/${ziel}`} aria-label={`${family.label} ansehen`}>
         <img src={bild} alt={`${family.label}${aktiv ? ` – ${aktiv.label}` : ''} – VIDEKO Merch`} loading="lazy" decoding="async" width="1000" height="1000" className={nurPlatzhalter ? "is-placeholder" : undefined} />
-        {family.badge && <span className="pcard__badge">{family.badge}</span>}
+        {family.badge && <span className={`pcard__badge ${family.badgeTone === 'live' ? 'pcard__badge--live' : ''}`.trim()}>{family.badge}</span>}
       </Link>
 
       <button
         type="button"
         className={`pcard__wish ${gemerkt ? 'is-on' : ''}`.trim()}
-        onClick={() => toggleWish(family.slug)}
+        onClick={merkenUndInteresse}
         aria-pressed={gemerkt}
-        aria-label={gemerkt ? `${family.label} von der Merkliste entfernen` : `${family.label} merken`}
+        aria-label={gemerkt ? `${family.label} von der Merkliste entfernen` : family.allSoon ? `Interesse an ${family.label} markieren` : `${family.label} merken`}
       >
         <Heart size={15} strokeWidth={1.8} fill={gemerkt ? 'currentColor' : 'none'} />
       </button>
@@ -56,7 +69,10 @@ export default function FamilyCard({ family, delay = 0 }) {
       <div className="pcard__body">
         <span className="pcard__coll">{family.styles.map((s) => LOGO_STYLE_INFO[s].label).join(' · ')}</span>
         <Link className="pcard__name" to={`/merch/${ziel}`}>{family.label}</Link>
-        <span className={`pcard__price ${!SHOW_PUBLIC_PRICES || family.priceFrom == null ? 'pcard__price--offen' : ''}`.trim()}>{preis}</span>
+        <span className={`pcard__price ${(!family.isSignature && (!SHOW_PUBLIC_PRICES || family.priceFrom == null)) ? 'pcard__price--offen' : ''}`.trim()}>
+          {preis}
+          {pv?.badge && <span className="pcard__pricebadge">{pv.badge}</span>}
+        </span>
 
         {mehrfarbig ? (
           <div className="pcard__colors" role="group" aria-label="Farbe wählen">
@@ -82,9 +98,15 @@ export default function FamilyCard({ family, delay = 0 }) {
           </div>
         )}
 
-        <Link className="pcard__add pcard__add--ghost" to={`/merch/${ziel}`}>
-          Modell ansehen <ArrowRight size={14} strokeWidth={1.9} />
-        </Link>
+        {family.allSoon ? (
+          <Link className="pcard__add pcard__add--notify" to={`/merch/${ziel}?benachrichtigen=1`}>
+            Benachrichtige mich <BellRing size={14} strokeWidth={1.9} />
+          </Link>
+        ) : (
+          <Link className={`pcard__add ${family.isSignature ? '' : 'pcard__add--ghost'}`.trim()} to={`/merch/${ziel}`}>
+            {family.isSignature ? 'Auswählen & anfragen' : 'Modell ansehen'} <ArrowRight size={14} strokeWidth={1.9} />
+          </Link>
+        )}
       </div>
     </Reveal>
   )

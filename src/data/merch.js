@@ -11,6 +11,7 @@
 import roh from './products.json'
 import config from './shop-config.json'
 import sizeGuides from './size-guides.json'
+import { activeUnitPrice } from './pricing.js'
 
 /**
  * Bilder werden ueber ihren Dateinamen referenziert und hier aufgeloest.
@@ -69,6 +70,29 @@ export const PRICE_INQUIRY_NOTE =
 
 export const SIZE_GUIDES = sizeGuides.guides
 export const getSizeGuide = (id) => (id ? SIZE_GUIDES[id] || null : null)
+
+/**
+ * Aktiv anfragbare Signature-Blankware (SOL'S Imperial 11500). Der Preis dieser
+ * Familie kommt NICHT aus products.json, sondern aus der zentralen Preislogik
+ * (pricing.js → Eröffnungs-/Regulärpreis inkl. Countdown), damit es genau eine
+ * Wahrheit für den Preis gibt.
+ */
+export const SIGNATURE_VARIANT_GROUPS = new Set(['signature-tee'])
+export const isSignatureGroup = (variantGroup) => SIGNATURE_VARIANT_GROUPS.has(variantGroup)
+
+/**
+ * Eindeutige, stabile SKU / Variant-ID je konkret anfragbarer Kombination aus
+ * Farbe, Logoausführung (Platzierung) und Größe (§ 1). Format bewusst sprechend
+ * und deterministisch – dieselbe Auswahl ergibt immer dieselbe ID (für Anfrage,
+ * E-Mail und spätere Zuordnung im Angebot).
+ *   Beispiel: SOLS11500-BLACK-FRONT-M
+ */
+export const skuFor = ({ colorKey, placementKey, size }) => {
+  const norm = (v) => String(v ?? '').toUpperCase().replace(/[^A-Z0-9]+/g, '')
+  return ['SOLS11500', norm(colorKey), norm(placementKey), norm(size)]
+    .filter(Boolean)
+    .join('-')
+}
 
 /**
  * Sichtbare Produktfamilie aus Typ und Schnitt ableiten. Kunden sehen im Grid
@@ -230,8 +254,9 @@ export const MERCH_PRODUCTS = basis.map((p) => ({
  * Signature-Brust 7,99 €) gemeinsam eine Familie ab, ohne dass Karten oder
  * Preise verloren gehen.
  */
-const unitsOf = (produkt) =>
-  produkt.placements.map((pl) => ({
+const unitsOf = (produkt) => {
+  const signature = isSignatureGroup(produkt.variantGroup)
+  return produkt.placements.map((pl) => ({
     style: produkt.logoStyle,
     styleLabel: LOGO_STYLE_INFO[produkt.logoStyle]?.label || produkt.logoStyle,
     color: produkt.colors?.[0]?.label || 'Standard',
@@ -247,8 +272,11 @@ const unitsOf = (produkt) =>
     imageStatus: pl.imageStatus,
     regenNote: pl.regenNote || null,
     assetFile: pl.assetFile || null,
-    price: produkt.price,
+    // Signature-Familie: Preis zentral aus pricing.js (Eröffnungs-/Regulärpreis).
+    // Alle übrigen Produkte behalten ihren products.json-Preis (meist auf Anfrage).
+    price: signature ? activeUnitPrice() : produkt.price,
     priceNote: produkt.priceNote,
+    isSignature: signature,
     personalizable: produkt.personalizable,
     personalizationPrice: produkt.personalizationPrice,
     sizes: produkt.sizes,
@@ -262,6 +290,7 @@ const unitsOf = (produkt) =>
     refinement: produkt.refinement || 'print',
     requiresRerender: !!produkt.requiresRerender,
   }))
+}
 
 // Reihenfolge fuer die Repraesentanten-Auswahl. Es gibt (noch) keine echten
 // Fotos – alle vorhandenen Bilder sind KI-Mockups.
@@ -287,6 +316,9 @@ function baueFamilien() {
     const styles = LOGO_STYLE_ORDER.filter((s) => units.some((u) => u.style === s))
     const preise = units.map((u) => u.price).filter((x) => x != null)
     const priceFrom = preise.length ? Math.min(...preise) : null
+    // Anfragbare Signature-Familie: Preis wird öffentlich gezeigt (aus pricing.js),
+    // auch wenn SHOW_PUBLIC_PRICES für die übrigen Produkte false bleibt.
+    const isSignature = units.some((u) => u.isSignature)
     // Repraesentatives Kartenbild: bestes Bild (final vor mockup vor placeholder),
     // dabei live-Units bevorzugen und das grosse Frontlogo vor der Brustansicht.
     // Bevorzugte Standard-Garnfarbe der Familie zuerst – aber nur, wenn davon ein
@@ -349,13 +381,15 @@ function baueFamilien() {
       colorOptions,
       repColorKey: repUnit.colorKey,
       priceFrom,
+      isSignature,
       anyLive: units.some((u) => !u.soon),
       allSoon: units.every((u) => u.soon),
       hasRealImage: units.some((u) => !isPlaceholderStatus(u.imageStatus)),
       // Fallback-Kartenbild = Detail-Startbild der Repraesentanten-Farbe (siehe oben).
       image: repOption.image,
       imageStatus: repOption.imageStatus,
-      badge: units.some((u) => !u.soon) ? null : 'Coming Soon',
+      badge: isSignature ? 'Jetzt anfragbar' : units.some((u) => !u.soon) ? null : 'Coming Soon',
+      badgeTone: isSignature ? 'live' : 'soon',
       rank: FAMILY_ORDER.indexOf(key),
     }
   })

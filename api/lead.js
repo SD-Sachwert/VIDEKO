@@ -117,7 +117,7 @@ function customerMail(d) {
   const body = isJob
     ? `Hey ${first},\n\nmega, dass du dich bei uns gemeldet hast! 🙌\nDeine Bewerbung ist bei uns gelandet und wir schauen sie uns in Ruhe an.\n\nWas jetzt passiert: Wir prüfen deine Unterlagen und melden uns ganz schnell persönlich bei dir – kein Bot, kein Standard-Absage-Generator, sondern echte Menschen.`
     : `Hey ${first},\n\nmega, dass du dich gemeldet hast! 🙌\nDeine Anfrage${d.source === 'stylefinder' ? ' inkl. deiner Stylefinder-Auswahl' : ''} ist bei uns gelandet und wir schauen sie uns gerade in Ruhe an.\n\nWas jetzt passiert: Wir prüfen alles und melden uns ganz schnell persönlich bei dir – kein Callcenter, kein Bla, sondern echte Menschen mit Bock auf deine Küche.`
-  const text = `${body}\n\nBis gleich,\nDein VIDEKO Team\n\nVIDEKO Küchen eG · Hertzstraße 4 · 97076 Würzburg\ninfo@videko-kuechen.de · 0160 5545818`
+  const text = `${body}\n\nBis gleich,\nDein VIDEKO Team\n\nVIDEKO Küchen – ein Geschäftsbereich der Süddeutsche Sachwert eG\ninfo@videko-kuechen.de · 0160 5545818`
   const html =
     `<div style="font-family:Arial,Helvetica,sans-serif;max-width:560px;margin:auto;color:#1a1a1a">
       <div style="background:#0d0d0d;color:#fff;padding:26px 24px;border-radius:14px 14px 0 0;text-align:center">
@@ -129,7 +129,7 @@ function customerMail(d) {
         <p style="margin:18px 0 0;font-size:15px">Bis gleich,<br><strong>Dein VIDEKO Team</strong></p>
         <hr style="border:none;border-top:1px solid #eee;margin:22px 0">
         <p style="margin:0;font-size:12px;color:#999;line-height:1.6">
-          VIDEKO Küchen eG · Hertzstraße 4 · 97076 Würzburg<br>
+          VIDEKO Küchen – ein Geschäftsbereich der Süddeutsche Sachwert eG<br>
           <a href="mailto:info@videko-kuechen.de" style="color:#caa15a">info@videko-kuechen.de</a> · 0160 5545818
         </p>
       </div>

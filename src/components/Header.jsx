@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import { Menu, X, MapPin, ChevronDown } from 'lucide-react'
+import { Menu, X, MapPin, ChevronDown, ShoppingBag } from 'lucide-react'
 import logoMain from '../assets/brand/logo-main-v2.png'
+import { useCart } from '../shop/cart-context.js'
+import { inquiryReady } from '../data/release.js'
 
 const MAIN = [
   { label: 'Studio', to: '/studio' },
@@ -29,6 +31,7 @@ export default function Header() {
   const [open, setOpen] = useState(false)
   const [openMenu, setOpenMenu] = useState(null)
   const close = () => { setOpen(false); setOpenMenu(null) }
+  const { inquiryCount, openAnfrage } = useCart()
 
   // Seiten ohne dunklen Hero: Header dauerhaft im hellen "solid"-Zustand,
   // damit die Navigation auch ganz oben lesbar bleibt.
@@ -40,9 +43,11 @@ export default function Header() {
   ]
   const solidRoute = HELLE_SEITEN.includes(pathname)
 
-  // Kein Warenkorb-Icon mehr: Der Merch-Bereich läuft im Anfragemodell ohne
-  // Warenkorb/Checkout (Livegang-Audit). Es gibt bewusst keinen Einstiegspunkt
-  // in einen Warenkorb im Header.
+  // Anfrageliste-Icon: nur wenn die unverbindliche Anfrage freigegeben ist
+  // (RELEASE_STAGE ≥ 'inquiry'). Auf der Live-Domain (Stufe 'preview') bleibt es
+  // ausgeblendet – es ist KEIN Warenkorb/Checkout, sondern öffnet die rein lokale
+  // Anfrageliste für die unverbindliche E-Mail-Sammelanfrage.
+  const zeigeAnfrage = inquiryReady
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -112,6 +117,17 @@ export default function Header() {
         </nav>
 
         <div className="header__actions">
+          {zeigeAnfrage && (
+            <button
+              type="button"
+              className="header__anfrage"
+              onClick={openAnfrage}
+              aria-label={`Deine Anfrageliste${inquiryCount ? ` (${inquiryCount})` : ''}`}
+            >
+              <ShoppingBag size={19} strokeWidth={1.8} />
+              {inquiryCount > 0 && <span className="header__anfragecount">{inquiryCount}</span>}
+            </button>
+          )}
           <Link className="pill pill--cta" to="/beratung">
             <MapPin size={15} strokeWidth={1.8} />
             Beratung anfragen

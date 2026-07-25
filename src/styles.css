@@ -13729,3 +13729,151 @@ a.footer__contact-line:hover {
   background: rgba(0, 0, 0, 0.04);
   border: 1px solid var(--line-dark, rgba(0, 0, 0, 0.1));
 }
+
+/* =====================================================================
+   Merch-Anfragemodell – Ergaenzungen (§ 6/§ 7/§ 8/§ 10)
+   ===================================================================== */
+
+/* --- § 8: einheitliche CTA-Hoehe ueber alle Produktkarten ---
+   Karten strecken sich auf gleiche Hoehe (Grid), der Karteninhalt fuellt den
+   Rest und die primaere Aktion sitzt immer unten buendig. Keine Pixel je Produkt. */
+.mgrid { align-items: stretch; }
+.mgrid > .pcard,
+.mgrid > .reveal.pcard { height: 100%; }
+.pcard__body { flex: 1 1 auto; }
+/* Die CTA (Link/Span, egal welche Variante) rutscht ans untere Ende der Karte. */
+.pcard__add,
+.pcard__add--soon,
+.pcard__add--notify,
+.pcard__add--preview,
+.pcard__add--ghost { margin-top: auto; }
+
+/* --- Karten-Badge "Jetzt anfragbar" (live) + Eroeffnungspreis-Chip --- */
+.pcard__badge--live { background: linear-gradient(135deg, #1f7a4d 0%, #2ea36a 100%); color: #fff; }
+.pcard__pricebadge {
+  display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 999px;
+  font-size: 0.64rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+  color: #20170a; background: var(--grad-gold); vertical-align: middle;
+}
+
+/* --- PDP: Eroeffnungspreis-Badge + Countdown-Hinweis --- */
+.pdp__badge--opening { background: var(--grad-gold); color: #20170a; border: none; }
+.pdp__opening {
+  margin-top: 10px; font-size: 0.84rem; line-height: 1.55; color: var(--ink);
+  padding: 11px 14px; border-radius: 10px;
+  background: rgba(201, 160, 80, 0.1); border: 1px solid rgba(201, 160, 80, 0.4);
+}
+.pdp__opening strong { color: var(--bronze); }
+
+/* --- PDP: CTA "hinzugefuegt"-Bestaetigungszustand --- */
+.pdp__cta.is-added { color: #fff; background: linear-gradient(135deg, #1f7a4d 0%, #2ea36a 100%); box-shadow: none; }
+
+/* --- Header: Anfrageliste-Icon --- */
+.header__anfrage {
+  position: relative; width: 40px; height: 40px; display: inline-grid; place-items: center;
+  border-radius: 50%; cursor: pointer; color: inherit;
+  background: transparent; border: 1px solid transparent; transition: border-color 0.2s ease, background 0.2s ease;
+}
+.header__anfrage:hover { border-color: rgba(201, 160, 80, 0.5); background: rgba(255, 255, 255, 0.12); }
+.header__anfragecount {
+  position: absolute; top: 2px; right: 2px; min-width: 17px; height: 17px; padding: 0 4px;
+  display: grid; place-items: center; border-radius: 999px; font-size: 0.62rem; font-weight: 700;
+  color: #20170a; background: var(--grad-gold); line-height: 1;
+}
+
+/* =====================================================================
+   "Deine Anfrageliste" - seitliches Panel (§ 3/§ 4)
+   ===================================================================== */
+.anfrage { position: fixed; inset: 0; z-index: 120; display: flex; justify-content: flex-end; }
+.anfrage__backdrop { position: absolute; inset: 0; border: none; cursor: pointer; background: rgba(20, 16, 10, 0.5); backdrop-filter: blur(2px); }
+.anfrage__panel {
+  position: relative; z-index: 1; width: min(420px, 92vw); height: 100%; display: flex; flex-direction: column;
+  background: var(--cream, #f7f3ec); border-left: 1px solid var(--line-dark); box-shadow: -30px 0 60px -30px rgba(30, 20, 10, 0.5);
+  animation: anfrageIn 0.28s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+@keyframes anfrageIn { from { transform: translateX(30px); opacity: 0.4; } to { transform: translateX(0); opacity: 1; } }
+.anfrage__head { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; border-bottom: 1px solid var(--line-dark); }
+.anfrage__title { display: flex; align-items: center; gap: 9px; margin: 0; font-family: var(--serif); font-weight: 600; font-size: 1.1rem; color: var(--ink); }
+.anfrage__close { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; cursor: pointer; color: var(--ink-soft); background: transparent; border: 1px solid var(--line-dark); }
+.anfrage__close:hover { color: var(--ink); border-color: rgba(201, 160, 80, 0.6); }
+.anfrage__empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 30px 26px; text-align: center; }
+.anfrage__empty p { margin: 0; color: var(--ink); }
+.anfrage__emptysub { font-size: 0.85rem; line-height: 1.6; color: var(--ink-soft); }
+.anfrage__shoplink { margin-top: 6px; padding: 11px 20px; border-radius: 999px; text-decoration: none; font-size: 0.82rem; font-weight: 600; color: var(--cream); background: var(--anthracite); }
+.anfrage__list { flex: 1; overflow-y: auto; list-style: none; margin: 0; padding: 8px 16px; display: flex; flex-direction: column; gap: 12px; }
+.anfrage__item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line-dark); }
+.anfrage__img { width: 72px; height: 72px; border-radius: 10px; object-fit: cover; background: #f0ece5; flex-shrink: 0; }
+.anfrage__meta { flex: 1; min-width: 0; }
+.anfrage__name { margin: 0 0 2px; font-size: 0.9rem; font-weight: 600; color: var(--ink); }
+.anfrage__variant { margin: 0 0 3px; font-size: 0.78rem; color: var(--ink-soft); }
+.anfrage__note { margin: 0 0 3px; font-size: 0.74rem; color: var(--bronze); }
+.anfrage__sku { margin: 0 0 8px; font-size: 0.68rem; color: var(--ink-soft); opacity: 0.75; }
+.anfrage__row { display: flex; align-items: center; gap: 10px; }
+.anfrage__qty { display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--line-dark); border-radius: 999px; padding: 2px; }
+.anfrage__qty button { width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; cursor: pointer; color: var(--ink); background: transparent; border: none; }
+.anfrage__qty button:hover { background: rgba(201, 160, 80, 0.15); }
+.anfrage__qty span { min-width: 20px; text-align: center; font-size: 0.82rem; font-weight: 600; }
+.anfrage__price { margin-left: auto; font-size: 0.88rem; font-weight: 600; color: var(--ink); }
+.anfrage__remove { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; cursor: pointer; color: var(--ink-soft); background: transparent; border: none; }
+.anfrage__remove:hover { color: #b4472f; background: rgba(180, 71, 47, 0.1); }
+.anfrage__foot { padding: 16px 20px 20px; border-top: 1px solid var(--line-dark); background: rgba(255, 255, 255, 0.5); }
+.anfrage__sum { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 4px; }
+.anfrage__sum span { font-size: 0.82rem; color: var(--ink-soft); }
+.anfrage__sum strong { font-size: 1.05rem; color: var(--ink); }
+.anfrage__shipnote { margin: 0 0 12px; font-size: 0.74rem; line-height: 1.5; color: var(--ink-soft); }
+.anfrage__send { width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 9px; padding: 14px 18px; border-radius: 12px; cursor: pointer; font: inherit; font-size: 0.82rem; font-weight: 700; color: #20170a; background: var(--grad-gold); border: none; box-shadow: 0 14px 30px -16px rgba(168, 122, 40, 0.6); }
+.anfrage__send:hover { box-shadow: 0 20px 40px -16px rgba(190, 140, 50, 0.7); }
+.anfrage__disclaimer { margin: 10px 0 0; font-size: 0.7rem; line-height: 1.5; color: var(--ink-soft); }
+.anfrage__actions { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; }
+.anfrage__count { font-size: 0.76rem; color: var(--ink-soft); }
+.anfrage__clear { font: inherit; font-size: 0.76rem; color: var(--ink-soft); background: none; border: none; cursor: pointer; text-decoration: underline; }
+.anfrage__clear:hover { color: #b4472f; }
+
+/* =====================================================================
+   "Benachrichtige mich" - Modal (§ 6)
+   ===================================================================== */
+.notify { position: fixed; inset: 0; z-index: 130; display: grid; place-items: center; padding: 20px; }
+.notify__backdrop { position: absolute; inset: 0; border: none; cursor: pointer; background: rgba(20, 16, 10, 0.55); backdrop-filter: blur(2px); }
+.notify__panel {
+  position: relative; z-index: 1; width: min(440px, 100%); max-height: 90vh; overflow-y: auto;
+  padding: 26px 26px 28px; border-radius: 18px; background: var(--cream, #f7f3ec);
+  border: 1px solid var(--line-dark); box-shadow: 0 40px 80px -40px rgba(30, 20, 10, 0.6);
+  animation: notifyIn 0.24s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+@keyframes notifyIn { from { transform: translateY(12px); opacity: 0.4; } to { transform: translateY(0); opacity: 1; } }
+.notify__close { position: absolute; top: 14px; right: 14px; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; cursor: pointer; color: var(--ink-soft); background: transparent; border: 1px solid var(--line-dark); }
+.notify__close:hover { color: var(--ink); border-color: rgba(201, 160, 80, 0.6); }
+.notify__title { display: flex; align-items: center; gap: 9px; margin: 0 0 8px; font-family: var(--serif); font-weight: 600; font-size: 1.25rem; color: var(--ink); }
+.notify__intro { margin: 0 0 18px; font-size: 0.88rem; line-height: 1.6; color: var(--ink-soft); }
+.notify__field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+.notify__field > span { font-size: 0.78rem; font-weight: 600; color: var(--ink); }
+.notify__field input, .notify__field select {
+  font: inherit; font-size: 0.9rem; color: var(--ink); padding: 11px 13px; border-radius: 10px;
+  background: rgba(255, 255, 255, 0.8); border: 1px solid var(--line-dark); outline: none;
+}
+.notify__field input:focus, .notify__field select:focus { border-color: var(--gold); }
+.notify__consent { display: flex; gap: 10px; align-items: flex-start; margin: 4px 0 14px; font-size: 0.8rem; line-height: 1.55; color: var(--ink); cursor: pointer; }
+.notify__consent input { margin-top: 3px; width: 17px; height: 17px; accent-color: var(--gold); flex-shrink: 0; cursor: pointer; }
+.notify__privacy { margin: 0 0 14px; font-size: 0.74rem; line-height: 1.55; color: var(--ink-soft); }
+.notify__privacy a { color: var(--bronze); }
+.notify__error { margin: 0 0 12px; font-size: 0.8rem; color: #b4472f; }
+.notify__submit { width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 9px; padding: 14px 18px; border-radius: 12px; cursor: pointer; font: inherit; font-size: 0.82rem; font-weight: 700; color: #20170a; background: var(--grad-gold); border: none; }
+.notify__submit:disabled { opacity: 0.65; cursor: default; }
+.notify__done { text-align: center; padding: 8px 4px 4px; }
+.notify__done h2 { margin: 8px 0 10px; font-family: var(--serif); font-weight: 600; font-size: 1.3rem; color: var(--ink); }
+.notify__done p { margin: 0 0 18px; font-size: 0.9rem; line-height: 1.65; color: var(--ink-soft); }
+.notify__doneicon { display: inline-grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; color: #fff; background: linear-gradient(135deg, #1f7a4d 0%, #2ea36a 100%); }
+.notify__ok { padding: 11px 24px; border-radius: 999px; cursor: pointer; font: inherit; font-size: 0.82rem; font-weight: 600; color: var(--cream); background: var(--anthracite); border: none; }
+.notify__spin { animation: notifySpin 0.9s linear infinite; }
+@keyframes notifySpin { to { transform: rotate(360deg); } }
+
+/* =====================================================================
+   Vormerkung-Bestaetigungsseite (§ 6, Double-Opt-in)
+   ===================================================================== */
+.confirm { max-width: 520px; margin: 60px auto; text-align: center; }
+.confirm__icon { display: inline-grid; place-items: center; width: 64px; height: 64px; margin-bottom: 18px; border-radius: 50%; color: var(--ink-soft); background: rgba(0, 0, 0, 0.05); }
+.confirm__icon--ok { color: #fff; background: linear-gradient(135deg, #1f7a4d 0%, #2ea36a 100%); }
+.confirm__icon--bad { color: #fff; background: linear-gradient(135deg, #b4472f 0%, #d06a4f 100%); }
+.confirm h1 { font-family: var(--serif); font-weight: 600; font-size: 1.6rem; color: var(--ink); margin: 0 0 12px; }
+.confirm p { font-size: 0.95rem; line-height: 1.7; color: var(--ink-soft); margin: 0 auto 22px; max-width: 440px; }
+.confirm__link { display: inline-block; padding: 12px 26px; border-radius: 999px; text-decoration: none; font-size: 0.84rem; font-weight: 600; color: var(--cream); background: var(--anthracite); }

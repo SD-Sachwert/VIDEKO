@@ -22,7 +22,7 @@ function upsertMeta(attr, key, content) {
   return el
 }
 
-export default function Seo({ title, description, canonicalPath, image, jsonLd }) {
+export default function Seo({ title, description, canonicalPath, image, jsonLd, noindex = false }) {
   useEffect(() => {
     const prevTitle = document.title
     if (title) document.title = title
@@ -32,6 +32,8 @@ export default function Seo({ title, description, canonicalPath, image, jsonLd }
     const setProp = (prop, val) => { if (val != null) created.push(upsertMeta('property', prop, val)) }
 
     if (description) setName('description', description)
+    // Utility-/Bestätigungsseiten nicht indexieren.
+    if (noindex) setName('robots', 'noindex, nofollow')
 
     // Canonical ohne Query-Parameter
     const canonicalHref = BASE + (canonicalPath || '/')

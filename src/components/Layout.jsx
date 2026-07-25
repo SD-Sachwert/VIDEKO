@@ -5,10 +5,11 @@ import { useLenis } from 'lenis/react'
 import AmbientBackground from './AmbientBackground.jsx'
 import Header from './Header.jsx'
 import Footer from './Footer.jsx'
-// Anfragemodell ohne Warenkorb/Checkout und ohne „Benachrichtige mich"
-// (Livegang-Audit): weder CartDrawer noch NotifyModal existieren noch. Der
-// CartProvider führt nur noch die rein lokale Merkliste.
+// Anfragemodell (§ 3/§ 4): „Deine Anfrageliste" ist ein rein lokales Merk-Panel
+// für die unverbindliche E-Mail-Sammelanfrage – KEIN Warenkorb/Checkout, keine
+// Bestellung, keine Server-Speicherung.
 import { CartProvider } from '../shop/CartContext.jsx'
+import AnfragelisteDrawer from './merch/AnfragelisteDrawer.jsx'
 
 // Scrollposition je History-Eintrag (location.key) in sessionStorage sichern.
 // Das ist dasselbe Muster wie React Routers eingebautes <ScrollRestoration>
@@ -107,6 +108,7 @@ export default function Layout() {
           <Outlet />
         </main>
         <Footer />
+        <AnfragelisteDrawer />
       </div>
     </CartProvider>
   )
