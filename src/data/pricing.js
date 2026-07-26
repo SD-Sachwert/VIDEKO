@@ -90,7 +90,7 @@ export const OPENING_LINES = {
     promotionStart: '2026-07-26',
     promotionEnd: null,
     openingStock: OPENING_STOCK,
-    alreadyTaken: 7, // sichtbarer Start: 100 − 7 = 93
+    alreadyTaken: 3, // sichtbarer Start: 100 − 3 = 97
     dailyDrop: DAILY_DROP,
   },
 }
