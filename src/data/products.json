@@ -192,10 +192,10 @@
     "audience": "unisex",
     "productType": "tshirt",
     "category": "Bekleidung",
-    "status": "coming_soon",
-    "purchasable": false,
-    "price": null,
-    "priceNote": "Preis folgt",
+    "status": "live",
+    "purchasable": true,
+    "price": 4.99,
+    "priceNote": null,
     "personalizable": true,
     "personalization_price": 3.99,
     "personalization": {
@@ -233,36 +233,36 @@
         "slot": "front",
         "slotLabel": "Großes Frontlogo",
         "logoColor": null,
-        "image": "v5-coming-soon.webp",
+        "image": "signature-tee-beige-front.webp",
         "gallery": [
-          "v5-coming-soon.webp"
+          "signature-tee-beige-front.webp"
         ],
-        "imageStatus": "placeholder",
-        "regenNote": "Signature T-Shirt Beige – Bild folgt"
+        "imageStatus": "ai_mockup",
+        "regenNote": null
       },
       {
         "key": "chest",
         "slot": "chest",
         "slotLabel": "Kleines Brustlogo",
         "logoColor": null,
-        "image": "v5-coming-soon.webp",
+        "image": "signature-tee-beige-brust.webp",
         "gallery": [
-          "v5-coming-soon.webp"
+          "signature-tee-beige-brust.webp"
         ],
-        "imageStatus": "placeholder",
-        "regenNote": "Signature T-Shirt Beige – Bild folgt"
+        "imageStatus": "ai_mockup",
+        "regenNote": null
       }
     ],
-    "image": "v5-coming-soon.webp",
+    "image": "signature-tee-beige-front.webp",
     "gallery": [
-      "v5-coming-soon.webp"
+      "signature-tee-beige-front.webp"
     ],
-    "imageStatus": "placeholder",
+    "imageStatus": "ai_mockup",
     "requiresFinalPhotography": true,
     "requiresRerender": true,
     "material": "100% Baumwolle",
     "care": "30 °C auf links waschen, nicht über den Druck bügeln",
-    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "lead_time": "7–14 Tage",
     "tagline": "Unser Klassiker in Beige mit vollständigem VIDEKO Küchen Logo.",
     "description": "Unser Klassiker in Beige mit vollständigem VIDEKO Küchen Logo. Teil der SIGNATURE Linie. Schnitt: Regular – fällt normal aus.",
     "usps": [
@@ -270,8 +270,7 @@
       "100% Baumwolle",
       "Teil der SIGNATURE Linie"
     ],
-    "rank": 2,
-    "regenNote": "Signature T-Shirt Beige – Bild folgt"
+    "rank": 2
   },
   {
     "id": "signature_vneck_black",
@@ -1034,6 +1033,81 @@
     "rank": 8
   },
   {
+    "id": "signature_crewneck_white",
+    "sku": "VK-SIGNATURE-CREWNECK-WHITE",
+    "slug": "signature-crewneck-white",
+    "name": "Signature Crewneck Weiß",
+    "kicker": "Sweatshirt",
+    "collection": "SIGNATURE",
+    "line": "signature",
+    "audience": "unisex",
+    "productType": "crewneck",
+    "category": "Bekleidung",
+    "status": "coming_soon",
+    "purchasable": false,
+    "price": null,
+    "priceNote": "Preis folgt",
+    "personalizable": false,
+    "personalization_price": 0,
+    "personalization": {
+      "enabled": false
+    },
+    "colors": [
+      {
+        "key": "white",
+        "label": "Weiß",
+        "hex": "#f4f2ee"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "fit": "Regular",
+    "fitNote": "Fällt normal aus.",
+    "sizeGuide": "unisex",
+    "modelHeight": "186 cm",
+    "modelSize": "L",
+    "variantGroup": null,
+    "refinement": "print",
+    "logoPlacement": "chest",
+    "placements": [
+      {
+        "key": "chest",
+        "slot": "chest",
+        "slotLabel": "Kleines Brustlogo",
+        "logoColor": null,
+        "image": "signature-crewneck-weiß-brust.webp",
+        "gallery": [
+          "signature-crewneck-weiß-brust.webp"
+        ],
+        "imageStatus": "final",
+        "regenNote": null
+      }
+    ],
+    "image": "signature-crewneck-weiß-brust.webp",
+    "gallery": [
+      "signature-crewneck-weiß-brust.webp"
+    ],
+    "imageStatus": "final",
+    "requiresFinalPhotography": true,
+    "requiresRerender": false,
+    "material": "80% Baumwolle / 20% Polyester",
+    "care": "30 °C auf links waschen, nicht über den Druck bügeln",
+    "lead_time": "Benachrichtigung bei Verfügbarkeit",
+    "tagline": "Rundhals-Sweatshirt mit kleinem Signature-Logo in Weiß.",
+    "description": "Rundhals-Sweatshirt mit kleinem Signature-Logo in Weiß. Teil der SIGNATURE Linie. Schnitt: Regular – fällt normal aus.",
+    "usps": [
+      "Regular geschnitten",
+      "80% Baumwolle / 20% Polyester",
+      "Teil der SIGNATURE Linie"
+    ],
+    "rank": 9
+  },
+  {
     "id": "pure_tee_black",
     "sku": "VK-PURE-TEE-BLACK",
     "slug": "pure-tee-black",
@@ -1044,10 +1118,10 @@
     "audience": "unisex",
     "productType": "tshirt",
     "category": "Bekleidung",
-    "status": "coming_soon",
-    "purchasable": false,
-    "price": null,
-    "priceNote": "Preis folgt",
+    "status": "live",
+    "purchasable": true,
+    "price": 13.99,
+    "priceNote": null,
     "personalizable": false,
     "personalization_price": 0,
     "personalization": {
@@ -1225,10 +1299,10 @@
     "audience": "unisex",
     "productType": "tshirt",
     "category": "Bekleidung",
-    "status": "coming_soon",
-    "purchasable": false,
-    "price": null,
-    "priceNote": "Preis folgt",
+    "status": "live",
+    "purchasable": true,
+    "price": 13.99,
+    "priceNote": null,
     "personalizable": false,
     "personalization_price": 0,
     "personalization": {
@@ -1406,10 +1480,10 @@
     "audience": "unisex",
     "productType": "tshirt",
     "category": "Bekleidung",
-    "status": "coming_soon",
-    "purchasable": false,
-    "price": null,
-    "priceNote": "Preis folgt",
+    "status": "live",
+    "purchasable": true,
+    "price": 13.99,
+    "priceNote": null,
     "personalizable": false,
     "personalization_price": 0,
     "personalization": {
@@ -2974,10 +3048,10 @@
     "audience": "unisex",
     "productType": "tshirt",
     "category": "Bekleidung",
-    "status": "coming_soon",
-    "purchasable": false,
-    "price": null,
-    "priceNote": "Preis folgt",
+    "status": "live",
+    "purchasable": true,
+    "price": 13.99,
+    "priceNote": null,
     "personalizable": false,
     "personalization_price": 0,
     "personalization": {
@@ -3083,10 +3157,10 @@
     "audience": "unisex",
     "productType": "tshirt",
     "category": "Bekleidung",
-    "status": "coming_soon",
-    "purchasable": false,
-    "price": null,
-    "priceNote": "Preis folgt",
+    "status": "live",
+    "purchasable": true,
+    "price": 13.99,
+    "priceNote": null,
     "personalizable": false,
     "personalization_price": 0,
     "personalization": {

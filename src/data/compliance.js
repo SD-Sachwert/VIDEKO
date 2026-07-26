@@ -141,7 +141,11 @@ export const PRODUCT_FAMILIES = {
     id: 'SOLS-IMPERIAL-11500',
     productType: 'Herren-T-Shirt',
     // Interne variantGroup(s) aus products.json, die zu dieser Blankware gehören.
-    variantGroups: ['signature-tee'],
+    // Signature/Pure/One sind DASSELBE Blank (SOL'S Imperial 11500, 100 % Baumwolle,
+    // SKU-Präfix SOLS11500) – sie unterscheiden sich nur in der Logo-Ausführung
+    // (Print-Stil), nicht im Material. Daher gilt derselbe Blankware-Nachweis
+    // (confirmedBySource, Gröner-Schulze) für alle drei Linien.
+    variantGroups: ['signature-tee', 'pure-tee', 'one-tee'],
 
     // --- Blankware / Lieferkette -------------------------------------------
     blankware: {

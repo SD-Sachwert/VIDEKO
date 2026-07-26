@@ -153,10 +153,12 @@ export default async function handler(req, res) {
     // 1) Anonyme Nachfrage-Liste fortschreiben (nur Produktbezug, keine Personendaten).
     const stored = await storeInterest({ product_id: productId, product_name: productName, variant })
 
-    // 2) Interne Sofort-Benachrichtigung per E-Mail.
+    // 2) Interne Sofort-Benachrichtigung per E-Mail. Braucht NUR die SMTP-Zugangsdaten
+    //    (kein NOTIFY_SECRET – das ist nur für die Double-Opt-in-Token der Vormerkung).
+    const smtpReady = Boolean(SMTP_USER && SMTP_PASS)
     let mailed = false
     try {
-      if (mailReady) {
+      if (smtpReady) {
         const t = transport()
         const text =
           `❤️ Neues Produktinteresse über den Herzbutton.\n\n` +
@@ -174,7 +176,7 @@ export default async function handler(req, res) {
         mailed = true
       }
     } catch { /* Nutzeraktion nie blockieren */ }
-    res.status(200).json({ ok: true, configured: mailReady, mailed, stored })
+    res.status(200).json({ ok: true, configured: smtpReady, mailed, stored })
     return
   }
 

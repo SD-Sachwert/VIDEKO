@@ -72,13 +72,18 @@ export const SIZE_GUIDES = sizeGuides.guides
 export const getSizeGuide = (id) => (id ? SIZE_GUIDES[id] || null : null)
 
 /**
- * Aktiv anfragbare Signature-Blankware (SOL'S Imperial 11500). Der Preis dieser
- * Familie kommt NICHT aus products.json, sondern aus der zentralen Preislogik
- * (pricing.js → Eröffnungs-/Regulärpreis inkl. Countdown), damit es genau eine
- * Wahrheit für den Preis gibt.
+ * Aktiv anfragbare Launch-Blankware. Der Preis dieser variantGroups kommt NICHT
+ * aus products.json, sondern aus der zentralen Preislogik (pricing.js →
+ * Launch-/Regulärpreis inkl. Countdown je Linie), damit es genau eine Wahrheit
+ * für den Preis gibt. Jede variantGroup ist genau einer Aktionslinie zugeordnet.
  */
-export const SIGNATURE_VARIANT_GROUPS = new Set(['signature-tee'])
-export const isSignatureGroup = (variantGroup) => SIGNATURE_VARIANT_GROUPS.has(variantGroup)
+export const PROMO_LINE_BY_GROUP = {
+  'signature-tee': 'signature',
+  'pure-tee': 'pure',
+  'one-tee': 'one',
+}
+export const promoLineFor = (variantGroup) => PROMO_LINE_BY_GROUP[variantGroup] || null
+export const isSignatureGroup = (variantGroup) => promoLineFor(variantGroup) === 'signature'
 
 /**
  * Eindeutige, stabile SKU / Variant-ID je konkret anfragbarer Kombination aus
@@ -255,7 +260,7 @@ export const MERCH_PRODUCTS = basis.map((p) => ({
  * Preise verloren gehen.
  */
 const unitsOf = (produkt) => {
-  const signature = isSignatureGroup(produkt.variantGroup)
+  const promoLine = promoLineFor(produkt.variantGroup)
   return produkt.placements.map((pl) => ({
     style: produkt.logoStyle,
     styleLabel: LOGO_STYLE_INFO[produkt.logoStyle]?.label || produkt.logoStyle,
@@ -272,11 +277,14 @@ const unitsOf = (produkt) => {
     imageStatus: pl.imageStatus,
     regenNote: pl.regenNote || null,
     assetFile: pl.assetFile || null,
-    // Signature-Familie: Preis zentral aus pricing.js (Eröffnungs-/Regulärpreis).
-    // Alle übrigen Produkte behalten ihren products.json-Preis (meist auf Anfrage).
-    price: signature ? activeUnitPrice() : produkt.price,
+    // Launch-Linie (signature/pure/one): Preis zentral aus pricing.js
+    // (Launch-/Regulärpreis je Linie). Alle übrigen Produkte behalten ihren
+    // products.json-Preis (meist auf Anfrage).
+    price: promoLine ? activeUnitPrice(promoLine) : produkt.price,
     priceNote: produkt.priceNote,
-    isSignature: signature,
+    promoLine,
+    isPromo: !!promoLine,
+    isSignature: promoLine === 'signature',
     personalizable: produkt.personalizable,
     personalizationPrice: produkt.personalizationPrice,
     sizes: produkt.sizes,
@@ -316,9 +324,17 @@ function baueFamilien() {
     const styles = LOGO_STYLE_ORDER.filter((s) => units.some((u) => u.style === s))
     const preise = units.map((u) => u.price).filter((x) => x != null)
     const priceFrom = preise.length ? Math.min(...preise) : null
-    // Anfragbare Signature-Familie: Preis wird öffentlich gezeigt (aus pricing.js),
-    // auch wenn SHOW_PUBLIC_PRICES für die übrigen Produkte false bleibt.
-    const isSignature = units.some((u) => u.isSignature)
+    // Anfragbare Launch-Familie: Preis wird öffentlich gezeigt (aus pricing.js),
+    // auch wenn SHOW_PUBLIC_PRICES für die übrigen Produkte false bleibt. Eine
+    // Familie (Produkttyp) kann mehrere Launch-Linien enthalten (z. B. das
+    // T-Shirt: Signature + Pure + One). Repräsentativ für Karte/Badge ist die
+    // günstigste aktuell aktive Launch-Linie.
+    const promoUnits = units.filter((u) => u.isPromo)
+    const isPromo = promoUnits.length > 0
+    const promoLine = isPromo
+      ? promoUnits.reduce((a, b) => ((a.price ?? Infinity) <= (b.price ?? Infinity) ? a : b)).promoLine
+      : null
+    const isSignature = promoLine === 'signature'
     // Repraesentatives Kartenbild: bestes Bild (final vor mockup vor placeholder),
     // dabei live-Units bevorzugen und das grosse Frontlogo vor der Brustansicht.
     // Bevorzugte Standard-Garnfarbe der Familie zuerst – aber nur, wenn davon ein
@@ -382,14 +398,16 @@ function baueFamilien() {
       repColorKey: repUnit.colorKey,
       priceFrom,
       isSignature,
+      isPromo,
+      promoLine,
       anyLive: units.some((u) => !u.soon),
       allSoon: units.every((u) => u.soon),
       hasRealImage: units.some((u) => !isPlaceholderStatus(u.imageStatus)),
       // Fallback-Kartenbild = Detail-Startbild der Repraesentanten-Farbe (siehe oben).
       image: repOption.image,
       imageStatus: repOption.imageStatus,
-      badge: isSignature ? 'Jetzt erhältlich' : units.some((u) => !u.soon) ? null : 'Coming Soon',
-      badgeTone: isSignature ? 'live' : 'soon',
+      badge: isPromo ? 'Jetzt erhältlich' : units.some((u) => !u.soon) ? null : 'Coming Soon',
+      badgeTone: isPromo ? 'live' : 'soon',
       rank: FAMILY_ORDER.indexOf(key),
     }
   })

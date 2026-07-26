@@ -18,16 +18,17 @@ import { sendInterest } from '../../shop/notify.js'
 export default function FamilyCard({ family, delay = 0 }) {
   const { wishlist, toggleWish } = useCart()
   const gemerkt = wishlist.includes(family.slug)
-  // § 7: Coming-soon-Familie → Herz meldet beim Aktivieren einmalig anonymes
-  // Interesse (keine personenbezogenen Daten). Sonst nur lokales Merken.
+  // § 7: Herz meldet beim Aktivieren EINMALIG anonymes Interesse für JEDEN
+  // Artikel (auch live), damit VIDEKO die Nachfrage je Artikel sieht. Es werden
+  // keine personenbezogenen Daten übertragen; danach nur lokales Merken.
   const merkenUndInteresse = () => {
-    if (family.allSoon && !gemerkt) sendInterest({ productName: family.label, productId: family.slug, variant: '' })
+    if (!gemerkt) sendInterest({ productName: family.label, productId: family.slug, variant: '' })
     toggleWish(family.slug)
   }
-  // Signature-Familie: öffentlicher Preis aus der zentralen Preislogik (auch
-  // wenn SHOW_PUBLIC_PRICES für die übrigen Produkte false ist).
-  const pv = family.isSignature ? priceView() : null
-  const preis = family.isSignature
+  // Launch-Familie: öffentlicher Preis aus der zentralen Preislogik je Linie
+  // (auch wenn SHOW_PUBLIC_PRICES für die übrigen Produkte false ist).
+  const pv = family.isPromo ? priceView(family.promoLine) : null
+  const preis = family.isPromo
     ? formatPrice(pv.price)
     : !SHOW_PUBLIC_PRICES
       ? PRICE_ON_REQUEST
@@ -69,7 +70,7 @@ export default function FamilyCard({ family, delay = 0 }) {
       <div className="pcard__body">
         <span className="pcard__coll">{family.styles.map((s) => LOGO_STYLE_INFO[s].label).join(' · ')}</span>
         <Link className="pcard__name" to={`/merch/${ziel}`}>{family.label}</Link>
-        <span className={`pcard__price ${(!family.isSignature && (!SHOW_PUBLIC_PRICES || family.priceFrom == null)) ? 'pcard__price--offen' : ''}`.trim()}>
+        <span className={`pcard__price ${(!family.isPromo && (!SHOW_PUBLIC_PRICES || family.priceFrom == null)) ? 'pcard__price--offen' : ''}`.trim()}>
           {preis}
           {pv?.showRegularStrike && (
             <s className="pcard__price-strike" title="Regulärer Preis nach dem Launch">{formatPrice(pv.regularPrice)}</s>
@@ -106,8 +107,8 @@ export default function FamilyCard({ family, delay = 0 }) {
             Benachrichtige mich <BellRing size={14} strokeWidth={1.9} />
           </Link>
         ) : (
-          <Link className={`pcard__add ${family.isSignature ? '' : 'pcard__add--ghost'}`.trim()} to={`/merch/${ziel}`}>
-            {family.isSignature ? 'In den Warenkorb' : 'Modell ansehen'} <ArrowRight size={14} strokeWidth={1.9} />
+          <Link className={`pcard__add ${family.isPromo ? '' : 'pcard__add--ghost'}`.trim()} to={`/merch/${ziel}`}>
+            {family.isPromo ? 'In den Warenkorb' : 'Modell ansehen'} <ArrowRight size={14} strokeWidth={1.9} />
           </Link>
         )}
       </div>

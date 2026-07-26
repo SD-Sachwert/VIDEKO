@@ -350,12 +350,13 @@ function Konfigurator({ family, start }) {
   const gemerkt = wishlist.includes(quelle.id)
   const kannAnfragen = canInquire(quelle)
   const aufpreis = unit.personalizable && persAn && persName.trim() ? unit.personalizationPrice : 0
-  // Signature-Familie: Preis live aus der zentralen Preislogik (Eröffnungs-/
-  // Regulärpreis inkl. Countdown). Alle anderen Familien behalten ihre Logik.
-  const pv = unit.isSignature ? priceView() : null
-  const basisPreis = unit.isSignature ? pv.price : unit.price
+  // Launch-Linie (signature/pure/one): Preis live aus der zentralen Preislogik
+  // (Launch-/Regulärpreis inkl. Countdown je Linie). Alle anderen Familien
+  // behalten ihre Logik.
+  const pv = unit.isPromo ? priceView(unit.promoLine) : null
+  const basisPreis = unit.isPromo ? pv.price : unit.price
   const stueck = basisPreis == null ? null : basisPreis + aufpreis
-  const preisSichtbar = unit.isSignature || SHOW_PUBLIC_PRICES
+  const preisSichtbar = unit.isPromo || SHOW_PUBLIC_PRICES
 
   const logoAusfuehrung = [
     unit.styleLabel,
@@ -450,14 +451,14 @@ function Konfigurator({ family, start }) {
             {unit.refinement === 'flock' && (
               <p className="pdp__flocknote">PRESTIGE wird nicht bedruckt, sondern mit samtigem Flock veredelt – erhaben, matt und deutlich hochwertiger. Kontrastierend in Weiß oder Schwarz, auf Wunsch in edlem Gold.</p>
             )}
-            {unit.isSignature ? (
+            {unit.isPromo ? (
               <>
                 <span className="pdp__vat">
                   inkl. gesetzl. USt., zzgl. Versand{aufpreis > 0 && ` · enthält ${formatPrice(aufpreis)} Namensdruck`}. Versandkosten nennen wir mit dem individuellen Angebot.
                 </span>
                 {pv?.opening && (
                   <p className="pdp__opening">
-                    <strong>Launch-Preis</strong> für die ersten {pv.openingStock} Shirts – noch {pv.remaining} zum Launch-Preis verfügbar.
+                    <strong>Launch-Preis</strong> für die ersten {pv.openingStock} Stück – noch {pv.remaining} zum Launch-Preis verfügbar.
                     Regulärer Preis nach dem Launch: {formatPrice(pv.regularPrice)}.
                   </p>
                 )}

@@ -78,13 +78,17 @@ export default function CheckoutDialog() {
 
   // Serverseitige Feldmeldung (z. B. „PLZ passt nicht zum Ort") pro Feld.
   const [serverFeld, setServerFeld] = useState({})
+  // Einzeln „berührte" Felder – so wird ein Fehler schon beim Verlassen des
+  // Feldes rot markiert, nicht erst nach „Weiter".
+  const [blurred, setBlurred] = useState({})
   const set = (k) => (e) => {
     setForm((f) => ({ ...f, [k]: e.target.value }))
     if (serverFeld[k]) setServerFeld((s) => { const n = { ...s }; delete n[k]; return n })
   }
+  const blur = (k) => () => setBlurred((b) => (b[k] ? b : { ...b, [k]: true }))
 
   const errs = pruefeFelder(form)
-  const meldung = (k) => serverFeld[k] || (touched ? errs[k] : null)
+  const meldung = (k) => serverFeld[k] || ((touched || blurred[k]) ? errs[k] : null)
   const kontaktOk = !errs.name && !errs.email
   const lieferOk = !errs.strasse && !errs.plz && !errs.ort
 
@@ -168,12 +172,12 @@ export default function CheckoutDialog() {
             <p className="checkout__lead">Damit wir dir dein persönliches Angebot schicken können.</p>
             <label className={`checkout__field ${meldung('name') ? 'has-err' : ''}`}>
               <span>Name *</span>
-              <input type="text" value={form.name} onChange={set('name')} autoComplete="name" placeholder="Vor- und Nachname" />
+              <input type="text" value={form.name} onChange={set('name')} onBlur={blur('name')} autoComplete="name" placeholder="Vor- und Nachname" />
               {meldung('name') && <em className="checkout__ferr">{meldung('name')}</em>}
             </label>
             <label className={`checkout__field ${meldung('email') ? 'has-err' : ''}`}>
               <span>E-Mail *</span>
-              <input type="email" value={form.email} onChange={set('email')} autoComplete="email" placeholder="name@beispiel.de" />
+              <input type="email" value={form.email} onChange={set('email')} onBlur={blur('email')} autoComplete="email" placeholder="name@beispiel.de" />
               {meldung('email') && <em className="checkout__ferr">{meldung('email')}</em>}
             </label>
             <div className="checkout__grid2">
@@ -196,18 +200,18 @@ export default function CheckoutDialog() {
             <p className="checkout__lead">Wir brauchen die Adresse, um dir die Versandkosten im Angebot exakt zu nennen.</p>
             <label className={`checkout__field ${meldung('strasse') ? 'has-err' : ''}`}>
               <span>Straße &amp; Hausnummer *</span>
-              <input type="text" value={form.strasse} onChange={set('strasse')} autoComplete="street-address" placeholder="Musterstraße 12" />
+              <input type="text" value={form.strasse} onChange={set('strasse')} onBlur={blur('strasse')} autoComplete="street-address" placeholder="Musterstraße 12" />
               {meldung('strasse') && <em className="checkout__ferr">{meldung('strasse')}</em>}
             </label>
             <div className="checkout__grid2">
               <label className={`checkout__field checkout__field--plz ${meldung('plz') ? 'has-err' : ''}`}>
                 <span>PLZ *</span>
-                <input type="text" value={form.plz} onChange={set('plz')} autoComplete="postal-code" inputMode="numeric" placeholder="12345" />
+                <input type="text" value={form.plz} onChange={set('plz')} onBlur={blur('plz')} autoComplete="postal-code" inputMode="numeric" placeholder="12345" />
                 {meldung('plz') && <em className="checkout__ferr">{meldung('plz')}</em>}
               </label>
               <label className={`checkout__field ${meldung('ort') ? 'has-err' : ''}`}>
                 <span>Ort *</span>
-                <input type="text" value={form.ort} onChange={set('ort')} autoComplete="address-level2" placeholder="Musterstadt" />
+                <input type="text" value={form.ort} onChange={set('ort')} onBlur={blur('ort')} autoComplete="address-level2" placeholder="Musterstadt" />
                 {meldung('ort') && <em className="checkout__ferr">{meldung('ort')}</em>}
               </label>
             </div>
