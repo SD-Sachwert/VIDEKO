@@ -5089,10 +5089,12 @@
         "slot": "front",
         "slotLabel": "Großes Frontlogo",
         "logoColor": "schwarz",
-        "image": null,
-        "gallery": [],
-        "imageStatus": "placeholder",
-        "regenNote": "front-Bild folgt"
+        "image": "pure-hoodie-beige-front-schwarz.webp",
+        "gallery": [
+          "pure-hoodie-beige-front-schwarz.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
       },
       {
         "key": "chest-schwarz",
@@ -5111,10 +5113,12 @@
         "slot": "front",
         "slotLabel": "Großes Frontlogo",
         "logoColor": "weiss",
-        "image": null,
-        "gallery": [],
-        "imageStatus": "placeholder",
-        "regenNote": "front-Bild folgt"
+        "image": "pure-hoodie-beige-front-weiss.webp",
+        "gallery": [
+          "pure-hoodie-beige-front-weiss.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
       },
       {
         "key": "chest-weiss",
@@ -5133,10 +5137,12 @@
         "slot": "front",
         "slotLabel": "Großes Frontlogo",
         "logoColor": "gold",
-        "image": null,
-        "gallery": [],
-        "imageStatus": "placeholder",
-        "regenNote": "front-Bild folgt"
+        "image": "pure-hoodie-beige-front-gold.webp",
+        "gallery": [
+          "pure-hoodie-beige-front-gold.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
       },
       {
         "key": "chest-gold",
@@ -5155,10 +5161,12 @@
         "slot": "front",
         "slotLabel": "Großes Frontlogo",
         "logoColor": "silber",
-        "image": null,
-        "gallery": [],
-        "imageStatus": "placeholder",
-        "regenNote": "front-Bild folgt"
+        "image": "pure-hoodie-beige-front-silber.webp",
+        "gallery": [
+          "pure-hoodie-beige-front-silber.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
       },
       {
         "key": "chest-silber",
@@ -5197,9 +5205,9 @@
         "regenNote": null
       }
     ],
-    "image": "pure-hoodie-beige-brust-schwarz.webp",
+    "image": "pure-hoodie-beige-front-schwarz.webp",
     "gallery": [
-      "pure-hoodie-beige-brust-schwarz.webp"
+      "pure-hoodie-beige-front-schwarz.webp"
     ],
     "imageStatus": "ai_mockup",
     "requiresFinalPhotography": true,
