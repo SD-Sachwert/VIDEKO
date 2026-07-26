@@ -192,10 +192,10 @@
     "audience": "unisex",
     "productType": "tshirt",
     "category": "Bekleidung",
-    "status": "live",
-    "purchasable": true,
-    "price": 4.99,
-    "priceNote": null,
+    "status": "coming_soon",
+    "purchasable": false,
+    "price": null,
+    "priceNote": "Preis folgt",
     "personalizable": true,
     "personalization_price": 3.99,
     "personalization": {
@@ -1480,10 +1480,10 @@
     "audience": "unisex",
     "productType": "tshirt",
     "category": "Bekleidung",
-    "status": "live",
-    "purchasable": true,
-    "price": 13.99,
-    "priceNote": null,
+    "status": "coming_soon",
+    "purchasable": false,
+    "price": null,
+    "priceNote": "Preis folgt",
     "personalizable": false,
     "personalization_price": 0,
     "personalization": {
@@ -5043,7 +5043,7 @@
   },
   {
     "id": "pure-hoodie-beige",
-    "sku": "VK-PURE-HOODIE-WHITE",
+    "sku": "VK-PURE-HOODIE-BEIGE",
     "slug": "pure-hoodie-beige",
     "name": "PURE Hoodie Beige",
     "kicker": "Hoodie",
@@ -5089,12 +5089,10 @@
         "slot": "front",
         "slotLabel": "Großes Frontlogo",
         "logoColor": "schwarz",
-        "image": "pure-hoodie-beige-front-schwarz.webp",
-        "gallery": [
-          "pure-hoodie-beige-front-schwarz.webp"
-        ],
-        "imageStatus": "ai_mockup",
-        "regenNote": null
+        "image": null,
+        "gallery": [],
+        "imageStatus": "placeholder",
+        "regenNote": "front-Bild folgt"
       },
       {
         "key": "chest-schwarz",
@@ -5113,12 +5111,10 @@
         "slot": "front",
         "slotLabel": "Großes Frontlogo",
         "logoColor": "weiss",
-        "image": "pure-hoodie-beige-front-weiss.webp",
-        "gallery": [
-          "pure-hoodie-beige-front-weiss.webp"
-        ],
-        "imageStatus": "ai_mockup",
-        "regenNote": null
+        "image": null,
+        "gallery": [],
+        "imageStatus": "placeholder",
+        "regenNote": "front-Bild folgt"
       },
       {
         "key": "chest-weiss",
@@ -5137,12 +5133,10 @@
         "slot": "front",
         "slotLabel": "Großes Frontlogo",
         "logoColor": "gold",
-        "image": "pure-hoodie-beige-front-gold.webp",
-        "gallery": [
-          "pure-hoodie-beige-front-gold.webp"
-        ],
-        "imageStatus": "ai_mockup",
-        "regenNote": null
+        "image": null,
+        "gallery": [],
+        "imageStatus": "placeholder",
+        "regenNote": "front-Bild folgt"
       },
       {
         "key": "chest-gold",
@@ -5161,12 +5155,10 @@
         "slot": "front",
         "slotLabel": "Großes Frontlogo",
         "logoColor": "silber",
-        "image": "pure-hoodie-beige-front-silber.webp",
-        "gallery": [
-          "pure-hoodie-beige-front-silber.webp"
-        ],
-        "imageStatus": "ai_mockup",
-        "regenNote": null
+        "image": null,
+        "gallery": [],
+        "imageStatus": "placeholder",
+        "regenNote": "front-Bild folgt"
       },
       {
         "key": "chest-silber",
@@ -5185,25 +5177,29 @@
         "slot": "front",
         "slotLabel": "Großes Frontlogo",
         "logoColor": "classic",
-        "image": null,
-        "gallery": [],
-        "imageStatus": "placeholder",
-        "regenNote": "classic-Bild fehlt noch"
+        "image": "pure-hoodie-beige-front-classic.webp",
+        "gallery": [
+          "pure-hoodie-beige-front-classic.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
       },
       {
         "key": "chest-classic",
         "slot": "chest",
         "slotLabel": "Kleines Brustlogo",
         "logoColor": "classic",
-        "image": null,
-        "gallery": [],
-        "imageStatus": "placeholder",
-        "regenNote": "classic-Bild fehlt noch"
+        "image": "pure-hoodie-beige-brust-classic.webp",
+        "gallery": [
+          "pure-hoodie-beige-brust-classic.webp"
+        ],
+        "imageStatus": "ai_mockup",
+        "regenNote": null
       }
     ],
-    "image": "pure-hoodie-beige-front-schwarz.webp",
+    "image": "pure-hoodie-beige-brust-schwarz.webp",
     "gallery": [
-      "pure-hoodie-beige-front-schwarz.webp"
+      "pure-hoodie-beige-brust-schwarz.webp"
     ],
     "imageStatus": "ai_mockup",
     "requiresFinalPhotography": true,
@@ -5211,8 +5207,8 @@
     "material": "80% Baumwolle / 20% Polyester",
     "care": "30 °C auf links waschen, nicht über den Druck bügeln",
     "lead_time": "Benachrichtigung bei Verfügbarkeit",
-    "tagline": "Hoodie in Weiß mit reduziertem PURE Brustlogo.",
-    "description": "Hoodie in Weiß mit reduziertem PURE Brustlogo. Teil der PURE Linie. Schnitt: Regular – fällt normal aus.",
+    "tagline": "Hoodie in Beige mit reduziertem PURE Brustlogo.",
+    "description": "Hoodie in Beige mit reduziertem PURE Brustlogo. Teil der PURE Linie. Schnitt: Regular – fällt normal aus.",
     "usps": [
       "Regular geschnitten",
       "80% Baumwolle / 20% Polyester",
