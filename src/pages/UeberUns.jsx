@@ -10,6 +10,7 @@ import CTAButton from '../components/CTAButton.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
 import CardGrid from '../components/CardGrid.jsx'
 import FeatureCard from '../components/FeatureCard.jsx'
+import { KiBadge, KiHinweis } from '../components/legal/KiKennzeichnung.jsx'
 
 import heroDark from '../assets/images/leistungen/ls-feature.png'
 import whyImg from '../assets/images/ueber-uns/02_why_videko_beratungsszene.png'
@@ -74,9 +75,10 @@ export default function UeberUns() {
     <div className="leist-page about-page">
       {/* HERO */}
       <section className="pagehero leist-hero" ref={heroRef}>
-        <div className="pagehero__media" aria-hidden="true">
-          <motion.img src={heroDark} alt="" className="pagehero__img" style={{ y: imgY, scale: imgScale }} />
-          <div className="pagehero__veil" />
+        <div className="pagehero__media">
+          <motion.img src={heroDark} alt="" className="pagehero__img" style={{ y: imgY, scale: imgScale }} aria-hidden="true" />
+          <div className="pagehero__veil" aria-hidden="true" />
+          <KiHinweis className="pagehero__ainote" />
         </div>
         <div className="container pagehero__inner">
           <Reveal>
@@ -110,7 +112,7 @@ export default function UeberUns() {
               <CTAButton to="/beratung">Lern uns kennen</CTAButton>
             </Reveal>
             <Reveal className="lintro__media" delay={0.08}>
-              <div className="lintro__frame"><img src={whyImg} alt="Persönliche Beratung bei VIDEKO" loading="lazy" /><span className="lintro__rim" aria-hidden="true" /></div>
+              <div className="lintro__frame"><img src={whyImg} alt="Beratungsszene (KI-generiertes Symbolbild)" loading="lazy" /><span className="lintro__rim" aria-hidden="true" /><KiBadge /></div>
             </Reveal>
           </div>
         </div>
@@ -173,6 +175,7 @@ export default function UeberUns() {
               </Reveal>
             ))}
           </div>
+          <KiHinweis className="vnc__ainote" text="Teambereiche als Symbolbilder – KI-generiert. Die drei Gründer oben sind echt." />
         </div>
       </section>
 
@@ -201,7 +204,7 @@ export default function UeberUns() {
         <div className="container">
           <div className="lintro">
             <Reveal className="lintro__media">
-              <div className="lintro__frame"><img src={momentImg} alt="Persönlicher Moment mit Kund:innen" loading="lazy" /><span className="lintro__rim" aria-hidden="true" /></div>
+              <div className="lintro__frame"><img src={momentImg} alt="Kundenmoment (KI-generiertes Symbolbild)" loading="lazy" /><span className="lintro__rim" aria-hidden="true" /><KiBadge /></div>
             </Reveal>
             <Reveal className="lintro__copy" delay={0.08}>
               <span className="kicker">Unser Anspruch</span>

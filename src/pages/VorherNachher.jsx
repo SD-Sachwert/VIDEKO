@@ -7,7 +7,7 @@ import CTAButton from '../components/CTAButton.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
 import ProcessTimeline from '../components/ProcessTimeline.jsx'
 import BeforeAfter from '../components/BeforeAfter.jsx'
-import { KiHinweis } from '../components/legal/KiKennzeichnung.jsx'
+import { KiBadge, KiHinweis } from '../components/legal/KiKennzeichnung.jsx'
 
 import heroImg from '../assets/images/vorher-nachher/02_hero_dark_kitchen_banner.png'
 import introImg from '../assets/images/vorher-nachher/03_intro_helle_wohnkueche.png'
@@ -174,7 +174,7 @@ export default function VorherNachher() {
         <div className="container">
           <div className="lintro">
             <Reveal className="lintro__media">
-              <div className="lintro__frame"><img src={trustImg} alt="Beratungsmoment mit Kund:innen" loading="lazy" /><span className="lintro__rim" aria-hidden="true" /></div>
+              <div className="lintro__frame"><img src={trustImg} alt="Beratungsmoment (KI-generiertes Symbolbild)" loading="lazy" /><span className="lintro__rim" aria-hidden="true" /><KiBadge /></div>
             </Reveal>
             <Reveal className="lintro__copy" delay={0.08}>
               <span className="kicker">Vielleicht bist du als Nächstes dabei</span>

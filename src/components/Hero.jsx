@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'fram
 
 import CTAButton from './CTAButton.jsx'
 import ValueBand from './ValueBand.jsx'
+import { KiHinweis } from './legal/KiKennzeichnung.jsx'
 import heroImg from '../assets/images/shared/hero-videko-final-16x9.png'
 import heroMobileImg from '../assets/images/home/Mobile.png'
 import heroVideo from '../assets/images/home/Header.mp4'
@@ -99,6 +100,8 @@ export default function Hero() {
       </motion.div>
 
       <div className="hero__veil" aria-hidden="true" />
+
+      <KiHinweis className="kimark--overlay" />
 
       {/* --- Copy --- */}
       <motion.div className="container hero__inner" style={{ y: textY }}>

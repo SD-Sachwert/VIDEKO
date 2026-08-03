@@ -9,6 +9,7 @@ import Reveal from '../components/Reveal.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import KfgTeaser from '../components/KfgTeaser.jsx'
+import { KiHinweis } from '../components/legal/KiKennzeichnung.jsx'
 import ExplodingKitchenModal from '../components/ExplodingKitchenModal.jsx'
 import HeroExperience from '../components/HeroExperience.jsx'
 import StylefinderHero from '../components/StylefinderHero.jsx'
@@ -151,6 +152,7 @@ export default function Home() {
             </Reveal>
           ))}
         </div>
+        <div className="container"><KiHinweis className="vnc__ainote" text="Impressionen – KI-generierte Symbolbilder." /></div>
       </section>
 
       {/* 5 — TRANSFORMATION */}

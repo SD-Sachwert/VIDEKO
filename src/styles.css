@@ -5211,6 +5211,17 @@ body {
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.55);
 }
 
+/* KI-Hinweis als dezentes Overlay in freistehenden Heros (Home, Showroom-Portal) */
+.kimark--overlay {
+  position: absolute;
+  right: clamp(14px, 3vw, 30px);
+  bottom: clamp(12px, 2.4vw, 22px);
+  z-index: 5;
+  color: rgba(244, 239, 228, 0.6);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+}
+
 .pagehero__veil {
   position: absolute;
   inset: 0;

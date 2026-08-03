@@ -70,6 +70,23 @@ export default function Impressum() {
               Anschrift wie oben ({op.legalName}).
             </p>
 
+            <h2>Hinweis zu Bildern (KI-Kennzeichnung)</h2>
+            <p>
+              Ein großer Teil der auf {BRAND.domain} gezeigten Bilder – insbesondere
+              Küchen-, Raum- und Stimmungsaufnahmen, Produktdarstellungen sowie einzelne
+              Szenen mit Personen in Beratungs- oder Kundensituationen – wurde mit
+              künstlicher Intelligenz (KI) erzeugt. Diese Bilder dienen der Veranschaulichung
+              und können vom tatsächlichen Aussehen von Räumen, Produkten oder Situationen
+              abweichen. KI-generierte Motive sind im jeweiligen Zusammenhang zusätzlich
+              gekennzeichnet.
+            </p>
+            <p>
+              Vorher/Nachher- sowie Projektdarstellungen sind – soweit nicht ausdrücklich
+              anders angegeben – beispielhafte, teils KI-generierte Illustrationen und keine
+              dokumentierten realen Kundenprojekte. Die Fotos der drei Gründer (Vitali,
+              Dennis, Heiko) im Bereich „Über uns" sind echte Aufnahmen dieser Personen.
+            </p>
+
             <h2>Verbraucherstreitbeilegung / Universalschlichtungsstelle</h2>
             <p>
               Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer

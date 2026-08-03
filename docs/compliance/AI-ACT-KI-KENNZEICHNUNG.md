@@ -29,13 +29,27 @@
   Neutrale Kennzeichnung „Beispieldarstellungen – teils KI-generiert" (weil laut Betreiber
   **gemischt/unsicher**, daher nicht pauschal „KI").
 
-**Bewusst (noch) NICHT gekennzeichnet – Begründung:**
-- **Home-Hero (Video) und Showroom-Hero:** könnten echtes Film-/Bildmaterial sein → nicht
-  pauschal als „KI" gelabelt (Footer-Hinweis deckt sie ab). **Vom Betreiber zu klären.**
-- **KI-Bild „Beratungsmoment" mit Personen** (`vorher-nachher/11_beratung_kundenmoment.png`,
-  in `VorherNachher.jsx` als „Beratungsmoment mit Kund:innen"): zeigt KI-Personen als echte
-  Kund:innen → **erhöhtes Risiko** (§ 5 UWG + Persönlichkeitsrecht). Noch offen (P1.3).
-- **`alt`-Texte** mit „KI-generiert" (P1.4): noch offen.
+**Zweite Welle (2026-08-03, nach Betreiber-Auskunft „Gründerfotos echt, Rest KI"):**
+- **Wichtige Korrektur:** `/ueber-videko` und `/materialien` sind **Weiterleitungen** –
+  die live sichtbaren Seiten sind `UeberUns.jsx` (mit eigenem Hero) bzw. `/inspiration`.
+  Die KI-Heros der **tatsächlich live geschalteten** Seiten sind jetzt gekennzeichnet:
+  **Home-Hero (Video), Leistungen, Über uns, Showroom-Portal** (per `KiHinweis`).
+- **Gründerfotos Vitali/Dennis/Heiko = echt** → bewusst **kein** KI-Label (`UeberUns.jsx`).
+- **KI-Personen als „Team/Kund:innen" gekennzeichnet** (§ 5 UWG, höchstes Risiko):
+  KI-Badge direkt am Bild bei Beratungs-/Kundenszenen (`UeberUns.jsx` whyImg + momentImg,
+  `VorherNachher.jsx` trustImg, `Studio.jsx` teamImg); Team-Bento in `UeberUns.jsx` mit
+  Hinweis „Teambereiche als Symbolbilder – KI-generiert. Die drei Gründer oben sind echt.";
+  Home-Galerie mit Hinweis „Impressionen – KI-generierte Symbolbilder". `alt`-Texte dieser
+  Bilder auf „(KI-generiertes Symbolbild)" umgestellt.
+- **Impressum:** neuer Abschnitt „Hinweis zu Bildern (KI-Kennzeichnung)" – zentraler,
+  ehrlicher Bilddisclaimer (KI-Bildwelt, Vorher/Nachher = Beispiel/teils KI, Gründerfotos echt).
+
+**Bewusst NICHT einzeln beschriftet (Begründung):**
+- Reine **Küchen-/Material-/Stimmungsbilder ohne Personen** tragen keinen Einzel-Badge –
+  die AI-Act-Offenlegung läuft dort über die Hero-Hinweise, den Footer-Hinweis und den
+  zentralen Impressum-Passus. Einzel-Badges auf jedem Küchenbild wären „auffällig" und
+  bringen juristisch keinen Mehrwert. Der §-5-UWG-Hebel (Personen als echt) ist adressiert.
+- **`alt`-Texte** flächendeckend (P1.4): nur bei den Personen-Symbolbildern erledigt, sonst offen.
 
 Die To-do-Liste unten ist entsprechend abgehakt.
 
@@ -155,10 +169,10 @@ Legende: **P0** = zuerst (höchstes/sicheres Risiko) · **P1** = zeitnah · **P2
       Über VIDEKO, Team, Studio, Inspiration, Vorher/Nachher; **Footer-Hinweis** site-weit als
       Auffangnetz. **Offen (Betreiber):** Home-Hero (Video) & Showroom-Hero – möglicherweise
       echtes Material, daher bewusst nicht pauschal gelabelt.
-- [ ] **P1.3 Gründer-/Personen-Platzhalter prüfen.** Sicherstellen, dass die
-      `*_placeholder.png` **nicht** als echte Fotos benannter Personen erscheinen (sonst §5
-      UWG **und** Persönlichkeitsrecht). Bis echte Fotos vorliegen: neutral halten/kennzeichnen.
-      **Dazu:** KI-Personenbild „Beratungsmoment" in `VorherNachher.jsx` (s. Abschnitt 0).
+- [x] **P1.3 Gründer-/Personen-Platzhalter prüfen.** ✔ Betreiber bestätigt: Gründerfotos
+      (Vitali/Dennis/Heiko) sind **echt** → kein KI-Label. Alle **KI-Personen**, die als echtes
+      Team/echte Kund:innen wirken könnten, sind jetzt als KI-Symbolbild gekennzeichnet
+      (UeberUns why/moment + Team-Bento, VorherNachher trust, Studio team, Home-Galerie).
 - [ ] **P1.4 `alt`-Texte / Metadaten.** Wo Bilder KI-generiert sind, im `alt`-Text bzw. in
       Metadaten „KI-generiert" vermerken – unterstützt die „maschinenlesbare" Idee des AI Act
       (auch wenn Abs. 2 primär den KI-Anbieter trifft).
@@ -168,9 +182,8 @@ Legende: **P0** = zuerst (höchstes/sicheres Risiko) · **P1** = zeitnah · **P2
       **keine** AI-Act-Pflicht (kein „öffentliches Interesse"). Defensiv trotzdem intern
       festhalten, dass alle veröffentlichten Texte **menschlich geprüft/redigiert** wurden
       (das ist die Ausnahme in Art. 50 Abs. 4 UAbs. 2). **Kein** sichtbarer Hinweis nötig.
-- [ ] **P2.2 Optionaler Passus in Impressum/„Über die Seite".** Kurzer, ehrlicher Hinweis,
-      dass Teile der Bildwelt KI-gestützt erstellt wurden. *(Kür, nicht Pflicht; erhöht
-      Transparenz.)*
+- [x] **P2.2 Passus in Impressum.** ✔ Umgesetzt: Abschnitt „Hinweis zu Bildern
+      (KI-Kennzeichnung)" in `Impressum.jsx` – zentraler, ehrlicher Bilddisclaimer.
 - [ ] **P2.3 Prozess für neue Assets.** Konvention festlegen: Jedes neu eingebundene KI-Bild
       bekommt ab sofort das Kennzeichnungs-Flag – damit die Lücke nicht wieder entsteht.
       Diesen Punkt in `docs/compliance/README.md` und `shop-launch-checklist.md` verankern.
@@ -192,10 +205,13 @@ Legende: **P0** = zuerst (höchstes/sicheres Risiko) · **P1** = zeitnah · **P2
 ---
 
 ## 8. Nächster Schritt
-**Erledigt:** P0.1–P0.3 sowie P1.1–P1.2 sind umgesetzt und live-fähig (grüner Build) – damit ist
-das **sichere** (§ 5 UWG) und der Kern des AI-Act-Risikos entschärft und die Kennzeichnung
-flächendeckend + wartbar.
-**Noch offen:** P1.3 (KI-Personenbilder/Platzhalter), P1.4 (`alt`-Texte), P2.2/P2.3 (Impressum-
-Passus & Prozesskonvention) sowie – als Blocker für die Aussage „rechtssicher" – **P2.4
-(anwaltliche Endprüfung)**. Ebenfalls vom Betreiber zu klären: Home-Hero (Video) & Showroom-Hero
-(echt oder KI?).
+**Erledigt:** P0.1–P0.3, P1.1–P1.3 sowie P2.2 sind umgesetzt und live (grüner Build) – damit ist
+das **sichere** (§ 5 UWG) und der Kern des AI-Act-Risikos entschärft, die Kennzeichnung
+flächendeckend + wartbar, und die heiklen KI-Personenbilder sind sauber als Symbolbild markiert.
+**Noch offen:** P1.4 (`alt`-Texte flächendeckend), P2.3 (Prozesskonvention für neue Assets)
+sowie – als Blocker für die belastbare Aussage „rechtssicher" – **P2.4 (anwaltliche Endprüfung)**.
+
+> **Ehrliche Einordnung:** Mit diesem Stand ist das *reale* Abmahnrisiko deutlich gesenkt und die
+> Seite transparent gekennzeichnet. „Rechtssicher" im Sinne einer Garantie ist sie damit **nicht** –
+> das kann nur ein Fachanwalt nach Prüfung bestätigen (P2.4). Dieses Dokument bleibt eine
+> technisch-organisatorische Ersteinschätzung, **keine Rechtsberatung**.

@@ -5,6 +5,7 @@ import { ArrowUpRight, Gem, Layers, MessageSquare, Sparkles } from 'lucide-react
 import Reveal from './Reveal.jsx'
 import MagneticButton from './MagneticButton.jsx'
 import TextLink from './TextLink.jsx'
+import { KiHinweis } from './legal/KiKennzeichnung.jsx'
 
 import heroImmersive from '../assets/images/showroom/showroom-hero-immersive.png'
 import ctaWide from '../assets/images/showroom/showroom-cta-wide.png'
@@ -82,6 +83,7 @@ export default function ShowroomJourneySection() {
           />
         )}
         <div className="showroom__portal-veil" aria-hidden="true" />
+        <KiHinweis className="kimark--overlay" />
         <div className="container showroom__portal-copy">
           <Reveal>
             <span className="kicker kicker--gold">Dein Weg durch unseren Showroom</span>

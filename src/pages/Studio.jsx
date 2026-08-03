@@ -5,7 +5,7 @@ import { Check, ArrowRight } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
-import { KiHinweis } from '../components/legal/KiKennzeichnung.jsx'
+import { KiBadge, KiHinweis } from '../components/legal/KiKennzeichnung.jsx'
 
 import heroImg from '../assets/images/studio/bilder/01_hero_studio_showroom.png'
 import introImg from '../assets/images/studio/bilder/02_intro_showroom_hell.png'
@@ -153,7 +153,7 @@ export default function Studio() {
         <div className="container">
           <div className="lintro">
             <Reveal className="lintro__media">
-              <div className="lintro__frame"><img src={teamImg} alt="Beratung auf Augenhöhe" loading="lazy" /><span className="lintro__rim" aria-hidden="true" /></div>
+              <div className="lintro__frame"><img src={teamImg} alt="Beratungssituation (KI-generiertes Symbolbild)" loading="lazy" /><span className="lintro__rim" aria-hidden="true" /><KiBadge /></div>
             </Reveal>
             <Reveal className="lintro__copy" delay={0.08}>
               <span className="kicker">Beratung auf Augenhöhe</span>
