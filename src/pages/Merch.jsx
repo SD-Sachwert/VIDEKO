@@ -11,6 +11,7 @@ import Seo from '../components/Seo.jsx'
 import ProductCard from '../components/merch/ProductCard.jsx'
 import FamilyCard from '../components/merch/FamilyCard.jsx'
 import ProductGallery from '../components/merch/ProductGallery.jsx'
+import { KiHinweis } from '../components/legal/KiKennzeichnung.jsx'
 import PerformanceSection from '../components/merch/PerformanceSection.jsx'
 import {
   MERCH_FAMILIES, ACCESSORY_PRODUCTS, MERCH_TABS, MERCH_SORTS, passtZuTab,
@@ -195,6 +196,8 @@ export default function Merch() {
         </motion.div>
         <div className="merch-hero__veil" aria-hidden="true" />
 
+        <KiHinweis className="kimark--overlay" variant="symbolic" text="KI-generiertes Symbolbild – die abgebildeten Modelle sind KI-generiert, keine realen Personen." />
+
         <div className="container merch-hero__inner">
           <div className="merch-hero__copy">
             <h1 className="merch-hero__title">
@@ -230,6 +233,15 @@ export default function Merch() {
           ))}
         </div>
       </section>
+
+      {/* Shop-weiter KI-Hinweis: sitzt direkt über allen Produktbild-Sektionen */}
+      <div className="container">
+        <KiHinweis
+          className="vnc__ainote"
+          variant="product"
+          text="Alle Produkt- und Modellabbildungen im Shop sind KI-generierte Produktvisualisierungen – noch keine realen Produktfotos. Farbe, Material und Logo können vom finalen Produkt abweichen."
+        />
+      </div>
 
       {/* ---------- Logo-Stile erklären ---------- */}
       <section className="mstyles">
@@ -282,7 +294,7 @@ export default function Merch() {
       <section className="mfeat">
         <div className="container mfeat__grid">
           <Reveal className="mfeat__media">
-            <ProductGallery images={featured.gallery} alt={featured.name} />
+            <ProductGallery images={featured.gallery} alt={featured.name} ai />
           </Reveal>
 
           <Reveal className="mfeat__info" delay={0.08}>

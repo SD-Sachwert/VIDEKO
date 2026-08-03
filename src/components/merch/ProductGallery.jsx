@@ -84,7 +84,7 @@ export default function ProductGallery({ images, alt, layout = 'side', placehold
             <img src={bilder[aktiv]} alt={alt} width="1000" height="1000" fetchPriority="high" decoding="async" />
           </button>
           <span className="pgal__zoom" aria-hidden="true"><ZoomIn size={17} strokeWidth={1.7} /></span>
-          {ai && <KiBadge />}
+          {ai && <KiBadge variant="product" title="KI-generierte Produktvisualisierung – Abbildung kann abweichen" />}
 
           {mehrere && (
             <>
@@ -131,7 +131,7 @@ export default function ProductGallery({ images, alt, layout = 'side', placehold
             onTouchStart={onTouchStart}
             onTouchEnd={onTouchEnd}
           />
-          {ai && <KiBadge />}
+          {ai && <KiBadge variant="product" title="KI-generierte Produktvisualisierung – Abbildung kann abweichen" />}
           {mehrere && (
             <>
               <button

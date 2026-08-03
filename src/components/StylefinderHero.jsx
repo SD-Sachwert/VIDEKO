@@ -24,7 +24,7 @@ const TRUST = [
   { icon: ShieldCheck, t: '100% unverbindlich', d: 'Ohne Verpflichtungen' },
   { icon: Sparkles, t: 'Für deinen Stil', d: 'Individuell & persönlich' },
   { icon: Clock, t: '2 Minuten Zeit', d: 'Schnell & unkompliziert' },
-  { icon: Award, t: 'Expertenqualität', d: 'Über 20 Jahre Erfahrung' },
+  { icon: Award, t: 'Durchdachte Planung', d: 'Persönlich statt von der Stange' },
 ]
 
 function SideCard({ img, title, text, cta, to, active }) {

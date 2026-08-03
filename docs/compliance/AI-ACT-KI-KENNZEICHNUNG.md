@@ -259,3 +259,47 @@ sowie – als Blocker für die belastbare Aussage „rechtssicher" – **P2.4 (a
 > Seite transparent gekennzeichnet. „Rechtssicher" im Sinne einer Garantie ist sie damit **nicht** –
 > das kann nur ein Fachanwalt nach Prüfung bestätigen (P2.4). Dieses Dokument bleibt eine
 > technisch-organisatorische Ersteinschätzung, **keine Rechtsberatung**.
+
+---
+
+## 9. Vierte Welle (2026-08-03): Marketing-Claims + Shop-Kennzeichnung + echter Browser-Test
+
+Nach der dritten Welle (KI-Kennzeichnung) wurde auf ausdrückliche Betreiber-Freigabe
+zusätzlich der Bestand an **nicht belegbaren Tatsachenbehauptungen (§ 5 UWG)** bereinigt
+und ein **tatsächlicher Browser-Sichttest** (Playwright/Chromium) durchgeführt.
+
+**A) Neutralisierte Marketing-Aussagen (keine neuen Zahlen erfunden):**
+| Ort | Datei | Vorher | Nachher |
+|---|---|---|---|
+| Home, Transform-Sektion | `pages/Home.jsx` | „+87% mehr Stauraum“, „+3 Lösungen“, „100% zufriedene Kunden / Basierend auf Kundenprojekten“ | „Maßgeplant …“, „Durchdacht …“, „Persönlich – Von der ersten Idee bis zur fertigen Küche“ |
+| Planung, Budget-Kompass (**LIVE**) | `components/BudgetCompassSection.jsx` | „Seit 2008 für dich da“, „Über 1.250 Küchen realisiert“, „Mehr als 25 Auszeichnungen“ | „Beratung persönlich – statt anonym“, „Planung individuell – auf dein Budget“, „Preise transparent – ohne Überraschungen“; Bottom-Sub „Seit 2008 für dich da“ → „Ehrlich und auf Augenhöhe“ |
+| Home-Einstieg (Stylefinder) | `components/StylefinderHero.jsx` | „Expertenqualität / Über 20 Jahre Erfahrung“ | „Durchdachte Planung / Persönlich statt von der Stange“ |
+| Toter Footer | `components/FooterExperienceSection.jsx` | „4,9/5 · 250+ Bewertungen“, „German Design Award 2023 & 2024“, „1.250 Küchen“, „250+ Showrooms“, „98% Weiterempfehlung“ | **Datei gelöscht** (war nirgends importiert) |
+
+> „100% Leidenschaft für Küchen / 0 Möbelhaus-Vibes / ∞ Tassen Kaffee“ (Karriere `STATS_DECK`)
+> bleibt bewusst stehen: erkennbar nicht-ernst gemeinte Übertreibung (zulässige Reklame-Übertreibung),
+> keine messbare Tatsachenbehauptung. „Küchenverkauf von 2008“ (Experience) = rhetorisch (veralteter
+> Verkaufsstil), keine Gründungsdatum-Angabe.
+
+**B) Shop-Kennzeichnung präzisiert (Produktrenderings):**
+- Neue Variante `product` → „KI-generierte Produktvisualisierung – Abbildung kann abweichen“
+  (deckt Farb-/Material-/Logo-Abweichung mit ab; verhindert Wirkung als verbindliches Produktfoto).
+- `ProductGallery` (Detailseite **und** Featured-Block) nutzt jetzt diese Variante.
+- **Neu geschlossene Lücke:** Der Shop-Übersichtsseite (`/merch`) fehlte jede KI-Kennzeichnung
+  (KI-Modelle im Hero, ungelabelte Renderings in Stil-Karten/Grid). Ergänzt: Hero-Overlay
+  „KI-generiertes Symbolbild – die abgebildeten Modelle sind KI-generiert, keine realen Personen.“
+  + shop-weiter Sammelhinweis direkt über allen Produktbild-Sektionen (Kategorie B).
+- CSS-Fix: Badges brechen jetzt innerhalb der Bildgrenzen um (`white-space: normal; max-width`)
+  statt am rechten Rand abgeschnitten zu werden (langer Produkt-Text auf schmalen Screens).
+
+**C) Tatsächlicher Browser-Sichttest (Playwright/Chromium, headless):**
+- Viewports: 1440×900, 1280×720, 390×844, 360×800.
+- Routen: /, /ueber-uns, /team, /studio, /showroom, /vorher-nachher, /beratung, /leistungen,
+  /inspiration, /planung, /stylefinder, /karriere, /merch, /merch/:slug, /impressum.
+- Geprüft je Route/Viewport: horizontales Scrollen/Overflow (0), Sichtbarkeit & Nicht-Abschneiden
+  aller KI-Hinweise, keine verbotenen Claim-Strings mehr im gerenderten Text, Vorher/Nachher-Regler
+  an beiden Extremen (KI-Hinweis bleibt sichtbar), Shop-Galerie-Lightbox inkl. Bildwechsel
+  (Badge bleibt). Ergebnis lokal: alle Routen grün; ein gefundener Mobil-Clip (Shop-Badge) wurde
+  behoben und nachverifiziert. Screenshots als Nachweis erstellt (nicht committet).
+- **Grenze:** headless-Chromium-Sichtprüfung deckt Layout/Sichtbarkeit/Kontrast-Grundlagen ab,
+  ersetzt aber keine manuelle Prüfung mit echten Screenreadern / realen Geräten.

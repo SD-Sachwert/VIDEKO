@@ -83,10 +83,11 @@ const TRUST = [
   { icon: ShieldCheck, label: 'Langfristige Werte' },
 ]
 
+// Qualitative Vertrauenspunkte statt nicht belegbarer Zahlen/Auszeichnungen.
 const STATS = [
-  { pre: 'Seit', value: '2008', post: 'für dich da' },
-  { pre: 'Über', value: '1.250', post: 'Küchen realisiert' },
-  { pre: 'Mehr als', value: '25', post: 'Auszeichnungen' },
+  { pre: 'Beratung', value: 'persönlich', post: 'statt anonym' },
+  { pre: 'Planung', value: 'individuell', post: 'auf dein Budget' },
+  { pre: 'Preise', value: 'transparent', post: 'ohne Überraschungen' },
 ]
 
 export default function BudgetCompassSection() {
@@ -241,7 +242,7 @@ export default function BudgetCompassSection() {
             </span>
             <div>
               <span className="budget__bottom-title">Persönliche Beratung</span>
-              <span className="budget__bottom-sub">Seit 2008 für dich da</span>
+              <span className="budget__bottom-sub">Ehrlich und auf Augenhöhe</span>
             </div>
           </div>
           <div className="budget__stats">

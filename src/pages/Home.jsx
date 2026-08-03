@@ -69,9 +69,9 @@ const GALLERY = [
 ]
 
 const STATS = [
-  { v: '+87%', l: 'mehr Stauraum' },
-  { v: '+3', l: 'Lösungen' },
-  { v: '100%', l: 'zufriedene Kunden', sub: 'Basierend auf Kundenprojekten' },
+  { v: 'Maßgeplant', l: 'Für deinen Grundriss – nicht von der Stange' },
+  { v: 'Durchdacht', l: 'Klar geplant, sauber umgesetzt' },
+  { v: 'Persönlich', l: 'Von der ersten Idee bis zur fertigen Küche' },
 ]
 
 const PROCESS = [

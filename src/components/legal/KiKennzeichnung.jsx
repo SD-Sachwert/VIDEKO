@@ -16,7 +16,8 @@ import { Sparkles } from 'lucide-react'
  *
  * Varianten (Wortlaut je nach Motiv möglichst präzise, nicht pauschal):
  *  - symbolic          → „KI-generiertes Symbolbild“ (Personen-/Szenen-Symbolbilder)
- *  - visualization     → „KI-generierte Visualisierung“ (Räume/Studio/Produkte)
+ *  - visualization     → „KI-generierte Visualisierung“ (Räume/Studio)
+ *  - product           → „KI-generierte Produktvisualisierung – Abbildung kann abweichen“ (Shop-Renderings)
  *  - not-real-project  → „Beispielhafte KI-Visualisierung – kein reales Kundenprojekt“
  *  - section-notice    → Sammel-Hinweis für eine klar abgegrenzte KI-Bildgruppe
  *  - generic           → neutraler Fallback
@@ -30,6 +31,7 @@ const VARIANT_TEXT = {
   visualization: 'KI-generierte Visualisierung',
   'not-real-project': 'Beispielhafte KI-Visualisierung – kein reales Kundenprojekt',
   'section-notice': 'KI-generierte Symbolbilder',
+  product: 'KI-generierte Produktvisualisierung – Abbildung kann abweichen',
   generic: 'Darstellung: KI-generiert',
 }
 
@@ -38,6 +40,7 @@ const VARIANT_FORMAT = {
   visualization: 'note',
   'not-real-project': 'note',
   'section-notice': 'note',
+  product: 'badge',
   generic: 'note',
 }
 
