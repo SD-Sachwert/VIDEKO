@@ -12,6 +12,7 @@ import CTAButton from '../components/CTAButton.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
 import KarriereTopShowcase from '../components/KarriereTopShowcase.jsx'
 import ComparisonTable from '../components/ComparisonTable.jsx'
+import { KiHinweis } from '../components/legal/KiKennzeichnung.jsx'
 
 import heroImg from '../assets/images/karriere/01_hero_team_beratung.png'
 import jVerkauf from '../assets/images/karriere/02_job_kuechenverkauf_beratung.png'
@@ -151,9 +152,10 @@ export default function Karriere() {
     <div className="leist-page karr-page">
       {/* 1 — HERO */}
       <section className="pagehero leist-hero" ref={heroRef}>
-        <div className="pagehero__media" aria-hidden="true">
-          <motion.img src={heroImg} alt="" className="pagehero__img" style={{ y: imgY, scale: imgScale }} />
-          <div className="pagehero__veil" />
+        <div className="pagehero__media">
+          <motion.img src={heroImg} alt="" className="pagehero__img" style={{ y: imgY, scale: imgScale }} aria-hidden="true" />
+          <div className="pagehero__veil" aria-hidden="true" />
+          <KiHinweis className="pagehero__ainote" variant="symbolic" text="KI-generiertes Symbolbild – keine realen Mitarbeitenden" />
         </div>
         <div className="container pagehero__inner">
           <Reveal>
@@ -199,6 +201,11 @@ export default function Karriere() {
               </Reveal>
             ))}
           </div>
+          <KiHinweis
+            className="vnc__ainote"
+            variant="section-notice"
+            text="Alle abgebildeten Personen sind KI-generierte Symbolbilder – keine realen Mitarbeitenden oder Kund:innen."
+          />
         </div>
       </section>
 
@@ -271,6 +278,14 @@ export default function Karriere() {
             <button type="button" className="cdeck__arrow" onClick={deckNext} aria-label="Nächste Rolle"><ChevronRight size={20} strokeWidth={2} /></button>
             <span className="cdeck__hint">Automatisch wechselnde Rollen</span>
           </div>
+        </div>
+
+        <div className="container">
+          <KiHinweis
+            className="vnc__ainote"
+            variant="section-notice"
+            text="Die abgebildeten Personen in den Rollenkarten sind KI-generierte Symbolbilder – keine realen Mitarbeitenden."
+          />
         </div>
 
         <div className="container karr-deckstats">

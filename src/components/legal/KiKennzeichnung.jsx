@@ -1,32 +1,78 @@
 import { Sparkles } from 'lucide-react'
 
 /**
- * Einheitliche, bewusst zurückhaltende KI-Kennzeichnung für synthetisch
- * erzeugte Bilder.
+ * Einheitliche KI-Kennzeichnung – EINE Komponente (`KiTag`) mit Varianten.
  *
- * Rechtlicher Hintergrund: EU AI Act (VO 2024/1689) Art. 50 Abs. 4 verlangt ab
- * dem 02.08.2026 eine klar erkennbare Offenlegung KI-generierter, real wirkender
- * Bilder; zusätzlich vermeidet die Kennzeichnung eine Irreführung nach § 5 UWG.
- * Details und To-do: docs/compliance/AI-ACT-KI-KENNZEICHNUNG.md.
+ * Rechtlicher Hintergrund (Stand 08/2026):
+ *  - EU AI Act (VO 2024/1689) Art. 50 Abs. 4: Ab 02.08.2026 müssen KI-generierte
+ *    Bilder, die real/plausibel echt wirkende Personen, Orte, Objekte oder
+ *    Situationen zeigen, klar und bereits beim ersten Kontakt erkennbar
+ *    offengelegt werden (Deepfake-Transparenz).
+ *  - § 5 UWG: Unabhängig vom AI Act darf keine Irreführung entstehen – z. B.
+ *    KI-Personen als echte Kund:innen/Mitarbeitende oder KI-Renderings als
+ *    dokumentierte reale Kundenprojekte.
+ *  Diese Kennzeichnung ist eine nach bestem Stand umgesetzte technische
+ *  Maßnahme, KEINE juristische Freigabe. Details: docs/compliance/AI-ACT-KI-KENNZEICHNUNG.md.
  *
- * Ziel der Gestaltung: sichtbar, aber nicht aufdringlich.
- *   <KiBadge>   – kleines Overlay-Label in einer Bildecke (Galerien, Slider)
- *   <KiHinweis> – dezente Zeile als Bildunterschrift (Hero-/Seitenbilder)
+ * Varianten (Wortlaut je nach Motiv möglichst präzise, nicht pauschal):
+ *  - symbolic          → „KI-generiertes Symbolbild“ (Personen-/Szenen-Symbolbilder)
+ *  - visualization     → „KI-generierte Visualisierung“ (Räume/Studio/Produkte)
+ *  - not-real-project  → „Beispielhafte KI-Visualisierung – kein reales Kundenprojekt“
+ *  - section-notice    → Sammel-Hinweis für eine klar abgegrenzte KI-Bildgruppe
+ *  - generic           → neutraler Fallback
+ *
+ * Darstellungsform (`format`):
+ *  - badge → kleines Overlay-Label in einer Bildecke
+ *  - note  → dezente Hinweiszeile (Bildunterschrift / Sammelhinweis)
  */
-export function KiBadge({ label = 'KI-Bild', title = 'Mit KI erstelltes Bild', className = '' }) {
+const VARIANT_TEXT = {
+  symbolic: 'KI-generiertes Symbolbild',
+  visualization: 'KI-generierte Visualisierung',
+  'not-real-project': 'Beispielhafte KI-Visualisierung – kein reales Kundenprojekt',
+  'section-notice': 'KI-generierte Symbolbilder',
+  generic: 'Darstellung: KI-generiert',
+}
+
+const VARIANT_FORMAT = {
+  symbolic: 'badge',
+  visualization: 'note',
+  'not-real-project': 'note',
+  'section-notice': 'note',
+  generic: 'note',
+}
+
+export function KiTag({
+  variant = 'generic',
+  format,
+  text,
+  className = '',
+  title,
+}) {
+  const fmt = format || VARIANT_FORMAT[variant] || 'note'
+  const content = text ?? VARIANT_TEXT[variant] ?? VARIANT_TEXT.generic
+  const base = fmt === 'badge' ? 'kimark kimark--badge' : 'kimark kimark--note'
   return (
-    <span className={`kimark kimark--badge ${className}`.trim()} title={title}>
+    <span
+      className={`${base} ${className}`.trim()}
+      role="note"
+      aria-label={`Bildkennzeichnung: ${content}`}
+      title={title || content}
+    >
       <Sparkles size={11} strokeWidth={1.9} aria-hidden="true" />
-      {label}
+      {content}
     </span>
   )
 }
 
-export function KiHinweis({ text = 'Darstellung: KI-generiert', className = '' }) {
-  return (
-    <span className={`kimark kimark--note ${className}`.trim()}>
-      <Sparkles size={11} strokeWidth={1.9} aria-hidden="true" />
-      {text}
-    </span>
-  )
+/**
+ * Rückwärtskompatible Wrapper – bauen intern auf der EINEN Quelle `KiTag` auf,
+ * damit bestehende Aufrufe (Shop-Galerie, PageHero, Hero-Overlays …) unverändert
+ * funktionieren. Kein zweites Badge-System.
+ */
+export function KiBadge({ label, title = 'Mit KI erstelltes Bild', className = '', variant = 'symbolic' }) {
+  return <KiTag variant={variant} format="badge" text={label} title={title} className={className} />
+}
+
+export function KiHinweis({ text, className = '', variant = 'generic' }) {
+  return <KiTag variant={variant} format="note" text={text} className={className} />
 }

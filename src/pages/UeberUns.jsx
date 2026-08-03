@@ -78,7 +78,7 @@ export default function UeberUns() {
         <div className="pagehero__media">
           <motion.img src={heroDark} alt="" className="pagehero__img" style={{ y: imgY, scale: imgScale }} aria-hidden="true" />
           <div className="pagehero__veil" aria-hidden="true" />
-          <KiHinweis className="pagehero__ainote" />
+          <KiHinweis className="pagehero__ainote" variant="visualization" />
         </div>
         <div className="container pagehero__inner">
           <Reveal>
@@ -175,7 +175,11 @@ export default function UeberUns() {
               </Reveal>
             ))}
           </div>
-          <KiHinweis className="vnc__ainote" text="Teambereiche als Symbolbilder – KI-generiert. Die drei Gründer oben sind echt." />
+          <KiHinweis
+            className="vnc__ainote"
+            variant="section-notice"
+            text="Die Teambereiche zeigen KI-generierte Symbolbilder – keine realen Mitarbeitenden. Nur die drei Gründer (Vitali, Dennis, Heiko) oben sind echte Personen."
+          />
         </div>
       </section>
 

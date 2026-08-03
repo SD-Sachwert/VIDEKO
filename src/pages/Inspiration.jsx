@@ -122,7 +122,7 @@ export default function Inspiration() {
         <div className="pagehero__media">
           <motion.img src={heroImg} alt="" className="pagehero__img" style={{ y: imgY, scale: imgScale }} aria-hidden="true" />
           <div className="pagehero__veil" aria-hidden="true" />
-          <KiHinweis className="pagehero__ainote" />
+          <KiHinweis className="pagehero__ainote" variant="visualization" />
         </div>
         <div className="container pagehero__inner">
           <Reveal>

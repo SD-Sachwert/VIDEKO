@@ -4,6 +4,7 @@ import { ArrowRight, Check, ShieldCheck, Sparkles, Clock, Award } from 'lucide-r
 
 import Reveal from './Reveal.jsx'
 import CTAButton from './CTAButton.jsx'
+import { KiHinweis } from './legal/KiKennzeichnung.jsx'
 import inspImg from '../assets/images/stylefinder-sec/insp.png'
 import berImg from '../assets/images/stylefinder-sec/ber.png'
 import resultImg from '../assets/images/stylefinder-sec/result.png'
@@ -106,6 +107,11 @@ export default function StylefinderHero() {
             </Reveal>
           ))}
         </div>
+        <KiHinweis
+          className="vnc__ainote"
+          variant="section-notice"
+          text="Bild- und Ergebnisdarstellungen sind KI-generierte Symbolbilder; abgebildete Personen sind nicht real. Das Stylefinder-Ergebnis dient nur der Veranschaulichung."
+        />
       </div>
     </section>
   )

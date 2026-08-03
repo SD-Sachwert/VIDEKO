@@ -27,6 +27,7 @@ export default function Team() {
         lead="Bei VIDEKO zählt nicht nur Design. Es zählt, wer zuhört, plant, nachfragt und Verantwortung übernimmt."
         image={heroImg}
         aiImage
+        aiVariant="symbolic"
       />
 
       <section className="section section--light">

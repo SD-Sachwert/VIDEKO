@@ -29,6 +29,50 @@
   Neutrale Kennzeichnung „Beispieldarstellungen – teils KI-generiert" (weil laut Betreiber
   **gemischt/unsicher**, daher nicht pauschal „KI").
 
+**Dritte Welle (2026-08-03, vollständige Neu-Auditierung der KI-Kennzeichnung):**
+- **Zentrale Komponente vereinheitlicht:** `KiKennzeichnung.jsx` ist jetzt EINE Quelle
+  (`KiTag`) mit **Varianten** statt fünf Badge-Systemen. Varianten:
+  `symbolic` („KI-generiertes Symbolbild"), `visualization` („KI-generierte Visualisierung"),
+  `not-real-project` („Beispielhafte KI-Visualisierung – kein reales Kundenprojekt"),
+  `section-notice` (Sammelhinweis für abgegrenzte KI-Bildgruppen), `generic` (Fallback).
+  `KiBadge`/`KiHinweis` bleiben als rückwärtskompatible Wrapper. Jede Kennzeichnung trägt
+  jetzt `role="note"` + `aria-label="Bildkennzeichnung: …"` (ARIA). Lange Hinweistexte
+  umbrechen sauber (CSS `.kimark--note white-space:normal`).
+- **Präziserer Wortlaut statt pauschal „KI-generiert":** Räume/Küchen/Studio →
+  `visualization`; Personen-/Beratungsszenen → `symbolic`; Vorher/Nachher & Projektgrid →
+  `not-real-project`.
+- **Vorher/Nachher (kritischster Bereich):** Hero-Note `visualization`; **neuer
+  Sammelhinweis** am Projektgrid „Beispielhafte KI-Visualisierung – kein reales
+  Kundenprojekt …"; Slider-Note jetzt exakt „Beispielhafte KI-Visualisierung – kein reales
+  Kundenprojekt"; Status „In Umsetzung" → „In Planung" (keine vorgetäuschten laufenden
+  Realprojekte).
+- **Home:** Before/After-Slider (`HeroExperience.jsx`) erstmals gekennzeichnet
+  (`visualization`, „…kein dokumentiertes Kundenprojekt"); Galerie-Hinweis erweitert
+  („auch die abgebildeten Personen sind KI-generiert; Studio noch im Aufbau");
+  `StylefinderHero.jsx` Personen-Thumbnail + Mock-Ergebnis mit Sammelhinweis versehen;
+  Home-Top-Hero-Overlay → `visualization`.
+- **Über uns:** Team-Bento-Hinweis verschärft auf „**keine realen Mitarbeitenden**. Nur die
+  drei Gründer … sind echt."; Hero → `visualization`.
+- **Studio:** Hero → `visualization`; **Showroom-Split-Bild** neu mit KI-Badge; neuer
+  Journey-Sammelhinweis „…kein reales Studio … Studio noch im Aufbau".
+- **Showroom-Sektion:** Portal-Overlay → `visualization`; **neuer Rail-Sammelhinweis**
+  „…kein reales Studio, keine realen Mitarbeitenden …".
+- **Karriere (KI-Personen als Personal, vorher ungekennzeichnet):** Hero-Note neu
+  („KI-generiertes Symbolbild – keine realen Mitarbeitenden") + **zwei Sammelhinweise**
+  (Flow-Bilder & Rollen-Deck): „Alle abgebildeten Personen sind KI-generierte Symbolbilder
+  – keine realen Mitarbeitenden".
+- **Beratung:** Hero-Note neu (`visualization`); Hero-Media war fälschlich komplett
+  `aria-hidden` → korrigiert, damit die Kennzeichnung für Screenreader hörbar ist (auch in
+  Karriere).
+- **PageHero:** neues `aiVariant`-Prop → Team-Hero `symbolic` (Personen), Planung/Stylefinder
+  `visualization`.
+- **Verifikation:** `eslint` (nur **vorbestehende** Warnungen, keine neuen), `vite build`
+  **grün**. Kein Browser-Test-Harness vorhanden → Prüfung per Code-/Sichtaudit (transparent
+  offengelegt). **Weiterhin außerhalb dieses KI-Scopes und nur als Flag notiert (nicht
+  eigenmächtig geändert):** erfundene Marketing-Kennzahlen (Home „100 % zufriedene Kunden",
+  `StylefinderHero` „Über 20 Jahre Erfahrung"), toter `FooterExperienceSection.jsx` mit
+  Fake-Bewertungen/Awards – § 5 UWG, aber inhaltliche Betreiber-Entscheidung.
+
 **Zweite Welle (2026-08-03, nach Betreiber-Auskunft „Gründerfotos echt, Rest KI"):**
 - **Wichtige Korrektur:** `/ueber-videko` und `/materialien` sind **Weiterleitungen** –
   die live sichtbaren Seiten sind `UeberUns.jsx` (mit eigenem Hero) bzw. `/inspiration`.

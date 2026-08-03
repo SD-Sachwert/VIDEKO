@@ -152,7 +152,7 @@ export default function Home() {
             </Reveal>
           ))}
         </div>
-        <div className="container"><KiHinweis className="vnc__ainote" text="Impressionen – KI-generierte Symbolbilder." /></div>
+        <div className="container"><KiHinweis className="vnc__ainote" variant="section-notice" text="Impressionen – KI-generierte Symbolbilder. Auch die abgebildeten Personen sind KI-generiert; das Studio in Würzburg befindet sich noch im Aufbau." /></div>
       </section>
 
       {/* 5 — TRANSFORMATION */}

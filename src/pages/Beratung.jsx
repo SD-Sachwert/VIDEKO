@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { MapPin, Mail, Phone, Check, ArrowRight, Compass, PhoneCall, Store, ChevronDown, ShieldCheck, Upload, FileText } from 'lucide-react'
 
 import Reveal from '../components/Reveal.jsx'
+import { KiHinweis } from '../components/legal/KiKennzeichnung.jsx'
 import heroImg from '../assets/images/leistungen/ls-hero.png'
 import cIdee from '../assets/images/beratung/story-idee.png'
 import cPlanung from '../assets/images/beratung/story-richtung.png'
@@ -101,9 +102,10 @@ export default function Beratung() {
     <div className="leist-page">
       {/* HERO */}
       <section className="pagehero leist-hero" ref={heroRef}>
-        <div className="pagehero__media" aria-hidden="true">
-          <motion.img src={heroImg} alt="" className="pagehero__img" style={{ y: imgY, scale: imgScale }} />
-          <div className="pagehero__veil" />
+        <div className="pagehero__media">
+          <motion.img src={heroImg} alt="" className="pagehero__img" style={{ y: imgY, scale: imgScale }} aria-hidden="true" />
+          <div className="pagehero__veil" aria-hidden="true" />
+          <KiHinweis className="pagehero__ainote" variant="visualization" />
         </div>
         <div className="container pagehero__inner">
           <Reveal>

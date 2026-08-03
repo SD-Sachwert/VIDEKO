@@ -101,7 +101,7 @@ export default function Hero() {
 
       <div className="hero__veil" aria-hidden="true" />
 
-      <KiHinweis className="kimark--overlay" />
+      <KiHinweis className="kimark--overlay" variant="visualization" />
 
       {/* --- Copy --- */}
       <motion.div className="container hero__inner" style={{ y: textY }}>

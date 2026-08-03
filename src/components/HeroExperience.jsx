@@ -4,6 +4,7 @@ import { ArrowRight, Boxes, Lightbulb, Ruler, Clock, Gem, ShieldCheck, PencilRul
 
 import Reveal from './Reveal.jsx'
 import CTAButton from './CTAButton.jsx'
+import { KiHinweis } from './legal/KiKennzeichnung.jsx'
 import beforeImg from '../assets/images/home-hero/before.png'
 import afterImg from '../assets/images/home-hero/after.png'
 import cardInsp from '../assets/images/home-hero/card-inspiration.png'
@@ -122,6 +123,11 @@ export default function HeroExperience() {
             )
           })}
         </Reveal>
+        <KiHinweis
+          className="vnc__ainote"
+          variant="visualization"
+          text="KI-generierte Visualisierung – Beispiel für eine mögliche Raumverwandlung, kein dokumentiertes Kundenprojekt."
+        />
       </div>
 
       <div className="container hx-trust">

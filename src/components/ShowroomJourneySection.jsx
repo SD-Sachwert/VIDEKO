@@ -83,7 +83,7 @@ export default function ShowroomJourneySection() {
           />
         )}
         <div className="showroom__portal-veil" aria-hidden="true" />
-        <KiHinweis className="kimark--overlay" />
+        <KiHinweis className="kimark--overlay" variant="visualization" />
         <div className="container showroom__portal-copy">
           <Reveal>
             <span className="kicker kicker--gold">Dein Weg durch unseren Showroom</span>
@@ -157,6 +157,11 @@ export default function ShowroomJourneySection() {
             </button>
           ))}
         </div>
+        <KiHinweis
+          className="vnc__ainote"
+          variant="section-notice"
+          text="Alle gezeigten Studio- und Beratungsszenen sind KI-generierte Symbolbilder – kein reales Studio, keine realen Mitarbeitenden. Das Studio in Würzburg befindet sich noch im Aufbau."
+        />
       </div>
 
       {/* info section */}

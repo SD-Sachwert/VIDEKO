@@ -55,7 +55,7 @@ export default function Studio() {
         <div className="pagehero__media">
           <motion.img src={heroImg} alt="" className="pagehero__img" style={{ y: imgY, scale: imgScale }} aria-hidden="true" />
           <div className="pagehero__veil" aria-hidden="true" />
-          <KiHinweis className="pagehero__ainote" />
+          <KiHinweis className="pagehero__ainote" variant="visualization" />
         </div>
         <div className="container pagehero__inner">
           <Reveal>
@@ -123,6 +123,11 @@ export default function Studio() {
               </AnimatePresence>
             </div>
           </div>
+          <KiHinweis
+            className="vnc__ainote"
+            variant="section-notice"
+            text="Die gezeigten Studio-Szenen sind KI-generierte Visualisierungen. Das Studio in Würzburg befindet sich noch im Aufbau."
+          />
         </div>
       </section>
 
@@ -142,7 +147,7 @@ export default function Studio() {
               </ul>
             </Reveal>
             <Reveal className="lintro__media" delay={0.08}>
-              <div className="lintro__frame"><img src={splitImg} alt="VIDEKO Showroom" loading="lazy" /><span className="lintro__rim" aria-hidden="true" /></div>
+              <div className="lintro__frame"><img src={splitImg} alt="Visualisierung eines VIDEKO Showrooms (KI-generiert)" loading="lazy" /><span className="lintro__rim" aria-hidden="true" /><KiBadge variant="visualization" title="KI-generierte Visualisierung" /></div>
             </Reveal>
           </div>
         </div>

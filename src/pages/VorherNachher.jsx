@@ -34,7 +34,7 @@ const KEYPOINTS = ['Alltagsnahe Ausgangssituationen', 'Ehrliche Planung & Umsetz
 
 const PROJECTS = [
   { title: 'Küche + Wohnbereich', text: 'Offener Übergang von Küche zu Wohnraum.', status: 'In Planung', image: p1, cats: ['Küche', 'Wohnküche'] },
-  { title: 'Modernisierung Bestandsküche', text: 'Aus alt mach neu – ohne Komplettabriss.', status: 'In Umsetzung', image: p2, cats: ['Küche', 'Raumumbau'] },
+  { title: 'Modernisierung Bestandsküche', text: 'Aus alt mach neu – ohne Komplettabriss.', status: 'In Planung', image: p2, cats: ['Küche', 'Raumumbau'] },
   { title: 'Raumkonzept & Licht', text: 'Mehr Licht, bessere Wege, klare Linien.', status: 'Folgt bald', image: p3, cats: ['Raumumbau', 'Lichtkonzept'] },
   { title: 'Komplettumbau', text: 'Vom Rohbau-Gefühl zur fertigen Wohnküche.', status: 'In Planung', image: p4, cats: ['Komplettumbau', 'Raumumbau'] },
   { title: 'Wohnküche Deluxe', text: 'Wohnen und Kochen auf höchstem Niveau.', status: 'Folgt bald', image: p5, cats: ['Wohnküche', 'Küche'] },
@@ -69,7 +69,7 @@ export default function VorherNachher() {
         <div className="pagehero__media">
           <motion.img src={heroImg} alt="" className="pagehero__img" style={{ y: imgY, scale: imgScale }} aria-hidden="true" />
           <div className="pagehero__veil" aria-hidden="true" />
-          <KiHinweis className="pagehero__ainote" />
+          <KiHinweis className="pagehero__ainote" variant="visualization" />
         </div>
         <div className="container pagehero__inner">
           <Reveal>
@@ -135,6 +135,11 @@ export default function VorherNachher() {
               </Reveal>
             ))}
           </div>
+          <KiHinweis
+            className="vnc__ainote"
+            variant="not-real-project"
+            text="Beispielhafte KI-Visualisierung – kein reales Kundenprojekt. Die gezeigten Räume sind KI-generierte Konzeptbilder, keine dokumentierten Umbauten."
+          />
         </div>
       </section>
 
@@ -157,7 +162,7 @@ export default function VorherNachher() {
               </Reveal>
             ))}
           </div>
-          <KiHinweis className="vn-ba-note" text="Beispieldarstellungen – teils KI-generiert." />
+          <KiHinweis className="vn-ba-note" variant="not-real-project" />
         </div>
       </section>
 
