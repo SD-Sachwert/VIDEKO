@@ -427,7 +427,7 @@ function Konfigurator({ family, start }) {
         <div className="container pdp__grid">
           <div className="pdp__media">
             {/* key auf die aktive Variante: Galerie springt auf das erste (volle) Bild */}
-            <ProductGallery key={`${unit.sourceId}-${unit.placementKey}-${unit.logoColorKey || ''}`} images={unit.gallery} alt={`${family.label} – ${unit.styleLabel}, ${color}`} placeholder={platzhalter} />
+            <ProductGallery key={`${unit.sourceId}-${unit.placementKey}-${unit.logoColorKey || ''}`} images={unit.gallery} alt={`${family.label} – ${unit.styleLabel}, ${color}`} placeholder={platzhalter} ai={!platzhalter && unit.imageStatus !== 'real_photo'} />
           </div>
 
           <div className="pdp__info">
@@ -628,7 +628,7 @@ function Konfigurator({ family, start }) {
                   ? `Dieses Bild wird neu erstellt${unit.regenNote ? ` – ${unit.regenNote}` : ''}. Bis dahin zeigen wir bewusst kein vorläufiges Bild.`
                   : unit.soon
                     // Coming-soon: unverbindliche Produktvorschau (KI-Muster).
-                    ? 'Produktvorschau – Abbildung kann vom späteren Produkt abweichen.'
+                    ? 'KI-Produktvorschau – Abbildung kann vom späteren Produkt abweichen.'
                     // Kaufbarer Artikel: KI-Muster ist interner Verkaufs-Blocker.
                     : 'Vorschau als KI-Muster – echte Produktfotos folgen vor dem Verkauf.'}
             </p>
@@ -749,7 +749,7 @@ function Einzelseite({ product }) {
       <section className="pdp__top">
         <div className="container pdp__grid">
           <div className="pdp__media">
-            <ProductGallery images={product.gallery} alt={product.name} />
+            <ProductGallery images={product.gallery} alt={product.name} ai={product.imageStatus !== 'real_photo' && !isPlaceholderStatus(product.imageStatus)} />
           </div>
 
           <div className="pdp__info">
@@ -841,7 +841,7 @@ function Einzelseite({ product }) {
                 {product.imageStatus === 'placeholder'
                   ? 'Platzhalter – für dieses Produkt liegt noch kein Bild vor.'
                   : product.soon
-                    ? 'Produktvorschau – Abbildung kann vom späteren Produkt abweichen.'
+                    ? 'KI-Produktvorschau – Abbildung kann vom späteren Produkt abweichen.'
                     : 'Vorschau als KI-Muster – echte Produktfotos folgen vor dem Verkauf.'}
               </p>
             )}

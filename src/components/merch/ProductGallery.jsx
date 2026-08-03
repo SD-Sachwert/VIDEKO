@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { ZoomIn, ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { KiBadge } from '../legal/KiKennzeichnung.jsx'
 
 /**
  * Bildgalerie fuer Produktseite und Featured-Block.
@@ -14,7 +15,7 @@ import { ZoomIn, ChevronLeft, ChevronRight, X } from 'lucide-react'
  * Die Quelldateien sind die hochaufloesenden Packshots (1000px), auch fuer
  * die Thumbnails – es gibt bewusst keine separaten Thumbnail-Dateien.
  */
-export default function ProductGallery({ images, alt, layout = 'side', placeholder = null }) {
+export default function ProductGallery({ images, alt, layout = 'side', placeholder = null, ai = false }) {
   const bilder = images?.length ? images : []
   const [aktiv, setAktiv] = useState(0)
   const [zoom, setZoom] = useState(false)
@@ -83,6 +84,7 @@ export default function ProductGallery({ images, alt, layout = 'side', placehold
             <img src={bilder[aktiv]} alt={alt} width="1000" height="1000" fetchPriority="high" decoding="async" />
           </button>
           <span className="pgal__zoom" aria-hidden="true"><ZoomIn size={17} strokeWidth={1.7} /></span>
+          {ai && <KiBadge />}
 
           {mehrere && (
             <>
@@ -129,6 +131,7 @@ export default function ProductGallery({ images, alt, layout = 'side', placehold
             onTouchStart={onTouchStart}
             onTouchEnd={onTouchEnd}
           />
+          {ai && <KiBadge />}
           {mehrere && (
             <>
               <button

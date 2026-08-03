@@ -10,6 +10,7 @@ export default function Materialien() {
         title={<>Materialien, die man <span className="grad">fühlen will.</span></>}
         lead="Oberflächen, Haptik und Muster – echte Materialien, perfekt verarbeitet. Für Küchen, die bleiben und begeistern."
         image={matHero}
+        aiImage
       />
       <MaterialsSection embedded />
     </>

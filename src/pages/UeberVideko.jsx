@@ -25,6 +25,7 @@ export default function UeberVideko() {
         title={<>Nicht normal. <span className="grad">Mit Absicht.</span></>}
         lead="Wir bauen kein Möbelhaus. Wir planen Küchen für Menschen, die das Besondere wertschätzen."
         image={heroImg}
+        aiImage
       />
 
       <section className="section section--light">

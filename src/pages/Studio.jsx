@@ -5,6 +5,7 @@ import { Check, ArrowRight } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
+import { KiHinweis } from '../components/legal/KiKennzeichnung.jsx'
 
 import heroImg from '../assets/images/studio/bilder/01_hero_studio_showroom.png'
 import introImg from '../assets/images/studio/bilder/02_intro_showroom_hell.png'
@@ -51,9 +52,10 @@ export default function Studio() {
     <div className="leist-page studio-page">
       {/* HERO */}
       <section className="pagehero leist-hero" ref={heroRef}>
-        <div className="pagehero__media" aria-hidden="true">
-          <motion.img src={heroImg} alt="" className="pagehero__img" style={{ y: imgY, scale: imgScale }} />
-          <div className="pagehero__veil" />
+        <div className="pagehero__media">
+          <motion.img src={heroImg} alt="" className="pagehero__img" style={{ y: imgY, scale: imgScale }} aria-hidden="true" />
+          <div className="pagehero__veil" aria-hidden="true" />
+          <KiHinweis className="pagehero__ainote" />
         </div>
         <div className="container pagehero__inner">
           <Reveal>

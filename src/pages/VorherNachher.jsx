@@ -7,6 +7,7 @@ import CTAButton from '../components/CTAButton.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
 import ProcessTimeline from '../components/ProcessTimeline.jsx'
 import BeforeAfter from '../components/BeforeAfter.jsx'
+import { KiHinweis } from '../components/legal/KiKennzeichnung.jsx'
 
 import heroImg from '../assets/images/vorher-nachher/02_hero_dark_kitchen_banner.png'
 import introImg from '../assets/images/vorher-nachher/03_intro_helle_wohnkueche.png'
@@ -29,7 +30,7 @@ const PAIRS = [
   { before: vorher3, after: nachher3, cap: 'Verwandlung 03' },
 ]
 
-const KEYPOINTS = ['Reale Ausgangssituationen', 'Ehrliche Planung & Umsetzung', 'Sichtbare Veränderungen', 'Liebe zum Detail']
+const KEYPOINTS = ['Alltagsnahe Ausgangssituationen', 'Ehrliche Planung & Umsetzung', 'Sichtbare Veränderungen', 'Liebe zum Detail']
 
 const PROJECTS = [
   { title: 'Küche + Wohnbereich', text: 'Offener Übergang von Küche zu Wohnraum.', status: 'In Planung', image: p1, cats: ['Küche', 'Wohnküche'] },
@@ -65,18 +66,19 @@ export default function VorherNachher() {
     <div className="leist-page vn-page">
       {/* HERO */}
       <section className="pagehero leist-hero" ref={heroRef}>
-        <div className="pagehero__media" aria-hidden="true">
-          <motion.img src={heroImg} alt="" className="pagehero__img" style={{ y: imgY, scale: imgScale }} />
-          <div className="pagehero__veil" />
+        <div className="pagehero__media">
+          <motion.img src={heroImg} alt="" className="pagehero__img" style={{ y: imgY, scale: imgScale }} aria-hidden="true" />
+          <div className="pagehero__veil" aria-hidden="true" />
+          <KiHinweis className="pagehero__ainote" />
         </div>
         <div className="container pagehero__inner">
           <Reveal>
             <span className="kicker kicker--gold">Vorher / Nachher</span>
-            <h1 className="pagehero__title">Echte Projekte.<br /><span className="grad">Echte Verwandlungen.</span></h1>
+            <h1 className="pagehero__title">Deine Küche.<br /><span className="grad">Deine Verwandlung.</span></h1>
             <p className="pagehero__lead">
-              Hier zeigen wir, was möglich ist: echte Räume, echte Herausforderungen
-              und beeindruckende Ergebnisse – ehrlich dokumentiert, vom ersten Entwurf
-              bis zum letzten Handgriff.
+              Hier zeigen wir, was möglich ist: von der Ausgangssituation über die
+              Planung bis zum fertigen Raum – vom ersten Entwurf bis zum letzten
+              Handgriff.
             </p>
             <div className="pagehero__actions">
               <CTAButton to="/beratung">Projekt anfragen</CTAButton>
@@ -92,11 +94,11 @@ export default function VorherNachher() {
           <div className="lintro">
             <Reveal className="lintro__copy">
               <span className="kicker">Was dich hier erwartet</span>
-              <h2 className="lintro__title">Echte Projekte<br /><span className="grad">statt leerer Versprechen.</span></h2>
+              <h2 className="lintro__title">Ehrliche Planung<br /><span className="grad">statt leerer Versprechen.</span></h2>
               <p className="lintro__text">
-                Hier zeigen wir echte Umbauten, clevere Lösungen und sichtbare
-                Veränderungen. Die ersten VIDEKO-Projekte sind in vollem Gange – du
-                kannst eins davon werden.
+                Hier zeigen wir, wie Umbauten, clevere Lösungen und sichtbare
+                Veränderungen aussehen können. Die ersten VIDEKO-Projekte sind in
+                vollem Gange – du kannst eins davon werden.
               </p>
               <ul className="lstances lstances--2col">
                 {KEYPOINTS.map((k) => <li key={k}><Check size={16} strokeWidth={2.4} /> {k}</li>)}
@@ -136,7 +138,7 @@ export default function VorherNachher() {
         </div>
       </section>
 
-      {/* VORHER / NACHHER SLIDER – 3 echte Paare, direkt nach den Projekten */}
+      {/* VORHER / NACHHER SLIDER – Beispielpaare (teils KI), direkt nach den Projekten */}
       <section className="section vn-ba-sec">
         <div className="container">
           <SectionHeader
@@ -155,6 +157,7 @@ export default function VorherNachher() {
               </Reveal>
             ))}
           </div>
+          <KiHinweis className="vn-ba-note" text="Beispieldarstellungen – teils KI-generiert." />
         </div>
       </section>
 

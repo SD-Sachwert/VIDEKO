@@ -15,6 +15,7 @@ export default function Stylefinder() {
         title={<>Dein Stil. Deine Küche.<br /><span className="grad">Deine erste Einschätzung.</span></>}
         lead="Finde in wenigen Minuten heraus, welcher Küchenstil zu dir passt – und was daraus realistisch entstehen kann. Wir raten nicht ins Blaue, wir planen lieber sauber."
         image={heroPoster}
+        aiImage
       >
         <CTAButton href="#sf-start">Stylefinder starten</CTAButton>
         <span className="pagehero__note"><Clock size={15} strokeWidth={1.9} /> Dauer: ca. 2–4 Minuten · Es geht um deinen Stil, nicht unseren.</span>

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Wrench, Repeat, Sparkles, ArrowRight, ArrowLeftRight } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
+import { KiHinweis } from './legal/KiKennzeichnung.jsx'
 import vorher1 from '../assets/images/vorher-nachher/vorher-1.jpg'
 import vorher2 from '../assets/images/vorher-nachher/vorher-2.png'
 import vorher3 from '../assets/images/vorher-nachher/vorher-3.png'
@@ -17,7 +18,7 @@ const CARDS = [
 ]
 
 const BENEFITS = [
-  { icon: Wrench, t: 'Echte Umbauten' },
+  { icon: Wrench, t: 'Umbau-Ideen' },
   { icon: Repeat, t: 'Vorher / Nachher' },
   { icon: Sparkles, t: 'Inspiration' },
 ]
@@ -59,12 +60,13 @@ export default function VorherNachherShowcase() {
         <Reveal className="vnc__head">
           <span className="kicker kicker--gold">Vorher / Nachher</span>
           <h2 className="vnc__title">Aus alt wird <span className="grad">wow.</span></h2>
-          <p className="vnc__sub">Echte Küchen. Echte Verwandlungen. Zieh am Regler – und sieh, was möglich wird.</p>
+          <p className="vnc__sub">Zieh am Regler – und sieh, was in deinem Raum möglich wird.</p>
         </Reveal>
 
         <Reveal className="vnc__cards" delay={0.06}>
           {CARDS.map((cd, i) => <VncCard key={i} {...cd} />)}
         </Reveal>
+        <KiHinweis className="vnc__ainote" text="Beispieldarstellungen – teils KI-generiert." />
 
         <div className="vnc__benefits">
           {BENEFITS.map((b) => (

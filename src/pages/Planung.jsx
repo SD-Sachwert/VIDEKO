@@ -39,6 +39,7 @@ export default function Planung() {
         title={<>Planung, die jeden Tag <span className="grad">Sinn ergibt.</span></>}
         lead="Von der durchdachten Konstruktion über typische Planungsfehler bis zum transparenten Budget – so entsteht eine Küche, die wirklich passt."
         image={heroImg}
+        aiImage
       />
 
       <ExplodingKitchenSection />

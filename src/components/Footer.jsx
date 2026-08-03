@@ -154,6 +154,7 @@ export default function Footer() {
         </div>
 
         <p className="footer__operatornote">{OPERATOR_NOTICE} <Link to="/impressum">Impressum</Link></p>
+        <p className="footer__ainote">Ein Teil der Bilder auf dieser Website wurde mit KI erstellt.</p>
       </div>
     </footer>
   )

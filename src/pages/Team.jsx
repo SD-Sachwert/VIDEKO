@@ -26,6 +26,7 @@ export default function Team() {
         title={<>Menschen, die Küchen <span className="grad">ernst nehmen.</span></>}
         lead="Bei VIDEKO zählt nicht nur Design. Es zählt, wer zuhört, plant, nachfragt und Verantwortung übernimmt."
         image={heroImg}
+        aiImage
       />
 
       <section className="section section--light">
