@@ -15,26 +15,27 @@ import RaumideenSection from '../components/RaumideenSection.jsx'
 import KuechengefuehlSection from '../components/KuechengefuehlSection.jsx'
 import StylefinderStyles from '../components/StylefinderStyles.jsx'
 import { KiHinweis } from '../components/legal/KiKennzeichnung.jsx'
+import { imageMeta } from '../data/image-meta.js'
 
-import heroImg from '../assets/images/inspiration/insp-hero-dark.png'
-import explodeImg from '../assets/images/inspiration/insp-exploding-light.png'
-import iModern from '../assets/images/inspiration/02_moderne_kueche.png'
-import iWohnlich from '../assets/images/inspiration/03_wohnliche_kueche.png'
-import iDunkel from '../assets/images/inspiration/04_dunkle_kueche.png'
-import iHell from '../assets/images/inspiration/05_helle_kueche.png'
-import iDetails from '../assets/images/inspiration/06_materialien_und_details.png'
-import iInsel from '../assets/images/inspiration/07_kueche_mit_insel.png'
-import iKlein from '../assets/images/inspiration/08_kleine_kueche_clever_geplant.png'
-import iPremium from '../assets/images/inspiration/09_premium_architektur_kueche.png'
-import iLuxus from '../assets/images/inspiration/10_favoriten_wohnkueche_luxus.png'
+import heroImg from '../assets/images/inspiration/insp-hero-dark.webp'
+import explodeImg from '../assets/images/inspiration/insp-exploding-light.webp'
+import iModern from '../assets/images/inspiration/02_moderne_kueche.webp'
+import iWohnlich from '../assets/images/inspiration/03_wohnliche_kueche.webp'
+import iDunkel from '../assets/images/inspiration/04_dunkle_kueche.webp'
+import iHell from '../assets/images/inspiration/05_helle_kueche.webp'
+import iDetails from '../assets/images/inspiration/06_materialien_und_details.webp'
+import iInsel from '../assets/images/inspiration/07_kueche_mit_insel.webp'
+import iKlein from '../assets/images/inspiration/08_kleine_kueche_clever_geplant.webp'
+import iPremium from '../assets/images/inspiration/09_premium_architektur_kueche.webp'
+import iLuxus from '../assets/images/inspiration/10_favoriten_wohnkueche_luxus.webp'
 
-import mHolz from '../assets/images/materialien/cards/material-card-holz.png'
-import mStein from '../assets/images/materialien/cards/material-card-naturstein.png'
-import mKeramik from '../assets/images/materialien/cards/material-card-keramik.png'
-import mGlas from '../assets/images/materialien/cards/material-card-glas.png'
-import mMetall from '../assets/images/materialien/cards/material-card-metall.png'
-import mFronten from '../assets/images/materialien/cards/material-card-lack-matt.png'
-import mPlatten from '../assets/images/materialien/cards/material-card-quarzkomposit.png'
+import mHolz from '../assets/images/materialien/cards/material-card-holz.webp'
+import mStein from '../assets/images/materialien/cards/material-card-naturstein.webp'
+import mKeramik from '../assets/images/materialien/cards/material-card-keramik.webp'
+import mGlas from '../assets/images/materialien/cards/material-card-glas.webp'
+import mMetall from '../assets/images/materialien/cards/material-card-metall.webp'
+import mFronten from '../assets/images/materialien/cards/material-card-lack-matt.webp'
+import mPlatten from '../assets/images/materialien/cards/material-card-quarzkomposit.webp'
 
 const STYLES = [
   { key: 'modern', label: 'Modern', img: iModern },
@@ -120,7 +121,22 @@ export default function Inspiration() {
       {/* HERO */}
       <section className="pagehero leist-hero" ref={heroRef}>
         <div className="pagehero__media">
-          <motion.img src={heroImg} alt="" className="pagehero__img" style={{ y: imgY, scale: imgScale }} aria-hidden="true" />
+          {/* LCP-Element der Seite. Der Parallax braucht ein motion.img, deshalb
+              kein <Img> — Prioritaet und Abmessungen aber genauso setzen. */}
+          <motion.img
+            src={heroImg}
+            alt=""
+            className="pagehero__img"
+            style={{ y: imgY, scale: imgScale }}
+            aria-hidden="true"
+            width={imageMeta(heroImg)?.w}
+            height={imageMeta(heroImg)?.h}
+            srcSet={imageMeta(heroImg)?.srcSet}
+            sizes="100vw"
+            loading="eager"
+            decoding="sync"
+            fetchPriority="high"
+          />
           <div className="pagehero__veil" aria-hidden="true" />
           <KiHinweis className="pagehero__ainote" variant="visualization" />
         </div>

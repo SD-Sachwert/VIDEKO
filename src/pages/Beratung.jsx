@@ -5,13 +5,13 @@ import { MapPin, Mail, Phone, Check, ArrowRight, Compass, PhoneCall, Store, Chev
 
 import Reveal from '../components/Reveal.jsx'
 import { KiHinweis } from '../components/legal/KiKennzeichnung.jsx'
-import heroImg from '../assets/images/leistungen/ls-hero.png'
-import cIdee from '../assets/images/beratung/story-idee.png'
-import cPlanung from '../assets/images/beratung/story-richtung.png'
-import cKueche from '../assets/images/beratung/story-kueche.png'
-import entryGrob from '../assets/images/beratung/entry-grob.png'
-import entryRueckruf from '../assets/images/beratung/entry-rueckruf.png'
-import entryStudio from '../assets/images/beratung/entry-studio.png'
+import heroImg from '../assets/images/leistungen/ls-hero.webp'
+import cIdee from '../assets/images/beratung/story-idee.webp'
+import cPlanung from '../assets/images/beratung/story-richtung.webp'
+import cKueche from '../assets/images/beratung/story-kueche.webp'
+import entryGrob from '../assets/images/beratung/entry-grob.webp'
+import entryRueckruf from '../assets/images/beratung/entry-rueckruf.webp'
+import entryStudio from '../assets/images/beratung/entry-studio.webp'
 
 const ANLIEGEN = ['Rückruf', 'Studio-Termin', 'Ich habe erst mal Fragen']
 const KUECHENART = ['Zeile', 'L-Küche', 'U-Küche', 'Insel', 'Noch offen']

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Heart, ArrowRight, BellRing } from 'lucide-react'
 
 import Reveal from '../Reveal.jsx'
+import Img from '../Img.jsx'
 import { useCart } from '../../shop/cart-context.js'
 import { formatPrice, LOGO_STYLE_INFO, SHOW_PUBLIC_PRICES, PRICE_ON_REQUEST } from '../../data/merch.js'
 import { priceView } from '../../data/pricing.js'
@@ -53,7 +54,7 @@ export default function FamilyCard({ family, delay = 0 }) {
   return (
     <Reveal className={`pcard pcard--family ${family.allSoon ? 'pcard--soon' : ''}`.trim()} delay={delay}>
       <Link className="pcard__media" to={`/merch/${ziel}`} aria-label={`${family.label} ansehen`}>
-        <img src={bild} alt={`${family.label}${aktiv ? ` – ${aktiv.label}` : ''} – VIDEKO Merch`} loading="lazy" decoding="async" width="1000" height="1000" className={nurPlatzhalter ? "is-placeholder" : undefined} />
+        <Img src={bild} alt={`${family.label}${aktiv ? ` – ${aktiv.label}` : ''} – VIDEKO Merch`} sizes="(max-width: 700px) 50vw, (max-width: 1100px) 33vw, 400px" className={nurPlatzhalter ? "is-placeholder" : undefined} />
         {family.badge && <span className={`pcard__badge ${family.badgeTone === 'live' ? 'pcard__badge--live' : ''}`.trim()}>{family.badge}</span>}
       </Link>
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { Menu, X, MapPin, ChevronDown, ShoppingBag } from 'lucide-react'
-import logoMain from '../assets/brand/logo-main-v2.png'
+import logoMain from '../assets/brand/logo-main-v2.webp'
 import { useCart } from '../shop/cart-context.js'
 import { inquiryReady } from '../data/release.js'
 

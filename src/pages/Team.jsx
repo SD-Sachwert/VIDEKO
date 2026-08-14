@@ -5,7 +5,7 @@ import TeamCard from '../components/TeamCard.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import Reveal from '../components/Reveal.jsx'
 
-import heroImg from '../assets/images/showroom/journey-07-verstehen.png'
+import heroImg from '../assets/images/showroom/journey-07-verstehen.webp'
 
 const TEAM = [
   { role: 'Beratung' },

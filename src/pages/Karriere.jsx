@@ -14,21 +14,21 @@ import KarriereTopShowcase from '../components/KarriereTopShowcase.jsx'
 import ComparisonTable from '../components/ComparisonTable.jsx'
 import { KiHinweis } from '../components/legal/KiKennzeichnung.jsx'
 
-import heroImg from '../assets/images/karriere/01_hero_team_beratung.png'
-import jVerkauf from '../assets/images/karriere/02_job_kuechenverkauf_beratung.png'
-import jPlanung from '../assets/images/karriere/03_job_kuechenplanung_planungstisch.png'
-import jMontage from '../assets/images/karriere/04_job_monteure_aufmass.png'
-import jEmpfang from '../assets/images/karriere/05_job_empfang_service.png'
-import jMarketing from '../assets/images/karriere/06_job_marketing_social_media.png'
-import jReinigung from '../assets/images/karriere/07_job_reinigung_studioservice.png'
-import jc01 from '../assets/images/karriere/karten/01_beratung_verkauf.png'
-import jc02 from '../assets/images/karriere/karten/02_planung_technik.png'
-import jc03 from '../assets/images/karriere/karten/03_montage_handwerk.png'
-import jc04 from '../assets/images/karriere/karten/04_empfang_organisation.png'
-import jc05 from '../assets/images/karriere/karten/05_marketing_social_media.png'
-import jc06 from '../assets/images/karriere/karten/06_quereinsteiger.png'
-import jc07 from '../assets/images/karriere/karten/07_reinigung_studio_service.png'
-import jc08 from '../assets/images/karriere/karten/08_reklamation_service.png'
+import heroImg from '../assets/images/karriere/01_hero_team_beratung.webp'
+import jVerkauf from '../assets/images/karriere/02_job_kuechenverkauf_beratung.webp'
+import jPlanung from '../assets/images/karriere/03_job_kuechenplanung_planungstisch.webp'
+import jMontage from '../assets/images/karriere/04_job_monteure_aufmass.webp'
+import jEmpfang from '../assets/images/karriere/05_job_empfang_service.webp'
+import jMarketing from '../assets/images/karriere/06_job_marketing_social_media.webp'
+import jReinigung from '../assets/images/karriere/07_job_reinigung_studioservice.webp'
+import jc01 from '../assets/images/karriere/karten/01_beratung_verkauf.webp'
+import jc02 from '../assets/images/karriere/karten/02_planung_technik.webp'
+import jc03 from '../assets/images/karriere/karten/03_montage_handwerk.webp'
+import jc04 from '../assets/images/karriere/karten/04_empfang_organisation.webp'
+import jc05 from '../assets/images/karriere/karten/05_marketing_social_media.webp'
+import jc06 from '../assets/images/karriere/karten/06_quereinsteiger.webp'
+import jc07 from '../assets/images/karriere/karten/07_reinigung_studio_service.webp'
+import jc08 from '../assets/images/karriere/karten/08_reklamation_service.webp'
 
 const DECK = [
   { n: '01', name: 'Beratung & Verkauf', img: jc01, panel: { about: 'Kund:innen beraten & begeistern.', tasks: 'Gespräche führen, Lösungen finden, Angebote erstellen.', req: 'Kommunikationsstärke, Empathie und ein gutes Gespür für Menschen.', get: 'Wertschätzung, Entwicklung und ein Team, das zusammenhält.' } },
@@ -54,9 +54,9 @@ const STATS_DECK = [
   { v: '∞', l: 'Tassen Kaffee' },
   { v: '∞', l: 'Möglichkeiten' },
 ]
-import imgProzess from '../assets/images/karriere/08_bewerbungsprozess_teammeeting.png'
-import imgFormular from '../assets/images/karriere/09_bewerbung_interior_formular.png'
-import imgCta from '../assets/images/karriere/10_cta_footer_premium_showroom.png'
+import imgProzess from '../assets/images/karriere/08_bewerbungsprozess_teammeeting.webp'
+import imgFormular from '../assets/images/karriere/09_bewerbung_interior_formular.webp'
+import imgCta from '../assets/images/karriere/10_cta_footer_premium_showroom.webp'
 
 const ROLES = [
   { title: 'Beratung & Verkauf', cat: 'verkaufen', icon: Store, image: jVerkauf, text: 'Für Menschen, die zuhören können, bevor sie verkaufen.' },

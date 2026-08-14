@@ -6,8 +6,8 @@ import Reveal from './Reveal.jsx'
 import CTAButton from './CTAButton.jsx'
 
 const ARTICLE_URL = '/journal/7-kuechenfehler-die-du-spaeter-jeden-tag-bereust'
-import scene from '../assets/images/kuechenfehler/scene.png'
-import ctaBg from '../assets/images/kuechenfehler/cta-bg.png'
+import scene from '../assets/images/kuechenfehler/scene.webp'
+import ctaBg from '../assets/images/kuechenfehler/cta-bg.webp'
 
 const HOTSPOTS = [
   { id: 1, title: 'Kühlschrank im Abseits', x: 9, y: 42, r: 7, text: 'Der Kühlschrank sitzt zu weit weg vom eigentlichen Arbeitsbereich. Kühlen, Spülen und Kochen werden dadurch unnötig laufintensiv.', hint: 'Achte auf die Wege zwischen Kühlen, Spülen und Kochen.' },

@@ -2,12 +2,12 @@ import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useTexture } from '@react-three/drei'
 
-import nat from '../../assets/images/experience/videko_experience_asset_pack/03_material_textures/exp-material-black-stone-slab.png'
-import met from '../../assets/images/experience/videko_experience_asset_pack/03_material_textures/exp-material-metal-slab.png'
-import bro from '../../assets/images/experience/videko_experience_asset_pack/03_material_textures/exp-material-bronze-metal.png'
-import ker from '../../assets/images/experience/videko_experience_asset_pack/03_material_textures/exp-material-ceramic-slab.png'
-import hol from '../../assets/images/experience/videko_experience_asset_pack/03_material_textures/exp-material-wood-slab.png'
-import gla from '../../assets/images/experience/videko_experience_asset_pack/03_material_textures/exp-material-glass-slab.png'
+import nat from '../../assets/images/experience/videko_experience_asset_pack/03_material_textures/exp-material-black-stone-slab.webp'
+import met from '../../assets/images/experience/videko_experience_asset_pack/03_material_textures/exp-material-metal-slab.webp'
+import bro from '../../assets/images/experience/videko_experience_asset_pack/03_material_textures/exp-material-bronze-metal.webp'
+import ker from '../../assets/images/experience/videko_experience_asset_pack/03_material_textures/exp-material-ceramic-slab.webp'
+import hol from '../../assets/images/experience/videko_experience_asset_pack/03_material_textures/exp-material-wood-slab.webp'
+import gla from '../../assets/images/experience/videko_experience_asset_pack/03_material_textures/exp-material-glass-slab.webp'
 
 const SRC = [nat, met, bro, ker, hol, gla]
 

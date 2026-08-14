@@ -4,12 +4,12 @@ import { Wrench, Repeat, Sparkles, ArrowRight, ArrowLeftRight } from 'lucide-rea
 
 import Reveal from './Reveal.jsx'
 import { KiHinweis } from './legal/KiKennzeichnung.jsx'
-import vorher1 from '../assets/images/vorher-nachher/vorher-1.jpg'
-import vorher2 from '../assets/images/vorher-nachher/vorher-2.png'
-import vorher3 from '../assets/images/vorher-nachher/vorher-3.png'
-import nachher1 from '../assets/images/vorher-nachher/nachher-1.jpg'
-import nachher2 from '../assets/images/vorher-nachher/nachher-2.png'
-import nachher3 from '../assets/images/vorher-nachher/nachher-3.png'
+import vorher1 from '../assets/images/vorher-nachher/vorher-1.webp'
+import vorher2 from '../assets/images/vorher-nachher/vorher-2.webp'
+import vorher3 from '../assets/images/vorher-nachher/vorher-3.webp'
+import nachher1 from '../assets/images/vorher-nachher/nachher-1.webp'
+import nachher2 from '../assets/images/vorher-nachher/nachher-2.webp'
+import nachher3 from '../assets/images/vorher-nachher/nachher-3.webp'
 
 const CARDS = [
   { v: vorher1, n: nachher1, pos: 'side' },

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, Hammer, Repeat, Sparkles } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
+import LazyVideo from './LazyVideo.jsx'
 import video from '../assets/images/transforming-kitchen.mp4'
 
 const BENEFITS = [
@@ -22,9 +23,7 @@ export default function TransformingKitchen() {
         </Reveal>
 
         <Reveal className="tk__stage" delay={0.06}>
-          <video className="tk__video" autoPlay muted loop playsInline preload="metadata">
-            <source src={video} type="video/mp4" />
-          </video>
+          <LazyVideo className="tk__video" src={video} />
           <span className="tk__frame" aria-hidden="true" />
         </Reveal>
 

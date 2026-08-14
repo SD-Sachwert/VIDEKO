@@ -2,10 +2,10 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowRight, Hand, Flame, Waves, Gem, Home } from 'lucide-react'
 
-import warmImg from '../assets/images/studio/feeling/warm.png'
-import ruhigImg from '../assets/images/studio/feeling/ruhig.png'
-import elegantImg from '../assets/images/studio/feeling/elegant.png'
-import alltagImg from '../assets/images/studio/feeling/alltag.png'
+import warmImg from '../assets/images/studio/feeling/warm.webp'
+import ruhigImg from '../assets/images/studio/feeling/ruhig.webp'
+import elegantImg from '../assets/images/studio/feeling/elegant.webp'
+import alltagImg from '../assets/images/studio/feeling/alltag.webp'
 
 const FEELINGS = [
   {

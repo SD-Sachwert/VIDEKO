@@ -6,28 +6,28 @@ import {
   Maximize, Baby, CircleDot, Cpu, Package, Coffee, Wine, PiggyBank, Coins, BadgeEuro, HelpCircle,
 } from 'lucide-react'
 
-import logoMain from '../../assets/brand/logo-main-v2.png'
+import logoMain from '../../assets/brand/logo-main-v2.webp'
 import { EMPTY_ANSWERS, PRIORITY_LIST, computeProfile, computeResultStyle } from './stylefinderLogic.js'
 
-import sModern from '../../assets/images/stylefinder-assets/02_stil_hell_modern_minimal.png'
-import sNatur from '../../assets/images/stylefinder-assets/03_stil_skandinavisch_natuerlich.png'
-import sDunkel from '../../assets/images/stylefinder-assets/05_stil_dunkel_luxurioes_wohnlich.png'
-import sHell from '../../assets/images/stylefinder-assets/08_stil_hell_luxurioes_mit_pflanzen.png'
-import sLandhaus from '../../assets/images/stylefinder-assets/04_stil_hell_wohnlich_landhaus_modern.png'
-import sIndustrial from '../../assets/images/stylefinder-assets/06_stil_industrial_dark_city.png'
+import sModern from '../../assets/images/stylefinder-assets/02_stil_hell_modern_minimal.webp'
+import sNatur from '../../assets/images/stylefinder-assets/03_stil_skandinavisch_natuerlich.webp'
+import sDunkel from '../../assets/images/stylefinder-assets/05_stil_dunkel_luxurioes_wohnlich.webp'
+import sHell from '../../assets/images/stylefinder-assets/08_stil_hell_luxurioes_mit_pflanzen.webp'
+import sLandhaus from '../../assets/images/stylefinder-assets/04_stil_hell_wohnlich_landhaus_modern.webp'
+import sIndustrial from '../../assets/images/stylefinder-assets/06_stil_industrial_dark_city.webp'
 
-import mNaturstein from '../../assets/images/materialien/cards/material-card-naturstein.png'
-import mHolz from '../../assets/images/materialien/cards/material-card-holz.png'
-import mMetall from '../../assets/images/materialien/cards/material-card-metall.png'
-import mKeramik from '../../assets/images/materialien/cards/material-card-keramik.png'
-import mGlas from '../../assets/images/materialien/cards/material-card-glas.png'
-import mLack from '../../assets/images/materialien/cards/material-card-lack-matt.png'
-import mBronze from '../../assets/images/materialien/cards/material-card-bronze.png'
-import mPlatten from '../../assets/images/materialien/cards/material-card-quarzkomposit.png'
+import mNaturstein from '../../assets/images/materialien/cards/material-card-naturstein.webp'
+import mHolz from '../../assets/images/materialien/cards/material-card-holz.webp'
+import mMetall from '../../assets/images/materialien/cards/material-card-metall.webp'
+import mKeramik from '../../assets/images/materialien/cards/material-card-keramik.webp'
+import mGlas from '../../assets/images/materialien/cards/material-card-glas.webp'
+import mLack from '../../assets/images/materialien/cards/material-card-lack-matt.webp'
+import mBronze from '../../assets/images/materialien/cards/material-card-bronze.webp'
+import mPlatten from '../../assets/images/materialien/cards/material-card-quarzkomposit.webp'
 
-import iHell from '../../assets/images/inspiration/05_helle_kueche.png'
-import iWohnlich from '../../assets/images/inspiration/03_wohnliche_kueche.png'
-import iModernK from '../../assets/images/inspiration/02_moderne_kueche.png'
+import iHell from '../../assets/images/inspiration/05_helle_kueche.webp'
+import iWohnlich from '../../assets/images/inspiration/03_wohnliche_kueche.webp'
+import iModernK from '../../assets/images/inspiration/02_moderne_kueche.webp'
 
 const STEPS = ['Stil', 'Mehrwerte', 'Materialdetails', 'Farbwelten', 'Funktionsraum', 'Budget', 'Prioritäten', 'Ergebnis']
 

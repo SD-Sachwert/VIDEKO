@@ -5,11 +5,11 @@ import { ArrowRight, Boxes, Lightbulb, Ruler, Clock, Gem, ShieldCheck, PencilRul
 import Reveal from './Reveal.jsx'
 import CTAButton from './CTAButton.jsx'
 import { KiHinweis } from './legal/KiKennzeichnung.jsx'
-import beforeImg from '../assets/images/home-hero/before.png'
-import afterImg from '../assets/images/home-hero/after.png'
-import cardInsp from '../assets/images/home-hero/card-inspiration.png'
-import cardStyle from '../assets/images/home-hero/card-stylefinder.png'
-import cardBer from '../assets/images/home-hero/card-beratung.png'
+import beforeImg from '../assets/images/home-hero/before.webp'
+import afterImg from '../assets/images/home-hero/after.webp'
+import cardInsp from '../assets/images/home-hero/card-inspiration.webp'
+import cardStyle from '../assets/images/home-hero/card-stylefinder.webp'
+import cardBer from '../assets/images/home-hero/card-beratung.webp'
 
 const HOTSPOTS = [
   { icon: Layers, t: 'Materialkonzept', d: 'Oberflächen, die zum Alltag passen.' },
@@ -83,7 +83,9 @@ export default function HeroExperience() {
       <div className="container hx-introwrap">
         <Reveal className="hx-intro">
           <span className="kicker">Der ganze Raum</span>
-          <h1 className="hx-headline">Aus einem Raum wird nicht einfach eine Küche.<br /><span className="grad">Sondern dein neuer Lieblingsplatz.</span></h1>
+          {/* Sektionsueberschrift innerhalb der Startseite — die H1 gehoert
+              dem Hero. Optik unveraendert (gleiche Klasse). */}
+          <h2 className="hx-headline">Aus einem Raum wird nicht einfach eine Küche.<br /><span className="grad">Sondern dein neuer Lieblingsplatz.</span></h2>
           <p className="hx-sub">Von der ersten Idee über Planung, Material, Licht und Montage bis zur fertigen Küche.</p>
         </Reveal>
       </div>

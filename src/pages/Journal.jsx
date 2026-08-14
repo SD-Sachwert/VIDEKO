@@ -7,9 +7,10 @@ import {
 import Reveal from '../components/Reveal.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
 import CTAButton from '../components/CTAButton.jsx'
+import Img from '../components/Img.jsx'
 
-import heroImg from '../assets/images/inspiration/01_hero_atmosphaerische_kueche.png'
-import faqImg from '../assets/images/leistungen/04_intro_helle_kueche.png'
+import heroImg from '../assets/images/inspiration/01_hero_atmosphaerische_kueche.webp'
+import faqImg from '../assets/images/leistungen/04_intro_helle_kueche.webp'
 import {
   categories, journalArticles, journalFaqs, kitchenMyths, fragVidekoQuestions, popularTopics,
 } from '../data/journal.js'
@@ -33,7 +34,7 @@ export default function Journal() {
       {/* 1 — HERO */}
       <section className="pagehero journal-hero">
         <div className="pagehero__media" aria-hidden="true">
-          <img src={heroImg} alt="" className="pagehero__img" />
+          <Img src={heroImg} alt="" className="pagehero__img" priority sizes="100vw" />
           <div className="pagehero__veil" />
         </div>
         <div className="container journal-hero__inner">
@@ -71,7 +72,7 @@ export default function Journal() {
             {shown.map((a, i) => (
               <Reveal key={a.slug} delay={(i % 3) * 0.06}>
                 <Link to={`/journal/${a.slug}`} className="jcard">
-                  <span className="jcard__media"><img src={a.image} alt="" loading="lazy" /><span className="jcard__badge">{a.category}</span></span>
+                  <span className="jcard__media"><Img src={a.image} alt="" sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 380px" /><span className="jcard__badge">{a.category}</span></span>
                   <span className="jcard__body">
                     <span className="jcard__title">{a.title}</span>
                     <span className="jcard__teaser">{a.teaser}</span>
@@ -115,7 +116,7 @@ export default function Journal() {
           <Reveal className="jfaqblock__left">
             <span className="kicker">Beliebte Fragen</span>
             <h2 className="jfaqblock__title">Fragen, die fast jeder vor der <span className="grad">Küchenplanung</span> hat.</h2>
-            <div className="jfaqblock__img"><img src={faqImg} alt="" loading="lazy" /></div>
+            <div className="jfaqblock__img"><Img src={faqImg} alt="" sizes="(max-width: 900px) 100vw, 520px" /></div>
           </Reveal>
           <div className="jfaqblock__grid">
             {journalFaqs.map((f, i) => (

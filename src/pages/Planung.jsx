@@ -11,7 +11,7 @@ import FeatureCard from '../components/FeatureCard.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import Reveal from '../components/Reveal.jsx'
 
-import heroImg from '../assets/images/shared/hero-kitchen-arch.jpg'
+import heroImg from '../assets/images/shared/hero-kitchen-arch.webp'
 
 const PROCESS = [
   { title: 'Erstgespräch', text: 'Kennenlernen, Wünsche, erste Richtung.' },

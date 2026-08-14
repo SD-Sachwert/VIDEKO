@@ -23,8 +23,17 @@ import { activeUnitPrice } from './pricing.js'
 // products.json referenziert nur den Dateinamen (ohne Pfad), daher wird hier
 // rekursiv geladen und ueber den Basename aufgeloest. _deprecated/ ist bewusst
 // vom Glob ausgeschlossen, damit ersetzte Alt-Assets nicht mitgebundelt werden.
+// Die srcset-Varianten (…-480w.webp / …-960w.webp) aus
+// scripts/optimize-images.mjs sind hier bewusst ausgeschlossen: Sie sind keine
+// eigenstaendigen Produktbilder, wuerden den Basename-Resolver verunreinigen
+// und zusaetzlich ungenutzt ins Bundle wandern. Aufgeloest werden sie ueber
+// components/Img.jsx anhand der Basis-URL.
 const BILDER = import.meta.glob(
-  ['../assets/images/merch/**/*.webp', '!../assets/images/merch/_deprecated/**'],
+  [
+    '../assets/images/merch/**/*.webp',
+    '!../assets/images/merch/_deprecated/**',
+    '!../assets/images/merch/**/*-[0-9]*w.webp',
+  ],
   { eager: true, import: 'default' },
 )
 

@@ -5,13 +5,13 @@ import { ArrowRight } from 'lucide-react'
 import Reveal from './Reveal.jsx'
 import MagneticButton from './MagneticButton.jsx'
 
-import fallback from '../assets/images/planung/exploding/exploded-full-fallback-16x9.png'
-import dLight from '../assets/images/planung/exploding/detail-light-16x9.png'
-import dAppliances from '../assets/images/planung/exploding/detail-appliances-16x9.png'
-import dWorktop from '../assets/images/planung/exploding/detail-worktop-16x9.png'
-import dMaterials from '../assets/images/planung/exploding/detail-materials-16x9.png'
-import dDrawers from '../assets/images/planung/exploding/detail-drawers-16x9.png'
-import dMontage from '../assets/images/planung/exploding/detail-montage-16x9.png'
+import fallback from '../assets/images/planung/exploding/exploded-full-fallback-16x9.webp'
+import dLight from '../assets/images/planung/exploding/detail-light-16x9.webp'
+import dAppliances from '../assets/images/planung/exploding/detail-appliances-16x9.webp'
+import dWorktop from '../assets/images/planung/exploding/detail-worktop-16x9.webp'
+import dMaterials from '../assets/images/planung/exploding/detail-materials-16x9.webp'
+import dDrawers from '../assets/images/planung/exploding/detail-drawers-16x9.webp'
+import dMontage from '../assets/images/planung/exploding/detail-montage-16x9.webp'
 
 const POINTS = [
   { n: '01', title: 'Licht & Atmosphäre', text: 'Integrierte Lichtkonzepte für Stimmung und Funktion.', image: dLight },

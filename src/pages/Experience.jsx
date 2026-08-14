@@ -4,12 +4,12 @@ import { motion } from 'framer-motion'
 import CTAButton from '../components/CTAButton.jsx'
 import ExperienceOverlay from '../components/experience/ExperienceOverlay.jsx'
 
-import fbHero from '../assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-01-hero-arrival-backplate.png'
-import fbWhy from '../assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-02-why-videko-backplate.png'
-import fbMaterial from '../assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-03-material-gallery-backplate.png'
-import fbPlanning from '../assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-04-planning-exploding-backplate.png'
-import fbShowroom from '../assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-05-showroom-panorama-backplate.png'
-import fbFinal from '../assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-06-final-cta-showroom-backplate.png'
+import fbHero from '../assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-01-hero-arrival-backplate.webp'
+import fbWhy from '../assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-02-why-videko-backplate.webp'
+import fbMaterial from '../assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-03-material-gallery-backplate.webp'
+import fbPlanning from '../assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-04-planning-exploding-backplate.webp'
+import fbShowroom from '../assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-05-showroom-panorama-backplate.webp'
+import fbFinal from '../assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-06-final-cta-showroom-backplate.webp'
 
 // load three/r3f only when the immersive version is actually used
 const ExperienceCanvas = lazy(() => import('../components/experience/ExperienceCanvas.jsx'))
@@ -45,7 +45,10 @@ function ExperienceFallback() {
             transition={{ duration: 0.6 }}
           >
             <span className="xp-fb__eyebrow">{s.eyebrow}</span>
-            <h2 className="xp-fb__title">{s.lines.map((l, k) => <span key={k}>{l}</span>)}</h2>
+            {/* Erste Sektion traegt die H1 der Seite – gleiche Klasse, gleiche Optik. */}
+            {i === 0
+              ? <h1 className="xp-fb__title">{s.lines.map((l, k) => <span key={k}>{l}</span>)}</h1>
+              : <h2 className="xp-fb__title">{s.lines.map((l, k) => <span key={k}>{l}</span>)}</h2>}
             <p className="xp-fb__sub">{s.sub}</p>
             <CTAButton to={s.cta.to}>{s.cta.label}</CTAButton>
           </motion.div>
@@ -78,6 +81,10 @@ export default function Experience() {
 
   return (
     <div className="xp">
+      {/* Die immersive Ansicht besteht aus Canvas und Overlay und haette sonst
+          keine Ueberschrift. Visuell unveraendert, aber fuer Suchmaschinen und
+          Screenreader eindeutig. */}
+      <h1 className="sr-only">VIDEKO Experience – Küchenwelten in 3D erleben</h1>
       <Suspense fallback={<div className="xp__loading"><span>VIDEKO Experience lädt …</span></div>}>
         <ExperienceCanvas progress={progress} />
       </Suspense>

@@ -7,24 +7,25 @@ import {
 
 import Reveal from '../components/Reveal.jsx'
 import CTAButton from '../components/CTAButton.jsx'
+import TextLink from '../components/TextLink.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
 import CardGrid from '../components/CardGrid.jsx'
 import FeatureCard from '../components/FeatureCard.jsx'
 import { KiBadge, KiHinweis } from '../components/legal/KiKennzeichnung.jsx'
 
-import heroDark from '../assets/images/leistungen/ls-feature.png'
-import whyImg from '../assets/images/ueber-uns/02_why_videko_beratungsszene.png'
-import fVitali from '../assets/images/ueber-uns/05_founder_vitali_placeholder.png'
-import fDennis from '../assets/images/ueber-uns/05_founder_dennis_placeholder.png'
-import fHeiko from '../assets/images/ueber-uns/05_founder_heiko_placeholder.png'
-import tBeratung from '../assets/images/ueber-uns/team-neu/t1.png'
-import tMarketing from '../assets/images/ueber-uns/team-neu/t2.png'
-import tMontage from '../assets/images/ueber-uns/team-neu/t3.png'
-import tSach from '../assets/images/ueber-uns/team-neu/t4.png'
-import tPartner from '../assets/images/ueber-uns/team-neu/t5.png'
-import tService from '../assets/images/ueber-uns/team-neu/t6.png'
-import momentImg from '../assets/images/ueber-uns/10_persoenlicher_kundenmoment.png'
-import karteImg from '../assets/images/ueber-uns/karte.png'
+import heroDark from '../assets/images/leistungen/ls-feature.webp'
+import whyImg from '../assets/images/ueber-uns/02_why_videko_beratungsszene.webp'
+import fVitali from '../assets/images/ueber-uns/05_founder_vitali_placeholder.webp'
+import fDennis from '../assets/images/ueber-uns/05_founder_dennis_placeholder.webp'
+import fHeiko from '../assets/images/ueber-uns/05_founder_heiko_placeholder.webp'
+import tBeratung from '../assets/images/ueber-uns/team-neu/t1.webp'
+import tMarketing from '../assets/images/ueber-uns/team-neu/t2.webp'
+import tMontage from '../assets/images/ueber-uns/team-neu/t3.webp'
+import tSach from '../assets/images/ueber-uns/team-neu/t4.webp'
+import tPartner from '../assets/images/ueber-uns/team-neu/t5.webp'
+import tService from '../assets/images/ueber-uns/team-neu/t6.webp'
+import momentImg from '../assets/images/ueber-uns/10_persoenlicher_kundenmoment.webp'
+import karteImg from '../assets/images/ueber-uns/karte.webp'
 
 const MAPS_URL = 'https://www.google.com/maps/search/?api=1&query=Hertzstra%C3%9Fe%204%2C%2097076%20W%C3%BCrzburg'
 
@@ -248,7 +249,12 @@ export default function UeberUns() {
         <div className="container">
           <Reveal className="lfinal">
             <h2 className="lfinal__title">Genug von uns.<br /><span className="grad">Jetzt bist du dran.</span></h2>
-            <p className="lfinal__text">Lass uns deine Küche planen – ehrlich, persönlich und auf Augenhöhe.</p>
+            <p className="lfinal__text">
+              Lass uns deine Küche planen – ehrlich, persönlich und auf Augenhöhe.
+              {/* /leistungen war von hier bisher nicht verlinkt. */}
+              {' '}Was dabei alles dazugehört, steht unter{' '}
+              <TextLink href="/leistungen">Leistungen</TextLink>.
+            </p>
             <div className="lfinal__actions">
               <CTAButton to="/beratung">Beratung anfragen</CTAButton>
               <CTAButton to="/studio" variant="dark">Studio entdecken</CTAButton>

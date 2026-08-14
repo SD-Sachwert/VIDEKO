@@ -2,11 +2,11 @@ import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useTexture } from '@react-three/drei'
 
-import zeitlos from '../../assets/images/experience/stylefinder/exp-style-zeitlos.jpg'
-import modern from '../../assets/images/experience/stylefinder/exp-style-modern-warm.jpg'
-import dunkel from '../../assets/images/experience/stylefinder/exp-style-dunkel.jpg'
-import natuerlich from '../../assets/images/experience/stylefinder/exp-style-natuerlich.jpg'
-import industrial from '../../assets/images/experience/stylefinder/exp-style-industrial.jpg'
+import zeitlos from '../../assets/images/experience/stylefinder/exp-style-zeitlos.webp'
+import modern from '../../assets/images/experience/stylefinder/exp-style-modern-warm.webp'
+import dunkel from '../../assets/images/experience/stylefinder/exp-style-dunkel.webp'
+import natuerlich from '../../assets/images/experience/stylefinder/exp-style-natuerlich.webp'
+import industrial from '../../assets/images/experience/stylefinder/exp-style-industrial.webp'
 
 const SRC = [zeitlos, modern, dunkel, natuerlich, industrial]
 

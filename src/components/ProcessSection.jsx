@@ -2,13 +2,13 @@ import { useRef, useState } from 'react'
 import { Users, MessageSquare, Box, Layers, Workflow, Home, ArrowLeftRight } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
-import s1 from '../assets/images/process2/s1.png'
-import s2 from '../assets/images/process2/s2.png'
-import s3 from '../assets/images/process2/s3.png'
-import s4 from '../assets/images/process2/s4.png'
-import s5 from '../assets/images/process2/s5.png'
-import vorher from '../assets/images/process2/vorher.png'
-import nachher from '../assets/images/process2/nachher.png'
+import s1 from '../assets/images/process2/s1.webp'
+import s2 from '../assets/images/process2/s2.webp'
+import s3 from '../assets/images/process2/s3.webp'
+import s4 from '../assets/images/process2/s4.webp'
+import s5 from '../assets/images/process2/s5.webp'
+import vorher from '../assets/images/process2/vorher.webp'
+import nachher from '../assets/images/process2/nachher.webp'
 
 const STEPS = [
   { n: '01', icon: Users, t: 'Kennenlernen', d: 'Wir lernen dich und deinen Raum kennen.', img: s1 },

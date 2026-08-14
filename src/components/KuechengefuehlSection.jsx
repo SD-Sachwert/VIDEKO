@@ -2,10 +2,10 @@ import { Check, Heart, ShoppingBag, Cloud } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
 import KitchenFeelingCard from './KitchenFeelingCard.jsx'
-import alltag1 from '../assets/images/kuechengefuehl/alltag1.png'
-import alltag2 from '../assets/images/kuechengefuehl/alltag2.png'
-import alltag3 from '../assets/images/kuechengefuehl/alltag3.png'
-import alltag4 from '../assets/images/kuechengefuehl/alltag4.png'
+import alltag1 from '../assets/images/kuechengefuehl/alltag1.webp'
+import alltag2 from '../assets/images/kuechengefuehl/alltag2.webp'
+import alltag3 from '../assets/images/kuechengefuehl/alltag3.webp'
+import alltag4 from '../assets/images/kuechengefuehl/alltag4.webp'
 
 const USP = [
   'Individuelle Beratung', 'Planung mit Feingefühl', 'Realistische Planung',

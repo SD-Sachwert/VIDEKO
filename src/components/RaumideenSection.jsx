@@ -4,13 +4,13 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ChefHat, Utensils, Sofa, Laptop, WashingMachine, DoorOpen, BedDouble, Check, Plus, ArrowLeft, ArrowRight } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
-import kochen from '../assets/images/raumideen/kochen.png'
-import essen from '../assets/images/raumideen/essen.png'
-import wohnen from '../assets/images/raumideen/wohnen.png'
-import homeoffice from '../assets/images/raumideen/homeoffice.png'
-import hauswirtschaft from '../assets/images/raumideen/hauswirtschaft.png'
-import garderobe from '../assets/images/raumideen/garderobe.png'
-import schlafen from '../assets/images/raumideen/schlafen.png'
+import kochen from '../assets/images/raumideen/kochen.webp'
+import essen from '../assets/images/raumideen/essen.webp'
+import wohnen from '../assets/images/raumideen/wohnen.webp'
+import homeoffice from '../assets/images/raumideen/homeoffice.webp'
+import hauswirtschaft from '../assets/images/raumideen/hauswirtschaft.webp'
+import garderobe from '../assets/images/raumideen/garderobe.webp'
+import schlafen from '../assets/images/raumideen/schlafen.webp'
 
 const ROOMS = [
   {

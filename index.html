@@ -7,52 +7,37 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>VIDEKO Küchen | Küchenstudio Würzburg</title>
-    <meta name="description" content="VIDEKO Küchen – dein Küchenstudio in Würzburg. Hochwertige Küchenplanung, ehrliche Beratung und maßgeschneiderte Küchen für deinen Alltag." />
-    <meta name="robots" content="index, follow" />
     <meta name="theme-color" content="#0d0d0d" />
 
-    <!-- Open Graph -->
-    <meta property="og:type" content="website" />
+    <!--
+      Alles zwischen den Markern ersetzt scripts/prerender.mjs nach dem Build
+      pro Route durch deren eigene Metadaten. Was hier steht, ist der Zustand
+      im Dev-Server und der Fallback der Startseite.
+
+      Die strukturierten Daten stehen bewusst NICHT mehr hier fest verdrahtet:
+      Rechtstraeger, Anschrift und Kontakt kommen ausschliesslich aus
+      src/data/company.js ueber src/data/site.js. Eine zweite, handgepflegte
+      Kopie im HTML lief sonst irgendwann auseinander.
+    -->
+    <!--seo:start-->
+    <title>VIDEKO Küchen | Küchenstudio Würzburg</title>
+    <meta name="description" content="VIDEKO Küchen – dein Küchenstudio in Würzburg. Küchenplanung, ehrliche Beratung und maßgeschneiderte Küchen für deinen Alltag." />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://videko-kuechen.de/" />
+
     <meta property="og:site_name" content="VIDEKO Küchen" />
     <meta property="og:locale" content="de_DE" />
+    <meta property="og:type" content="website" />
     <meta property="og:url" content="https://videko-kuechen.de/" />
     <meta property="og:title" content="VIDEKO Küchen | Küchenstudio Würzburg" />
-    <meta property="og:description" content="Dein Küchenstudio in Würzburg: hochwertige Küchenplanung, ehrliche Beratung und maßgeschneiderte Küchen für deinen Alltag." />
+    <meta property="og:description" content="VIDEKO Küchen – dein Küchenstudio in Würzburg. Küchenplanung, ehrliche Beratung und maßgeschneiderte Küchen für deinen Alltag." />
     <meta property="og:image" content="https://videko-kuechen.de/og-image.jpg" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
 
-    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="VIDEKO Küchen | Küchenstudio Würzburg" />
-    <meta name="twitter:description" content="Dein Küchenstudio in Würzburg: hochwertige Küchenplanung, ehrliche Beratung und maßgeschneiderte Küchen." />
+    <meta name="twitter:description" content="VIDEKO Küchen – dein Küchenstudio in Würzburg. Küchenplanung, ehrliche Beratung und maßgeschneiderte Küchen für deinen Alltag." />
     <meta name="twitter:image" content="https://videko-kuechen.de/og-image.jpg" />
-
-    <!-- Lokales Unternehmen (strukturierte Daten) -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": ["HomeAndConstructionBusiness", "FurnitureStore"],
-      "name": "VIDEKO Küchen",
-      "legalName": "Süddeutsche Sachwert eG",
-      "url": "https://videko-kuechen.de",
-      "image": "https://videko-kuechen.de/og-image.jpg",
-      "logo": "https://videko-kuechen.de/favicon-512.png",
-      "telephone": "+49 160 5545818",
-      "email": "info@videko-kuechen.de",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Hertzstraße 4",
-        "postalCode": "97076",
-        "addressLocality": "Würzburg",
-        "addressRegion": "Bayern",
-        "addressCountry": "DE"
-      },
-      "areaServed": "Würzburg",
-      "description": "Premium-Küchenstudio in Würzburg: Küchenplanung, Beratung und maßgeschneiderte Küchen."
-    }
-    </script>
+    <!--seo:end-->
   </head>
   <body>
     <div id="root"></div>

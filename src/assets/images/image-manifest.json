@@ -1,0 +1,6191 @@
+{
+  "src/assets/images/beratung/entry-grob.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 143220,
+    "source": "src/assets/images/beratung/entry-grob.webp",
+    "sourceBytes": 143220,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/beratung/entry-grob-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/beratung/entry-grob-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/beratung/entry-rueckruf.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 157918,
+    "source": "src/assets/images/beratung/entry-rueckruf.webp",
+    "sourceBytes": 157918,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/beratung/entry-rueckruf-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/beratung/entry-rueckruf-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/beratung/entry-studio.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 89260,
+    "source": "src/assets/images/beratung/entry-studio.webp",
+    "sourceBytes": 89260,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/beratung/entry-studio-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/beratung/entry-studio-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/beratung/story-idee.webp": {
+    "width": 278,
+    "height": 96,
+    "bytes": 3174,
+    "source": "src/assets/images/beratung/story-idee.webp",
+    "sourceBytes": 3174,
+    "variants": []
+  },
+  "src/assets/images/beratung/story-kueche.webp": {
+    "width": 278,
+    "height": 96,
+    "bytes": 4996,
+    "source": "src/assets/images/beratung/story-kueche.webp",
+    "sourceBytes": 4996,
+    "variants": []
+  },
+  "src/assets/images/beratung/story-richtung.webp": {
+    "width": 278,
+    "height": 96,
+    "bytes": 4308,
+    "source": "src/assets/images/beratung/story-richtung.webp",
+    "sourceBytes": 4308,
+    "variants": []
+  },
+  "src/assets/images/ek-modal/card1.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 87866,
+    "source": "src/assets/images/ek-modal/card1.webp",
+    "sourceBytes": 87866,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/ek-modal/card1-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/ek-modal/card1-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/ek-modal/card2.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 94252,
+    "source": "src/assets/images/ek-modal/card2.webp",
+    "sourceBytes": 94252,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/ek-modal/card2-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/ek-modal/card2-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/ek-modal/card3.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 100690,
+    "source": "src/assets/images/ek-modal/card3.webp",
+    "sourceBytes": 100690,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/ek-modal/card3-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/ek-modal/card3-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/ek-modal/card4.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 92176,
+    "source": "src/assets/images/ek-modal/card4.webp",
+    "sourceBytes": 92176,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/ek-modal/card4-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/ek-modal/card4-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/ek-modal/card5.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 94998,
+    "source": "src/assets/images/ek-modal/card5.webp",
+    "sourceBytes": 94998,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/ek-modal/card5-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/ek-modal/card5-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/ek-modal/card6.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 104484,
+    "source": "src/assets/images/ek-modal/card6.webp",
+    "sourceBytes": 104484,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/ek-modal/card6-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/ek-modal/card6-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/ek-modal/card7.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 85258,
+    "source": "src/assets/images/ek-modal/card7.webp",
+    "sourceBytes": 85258,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/ek-modal/card7-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/ek-modal/card7-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/ek-modal/card8.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 99182,
+    "source": "src/assets/images/ek-modal/card8.webp",
+    "sourceBytes": 99182,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/ek-modal/card8-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/ek-modal/card8-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/ek-modal/main-closed.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 91186,
+    "source": "src/assets/images/ek-modal/main-closed.webp",
+    "sourceBytes": 91186,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/ek-modal/main-closed-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/ek-modal/main-closed-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/ek-modal/main-open.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 144368,
+    "source": "src/assets/images/ek-modal/main-open.webp",
+    "sourceBytes": 144368,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/ek-modal/main-open-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/ek-modal/main-open-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/experience/shared/exp-marble.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 45790,
+    "source": "src/assets/images/experience/shared/exp-marble.webp",
+    "sourceBytes": 45790,
+    "variants": []
+  },
+  "src/assets/images/experience/stylefinder/exp-style-dunkel.webp": {
+    "width": 2048,
+    "height": 768,
+    "bytes": 93888,
+    "source": "src/assets/images/experience/stylefinder/exp-style-dunkel.webp",
+    "sourceBytes": 93888,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/experience/stylefinder/exp-style-dunkel-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/experience/stylefinder/exp-style-dunkel-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/experience/stylefinder/exp-style-industrial.webp": {
+    "width": 2048,
+    "height": 768,
+    "bytes": 141492,
+    "source": "src/assets/images/experience/stylefinder/exp-style-industrial.webp",
+    "sourceBytes": 141492,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/experience/stylefinder/exp-style-industrial-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/experience/stylefinder/exp-style-industrial-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/experience/stylefinder/exp-style-modern-warm.webp": {
+    "width": 2048,
+    "height": 768,
+    "bytes": 152950,
+    "source": "src/assets/images/experience/stylefinder/exp-style-modern-warm.webp",
+    "sourceBytes": 152950,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/experience/stylefinder/exp-style-modern-warm-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/experience/stylefinder/exp-style-modern-warm-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/experience/stylefinder/exp-style-natuerlich.webp": {
+    "width": 2048,
+    "height": 768,
+    "bytes": 147538,
+    "source": "src/assets/images/experience/stylefinder/exp-style-natuerlich.webp",
+    "sourceBytes": 147538,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/experience/stylefinder/exp-style-natuerlich-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/experience/stylefinder/exp-style-natuerlich-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/experience/stylefinder/exp-style-zeitlos.webp": {
+    "width": 2048,
+    "height": 768,
+    "bytes": 120656,
+    "source": "src/assets/images/experience/stylefinder/exp-style-zeitlos.webp",
+    "sourceBytes": 120656,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/experience/stylefinder/exp-style-zeitlos-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/experience/stylefinder/exp-style-zeitlos-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-01-hero-arrival-backplate.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 89130,
+    "source": "src/assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-01-hero-arrival-backplate.webp",
+    "sourceBytes": 89130,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-01-hero-arrival-backplate-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-01-hero-arrival-backplate-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-02-why-videko-backplate.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 102826,
+    "source": "src/assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-02-why-videko-backplate.webp",
+    "sourceBytes": 102826,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-02-why-videko-backplate-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-02-why-videko-backplate-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-03-material-gallery-backplate.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 121498,
+    "source": "src/assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-03-material-gallery-backplate.webp",
+    "sourceBytes": 121498,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-03-material-gallery-backplate-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-03-material-gallery-backplate-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-04-planning-exploding-backplate.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 103926,
+    "source": "src/assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-04-planning-exploding-backplate.webp",
+    "sourceBytes": 103926,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-04-planning-exploding-backplate-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-04-planning-exploding-backplate-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-05-showroom-panorama-backplate.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 120860,
+    "source": "src/assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-05-showroom-panorama-backplate.webp",
+    "sourceBytes": 120860,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-05-showroom-panorama-backplate-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-05-showroom-panorama-backplate-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-06-final-cta-showroom-backplate.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 140126,
+    "source": "src/assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-06-final-cta-showroom-backplate.webp",
+    "sourceBytes": 140126,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-06-final-cta-showroom-backplate-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/experience/videko_experience_asset_pack/01_scene_backplates/exp-room-06-final-cta-showroom-backplate-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/experience/videko_experience_asset_pack/02_detail_shots/exp-detail-01-marble-island-edge.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 87932,
+    "source": "src/assets/images/experience/videko_experience_asset_pack/02_detail_shots/exp-detail-01-marble-island-edge.webp",
+    "sourceBytes": 87932,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/experience/videko_experience_asset_pack/02_detail_shots/exp-detail-01-marble-island-edge-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/experience/videko_experience_asset_pack/02_detail_shots/exp-detail-01-marble-island-edge-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/experience/videko_experience_asset_pack/02_detail_shots/exp-detail-02-planning-table.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 85322,
+    "source": "src/assets/images/experience/videko_experience_asset_pack/02_detail_shots/exp-detail-02-planning-table.webp",
+    "sourceBytes": 85322,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/experience/videko_experience_asset_pack/02_detail_shots/exp-detail-02-planning-table-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/experience/videko_experience_asset_pack/02_detail_shots/exp-detail-02-planning-table-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/experience/videko_experience_asset_pack/02_detail_shots/exp-detail-03-service-laser-measurement.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 91692,
+    "source": "src/assets/images/experience/videko_experience_asset_pack/02_detail_shots/exp-detail-03-service-laser-measurement.webp",
+    "sourceBytes": 91692,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/experience/videko_experience_asset_pack/02_detail_shots/exp-detail-03-service-laser-measurement-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/experience/videko_experience_asset_pack/02_detail_shots/exp-detail-03-service-laser-measurement-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/experience/videko_experience_asset_pack/03_material_textures/exp-material-black-stone-slab.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 142888,
+    "source": "src/assets/images/experience/videko_experience_asset_pack/03_material_textures/exp-material-black-stone-slab.webp",
+    "sourceBytes": 142888,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/experience/videko_experience_asset_pack/03_material_textures/exp-material-black-stone-slab-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/experience/videko_experience_asset_pack/03_material_textures/exp-material-bronze-metal.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 54186,
+    "source": "src/assets/images/experience/videko_experience_asset_pack/03_material_textures/exp-material-bronze-metal.webp",
+    "sourceBytes": 54186,
+    "variants": []
+  },
+  "src/assets/images/experience/videko_experience_asset_pack/03_material_textures/exp-material-ceramic-slab.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 86894,
+    "source": "src/assets/images/experience/videko_experience_asset_pack/03_material_textures/exp-material-ceramic-slab.webp",
+    "sourceBytes": 86894,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/experience/videko_experience_asset_pack/03_material_textures/exp-material-ceramic-slab-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/experience/videko_experience_asset_pack/03_material_textures/exp-material-glass-slab.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 77734,
+    "source": "src/assets/images/experience/videko_experience_asset_pack/03_material_textures/exp-material-glass-slab.webp",
+    "sourceBytes": 77734,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/experience/videko_experience_asset_pack/03_material_textures/exp-material-glass-slab-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/experience/videko_experience_asset_pack/03_material_textures/exp-material-metal-slab.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 72140,
+    "source": "src/assets/images/experience/videko_experience_asset_pack/03_material_textures/exp-material-metal-slab.webp",
+    "sourceBytes": 72140,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/experience/videko_experience_asset_pack/03_material_textures/exp-material-metal-slab-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/experience/videko_experience_asset_pack/03_material_textures/exp-material-wood-slab.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 83812,
+    "source": "src/assets/images/experience/videko_experience_asset_pack/03_material_textures/exp-material-wood-slab.webp",
+    "sourceBytes": 83812,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/experience/videko_experience_asset_pack/03_material_textures/exp-material-wood-slab-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/experience/videko_experience_asset_pack/04_showroom_extras/exp-exterior-videko-building.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 126308,
+    "source": "src/assets/images/experience/videko_experience_asset_pack/04_showroom_extras/exp-exterior-videko-building.webp",
+    "sourceBytes": 126308,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/experience/videko_experience_asset_pack/04_showroom_extras/exp-exterior-videko-building-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/experience/videko_experience_asset_pack/04_showroom_extras/exp-exterior-videko-building-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/home/bg-marble-warm.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 45790,
+    "source": "src/assets/images/home/bg-marble-warm.webp",
+    "sourceBytes": 45790,
+    "variants": []
+  },
+  "src/assets/images/home/feature-consulting.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 85304,
+    "source": "src/assets/images/home/feature-consulting.webp",
+    "sourceBytes": 85304,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/home/feature-consulting-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/home/feature-showroom.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 145338,
+    "source": "src/assets/images/home/feature-showroom.webp",
+    "sourceBytes": 145338,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/home/feature-showroom-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/home/feature-stylefinder.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 222948,
+    "source": "src/assets/images/home/feature-stylefinder.webp",
+    "sourceBytes": 222948,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/home/feature-stylefinder-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/home/gold-orbit-lines.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 21568,
+    "source": "src/assets/images/home/gold-orbit-lines.webp",
+    "sourceBytes": 21568,
+    "variants": []
+  },
+  "src/assets/images/home/Mobile.webp": {
+    "width": 941,
+    "height": 1672,
+    "bytes": 140724,
+    "source": "src/assets/images/home/Mobile.webp",
+    "sourceBytes": 140724,
+    "variants": []
+  },
+  "src/assets/images/home/way-organic-1.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 126512,
+    "source": "src/assets/images/home/way-organic-1.webp",
+    "sourceBytes": 126512,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/home/way-organic-1-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/home/way-organic-2.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 159290,
+    "source": "src/assets/images/home/way-organic-2.webp",
+    "sourceBytes": 159290,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/home/way-organic-2-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/home/way-organic-3.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 75912,
+    "source": "src/assets/images/home/way-organic-3.webp",
+    "sourceBytes": 75912,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/home/way-organic-3-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/home-hero/after.webp": {
+    "width": 1586,
+    "height": 992,
+    "bytes": 76948,
+    "source": "src/assets/images/home-hero/after.webp",
+    "sourceBytes": 76948,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/home-hero/after-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/home-hero/after-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/home-hero/before.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 130786,
+    "source": "src/assets/images/home-hero/before.webp",
+    "sourceBytes": 130786,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/home-hero/before-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/home-hero/before-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/home-hero/card-beratung.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 96034,
+    "source": "src/assets/images/home-hero/card-beratung.webp",
+    "sourceBytes": 96034,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/home-hero/card-beratung-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/home-hero/card-beratung-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/home-hero/card-inspiration.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 149578,
+    "source": "src/assets/images/home-hero/card-inspiration.webp",
+    "sourceBytes": 149578,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/home-hero/card-inspiration-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/home-hero/card-inspiration-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/home-hero/card-stylefinder.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 77280,
+    "source": "src/assets/images/home-hero/card-stylefinder.webp",
+    "sourceBytes": 77280,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/home-hero/card-stylefinder-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/home-hero/card-stylefinder-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/inspiration/01_hero_atmosphaerische_kueche.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 103434,
+    "source": "src/assets/images/inspiration/01_hero_atmosphaerische_kueche.webp",
+    "sourceBytes": 103434,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/inspiration/01_hero_atmosphaerische_kueche-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/inspiration/01_hero_atmosphaerische_kueche-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/inspiration/02_moderne_kueche.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 93900,
+    "source": "src/assets/images/inspiration/02_moderne_kueche.webp",
+    "sourceBytes": 93900,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/inspiration/02_moderne_kueche-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/inspiration/02_moderne_kueche-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/inspiration/03_wohnliche_kueche.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 115544,
+    "source": "src/assets/images/inspiration/03_wohnliche_kueche.webp",
+    "sourceBytes": 115544,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/inspiration/03_wohnliche_kueche-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/inspiration/03_wohnliche_kueche-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/inspiration/04_dunkle_kueche.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 89328,
+    "source": "src/assets/images/inspiration/04_dunkle_kueche.webp",
+    "sourceBytes": 89328,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/inspiration/04_dunkle_kueche-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/inspiration/04_dunkle_kueche-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/inspiration/05_helle_kueche.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 111816,
+    "source": "src/assets/images/inspiration/05_helle_kueche.webp",
+    "sourceBytes": 111816,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/inspiration/05_helle_kueche-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/inspiration/05_helle_kueche-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/inspiration/06_materialien_und_details.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 92804,
+    "source": "src/assets/images/inspiration/06_materialien_und_details.webp",
+    "sourceBytes": 92804,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/inspiration/06_materialien_und_details-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/inspiration/06_materialien_und_details-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/inspiration/07_kueche_mit_insel.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 118748,
+    "source": "src/assets/images/inspiration/07_kueche_mit_insel.webp",
+    "sourceBytes": 118748,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/inspiration/07_kueche_mit_insel-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/inspiration/07_kueche_mit_insel-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/inspiration/08_kleine_kueche_clever_geplant.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 81236,
+    "source": "src/assets/images/inspiration/08_kleine_kueche_clever_geplant.webp",
+    "sourceBytes": 81236,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/inspiration/08_kleine_kueche_clever_geplant-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/inspiration/08_kleine_kueche_clever_geplant-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/inspiration/09_premium_architektur_kueche.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 103656,
+    "source": "src/assets/images/inspiration/09_premium_architektur_kueche.webp",
+    "sourceBytes": 103656,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/inspiration/09_premium_architektur_kueche-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/inspiration/09_premium_architektur_kueche-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/inspiration/10_favoriten_wohnkueche_luxus.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 107918,
+    "source": "src/assets/images/inspiration/10_favoriten_wohnkueche_luxus.webp",
+    "sourceBytes": 107918,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/inspiration/10_favoriten_wohnkueche_luxus-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/inspiration/10_favoriten_wohnkueche_luxus-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/inspiration/insp-exploding-light.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 100968,
+    "source": "src/assets/images/inspiration/insp-exploding-light.webp",
+    "sourceBytes": 100968,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/inspiration/insp-exploding-light-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/inspiration/insp-exploding-light-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/inspiration/insp-hero-dark.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 126360,
+    "source": "src/assets/images/inspiration/insp-hero-dark.webp",
+    "sourceBytes": 126360,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/inspiration/insp-hero-dark-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/inspiration/insp-hero-dark-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/inspiration/materials-lab/m01.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 109828,
+    "source": "src/assets/images/inspiration/materials-lab/m01.webp",
+    "sourceBytes": 109828,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/inspiration/materials-lab/m01-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/inspiration/materials-lab/m02.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 90198,
+    "source": "src/assets/images/inspiration/materials-lab/m02.webp",
+    "sourceBytes": 90198,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/inspiration/materials-lab/m02-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/inspiration/materials-lab/m03.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 159444,
+    "source": "src/assets/images/inspiration/materials-lab/m03.webp",
+    "sourceBytes": 159444,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/inspiration/materials-lab/m03-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/inspiration/materials-lab/m04.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 86608,
+    "source": "src/assets/images/inspiration/materials-lab/m04.webp",
+    "sourceBytes": 86608,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/inspiration/materials-lab/m04-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/inspiration/materials-lab/m05.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 32422,
+    "source": "src/assets/images/inspiration/materials-lab/m05.webp",
+    "sourceBytes": 32422,
+    "variants": []
+  },
+  "src/assets/images/inspiration/materials-lab/m06.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 26774,
+    "source": "src/assets/images/inspiration/materials-lab/m06.webp",
+    "sourceBytes": 26774,
+    "variants": []
+  },
+  "src/assets/images/inspiration/materials-lab/m07.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 109096,
+    "source": "src/assets/images/inspiration/materials-lab/m07.webp",
+    "sourceBytes": 109096,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/inspiration/materials-lab/m07-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/inspiration/materials-lab/m08.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 75676,
+    "source": "src/assets/images/inspiration/materials-lab/m08.webp",
+    "sourceBytes": 75676,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/inspiration/materials-lab/m08-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/inspiration/materials-lab/m09.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 159186,
+    "source": "src/assets/images/inspiration/materials-lab/m09.webp",
+    "sourceBytes": 159186,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/inspiration/materials-lab/m09-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/inspiration/materials-lab/m10.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 56656,
+    "source": "src/assets/images/inspiration/materials-lab/m10.webp",
+    "sourceBytes": 56656,
+    "variants": []
+  },
+  "src/assets/images/karriere/01_hero_team_beratung.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 94284,
+    "source": "src/assets/images/karriere/01_hero_team_beratung.webp",
+    "sourceBytes": 94284,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/karriere/01_hero_team_beratung-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/karriere/01_hero_team_beratung-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/karriere/02_job_kuechenverkauf_beratung.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 86654,
+    "source": "src/assets/images/karriere/02_job_kuechenverkauf_beratung.webp",
+    "sourceBytes": 86654,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/karriere/02_job_kuechenverkauf_beratung-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/karriere/02_job_kuechenverkauf_beratung-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/karriere/03_job_kuechenplanung_planungstisch.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 76146,
+    "source": "src/assets/images/karriere/03_job_kuechenplanung_planungstisch.webp",
+    "sourceBytes": 76146,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/karriere/03_job_kuechenplanung_planungstisch-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/karriere/03_job_kuechenplanung_planungstisch-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/karriere/04_job_monteure_aufmass.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 77336,
+    "source": "src/assets/images/karriere/04_job_monteure_aufmass.webp",
+    "sourceBytes": 77336,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/karriere/04_job_monteure_aufmass-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/karriere/04_job_monteure_aufmass-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/karriere/05_job_empfang_service.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 87898,
+    "source": "src/assets/images/karriere/05_job_empfang_service.webp",
+    "sourceBytes": 87898,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/karriere/05_job_empfang_service-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/karriere/05_job_empfang_service-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/karriere/06_job_marketing_social_media.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 105786,
+    "source": "src/assets/images/karriere/06_job_marketing_social_media.webp",
+    "sourceBytes": 105786,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/karriere/06_job_marketing_social_media-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/karriere/06_job_marketing_social_media-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/karriere/07_job_reinigung_studioservice.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 97160,
+    "source": "src/assets/images/karriere/07_job_reinigung_studioservice.webp",
+    "sourceBytes": 97160,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/karriere/07_job_reinigung_studioservice-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/karriere/07_job_reinigung_studioservice-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/karriere/08_bewerbungsprozess_teammeeting.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 131446,
+    "source": "src/assets/images/karriere/08_bewerbungsprozess_teammeeting.webp",
+    "sourceBytes": 131446,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/karriere/08_bewerbungsprozess_teammeeting-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/karriere/08_bewerbungsprozess_teammeeting-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/karriere/09_bewerbung_interior_formular.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 139902,
+    "source": "src/assets/images/karriere/09_bewerbung_interior_formular.webp",
+    "sourceBytes": 139902,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/karriere/09_bewerbung_interior_formular-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/karriere/09_bewerbung_interior_formular-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/karriere/10_cta_footer_premium_showroom.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 108978,
+    "source": "src/assets/images/karriere/10_cta_footer_premium_showroom.webp",
+    "sourceBytes": 108978,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/karriere/10_cta_footer_premium_showroom-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/karriere/10_cta_footer_premium_showroom-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/karriere/karten/01_beratung_verkauf.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 101686,
+    "source": "src/assets/images/karriere/karten/01_beratung_verkauf.webp",
+    "sourceBytes": 101686,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/karriere/karten/01_beratung_verkauf-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/karriere/karten/01_beratung_verkauf-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/karriere/karten/02_planung_technik.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 104958,
+    "source": "src/assets/images/karriere/karten/02_planung_technik.webp",
+    "sourceBytes": 104958,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/karriere/karten/02_planung_technik-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/karriere/karten/02_planung_technik-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/karriere/karten/03_montage_handwerk.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 108596,
+    "source": "src/assets/images/karriere/karten/03_montage_handwerk.webp",
+    "sourceBytes": 108596,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/karriere/karten/03_montage_handwerk-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/karriere/karten/03_montage_handwerk-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/karriere/karten/04_empfang_organisation.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 100112,
+    "source": "src/assets/images/karriere/karten/04_empfang_organisation.webp",
+    "sourceBytes": 100112,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/karriere/karten/04_empfang_organisation-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/karriere/karten/04_empfang_organisation-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/karriere/karten/05_marketing_social_media.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 123286,
+    "source": "src/assets/images/karriere/karten/05_marketing_social_media.webp",
+    "sourceBytes": 123286,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/karriere/karten/05_marketing_social_media-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/karriere/karten/05_marketing_social_media-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/karriere/karten/06_quereinsteiger.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 99706,
+    "source": "src/assets/images/karriere/karten/06_quereinsteiger.webp",
+    "sourceBytes": 99706,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/karriere/karten/06_quereinsteiger-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/karriere/karten/06_quereinsteiger-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/karriere/karten/07_reinigung_studio_service.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 109312,
+    "source": "src/assets/images/karriere/karten/07_reinigung_studio_service.webp",
+    "sourceBytes": 109312,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/karriere/karten/07_reinigung_studio_service-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/karriere/karten/07_reinigung_studio_service-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/karriere/karten/08_reklamation_service.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 101742,
+    "source": "src/assets/images/karriere/karten/08_reklamation_service.webp",
+    "sourceBytes": 101742,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/karriere/karten/08_reklamation_service-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/karriere/karten/08_reklamation_service-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/karriere/philosophie/VIDEKO_Karte_01_freigestellt.webp": {
+    "width": 922,
+    "height": 1229,
+    "bytes": 87582,
+    "source": "src/assets/images/karriere/philosophie/VIDEKO_Karte_01_freigestellt.webp",
+    "sourceBytes": 87582,
+    "variants": []
+  },
+  "src/assets/images/karriere/philosophie/VIDEKO_Karte_02_freigestellt.webp": {
+    "width": 942,
+    "height": 1292,
+    "bytes": 90802,
+    "source": "src/assets/images/karriere/philosophie/VIDEKO_Karte_02_freigestellt.webp",
+    "sourceBytes": 90802,
+    "variants": []
+  },
+  "src/assets/images/karriere/philosophie/VIDEKO_Karte_03_freigestellt.webp": {
+    "width": 1025,
+    "height": 1334,
+    "bytes": 88656,
+    "source": "src/assets/images/karriere/philosophie/VIDEKO_Karte_03_freigestellt.webp",
+    "sourceBytes": 88656,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/karriere/philosophie/VIDEKO_Karte_03_freigestellt-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/karriere/philosophie/VIDEKO_Karte_04_freigestellt.webp": {
+    "width": 920,
+    "height": 1219,
+    "bytes": 98902,
+    "source": "src/assets/images/karriere/philosophie/VIDEKO_Karte_04_freigestellt.webp",
+    "sourceBytes": 98902,
+    "variants": []
+  },
+  "src/assets/images/karriere/philosophie/VIDEKO_Karte_05_freigestellt.webp": {
+    "width": 942,
+    "height": 1246,
+    "bytes": 92904,
+    "source": "src/assets/images/karriere/philosophie/VIDEKO_Karte_05_freigestellt.webp",
+    "sourceBytes": 92904,
+    "variants": []
+  },
+  "src/assets/images/karriere/philosophie/VIDEKO_Karte_06_freigestellt.webp": {
+    "width": 909,
+    "height": 1221,
+    "bytes": 89524,
+    "source": "src/assets/images/karriere/philosophie/VIDEKO_Karte_06_freigestellt.webp",
+    "sourceBytes": 89524,
+    "variants": []
+  },
+  "src/assets/images/kitchen-vision-1.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 98300,
+    "source": "src/assets/images/kitchen-vision-1.webp",
+    "sourceBytes": 98300,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/kitchen-vision-1-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/kitchen-vision-1-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/kuechenfehler/cta-bg.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 42654,
+    "source": "src/assets/images/kuechenfehler/cta-bg.webp",
+    "sourceBytes": 42654,
+    "variants": []
+  },
+  "src/assets/images/kuechenfehler/scene.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 88066,
+    "source": "src/assets/images/kuechenfehler/scene.webp",
+    "sourceBytes": 88066,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/kuechenfehler/scene-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/kuechenfehler/scene-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/kuechengefuehl/alltag1.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 122256,
+    "source": "src/assets/images/kuechengefuehl/alltag1.webp",
+    "sourceBytes": 122256,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/kuechengefuehl/alltag1-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/kuechengefuehl/alltag1-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/kuechengefuehl/alltag2.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 139832,
+    "source": "src/assets/images/kuechengefuehl/alltag2.webp",
+    "sourceBytes": 139832,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/kuechengefuehl/alltag2-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/kuechengefuehl/alltag2-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/kuechengefuehl/alltag3.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 131466,
+    "source": "src/assets/images/kuechengefuehl/alltag3.webp",
+    "sourceBytes": 131466,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/kuechengefuehl/alltag3-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/kuechengefuehl/alltag3-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/kuechengefuehl/alltag4.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 144334,
+    "source": "src/assets/images/kuechengefuehl/alltag4.webp",
+    "sourceBytes": 144334,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/kuechengefuehl/alltag4-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/kuechengefuehl/alltag4-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/kuechenwelten/stilfinderbg-dark-texture.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 59398,
+    "source": "src/assets/images/kuechenwelten/stilfinderbg-dark-texture.webp",
+    "sourceBytes": 59398,
+    "variants": []
+  },
+  "src/assets/images/kuechenwelten/stilfindercard-dunkel-dramatisch.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 96716,
+    "source": "src/assets/images/kuechenwelten/stilfindercard-dunkel-dramatisch.webp",
+    "sourceBytes": 96716,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/kuechenwelten/stilfindercard-dunkel-dramatisch-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/kuechenwelten/stilfindercard-industrial-premium.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 116358,
+    "source": "src/assets/images/kuechenwelten/stilfindercard-industrial-premium.webp",
+    "sourceBytes": 116358,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/kuechenwelten/stilfindercard-industrial-premium-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/kuechenwelten/stilfindercard-modern-warm.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 104172,
+    "source": "src/assets/images/kuechenwelten/stilfindercard-modern-warm.webp",
+    "sourceBytes": 104172,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/kuechenwelten/stilfindercard-modern-warm-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/kuechenwelten/stilfindercard-natuerlich-luxurioes.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 172898,
+    "source": "src/assets/images/kuechenwelten/stilfindercard-natuerlich-luxurioes.webp",
+    "sourceBytes": 172898,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/kuechenwelten/stilfindercard-natuerlich-luxurioes-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/kuechenwelten/stilfindercard-zeitlos-elegant.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 128358,
+    "source": "src/assets/images/kuechenwelten/stilfindercard-zeitlos-elegant.webp",
+    "sourceBytes": 128358,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/kuechenwelten/stilfindercard-zeitlos-elegant-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/kuechenwelten/stilfinderhero-kitchen-wide.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 134192,
+    "source": "src/assets/images/kuechenwelten/stilfinderhero-kitchen-wide.webp",
+    "sourceBytes": 134192,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/kuechenwelten/stilfinderhero-kitchen-wide-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/kuechenwelten/stilfinderhero-kitchen-wide-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/kuechenwelten/stilfinderresult-dunkel-dramatisch.webp": {
+    "width": 2048,
+    "height": 768,
+    "bytes": 93888,
+    "source": "src/assets/images/kuechenwelten/stilfinderresult-dunkel-dramatisch.webp",
+    "sourceBytes": 93888,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/kuechenwelten/stilfinderresult-dunkel-dramatisch-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/kuechenwelten/stilfinderresult-dunkel-dramatisch-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/kuechenwelten/stilfinderresult-industrial-premium.webp": {
+    "width": 2048,
+    "height": 768,
+    "bytes": 141492,
+    "source": "src/assets/images/kuechenwelten/stilfinderresult-industrial-premium.webp",
+    "sourceBytes": 141492,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/kuechenwelten/stilfinderresult-industrial-premium-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/kuechenwelten/stilfinderresult-industrial-premium-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/kuechenwelten/stilfinderresult-modern-warm.webp": {
+    "width": 2048,
+    "height": 768,
+    "bytes": 152950,
+    "source": "src/assets/images/kuechenwelten/stilfinderresult-modern-warm.webp",
+    "sourceBytes": 152950,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/kuechenwelten/stilfinderresult-modern-warm-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/kuechenwelten/stilfinderresult-modern-warm-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/kuechenwelten/stilfinderresult-natuerlich-luxurioes.webp": {
+    "width": 2048,
+    "height": 768,
+    "bytes": 147538,
+    "source": "src/assets/images/kuechenwelten/stilfinderresult-natuerlich-luxurioes.webp",
+    "sourceBytes": 147538,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/kuechenwelten/stilfinderresult-natuerlich-luxurioes-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/kuechenwelten/stilfinderresult-natuerlich-luxurioes-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/kuechenwelten/stilfinderresult-zeitlos-elegant.webp": {
+    "width": 2048,
+    "height": 768,
+    "bytes": 120656,
+    "source": "src/assets/images/kuechenwelten/stilfinderresult-zeitlos-elegant.webp",
+    "sourceBytes": 120656,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/kuechenwelten/stilfinderresult-zeitlos-elegant-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/kuechenwelten/stilfinderresult-zeitlos-elegant-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/leistungen/02_referenz_gold_marble_hintergrund.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 47052,
+    "source": "src/assets/images/leistungen/02_referenz_gold_marble_hintergrund.webp",
+    "sourceBytes": 47052,
+    "variants": []
+  },
+  "src/assets/images/leistungen/04_intro_helle_kueche.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 111726,
+    "source": "src/assets/images/leistungen/04_intro_helle_kueche.webp",
+    "sourceBytes": 111726,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/leistungen/04_intro_helle_kueche-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/leistungen/04_intro_helle_kueche-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/leistungen/baustein/panel-01.webp": {
+    "width": 1110,
+    "height": 944,
+    "bytes": 145418,
+    "source": "src/assets/images/leistungen/baustein/panel-01.webp",
+    "sourceBytes": 145418,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/leistungen/baustein/panel-01-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/leistungen/baustein/panel-02.webp": {
+    "width": 1110,
+    "height": 944,
+    "bytes": 88058,
+    "source": "src/assets/images/leistungen/baustein/panel-02.webp",
+    "sourceBytes": 88058,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/leistungen/baustein/panel-02-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/leistungen/baustein/panel-03.webp": {
+    "width": 1110,
+    "height": 944,
+    "bytes": 154732,
+    "source": "src/assets/images/leistungen/baustein/panel-03.webp",
+    "sourceBytes": 154732,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/leistungen/baustein/panel-03-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/leistungen/baustein/panel-04.webp": {
+    "width": 1110,
+    "height": 944,
+    "bytes": 218424,
+    "source": "src/assets/images/leistungen/baustein/panel-04.webp",
+    "sourceBytes": 218424,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/leistungen/baustein/panel-04-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/leistungen/baustein/panel-05.webp": {
+    "width": 1110,
+    "height": 944,
+    "bytes": 75960,
+    "source": "src/assets/images/leistungen/baustein/panel-05.webp",
+    "sourceBytes": 75960,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/leistungen/baustein/panel-05-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/leistungen/baustein/panel-06.webp": {
+    "width": 1110,
+    "height": 944,
+    "bytes": 78172,
+    "source": "src/assets/images/leistungen/baustein/panel-06.webp",
+    "sourceBytes": 78172,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/leistungen/baustein/panel-06-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/leistungen/baustein/panel-07.webp": {
+    "width": 1110,
+    "height": 944,
+    "bytes": 82050,
+    "source": "src/assets/images/leistungen/baustein/panel-07.webp",
+    "sourceBytes": 82050,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/leistungen/baustein/panel-07-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/leistungen/baustein/panel-08.webp": {
+    "width": 1110,
+    "height": 944,
+    "bytes": 71868,
+    "source": "src/assets/images/leistungen/baustein/panel-08.webp",
+    "sourceBytes": 71868,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/leistungen/baustein/panel-08-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/leistungen/ls-3d.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 106482,
+    "source": "src/assets/images/leistungen/ls-3d.webp",
+    "sourceBytes": 106482,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/leistungen/ls-3d-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/leistungen/ls-3d-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/leistungen/ls-aftercare.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 77258,
+    "source": "src/assets/images/leistungen/ls-aftercare.webp",
+    "sourceBytes": 77258,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/leistungen/ls-aftercare-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/leistungen/ls-aftercare-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/leistungen/ls-consulting.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 90576,
+    "source": "src/assets/images/leistungen/ls-consulting.webp",
+    "sourceBytes": 90576,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/leistungen/ls-consulting-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/leistungen/ls-consulting-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/leistungen/ls-coordination.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 72336,
+    "source": "src/assets/images/leistungen/ls-coordination.webp",
+    "sourceBytes": 72336,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/leistungen/ls-coordination-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/leistungen/ls-coordination-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/leistungen/ls-feature.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 102860,
+    "source": "src/assets/images/leistungen/ls-feature.webp",
+    "sourceBytes": 102860,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/leistungen/ls-feature-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/leistungen/ls-feature-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/leistungen/ls-hero.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 121856,
+    "source": "src/assets/images/leistungen/ls-hero.webp",
+    "sourceBytes": 121856,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/leistungen/ls-hero-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/leistungen/ls-hero-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/leistungen/ls-install.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 72134,
+    "source": "src/assets/images/leistungen/ls-install.webp",
+    "sourceBytes": 72134,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/leistungen/ls-install-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/leistungen/ls-install-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/leistungen/ls-materials.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 141594,
+    "source": "src/assets/images/leistungen/ls-materials.webp",
+    "sourceBytes": 141594,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/leistungen/ls-materials-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/leistungen/ls-materials-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/materialien/cards/material-card-bronze.webp": {
+    "width": 971,
+    "height": 1619,
+    "bytes": 59390,
+    "source": "src/assets/images/materialien/cards/material-card-bronze.webp",
+    "sourceBytes": 59390,
+    "variants": []
+  },
+  "src/assets/images/materialien/cards/material-card-glas.webp": {
+    "width": 971,
+    "height": 1619,
+    "bytes": 41460,
+    "source": "src/assets/images/materialien/cards/material-card-glas.webp",
+    "sourceBytes": 41460,
+    "variants": []
+  },
+  "src/assets/images/materialien/cards/material-card-holz.webp": {
+    "width": 971,
+    "height": 1619,
+    "bytes": 95986,
+    "source": "src/assets/images/materialien/cards/material-card-holz.webp",
+    "sourceBytes": 95986,
+    "variants": []
+  },
+  "src/assets/images/materialien/cards/material-card-keramik.webp": {
+    "width": 971,
+    "height": 1619,
+    "bytes": 82130,
+    "source": "src/assets/images/materialien/cards/material-card-keramik.webp",
+    "sourceBytes": 82130,
+    "variants": []
+  },
+  "src/assets/images/materialien/cards/material-card-lack-matt.webp": {
+    "width": 971,
+    "height": 1619,
+    "bytes": 9586,
+    "source": "src/assets/images/materialien/cards/material-card-lack-matt.webp",
+    "sourceBytes": 9586,
+    "variants": []
+  },
+  "src/assets/images/materialien/cards/material-card-metall.webp": {
+    "width": 971,
+    "height": 1619,
+    "bytes": 66952,
+    "source": "src/assets/images/materialien/cards/material-card-metall.webp",
+    "sourceBytes": 66952,
+    "variants": []
+  },
+  "src/assets/images/materialien/cards/material-card-naturstein.webp": {
+    "width": 971,
+    "height": 1619,
+    "bytes": 116878,
+    "source": "src/assets/images/materialien/cards/material-card-naturstein.webp",
+    "sourceBytes": 116878,
+    "variants": []
+  },
+  "src/assets/images/materialien/cards/material-card-quarzkomposit.webp": {
+    "width": 971,
+    "height": 1619,
+    "bytes": 66692,
+    "source": "src/assets/images/materialien/cards/material-card-quarzkomposit.webp",
+    "sourceBytes": 66692,
+    "variants": []
+  },
+  "src/assets/images/materialien/materials-hero-bg-16x9.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 69016,
+    "source": "src/assets/images/materialien/materials-hero-bg-16x9.webp",
+    "sourceBytes": 69016,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/materialien/materials-hero-bg-16x9-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/materialien/materials-hero-bg-16x9-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/accessories/accessoire-badehose-schwarz.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 27596,
+    "source": "src/assets/images/merch/accessories/accessoire-badehose-schwarz.webp",
+    "sourceBytes": 27596,
+    "variants": []
+  },
+  "src/assets/images/merch/accessories/accessoire-badeschlappen-schwarz.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 43268,
+    "source": "src/assets/images/merch/accessories/accessoire-badeschlappen-schwarz.webp",
+    "sourceBytes": 43268,
+    "variants": []
+  },
+  "src/assets/images/merch/accessories/accessoire-badeschlappen-weiss-uni.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 24360,
+    "source": "src/assets/images/merch/accessories/accessoire-badeschlappen-weiss-uni.webp",
+    "sourceBytes": 24360,
+    "variants": []
+  },
+  "src/assets/images/merch/accessories/accessoire-badeschlappen-weiss.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 34006,
+    "source": "src/assets/images/merch/accessories/accessoire-badeschlappen-weiss.webp",
+    "sourceBytes": 34006,
+    "variants": []
+  },
+  "src/assets/images/merch/accessories/accessoire-beanie-schwarz.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 60862,
+    "source": "src/assets/images/merch/accessories/accessoire-beanie-schwarz.webp",
+    "sourceBytes": 60862,
+    "variants": []
+  },
+  "src/assets/images/merch/accessories/accessoire-boss-battle-schwarz-gold.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 111554,
+    "source": "src/assets/images/merch/accessories/accessoire-boss-battle-schwarz-gold.webp",
+    "sourceBytes": 111554,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/accessories/accessoire-boss-battle-schwarz-gold-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/accessories/accessoire-cap-schwarz.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 43388,
+    "source": "src/assets/images/merch/accessories/accessoire-cap-schwarz.webp",
+    "sourceBytes": 43388,
+    "variants": []
+  },
+  "src/assets/images/merch/accessories/accessoire-handtuch-schwarz.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 64730,
+    "source": "src/assets/images/merch/accessories/accessoire-handtuch-schwarz.webp",
+    "sourceBytes": 64730,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/accessories/accessoire-handtuch-schwarz-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/accessories/accessoire-regenschirm-schwarz.webp": {
+    "width": 1218,
+    "height": 1218,
+    "bytes": 93086,
+    "source": "src/assets/images/merch/accessories/accessoire-regenschirm-schwarz.webp",
+    "sourceBytes": 93086,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/accessories/accessoire-regenschirm-schwarz-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/merch/accessories/accessoire-regenschirm-schwarz-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/accessories/accessoire-schuerze-schwarz.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 26200,
+    "source": "src/assets/images/merch/accessories/accessoire-schuerze-schwarz.webp",
+    "sourceBytes": 26200,
+    "variants": []
+  },
+  "src/assets/images/merch/accessories/accessoire-tasse-schwarz.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 28778,
+    "source": "src/assets/images/merch/accessories/accessoire-tasse-schwarz.webp",
+    "sourceBytes": 28778,
+    "variants": []
+  },
+  "src/assets/images/merch/accessories/accessoire-tote-bag-schwarz.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 23832,
+    "source": "src/assets/images/merch/accessories/accessoire-tote-bag-schwarz.webp",
+    "sourceBytes": 23832,
+    "variants": []
+  },
+  "src/assets/images/merch/accessories/accessoire-trinkflasche-schwarz.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 14734,
+    "source": "src/assets/images/merch/accessories/accessoire-trinkflasche-schwarz.webp",
+    "sourceBytes": 14734,
+    "variants": []
+  },
+  "src/assets/images/merch/crewnecks/pure/pure-crewneck-schwarz-brust.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 52686,
+    "source": "src/assets/images/merch/crewnecks/pure/pure-crewneck-schwarz-brust.webp",
+    "sourceBytes": 52686,
+    "variants": []
+  },
+  "src/assets/images/merch/crewnecks/pure/pure-crewneck-weiss-brust.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 39264,
+    "source": "src/assets/images/merch/crewnecks/pure/pure-crewneck-weiss-brust.webp",
+    "sourceBytes": 39264,
+    "variants": []
+  },
+  "src/assets/images/merch/crewnecks/signature/signature-crewneck-schwarz-brust.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 32272,
+    "source": "src/assets/images/merch/crewnecks/signature/signature-crewneck-schwarz-brust.webp",
+    "sourceBytes": 32272,
+    "variants": []
+  },
+  "src/assets/images/merch/crewnecks/signature/signature-crewneck-weiß-brust.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 25242,
+    "source": "src/assets/images/merch/crewnecks/signature/signature-crewneck-weiß-brust.webp",
+    "sourceBytes": 25242,
+    "variants": []
+  },
+  "src/assets/images/merch/hoodies/pure/pure-hoodie-beige-brust-classic.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 31444,
+    "source": "src/assets/images/merch/hoodies/pure/pure-hoodie-beige-brust-classic.webp",
+    "sourceBytes": 31444,
+    "variants": []
+  },
+  "src/assets/images/merch/hoodies/pure/pure-hoodie-beige-brust-gold.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 30374,
+    "source": "src/assets/images/merch/hoodies/pure/pure-hoodie-beige-brust-gold.webp",
+    "sourceBytes": 30374,
+    "variants": []
+  },
+  "src/assets/images/merch/hoodies/pure/pure-hoodie-beige-brust-schwarz.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 38462,
+    "source": "src/assets/images/merch/hoodies/pure/pure-hoodie-beige-brust-schwarz.webp",
+    "sourceBytes": 38462,
+    "variants": []
+  },
+  "src/assets/images/merch/hoodies/pure/pure-hoodie-beige-brust-silber.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 38634,
+    "source": "src/assets/images/merch/hoodies/pure/pure-hoodie-beige-brust-silber.webp",
+    "sourceBytes": 38634,
+    "variants": []
+  },
+  "src/assets/images/merch/hoodies/pure/pure-hoodie-beige-brust-weiss.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 31444,
+    "source": "src/assets/images/merch/hoodies/pure/pure-hoodie-beige-brust-weiss.webp",
+    "sourceBytes": 31444,
+    "variants": []
+  },
+  "src/assets/images/merch/hoodies/pure/pure-hoodie-beige-front-classic.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 66740,
+    "source": "src/assets/images/merch/hoodies/pure/pure-hoodie-beige-front-classic.webp",
+    "sourceBytes": 66740,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/hoodies/pure/pure-hoodie-beige-front-classic-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/hoodies/pure/pure-hoodie-beige-front-gold.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 70046,
+    "source": "src/assets/images/merch/hoodies/pure/pure-hoodie-beige-front-gold.webp",
+    "sourceBytes": 70046,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/hoodies/pure/pure-hoodie-beige-front-gold-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/hoodies/pure/pure-hoodie-beige-front-schwarz.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 68432,
+    "source": "src/assets/images/merch/hoodies/pure/pure-hoodie-beige-front-schwarz.webp",
+    "sourceBytes": 68432,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/hoodies/pure/pure-hoodie-beige-front-schwarz-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/hoodies/pure/pure-hoodie-beige-front-silber.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 69360,
+    "source": "src/assets/images/merch/hoodies/pure/pure-hoodie-beige-front-silber.webp",
+    "sourceBytes": 69360,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/hoodies/pure/pure-hoodie-beige-front-silber-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/hoodies/pure/pure-hoodie-beige-front-weiss.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 64910,
+    "source": "src/assets/images/merch/hoodies/pure/pure-hoodie-beige-front-weiss.webp",
+    "sourceBytes": 64910,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/hoodies/pure/pure-hoodie-beige-front-weiss-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/hoodies/pure/pure-hoodie-schwarz-brust-classic.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 32586,
+    "source": "src/assets/images/merch/hoodies/pure/pure-hoodie-schwarz-brust-classic.webp",
+    "sourceBytes": 32586,
+    "variants": []
+  },
+  "src/assets/images/merch/hoodies/pure/pure-hoodie-schwarz-brust-gold.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 33646,
+    "source": "src/assets/images/merch/hoodies/pure/pure-hoodie-schwarz-brust-gold.webp",
+    "sourceBytes": 33646,
+    "variants": []
+  },
+  "src/assets/images/merch/hoodies/pure/pure-hoodie-schwarz-brust-schwarz.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 32870,
+    "source": "src/assets/images/merch/hoodies/pure/pure-hoodie-schwarz-brust-schwarz.webp",
+    "sourceBytes": 32870,
+    "variants": []
+  },
+  "src/assets/images/merch/hoodies/pure/pure-hoodie-schwarz-brust-silber.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 33786,
+    "source": "src/assets/images/merch/hoodies/pure/pure-hoodie-schwarz-brust-silber.webp",
+    "sourceBytes": 33786,
+    "variants": []
+  },
+  "src/assets/images/merch/hoodies/pure/pure-hoodie-schwarz-brust-weiss.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 97052,
+    "source": "src/assets/images/merch/hoodies/pure/pure-hoodie-schwarz-brust-weiss.webp",
+    "sourceBytes": 97052,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/hoodies/pure/pure-hoodie-schwarz-brust-weiss-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/hoodies/pure/pure-hoodie-schwarz-front-classic.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 51124,
+    "source": "src/assets/images/merch/hoodies/pure/pure-hoodie-schwarz-front-classic.webp",
+    "sourceBytes": 51124,
+    "variants": []
+  },
+  "src/assets/images/merch/hoodies/pure/pure-hoodie-schwarz-front-gold.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 128704,
+    "source": "src/assets/images/merch/hoodies/pure/pure-hoodie-schwarz-front-gold.webp",
+    "sourceBytes": 128704,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/hoodies/pure/pure-hoodie-schwarz-front-gold-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/hoodies/pure/pure-hoodie-schwarz-front-schwarz.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 108126,
+    "source": "src/assets/images/merch/hoodies/pure/pure-hoodie-schwarz-front-schwarz.webp",
+    "sourceBytes": 108126,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/hoodies/pure/pure-hoodie-schwarz-front-schwarz-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/hoodies/pure/pure-hoodie-schwarz-front-silber.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 118708,
+    "source": "src/assets/images/merch/hoodies/pure/pure-hoodie-schwarz-front-silber.webp",
+    "sourceBytes": 118708,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/hoodies/pure/pure-hoodie-schwarz-front-silber-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/hoodies/pure/pure-hoodie-schwarz-front-weiss.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 100978,
+    "source": "src/assets/images/merch/hoodies/pure/pure-hoodie-schwarz-front-weiss.webp",
+    "sourceBytes": 100978,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/hoodies/pure/pure-hoodie-schwarz-front-weiss-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/hoodies/pure/pure-hoodie-weiss-brust-classic.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 24902,
+    "source": "src/assets/images/merch/hoodies/pure/pure-hoodie-weiss-brust-classic.webp",
+    "sourceBytes": 24902,
+    "variants": []
+  },
+  "src/assets/images/merch/hoodies/pure/pure-hoodie-weiss-brust-gold.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 23998,
+    "source": "src/assets/images/merch/hoodies/pure/pure-hoodie-weiss-brust-gold.webp",
+    "sourceBytes": 23998,
+    "variants": []
+  },
+  "src/assets/images/merch/hoodies/pure/pure-hoodie-weiss-brust-schwarz.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 25688,
+    "source": "src/assets/images/merch/hoodies/pure/pure-hoodie-weiss-brust-schwarz.webp",
+    "sourceBytes": 25688,
+    "variants": []
+  },
+  "src/assets/images/merch/hoodies/pure/pure-hoodie-weiss-brust-silber.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 24842,
+    "source": "src/assets/images/merch/hoodies/pure/pure-hoodie-weiss-brust-silber.webp",
+    "sourceBytes": 24842,
+    "variants": []
+  },
+  "src/assets/images/merch/hoodies/pure/pure-hoodie-weiss-brust-weiss.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 25420,
+    "source": "src/assets/images/merch/hoodies/pure/pure-hoodie-weiss-brust-weiss.webp",
+    "sourceBytes": 25420,
+    "variants": []
+  },
+  "src/assets/images/merch/hoodies/pure/pure-hoodie-weiss-front-classic.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 36530,
+    "source": "src/assets/images/merch/hoodies/pure/pure-hoodie-weiss-front-classic.webp",
+    "sourceBytes": 36530,
+    "variants": []
+  },
+  "src/assets/images/merch/hoodies/pure/pure-hoodie-weiss-front-gold.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 32384,
+    "source": "src/assets/images/merch/hoodies/pure/pure-hoodie-weiss-front-gold.webp",
+    "sourceBytes": 32384,
+    "variants": []
+  },
+  "src/assets/images/merch/hoodies/pure/pure-hoodie-weiss-front-schwarz.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 30068,
+    "source": "src/assets/images/merch/hoodies/pure/pure-hoodie-weiss-front-schwarz.webp",
+    "sourceBytes": 30068,
+    "variants": []
+  },
+  "src/assets/images/merch/hoodies/pure/pure-hoodie-weiss-front-silber.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 28120,
+    "source": "src/assets/images/merch/hoodies/pure/pure-hoodie-weiss-front-silber.webp",
+    "sourceBytes": 28120,
+    "variants": []
+  },
+  "src/assets/images/merch/hoodies/pure/pure-hoodie-weiss-front-weiss.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 25170,
+    "source": "src/assets/images/merch/hoodies/pure/pure-hoodie-weiss-front-weiss.webp",
+    "sourceBytes": 25170,
+    "variants": []
+  },
+  "src/assets/images/merch/hoodies/signature/signature-hoodie-beige-front.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 61514,
+    "source": "src/assets/images/merch/hoodies/signature/signature-hoodie-beige-front.webp",
+    "sourceBytes": 61514,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/hoodies/signature/signature-hoodie-beige-front-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/hoodies/signature/signature-hoodie-schwarz-front.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 39782,
+    "source": "src/assets/images/merch/hoodies/signature/signature-hoodie-schwarz-front.webp",
+    "sourceBytes": 39782,
+    "variants": []
+  },
+  "src/assets/images/merch/hoodies/signature/signature-hoodie-weiss-front.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 39126,
+    "source": "src/assets/images/merch/hoodies/signature/signature-hoodie-weiss-front.webp",
+    "sourceBytes": 39126,
+    "variants": []
+  },
+  "src/assets/images/merch/hoodies/v3-g-hoodie-angle.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 19412,
+    "source": "src/assets/images/merch/hoodies/v3-g-hoodie-angle.webp",
+    "sourceBytes": 19412,
+    "variants": []
+  },
+  "src/assets/images/merch/hoodies/v3-g-hoodie-cuff.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 16714,
+    "source": "src/assets/images/merch/hoodies/v3-g-hoodie-cuff.webp",
+    "sourceBytes": 16714,
+    "variants": []
+  },
+  "src/assets/images/merch/hoodies/v3-g-hoodie-hood.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 17146,
+    "source": "src/assets/images/merch/hoodies/v3-g-hoodie-hood.webp",
+    "sourceBytes": 17146,
+    "variants": []
+  },
+  "src/assets/images/merch/polos/pure/pure weiss.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 45930,
+    "source": "src/assets/images/merch/polos/pure/pure weiss.webp",
+    "sourceBytes": 45930,
+    "variants": []
+  },
+  "src/assets/images/merch/polos/pure/pure-polo-schwarz-brust-classic.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 25178,
+    "source": "src/assets/images/merch/polos/pure/pure-polo-schwarz-brust-classic.webp",
+    "sourceBytes": 25178,
+    "variants": []
+  },
+  "src/assets/images/merch/polos/pure/pure-polo-schwarz-brust-gold.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 27758,
+    "source": "src/assets/images/merch/polos/pure/pure-polo-schwarz-brust-gold.webp",
+    "sourceBytes": 27758,
+    "variants": []
+  },
+  "src/assets/images/merch/polos/pure/pure-polo-schwarz-brust-schwarz.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 33328,
+    "source": "src/assets/images/merch/polos/pure/pure-polo-schwarz-brust-schwarz.webp",
+    "sourceBytes": 33328,
+    "variants": []
+  },
+  "src/assets/images/merch/polos/pure/pure-polo-schwarz-brust-silber.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 34266,
+    "source": "src/assets/images/merch/polos/pure/pure-polo-schwarz-brust-silber.webp",
+    "sourceBytes": 34266,
+    "variants": []
+  },
+  "src/assets/images/merch/polos/pure/pure-polo-weiss-brust-classic.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 16278,
+    "source": "src/assets/images/merch/polos/pure/pure-polo-weiss-brust-classic.webp",
+    "sourceBytes": 16278,
+    "variants": []
+  },
+  "src/assets/images/merch/polos/pure/pure-polo-weiss-brust-gold.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 17390,
+    "source": "src/assets/images/merch/polos/pure/pure-polo-weiss-brust-gold.webp",
+    "sourceBytes": 17390,
+    "variants": []
+  },
+  "src/assets/images/merch/polos/pure/pure-polo-weiss-brust-schwarz.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 19548,
+    "source": "src/assets/images/merch/polos/pure/pure-polo-weiss-brust-schwarz.webp",
+    "sourceBytes": 19548,
+    "variants": []
+  },
+  "src/assets/images/merch/polos/pure/pure-polo-weiss-brust-silber.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 16272,
+    "source": "src/assets/images/merch/polos/pure/pure-polo-weiss-brust-silber.webp",
+    "sourceBytes": 16272,
+    "variants": []
+  },
+  "src/assets/images/merch/polos/pure/pure-polo-weiss-brust-weiss.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 15234,
+    "source": "src/assets/images/merch/polos/pure/pure-polo-weiss-brust-weiss.webp",
+    "sourceBytes": 15234,
+    "variants": []
+  },
+  "src/assets/images/merch/polos/signature/signature-polo-beige-brust.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 26468,
+    "source": "src/assets/images/merch/polos/signature/signature-polo-beige-brust.webp",
+    "sourceBytes": 26468,
+    "variants": []
+  },
+  "src/assets/images/merch/polos/signature/signature-polo-schwarz-brust.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 35148,
+    "source": "src/assets/images/merch/polos/signature/signature-polo-schwarz-brust.webp",
+    "sourceBytes": 35148,
+    "variants": []
+  },
+  "src/assets/images/merch/polos/signature/signature-polo-weiss-brust.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 15202,
+    "source": "src/assets/images/merch/polos/signature/signature-polo-weiss-brust.webp",
+    "sourceBytes": 15202,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/one/one-tee-schwarz-brust-classic.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 40972,
+    "source": "src/assets/images/merch/tshirts/one/one-tee-schwarz-brust-classic.webp",
+    "sourceBytes": 40972,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/one/one-tee-schwarz-brust-schwarz.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 27860,
+    "source": "src/assets/images/merch/tshirts/one/one-tee-schwarz-brust-schwarz.webp",
+    "sourceBytes": 27860,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/one/one-tee-schwarz-brust-weiss.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 33508,
+    "source": "src/assets/images/merch/tshirts/one/one-tee-schwarz-brust-weiss.webp",
+    "sourceBytes": 33508,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/one/one-tee-weiss-brust-classic.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 18264,
+    "source": "src/assets/images/merch/tshirts/one/one-tee-weiss-brust-classic.webp",
+    "sourceBytes": 18264,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/one/one-tee-weiss-brust-schwarz.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 18948,
+    "source": "src/assets/images/merch/tshirts/one/one-tee-weiss-brust-schwarz.webp",
+    "sourceBytes": 18948,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/one/one-tee-weiss-brust-weiss.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 43270,
+    "source": "src/assets/images/merch/tshirts/one/one-tee-weiss-brust-weiss.webp",
+    "sourceBytes": 43270,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/prestige/prestige-tee-schwarz-brust-gold.webp": {
+    "width": 1195,
+    "height": 1316,
+    "bytes": 31514,
+    "source": "src/assets/images/merch/tshirts/prestige/prestige-tee-schwarz-brust-gold.webp",
+    "sourceBytes": 31514,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/prestige/prestige-tee-schwarz-brust-schwarz.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 18514,
+    "source": "src/assets/images/merch/tshirts/prestige/prestige-tee-schwarz-brust-schwarz.webp",
+    "sourceBytes": 18514,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/prestige/prestige-tee-schwarz-brust-silber.webp": {
+    "width": 1195,
+    "height": 1316,
+    "bytes": 30742,
+    "source": "src/assets/images/merch/tshirts/prestige/prestige-tee-schwarz-brust-silber.webp",
+    "sourceBytes": 30742,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/prestige/prestige-tee-schwarz-brust-weiss-nah.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 152318,
+    "source": "src/assets/images/merch/tshirts/prestige/prestige-tee-schwarz-brust-weiss-nah.webp",
+    "sourceBytes": 152318,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/tshirts/prestige/prestige-tee-schwarz-brust-weiss-nah-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/merch/tshirts/prestige/prestige-tee-schwarz-brust-weiss-nah-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/tshirts/prestige/prestige-tee-schwarz-brust-weiss.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 21506,
+    "source": "src/assets/images/merch/tshirts/prestige/prestige-tee-schwarz-brust-weiss.webp",
+    "sourceBytes": 21506,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/prestige/prestige-tee-weiss-brust-gold.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 16098,
+    "source": "src/assets/images/merch/tshirts/prestige/prestige-tee-weiss-brust-gold.webp",
+    "sourceBytes": 16098,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/prestige/prestige-tee-weiss-brust-schwarz-nah.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 82182,
+    "source": "src/assets/images/merch/tshirts/prestige/prestige-tee-weiss-brust-schwarz-nah.webp",
+    "sourceBytes": 82182,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/tshirts/prestige/prestige-tee-weiss-brust-schwarz-nah-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/merch/tshirts/prestige/prestige-tee-weiss-brust-schwarz-nah-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/tshirts/prestige/prestige-tee-weiss-brust-schwarz.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 18106,
+    "source": "src/assets/images/merch/tshirts/prestige/prestige-tee-weiss-brust-schwarz.webp",
+    "sourceBytes": 18106,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/prestige/prestige-tee-weiss-brust-silber.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 16030,
+    "source": "src/assets/images/merch/tshirts/prestige/prestige-tee-weiss-brust-silber.webp",
+    "sourceBytes": 16030,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/prestige/prestige-tee-weiss-brust-weiss-nah.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 77158,
+    "source": "src/assets/images/merch/tshirts/prestige/prestige-tee-weiss-brust-weiss-nah.webp",
+    "sourceBytes": 77158,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/tshirts/prestige/prestige-tee-weiss-brust-weiss-nah-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/merch/tshirts/prestige/prestige-tee-weiss-brust-weiss-nah-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/tshirts/prestige/prestige-tee-weiss-brust-weiss.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 14454,
+    "source": "src/assets/images/merch/tshirts/prestige/prestige-tee-weiss-brust-weiss.webp",
+    "sourceBytes": 14454,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/pure/pure-tee-beige-brust-schwarz.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 105618,
+    "source": "src/assets/images/merch/tshirts/pure/pure-tee-beige-brust-schwarz.webp",
+    "sourceBytes": 105618,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/tshirts/pure/pure-tee-beige-brust-schwarz-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/merch/tshirts/pure/pure-tee-beige-brust-schwarz-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/tshirts/pure/pure-tee-beige-brust-silber.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 80898,
+    "source": "src/assets/images/merch/tshirts/pure/pure-tee-beige-brust-silber.webp",
+    "sourceBytes": 80898,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/tshirts/pure/pure-tee-beige-brust-silber-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/tshirts/pure/pure-tee-beige-front-gold.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 91656,
+    "source": "src/assets/images/merch/tshirts/pure/pure-tee-beige-front-gold.webp",
+    "sourceBytes": 91656,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/tshirts/pure/pure-tee-beige-front-gold-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-brust-gold.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 120870,
+    "source": "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-brust-gold.webp",
+    "sourceBytes": 120870,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-brust-gold-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-brust-gold-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-brust-schwarz.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 91712,
+    "source": "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-brust-schwarz.webp",
+    "sourceBytes": 91712,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-brust-schwarz-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-brust-schwarz-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-brust-silber.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 23888,
+    "source": "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-brust-silber.webp",
+    "sourceBytes": 23888,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-brust-weiss.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 97430,
+    "source": "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-brust-weiss.webp",
+    "sourceBytes": 97430,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-brust-weiss-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-brust-weiss-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-front-classic.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 41700,
+    "source": "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-front-classic.webp",
+    "sourceBytes": 41700,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-front-gold.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 87018,
+    "source": "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-front-gold.webp",
+    "sourceBytes": 87018,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-front-gold-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-front-gold-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-front-schwarz.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 99056,
+    "source": "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-front-schwarz.webp",
+    "sourceBytes": 99056,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-front-schwarz-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-front-schwarz-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-front-silber.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 89080,
+    "source": "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-front-silber.webp",
+    "sourceBytes": 89080,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-front-silber-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-front-silber-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-front-weiss.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 85296,
+    "source": "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-front-weiss.webp",
+    "sourceBytes": 85296,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-front-weiss-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/merch/tshirts/pure/pure-tee-schwarz-front-weiss-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/tshirts/pure/pure-tee-weiss-brust-gold.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 37822,
+    "source": "src/assets/images/merch/tshirts/pure/pure-tee-weiss-brust-gold.webp",
+    "sourceBytes": 37822,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/pure/pure-tee-weiss-brust-schwarz.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 40984,
+    "source": "src/assets/images/merch/tshirts/pure/pure-tee-weiss-brust-schwarz.webp",
+    "sourceBytes": 40984,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/pure/pure-tee-weiss-brust-silber.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 14948,
+    "source": "src/assets/images/merch/tshirts/pure/pure-tee-weiss-brust-silber.webp",
+    "sourceBytes": 14948,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/pure/pure-tee-weiss-brust-weiss.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 39484,
+    "source": "src/assets/images/merch/tshirts/pure/pure-tee-weiss-brust-weiss.webp",
+    "sourceBytes": 39484,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/pure/pure-tee-weiss-front-classic.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 25032,
+    "source": "src/assets/images/merch/tshirts/pure/pure-tee-weiss-front-classic.webp",
+    "sourceBytes": 25032,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/pure/pure-tee-weiss-front-gold.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 54482,
+    "source": "src/assets/images/merch/tshirts/pure/pure-tee-weiss-front-gold.webp",
+    "sourceBytes": 54482,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/pure/pure-tee-weiss-front-schwarz.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 51040,
+    "source": "src/assets/images/merch/tshirts/pure/pure-tee-weiss-front-schwarz.webp",
+    "sourceBytes": 51040,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/pure/pure-tee-weiss-front-silber.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 52884,
+    "source": "src/assets/images/merch/tshirts/pure/pure-tee-weiss-front-silber.webp",
+    "sourceBytes": 52884,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/pure/pure-tee-weiss-front-weiss.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 47406,
+    "source": "src/assets/images/merch/tshirts/pure/pure-tee-weiss-front-weiss.webp",
+    "sourceBytes": 47406,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/signature/signature-tee-beige-brust.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 28924,
+    "source": "src/assets/images/merch/tshirts/signature/signature-tee-beige-brust.webp",
+    "sourceBytes": 28924,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/signature/signature-tee-beige-front.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 30266,
+    "source": "src/assets/images/merch/tshirts/signature/signature-tee-beige-front.webp",
+    "sourceBytes": 30266,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/signature/signature-tee-schwarz-brust.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 33528,
+    "source": "src/assets/images/merch/tshirts/signature/signature-tee-schwarz-brust.webp",
+    "sourceBytes": 33528,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/signature/signature-tee-schwarz-front.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 39460,
+    "source": "src/assets/images/merch/tshirts/signature/signature-tee-schwarz-front.webp",
+    "sourceBytes": 39460,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/signature/signature-tee-weiss-brust.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 21472,
+    "source": "src/assets/images/merch/tshirts/signature/signature-tee-weiss-brust.webp",
+    "sourceBytes": 21472,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/signature/signature-tee-weiss-front.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 20820,
+    "source": "src/assets/images/merch/tshirts/signature/signature-tee-weiss-front.webp",
+    "sourceBytes": 20820,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/v3-g-signature-black-life.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 15762,
+    "source": "src/assets/images/merch/tshirts/v3-g-signature-black-life.webp",
+    "sourceBytes": 15762,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/v3-g-signature-fabric.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 16082,
+    "source": "src/assets/images/merch/tshirts/v3-g-signature-fabric.webp",
+    "sourceBytes": 16082,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/v3-g-signature-model.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 19276,
+    "source": "src/assets/images/merch/tshirts/v3-g-signature-model.webp",
+    "sourceBytes": 19276,
+    "variants": []
+  },
+  "src/assets/images/merch/tshirts/v3-g-signature-white-life.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 21240,
+    "source": "src/assets/images/merch/tshirts/v3-g-signature-white-life.webp",
+    "sourceBytes": 21240,
+    "variants": []
+  },
+  "src/assets/images/merch/vnecks/prestige/prestige-vneck-schwarz-brust-gold.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 123394,
+    "source": "src/assets/images/merch/vnecks/prestige/prestige-vneck-schwarz-brust-gold.webp",
+    "sourceBytes": 123394,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/vnecks/prestige/prestige-vneck-schwarz-brust-gold-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/vnecks/prestige/prestige-vneck-schwarz-brust-schwarz.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 29492,
+    "source": "src/assets/images/merch/vnecks/prestige/prestige-vneck-schwarz-brust-schwarz.webp",
+    "sourceBytes": 29492,
+    "variants": []
+  },
+  "src/assets/images/merch/vnecks/prestige/prestige-vneck-schwarz-brust-silber.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 122532,
+    "source": "src/assets/images/merch/vnecks/prestige/prestige-vneck-schwarz-brust-silber.webp",
+    "sourceBytes": 122532,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/vnecks/prestige/prestige-vneck-schwarz-brust-silber-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/vnecks/prestige/prestige-vneck-schwarz-brust-weiss.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 26356,
+    "source": "src/assets/images/merch/vnecks/prestige/prestige-vneck-schwarz-brust-weiss.webp",
+    "sourceBytes": 26356,
+    "variants": []
+  },
+  "src/assets/images/merch/vnecks/prestige/prestige-vneck-weiss-brust-gold.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 80486,
+    "source": "src/assets/images/merch/vnecks/prestige/prestige-vneck-weiss-brust-gold.webp",
+    "sourceBytes": 80486,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/vnecks/prestige/prestige-vneck-weiss-brust-gold-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/vnecks/prestige/prestige-vneck-weiss-brust-schwarz.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 17564,
+    "source": "src/assets/images/merch/vnecks/prestige/prestige-vneck-weiss-brust-schwarz.webp",
+    "sourceBytes": 17564,
+    "variants": []
+  },
+  "src/assets/images/merch/vnecks/prestige/prestige-vneck-weiss-brust-silber.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 79104,
+    "source": "src/assets/images/merch/vnecks/prestige/prestige-vneck-weiss-brust-silber.webp",
+    "sourceBytes": 79104,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/vnecks/prestige/prestige-vneck-weiss-brust-silber-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/vnecks/prestige/prestige-vneck-weiss-brust-weiss.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 16584,
+    "source": "src/assets/images/merch/vnecks/prestige/prestige-vneck-weiss-brust-weiss.webp",
+    "sourceBytes": 16584,
+    "variants": []
+  },
+  "src/assets/images/merch/vnecks/pure/pure-vneck-beige-brust-schwarz.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 109688,
+    "source": "src/assets/images/merch/vnecks/pure/pure-vneck-beige-brust-schwarz.webp",
+    "sourceBytes": 109688,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/vnecks/pure/pure-vneck-beige-brust-schwarz-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/merch/vnecks/pure/pure-vneck-beige-brust-schwarz-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/vnecks/pure/pure-vneck-beige-front-gold.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 117074,
+    "source": "src/assets/images/merch/vnecks/pure/pure-vneck-beige-front-gold.webp",
+    "sourceBytes": 117074,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/vnecks/pure/pure-vneck-beige-front-gold-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/vnecks/pure/pure-vneck-schwarz-brust-gold.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 111350,
+    "source": "src/assets/images/merch/vnecks/pure/pure-vneck-schwarz-brust-gold.webp",
+    "sourceBytes": 111350,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/vnecks/pure/pure-vneck-schwarz-brust-gold-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/merch/vnecks/pure/pure-vneck-schwarz-brust-gold-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/vnecks/pure/pure-vneck-schwarz-brust-schwarz.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 84118,
+    "source": "src/assets/images/merch/vnecks/pure/pure-vneck-schwarz-brust-schwarz.webp",
+    "sourceBytes": 84118,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/vnecks/pure/pure-vneck-schwarz-brust-schwarz-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/vnecks/pure/pure-vneck-schwarz-brust-silber.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 24856,
+    "source": "src/assets/images/merch/vnecks/pure/pure-vneck-schwarz-brust-silber.webp",
+    "sourceBytes": 24856,
+    "variants": []
+  },
+  "src/assets/images/merch/vnecks/pure/pure-vneck-schwarz-brust-weiss.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 28824,
+    "source": "src/assets/images/merch/vnecks/pure/pure-vneck-schwarz-brust-weiss.webp",
+    "sourceBytes": 28824,
+    "variants": []
+  },
+  "src/assets/images/merch/vnecks/pure/pure-vneck-schwarz-front-gold.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 96886,
+    "source": "src/assets/images/merch/vnecks/pure/pure-vneck-schwarz-front-gold.webp",
+    "sourceBytes": 96886,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/vnecks/pure/pure-vneck-schwarz-front-gold-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/merch/vnecks/pure/pure-vneck-schwarz-front-gold-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/vnecks/pure/pure-vneck-schwarz-front-schwarz.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 155992,
+    "source": "src/assets/images/merch/vnecks/pure/pure-vneck-schwarz-front-schwarz.webp",
+    "sourceBytes": 155992,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/vnecks/pure/pure-vneck-schwarz-front-schwarz-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/merch/vnecks/pure/pure-vneck-schwarz-front-schwarz-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/vnecks/pure/pure-vneck-schwarz-front-silber.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 156978,
+    "source": "src/assets/images/merch/vnecks/pure/pure-vneck-schwarz-front-silber.webp",
+    "sourceBytes": 156978,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/vnecks/pure/pure-vneck-schwarz-front-silber-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/merch/vnecks/pure/pure-vneck-schwarz-front-silber-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/vnecks/pure/pure-vneck-schwarz-front-weiss.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 165456,
+    "source": "src/assets/images/merch/vnecks/pure/pure-vneck-schwarz-front-weiss.webp",
+    "sourceBytes": 165456,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/vnecks/pure/pure-vneck-schwarz-front-weiss-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/merch/vnecks/pure/pure-vneck-schwarz-front-weiss-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/vnecks/pure/pure-vneck-weiss-brust-gold.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 91646,
+    "source": "src/assets/images/merch/vnecks/pure/pure-vneck-weiss-brust-gold.webp",
+    "sourceBytes": 91646,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/vnecks/pure/pure-vneck-weiss-brust-gold-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/merch/vnecks/pure/pure-vneck-weiss-brust-gold-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/vnecks/pure/pure-vneck-weiss-brust-schwarz.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 91374,
+    "source": "src/assets/images/merch/vnecks/pure/pure-vneck-weiss-brust-schwarz.webp",
+    "sourceBytes": 91374,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/vnecks/pure/pure-vneck-weiss-brust-schwarz-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/merch/vnecks/pure/pure-vneck-weiss-brust-schwarz-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/vnecks/pure/pure-vneck-weiss-brust-silber.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 32520,
+    "source": "src/assets/images/merch/vnecks/pure/pure-vneck-weiss-brust-silber.webp",
+    "sourceBytes": 32520,
+    "variants": []
+  },
+  "src/assets/images/merch/vnecks/pure/pure-vneck-weiss-brust-weiss.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 88828,
+    "source": "src/assets/images/merch/vnecks/pure/pure-vneck-weiss-brust-weiss.webp",
+    "sourceBytes": 88828,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/vnecks/pure/pure-vneck-weiss-brust-weiss-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/merch/vnecks/pure/pure-vneck-weiss-brust-weiss-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/vnecks/pure/pure-vneck-weiss-front-gold.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 51634,
+    "source": "src/assets/images/merch/vnecks/pure/pure-vneck-weiss-front-gold.webp",
+    "sourceBytes": 51634,
+    "variants": []
+  },
+  "src/assets/images/merch/vnecks/pure/pure-vneck-weiss-front-schwarz.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 105432,
+    "source": "src/assets/images/merch/vnecks/pure/pure-vneck-weiss-front-schwarz.webp",
+    "sourceBytes": 105432,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/vnecks/pure/pure-vneck-weiss-front-schwarz-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/merch/vnecks/pure/pure-vneck-weiss-front-schwarz-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/vnecks/pure/pure-vneck-weiss-front-silber.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 99266,
+    "source": "src/assets/images/merch/vnecks/pure/pure-vneck-weiss-front-silber.webp",
+    "sourceBytes": 99266,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/vnecks/pure/pure-vneck-weiss-front-silber-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/merch/vnecks/pure/pure-vneck-weiss-front-silber-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/vnecks/pure/pure-vneck-weiss-front-weiss.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 17080,
+    "source": "src/assets/images/merch/vnecks/pure/pure-vneck-weiss-front-weiss.webp",
+    "sourceBytes": 17080,
+    "variants": []
+  },
+  "src/assets/images/merch/vnecks/pure/signature-vneck-schwarz-brust.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 37088,
+    "source": "src/assets/images/merch/vnecks/pure/signature-vneck-schwarz-brust.webp",
+    "sourceBytes": 37088,
+    "variants": []
+  },
+  "src/assets/images/merch/vnecks/pure/signature-vneck-weiss-brust.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 19962,
+    "source": "src/assets/images/merch/vnecks/pure/signature-vneck-weiss-brust.webp",
+    "sourceBytes": 19962,
+    "variants": []
+  },
+  "src/assets/images/merch/vnecks/signature/signature-vneck-schwarz-brust.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 27926,
+    "source": "src/assets/images/merch/vnecks/signature/signature-vneck-schwarz-brust.webp",
+    "sourceBytes": 27926,
+    "variants": []
+  },
+  "src/assets/images/merch/vnecks/signature/signature-vneck-weiss-brust.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 15150,
+    "source": "src/assets/images/merch/vnecks/signature/signature-vneck-weiss-brust.webp",
+    "sourceBytes": 15150,
+    "variants": []
+  },
+  "src/assets/images/merch/workwear/workwear-overshirt-schwarz.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 46980,
+    "source": "src/assets/images/merch/workwear/workwear-overshirt-schwarz.webp",
+    "sourceBytes": 46980,
+    "variants": []
+  },
+  "src/assets/images/merch/workwear/workwear-polo-schwarz.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 57482,
+    "source": "src/assets/images/merch/workwear/workwear-polo-schwarz.webp",
+    "sourceBytes": 57482,
+    "variants": []
+  },
+  "src/assets/images/merch/workwear/workwear-polo-weiss.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 26468,
+    "source": "src/assets/images/merch/workwear/workwear-polo-weiss.webp",
+    "sourceBytes": 26468,
+    "variants": []
+  },
+  "src/assets/images/merch/workwear/workwear-softshelljacke-schwarz.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 40038,
+    "source": "src/assets/images/merch/workwear/workwear-softshelljacke-schwarz.webp",
+    "sourceBytes": 40038,
+    "variants": []
+  },
+  "src/assets/images/merch/workwear/workwear-softshellweste-schwarz.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 47188,
+    "source": "src/assets/images/merch/workwear/workwear-softshellweste-schwarz.webp",
+    "sourceBytes": 47188,
+    "variants": []
+  },
+  "src/assets/images/merch/workwear/workwear-tee-schwarz.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 44806,
+    "source": "src/assets/images/merch/workwear/workwear-tee-schwarz.webp",
+    "sourceBytes": 44806,
+    "variants": []
+  },
+  "src/assets/images/merch/Zip Hoodie/pure-ziphoodie-schwarz-brust.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 67762,
+    "source": "src/assets/images/merch/Zip Hoodie/pure-ziphoodie-schwarz-brust.webp",
+    "sourceBytes": 67762,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/Zip Hoodie/pure-ziphoodie-schwarz-brust-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/Zip Hoodie/pure-ziphoodie-weiss-brust.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 50580,
+    "source": "src/assets/images/merch/Zip Hoodie/pure-ziphoodie-weiss-brust.webp",
+    "sourceBytes": 50580,
+    "variants": []
+  },
+  "src/assets/images/merch/Zip Hoodie/signature-hoodie-schwarz-front.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 67762,
+    "source": "src/assets/images/merch/Zip Hoodie/signature-hoodie-schwarz-front.webp",
+    "sourceBytes": 67762,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/Zip Hoodie/signature-hoodie-schwarz-front-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/Zip Hoodie/signature-ziphoodie-classic-brust.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 35794,
+    "source": "src/assets/images/merch/Zip Hoodie/signature-ziphoodie-classic-brust.webp",
+    "sourceBytes": 35794,
+    "variants": []
+  },
+  "src/assets/images/merch/Zip Hoodie/signature-ziphoodie-schwarz-brust.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 45158,
+    "source": "src/assets/images/merch/Zip Hoodie/signature-ziphoodie-schwarz-brust.webp",
+    "sourceBytes": 45158,
+    "variants": []
+  },
+  "src/assets/images/merch/_shared/merch-hero.webp": {
+    "width": 2400,
+    "height": 1351,
+    "bytes": 120908,
+    "source": "src/assets/images/merch/_shared/merch-hero.webp",
+    "sourceBytes": 120908,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/merch/_shared/merch-hero-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/merch/_shared/merch-hero-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/merch/_shared/stil-one.webp": {
+    "width": 760,
+    "height": 760,
+    "bytes": 20590,
+    "source": "src/assets/images/merch/_shared/stil-one.webp",
+    "sourceBytes": 20590,
+    "variants": []
+  },
+  "src/assets/images/merch/_shared/stil-prestige.webp": {
+    "width": 760,
+    "height": 760,
+    "bytes": 24942,
+    "source": "src/assets/images/merch/_shared/stil-prestige.webp",
+    "sourceBytes": 24942,
+    "variants": []
+  },
+  "src/assets/images/merch/_shared/stil-pure.webp": {
+    "width": 760,
+    "height": 760,
+    "bytes": 26210,
+    "source": "src/assets/images/merch/_shared/stil-pure.webp",
+    "sourceBytes": 26210,
+    "variants": []
+  },
+  "src/assets/images/merch/_shared/stil-signature.webp": {
+    "width": 760,
+    "height": 760,
+    "bytes": 29346,
+    "source": "src/assets/images/merch/_shared/stil-signature.webp",
+    "sourceBytes": 29346,
+    "variants": []
+  },
+  "src/assets/images/merch/_shared/v5-coming-soon.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 6274,
+    "source": "src/assets/images/merch/_shared/v5-coming-soon.webp",
+    "sourceBytes": 6274,
+    "variants": []
+  },
+  "src/assets/images/performance/perf-apex-tee-black.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 56872,
+    "source": "src/assets/images/performance/perf-apex-tee-black.webp",
+    "sourceBytes": 56872,
+    "variants": []
+  },
+  "src/assets/images/performance/perf-bag-black.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 112222,
+    "source": "src/assets/images/performance/perf-bag-black.webp",
+    "sourceBytes": 112222,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/performance/perf-bag-black-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/performance/perf-bag-black-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/performance/perf-cap-black.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 73410,
+    "source": "src/assets/images/performance/perf-cap-black.webp",
+    "sourceBytes": 73410,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/performance/perf-cap-black-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/performance/perf-cap-black-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/performance/perf-core-alt-tee-black.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 25696,
+    "source": "src/assets/images/performance/perf-core-alt-tee-black.webp",
+    "sourceBytes": 25696,
+    "variants": []
+  },
+  "src/assets/images/performance/perf-core-tee-black-back.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 16754,
+    "source": "src/assets/images/performance/perf-core-tee-black-back.webp",
+    "sourceBytes": 16754,
+    "variants": []
+  },
+  "src/assets/images/performance/perf-core-tee-black.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 38700,
+    "source": "src/assets/images/performance/perf-core-tee-black.webp",
+    "sourceBytes": 38700,
+    "variants": []
+  },
+  "src/assets/images/performance/perf-essential-tee-white-back.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 35182,
+    "source": "src/assets/images/performance/perf-essential-tee-white-back.webp",
+    "sourceBytes": 35182,
+    "variants": []
+  },
+  "src/assets/images/performance/perf-essential-tee-white-front.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 51366,
+    "source": "src/assets/images/performance/perf-essential-tee-white-front.webp",
+    "sourceBytes": 51366,
+    "variants": []
+  },
+  "src/assets/images/performance/perf-flow-tee-white.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 110498,
+    "source": "src/assets/images/performance/perf-flow-tee-white.webp",
+    "sourceBytes": 110498,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/performance/perf-flow-tee-white-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/performance/perf-flow-tee-white-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/performance/perf-goldrush-tee-black.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 114254,
+    "source": "src/assets/images/performance/perf-goldrush-tee-black.webp",
+    "sourceBytes": 114254,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/performance/perf-goldrush-tee-black-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/performance/perf-goldrush-tee-black-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/performance/perf-ignite-tee-black.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 71652,
+    "source": "src/assets/images/performance/perf-ignite-tee-black.webp",
+    "sourceBytes": 71652,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/performance/perf-ignite-tee-black-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/performance/perf-ignite-tee-black-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/performance/perf-jacket-black.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 55386,
+    "source": "src/assets/images/performance/perf-jacket-black.webp",
+    "sourceBytes": 55386,
+    "variants": []
+  },
+  "src/assets/images/performance/perf-laufschuh-white.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 39844,
+    "source": "src/assets/images/performance/perf-laufschuh-white.webp",
+    "sourceBytes": 39844,
+    "variants": []
+  },
+  "src/assets/images/performance/perf-longsleeve-black.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 62440,
+    "source": "src/assets/images/performance/perf-longsleeve-black.webp",
+    "sourceBytes": 62440,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/performance/perf-longsleeve-black-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/performance/perf-longsleeve-black-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/performance/perf-shorts-black.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 50374,
+    "source": "src/assets/images/performance/perf-shorts-black.webp",
+    "sourceBytes": 50374,
+    "variants": []
+  },
+  "src/assets/images/performance/perf-sneaker-white.webp": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 41674,
+    "source": "src/assets/images/performance/perf-sneaker-white.webp",
+    "sourceBytes": 41674,
+    "variants": []
+  },
+  "src/assets/images/performance/perf-socks-black.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 108978,
+    "source": "src/assets/images/performance/perf-socks-black.webp",
+    "sourceBytes": 108978,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/performance/perf-socks-black-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/performance/perf-socks-black-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/performance/perf-statement-tee-white-back.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 58876,
+    "source": "src/assets/images/performance/perf-statement-tee-white-back.webp",
+    "sourceBytes": 58876,
+    "variants": []
+  },
+  "src/assets/images/performance/perf-statement-tee-white-front.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 104936,
+    "source": "src/assets/images/performance/perf-statement-tee-white-front.webp",
+    "sourceBytes": 104936,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/performance/perf-statement-tee-white-front-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/performance/perf-statement-tee-white-front-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/performance/perf-tank-black.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 59584,
+    "source": "src/assets/images/performance/perf-tank-black.webp",
+    "sourceBytes": 59584,
+    "variants": []
+  },
+  "src/assets/images/planung/budget/budget-bg-stone-texture.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 128756,
+    "source": "src/assets/images/planung/budget/budget-bg-stone-texture.webp",
+    "sourceBytes": 128756,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/budget/budget-bg-stone-texture-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/budget/budget-bg-stone-texture-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/budget/segment-entry-12-15k.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 92014,
+    "source": "src/assets/images/planung/budget/segment-entry-12-15k.webp",
+    "sourceBytes": 92014,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/budget/segment-entry-12-15k-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/budget/segment-entry-12-15k-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/budget/segment-exclusive-25-35k.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 129974,
+    "source": "src/assets/images/planung/budget/segment-exclusive-25-35k.webp",
+    "sourceBytes": 129974,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/budget/segment-exclusive-25-35k-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/budget/segment-exclusive-25-35k-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/budget/segment-luxury-35k-plus.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 117084,
+    "source": "src/assets/images/planung/budget/segment-luxury-35k-plus.webp",
+    "sourceBytes": 117084,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/budget/segment-luxury-35k-plus-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/budget/segment-luxury-35k-plus-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/budget/segment-premium-18-25k.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 103412,
+    "source": "src/assets/images/planung/budget/segment-premium-18-25k.webp",
+    "sourceBytes": 103412,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/budget/segment-premium-18-25k-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/budget/segment-premium-18-25k-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/budget/showcase/showcase-12000-15000-01.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 111690,
+    "source": "src/assets/images/planung/budget/showcase/showcase-12000-15000-01.webp",
+    "sourceBytes": 111690,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/budget/showcase/showcase-12000-15000-01-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/budget/showcase/showcase-12000-15000-01-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/budget/showcase/showcase-12000-15000-02.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 104598,
+    "source": "src/assets/images/planung/budget/showcase/showcase-12000-15000-02.webp",
+    "sourceBytes": 104598,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/budget/showcase/showcase-12000-15000-02-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/budget/showcase/showcase-12000-15000-02-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/budget/showcase/showcase-12000-15000-03.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 94236,
+    "source": "src/assets/images/planung/budget/showcase/showcase-12000-15000-03.webp",
+    "sourceBytes": 94236,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/budget/showcase/showcase-12000-15000-03-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/budget/showcase/showcase-12000-15000-03-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/budget/showcase/showcase-12000-15000-04.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 102492,
+    "source": "src/assets/images/planung/budget/showcase/showcase-12000-15000-04.webp",
+    "sourceBytes": 102492,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/budget/showcase/showcase-12000-15000-04-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/budget/showcase/showcase-12000-15000-04-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/budget/showcase/showcase-18000-25000-01.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 111384,
+    "source": "src/assets/images/planung/budget/showcase/showcase-18000-25000-01.webp",
+    "sourceBytes": 111384,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/budget/showcase/showcase-18000-25000-01-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/budget/showcase/showcase-18000-25000-01-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/budget/showcase/showcase-18000-25000-02.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 94948,
+    "source": "src/assets/images/planung/budget/showcase/showcase-18000-25000-02.webp",
+    "sourceBytes": 94948,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/budget/showcase/showcase-18000-25000-02-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/budget/showcase/showcase-18000-25000-02-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/budget/showcase/showcase-18000-25000-03.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 102890,
+    "source": "src/assets/images/planung/budget/showcase/showcase-18000-25000-03.webp",
+    "sourceBytes": 102890,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/budget/showcase/showcase-18000-25000-03-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/budget/showcase/showcase-18000-25000-03-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/budget/showcase/showcase-18000-25000-04.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 178894,
+    "source": "src/assets/images/planung/budget/showcase/showcase-18000-25000-04.webp",
+    "sourceBytes": 178894,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/budget/showcase/showcase-18000-25000-04-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/budget/showcase/showcase-18000-25000-04-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/budget/showcase/showcase-25000-35000-01.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 113434,
+    "source": "src/assets/images/planung/budget/showcase/showcase-25000-35000-01.webp",
+    "sourceBytes": 113434,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/budget/showcase/showcase-25000-35000-01-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/budget/showcase/showcase-25000-35000-01-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/budget/showcase/showcase-25000-35000-02.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 121904,
+    "source": "src/assets/images/planung/budget/showcase/showcase-25000-35000-02.webp",
+    "sourceBytes": 121904,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/budget/showcase/showcase-25000-35000-02-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/budget/showcase/showcase-25000-35000-02-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/budget/showcase/showcase-25000-35000-03.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 91986,
+    "source": "src/assets/images/planung/budget/showcase/showcase-25000-35000-03.webp",
+    "sourceBytes": 91986,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/budget/showcase/showcase-25000-35000-03-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/budget/showcase/showcase-25000-35000-03-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/budget/showcase/showcase-25000-35000-04.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 179268,
+    "source": "src/assets/images/planung/budget/showcase/showcase-25000-35000-04.webp",
+    "sourceBytes": 179268,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/budget/showcase/showcase-25000-35000-04-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/budget/showcase/showcase-25000-35000-04-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/budget/showcase/showcase-35000-plus-01.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 196098,
+    "source": "src/assets/images/planung/budget/showcase/showcase-35000-plus-01.webp",
+    "sourceBytes": 196098,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/budget/showcase/showcase-35000-plus-01-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/budget/showcase/showcase-35000-plus-01-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/budget/showcase/showcase-35000-plus-02.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 115908,
+    "source": "src/assets/images/planung/budget/showcase/showcase-35000-plus-02.webp",
+    "sourceBytes": 115908,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/budget/showcase/showcase-35000-plus-02-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/budget/showcase/showcase-35000-plus-02-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/budget/showcase/showcase-35000-plus-03.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 138222,
+    "source": "src/assets/images/planung/budget/showcase/showcase-35000-plus-03.webp",
+    "sourceBytes": 138222,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/budget/showcase/showcase-35000-plus-03-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/budget/showcase/showcase-35000-plus-03-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/budget/showcase/showcase-35000-plus-04.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 137478,
+    "source": "src/assets/images/planung/budget/showcase/showcase-35000-plus-04.webp",
+    "sourceBytes": 137478,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/budget/showcase/showcase-35000-plus-04-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/budget/showcase/showcase-35000-plus-04-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/budget/showcase/showcase-5000-12500-01.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 87690,
+    "source": "src/assets/images/planung/budget/showcase/showcase-5000-12500-01.webp",
+    "sourceBytes": 87690,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/budget/showcase/showcase-5000-12500-01-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/budget/showcase/showcase-5000-12500-01-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/budget/showcase/showcase-5000-12500-02.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 82584,
+    "source": "src/assets/images/planung/budget/showcase/showcase-5000-12500-02.webp",
+    "sourceBytes": 82584,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/budget/showcase/showcase-5000-12500-02-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/budget/showcase/showcase-5000-12500-02-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/budget/showcase/showcase-5000-12500-03.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 76366,
+    "source": "src/assets/images/planung/budget/showcase/showcase-5000-12500-03.webp",
+    "sourceBytes": 76366,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/budget/showcase/showcase-5000-12500-03-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/budget/showcase/showcase-5000-12500-03-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/budget/showcase/showcase-5000-12500-04.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 65982,
+    "source": "src/assets/images/planung/budget/showcase/showcase-5000-12500-04.webp",
+    "sourceBytes": 65982,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/budget/showcase/showcase-5000-12500-04-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/budget/showcase/showcase-5000-12500-04-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/exploding/detail-appliances-16x9.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 76500,
+    "source": "src/assets/images/planung/exploding/detail-appliances-16x9.webp",
+    "sourceBytes": 76500,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/exploding/detail-appliances-16x9-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/exploding/detail-appliances-16x9-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/exploding/detail-drawers-16x9.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 155416,
+    "source": "src/assets/images/planung/exploding/detail-drawers-16x9.webp",
+    "sourceBytes": 155416,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/exploding/detail-drawers-16x9-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/exploding/detail-drawers-16x9-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/exploding/detail-light-16x9.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 82932,
+    "source": "src/assets/images/planung/exploding/detail-light-16x9.webp",
+    "sourceBytes": 82932,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/exploding/detail-light-16x9-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/exploding/detail-light-16x9-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/exploding/detail-materials-16x9.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 98254,
+    "source": "src/assets/images/planung/exploding/detail-materials-16x9.webp",
+    "sourceBytes": 98254,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/exploding/detail-materials-16x9-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/exploding/detail-materials-16x9-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/exploding/detail-montage-16x9.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 70710,
+    "source": "src/assets/images/planung/exploding/detail-montage-16x9.webp",
+    "sourceBytes": 70710,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/exploding/detail-montage-16x9-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/exploding/detail-montage-16x9-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/exploding/detail-worktop-16x9.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 146520,
+    "source": "src/assets/images/planung/exploding/detail-worktop-16x9.webp",
+    "sourceBytes": 146520,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/exploding/detail-worktop-16x9-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/exploding/detail-worktop-16x9-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/exploding/exploded-full-fallback-16x9.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 101568,
+    "source": "src/assets/images/planung/exploding/exploded-full-fallback-16x9.webp",
+    "sourceBytes": 101568,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/exploding/exploded-full-fallback-16x9-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/exploding/exploded-full-fallback-16x9-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/simulator/01-hero-planungsfehler-simulator-16x9.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 57036,
+    "source": "src/assets/images/planung/simulator/01-hero-planungsfehler-simulator-16x9.webp",
+    "sourceBytes": 57036,
+    "variants": []
+  },
+  "src/assets/images/planung/simulator/02-simulator-main-problem-16x9.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 105574,
+    "source": "src/assets/images/planung/simulator/02-simulator-main-problem-16x9.webp",
+    "sourceBytes": 105574,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/simulator/02-simulator-main-problem-16x9-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/simulator/02-simulator-main-problem-16x9-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/simulator/03-simulator-main-loesung-16x9.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 104154,
+    "source": "src/assets/images/planung/simulator/03-simulator-main-loesung-16x9.webp",
+    "sourceBytes": 104154,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/simulator/03-simulator-main-loesung-16x9-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/simulator/03-simulator-main-loesung-16x9-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/simulator/04-thumb-problem-01-zu-wenig-arbeitsflaeche.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 105472,
+    "source": "src/assets/images/planung/simulator/04-thumb-problem-01-zu-wenig-arbeitsflaeche.webp",
+    "sourceBytes": 105472,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/simulator/04-thumb-problem-01-zu-wenig-arbeitsflaeche-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/simulator/04-thumb-problem-01-zu-wenig-arbeitsflaeche-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/simulator/05-thumb-problem-02-schlechte-beleuchtung.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 53284,
+    "source": "src/assets/images/planung/simulator/05-thumb-problem-02-schlechte-beleuchtung.webp",
+    "sourceBytes": 53284,
+    "variants": []
+  },
+  "src/assets/images/planung/simulator/06-thumb-problem-03-unguenstige-laufwege.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 100788,
+    "source": "src/assets/images/planung/simulator/06-thumb-problem-03-unguenstige-laufwege.webp",
+    "sourceBytes": 100788,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/simulator/06-thumb-problem-03-unguenstige-laufwege-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/simulator/06-thumb-problem-03-unguenstige-laufwege-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/simulator/07-thumb-problem-04-zu-wenig-steckdosen.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 78904,
+    "source": "src/assets/images/planung/simulator/07-thumb-problem-04-zu-wenig-steckdosen.webp",
+    "sourceBytes": 78904,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/simulator/07-thumb-problem-04-zu-wenig-steckdosen-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/simulator/07-thumb-problem-04-zu-wenig-steckdosen-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/simulator/08-thumb-problem-05-geraete-falsch-platziert.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 92408,
+    "source": "src/assets/images/planung/simulator/08-thumb-problem-05-geraete-falsch-platziert.webp",
+    "sourceBytes": 92408,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/simulator/08-thumb-problem-05-geraete-falsch-platziert-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/simulator/08-thumb-problem-05-geraete-falsch-platziert-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/simulator/09-thumb-problem-06-zu-wenig-stauraum.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 105574,
+    "source": "src/assets/images/planung/simulator/09-thumb-problem-06-zu-wenig-stauraum.webp",
+    "sourceBytes": 105574,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/simulator/09-thumb-problem-06-zu-wenig-stauraum-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/simulator/09-thumb-problem-06-zu-wenig-stauraum-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/simulator/10-thumb-problem-07-unpassende-materialien.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 124128,
+    "source": "src/assets/images/planung/simulator/10-thumb-problem-07-unpassende-materialien.webp",
+    "sourceBytes": 124128,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/simulator/10-thumb-problem-07-unpassende-materialien-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/simulator/10-thumb-problem-07-unpassende-materialien-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/simulator/11-thumb-loesung-01-grosszuegige-arbeitsflaeche.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 79150,
+    "source": "src/assets/images/planung/simulator/11-thumb-loesung-01-grosszuegige-arbeitsflaeche.webp",
+    "sourceBytes": 79150,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/simulator/11-thumb-loesung-01-grosszuegige-arbeitsflaeche-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/simulator/11-thumb-loesung-01-grosszuegige-arbeitsflaeche-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/simulator/12-thumb-loesung-02-gute-beleuchtung.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 104628,
+    "source": "src/assets/images/planung/simulator/12-thumb-loesung-02-gute-beleuchtung.webp",
+    "sourceBytes": 104628,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/simulator/12-thumb-loesung-02-gute-beleuchtung-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/simulator/12-thumb-loesung-02-gute-beleuchtung-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/simulator/13-thumb-loesung-03-optimierte-laufwege.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 89850,
+    "source": "src/assets/images/planung/simulator/13-thumb-loesung-03-optimierte-laufwege.webp",
+    "sourceBytes": 89850,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/simulator/13-thumb-loesung-03-optimierte-laufwege-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/simulator/13-thumb-loesung-03-optimierte-laufwege-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/simulator/14-thumb-loesung-04-genug-steckdosen.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 106968,
+    "source": "src/assets/images/planung/simulator/14-thumb-loesung-04-genug-steckdosen.webp",
+    "sourceBytes": 106968,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/simulator/14-thumb-loesung-04-genug-steckdosen-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/simulator/14-thumb-loesung-04-genug-steckdosen-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/simulator/15-thumb-loesung-05-geraete-richtig-platziert.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 89320,
+    "source": "src/assets/images/planung/simulator/15-thumb-loesung-05-geraete-richtig-platziert.webp",
+    "sourceBytes": 89320,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/simulator/15-thumb-loesung-05-geraete-richtig-platziert-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/simulator/15-thumb-loesung-05-geraete-richtig-platziert-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/simulator/16-thumb-loesung-06-mehr-stauraum.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 106674,
+    "source": "src/assets/images/planung/simulator/16-thumb-loesung-06-mehr-stauraum.webp",
+    "sourceBytes": 106674,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/simulator/16-thumb-loesung-06-mehr-stauraum-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/simulator/16-thumb-loesung-06-mehr-stauraum-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/planung/simulator/17-thumb-loesung-07-passende-materialien.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 103458,
+    "source": "src/assets/images/planung/simulator/17-thumb-loesung-07-passende-materialien.webp",
+    "sourceBytes": 103458,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/planung/simulator/17-thumb-loesung-07-passende-materialien-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/planung/simulator/17-thumb-loesung-07-passende-materialien-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/process2/nachher.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 92944,
+    "source": "src/assets/images/process2/nachher.webp",
+    "sourceBytes": 92944,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/process2/nachher-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/process2/nachher-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/process2/s1.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 115472,
+    "source": "src/assets/images/process2/s1.webp",
+    "sourceBytes": 115472,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/process2/s1-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/process2/s1-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/process2/s2.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 161040,
+    "source": "src/assets/images/process2/s2.webp",
+    "sourceBytes": 161040,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/process2/s2-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/process2/s2-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/process2/s3.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 90020,
+    "source": "src/assets/images/process2/s3.webp",
+    "sourceBytes": 90020,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/process2/s3-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/process2/s3-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/process2/s4.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 113268,
+    "source": "src/assets/images/process2/s4.webp",
+    "sourceBytes": 113268,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/process2/s4-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/process2/s4-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/process2/s5.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 64590,
+    "source": "src/assets/images/process2/s5.webp",
+    "sourceBytes": 64590,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/process2/s5-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/process2/s5-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/process2/vorher.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 73080,
+    "source": "src/assets/images/process2/vorher.webp",
+    "sourceBytes": 73080,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/process2/vorher-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/process2/vorher-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/raumideen/essen.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 107644,
+    "source": "src/assets/images/raumideen/essen.webp",
+    "sourceBytes": 107644,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/raumideen/essen-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/raumideen/essen-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/raumideen/garderobe.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 94726,
+    "source": "src/assets/images/raumideen/garderobe.webp",
+    "sourceBytes": 94726,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/raumideen/garderobe-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/raumideen/garderobe-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/raumideen/hauswirtschaft.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 89652,
+    "source": "src/assets/images/raumideen/hauswirtschaft.webp",
+    "sourceBytes": 89652,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/raumideen/hauswirtschaft-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/raumideen/hauswirtschaft-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/raumideen/homeoffice.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 80724,
+    "source": "src/assets/images/raumideen/homeoffice.webp",
+    "sourceBytes": 80724,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/raumideen/homeoffice-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/raumideen/homeoffice-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/raumideen/kochen.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 136048,
+    "source": "src/assets/images/raumideen/kochen.webp",
+    "sourceBytes": 136048,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/raumideen/kochen-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/raumideen/kochen-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/raumideen/schlafen.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 96236,
+    "source": "src/assets/images/raumideen/schlafen.webp",
+    "sourceBytes": 96236,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/raumideen/schlafen-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/raumideen/schlafen-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/raumideen/wohnen.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 152726,
+    "source": "src/assets/images/raumideen/wohnen.webp",
+    "sourceBytes": 152726,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/raumideen/wohnen-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/raumideen/wohnen-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/shared/hero-kitchen-arch.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 112302,
+    "source": "src/assets/images/shared/hero-kitchen-arch.webp",
+    "sourceBytes": 112302,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/shared/hero-kitchen-arch-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/shared/hero-kitchen-arch-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/shared/hero-videko-final-16x9.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 132282,
+    "source": "src/assets/images/shared/hero-videko-final-16x9.webp",
+    "sourceBytes": 132282,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/shared/hero-videko-final-16x9-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/shared/hero-videko-final-16x9-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/showroom/journey-01-ankommen.webp": {
+    "width": 1086,
+    "height": 1448,
+    "bytes": 132016,
+    "source": "src/assets/images/showroom/journey-01-ankommen.webp",
+    "sourceBytes": 132016,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/showroom/journey-01-ankommen-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/showroom/journey-02-eintreten.webp": {
+    "width": 1086,
+    "height": 1448,
+    "bytes": 93636,
+    "source": "src/assets/images/showroom/journey-02-eintreten.webp",
+    "sourceBytes": 93636,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/showroom/journey-02-eintreten-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/showroom/journey-03-wohlfuehlen.webp": {
+    "width": 1086,
+    "height": 1448,
+    "bytes": 101956,
+    "source": "src/assets/images/showroom/journey-03-wohlfuehlen.webp",
+    "sourceBytes": 101956,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/showroom/journey-03-wohlfuehlen-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/showroom/journey-04-geniessen.webp": {
+    "width": 1086,
+    "height": 1448,
+    "bytes": 116900,
+    "source": "src/assets/images/showroom/journey-04-geniessen.webp",
+    "sourceBytes": 116900,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/showroom/journey-04-geniessen-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/showroom/journey-05-begreifen.webp": {
+    "width": 1086,
+    "height": 1448,
+    "bytes": 125482,
+    "source": "src/assets/images/showroom/journey-05-begreifen.webp",
+    "sourceBytes": 125482,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/showroom/journey-05-begreifen-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/showroom/journey-06-entdecken.webp": {
+    "width": 1086,
+    "height": 1448,
+    "bytes": 144588,
+    "source": "src/assets/images/showroom/journey-06-entdecken.webp",
+    "sourceBytes": 144588,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/showroom/journey-06-entdecken-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/showroom/journey-07-verstehen.webp": {
+    "width": 1086,
+    "height": 1448,
+    "bytes": 84770,
+    "source": "src/assets/images/showroom/journey-07-verstehen.webp",
+    "sourceBytes": 84770,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/showroom/journey-07-verstehen-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/showroom/journey-08-verlieben.webp": {
+    "width": 1086,
+    "height": 1448,
+    "bytes": 111240,
+    "source": "src/assets/images/showroom/journey-08-verlieben.webp",
+    "sourceBytes": 111240,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/showroom/journey-08-verlieben-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/showroom/showroom-cta-wide.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 71550,
+    "source": "src/assets/images/showroom/showroom-cta-wide.webp",
+    "sourceBytes": 71550,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/showroom/showroom-cta-wide-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/showroom/showroom-cta-wide-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/showroom/showroom-hero-immersive.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 82482,
+    "source": "src/assets/images/showroom/showroom-hero-immersive.webp",
+    "sourceBytes": 82482,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/showroom/showroom-hero-immersive-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/showroom/showroom-hero-immersive-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/studio/bilder/01_hero_studio_showroom.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 120966,
+    "source": "src/assets/images/studio/bilder/01_hero_studio_showroom.webp",
+    "sourceBytes": 120966,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/studio/bilder/01_hero_studio_showroom-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/studio/bilder/01_hero_studio_showroom-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/studio/bilder/02_intro_showroom_hell.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 139990,
+    "source": "src/assets/images/studio/bilder/02_intro_showroom_hell.webp",
+    "sourceBytes": 139990,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/studio/bilder/02_intro_showroom_hell-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/studio/bilder/02_intro_showroom_hell-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/studio/bilder/03_studio_card_ankommen_lounge.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 148422,
+    "source": "src/assets/images/studio/bilder/03_studio_card_ankommen_lounge.webp",
+    "sourceBytes": 148422,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/studio/bilder/03_studio_card_ankommen_lounge-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/studio/bilder/03_studio_card_ankommen_lounge-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/studio/bilder/04_studio_card_kuechenwelten_entdecken.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 133102,
+    "source": "src/assets/images/studio/bilder/04_studio_card_kuechenwelten_entdecken.webp",
+    "sourceBytes": 133102,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/studio/bilder/04_studio_card_kuechenwelten_entdecken-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/studio/bilder/04_studio_card_kuechenwelten_entdecken-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/studio/bilder/05_studio_card_materialien_fuehlen.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 159964,
+    "source": "src/assets/images/studio/bilder/05_studio_card_materialien_fuehlen.webp",
+    "sourceBytes": 159964,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/studio/bilder/05_studio_card_materialien_fuehlen-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/studio/bilder/05_studio_card_materialien_fuehlen-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/studio/bilder/06_studio_card_planung_erleben.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 95022,
+    "source": "src/assets/images/studio/bilder/06_studio_card_planung_erleben.webp",
+    "sourceBytes": 95022,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/studio/bilder/06_studio_card_planung_erleben-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/studio/bilder/06_studio_card_planung_erleben-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/studio/bilder/07_studio_card_beratung_vertiefen.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 104162,
+    "source": "src/assets/images/studio/bilder/07_studio_card_beratung_vertiefen.webp",
+    "sourceBytes": 104162,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/studio/bilder/07_studio_card_beratung_vertiefen-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/studio/bilder/07_studio_card_beratung_vertiefen-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/studio/bilder/08_split_section_showroom_gross.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 143580,
+    "source": "src/assets/images/studio/bilder/08_split_section_showroom_gross.webp",
+    "sourceBytes": 143580,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/studio/bilder/08_split_section_showroom_gross-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/studio/bilder/08_split_section_showroom_gross-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/studio/bilder/09_team_beratung_auf_augenhoehe.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 113292,
+    "source": "src/assets/images/studio/bilder/09_team_beratung_auf_augenhoehe.webp",
+    "sourceBytes": 113292,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/studio/bilder/09_team_beratung_auf_augenhoehe-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/studio/bilder/09_team_beratung_auf_augenhoehe-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/studio/bilder/10_final_cta_studio_banner.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 122972,
+    "source": "src/assets/images/studio/bilder/10_final_cta_studio_banner.webp",
+    "sourceBytes": 122972,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/studio/bilder/10_final_cta_studio_banner-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/studio/bilder/10_final_cta_studio_banner-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/studio/feeling/alltag.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 123146,
+    "source": "src/assets/images/studio/feeling/alltag.webp",
+    "sourceBytes": 123146,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/studio/feeling/alltag-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/studio/feeling/alltag-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/studio/feeling/elegant.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 125344,
+    "source": "src/assets/images/studio/feeling/elegant.webp",
+    "sourceBytes": 125344,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/studio/feeling/elegant-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/studio/feeling/elegant-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/studio/feeling/ruhig.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 97898,
+    "source": "src/assets/images/studio/feeling/ruhig.webp",
+    "sourceBytes": 97898,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/studio/feeling/ruhig-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/studio/feeling/ruhig-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/studio/feeling/warm.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 127378,
+    "source": "src/assets/images/studio/feeling/warm.webp",
+    "sourceBytes": 127378,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/studio/feeling/warm-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/studio/feeling/warm-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/stylefinder-assets/00_goldmarmor_hintergrund_reference.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 47052,
+    "source": "src/assets/images/stylefinder-assets/00_goldmarmor_hintergrund_reference.webp",
+    "sourceBytes": 47052,
+    "variants": []
+  },
+  "src/assets/images/stylefinder-assets/01_hero_dark_premium_kitchen.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 83468,
+    "source": "src/assets/images/stylefinder-assets/01_hero_dark_premium_kitchen.webp",
+    "sourceBytes": 83468,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/stylefinder-assets/01_hero_dark_premium_kitchen-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/stylefinder-assets/01_hero_dark_premium_kitchen-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/stylefinder-assets/02_stil_hell_modern_minimal.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 117064,
+    "source": "src/assets/images/stylefinder-assets/02_stil_hell_modern_minimal.webp",
+    "sourceBytes": 117064,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/stylefinder-assets/02_stil_hell_modern_minimal-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/stylefinder-assets/02_stil_hell_modern_minimal-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/stylefinder-assets/03_stil_skandinavisch_natuerlich.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 108814,
+    "source": "src/assets/images/stylefinder-assets/03_stil_skandinavisch_natuerlich.webp",
+    "sourceBytes": 108814,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/stylefinder-assets/03_stil_skandinavisch_natuerlich-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/stylefinder-assets/03_stil_skandinavisch_natuerlich-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/stylefinder-assets/04_stil_hell_wohnlich_landhaus_modern.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 140864,
+    "source": "src/assets/images/stylefinder-assets/04_stil_hell_wohnlich_landhaus_modern.webp",
+    "sourceBytes": 140864,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/stylefinder-assets/04_stil_hell_wohnlich_landhaus_modern-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/stylefinder-assets/04_stil_hell_wohnlich_landhaus_modern-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/stylefinder-assets/05_stil_dunkel_luxurioes_wohnlich.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 131002,
+    "source": "src/assets/images/stylefinder-assets/05_stil_dunkel_luxurioes_wohnlich.webp",
+    "sourceBytes": 131002,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/stylefinder-assets/05_stil_dunkel_luxurioes_wohnlich-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/stylefinder-assets/05_stil_dunkel_luxurioes_wohnlich-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/stylefinder-assets/06_stil_industrial_dark_city.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 114256,
+    "source": "src/assets/images/stylefinder-assets/06_stil_industrial_dark_city.webp",
+    "sourceBytes": 114256,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/stylefinder-assets/06_stil_industrial_dark_city-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/stylefinder-assets/06_stil_industrial_dark_city-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/stylefinder-assets/08_stil_hell_luxurioes_mit_pflanzen.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 98900,
+    "source": "src/assets/images/stylefinder-assets/08_stil_hell_luxurioes_mit_pflanzen.webp",
+    "sourceBytes": 98900,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/stylefinder-assets/08_stil_hell_luxurioes_mit_pflanzen-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/stylefinder-assets/08_stil_hell_luxurioes_mit_pflanzen-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/stylefinder-sec/ber.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 69968,
+    "source": "src/assets/images/stylefinder-sec/ber.webp",
+    "sourceBytes": 69968,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/stylefinder-sec/ber-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/stylefinder-sec/ber-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/stylefinder-sec/insp.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 108780,
+    "source": "src/assets/images/stylefinder-sec/insp.webp",
+    "sourceBytes": 108780,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/stylefinder-sec/insp-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/stylefinder-sec/insp-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/stylefinder-sec/o1.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 87092,
+    "source": "src/assets/images/stylefinder-sec/o1.webp",
+    "sourceBytes": 87092,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/stylefinder-sec/o1-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/stylefinder-sec/o1-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/stylefinder-sec/o2.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 108630,
+    "source": "src/assets/images/stylefinder-sec/o2.webp",
+    "sourceBytes": 108630,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/stylefinder-sec/o2-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/stylefinder-sec/o2-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/stylefinder-sec/o3.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 50840,
+    "source": "src/assets/images/stylefinder-sec/o3.webp",
+    "sourceBytes": 50840,
+    "variants": []
+  },
+  "src/assets/images/stylefinder-sec/o4.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 84530,
+    "source": "src/assets/images/stylefinder-sec/o4.webp",
+    "sourceBytes": 84530,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/stylefinder-sec/o4-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/stylefinder-sec/o4-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/stylefinder-sec/result.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 66992,
+    "source": "src/assets/images/stylefinder-sec/result.webp",
+    "sourceBytes": 66992,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/stylefinder-sec/result-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/stylefinder-sec/result-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/stylefinder-styles/dunkel.webp": {
+    "width": 1086,
+    "height": 1448,
+    "bytes": 75448,
+    "source": "src/assets/images/stylefinder-styles/dunkel.webp",
+    "sourceBytes": 75448,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/stylefinder-styles/dunkel-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/stylefinder-styles/hell.webp": {
+    "width": 1086,
+    "height": 1448,
+    "bytes": 68364,
+    "source": "src/assets/images/stylefinder-styles/hell.webp",
+    "sourceBytes": 68364,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/stylefinder-styles/hell-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/stylefinder-styles/luxurioes.webp": {
+    "width": 1086,
+    "height": 1448,
+    "bytes": 84074,
+    "source": "src/assets/images/stylefinder-styles/luxurioes.webp",
+    "sourceBytes": 84074,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/stylefinder-styles/luxurioes-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/stylefinder-styles/modern.webp": {
+    "width": 1086,
+    "height": 1448,
+    "bytes": 79494,
+    "source": "src/assets/images/stylefinder-styles/modern.webp",
+    "sourceBytes": 79494,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/stylefinder-styles/modern-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/stylefinder-styles/natuerlich.webp": {
+    "width": 1086,
+    "height": 1448,
+    "bytes": 180280,
+    "source": "src/assets/images/stylefinder-styles/natuerlich.webp",
+    "sourceBytes": 180280,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/stylefinder-styles/natuerlich-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/stylefinder-styles/warm.webp": {
+    "width": 1086,
+    "height": 1448,
+    "bytes": 87740,
+    "source": "src/assets/images/stylefinder-styles/warm.webp",
+    "sourceBytes": 87740,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/stylefinder-styles/warm-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/ueber-uns/02_why_videko_beratungsszene.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 104546,
+    "source": "src/assets/images/ueber-uns/02_why_videko_beratungsszene.webp",
+    "sourceBytes": 104546,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/ueber-uns/02_why_videko_beratungsszene-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/ueber-uns/02_why_videko_beratungsszene-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/ueber-uns/05_founder_dennis_placeholder.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 53246,
+    "source": "src/assets/images/ueber-uns/05_founder_dennis_placeholder.webp",
+    "sourceBytes": 53246,
+    "variants": []
+  },
+  "src/assets/images/ueber-uns/05_founder_heiko_placeholder.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 72422,
+    "source": "src/assets/images/ueber-uns/05_founder_heiko_placeholder.webp",
+    "sourceBytes": 72422,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/ueber-uns/05_founder_heiko_placeholder-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/ueber-uns/05_founder_heiko_placeholder-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/ueber-uns/05_founder_vitali_placeholder.webp": {
+    "width": 1254,
+    "height": 1254,
+    "bytes": 100332,
+    "source": "src/assets/images/ueber-uns/05_founder_vitali_placeholder.webp",
+    "sourceBytes": 100332,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/ueber-uns/05_founder_vitali_placeholder-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/ueber-uns/05_founder_vitali_placeholder-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/ueber-uns/06_team_beratung_und_planung.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 99106,
+    "source": "src/assets/images/ueber-uns/06_team_beratung_und_planung.webp",
+    "sourceBytes": 99106,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/ueber-uns/06_team_beratung_und_planung-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/ueber-uns/06_team_beratung_und_planung-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/ueber-uns/07_team_marketing_und_social_media.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 87430,
+    "source": "src/assets/images/ueber-uns/07_team_marketing_und_social_media.webp",
+    "sourceBytes": 87430,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/ueber-uns/07_team_marketing_und_social_media-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/ueber-uns/07_team_marketing_und_social_media-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/ueber-uns/08_team_montage_und_handwerk.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 105248,
+    "source": "src/assets/images/ueber-uns/08_team_montage_und_handwerk.webp",
+    "sourceBytes": 105248,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/ueber-uns/08_team_montage_und_handwerk-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/ueber-uns/08_team_montage_und_handwerk-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/ueber-uns/09_team_organisation_und_partner.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 98322,
+    "source": "src/assets/images/ueber-uns/09_team_organisation_und_partner.webp",
+    "sourceBytes": 98322,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/ueber-uns/09_team_organisation_und_partner-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/ueber-uns/09_team_organisation_und_partner-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/ueber-uns/10_persoenlicher_kundenmoment.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 91202,
+    "source": "src/assets/images/ueber-uns/10_persoenlicher_kundenmoment.webp",
+    "sourceBytes": 91202,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/ueber-uns/10_persoenlicher_kundenmoment-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/ueber-uns/10_persoenlicher_kundenmoment-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/ueber-uns/karte.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 60948,
+    "source": "src/assets/images/ueber-uns/karte.webp",
+    "sourceBytes": 60948,
+    "variants": []
+  },
+  "src/assets/images/ueber-uns/team-neu/t1.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 117394,
+    "source": "src/assets/images/ueber-uns/team-neu/t1.webp",
+    "sourceBytes": 117394,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/ueber-uns/team-neu/t1-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/ueber-uns/team-neu/t1-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/ueber-uns/team-neu/t2.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 100944,
+    "source": "src/assets/images/ueber-uns/team-neu/t2.webp",
+    "sourceBytes": 100944,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/ueber-uns/team-neu/t2-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/ueber-uns/team-neu/t2-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/ueber-uns/team-neu/t3.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 100962,
+    "source": "src/assets/images/ueber-uns/team-neu/t3.webp",
+    "sourceBytes": 100962,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/ueber-uns/team-neu/t3-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/ueber-uns/team-neu/t3-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/ueber-uns/team-neu/t4.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 129726,
+    "source": "src/assets/images/ueber-uns/team-neu/t4.webp",
+    "sourceBytes": 129726,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/ueber-uns/team-neu/t4-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/ueber-uns/team-neu/t4-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/ueber-uns/team-neu/t5.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 121272,
+    "source": "src/assets/images/ueber-uns/team-neu/t5.webp",
+    "sourceBytes": 121272,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/ueber-uns/team-neu/t5-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/ueber-uns/team-neu/t5-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/ueber-uns/team-neu/t6.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 87582,
+    "source": "src/assets/images/ueber-uns/team-neu/t6.webp",
+    "sourceBytes": 87582,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/ueber-uns/team-neu/t6-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/ueber-uns/team-neu/t6-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/vorher-nachher/02_hero_dark_kitchen_banner.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 68102,
+    "source": "src/assets/images/vorher-nachher/02_hero_dark_kitchen_banner.webp",
+    "sourceBytes": 68102,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/vorher-nachher/02_hero_dark_kitchen_banner-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/vorher-nachher/02_hero_dark_kitchen_banner-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/vorher-nachher/03_intro_helle_wohnkueche.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 92676,
+    "source": "src/assets/images/vorher-nachher/03_intro_helle_wohnkueche.webp",
+    "sourceBytes": 92676,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/vorher-nachher/03_intro_helle_wohnkueche-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/vorher-nachher/03_intro_helle_wohnkueche-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/vorher-nachher/04_projekt_01_kueche_wohnbereich.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 113842,
+    "source": "src/assets/images/vorher-nachher/04_projekt_01_kueche_wohnbereich.webp",
+    "sourceBytes": 113842,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/vorher-nachher/04_projekt_01_kueche_wohnbereich-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/vorher-nachher/04_projekt_01_kueche_wohnbereich-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/vorher-nachher/05_projekt_02_modernisierung_bestandskueche.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 92692,
+    "source": "src/assets/images/vorher-nachher/05_projekt_02_modernisierung_bestandskueche.webp",
+    "sourceBytes": 92692,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/vorher-nachher/05_projekt_02_modernisierung_bestandskueche-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/vorher-nachher/05_projekt_02_modernisierung_bestandskueche-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/vorher-nachher/06_projekt_03_raumkonzept_licht.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 72182,
+    "source": "src/assets/images/vorher-nachher/06_projekt_03_raumkonzept_licht.webp",
+    "sourceBytes": 72182,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/vorher-nachher/06_projekt_03_raumkonzept_licht-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/vorher-nachher/06_projekt_03_raumkonzept_licht-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/vorher-nachher/07_projekt_04_komplettumbau.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 197378,
+    "source": "src/assets/images/vorher-nachher/07_projekt_04_komplettumbau.webp",
+    "sourceBytes": 197378,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/vorher-nachher/07_projekt_04_komplettumbau-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/vorher-nachher/07_projekt_04_komplettumbau-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/vorher-nachher/08_projekt_05_wohnkueche_deluxe.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 103790,
+    "source": "src/assets/images/vorher-nachher/08_projekt_05_wohnkueche_deluxe.webp",
+    "sourceBytes": 103790,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/vorher-nachher/08_projekt_05_wohnkueche_deluxe-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/vorher-nachher/08_projekt_05_wohnkueche_deluxe-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/vorher-nachher/11_beratung_kundenmoment.webp": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 66150,
+    "source": "src/assets/images/vorher-nachher/11_beratung_kundenmoment.webp",
+    "sourceBytes": 66150,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/vorher-nachher/11_beratung_kundenmoment-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/vorher-nachher/11_beratung_kundenmoment-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/vorher-nachher/nachher-1.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 61350,
+    "source": "src/assets/images/vorher-nachher/nachher-1.webp",
+    "sourceBytes": 61350,
+    "variants": []
+  },
+  "src/assets/images/vorher-nachher/nachher-2.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 71298,
+    "source": "src/assets/images/vorher-nachher/nachher-2.webp",
+    "sourceBytes": 71298,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/vorher-nachher/nachher-2-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/vorher-nachher/nachher-2-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/vorher-nachher/nachher-3.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 108034,
+    "source": "src/assets/images/vorher-nachher/nachher-3.webp",
+    "sourceBytes": 108034,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/vorher-nachher/nachher-3-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/vorher-nachher/nachher-3-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/vorher-nachher/vorher-1.webp": {
+    "width": 4032,
+    "height": 3024,
+    "bytes": 277960,
+    "source": "src/assets/images/vorher-nachher/vorher-1.webp",
+    "sourceBytes": 277960,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/vorher-nachher/vorher-1-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/vorher-nachher/vorher-1-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/vorher-nachher/vorher-2.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 93036,
+    "source": "src/assets/images/vorher-nachher/vorher-2.webp",
+    "sourceBytes": 93036,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/vorher-nachher/vorher-2-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/vorher-nachher/vorher-2-960w.webp"
+      }
+    ]
+  },
+  "src/assets/images/vorher-nachher/vorher-3.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 121498,
+    "source": "src/assets/images/vorher-nachher/vorher-3.webp",
+    "sourceBytes": 121498,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/vorher-nachher/vorher-3-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/vorher-nachher/vorher-3-960w.webp"
+      }
+    ]
+  }
+}

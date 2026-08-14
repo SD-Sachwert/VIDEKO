@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   ArrowRight, ArrowUpRight, Check, PenTool, Telescope, Heart, Gem, LifeBuoy,
+  ChefHat, Zap, Layers, PaintRoller, Ruler, Lightbulb, Wrench,
 } from 'lucide-react'
 
 import Hero from '../components/Hero.jsx'
@@ -12,38 +13,36 @@ import KfgTeaser from '../components/KfgTeaser.jsx'
 import { KiHinweis } from '../components/legal/KiKennzeichnung.jsx'
 import ExplodingKitchenModal from '../components/ExplodingKitchenModal.jsx'
 import HeroExperience from '../components/HeroExperience.jsx'
+import LazyVideo from '../components/LazyVideo.jsx'
 import StylefinderHero from '../components/StylefinderHero.jsx'
 import ProcessSection from '../components/ProcessSection.jsx'
+import { journalArticles } from '../data/journal.js'
 import verwandleVideo from '../assets/images/home/verwandle-raum.mp4'
-import gameScene from '../assets/images/kuechenfehler/scene.png'
+import gameScene from '../assets/images/kuechenfehler/scene.webp'
 
-import wayInsp from '../assets/images/home/way-organic-1.png'
-import waySf from '../assets/images/home/way-organic-2.png'
-import wayBer from '../assets/images/home/way-organic-3.png'
-import sfResult from '../assets/images/kuechenwelten/stilfinderresult-modern-warm.jpg'
-import sfCard1 from '../assets/images/kuechenwelten/stilfindercard-modern-warm.jpg'
-import sfCard2 from '../assets/images/kuechenwelten/stilfindercard-zeitlos-elegant.jpg'
-import sfCard3 from '../assets/images/kuechenwelten/stilfindercard-natuerlich-luxurioes.jpg'
-import gKuechen from '../assets/images/inspiration/02_moderne_kueche.png'
-import gMat from '../assets/images/inspiration/06_materialien_und_details.png'
-import gBer from '../assets/images/ueber-uns/02_why_videko_beratungsszene.png'
-import gTech from '../assets/images/inspiration/09_premium_architektur_kueche.png'
-import gBesicht from '../assets/images/studio/bilder/01_hero_studio_showroom.png'
-import pc1 from '../assets/images/leistungen/ls-consulting.png'
-import pc2 from '../assets/images/leistungen/ls-3d.png'
-import pc3 from '../assets/images/leistungen/ls-materials.png'
-import pc4 from '../assets/images/leistungen/ls-coordination.png'
-import pc5 from '../assets/images/leistungen/ls-install.png'
-import pc6 from '../assets/images/leistungen/ls-aftercare.png'
-import tm1 from '../assets/images/ueber-uns/06_team_beratung_und_planung.png'
-import tm2 from '../assets/images/ueber-uns/07_team_marketing_und_social_media.png'
-import tm3 from '../assets/images/ueber-uns/08_team_montage_und_handwerk.png'
-import tm4 from '../assets/images/ueber-uns/09_team_organisation_und_partner.png'
-import j1 from '../assets/images/inspiration/09_premium_architektur_kueche.png'
-import j2 from '../assets/images/inspiration/06_materialien_und_details.png'
-import j3 from '../assets/images/inspiration/10_favoriten_wohnkueche_luxus.png'
-import j4 from '../assets/images/inspiration/03_wohnliche_kueche.png'
-import finalImg from '../assets/images/studio/bilder/10_final_cta_studio_banner.png'
+import wayInsp from '../assets/images/home/way-organic-1.webp'
+import waySf from '../assets/images/home/way-organic-2.webp'
+import wayBer from '../assets/images/home/way-organic-3.webp'
+import sfResult from '../assets/images/kuechenwelten/stilfinderresult-modern-warm.webp'
+import sfCard1 from '../assets/images/kuechenwelten/stilfindercard-modern-warm.webp'
+import sfCard2 from '../assets/images/kuechenwelten/stilfindercard-zeitlos-elegant.webp'
+import sfCard3 from '../assets/images/kuechenwelten/stilfindercard-natuerlich-luxurioes.webp'
+import gKuechen from '../assets/images/inspiration/02_moderne_kueche.webp'
+import gMat from '../assets/images/inspiration/06_materialien_und_details.webp'
+import gBer from '../assets/images/ueber-uns/02_why_videko_beratungsszene.webp'
+import gTech from '../assets/images/inspiration/09_premium_architektur_kueche.webp'
+import gBesicht from '../assets/images/studio/bilder/01_hero_studio_showroom.webp'
+import pc1 from '../assets/images/leistungen/ls-consulting.webp'
+import pc2 from '../assets/images/leistungen/ls-3d.webp'
+import pc3 from '../assets/images/leistungen/ls-materials.webp'
+import pc4 from '../assets/images/leistungen/ls-coordination.webp'
+import pc5 from '../assets/images/leistungen/ls-install.webp'
+import pc6 from '../assets/images/leistungen/ls-aftercare.webp'
+import tm1 from '../assets/images/ueber-uns/06_team_beratung_und_planung.webp'
+import tm2 from '../assets/images/ueber-uns/07_team_marketing_und_social_media.webp'
+import tm3 from '../assets/images/ueber-uns/08_team_montage_und_handwerk.webp'
+import tm4 from '../assets/images/ueber-uns/09_team_organisation_und_partner.webp'
+import finalImg from '../assets/images/studio/bilder/10_final_cta_studio_banner.webp'
 
 const WAYS = [
   { n: '01', title: 'Inspiration finden', text: 'Entdecke Stile, Materialien und Ideen für die Küche, die zu dir passt.', cta: 'Jetzt entdecken', to: '/inspiration', img: wayInsp },
@@ -92,12 +91,30 @@ const TEAM = [
 
 const TEAM_BENEFITS = ['Erfahren & engagiert', 'Kreativ & individuell', 'Verlässlich & transparent', 'Qualität mit Leidenschaft']
 
-const JOURNAL = [
-  { tag: 'Trends', title: 'Die 7 Küchentrends, die bleiben', img: j1, to: '/journal/7-kuechenfehler-die-du-spaeter-jeden-tag-bereust' },
-  { tag: 'Materialien', title: 'Naturstein in der Küche – zeitlos schön', img: j2, to: '/journal/welche-arbeitsplatte-passt-zu-mir' },
-  { tag: 'Projekt', title: 'Urban Luxury in Würzburg', img: j3, to: '/journal/fronten-farben-materialien' },
-  { tag: 'Licht', title: 'Beleuchtung in der Küche: So geht Atmosphäre', img: j4, to: '/journal/licht-in-der-kueche' },
+// Kurzuebersicht der Gewerke, die bei einem Komplettumbau zusammenkommen.
+// Details und die korrekte Einordnung (VIDEKO plant und koordiniert, ausgefuehrt
+// wird mit Fachpartnern) stehen auf /alles-aus-einer-hand.
+const RAUM_GEWERKE = [
+  { icon: ChefHat, label: 'Küche' },
+  { icon: Zap, label: 'Elektro' },
+  { icon: Layers, label: 'Boden' },
+  { icon: PaintRoller, label: 'Wand' },
+  { icon: Ruler, label: 'Spanndecke' },
+  { icon: Lightbulb, label: 'Licht' },
+  { icon: Wrench, label: 'Montage' },
 ]
+
+// Die Kacheln ziehen Titel, Kategorie und Bild direkt aus journal.js. Vorher
+// standen hier eigene Ueberschriften, die nicht zum verlinkten Artikel passten.
+const JOURNAL_SLUGS = [
+  '7-kuechenfehler-die-du-spaeter-jeden-tag-bereust',
+  'welche-arbeitsplatte-passt-zu-mir',
+  'fronten-farben-materialien',
+  'licht-in-der-kueche',
+]
+const JOURNAL = JOURNAL_SLUGS
+  .map((slug) => journalArticles.find((a) => a.slug === slug))
+  .filter(Boolean)
 
 export default function Home() {
   const [whyActive, setWhyActive] = useState(null)
@@ -164,7 +181,7 @@ export default function Home() {
             <p className="lp-lead">Mit durchdachtem Design und sauberer Planung wird aus einem Raum zum Ankommen mehr.</p>
           </Reveal>
           <Reveal className="lp-transform__video" delay={0.1}>
-            <video src={verwandleVideo} autoPlay muted loop playsInline preload="metadata" aria-label="Küchen-Transformation von VIDEKO" />
+            <LazyVideo src={verwandleVideo} aria-label="Küchen-Transformation von VIDEKO" />
           </Reveal>
           <div className="lp-transform__stats2">
             {STATS.map((s, i) => (
@@ -183,7 +200,31 @@ export default function Home() {
       {/* 6 — PROZESS (neue Wellen-Sektion) */}
       <ProcessSection />
 
-      {/* 8 — JOURNAL */}
+      {/* 8 — ALLES AUS EINER HAND */}
+      <section className="section raum-sec">
+        <div className="container">
+          <SectionHeader
+            align="center"
+            kicker="Komplettumbau"
+            title={<>Nicht nur Küche. <span className="grad">Der ganze Raum.</span></>}
+            lead="Elektro, Boden, Wand, Decke und Licht hängen an jeder neuen Küche mit dran. Wir planen sie zusammen und koordinieren die Fachpartner, die sie umsetzen."
+          />
+          <Reveal className="raum-sec__grid">
+            {RAUM_GEWERKE.map(({ icon: Icon, label }) => (
+              <span className="raum-chip" key={label}>
+                <Icon size={16} strokeWidth={1.6} aria-hidden="true" />
+                {label}
+              </span>
+            ))}
+          </Reveal>
+          <Reveal className="raum-sec__cta">
+            <CTAButton to="/alles-aus-einer-hand">Alles aus einer Hand</CTAButton>
+            <CTAButton to="/leistungen" variant="dark">Unsere Leistungen</CTAButton>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* 9 — JOURNAL */}
       <section className="section section--light lp-journal-sec">
         <div className="container lp-journal-head">
           <Reveal>
@@ -196,11 +237,11 @@ export default function Home() {
         <div className="container">
           <div className="lp-journal">
             {JOURNAL.map((a, i) => (
-              <Reveal key={a.title} delay={(i % 4) * 0.06}>
-                <Link to={a.to} className="lpjcard">
-                  <span className="lpjcard__img" style={{ backgroundImage: `url(${a.img})` }} aria-hidden="true" />
+              <Reveal key={a.slug} delay={(i % 4) * 0.06}>
+                <Link to={`/journal/${a.slug}`} className="lpjcard">
+                  <span className="lpjcard__img" style={{ backgroundImage: `url(${a.image})` }} aria-hidden="true" />
                   <span className="lpjcard__body">
-                    <span className="lpjcard__tag">{a.tag}</span>
+                    <span className="lpjcard__tag">{a.category}</span>
                     <span className="lpjcard__title">{a.title}</span>
                     <span className="lpjcard__cta">Jetzt lesen <ArrowUpRight size={15} strokeWidth={2} /></span>
                   </span>

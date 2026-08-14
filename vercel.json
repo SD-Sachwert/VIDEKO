@@ -4,5 +4,23 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "installCommand": "npm install",
-  "rewrites": [{ "source": "/((?!api/).*)", "destination": "/index.html" }]
+
+  "//": [
+    "Kein Catch-all-Rewrite mehr auf /index.html.",
+    "scripts/prerender.mjs legt fuer JEDE bekannte Route eine eigene",
+    "dist/<pfad>/index.html mit deren Metadaten ab. Der Dateisystem-Treffer",
+    "beantwortet Deep Links also weiterhin mit HTTP 200 — aber mit dem",
+    "richtigen Kopf. Alles Unbekannte faellt jetzt auf dist/404.html und",
+    "bekommt einen echten HTTP 404 statt heimlich die Startseite.",
+    "Die Funktionen unter /api/ bleiben davon unberuehrt."
+  ],
+
+  "trailingSlash": false,
+
+  "redirects": [
+    { "source": "/materialien", "destination": "/inspiration", "permanent": true },
+    { "source": "/kontakt", "destination": "/beratung", "permanent": true },
+    { "source": "/ueber-videko", "destination": "/ueber-uns", "permanent": true },
+    { "source": "/kuechenwelten", "destination": "/stylefinder", "permanent": true }
+  ]
 }

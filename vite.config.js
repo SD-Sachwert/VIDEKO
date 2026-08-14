@@ -4,6 +4,11 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  build: {
+    // scripts/prerender.mjs braucht die gehashten Asset-URLs (z. B. das Bild
+    // eines Journalartikels als og:image), bevor es das HTML schreibt.
+    manifest: true,
+  },
   server: {
     watch: {
       // Static assets are dropped in (large) batches. While Windows is still

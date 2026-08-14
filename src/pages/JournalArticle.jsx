@@ -3,7 +3,11 @@ import { ArrowLeft, ArrowUpRight, Clock } from 'lucide-react'
 
 import Reveal from '../components/Reveal.jsx'
 import CTAButton from '../components/CTAButton.jsx'
+import Img from '../components/Img.jsx'
+import TextLink from '../components/TextLink.jsx'
+import Seo from '../components/Seo.jsx'
 import { journalArticles } from '../data/journal.js'
+import { journalArticleHead } from '../data/head.js'
 
 export default function JournalArticle() {
   const { slug } = useParams()
@@ -14,10 +18,16 @@ export default function JournalArticle() {
 
   return (
     <div className="journal-page jarticle-page">
+      {/* Title und Description kommen aus journal.js – dort gepflegt, hier nur
+          verwendet. Das Artikelbild ist zugleich das OG-Bild. Derselbe Builder
+          erzeugt das vorgerenderte HTML in scripts/prerender.mjs. */}
+      <Seo {...journalArticleHead(article)} />
       {/* HERO */}
       <section className="pagehero jarticle-hero">
         <div className="pagehero__media" aria-hidden="true">
-          <img src={article.image} alt="" className="pagehero__img" />
+          {/* LCP-Element des Artikels. Im Audit lag der LCP hier mobil bei
+              18,8 s — unpriorisiertes 2 MB-PNG. Jetzt WebP, eager, high. */}
+          <Img src={article.image} alt="" className="pagehero__img" priority sizes="100vw" />
           <div className="pagehero__veil" />
         </div>
         <div className="container jarticle-hero__inner">
@@ -43,6 +53,12 @@ export default function JournalArticle() {
             <span className="jarticle__fazit-k">Fazit</span>
             <p>{article.fazit}</p>
           </Reveal>
+          {/* Genau ein weiterfuehrender Textlink pro Artikel: /leistungen war
+              aus dem Journal bisher gar nicht erreichbar. */}
+          <Reveal as="p" className="jarticle__weiter">
+            Wie so ein Projekt bei VIDEKO abläuft, steht unter{' '}
+            <TextLink href="/leistungen">Leistungen</TextLink>.
+          </Reveal>
           <Reveal className="jarticle__cta">
             <CTAButton to="/beratung">Beratung anfragen</CTAButton>
             <CTAButton to="/stylefinder" variant="dark">Stylefinder starten</CTAButton>
@@ -58,7 +74,7 @@ export default function JournalArticle() {
             {related.map((a, i) => (
               <Reveal key={a.slug} delay={(i % 3) * 0.06}>
                 <Link to={`/journal/${a.slug}`} className="jcard">
-                  <span className="jcard__media"><img src={a.image} alt="" loading="lazy" /><span className="jcard__badge">{a.category}</span></span>
+                  <span className="jcard__media"><Img src={a.image} alt="" sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 380px" /><span className="jcard__badge">{a.category}</span></span>
                   <span className="jcard__body">
                     <span className="jcard__title">{a.title}</span>
                     <span className="jcard__teaser">{a.teaser}</span>

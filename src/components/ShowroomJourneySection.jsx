@@ -7,16 +7,16 @@ import MagneticButton from './MagneticButton.jsx'
 import TextLink from './TextLink.jsx'
 import { KiHinweis } from './legal/KiKennzeichnung.jsx'
 
-import heroImmersive from '../assets/images/showroom/showroom-hero-immersive.png'
-import ctaWide from '../assets/images/showroom/showroom-cta-wide.png'
-import j01 from '../assets/images/showroom/journey-01-ankommen.png'
-import j02 from '../assets/images/showroom/journey-02-eintreten.png'
-import j03 from '../assets/images/showroom/journey-03-wohlfuehlen.png'
-import j04 from '../assets/images/showroom/journey-04-geniessen.png'
-import j05 from '../assets/images/showroom/journey-05-begreifen.png'
-import j06 from '../assets/images/showroom/journey-06-entdecken.png'
-import j07 from '../assets/images/showroom/journey-07-verstehen.png'
-import j08 from '../assets/images/showroom/journey-08-verlieben.png'
+import heroImmersive from '../assets/images/showroom/showroom-hero-immersive.webp'
+import ctaWide from '../assets/images/showroom/showroom-cta-wide.webp'
+import j01 from '../assets/images/showroom/journey-01-ankommen.webp'
+import j02 from '../assets/images/showroom/journey-02-eintreten.webp'
+import j03 from '../assets/images/showroom/journey-03-wohlfuehlen.webp'
+import j04 from '../assets/images/showroom/journey-04-geniessen.webp'
+import j05 from '../assets/images/showroom/journey-05-begreifen.webp'
+import j06 from '../assets/images/showroom/journey-06-entdecken.webp'
+import j07 from '../assets/images/showroom/journey-07-verstehen.webp'
+import j08 from '../assets/images/showroom/journey-08-verlieben.webp'
 
 const JOURNEY = [
   { n: '01', title: 'Ankommen', image: j01, text: 'Willkommen in einer Welt, die Qualität von außen zeigt.' },
@@ -87,11 +87,13 @@ export default function ShowroomJourneySection() {
         <div className="container showroom__portal-copy">
           <Reveal>
             <span className="kicker kicker--gold">Dein Weg durch unseren Showroom</span>
-            <h2 className="showroom__title">
+            {/* Einstiegsueberschrift der Seite /showroom — deshalb h1.
+                Die Optik bleibt unveraendert (gleiche Klasse). */}
+            <h1 className="showroom__title">
               Eintauchen<br />
               statt nur<br />
               <span className="grad">anschauen.</span>
-            </h2>
+            </h1>
             <p className="showroom__lead">
               Erlebe unsere Küchenwelten mit allen Sinnen. Eine Reise durch
               Design, Materialität und Atmosphäre.

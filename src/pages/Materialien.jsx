@@ -1,6 +1,6 @@
 import PageHero from '../components/PageHero.jsx'
 import MaterialsSection from '../components/MaterialsSection.jsx'
-import matHero from '../assets/images/materialien/materials-hero-bg-16x9.png'
+import matHero from '../assets/images/materialien/materials-hero-bg-16x9.webp'
 
 export default function Materialien() {
   return (

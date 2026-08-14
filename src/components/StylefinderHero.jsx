@@ -5,13 +5,13 @@ import { ArrowRight, Check, ShieldCheck, Sparkles, Clock, Award } from 'lucide-r
 import Reveal from './Reveal.jsx'
 import CTAButton from './CTAButton.jsx'
 import { KiHinweis } from './legal/KiKennzeichnung.jsx'
-import inspImg from '../assets/images/stylefinder-sec/insp.png'
-import berImg from '../assets/images/stylefinder-sec/ber.png'
-import resultImg from '../assets/images/stylefinder-sec/result.png'
-import o1 from '../assets/images/stylefinder-sec/o1.png'
-import o2 from '../assets/images/stylefinder-sec/o2.png'
-import o3 from '../assets/images/stylefinder-sec/o3.png'
-import o4 from '../assets/images/stylefinder-sec/o4.png'
+import inspImg from '../assets/images/stylefinder-sec/insp.webp'
+import berImg from '../assets/images/stylefinder-sec/ber.webp'
+import resultImg from '../assets/images/stylefinder-sec/result.webp'
+import o1 from '../assets/images/stylefinder-sec/o1.webp'
+import o2 from '../assets/images/stylefinder-sec/o2.webp'
+import o3 from '../assets/images/stylefinder-sec/o3.webp'
+import o4 from '../assets/images/stylefinder-sec/o4.webp'
 
 const OPTIONS = [
   { img: o1, t: 'Modern Luxury' },

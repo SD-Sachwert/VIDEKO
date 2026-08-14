@@ -8,6 +8,7 @@ import {
 import Reveal from '../components/Reveal.jsx'
 import Seo from '../components/Seo.jsx'
 import { familyJsonLd } from '../components/seo-jsonld.js'
+import { merchDetailHead } from '../data/head.js'
 import ProductGallery from '../components/merch/ProductGallery.jsx'
 import ProductCard from '../components/merch/ProductCard.jsx'
 import FamilyCard from '../components/merch/FamilyCard.jsx'
@@ -406,12 +407,10 @@ function Konfigurator({ family, start }) {
 
   return (
     <main className="pdp">
-      <Seo
-        title={`${family.label} – VIDEKO Merch`}
-        description={quelle.tagline}
-        canonicalPath={`/merch/${family.slug}`}
-        jsonLd={ld}
-      />
+      <Seo {...merchDetailHead({
+        name: family.label, tagline: quelle.tagline, slug: family.slug,
+        image: unit.image, extraLd: ld,
+      })} />
       <div className="container">
         <nav className="pdp__crumbs" aria-label="Brotkrumen">
           <button type="button" className="pdp__back" onClick={zurueck}>
@@ -727,12 +726,10 @@ function Einzelseite({ product }) {
 
   return (
     <main className="pdp">
-      <Seo
-        title={`${product.name} – VIDEKO Merch`}
-        description={product.tagline}
-        canonicalPath={`/merch/${product.slug}`}
-        jsonLd={ld}
-      />
+      <Seo {...merchDetailHead({
+        name: product.name, tagline: product.tagline, slug: product.slug,
+        image: product.image, extraLd: ld,
+      })} />
       <div className="container">
         <nav className="pdp__crumbs" aria-label="Brotkrumen">
           <button type="button" className="pdp__back" onClick={zurueck}>

@@ -10,10 +10,12 @@
  * damit der Basename-Resolver in merch.js sauber bleibt) und werden hier über
  * ihren Dateinamen aufgelöst.
  */
-const IMG = import.meta.glob('../assets/images/performance/*.webp', {
-  eager: true,
-  import: 'default',
-})
+// srcset-Varianten (…-480w.webp) sind ausgeschlossen — sie werden ueber
+// components/Img.jsx anhand der Basis-URL aufgeloest, nicht ueber den Namen.
+const IMG = import.meta.glob(
+  ['../assets/images/performance/*.webp', '!../assets/images/performance/*-[0-9]*w.webp'],
+  { eager: true, import: 'default' },
+)
 const bild = (name) => IMG[`../assets/images/performance/${name}`]
 
 const ONYX = { label: 'Onyx', hex: '#141312' }

@@ -8,7 +8,7 @@ import FeatureCard from '../components/FeatureCard.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import Reveal from '../components/Reveal.jsx'
 
-import heroImg from '../assets/images/shared/hero-videko-final-16x9.png'
+import heroImg from '../assets/images/shared/hero-videko-final-16x9.webp'
 
 const VALUES = [
   { icon: Handshake, title: 'Persönlich & unabhängig', text: 'Feste Ansprechpartner statt anonymer Abwicklung.' },

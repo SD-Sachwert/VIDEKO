@@ -7,23 +7,24 @@ import {
 } from 'lucide-react'
 
 import Reveal from '../components/Reveal.jsx'
+import LazyVideo from '../components/LazyVideo.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
 import { KiHinweis } from '../components/legal/KiKennzeichnung.jsx'
 
-import heroImg from '../assets/images/leistungen/ls-hero.png'
-import featureImg from '../assets/images/leistungen/ls-feature.png'
-import img3d from '../assets/images/leistungen/ls-3d.png'
-import imgMat from '../assets/images/leistungen/ls-materials.png'
+import heroImg from '../assets/images/leistungen/ls-hero.webp'
+import featureImg from '../assets/images/leistungen/ls-feature.webp'
+import img3d from '../assets/images/leistungen/ls-3d.webp'
+import imgMat from '../assets/images/leistungen/ls-materials.webp'
 import vnVideo from '../assets/images/leistungen/vorher-nachher.mp4'
-import p01 from '../assets/images/leistungen/baustein/panel-01.png'
-import p02 from '../assets/images/leistungen/baustein/panel-02.png'
-import p03 from '../assets/images/leistungen/baustein/panel-03.png'
-import p04 from '../assets/images/leistungen/baustein/panel-04.png'
-import p05 from '../assets/images/leistungen/baustein/panel-05.png'
-import p06 from '../assets/images/leistungen/baustein/panel-06.png'
-import p07 from '../assets/images/leistungen/baustein/panel-07.png'
-import p08 from '../assets/images/leistungen/baustein/panel-08.png'
+import p01 from '../assets/images/leistungen/baustein/panel-01.webp'
+import p02 from '../assets/images/leistungen/baustein/panel-02.webp'
+import p03 from '../assets/images/leistungen/baustein/panel-03.webp'
+import p04 from '../assets/images/leistungen/baustein/panel-04.webp'
+import p05 from '../assets/images/leistungen/baustein/panel-05.webp'
+import p06 from '../assets/images/leistungen/baustein/panel-06.webp'
+import p07 from '../assets/images/leistungen/baustein/panel-07.webp'
+import p08 from '../assets/images/leistungen/baustein/panel-08.webp'
 
 const FEATURE = ['Individuelle Beratung', 'Kreative Konzepte', 'Präzise Planung', 'Reibungslose Umsetzung', 'Verlässlicher Service']
 
@@ -109,9 +110,7 @@ export default function Leistungen() {
       <section className="section leist-transform">
         <div className="container">
           <Reveal className="vfeature">
-            <video className="vfeature__vid" autoPlay muted loop playsInline preload="none" poster={featureImg} aria-hidden="true">
-              <source src={vnVideo} type="video/mp4" />
-            </video>
+            <LazyVideo className="vfeature__vid" src={vnVideo} poster={featureImg} aria-hidden="true" />
             <span className="vfeature__veil" aria-hidden="true" />
             <div className="vfeature__copy">
               <span className="kicker kicker--gold">Unser Anspruch</span>

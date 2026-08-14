@@ -3,20 +3,21 @@ import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { Check, ArrowRight } from 'lucide-react'
 
 import Reveal from '../components/Reveal.jsx'
+import LazyVideo from '../components/LazyVideo.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
 import { KiBadge, KiHinweis } from '../components/legal/KiKennzeichnung.jsx'
 
-import heroImg from '../assets/images/studio/bilder/01_hero_studio_showroom.png'
-import introImg from '../assets/images/studio/bilder/02_intro_showroom_hell.png'
-import cAnkommen from '../assets/images/studio/bilder/03_studio_card_ankommen_lounge.png'
-import cWelten from '../assets/images/studio/bilder/04_studio_card_kuechenwelten_entdecken.png'
-import cMaterial from '../assets/images/studio/bilder/05_studio_card_materialien_fuehlen.png'
-import cPlanung from '../assets/images/studio/bilder/06_studio_card_planung_erleben.png'
-import cBeratung from '../assets/images/studio/bilder/07_studio_card_beratung_vertiefen.png'
-import splitImg from '../assets/images/studio/bilder/08_split_section_showroom_gross.png'
-import teamImg from '../assets/images/studio/bilder/09_team_beratung_auf_augenhoehe.png'
-import ctaImg from '../assets/images/studio/bilder/10_final_cta_studio_banner.png'
+import heroImg from '../assets/images/studio/bilder/01_hero_studio_showroom.webp'
+import introImg from '../assets/images/studio/bilder/02_intro_showroom_hell.webp'
+import cAnkommen from '../assets/images/studio/bilder/03_studio_card_ankommen_lounge.webp'
+import cWelten from '../assets/images/studio/bilder/04_studio_card_kuechenwelten_entdecken.webp'
+import cMaterial from '../assets/images/studio/bilder/05_studio_card_materialien_fuehlen.webp'
+import cPlanung from '../assets/images/studio/bilder/06_studio_card_planung_erleben.webp'
+import cBeratung from '../assets/images/studio/bilder/07_studio_card_beratung_vertiefen.webp'
+import splitImg from '../assets/images/studio/bilder/08_split_section_showroom_gross.webp'
+import teamImg from '../assets/images/studio/bilder/09_team_beratung_auf_augenhoehe.webp'
+import ctaImg from '../assets/images/studio/bilder/10_final_cta_studio_banner.webp'
 import umbauVideo from '../assets/images/studio/bilder/Umbau.mp4'
 
 const HERO_BADGES = ['Persönliche Beratung', 'Hochwertige Materialien', 'Planung auf höchstem Niveau']
@@ -81,9 +82,7 @@ export default function Studio() {
       <section className="section studio-video-sec">
         <div className="container">
           <Reveal className="vfeature">
-            <video className="vfeature__vid" autoPlay muted loop playsInline poster={introImg} aria-hidden="true">
-              <source src={umbauVideo} type="video/mp4" />
-            </video>
+            <LazyVideo className="vfeature__vid" src={umbauVideo} poster={introImg} aria-hidden="true" />
             <span className="vfeature__veil" aria-hidden="true" />
             <div className="vfeature__copy">
               <span className="kicker kicker--gold">Studio im Aufbau</span>

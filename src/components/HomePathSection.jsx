@@ -4,14 +4,14 @@ import { Award, MapPin, User, ArrowRight, Gem, Hammer, Layers, Phone } from 'luc
 
 import Reveal from './Reveal.jsx'
 
-import bgMarble from '../assets/images/home/bg-marble-warm.jpg'
-import goldOrbit from '../assets/images/home/gold-orbit-lines.jpg'
-import heroArch from '../assets/images/shared/hero-kitchen-arch.jpg'
+import bgMarble from '../assets/images/home/bg-marble-warm.webp'
+import goldOrbit from '../assets/images/home/gold-orbit-lines.webp'
+import heroArch from '../assets/images/shared/hero-kitchen-arch.webp'
 // NOTE: placeholder card crops — replace later with clean card-*.jpg
-import cardStylefinder from '../assets/images/home/feature-stylefinder.png'
-import cardShowroom from '../assets/images/home/feature-showroom.png'
-import cardConsulting from '../assets/images/home/feature-consulting.png'
-import emblem from '../assets/brand/logo-main-v2.png'
+import cardStylefinder from '../assets/images/home/feature-stylefinder.webp'
+import cardShowroom from '../assets/images/home/feature-showroom.webp'
+import cardConsulting from '../assets/images/home/feature-consulting.webp'
+import emblem from '../assets/brand/logo-main-v2.webp'
 
 const CARDS = [
   {

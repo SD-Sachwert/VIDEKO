@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight, Sparkles, Heart, BadgeCheck } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
-import modern from '../assets/images/stylefinder-styles/modern.png'
-import warm from '../assets/images/stylefinder-styles/warm.png'
-import dunkel from '../assets/images/stylefinder-styles/dunkel.png'
-import hell from '../assets/images/stylefinder-styles/hell.png'
-import natuerlich from '../assets/images/stylefinder-styles/natuerlich.png'
-import luxurioes from '../assets/images/stylefinder-styles/luxurioes.png'
+import modern from '../assets/images/stylefinder-styles/modern.webp'
+import warm from '../assets/images/stylefinder-styles/warm.webp'
+import dunkel from '../assets/images/stylefinder-styles/dunkel.webp'
+import hell from '../assets/images/stylefinder-styles/hell.webp'
+import natuerlich from '../assets/images/stylefinder-styles/natuerlich.webp'
+import luxurioes from '../assets/images/stylefinder-styles/luxurioes.webp'
 
 const STYLES = [
   { img: modern, t: 'Modern', d: 'Klar. Reduziert. Zeitgemäß.' },

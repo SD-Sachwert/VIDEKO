@@ -1,4 +1,5 @@
 import Reveal from './Reveal.jsx'
+import Img from './Img.jsx'
 import { KiHinweis } from './legal/KiKennzeichnung.jsx'
 
 /**
@@ -14,7 +15,9 @@ export default function PageHero({ kicker, title, lead, image, children, classNa
     <section className={`pagehero ${className}`.trim()}>
       {image && (
         <div className="pagehero__media">
-          <img src={image} alt="" className="pagehero__img" aria-hidden="true" />
+          {/* Das Hero-Bild ist auf Unterseiten regelmaessig das LCP-Element:
+              eager laden, hoch priorisieren, niemals lazy. */}
+          <Img src={image} alt="" className="pagehero__img" aria-hidden="true" priority sizes="100vw" />
           <div className="pagehero__veil" aria-hidden="true" />
           {aiImage && <KiHinweis className="pagehero__ainote" variant={aiVariant} />}
         </div>

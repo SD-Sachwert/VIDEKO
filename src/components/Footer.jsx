@@ -1,9 +1,10 @@
 import { Link, useLocation } from 'react-router-dom'
 import { MapPin, Mail, Phone, ArrowRight } from 'lucide-react'
-import logoMark from '../assets/brand/logo-main-v2.png'
+import logoMark from '../assets/brand/logo-main-v2.webp'
+import Img from './Img.jsx'
 import { BRAND, ACTIVE_OPERATOR, OPERATOR_NOTICE } from '../data/company.js'
 
-import kitchenVision from '../assets/images/kitchen-vision-1.png'
+import kitchenVision from '../assets/images/kitchen-vision-1.webp'
 
 // "Kitchen Vision" als einheitlicher Footer-Hintergrund auf allen Seiten
 const bgDefault = kitchenVision
@@ -103,7 +104,9 @@ export default function Footer() {
   return (
     <footer className={`footer footer--cinematic footer--${v.tone}`} id="footer">
       <div className="footer__bg" aria-hidden="true">
-        <img src={v.img} alt="" className="footer__bg-img" style={{ objectPosition: v.pos }} />
+        {/* Steht immer unterhalb des Viewports — darf niemals eager laden.
+            Vor der Optimierung waren das 2,13 MB auf jeder einzelnen Seite. */}
+        <Img src={v.img} alt="" className="footer__bg-img" style={{ objectPosition: v.pos }} sizes="100vw" />
         <span className="footer__overlay" />
       </div>
 

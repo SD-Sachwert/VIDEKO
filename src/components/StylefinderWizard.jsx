@@ -9,15 +9,15 @@ import {
 
 import CTAButton from './CTAButton.jsx'
 
-import imgKitchenWide from '../assets/images/kuechenwelten/stilfinderhero-kitchen-wide.jpg'
-import imgModern from '../assets/images/kuechenwelten/stilfindercard-modern-warm.jpg'
-import imgWarm from '../assets/images/kuechenwelten/stilfinderresult-modern-warm.jpg'
-import imgDunkel from '../assets/images/kuechenwelten/stilfindercard-dunkel-dramatisch.jpg'
-import imgHell from '../assets/images/kuechenwelten/stilfindercard-natuerlich-luxurioes.jpg'
-import imgLandhaus from '../assets/images/kuechenwelten/stilfinderresult-natuerlich-luxurioes.jpg'
-import imgIndustrial from '../assets/images/kuechenwelten/stilfindercard-industrial-premium.jpg'
-import imgLuxus from '../assets/images/kuechenwelten/stilfinderresult-industrial-premium.jpg'
-import imgZeitlos from '../assets/images/kuechenwelten/stilfindercard-zeitlos-elegant.jpg'
+import imgKitchenWide from '../assets/images/kuechenwelten/stilfinderhero-kitchen-wide.webp'
+import imgModern from '../assets/images/kuechenwelten/stilfindercard-modern-warm.webp'
+import imgWarm from '../assets/images/kuechenwelten/stilfinderresult-modern-warm.webp'
+import imgDunkel from '../assets/images/kuechenwelten/stilfindercard-dunkel-dramatisch.webp'
+import imgHell from '../assets/images/kuechenwelten/stilfindercard-natuerlich-luxurioes.webp'
+import imgLandhaus from '../assets/images/kuechenwelten/stilfinderresult-natuerlich-luxurioes.webp'
+import imgIndustrial from '../assets/images/kuechenwelten/stilfindercard-industrial-premium.webp'
+import imgLuxus from '../assets/images/kuechenwelten/stilfinderresult-industrial-premium.webp'
+import imgZeitlos from '../assets/images/kuechenwelten/stilfindercard-zeitlos-elegant.webp'
 
 const STEPS = [
   { n: '01', label: 'Raum', icon: Home },

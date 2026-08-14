@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Heart, Eye, ShoppingBag, BellRing } from 'lucide-react'
 
 import Reveal from '../Reveal.jsx'
+import Img from '../Img.jsx'
 import { useCart } from '../../shop/cart-context.js'
 import { formatPrice, SHOW_PUBLIC_PRICES, PRICE_ON_REQUEST } from '../../data/merch.js'
 import { canInquire } from '../../data/release.js'
@@ -44,7 +45,9 @@ export default function ProductCard({ product, delay = 0 }) {
   return (
     <Reveal className={`pcard ${product.soon ? 'pcard--soon' : ''}`.trim()} delay={delay}>
       <Link className="pcard__media" to={`/merch/${product.slug}`} aria-label={`${product.name} ansehen`}>
-        <img src={kartenBild} alt={`${product.name}${aktiveFarbe ? ` – ${aktiveFarbe.label}` : ''} – Produktansicht`} loading="lazy" decoding="async" width="1000" height="1000" />
+        {/* Karte zeigt ~400 px – die Quelle ist quadratisch und deutlich groesser,
+            deshalb ueber Img mit srcset ausliefern. */}
+        <Img src={kartenBild} alt={`${product.name}${aktiveFarbe ? ` – ${aktiveFarbe.label}` : ''} – Produktansicht`} sizes="(max-width: 700px) 50vw, (max-width: 1100px) 33vw, 400px" />
         {product.badge && <span className="pcard__badge">{product.badge}</span>}
       </Link>
 

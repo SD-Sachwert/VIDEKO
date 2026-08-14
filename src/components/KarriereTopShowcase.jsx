@@ -3,12 +3,12 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
 import useCarouselNav from '../hooks/useCarouselNav.js'
-import p1 from '../assets/images/karriere/philosophie/VIDEKO_Karte_01_freigestellt.png'
-import p2 from '../assets/images/karriere/philosophie/VIDEKO_Karte_02_freigestellt.png'
-import p3 from '../assets/images/karriere/philosophie/VIDEKO_Karte_03_freigestellt.png'
-import p4 from '../assets/images/karriere/philosophie/VIDEKO_Karte_04_freigestellt.png'
-import p5 from '../assets/images/karriere/philosophie/VIDEKO_Karte_05_freigestellt.png'
-import p6 from '../assets/images/karriere/philosophie/VIDEKO_Karte_06_freigestellt.png'
+import p1 from '../assets/images/karriere/philosophie/VIDEKO_Karte_01_freigestellt.webp'
+import p2 from '../assets/images/karriere/philosophie/VIDEKO_Karte_02_freigestellt.webp'
+import p3 from '../assets/images/karriere/philosophie/VIDEKO_Karte_03_freigestellt.webp'
+import p4 from '../assets/images/karriere/philosophie/VIDEKO_Karte_04_freigestellt.webp'
+import p5 from '../assets/images/karriere/philosophie/VIDEKO_Karte_05_freigestellt.webp'
+import p6 from '../assets/images/karriere/philosophie/VIDEKO_Karte_06_freigestellt.webp'
 
 const CARDS = [
   { img: p1, t: 'Keine Rabatt-Show', ar: 922 / 1229 },

@@ -20,6 +20,8 @@ import VersandLieferung from './pages/VersandLieferung.jsx'
 import RueckgabeWiderruf from './pages/RueckgabeWiderruf.jsx'
 import AGB from './pages/AGB.jsx'
 import Experience from './pages/Experience.jsx'
+import NotFound from './pages/NotFound.jsx'
+import AllesAusEinerHand from './pages/AllesAusEinerHand.jsx'
 
 // kept (reachable via the homepage teasers/cards)
 import Stylefinder from './pages/Stylefinder.jsx'
@@ -36,6 +38,7 @@ export default function App() {
         {/* main navigation */}
         <Route path="/studio" element={<Studio />} />
         <Route path="/leistungen" element={<Leistungen />} />
+        <Route path="/alles-aus-einer-hand" element={<AllesAusEinerHand />} />
         <Route path="/inspiration" element={<Inspiration />} />
         <Route path="/vorher-nachher" element={<VorherNachher />} />
         <Route path="/journal" element={<Journal />} />
@@ -69,7 +72,9 @@ export default function App() {
         <Route path="/ueber-videko" element={<Navigate to="/ueber-uns" replace />} />
         <Route path="/kuechenwelten" element={<Navigate to="/stylefinder" replace />} />
 
-        <Route path="*" element={<Home />} />
+        {/* Unbekannte Pfade zeigen eine echte 404-Seite statt heimlich die
+            Startseite — Vercel liefert dafuer dist/404.html mit HTTP 404 aus. */}
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   )

@@ -81,7 +81,7 @@ export default function ProductGallery({ images, alt, layout = 'side', placehold
             onClick={() => setZoom(true)}
             aria-label="Bild vergrößern"
           >
-            <img src={bilder[aktiv]} alt={alt} width="1000" height="1000" fetchPriority="high" decoding="async" />
+            <Img src={bilder[aktiv]} alt={alt} priority sizes="(max-width: 900px) 100vw, 620px" />
           </button>
           <span className="pgal__zoom" aria-hidden="true"><ZoomIn size={17} strokeWidth={1.7} /></span>
           {ai && <KiBadge variant="product" title="KI-generierte Produktvisualisierung – Abbildung kann abweichen" />}
@@ -109,7 +109,7 @@ export default function ProductGallery({ images, alt, layout = 'side', placehold
                 aria-label={`Ansicht ${i + 1} von ${bilder.length}`}
                 aria-current={aktiv === i}
               >
-                <img src={src} alt="" loading="lazy" />
+                <Img src={src} alt="" sizes="90px" />
               </button>
             ))}
           </div>

@@ -3,9 +3,10 @@ import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'fram
 
 import CTAButton from './CTAButton.jsx'
 import ValueBand from './ValueBand.jsx'
+import Img from './Img.jsx'
 import { KiHinweis } from './legal/KiKennzeichnung.jsx'
-import heroImg from '../assets/images/shared/hero-videko-final-16x9.png'
-import heroMobileImg from '../assets/images/home/Mobile.png'
+import heroImg from '../assets/images/shared/hero-videko-final-16x9.webp'
+import heroMobileImg from '../assets/images/home/Mobile.webp'
 import heroVideo from '../assets/images/home/Header.mp4'
 
 const LINES = ['Küchenplanung aus Würzburg –', 'für dein Zuhause,', 'nicht fürs Schaufenster.']
@@ -75,7 +76,14 @@ export default function Hero() {
       <motion.div className="hero__media" style={{ y: imgY, scale: imgScale }}>
         <div className="hero__kb">
           {isMobile ? (
-            <img className="hero__img kenburns hero__img--mobile" src={heroMobileImg} alt="" aria-hidden="true" />
+            <Img
+              className="hero__img kenburns hero__img--mobile"
+              src={heroMobileImg}
+              alt=""
+              aria-hidden="true"
+              priority
+              sizes="100vw"
+            />
           ) : (
             <video
               className="hero__img kenburns"

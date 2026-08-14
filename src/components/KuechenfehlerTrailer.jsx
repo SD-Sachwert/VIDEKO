@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Search, ArrowRight } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
-import scene from '../assets/images/kuechenfehler/scene.png'
+import scene from '../assets/images/kuechenfehler/scene.webp'
 
 const MISS = [
   'Fast. Der Raum lacht leise.',
