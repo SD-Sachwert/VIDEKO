@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, Check, ShieldCheck, Sparkles, Clock, Award } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
+import LazyBg from './LazyBg.jsx'
+import Img from './Img.jsx'
 import CTAButton from './CTAButton.jsx'
 import { KiHinweis } from './legal/KiKennzeichnung.jsx'
 import inspImg from '../assets/images/stylefinder-sec/insp.webp'
@@ -30,7 +32,7 @@ const TRUST = [
 function SideCard({ img, title, text, cta, to, active }) {
   return (
     <div className={`sfc sfc--side ${active ? 'is-active' : ''}`}>
-      <span className="sfc__media"><img src={img} alt="" loading="lazy" /></span>
+      <span className="sfc__media"><Img src={img} alt="" sizes="(max-width: 900px) 92vw, 330px" defer /></span>
       <span className="sfc__body">
         <span className="sfc__title">{title}</span>
         <span className="sfc__text">{text}</span>
@@ -53,14 +55,14 @@ function StyleCard({ active }) {
         <div className="sfq__opts">
           {OPTIONS.map((o, i) => (
             <button key={o.t} type="button" className={`sfq__opt ${opt === i ? 'is-sel' : ''}`} onClick={() => setOpt(i)}>
-              <span className="sfq__optimg" style={{ backgroundImage: `url(${o.img})` }} aria-hidden="true" />
+              <LazyBg className="sfq__optimg" image={o.img} aria-hidden="true" />
               <span className="sfq__optlabel">{o.t}{opt === i && <Check size={13} strokeWidth={3} />}</span>
             </button>
           ))}
         </div>
       </div>
       <div className="sfresult">
-        <span className="sfresult__img" style={{ backgroundImage: `url(${resultImg})` }} aria-hidden="true" />
+        <LazyBg className="sfresult__img" image={resultImg} aria-hidden="true" />
         <span className="sfresult__body">
           <span className="sfresult__k">Voraussichtliches Ergebnis</span>
           <span className="sfresult__t">Modern Luxury – 92% Match</span>

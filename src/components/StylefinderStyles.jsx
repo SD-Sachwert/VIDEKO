@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight, Sparkles, Heart, BadgeCheck } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
+import Img from './Img.jsx'
 import modern from '../assets/images/stylefinder-styles/modern.webp'
 import warm from '../assets/images/stylefinder-styles/warm.webp'
 import dunkel from '../assets/images/stylefinder-styles/dunkel.webp'
@@ -52,7 +53,7 @@ export default function StylefinderStyles() {
             return (
               <button key={s.t} type="button" className={`sfxcard ${isActive ? 'is-active' : ''}`} style={style}
                 onClick={() => setActive(i)} aria-label={s.t} aria-pressed={isActive}>
-                <img src={s.img} alt={s.t} loading="lazy" draggable={false} />
+                <Img src={s.img} alt={s.t} sizes="(max-width: 720px) 45vw, 260px" defer draggable={false} />
                 <span className="sfxcard__scrim" aria-hidden="true" />
                 {isActive && <span className="sfxcard__diamond" aria-hidden="true" />}
                 <span className="sfxcard__body">

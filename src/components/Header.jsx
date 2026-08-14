@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { Menu, X, MapPin, ChevronDown, ShoppingBag } from 'lucide-react'
-import logoMain from '../assets/brand/logo-main-v2.webp'
+// 288 px breite Fassung des Markenlogos (Performance 1.1): dargestellt wird es
+// hier mit 79 px Hoehe, im Footer mit 83 px — das 902px-Original kostete 56 kB
+// vor dem LCP auf jeder Route, diese Fassung 13 kB. Master bleibt im Repo.
+import logoMain from '../assets/brand/logo-main-v2-288.webp'
 import { useCart } from '../shop/cart-context.js'
 import { inquiryReady } from '../data/release.js'
 

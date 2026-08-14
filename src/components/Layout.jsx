@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef } from 'react'
+import { Suspense, useEffect, useLayoutEffect, useRef } from 'react'
 import { Outlet, useLocation, useNavigationType } from 'react-router-dom'
 import { useLenis } from 'lenis/react'
 
@@ -10,8 +10,7 @@ import RouteSeo from './RouteSeo.jsx'
 // für die unverbindliche E-Mail-Sammelanfrage – KEIN Warenkorb/Checkout, keine
 // Bestellung, keine Server-Speicherung.
 import { CartProvider } from '../shop/CartContext.jsx'
-import AnfragelisteDrawer from './merch/AnfragelisteDrawer.jsx'
-import CheckoutDialog from './merch/CheckoutDialog.jsx'
+import ShopOverlays from './merch/ShopOverlays.jsx'
 
 // Scrollposition je History-Eintrag (location.key) in sessionStorage sichern.
 // Das ist dasselbe Muster wie React Routers eingebautes <ScrollRestoration>
@@ -108,11 +107,15 @@ export default function Layout() {
         <AmbientBackground />
         <Header />
         <main>
-          <Outlet />
+          {/* Alle Routen ausser der Startseite werden als eigener Chunk
+              nachgeladen (siehe App.jsx). Der Platzhalter haelt waehrenddessen
+              die Viewporthoehe, damit Header und Footer nicht springen. */}
+          <Suspense fallback={<div className="route-fallback" aria-hidden="true" />}>
+            <Outlet />
+          </Suspense>
         </main>
         <Footer />
-        <AnfragelisteDrawer />
-        <CheckoutDialog />
+        <ShopOverlays />
       </div>
     </CartProvider>
   )

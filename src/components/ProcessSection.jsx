@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { Users, MessageSquare, Box, Layers, Workflow, Home, ArrowLeftRight } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
+import LazyBg from './LazyBg.jsx'
 import s1 from '../assets/images/process2/s1.webp'
 import s2 from '../assets/images/process2/s2.webp'
 import s3 from '../assets/images/process2/s3.webp'
@@ -40,8 +41,8 @@ function BeforeAfterMini() {
       onPointerUp={(e) => { setDrag(false); try { e.currentTarget.releasePointerCapture(e.pointerId) } catch { /* noop */ } }}
       onPointerCancel={() => setDrag(false)}
     >
-      <span className="proc2ba__after" style={{ backgroundImage: `url(${nachher})` }} aria-hidden="true" />
-      <span className="proc2ba__before" style={{ backgroundImage: `url(${vorher})` }} aria-hidden="true" />
+      <LazyBg className="proc2ba__after" image={nachher} aria-hidden="true" />
+      <LazyBg className="proc2ba__before" image={vorher} aria-hidden="true" />
       <span className="proc2ba__line"><span className="proc2ba__handle"><ArrowLeftRight size={13} strokeWidth={2.4} /></span></span>
     </span>
   )
@@ -82,7 +83,7 @@ export default function ProcessSection() {
                 {s.ba ? (
                   <BeforeAfterMini />
                 ) : (
-                  <span className="proc2card__media" style={{ backgroundImage: `url(${s.img})` }} aria-hidden="true" />
+                  <LazyBg className="proc2card__media" image={s.img} aria-hidden="true" />
                 )}
               </Reveal>
             ))}

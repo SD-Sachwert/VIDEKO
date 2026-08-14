@@ -1,6 +1,7 @@
 import { Check, Heart, ShoppingBag, Cloud } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
+import LazyBg from './LazyBg.jsx'
 import KitchenFeelingCard from './KitchenFeelingCard.jsx'
 import alltag1 from '../assets/images/kuechengefuehl/alltag1.webp'
 import alltag2 from '../assets/images/kuechengefuehl/alltag2.webp'
@@ -41,7 +42,7 @@ export default function KuechengefuehlSection() {
             <div className="alltag">
               {ALLTAG.map((a) => (
                 <span key={a.t} className="alltag__card">
-                  <span className="alltag__img" style={{ backgroundImage: `url(${a.img})`, backgroundPosition: a.pos }} aria-hidden="true" />
+                  <LazyBg className="alltag__img" image={a.img} style={{ backgroundPosition: a.pos }} aria-hidden="true" />
                   <span className="alltag__cap">
                     <span className="alltag__t">{a.t}</span>
                     <span className="alltag__ic"><a.icon size={12} strokeWidth={2} /></span>

@@ -74,7 +74,7 @@ export default function JournalArticle() {
             {related.map((a, i) => (
               <Reveal key={a.slug} delay={(i % 3) * 0.06}>
                 <Link to={`/journal/${a.slug}`} className="jcard">
-                  <span className="jcard__media"><Img src={a.image} alt="" sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 380px" /><span className="jcard__badge">{a.category}</span></span>
+                  <span className="jcard__media"><Img src={a.image} alt="" sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 380px" defer /><span className="jcard__badge">{a.category}</span></span>
                   <span className="jcard__body">
                     <span className="jcard__title">{a.title}</span>
                     <span className="jcard__teaser">{a.teaser}</span>

@@ -11,7 +11,7 @@ import heroArch from '../assets/images/shared/hero-kitchen-arch.webp'
 import cardStylefinder from '../assets/images/home/feature-stylefinder.webp'
 import cardShowroom from '../assets/images/home/feature-showroom.webp'
 import cardConsulting from '../assets/images/home/feature-consulting.webp'
-import emblem from '../assets/brand/logo-main-v2.webp'
+import emblem from '../assets/brand/logo-main-v2-288.webp'
 
 const CARDS = [
   {

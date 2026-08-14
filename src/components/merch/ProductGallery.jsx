@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { ZoomIn, ChevronLeft, ChevronRight, X } from 'lucide-react'
 import { KiBadge } from '../legal/KiKennzeichnung.jsx'
+import Img from '../Img.jsx'
 
 /**
  * Bildgalerie fuer Produktseite und Featured-Block.

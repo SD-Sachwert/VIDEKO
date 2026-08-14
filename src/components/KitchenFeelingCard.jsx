@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowRight, Hand, Flame, Waves, Gem, Home } from 'lucide-react'
 
+import { useNearViewport } from './LazyBg.jsx'
+
 import warmImg from '../assets/images/studio/feeling/warm.webp'
 import ruhigImg from '../assets/images/studio/feeling/ruhig.webp'
 import elegantImg from '../assets/images/studio/feeling/elegant.webp'
@@ -47,6 +49,7 @@ const FEELINGS = [
 ]
 
 export default function KitchenFeelingCard() {
+  const [stageRef, stageNah] = useNearViewport('400px')
   const [active, setActive] = useState(0)
   const [spot, setSpot] = useState(null)
   const [light, setLight] = useState(0) // 0 = Tag, 50 = Abend, 100 = Mood
@@ -77,11 +80,16 @@ export default function KitchenFeelingCard() {
           </div>
         </div>
 
-        <div className="kfeel__stage" style={{ '--lv': light / 100 }}>
+        {/* Das Buehnenbild liegt weit unterhalb des Folds. `loading="lazy"`
+            allein reichte nicht: Chrome laedt mit grosszuegiger Distanzschwelle,
+            warm.webp stand mit 125 kB vor dem LCP von /inspiration. */}
+        <div className="kfeel__stage" style={{ '--lv': light / 100 }} ref={stageRef}>
           <AnimatePresence mode="wait">
-            <motion.img key={f.img} src={f.img} alt={f.h} className="kfeel__img"
-              initial={{ opacity: 0, scale: 1.03 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
-              transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }} loading="lazy" />
+            {stageNah && (
+              <motion.img key={f.img} src={f.img} alt={f.h} className="kfeel__img"
+                initial={{ opacity: 0, scale: 1.03 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
+                transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }} loading="lazy" />
+            )}
           </AnimatePresence>
           <span className="kfeel__lightveil" aria-hidden="true" />
           {f.spots.map((sp, i) => (

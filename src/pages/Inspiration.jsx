@@ -14,6 +14,7 @@ import KuechenfehlerGame from '../components/KuechenfehlerGame.jsx'
 import RaumideenSection from '../components/RaumideenSection.jsx'
 import KuechengefuehlSection from '../components/KuechengefuehlSection.jsx'
 import StylefinderStyles from '../components/StylefinderStyles.jsx'
+import LazyBg from '../components/LazyBg.jsx'
 import { KiHinweis } from '../components/legal/KiKennzeichnung.jsx'
 import { imageMeta } from '../data/image-meta.js'
 
@@ -179,9 +180,9 @@ export default function Inspiration() {
               </ul>
             </Reveal>
             <Reveal className="mood__collage" delay={0.08}>
-              <span className="mood__img mood__img--a" style={{ backgroundImage: `url(${iPremium})` }} />
-              <span className="mood__img mood__img--b" style={{ backgroundImage: `url(${iDetails})` }} />
-              <span className="mood__img mood__img--c" style={{ backgroundImage: `url(${iLuxus})` }} />
+              <LazyBg className="mood__img mood__img--a" image={iPremium} />
+              <LazyBg className="mood__img mood__img--b" image={iDetails} />
+              <LazyBg className="mood__img mood__img--c" image={iLuxus} />
             </Reveal>
           </div>
         </div>

@@ -202,11 +202,87 @@ function fontPreloadHtml() {
   }).filter(Boolean)
 }
 
+/**
+ * Modulepreload fuer den Routen-Chunk.
+ *
+ * Seit Performance 1.1 wird jede Seite ausser der Startseite per React.lazy
+ * nachgeladen (src/App.jsx). Ohne Hinweis im Kopf entdeckt der Browser den
+ * Chunk erst, nachdem das Hauptbundle ausgewertet wurde — ein zusaetzlicher
+ * Roundtrip mitten in der kritischen Kette, und bis dahin steht im <main> nur
+ * der Suspense-Platzhalter.
+ *
+ * Die Zuordnung Pfad -> Seitenmodul spiegelt die Routen aus App.jsx. Fehlt ein
+ * Modul im Manifest, faellt das unten als Warnung auf (statt still zu bleiben).
+ */
+const SEITEN_MODUL = {
+  // '/' fehlt bewusst: Home ist statisch im Startbundle (siehe src/App.jsx).
+  '/studio': 'src/pages/Studio.jsx',
+  '/leistungen': 'src/pages/Leistungen.jsx',
+  '/alles-aus-einer-hand': 'src/pages/AllesAusEinerHand.jsx',
+  '/inspiration': 'src/pages/Inspiration.jsx',
+  '/vorher-nachher': 'src/pages/VorherNachher.jsx',
+  '/journal': 'src/pages/Journal.jsx',
+  '/karriere': 'src/pages/Karriere.jsx',
+  '/ueber-uns': 'src/pages/UeberUns.jsx',
+  '/beratung': 'src/pages/Beratung.jsx',
+  '/merch': 'src/pages/Merch.jsx',
+  '/vormerkung-bestaetigen': 'src/pages/VormerkungBestaetigen.jsx',
+  '/experience': 'src/pages/Experience.jsx',
+  '/impressum': 'src/pages/Impressum.jsx',
+  '/datenschutz': 'src/pages/Datenschutz.jsx',
+  '/versand-lieferung': 'src/pages/VersandLieferung.jsx',
+  '/rueckgabe-widerruf': 'src/pages/RueckgabeWiderruf.jsx',
+  '/agb': 'src/pages/AGB.jsx',
+  '/stylefinder': 'src/pages/Stylefinder.jsx',
+  '/showroom': 'src/pages/Showroom.jsx',
+  '/planung': 'src/pages/Planung.jsx',
+  '/team': 'src/pages/Team.jsx',
+  '/404': 'src/pages/NotFound.jsx',
+}
+
+/** Alles, was der Einstiegs-Chunk ohnehin schon vorlaedt, nicht doppelt setzen. */
+const EINSTIEG_CHUNKS = new Set()
+{
+  const einstieg = Object.values(MANIFEST).find((e) => e.isEntry)
+  const sammle = (eintrag) => {
+    if (!eintrag?.file || EINSTIEG_CHUNKS.has(eintrag.file)) return
+    EINSTIEG_CHUNKS.add(eintrag.file)
+    for (const k of eintrag.imports || []) sammle(MANIFEST[k])
+  }
+  sammle(einstieg)
+}
+
+function modulPfadFuer(pfad) {
+  if (SEITEN_MODUL[pfad]) return SEITEN_MODUL[pfad]
+  if (pfad.startsWith('/journal/')) return 'src/pages/JournalArticle.jsx'
+  if (pfad.startsWith('/merch/')) return 'src/pages/ProductDetail.jsx'
+  return null // '/' ist statisch importiert und braucht nichts
+}
+
+function routenChunkHtml(pfad) {
+  const modul = modulPfadFuer(pfad)
+  if (!modul) return []
+  const eintrag = MANIFEST[modul]
+  if (!eintrag?.file) {
+    fehlendeAssets.add(modul)
+    return []
+  }
+  const dateien = []
+  const sammle = (e) => {
+    if (!e?.file || EINSTIEG_CHUNKS.has(e.file) || dateien.includes(e.file)) return
+    dateien.push(e.file)
+    for (const k of e.imports || []) sammle(MANIFEST[k])
+  }
+  sammle(eintrag)
+  return dateien.map((f) => `    <link rel="modulepreload" crossorigin href="/${f}" />`)
+}
+
 function kopfHtml(head, absUrl, SITE, VARIANTS) {
   const canonical = absUrl(head.canonicalPath)
   const bild = absUrl(head.image || SITE.defaultOgImage)
   const zeilen = [
     ...fontPreloadHtml(),
+    ...routenChunkHtml(head.canonicalPath),
     ...preloadHtml(head.preload, VARIANTS),
     `    <title>${esc(head.title)}</title>`,
     meta('name', 'description', head.description),

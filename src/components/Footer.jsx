@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { MapPin, Mail, Phone, ArrowRight } from 'lucide-react'
-import logoMark from '../assets/brand/logo-main-v2.webp'
+import logoMark from '../assets/brand/logo-main-v2-288.webp'
 import Img from './Img.jsx'
 import { BRAND, ACTIVE_OPERATOR, OPERATOR_NOTICE } from '../data/company.js'
 
@@ -106,7 +106,7 @@ export default function Footer() {
       <div className="footer__bg" aria-hidden="true">
         {/* Steht immer unterhalb des Viewports — darf niemals eager laden.
             Vor der Optimierung waren das 2,13 MB auf jeder einzelnen Seite. */}
-        <Img src={v.img} alt="" className="footer__bg-img" style={{ objectPosition: v.pos }} sizes="100vw" />
+        <Img src={v.img} alt="" className="footer__bg-img" style={{ objectPosition: v.pos }} sizes="100vw" defer />
         <span className="footer__overlay" />
       </div>
 

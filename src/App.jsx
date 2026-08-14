@@ -1,33 +1,51 @@
+import { lazy } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 
 import Layout from './components/Layout.jsx'
 import Home from './pages/Home.jsx'
-import Studio from './pages/Studio.jsx'
-import Leistungen from './pages/Leistungen.jsx'
-import Inspiration from './pages/Inspiration.jsx'
-import VorherNachher from './pages/VorherNachher.jsx'
-import Karriere from './pages/Karriere.jsx'
-import UeberUns from './pages/UeberUns.jsx'
-import Beratung from './pages/Beratung.jsx'
-import Merch from './pages/Merch.jsx'
-import ProductDetail from './pages/ProductDetail.jsx'
-import VormerkungBestaetigen from './pages/VormerkungBestaetigen.jsx'
-import Journal from './pages/Journal.jsx'
-import JournalArticle from './pages/JournalArticle.jsx'
-import Impressum from './pages/Impressum.jsx'
-import Datenschutz from './pages/Datenschutz.jsx'
-import VersandLieferung from './pages/VersandLieferung.jsx'
-import RueckgabeWiderruf from './pages/RueckgabeWiderruf.jsx'
-import AGB from './pages/AGB.jsx'
-import Experience from './pages/Experience.jsx'
-import NotFound from './pages/NotFound.jsx'
-import AllesAusEinerHand from './pages/AllesAusEinerHand.jsx'
+
+/**
+ * Route-Level Code-Splitting (Performance 1.1).
+ *
+ * Vorher lag jede Seite im Startbundle: 1051 kB roh / 305 kB gzip, davon
+ * 40,7 % ungenutzt (Lighthouse `unused-javascript`, 14.08.2026). Wer die
+ * Startseite aufrief, lud damit auch Shop, Produktdetail, Experience,
+ * Stylefinder, Karriere und saemtliche Rechtstexte mit.
+ *
+ * `Home` bleibt bewusst statisch importiert. Der Auslagerungsversuch wurde
+ * gemessen (14.08.2026, mobil): Das Startbundle sank zwar von 186 auf 133 kB
+ * gzip, doch der Bundler zerlegte den bis dahin gemeinsam genutzten Code in
+ * ~30 zusaetzliche Kleinstdateien (einzelne Lucide-Icons, <1 kB). Auf `/`
+ * stiegen die Requests von 19 auf 50, das Gesamtgewicht sogar von 604 auf
+ * 618 kB, der LCP von 4753 auf 5206 ms. Journal gewann dabei nur 146 ms.
+ * Alle uebrigen Seiten kommen als eigener Chunk nach.
+ */
+const Studio = lazy(() => import('./pages/Studio.jsx'))
+const Leistungen = lazy(() => import('./pages/Leistungen.jsx'))
+const Inspiration = lazy(() => import('./pages/Inspiration.jsx'))
+const VorherNachher = lazy(() => import('./pages/VorherNachher.jsx'))
+const Karriere = lazy(() => import('./pages/Karriere.jsx'))
+const UeberUns = lazy(() => import('./pages/UeberUns.jsx'))
+const Beratung = lazy(() => import('./pages/Beratung.jsx'))
+const Merch = lazy(() => import('./pages/Merch.jsx'))
+const ProductDetail = lazy(() => import('./pages/ProductDetail.jsx'))
+const VormerkungBestaetigen = lazy(() => import('./pages/VormerkungBestaetigen.jsx'))
+const Journal = lazy(() => import('./pages/Journal.jsx'))
+const JournalArticle = lazy(() => import('./pages/JournalArticle.jsx'))
+const Impressum = lazy(() => import('./pages/Impressum.jsx'))
+const Datenschutz = lazy(() => import('./pages/Datenschutz.jsx'))
+const VersandLieferung = lazy(() => import('./pages/VersandLieferung.jsx'))
+const RueckgabeWiderruf = lazy(() => import('./pages/RueckgabeWiderruf.jsx'))
+const AGB = lazy(() => import('./pages/AGB.jsx'))
+const Experience = lazy(() => import('./pages/Experience.jsx'))
+const NotFound = lazy(() => import('./pages/NotFound.jsx'))
+const AllesAusEinerHand = lazy(() => import('./pages/AllesAusEinerHand.jsx'))
 
 // kept (reachable via the homepage teasers/cards)
-import Stylefinder from './pages/Stylefinder.jsx'
-import Showroom from './pages/Showroom.jsx'
-import Planung from './pages/Planung.jsx'
-import Team from './pages/Team.jsx'
+const Stylefinder = lazy(() => import('./pages/Stylefinder.jsx'))
+const Showroom = lazy(() => import('./pages/Showroom.jsx'))
+const Planung = lazy(() => import('./pages/Planung.jsx'))
+const Team = lazy(() => import('./pages/Team.jsx'))
 
 export default function App() {
   return (

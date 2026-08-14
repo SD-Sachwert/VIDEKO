@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Search, Eye, Lightbulb, Check, ArrowRight, BookOpen, Square, Lamp, Plug, Boxes, Trash2, Cpu, Ruler, MoveHorizontal } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
+import Img from './Img.jsx'
 import CTAButton from './CTAButton.jsx'
 
 const ARTICLE_URL = '/journal/7-kuechenfehler-die-du-spaeter-jeden-tag-bereust'
@@ -129,7 +130,7 @@ export default function KuechenfehlerGame() {
         <div className="kfg-main">
           <Reveal className="kfg-stagewrap">
             <div className="kfg-stage" ref={imgRef} onClick={onClick}>
-              <img src={scene} alt="Küche – finde die Planungsfehler" draggable={false} />
+              <Img src={scene} alt="Küche – finde die Planungsfehler" sizes="(max-width: 900px) 100vw, 760px" defer draggable={false} />
               {found.map((id) => {
                 const h = HOTSPOTS.find((x) => x.id === id)
                 return <span key={id} className={`kfg-marker ${active === id ? 'is-active' : ''}`} style={{ left: `${h.x}%`, top: `${h.y}%` }} onClick={(e) => { e.stopPropagation(); setActive(id) }}><Check size={14} strokeWidth={3} /></span>
@@ -190,7 +191,9 @@ export default function KuechenfehlerGame() {
       </div>
 
       <div className="container">
-        <Reveal className="kfg-cta" style={{ backgroundImage: `url(${ctaBg})` }}>
+        {/* Hintergrund erst in Viewportnaehe laden (bgImage-Prop in Reveal.jsx) —
+            das Bild stand vorher mit 42 kB vor dem LCP von /inspiration. */}
+        <Reveal className="kfg-cta" bgImage={ctaBg}>
           <span className="kfg-cta__veil" aria-hidden="true" />
           <div className="kfg-cta__inner">
             <h3 className="kfg-cta__title">{done ? 'Alle 9 gefunden!' : 'Alle 9 gefunden?'} <span className="grad">Dann wird's Zeit für die echte Planung.</span></h3>

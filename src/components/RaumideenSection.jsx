@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ChefHat, Utensils, Sofa, Laptop, WashingMachine, DoorOpen, BedDouble, Check, Plus, ArrowLeft, ArrowRight } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
+import LazyBg, { useNearViewport } from './LazyBg.jsx'
 import kochen from '../assets/images/raumideen/kochen.webp'
 import essen from '../assets/images/raumideen/essen.webp'
 import wohnen from '../assets/images/raumideen/wohnen.webp'
@@ -81,6 +82,7 @@ const ROOMS = [
 const EASE = [0.16, 1, 0.3, 1]
 
 export default function RaumideenSection() {
+  const [mediaRef, mediaNah] = useNearViewport('400px')
   const [active, setActive] = useState(0)
   const [openCard, setOpenCard] = useState(null) // welche Detailkarte ist im Drawer offen
   const r = ROOMS[active]
@@ -108,11 +110,16 @@ export default function RaumideenSection() {
 
         <div className="rms__grid">
           {/* großes Hauptbild links – weicher Crossfade */}
-          <div className="rms__media">
+          {/* Das Hauptmotiv ist mehrere Bildschirmhoehen unterhalb des Folds.
+              Erst laden, wenn es in Viewportnaehe kommt — der Crossfade
+              bleibt unveraendert. */}
+          <div className="rms__media" ref={mediaRef}>
             <AnimatePresence initial={false}>
-              <motion.img key={r.img} src={r.img} alt={r.title} className="rms__img" loading="lazy" draggable={false}
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                transition={{ duration: 0.5, ease: 'easeOut' }} />
+              {mediaNah && (
+                <motion.img key={r.img} src={r.img} alt={r.title} className="rms__img" loading="lazy" draggable={false}
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5, ease: 'easeOut' }} />
+              )}
             </AnimatePresence>
             <div className="rms__nav">
               <button type="button" className="rms__arrow" onClick={() => go(-1)} aria-label="Vorheriger Bereich"><ArrowLeft size={16} strokeWidth={2} /></button>
@@ -143,7 +150,7 @@ export default function RaumideenSection() {
                 return (
                   <button key={cd.t} type="button" className={`rms__dcard ${isOpen ? 'is-active' : ''}`}
                     aria-expanded={isOpen} onClick={() => setOpenCard(isOpen ? null : ci)}>
-                    <span className="rms__dthumb" style={{ backgroundImage: `url(${r.img})`, backgroundPosition: cd.pos }} aria-hidden="true" />
+                    <LazyBg className="rms__dthumb" image={r.img} style={{ backgroundPosition: cd.pos }} aria-hidden="true" />
                     <span className="rms__dbody">
                       <span className="rms__dt">{cd.t}</span>
                       <span className="rms__dd">{cd.d}</span>

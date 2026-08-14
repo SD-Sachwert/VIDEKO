@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, Boxes, Lightbulb, Ruler, Clock, Gem, ShieldCheck, PencilRuler, Wrench, Layers, Cpu, Workflow, Sparkles, UserCheck } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
+import Img from './Img.jsx'
 import CTAButton from './CTAButton.jsx'
 import { KiHinweis } from './legal/KiKennzeichnung.jsx'
 import beforeImg from '../assets/images/home-hero/before.webp'
@@ -93,8 +94,8 @@ export default function HeroExperience() {
       <div className="container hx-bigwrap">
         <Reveal className="hx-visual" delay={0.1}>
           <div className={`hx-ba ${dragging ? 'is-dragging' : ''}`} ref={baRef} onPointerDown={onDown} onPointerMove={onMovePtr} onPointerUp={onUp} onPointerLeave={onUp} onPointerCancel={onUp} style={{ '--split': `${split}%` }}>
-            <div className="hx-ba__after"><img src={afterImg} alt="Fertige VIDEKO Küche" loading="lazy" draggable={false} /></div>
-            <div className="hx-ba__before"><img src={beforeImg} alt="Leerer Raum vor der Planung" loading="lazy" draggable={false} /></div>
+            <div className="hx-ba__after"><Img src={afterImg} alt="Fertige VIDEKO Küche" sizes="(max-width: 900px) 100vw, 860px" defer draggable={false} /></div>
+            <div className="hx-ba__before"><Img src={beforeImg} alt="Leerer Raum vor der Planung" sizes="(max-width: 900px) 100vw, 860px" defer draggable={false} /></div>
             <span className="hx-ba__line"><span className="hx-ba__knob"><ArrowRight size={13} strokeWidth={2.4} style={{ transform: 'rotate(180deg)' }} /><ArrowRight size={13} strokeWidth={2.4} /></span></span>
           </div>
 

@@ -14,6 +14,7 @@ import { KiHinweis } from '../components/legal/KiKennzeichnung.jsx'
 import ExplodingKitchenModal from '../components/ExplodingKitchenModal.jsx'
 import HeroExperience from '../components/HeroExperience.jsx'
 import LazyVideo from '../components/LazyVideo.jsx'
+import LazyBg from '../components/LazyBg.jsx'
 import StylefinderHero from '../components/StylefinderHero.jsx'
 import ProcessSection from '../components/ProcessSection.jsx'
 import { journalArticles } from '../data/journal.js'
@@ -163,7 +164,7 @@ export default function Home() {
         <div className="lp-gallery">
           {GALLERY.map((g, i) => (
             <Reveal key={g.title} className={`lpgal ${g.big ? 'lpgal--big' : ''}`} delay={(i % 5) * 0.05}>
-              <span className="lpgal__img" style={{ backgroundImage: `url(${g.img})` }} aria-hidden="true" />
+              <LazyBg className="lpgal__img" image={g.img} aria-hidden="true" />
               <span className="lpgal__scrim" aria-hidden="true" />
               <span className="lpgal__body"><span className="lpgal__title">{g.title}</span><span className="lpgal__sub">{g.sub}</span></span>
             </Reveal>
@@ -239,7 +240,7 @@ export default function Home() {
             {JOURNAL.map((a, i) => (
               <Reveal key={a.slug} delay={(i % 4) * 0.06}>
                 <Link to={`/journal/${a.slug}`} className="lpjcard">
-                  <span className="lpjcard__img" style={{ backgroundImage: `url(${a.image})` }} aria-hidden="true" />
+                  <LazyBg className="lpjcard__img" image={a.image} aria-hidden="true" />
                   <span className="lpjcard__body">
                     <span className="lpjcard__tag">{a.category}</span>
                     <span className="lpjcard__title">{a.title}</span>

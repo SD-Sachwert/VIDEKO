@@ -57,7 +57,7 @@ export default function ExplodingKitchenModal() {
         <Reveal className="ekm-stage" delay={0.1}>
           <div className="ekm-stagebg" onClick={() => setActive(null)} aria-hidden="true">
             <AnimatePresence mode="wait">
-              <motion.img key={open ? 'open' : 'closed'} src={open ? mainOpen : mainClosed} alt="VIDEKO Küche" className="ekm-stage__img"
+              <motion.img key={open ? 'open' : 'closed'} src={open ? mainOpen : mainClosed} alt="VIDEKO Küche" className="ekm-stage__img" loading="lazy" decoding="async"
                 initial={{ opacity: 0, scale: 1.02 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }} />
             </AnimatePresence>
           </div>
@@ -76,7 +76,7 @@ export default function ExplodingKitchenModal() {
                 <motion.div key={active} className={`ekm-pop ekm-pop--${arrowSide}`} onClick={(e) => e.stopPropagation()}
                   initial={{ opacity: 0, scale: 0.96, y: 8 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.97 }} transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}>
                   <button type="button" className="ekm-pop__close" onClick={() => setActive(null)} aria-label="Schließen">×</button>
-                  <img className="ekm-pop__img" src={h.card} alt={h.title} />
+                  <img className="ekm-pop__img" src={h.card} alt={h.title} loading="lazy" decoding="async" />
                 </motion.div>
               </div>
             )}

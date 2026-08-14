@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { ArrowUpRight, ArrowRight } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
+import LazyBg from './LazyBg.jsx'
 import scene from '../assets/images/kuechenfehler/scene.webp'
 
 const MISS = [
@@ -41,7 +42,7 @@ export default function KfgTeaser() {
 
   return (
     <Reveal className="kfgteaser" delay={0.1}>
-      <div className={`kfgteaser__media ${popup ? 'is-done' : ''}`} style={{ backgroundImage: `url(${scene})` }}
+      <LazyBg as="div" className={`kfgteaser__media ${popup ? 'is-done' : ''}`} image={scene}
         onClick={onField} role="button" tabIndex={0} aria-label="Küche – tippe und finde die Fehler">
         {miss && !popup && <span className="kft__miss" style={{ left: `${miss.x}%`, top: `${miss.y}%` }}>{miss.text}</span>}
         {popup && (
@@ -50,7 +51,7 @@ export default function KfgTeaser() {
             <Link to={TARGET} className="kfgteaser__popup-btn">Zu den 9 Küchenfehlern <ArrowRight size={15} strokeWidth={2} /></Link>
           </div>
         )}
-      </div>
+      </LazyBg>
       <div className="kfgteaser__body">
         <span className="kfgteaser__badge">Interaktiv · 9 Fehler versteckt</span>
         <span className="kfgteaser__title">Findest du die Küchenfehler?</span>
