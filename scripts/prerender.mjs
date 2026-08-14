@@ -15,11 +15,18 @@
  * Build wird pro bekannter Route eine eigene `dist/<pfad>/index.html`
  * geschrieben. Identisches Markup, identisches JS-Bundle — nur der Kopf ist
  * fest eingebacken. Zusaetzlich entsteht `dist/404.html`, damit unbekannte
- * Pfade von Vercel mit echtem HTTP 404 beantwortet werden koennen (dazu muss
- * der Catch-all-Rewrite in vercel.json weg sein — siehe dort).
+ * Pfade von Vercel mit echtem HTTP 404 beantwortet werden koennen.
  *
- * Da jede bekannte Route als Datei existiert, greift der Dateisystem-Treffer
- * vor dem 404. Deep Links funktionieren unveraendert.
+ * Dafuer musste der Catch-all-Rewrite `/((?!api/).*) -> /index.html` aus
+ * vercel.json entfernt werden. Da jede bekannte Route als eigene Datei
+ * existiert, greift der Dateisystem-Treffer vorher — Deep Links antworten
+ * unveraendert mit HTTP 200, nur eben mit dem richtigen Kopf. Alles Unbekannte
+ * faellt auf dist/404.html. Die Funktionen unter /api/ bleiben unberuehrt.
+ *
+ * Diese Erlaeuterung steht hier und nicht in vercel.json: Vercel validiert die
+ * Datei gegen https://openapi.vercel.sh/vercel.json, und dieses Schema setzt
+ * `additionalProperties: false`. Ein Kommentar-Key wie `"//"` laesst deshalb
+ * JEDEN Deployment-Build fehlschlagen ("Deployment failed", 14.08.2026).
  *
  * DATENHERKUNFT
  * -------------
