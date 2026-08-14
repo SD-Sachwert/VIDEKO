@@ -13,6 +13,6 @@
 export { STATIC_ROUTES, ROUTE_META, REDIRECTS } from '../src/data/routes-meta.js'
 export { journalArticles } from '../src/data/journal.js'
 export { MERCH_PRODUCTS, MERCH_FAMILIES } from '../src/data/merch.js'
-export { staticRouteHead, journalArticleHead, merchDetailHead } from '../src/data/head.js'
+export { staticRouteHead, journalArticleHead, merchDetailHead, ldSlotId } from '../src/data/head.js'
 export { SITE, absUrl } from '../src/data/site.js'
 export { IMAGE_VARIANTS } from '../src/assets/images/variants.generated.js'

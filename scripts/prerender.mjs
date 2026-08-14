@@ -317,7 +317,9 @@ function kopfHtml(head, absUrl, SITE, VARIANTS) {
   for (const block of head.jsonLd || []) {
     // </script> im Text wuerde den Block vorzeitig schliessen.
     const json = JSON.stringify(block).replace(/<\//g, '<\\/')
-    zeilen.push('', `    <script type="application/ld+json">${json}</script>`)
+    // data-seo-id: stabile Kennung, damit Seo.jsx den Block nach der Hydration
+    // aktualisiert statt einen zweiten danebenzuhaengen.
+    zeilen.push('', `    <script type="application/ld+json" data-seo-id="${esc(ldSlotId(block))}">${json}</script>`)
   }
   return zeilen.join('\n')
 }
@@ -369,7 +371,7 @@ if (!vorlage.includes(MARKER_START) || !vorlage.includes(MARKER_END)) {
 const daten = await ladeDaten()
 const {
   STATIC_ROUTES, journalArticles, MERCH_PRODUCTS, MERCH_FAMILIES,
-  staticRouteHead, journalArticleHead, merchDetailHead, SITE, absUrl, IMAGE_VARIANTS,
+  staticRouteHead, journalArticleHead, merchDetailHead, ldSlotId, SITE, absUrl, IMAGE_VARIANTS,
 } = daten
 
 const geschrieben = []

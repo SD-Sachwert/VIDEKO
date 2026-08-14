@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 
 import { SITE, absUrl } from '../data/site.js'
+import { ldSlotId } from '../data/head.js'
 
 /**
  * Leichtgewichtiges SEO ohne zusätzliche Bibliothek.
@@ -37,6 +38,34 @@ function upsertMeta(attr, key, content) {
   const el = document.createElement('meta')
   el.setAttribute(attr, key)
   el.setAttribute('content', content)
+  document.head.appendChild(el)
+  return () => el.parentNode?.removeChild(el)
+}
+
+/**
+ * Aktualisiert den JSON-LD-Block mit derselben `data-seo-id` — analog zu
+ * upsertMeta/upsertLink — statt blind ein zweites <script> anzuhaengen.
+ *
+ * Vorher hing jedes <Seo> seine Bloecke unabhaengig an den <head>. Weil
+ * scripts/prerender.mjs dieselben Bloecke bereits ausliefert, stand nach der
+ * Hydration jeder logische Block doppelt (auf /alles-aus-einer-hand dreifach,
+ * weil dort RouteSeo und das eigene <Seo> parallel laufen).
+ *
+ * Nur Skripte mit `data-seo-id` werden angefasst. Fremde strukturierte Daten
+ * ohne dieses Attribut bleiben unberuehrt.
+ */
+function upsertJsonLd(slotId, json) {
+  const vorhanden = [...document.head.querySelectorAll('script[type="application/ld+json"][data-seo-id]')]
+    .find((el) => el.dataset.seoId === slotId)
+  if (vorhanden) {
+    const alt = vorhanden.textContent
+    vorhanden.textContent = json
+    return () => { vorhanden.textContent = alt }
+  }
+  const el = document.createElement('script')
+  el.type = 'application/ld+json'
+  el.dataset.seoId = slotId
+  el.textContent = json
   document.head.appendChild(el)
   return () => el.parentNode?.removeChild(el)
 }
@@ -109,18 +138,13 @@ export default function Seo({
       setName('twitter:image:alt', imageAlt || title || SITE.name)
     }
 
-    const skripte = (jsonLd ? [].concat(jsonLd) : []).filter(Boolean).map((daten) => {
-      const el = document.createElement('script')
-      el.type = 'application/ld+json'
-      el.textContent = JSON.stringify(daten)
-      document.head.appendChild(el)
-      return el
-    })
+    for (const daten of (jsonLd ? [].concat(jsonLd) : []).filter(Boolean)) {
+      restore.push(upsertJsonLd(ldSlotId(daten), JSON.stringify(daten)))
+    }
 
     return () => {
       document.title = prevTitle
       restore.forEach((fn) => fn())
-      skripte.forEach((el) => el.parentNode?.removeChild(el))
     }
   }, [title, description, canonicalPath, image, imageAlt, jsonLdKey, noindex, ogType, jsonLd])
 

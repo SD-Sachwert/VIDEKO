@@ -20,6 +20,24 @@ import {
 const STUDIO_ROUTES = new Set(['/', '/studio', '/showroom'])
 
 /**
+ * Stabile Kennung eines JSON-LD-Blocks für das Attribut `data-seo-id`.
+ *
+ * `scripts/prerender.mjs` schreibt sie ins ausgelieferte HTML, `Seo.jsx` sucht
+ * damit zur Laufzeit den bereits vorhandenen Block und aktualisiert ihn, statt
+ * einen zweiten danebenzuhängen. Ohne diese Kennung stand nach der Hydration
+ * jeder vorgerenderte Block doppelt im <head>.
+ *
+ * `@id` ist die eindeutigste Kennung. Blöcke ohne `@id` — BreadcrumbList,
+ * FAQPage, Product — kommen pro Seite genau einmal vor; dort genügt der Typ.
+ * Fremde ld+json-Skripte ohne `data-seo-id` fasst `Seo.jsx` nie an.
+ */
+export function ldSlotId(block) {
+  if (block?.['@id']) return String(block['@id'])
+  const typ = block?.['@type']
+  return Array.isArray(typ) ? typ.join('+') : String(typ ?? 'unbekannt')
+}
+
+/**
  * Kopfdaten einer statischen Route aus routes-meta.js.
  * @param {object} meta Eintrag aus STATIC_ROUTES
  */
