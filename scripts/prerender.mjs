@@ -293,13 +293,50 @@ function schreibeSeite(vorlage, pfad, head, absUrl, SITE, VARIANTS, koerper, dat
  * 3. Sitemap
  * ------------------------------------------------------------------ */
 
-function schreibeSitemap(pfade, absUrl) {
-  const urls = pfade.map((p) => `  <url><loc>${esc(absUrl(p))}</loc></url>`).join('\n')
+/**
+ * <lastmod> nur aus belegten Daten.
+ *
+ * Bewusst KEIN Build-Datum und keine Datei-mtime: auf Vercel ist die mtime das
+ * Checkout-Datum, und ein pauschales Datum wuerde Google bei jedem Deploy alle
+ * URLs als geaendert melden. Genau davon lernt Google, dem Feld nicht mehr zu
+ * glauben. Gepflegt wird `lastModified` von Hand in den Routendaten
+ * (data/routes-meta.js) bzw. am Artikel (data/journal.js).
+ *
+ * Liefert das geprueste Datum oder null. Ungueltige oder in der Zukunft
+ * liegende Werte werden verworfen — ein fehlendes <lastmod> ist besser als ein
+ * falsches. Gemischte Praesenz ist laut Sitemap-Protokoll zulaessig.
+ */
+function pruefeLastmod(wert, pfad) {
+  if (!wert) return null
+  if (typeof wert !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(wert)) {
+    console.warn(`⚠ lastModified fuer ${pfad} ist kein ISO-Datum (YYYY-MM-DD): ${wert} — weggelassen`)
+    return null
+  }
+  const datum = new Date(`${wert}T00:00:00Z`)
+  if (Number.isNaN(datum.getTime()) || wert !== datum.toISOString().slice(0, 10)) {
+    console.warn(`⚠ lastModified fuer ${pfad} ist kein gueltiges Datum: ${wert} — weggelassen`)
+    return null
+  }
+  if (datum.getTime() > Date.now()) {
+    console.warn(`⚠ lastModified fuer ${pfad} liegt in der Zukunft: ${wert} — weggelassen`)
+    return null
+  }
+  return wert
+}
+
+function schreibeSitemap(eintraege, absUrl) {
+  const geprueft = eintraege.map((e) => ({ ...e, lastmod: pruefeLastmod(e.lastmod, e.pfad) }))
+  const urls = geprueft
+    .map(({ pfad, lastmod }) => {
+      const datum = lastmod ? `<lastmod>${lastmod}</lastmod>` : ''
+      return `  <url><loc>${esc(absUrl(pfad))}</loc>${datum}</url>`
+    })
+    .join('\n')
   fs.writeFileSync(
     path.join(DIST, 'sitemap.xml'),
     `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`,
   )
-  return pfade.length
+  return { anzahl: geprueft.length, mitLastmod: geprueft.filter((e) => e.lastmod).length }
 }
 
 /* ------------------------------------------------------------------ *
@@ -374,7 +411,9 @@ for (const route of STATIC_ROUTES) {
   const koerper = await koerperFuer(route.path)
   if (koerper) mitKoerper += 1
   geschrieben.push(schreibeSeite(vorlage, route.path, head, absUrl, SITE, IMAGE_VARIANTS, koerper))
-  if (route.inSitemap !== false && !route.noindex) sitemapPfade.push(route.path)
+  if (route.inSitemap !== false && !route.noindex) {
+    sitemapPfade.push({ pfad: route.path, lastmod: route.lastModified })
+  }
 }
 
 /* Journalartikel */
@@ -383,7 +422,7 @@ for (const artikel of journalArticles) {
   const koerper = await koerperFuer(head.canonicalPath)
   if (koerper) mitKoerper += 1
   geschrieben.push(schreibeSeite(vorlage, head.canonicalPath, head, absUrl, SITE, IMAGE_VARIANTS, koerper))
-  sitemapPfade.push(head.canonicalPath)
+  sitemapPfade.push({ pfad: head.canonicalPath, lastmod: artikel.lastModified })
 }
 
 /* Shop: Familienseiten und Einzelprodukte — beide liegen unter /merch/<slug> */
@@ -413,7 +452,8 @@ for (const seite of merchSeiten) {
   geschrieben.push(schreibeSeite(vorlage, pfad, head, absUrl, SITE, IMAGE_VARIANTS, koerper))
   // Nur kanonische Seiten in die Sitemap. Die Farbvarianten bleiben crawlbar
   // und verlinkt, konkurrieren aber nicht mit ihrer eigenen Hauptseite.
-  if (kanonisch === seite.slug) sitemapPfade.push(pfad)
+  // Fuer Produktseiten liegt kein belegtes Aenderungsdatum vor -> ohne <lastmod>.
+  if (kanonisch === seite.slug) sitemapPfade.push({ pfad })
 }
 
 /* 404 — noindex, kein Sitemap-Eintrag.
@@ -432,7 +472,7 @@ for (const seite of merchSeiten) {
   }, absUrl, SITE, IMAGE_VARIANTS, koerper, '404.html')
 }
 
-const anzahlSitemap = schreibeSitemap(sitemapPfade, absUrl)
+const sitemapInfo = schreibeSitemap(sitemapPfade, absUrl)
 
 console.log(`✔ Prerender: ${geschrieben.length} Routen + 404.html`)
 console.log(`  · statisch ${STATIC_ROUTES.length} · Journal ${journalArticles.length} · Shop ${gesehen.size}`)
@@ -440,7 +480,7 @@ console.log(`✔ Body gerendert: ${mitKoerper} von ${geschrieben.length + 1} Sei
 if (OHNE_KOERPER.size) {
   console.log(`  · bewusst nur Kopf: ${[...OHNE_KOERPER].join(', ')}`)
 }
-console.log(`✔ sitemap.xml: ${anzahlSitemap} URLs`)
+console.log(`✔ sitemap.xml: ${sitemapInfo.anzahl} URLs, davon ${sitemapInfo.mitLastmod} mit <lastmod>`)
 if (fehlendeAssets.size) {
   console.warn(`⚠ ${fehlendeAssets.size} Asset(s) ohne Manifest-Eintrag:`)
   for (const a of fehlendeAssets) console.warn(`   ${a}`)

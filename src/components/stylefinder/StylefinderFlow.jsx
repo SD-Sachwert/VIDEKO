@@ -28,6 +28,7 @@ import mPlatten from '../../assets/images/materialien/cards/material-card-quarzk
 import iHell from '../../assets/images/inspiration/05_helle_kueche.webp'
 import iWohnlich from '../../assets/images/inspiration/03_wohnliche_kueche.webp'
 import iModernK from '../../assets/images/inspiration/02_moderne_kueche.webp'
+import { BRAND } from '../../data/company.js'
 
 const STEPS = ['Stil', 'Mehrwerte', 'Materialdetails', 'Farbwelten', 'Funktionsraum', 'Budget', 'Prioritäten', 'Ergebnis']
 
@@ -319,7 +320,7 @@ export default function StylefinderFlow() {
                           <button className="btn btn--primary btn--lg" type="submit" disabled={planSending} style={{ width: '100%' }}>
                             <span className="btn__shimmer" aria-hidden="true" /><span className="btn__label">{planSending ? 'Wird gesendet …' : 'Jetzt an VIDEKO senden'}</span>
                           </button>
-                          {planError && <p style={{ color: '#e0795f', fontSize: '.88rem', marginTop: '12px' }} role="alert">Hoppla, das hat nicht geklappt. Versuch's bitte nochmal – oder ruf uns kurz an: 0160 5545818.</p>}
+                          {planError && <p style={{ color: '#e0795f', fontSize: '.88rem', marginTop: '12px' }} role="alert">Hoppla, das hat nicht geklappt. Versuch's bitte nochmal – oder ruf uns kurz an: {BRAND.phone}.</p>}
                           <button type="button" onClick={() => setShowPlan(false)} style={{ display: 'block', margin: '14px auto 0', background: 'none', border: 'none', color: '#8f897e', fontSize: '.85rem', cursor: 'pointer' }}>Abbrechen</button>
                         </form>
                       ) : (

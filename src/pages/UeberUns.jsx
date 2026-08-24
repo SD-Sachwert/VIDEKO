@@ -27,7 +27,7 @@ import tService from '../assets/images/ueber-uns/team-neu/t6.webp'
 import momentImg from '../assets/images/ueber-uns/10_persoenlicher_kundenmoment.webp'
 import karteImg from '../assets/images/ueber-uns/karte.webp'
 
-const MAPS_URL = 'https://www.google.com/maps/search/?api=1&query=Hertzstra%C3%9Fe%204%2C%2097076%20W%C3%BCrzburg'
+import { STUDIO_MAPS_URL as MAPS_URL } from '../data/company.js'
 
 const VALUES = [
   { icon: Handshake, title: 'Ehrlich', text: 'Klartext statt Verkaufsmasche. Wir sagen dir auch, was du nicht brauchst.' },

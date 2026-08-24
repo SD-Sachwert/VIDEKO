@@ -13,6 +13,7 @@ import cKueche from '../assets/images/beratung/story-kueche.webp'
 import entryGrob from '../assets/images/beratung/entry-grob.webp'
 import entryRueckruf from '../assets/images/beratung/entry-rueckruf.webp'
 import entryStudio from '../assets/images/beratung/entry-studio.webp'
+import { BRAND, STUDIO_ADRESSE } from '../data/company.js'
 
 const ANLIEGEN = ['Rückruf', 'Studio-Termin', 'Ich habe erst mal Fragen']
 const KUECHENART = ['Zeile', 'L-Küche', 'U-Küche', 'Insel', 'Noch offen']
@@ -229,7 +230,7 @@ export default function Beratung() {
                 </button>
                 <p className="bf-trust"><ShieldCheck size={14} strokeWidth={1.8} /> Deine Daten sind sicher. Kein Spam, kein Weiterverkauf.</p>
                 {sent && <p className="contact__ok" role="status">Anfrage ist raus. Wir melden uns persönlich – kein Bot, kein Küchen-Orakel. Schau gern in dein Postfach. 🙌</p>}
-                {error && <p className="contact__err" role="alert">Hoppla, da ist was schiefgelaufen. Versuch's bitte nochmal – oder ruf uns kurz an: 0160 5545818.</p>}
+                {error && <p className="contact__err" role="alert">Hoppla, da ist was schiefgelaufen. Versuch's bitte nochmal – oder ruf uns kurz an: {BRAND.phone}.</p>}
               </form>
             </Reveal>
 
@@ -247,9 +248,9 @@ export default function Beratung() {
                 <div className="bf-contact">
                   <h3>VIDEKO Küchen</h3>
                   <ul>
-                    <li><MapPin size={16} strokeWidth={1.7} /> <span>Hertzstraße 4, 97076 Würzburg</span></li>
+                    <li><MapPin size={16} strokeWidth={1.7} /> <span>{STUDIO_ADRESSE}</span></li>
                     <li><Mail size={16} strokeWidth={1.7} /> <a href="mailto:info@videko-kuechen.de">info@videko-kuechen.de</a></li>
-                    <li><Phone size={16} strokeWidth={1.7} /> <a href="tel:+491605545818">0160 5545818</a></li>
+                    <li><Phone size={16} strokeWidth={1.7} /> <a href={`tel:${BRAND.phoneHref}`}>{BRAND.phone}</a></li>
                   </ul>
                   <p className="bf-contact__note">Kein Druck. Kein Küchenbasar. Nur ehrliche Planung.</p>
                 </div>

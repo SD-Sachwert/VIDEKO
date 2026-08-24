@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { MapPin, Mail, Phone } from 'lucide-react'
 import Reveal from './Reveal.jsx'
+import { BRAND } from '../data/company.js'
 
 export default function ContactSection() {
   const [sent, setSent] = useState(false)
@@ -92,7 +93,7 @@ export default function ContactSection() {
           <ul className="contact__list">
             <li>
               <MapPin size={17} strokeWidth={1.7} />
-              <span>Hertzstraße 4<br />97076 Würzburg</span>
+              <span>{BRAND.studio.street}<br />{BRAND.studio.postalCode} {BRAND.studio.city}</span>
             </li>
             <li>
               <Mail size={17} strokeWidth={1.7} />
@@ -100,7 +101,7 @@ export default function ContactSection() {
             </li>
             <li>
               <Phone size={17} strokeWidth={1.7} />
-              <a href="tel:+491605545818">0160 5545818</a>
+              <a href={`tel:${BRAND.phoneHref}`}>{BRAND.phone}</a>
             </li>
           </ul>
           <p className="contact__note">

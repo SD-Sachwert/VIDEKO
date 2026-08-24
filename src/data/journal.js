@@ -20,6 +20,7 @@ export const categories = [
 export const journalArticles = [
   {
     slug: 'licht-in-der-kueche',
+    lastModified: '2026-08-24',
     title: 'Licht in der Küche: Warum gutes Licht mehr kann als nur hell machen',
     category: 'Licht',
     read: '4 Min.',
@@ -38,6 +39,7 @@ export const journalArticles = [
   },
   {
     slug: 'welche-arbeitsplatte-passt-zu-mir',
+    lastModified: '2026-08-24',
     title: 'Welche Arbeitsplatte passt zu mir? Holz, Stein, Keramik oder Compact',
     category: 'Materialien',
     read: '5 Min.',
@@ -58,6 +60,7 @@ export const journalArticles = [
   },
   {
     slug: 'offene-oder-geschlossene-kueche',
+    lastModified: '2026-08-24',
     title: 'Offene oder geschlossene Küche? Die ehrliche Antwort hängt von deinem Alltag ab',
     category: 'Planung',
     read: '4 Min.',
@@ -76,6 +79,7 @@ export const journalArticles = [
   },
   {
     slug: 'fronten-farben-materialien',
+    lastModified: '2026-08-24',
     title: 'Fronten, Farben und Materialien: Warum Küche mehr ist als „hell oder dunkel"',
     category: 'Design',
     read: '4 Min.',
@@ -94,6 +98,7 @@ export const journalArticles = [
   },
   {
     slug: 'vor-dem-beratungstermin-das-solltest-du-wissen',
+    lastModified: '2026-08-24',
     title: 'Vor dem Beratungstermin: Das solltest du wirklich wissen',
     category: 'Planung',
     read: '3 Min.',
@@ -112,6 +117,7 @@ export const journalArticles = [
   },
   {
     slug: 'mehr-stauraum-weniger-chaos',
+    lastModified: '2026-08-24',
     title: 'Mehr Stauraum, weniger Chaos: Warum gute Küche innen anfängt',
     category: 'Stauraum',
     read: '4 Min.',
@@ -130,6 +136,7 @@ export const journalArticles = [
   },
   {
     slug: '7-kuechenfehler-die-du-spaeter-jeden-tag-bereust',
+    lastModified: '2026-08-24',
     title: 'Typische Küchenfehler – und welche gar keine sind',
     category: 'Planung',
     read: '6 Min.',
@@ -154,6 +161,7 @@ export const journalArticles = [
   },
   {
     slug: 'geraete-richtig-planen',
+    lastModified: '2026-08-24',
     title: 'Geräte richtig planen: Nicht jedes Feature macht deinen Alltag besser',
     category: 'Geräte',
     read: '4 Min.',
@@ -172,6 +180,7 @@ export const journalArticles = [
   },
   {
     slug: 'pflegeleichte-kueche',
+    lastModified: '2026-08-24',
     title: 'Pflegeleichte Küche: Schön wohnen, ohne jeden Fingerabdruck zu adoptieren',
     category: 'Pflege',
     read: '3 Min.',

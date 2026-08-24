@@ -39,6 +39,33 @@ export const BRAND = {
   phoneHref: '+491605545818',
   // Physischer Studio-Standort (Küchenstudio) – NICHT der Sitz der Betreiberin.
   studio: { street: 'Hertzstraße 4', postalCode: '97076', city: 'Würzburg', country: 'Deutschland' },
+  /**
+   * ÖFFNUNGSZEITEN: BEWUSST `null` – OFFENER DATENPUNKT.
+   *
+   * Im Repository sind keine verbindlichen Öffnungszeiten hinterlegt und es
+   * liegt keine Freigabe dafür vor. Externe Verzeichnisse zeigen widersprüchliche
+   * Zeiten (Cylex: Mo–So 09–18 Uhr, Das Örtliche: Mo–Fr 09–18 Uhr, Gelbe Seiten:
+   * „24 Stunden Service“) – siehe docs/LOCAL-SEO-NAP-AUDIT-2026-08-24.md.
+   * Solange dieser Wert `null` ist, schreibt `localBusinessLd()` KEINE
+   * `openingHoursSpecification` in die strukturierten Daten. Erfundene Zeiten
+   * wären in den Suchergebnissen eine falsche Zusage.
+   * Sobald freigegebene Zeiten vorliegen, gehören sie hierher – an genau eine
+   * Stelle, aus der Website, Schema.org und alle Verzeichnisse gespeist werden.
+   */
+  openingHours: null,
+}
+
+/** Vollständige Studio-Anschrift einzeilig – für Fließtext und Listen. */
+export const STUDIO_ADRESSE = `${BRAND.studio.street}, ${BRAND.studio.postalCode} ${BRAND.studio.city}`
+
+/** Google-Maps-Suchlink auf die Studio-Anschrift. */
+export const STUDIO_MAPS_URL =
+  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(STUDIO_ADRESSE)}`
+
+/** WhatsApp-Link auf die Studio-Rufnummer. `text` wird angehängt, wenn gesetzt. */
+export function whatsappUrl(text) {
+  const nummer = BRAND.phoneHref.replace(/[^0-9]/g, '')
+  return text ? `https://wa.me/${nummer}?text=${encodeURIComponent(text)}` : `https://wa.me/${nummer}`
 }
 
 /**

@@ -58,6 +58,7 @@ const STATS_DECK = [
 import imgProzess from '../assets/images/karriere/08_bewerbungsprozess_teammeeting.webp'
 import imgFormular from '../assets/images/karriere/09_bewerbung_interior_formular.webp'
 import imgCta from '../assets/images/karriere/10_cta_footer_premium_showroom.webp'
+import { BRAND, STUDIO_ADRESSE, STUDIO_MAPS_URL } from '../data/company.js'
 
 const ROLES = [
   { title: 'Beratung & Verkauf', cat: 'verkaufen', icon: Store, image: jVerkauf, text: 'Für Menschen, die zuhören können, bevor sie verkaufen.' },
@@ -354,8 +355,8 @@ export default function Karriere() {
               <p className="lintro__text">Ein Satz reicht. Roman geht auch. Persönlichkeit zählt bei uns mehr als ein makelloser Lebenslauf.</p>
               <ul className="kapply__contact">
                 <li><Mail size={17} strokeWidth={1.7} /> <a href="mailto:info@videko-kuechen.de">info@videko-kuechen.de</a></li>
-                <li><MapPin size={17} strokeWidth={1.7} /> Hertzstraße 4, 97076 Würzburg <a className="kapply__route" href="https://www.google.com/maps/search/?api=1&query=Hertzstra%C3%9Fe%204%2C%2097076%20W%C3%BCrzburg" target="_blank" rel="noopener noreferrer">Route öffnen</a></li>
-                <li><Headset size={17} strokeWidth={1.7} /> <a href="tel:+491605545818">0160 5545818</a></li>
+                <li><MapPin size={17} strokeWidth={1.7} /> {STUDIO_ADRESSE} <a className="kapply__route" href={STUDIO_MAPS_URL} target="_blank" rel="noopener noreferrer">Route öffnen</a></li>
+                <li><Headset size={17} strokeWidth={1.7} /> <a href={`tel:${BRAND.phoneHref}`}>{BRAND.phone}</a></li>
               </ul>
               <div className="kapply__pic"><img src={imgFormular} alt="" loading="lazy" /></div>
             </Reveal>

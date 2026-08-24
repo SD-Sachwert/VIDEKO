@@ -8,7 +8,7 @@ import CTAButton from '../components/CTAButton.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
 import TextLink from '../components/TextLink.jsx'
 import { KiBadge, KiHinweis } from '../components/legal/KiKennzeichnung.jsx'
-import { BRAND } from '../data/company.js'
+import { BRAND, STUDIO_MAPS_URL } from '../data/company.js'
 
 import heroImg from '../assets/images/studio/bilder/01_hero_studio_showroom.webp'
 import introImg from '../assets/images/studio/bilder/02_intro_showroom_hell.webp'
@@ -48,8 +48,7 @@ const FINAL_HL = ['Individuelle Beratung', 'Premium Materialien', 'Planung auf h
    SEO-Phase 2 dauerhaft hierher weiterleitet. */
 const AREA = ['Würzburg', 'Tauberbischofsheim', 'Kitzingen', 'Main-Tauber', 'Schweinfurt']
 
-const MAPS_URL =
-  'https://www.google.com/maps/search/?api=1&query=Hertzstra%C3%9Fe%204%2C%2097076%20W%C3%BCrzburg'
+const MAPS_URL = STUDIO_MAPS_URL
 
 export default function Studio() {
   const heroRef = useRef(null)

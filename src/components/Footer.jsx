@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { MapPin, Mail, Phone, ArrowRight } from 'lucide-react'
 import logoMark from '../assets/brand/logo-main-v2-288.webp'
 import Img from './Img.jsx'
-import { BRAND, ACTIVE_OPERATOR, OPERATOR_NOTICE } from '../data/company.js'
+import { BRAND, ACTIVE_OPERATOR, OPERATOR_NOTICE, STUDIO_MAPS_URL } from '../data/company.js'
 
 import kitchenVision from '../assets/images/kitchen-vision-1.webp'
 
@@ -145,7 +145,7 @@ export default function Footer() {
           <div className="footer__col footer__col--contact">
             <span className="footer__coltitle">Kontakt</span>
             <span className="footer__contact-name">{BRAND.name}</span>
-            <a href="https://www.google.com/maps/search/?api=1&query=Hertzstra%C3%9Fe%204%2C%2097076%20W%C3%BCrzburg" target="_blank" rel="noopener noreferrer" className="footer__contact-line"><MapPin size={15} strokeWidth={1.7} /> {BRAND.studio.street}, {BRAND.studio.postalCode} {BRAND.studio.city}</a>
+            <a href={STUDIO_MAPS_URL} target="_blank" rel="noopener noreferrer" className="footer__contact-line"><MapPin size={15} strokeWidth={1.7} /> {BRAND.studio.street}, {BRAND.studio.postalCode} {BRAND.studio.city}</a>
             <a href={`mailto:${BRAND.contactEmail}`} className="footer__contact-line"><Mail size={15} strokeWidth={1.7} /> {BRAND.contactEmail}</a>
             <a href={`tel:${BRAND.phoneHref}`} className="footer__contact-line"><Phone size={15} strokeWidth={1.7} /> {BRAND.phone}</a>
           </div>

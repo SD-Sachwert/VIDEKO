@@ -28,6 +28,14 @@
  *                 Nur auf Seiten, die genau eine Leistung beschreiben.
  *   faqs        – Fragen aus data/leistungsseiten.js. Sie muessen sichtbar auf
  *                 der Seite stehen, sonst darf FAQPage nicht gesetzt werden.
+ *   lastModified – ISO-Datum (YYYY-MM-DD) der letzten ECHTEN Inhaltsänderung
+ *                 dieser Seite. Wird als <lastmod> in die sitemap.xml
+ *                 geschrieben. NUR setzen, wenn das Datum belegt ist —
+ *                 fehlt es, bleibt der Sitemap-Eintrag ohne <lastmod>.
+ *                 Ein pauschales Build-Datum wäre ein falsches Signal:
+ *                 Google würde bei jedem Deploy alle 64 URLs als geändert
+ *                 gemeldet bekommen und dem Feld irgendwann nicht mehr
+ *                 glauben. Deshalb wird hier von Hand gepflegt.
  */
 import heroDesktop from '../assets/images/shared/hero-videko-final-16x9.webp'
 import heroMobile from '../assets/images/home/Mobile.webp'
@@ -56,6 +64,7 @@ import ogMontage from '../assets/images/leistungen/ls-install.webp'
 
 export const HOME_META = {
   path: '/',
+  lastModified: '2026-08-24',
   title: 'VIDEKO Küchen | Küchenstudio Würzburg',
   description:
     'VIDEKO Küchen – dein Küchenstudio in Würzburg. Küchenplanung, ehrliche Beratung und maßgeschneiderte Küchen für deinen Alltag.',
@@ -73,6 +82,7 @@ export const STATIC_ROUTES = [
   HOME_META,
   {
     path: '/leistungen',
+    lastModified: '2026-08-24',
     title: 'Leistungen im Überblick: Planung, Montage & Service | VIDEKO Küchen',
     description:
       'Alle Leistungen von VIDEKO auf einen Blick: Beratung, Küchenplanung, Küchen nach Maß, Arbeitsplatten, Montage und Koordination – mit dem Weg zur passenden Seite.',
@@ -81,6 +91,7 @@ export const STATIC_ROUTES = [
   },
   {
     path: '/alles-aus-einer-hand',
+    lastModified: '2026-08-24',
     title: 'Nicht nur Küche. Der ganze Raum. | VIDEKO Küchen',
     description:
       'Küche, Elektro, Boden, Wand, Spanndecke, Licht und Montage – über VIDEKO koordiniert, mit passenden Fachpartnern geplant und abgestimmt.',
@@ -96,6 +107,7 @@ export const STATIC_ROUTES = [
   },
   {
     path: '/studio',
+    lastModified: '2026-08-24',
     title: 'Küchenstudio Würzburg – Hertzstraße 4 | VIDEKO Küchen',
     description:
       'Das VIDEKO Küchenstudio in der Hertzstraße 4 in Würzburg: Materialien fühlen, Fronten vergleichen, Planung verstehen – nach Terminvereinbarung, ohne Verkaufsdruck.',
@@ -104,6 +116,7 @@ export const STATIC_ROUTES = [
   },
   {
     path: '/inspiration',
+    lastModified: '2026-08-24',
     title: 'Küchen-Inspiration: Stile, Materialien & Ideen | VIDEKO Küchen',
     description:
       'Stilwelten, Materialien und Details für deine neue Küche – zum Durchsehen, Vergleichen und Ideensammeln.',
@@ -121,6 +134,7 @@ export const STATIC_ROUTES = [
   },
   {
     path: '/planung',
+    lastModified: '2026-08-24',
     title: 'Küchenplanung Würzburg: Ablauf, Fehler & Budget | VIDEKO Küchen',
     description:
       'Küchenplanung aus Würzburg: wie eine Küche entsteht, welche Planungsfehler typisch sind und wie ein realistisches Budget aussieht – von der Idee bis zur Abnahme.',
@@ -135,6 +149,7 @@ export const STATIC_ROUTES = [
   },
   {
     path: '/kuechen-nach-mass',
+    lastModified: '2026-08-24',
     title: 'Küchen nach Maß in Würzburg – Einbauküchen & Designküchen | VIDEKO',
     description:
       'Einbauküche, Designküche oder Küche nach Maß: Wie VIDEKO in Würzburg Grundriss, Maße, Materialien und Stil zu einer Küche zusammenführt, die genau in deinen Raum passt.',
@@ -150,6 +165,7 @@ export const STATIC_ROUTES = [
   },
   {
     path: '/arbeitsplatten',
+    lastModified: '2026-08-24',
     title: 'Arbeitsplatten für die Küche: Holz, Stein, Keramik & Compact | VIDEKO Küchen',
     description:
       'Welche Arbeitsplatte hält deinem Alltag stand? Massivholz, Naturstein, Keramik und Compact im ehrlichen Vergleich – mit Aufmaß, Kante und Ausschnitten über VIDEKO.',
@@ -165,6 +181,7 @@ export const STATIC_ROUTES = [
   },
   {
     path: '/kuechenmontage-wuerzburg',
+    lastModified: '2026-08-24',
     title: 'Küchenmontage Würzburg: Aufmaß, Aufbau & Abnahme | VIDEKO Küchen',
     description:
       'Küchenmontage in Würzburg und Umgebung: Laseraufmaß, feste Termine, sauberer Aufbau, Anschluss und gemeinsame Endabnahme – koordiniert über einen Ansprechpartner.',
@@ -219,6 +236,7 @@ export const STATIC_ROUTES = [
   },
   {
     path: '/karriere',
+    lastModified: '2026-08-24',
     title: 'Karriere bei VIDEKO Küchen in Würzburg',
     description:
       'Lust auf Küchen, aber ohne Möbelhaus-Zirkus? Offene Rollen, Arbeitsweise und eine Bewerbung, die in drei Minuten geschrieben ist.',
@@ -227,6 +245,7 @@ export const STATIC_ROUTES = [
   },
   {
     path: '/beratung',
+    lastModified: '2026-08-24',
     title: 'Küchenberatung Würzburg – persönlich & unverbindlich | VIDEKO Küchen',
     description:
       'Küchenberatung in Würzburg: Erzähl uns von deinem Raum und deinen Vorstellungen. Wir melden uns und sortieren gemeinsam die nächsten Schritte.',
@@ -241,6 +260,7 @@ export const STATIC_ROUTES = [
   },
   {
     path: '/merch',
+    lastModified: '2026-08-24',
     title: 'VIDEKO Merch – Kollektion zum Anziehen',
     description:
       'T-Shirts, Polos, Hoodies und mehr aus der VIDEKO Kollektion – schlicht, hochwertig und ohne Logo-Geschrei.',

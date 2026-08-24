@@ -105,6 +105,8 @@ export function localBusinessLd() {
     areaServed: { '@type': 'City', name: 'Würzburg' },
     // Terminbasiert statt offener Ladenöffnung – ehrlich abgebildet.
     availableService: { '@type': 'Service', name: 'Küchenplanung nach Terminvereinbarung' },
+    // Nur wenn in company.js freigegebene Zeiten hinterlegt sind – sonst gar nicht.
+    ...(BRAND.openingHours ? { openingHoursSpecification: BRAND.openingHours } : {}),
   }
 }
 
@@ -151,9 +153,13 @@ export function webPageLd({ path, title, description }) {
 /**
  * Artikel im Journal.
  *
- * OHNE `datePublished`/`dateModified`: für die bestehenden Beiträge liegt kein
- * belegtes Veröffentlichungsdatum vor. Ein erfundenes Datum wäre für Google ein
- * falsches Signal — lieber das Feld weglassen.
+ * OHNE `datePublished`: für die bestehenden Beiträge liegt kein belegtes
+ * Veröffentlichungsdatum vor. Ein erfundenes Datum wäre für Google ein falsches
+ * Signal — lieber das Feld weglassen.
+ *
+ * `dateModified` NUR, wenn am Artikel ein gepflegtes `lastModified` steht (siehe
+ * data/journal.js). Das ist dieselbe belegte Quelle wie das <lastmod> der
+ * Sitemap — beide Signale bleiben damit automatisch konsistent.
  */
 export function articleLd(article, path) {
   return {
@@ -168,6 +174,7 @@ export function articleLd(article, path) {
     mainEntityOfPage: absUrl(path),
     author: { '@id': `${SITE.origin}/#organization` },
     publisher: { '@id': `${SITE.origin}/#organization` },
+    ...(article.lastModified ? { dateModified: article.lastModified } : {}),
   }
 }
 
