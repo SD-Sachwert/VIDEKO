@@ -24,6 +24,10 @@
  *                 <link rel="preload" as="image">. Nur setzen, wo das Motiv
  *                 sicher above the fold und das LCP-Element ist — ein falscher
  *                 Preload kostet Bandbreite, statt sie zu sparen.
+ *   service     – { name, description, serviceType } fuer Service-JSON-LD.
+ *                 Nur auf Seiten, die genau eine Leistung beschreiben.
+ *   faqs        – Fragen aus data/leistungsseiten.js. Sie muessen sichtbar auf
+ *                 der Seite stehen, sonst darf FAQPage nicht gesetzt werden.
  */
 import heroDesktop from '../assets/images/shared/hero-videko-final-16x9.webp'
 import heroMobile from '../assets/images/home/Mobile.webp'
@@ -42,6 +46,13 @@ import ogJournal from '../assets/images/inspiration/01_hero_atmosphaerische_kuec
 import ogUeberUns from '../assets/images/leistungen/ls-feature.webp'
 import ogTeam from '../assets/images/showroom/journey-07-verstehen.webp'
 import ogKarriere from '../assets/images/karriere/01_hero_team_beratung.webp'
+import {
+  ALLES_AUS_EINER_HAND_FAQS, NACH_MASS_FAQS, ARBEITSPLATTEN_FAQS, MONTAGE_FAQS,
+} from './leistungsseiten.js'
+
+import ogNachMass from '../assets/images/inspiration/07_kueche_mit_insel.webp'
+import ogArbeitsplatten from '../assets/images/inspiration/06_materialien_und_details.webp'
+import ogMontage from '../assets/images/leistungen/ls-install.webp'
 
 export const HOME_META = {
   path: '/',
@@ -62,9 +73,9 @@ export const STATIC_ROUTES = [
   HOME_META,
   {
     path: '/leistungen',
-    title: 'Leistungen: Küchenplanung, Montage & Service | VIDEKO Küchen',
+    title: 'Leistungen im Überblick: Planung, Montage & Service | VIDEKO Küchen',
     description:
-      'Von der Beratung über die Planung bis zu Aufmaß, Montage und Abnahme: So begleitet VIDEKO dein Küchenprojekt Schritt für Schritt.',
+      'Alle Leistungen von VIDEKO auf einen Blick: Beratung, Küchenplanung, Küchen nach Maß, Arbeitsplatten, Montage und Koordination – mit dem Weg zur passenden Seite.',
     crumb: 'Leistungen',
     ogImage: ogLeistungen,
   },
@@ -75,21 +86,20 @@ export const STATIC_ROUTES = [
       'Küche, Elektro, Boden, Wand, Spanndecke, Licht und Montage – über VIDEKO koordiniert, mit passenden Fachpartnern geplant und abgestimmt.',
     crumb: 'Alles aus einer Hand',
     ogImage: ogAllesAusEinerHand,
+    service: {
+      name: 'Küchenumbau mit Koordination aller Gewerke',
+      serviceType: 'Küchenumbau',
+      description:
+        'Küche, Elektro, Boden, Wand, Decke und Licht werden gemeinsam geplant. VIDEKO koordiniert die Fachpartner und den Terminplan.',
+    },
+    faqs: ALLES_AUS_EINER_HAND_FAQS,
   },
   {
     path: '/studio',
-    title: 'Küchenstudio Würzburg – Küchen erleben | VIDEKO Küchen',
+    title: 'Küchenstudio Würzburg – Hertzstraße 4 | VIDEKO Küchen',
     description:
-      'Materialien fühlen, Fronten vergleichen, Planung verstehen: Was dich bei einem Termin im VIDEKO Studio in Würzburg erwartet.',
+      'Das VIDEKO Küchenstudio in der Hertzstraße 4 in Würzburg: Materialien fühlen, Fronten vergleichen, Planung verstehen – nach Terminvereinbarung, ohne Verkaufsdruck.',
     crumb: 'Studio',
-    ogImage: ogStudio,
-  },
-  {
-    path: '/showroom',
-    title: 'Showroom & Standort Würzburg | VIDEKO Küchen',
-    description:
-      'Der VIDEKO Showroom in der Hertzstraße 4 in Würzburg: Anfahrt, Umgebung und was du vor Ort sehen kannst.',
-    crumb: 'Showroom',
     ogImage: ogStudio,
   },
   {
@@ -111,11 +121,62 @@ export const STATIC_ROUTES = [
   },
   {
     path: '/planung',
-    title: 'Küchenplanung: Ablauf, Fehler & Budget | VIDEKO Küchen',
+    title: 'Küchenplanung Würzburg: Ablauf, Fehler & Budget | VIDEKO Küchen',
     description:
-      'Wie eine Küche entsteht, welche Planungsfehler typisch sind und wie ein realistisches Budget aussieht – von der Idee bis zur Abnahme.',
+      'Küchenplanung aus Würzburg: wie eine Küche entsteht, welche Planungsfehler typisch sind und wie ein realistisches Budget aussieht – von der Idee bis zur Abnahme.',
     crumb: 'Planung',
     ogImage: ogPlanung,
+    service: {
+      name: 'Küchenplanung',
+      serviceType: 'Küchenplanung',
+      description:
+        'Von Erstgespräch, Bedarf und Budget über die 3D-Planung und das Laseraufmaß bis zu Montage und gemeinsamer Endabnahme.',
+    },
+  },
+  {
+    path: '/kuechen-nach-mass',
+    title: 'Küchen nach Maß in Würzburg – Einbauküchen & Designküchen | VIDEKO',
+    description:
+      'Einbauküche, Designküche oder Küche nach Maß: Wie VIDEKO in Würzburg Grundriss, Maße, Materialien und Stil zu einer Küche zusammenführt, die genau in deinen Raum passt.',
+    crumb: 'Küchen nach Maß',
+    ogImage: ogNachMass,
+    service: {
+      name: 'Küchen nach Maß',
+      serviceType: 'Küchenplanung nach Maß',
+      description:
+        'Einbauküchen, die für den vorhandenen Raum geplant werden: Grundriss, Höhen, Arbeitswege, Stauraum und Geräte – mit millimetergenauem Laseraufmaß.',
+    },
+    faqs: NACH_MASS_FAQS,
+  },
+  {
+    path: '/arbeitsplatten',
+    title: 'Arbeitsplatten für die Küche: Holz, Stein, Keramik & Compact | VIDEKO Küchen',
+    description:
+      'Welche Arbeitsplatte hält deinem Alltag stand? Massivholz, Naturstein, Keramik und Compact im ehrlichen Vergleich – mit Aufmaß, Kante und Ausschnitten über VIDEKO.',
+    crumb: 'Arbeitsplatten',
+    ogImage: ogArbeitsplatten,
+    service: {
+      name: 'Arbeitsplatten für die Küche',
+      serviceType: 'Arbeitsplatten',
+      description:
+        'Beratung zu Massivholz, Naturstein, Keramik und Compact sowie Material, Kante und Ausschnitte inklusive Aufmaß beim Naturstein- oder Keramikpartner.',
+    },
+    faqs: ARBEITSPLATTEN_FAQS,
+  },
+  {
+    path: '/kuechenmontage-wuerzburg',
+    title: 'Küchenmontage Würzburg: Aufmaß, Aufbau & Abnahme | VIDEKO Küchen',
+    description:
+      'Küchenmontage in Würzburg und Umgebung: Laseraufmaß, feste Termine, sauberer Aufbau, Anschluss und gemeinsame Endabnahme – koordiniert über einen Ansprechpartner.',
+    crumb: 'Küchenmontage',
+    ogImage: ogMontage,
+    service: {
+      name: 'Küchenmontage',
+      serviceType: 'Küchenmontage',
+      description:
+        'Laseraufmaß, fester Terminplan, Aufbau und Anschluss der Küche sowie gemeinsame Endabnahme – in Würzburg und der Region.',
+    },
+    faqs: MONTAGE_FAQS,
   },
   {
     path: '/vorher-nachher',
@@ -148,6 +209,13 @@ export const STATIC_ROUTES = [
       'Planung, Beratung, Umsetzung: die Rollen im VIDEKO Team und wie wir an deinem Projekt zusammenarbeiten.',
     crumb: 'Team',
     ogImage: ogTeam,
+    // Die Seite zeigt derzeit sechs Rollenkarten mit dem Namen „Platzhalter"
+    // (src/pages/Team.jsx) und rund 430 Zeichen Text. Solange dort keine echten
+    // Personen stehen, gehört sie nicht in den Index — die Rollen selbst sind
+    // auf /ueber-uns bereits beschrieben. Die URL bleibt erreichbar; sobald das
+    // Team eingepflegt ist, fallen die beiden Zeilen ersatzlos weg.
+    noindex: true,
+    inSitemap: false,
   },
   {
     path: '/karriere',
@@ -159,11 +227,17 @@ export const STATIC_ROUTES = [
   },
   {
     path: '/beratung',
-    title: 'Beratung anfragen – persönlich & unverbindlich | VIDEKO Küchen',
+    title: 'Küchenberatung Würzburg – persönlich & unverbindlich | VIDEKO Küchen',
     description:
-      'Erzähl uns von deinem Raum und deinen Vorstellungen. Wir melden uns und sortieren gemeinsam die nächsten Schritte.',
+      'Küchenberatung in Würzburg: Erzähl uns von deinem Raum und deinen Vorstellungen. Wir melden uns und sortieren gemeinsam die nächsten Schritte.',
     crumb: 'Beratung',
     ogImage: ogLeistungen,
+    service: {
+      name: 'Küchenberatung',
+      serviceType: 'Küchenberatung',
+      description:
+        'Persönliches, unverbindliches Erstgespräch zu Raum, Alltag, Stil und Budget – nach Terminvereinbarung im Studio in Würzburg oder telefonisch.',
+    },
   },
   {
     path: '/merch',
@@ -178,6 +252,13 @@ export const STATIC_ROUTES = [
     description:
       'Die interaktive 3D-Ansicht von VIDEKO: Küchenwelten drehen, erkunden und Materialien in Bewegung sehen.',
     crumb: 'Experience',
+    // Bewusst außerhalb der Suchmaschinen-Architektur: Die Seite ist eine reine
+    // WebGL-Szene und liefert deshalb als einzige Route keinen vorgerenderten
+    // Textkörper aus (OHNE_KOERPER in scripts/prerender.mjs). Eine indexierbare
+    // URL ganz ohne Inhalt wäre ein Thin-Content-Signal. Für Besucher bleibt sie
+    // voll erreichbar und ist aus /inspiration verlinkt.
+    noindex: true,
+    inSitemap: false,
   },
 
   /* --- Rechtliches: indexierbar, aber ohne Breadcrumb-Kette --- */
@@ -234,4 +315,8 @@ export const REDIRECTS = [
   { from: '/kontakt', to: '/beratung' },
   { from: '/ueber-videko', to: '/ueber-uns' },
   { from: '/kuechenwelten', to: '/stylefinder' },
+  // /showroom und /studio bedienten dieselbe Suchintention: den Ort in Würzburg
+  // ansehen und einen Termin machen. /studio war die inhaltlich stärkere Seite;
+  // der Standortteil des Showrooms steht jetzt dort.
+  { from: '/showroom', to: '/studio' },
 ]

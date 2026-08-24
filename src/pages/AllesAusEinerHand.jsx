@@ -10,11 +10,7 @@ import SectionHeader from '../components/SectionHeader.jsx'
 import Reveal from '../components/Reveal.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import Img from '../components/Img.jsx'
-import Seo from '../components/Seo.jsx'
-import { ROUTE_META } from '../data/routes-meta.js'
-import {
-  organizationLd, webSiteLd, webPageLd, breadcrumbLd, faqLd,
-} from '../data/site.js'
+import { ALLES_AUS_EINER_HAND_FAQS } from '../data/leistungsseiten.js'
 
 import heroImg from '../assets/images/inspiration/09_premium_architektur_kueche.webp'
 import raumImg from '../assets/images/inspiration/03_wohnliche_kueche.webp'
@@ -109,53 +105,11 @@ const ABLAUF = [
   },
 ]
 
-const FAQS = [
-  {
-    q: 'Führt VIDEKO alle Arbeiten selbst aus?',
-    a: 'Nein. VIDEKO plant deine Küche und koordiniert das Projekt. Gewerke wie Elektro, Boden, Trockenbau oder Spanndecke werden über VIDEKO organisiert und von passenden Fachpartnern ausgeführt. Du hast trotzdem nur einen Ansprechpartner.',
-  },
-  {
-    q: 'Was bringt mir das gegenüber einzelnen Aufträgen?',
-    a: 'Die Gewerke werden aufeinander abgestimmt geplant: Aufbauhöhen, Anschlüsse, Leitungswege und Licht passen zusammen, weil sie gemeinsam betrachtet wurden. Und du musst die Termine nicht selbst zwischen mehreren Betrieben sortieren.',
-  },
-  {
-    q: 'Kann ich einzelne Gewerke selbst beauftragen?',
-    a: 'Ja. Wenn du deinen eigenen Elektriker oder Bodenleger hast, binden wir ihn in die Planung und den Terminplan ein. Du entscheidest, wie viel über VIDEKO läuft.',
-  },
-  {
-    q: 'Wie lange dauert so ein Umbau?',
-    a: 'Das hängt vom Umfang und von den Lieferzeiten der Küche ab. Eine belastbare Aussage bekommst du erst nach der Aufnahme vor Ort – vorher wäre jede Zahl geraten.',
-  },
-  {
-    q: 'Was kostet das?',
-    a: 'Der Preis ergibt sich aus den tatsächlich benötigten Gewerken und dem Umfang der Küche. Nach dem Aufmaß bekommst du eine Aufstellung, in der du siehst, welcher Posten wofür steht.',
-  },
-]
-
 export default function AllesAusEinerHand() {
   const [offen, setOffen] = useState(0)
-  const meta = ROUTE_META.get('/alles-aus-einer-hand')
 
   return (
     <div className="aaeh-page">
-      <Seo
-        title={meta.title}
-        description={meta.description}
-        canonicalPath="/alles-aus-einer-hand"
-        jsonLd={[
-          organizationLd(),
-          webSiteLd(),
-          webPageLd({ path: '/alles-aus-einer-hand', title: meta.title, description: meta.description }),
-          breadcrumbLd([
-            { name: 'Start', path: '/' },
-            { name: 'Alles aus einer Hand', path: '/alles-aus-einer-hand' },
-          ]),
-          // Die Fragen stehen unten sichtbar auf der Seite – Voraussetzung
-          // dafuer, dass FAQPage ausgezeichnet werden darf.
-          faqLd(FAQS),
-        ]}
-      />
-
       {/* 1 — HERO */}
       <PageHero
         kicker="Komplettumbau"
@@ -193,11 +147,17 @@ export default function AllesAusEinerHand() {
         </div>
       </section>
 
-      {/* 3 — LEISTUNGSRASTER */}
-      <section className="section">
+      {/* 3 — LEISTUNGSRASTER
+          Die Karten (.aaeh-card) sind mit cremefarbener Schrift, cremefarbenem
+          Rand und 5%-Fuellung fuer einen dunklen Abschnitt gebaut. Der fehlte:
+          `.section` allein hat keinen eigenen Hintergrund, deshalb stand der
+          Text bisher creme auf creme. section--dark stellt den vorgesehenen
+          Kontrast her. */}
+      <section className="section section--dark">
         <div className="container">
           <SectionHeader
             align="center"
+            tone="light"
             kicker="Der Umfang"
             title={<>Was zusammen geplant wird, <span className="grad">passt am Ende zusammen.</span></>}
             lead="Diese Bereiche denken wir von Anfang an gemeinsam. Ausgeführt werden sie von VIDEKO und den jeweils passenden Fachpartnern."
@@ -236,8 +196,10 @@ export default function AllesAusEinerHand() {
         </div>
       </section>
 
-      {/* 5 — EIN ANSPRECHPARTNER */}
-      <section className="section">
+      {/* 5 — EIN ANSPRECHPARTNER
+          Gleicher Fall wie Abschnitt 3: aaeh-split ist ein Baustein fuer
+          dunkle Abschnitte (cremefarbene Ueberschrift, goldhelle Links). */}
+      <section className="section section--dark">
         <div className="container aaeh-split">
           <Reveal className="aaeh-split__copy">
             <span className="kicker kicker--gold">Ein Ansprechpartner</span>
@@ -285,7 +247,7 @@ export default function AllesAusEinerHand() {
             title={<>Was Kundinnen und Kunden <span className="grad">zuerst fragen.</span></>}
           />
           <div className="aaeh-faq">
-            {FAQS.map((f, i) => (
+            {ALLES_AUS_EINER_HAND_FAQS.map((f, i) => (
               <Reveal key={f.q} as="div" className={`jacc ${offen === i ? 'is-open' : ''}`} delay={(i % 2) * 0.05}>
                 <button type="button" className="jacc__q" onClick={() => setOffen(offen === i ? -1 : i)} aria-expanded={offen === i}>
                   <span>{f.q}</span>

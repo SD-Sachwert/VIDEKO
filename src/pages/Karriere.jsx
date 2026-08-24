@@ -10,6 +10,7 @@ import Reveal from '../components/Reveal.jsx'
 import useCarouselNav from '../hooks/useCarouselNav.js'
 import CTAButton from '../components/CTAButton.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
+import TextLink from '../components/TextLink.jsx'
 import KarriereTopShowcase from '../components/KarriereTopShowcase.jsx'
 import ComparisonTable from '../components/ComparisonTable.jsx'
 import { KiHinweis } from '../components/legal/KiKennzeichnung.jsx'
@@ -311,6 +312,14 @@ export default function Karriere() {
             <p className="jobstage__cta-text">Dann bewirb dich trotzdem. Ob Vollzeit, Teilzeit, Minijob oder Quereinstieg – erzähl uns einfach, was du kannst und worauf du Lust hast. Den Rest finden wir gemeinsam heraus. Wir finden schon was für dich. Kein Bewerbungstheater, kein Lebenslauf-Bingo.</p>
             <CTAButton href="#bewerbung">Initiativ bewerben</CTAButton>
           </div>
+          {/* Karriere war bis SEO-Phase 2 eine Sackgasse: viel Inhalt, aber kein
+              einziger Link zurück in die Seite. Wer sich hier bewirbt, will in
+              aller Regel genau diese zwei Dinge wissen. */}
+          <p className="aaeh-note aaeh-note--center">
+            Wer wir sind und wofür wir stehen, steht unter{' '}
+            <TextLink href="/ueber-uns">Über uns</TextLink>. Wo gearbeitet wird, zeigt unser{' '}
+            <TextLink href="/studio">Küchenstudio in Würzburg</TextLink>.
+          </p>
         </div>
       </section>
 

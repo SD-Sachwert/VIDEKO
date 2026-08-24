@@ -8,6 +8,7 @@ import {
 import Reveal from '../components/Reveal.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
+import TextLink from '../components/TextLink.jsx'
 import TransformingKitchen from '../components/TransformingKitchen.jsx'
 import MaterialsLab from '../components/MaterialsLab.jsx'
 import KuechenfehlerGame from '../components/KuechenfehlerGame.jsx'
@@ -206,6 +207,15 @@ export default function Inspiration() {
               </Reveal>
             ))}
           </div>
+          {/* /experience hat keine eigene Suchintention und steht deshalb seit
+              SEO-Phase 2 bewusst außerhalb der Suchmaschinen-Architektur. Finden
+              soll man sie trotzdem — und Inspiration ist genau der Kontext. */}
+          <p className="aaeh-note aaeh-note--center">
+            Wenn du lieber schaust als liest: Die{' '}
+            <TextLink href="/experience">VIDEKO Experience</TextLink> führt durch dieselben
+            Themen als Bildstrecke. Und wie daraus eine geplante Küche wird, steht unter{' '}
+            <TextLink href="/planung">Küchenplanung</TextLink>.
+          </p>
         </div>
       </section>
 

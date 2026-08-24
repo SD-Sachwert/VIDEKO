@@ -43,8 +43,10 @@ const AllesAusEinerHand = lazy(() => import('./pages/AllesAusEinerHand.jsx'))
 
 // kept (reachable via the homepage teasers/cards)
 const Stylefinder = lazy(() => import('./pages/Stylefinder.jsx'))
-const Showroom = lazy(() => import('./pages/Showroom.jsx'))
 const Planung = lazy(() => import('./pages/Planung.jsx'))
+const KuechenNachMass = lazy(() => import('./pages/KuechenNachMass.jsx'))
+const Arbeitsplatten = lazy(() => import('./pages/Arbeitsplatten.jsx'))
+const KuechenmontageWuerzburg = lazy(() => import('./pages/KuechenmontageWuerzburg.jsx'))
 const Team = lazy(() => import('./pages/Team.jsx'))
 
 export default function App() {
@@ -57,6 +59,9 @@ export default function App() {
         <Route path="/studio" element={<Studio />} />
         <Route path="/leistungen" element={<Leistungen />} />
         <Route path="/alles-aus-einer-hand" element={<AllesAusEinerHand />} />
+        <Route path="/kuechen-nach-mass" element={<KuechenNachMass />} />
+        <Route path="/arbeitsplatten" element={<Arbeitsplatten />} />
+        <Route path="/kuechenmontage-wuerzburg" element={<KuechenmontageWuerzburg />} />
         <Route path="/inspiration" element={<Inspiration />} />
         <Route path="/vorher-nachher" element={<VorherNachher />} />
         <Route path="/journal" element={<Journal />} />
@@ -80,7 +85,6 @@ export default function App() {
 
         {/* kept feature pages (linked from homepage) */}
         <Route path="/stylefinder" element={<Stylefinder />} />
-        <Route path="/showroom" element={<Showroom />} />
         <Route path="/planung" element={<Planung />} />
         <Route path="/team" element={<Team />} />
 
@@ -89,6 +93,11 @@ export default function App() {
         <Route path="/kontakt" element={<Navigate to="/beratung" replace />} />
         <Route path="/ueber-videko" element={<Navigate to="/ueber-uns" replace />} />
         <Route path="/kuechenwelten" element={<Navigate to="/stylefinder" replace />} />
+        {/* /showroom und /studio bedienten dieselbe Suchintention; der
+            Standortteil steht seit SEO-Phase 2 auf /studio. Vercel liefert
+            dafuer bereits einen 308 aus, dieser Fall greift nur bei der
+            Navigation innerhalb der laufenden SPA. */}
+        <Route path="/showroom" element={<Navigate to="/studio" replace />} />
 
         {/* Unbekannte Pfade zeigen eine echte 404-Seite statt heimlich die
             Startseite — Vercel liefert dafuer dist/404.html mit HTTP 404 aus. */}

@@ -8,6 +8,7 @@ import {
 import Hero from '../components/Hero.jsx'
 import Reveal from '../components/Reveal.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
+import TextLink from '../components/TextLink.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import KfgTeaser from '../components/KfgTeaser.jsx'
 import { KiHinweis } from '../components/legal/KiKennzeichnung.jsx'
@@ -136,7 +137,20 @@ export default function Home() {
       <section className="section section--light lp-why-sec">
         <div className="container">
           <div className="lp-why-head">
-            <Reveal><span className="kicker">Warum VIDEKO</span><h2 className="lp-h2">Warum VIDEKO <span className="grad">anders plant.</span></h2></Reveal>
+            <Reveal>
+              <span className="kicker">Warum VIDEKO</span>
+              <h2 className="lp-h2">Warum VIDEKO <span className="grad">anders plant.</span></h2>
+              {/* Bis SEO-Phase 2 stand auf der Startseite nirgends im fließenden Text,
+                  was VIDEKO ist und wo. Der Satz sagt beides einmal — und führt zu den
+                  zwei Seiten, die das Thema vertiefen. */}
+              <p className="lp-lead">
+                VIDEKO ist ein Küchenstudio in Würzburg. Wir planen Küchen für den
+                Grundriss, der tatsächlich da ist – von der ersten Idee über die{' '}
+                <TextLink href="/planung">Küchenplanung</TextLink> bis zur Montage, und auf
+                Wunsch für den ganzen Raum. Sehen und anfassen kann man das in unserem{' '}
+                <TextLink href="/studio">Studio in der Hertzstraße</TextLink>.
+              </p>
+            </Reveal>
           </div>
           <div className="lp-why">
             {WHY.map((b, i) => (

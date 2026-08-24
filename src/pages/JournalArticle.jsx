@@ -9,12 +9,76 @@ import Seo from '../components/Seo.jsx'
 import { journalArticles } from '../data/journal.js'
 import { journalArticleHead } from '../data/head.js'
 
+/**
+ * Pro Artikel eine weiterfuehrende Seite, die zum Thema passt.
+ *
+ * Bis SEO-Phase 2 stand unter jedem Beitrag derselbe Satz mit demselben Link
+ * auf /leistungen. Damit lief die gesamte Journalkraft auf eine einzige Seite,
+ * und ein Beitrag über Arbeitsplatten verwies nicht auf die Seite, die genau
+ * das behandelt. Fehlt ein Slug hier, greift STANDARD — kein Artikel bleibt
+ * also ohne Anschluss.
+ */
+const WEITER = {
+  'licht-in-der-kueche': {
+    text: 'Wann Licht in der Planung entschieden wird – solange die Leitungswege offen sind – steht unter',
+    label: 'Küchenplanung',
+    to: '/planung',
+  },
+  'welche-arbeitsplatte-passt-zu-mir': {
+    text: 'Was wir bei Material, Kante, Ausschnitten und Aufmaß übernehmen, steht auf der Seite zu',
+    label: 'Arbeitsplatten',
+    to: '/arbeitsplatten',
+  },
+  'offene-oder-geschlossene-kueche': {
+    text: 'Wenn sich mit dem Grundriss auch Wände, Boden oder Decke ändern, wird daraus ein Umbau – wie der koordiniert wird, steht unter',
+    label: 'Alles aus einer Hand',
+    to: '/alles-aus-einer-hand',
+  },
+  'fronten-farben-materialien': {
+    text: 'Oberflächen entscheidet man am besten nebeneinander im echten Licht – dazu gibt es unser',
+    label: 'Küchenstudio in Würzburg',
+    to: '/studio',
+  },
+  'vor-dem-beratungstermin-das-solltest-du-wissen': {
+    text: 'Wie das Erstgespräch bei uns abläuft und was du mitbringen kannst, steht unter',
+    label: 'Küchenberatung',
+    to: '/beratung',
+  },
+  'mehr-stauraum-weniger-chaos': {
+    text: 'Stauraum entsteht dort, wo für den vorhandenen Raum geplant wird – mehr dazu unter',
+    label: 'Küchen nach Maß',
+    to: '/kuechen-nach-mass',
+  },
+  '7-kuechenfehler-die-du-spaeter-jeden-tag-bereust': {
+    text: 'Die meisten dieser Fehler entscheiden sich lange vor dem Aufmaß – wie wir sie vermeiden, steht unter',
+    label: 'Küchenplanung',
+    to: '/planung',
+  },
+  'geraete-richtig-planen': {
+    text: 'Geräte gehören in die Planung und nicht in die Restlücke – wie wir das machen, steht unter',
+    label: 'Küchenplanung',
+    to: '/planung',
+  },
+  'pflegeleichte-kueche': {
+    text: 'Welche Oberfläche im Alltag wirklich pflegeleicht ist, klären wir auf der Seite zu',
+    label: 'Arbeitsplatten',
+    to: '/arbeitsplatten',
+  },
+}
+
+const STANDARD = {
+  text: 'Wie so ein Projekt bei VIDEKO abläuft, steht unter',
+  label: 'Leistungen',
+  to: '/leistungen',
+}
+
 export default function JournalArticle() {
   const { slug } = useParams()
   const article = journalArticles.find((a) => a.slug === slug)
   if (!article) return <Navigate to="/journal" replace />
 
   const related = journalArticles.filter((a) => a.slug !== slug).slice(0, 3)
+  const weiter = WEITER[slug] || STANDARD
 
   return (
     <div className="journal-page jarticle-page">
@@ -53,11 +117,9 @@ export default function JournalArticle() {
             <span className="jarticle__fazit-k">Fazit</span>
             <p>{article.fazit}</p>
           </Reveal>
-          {/* Genau ein weiterfuehrender Textlink pro Artikel: /leistungen war
-              aus dem Journal bisher gar nicht erreichbar. */}
           <Reveal as="p" className="jarticle__weiter">
-            Wie so ein Projekt bei VIDEKO abläuft, steht unter{' '}
-            <TextLink href="/leistungen">Leistungen</TextLink>.
+            {weiter.text}{' '}
+            <TextLink href={weiter.to}>{weiter.label}</TextLink>.
           </Reveal>
           <Reveal className="jarticle__cta">
             <CTAButton to="/beratung">Beratung anfragen</CTAButton>

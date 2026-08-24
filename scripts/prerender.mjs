@@ -154,6 +154,9 @@ const SEITEN_MODUL = {
   '/studio': 'src/pages/Studio.jsx',
   '/leistungen': 'src/pages/Leistungen.jsx',
   '/alles-aus-einer-hand': 'src/pages/AllesAusEinerHand.jsx',
+  '/kuechen-nach-mass': 'src/pages/KuechenNachMass.jsx',
+  '/arbeitsplatten': 'src/pages/Arbeitsplatten.jsx',
+  '/kuechenmontage-wuerzburg': 'src/pages/KuechenmontageWuerzburg.jsx',
   '/inspiration': 'src/pages/Inspiration.jsx',
   '/vorher-nachher': 'src/pages/VorherNachher.jsx',
   '/journal': 'src/pages/Journal.jsx',
@@ -169,7 +172,6 @@ const SEITEN_MODUL = {
   '/rueckgabe-widerruf': 'src/pages/RueckgabeWiderruf.jsx',
   '/agb': 'src/pages/AGB.jsx',
   '/stylefinder': 'src/pages/Stylefinder.jsx',
-  '/showroom': 'src/pages/Showroom.jsx',
   '/planung': 'src/pages/Planung.jsx',
   '/team': 'src/pages/Team.jsx',
   '/404': 'src/pages/NotFound.jsx',
@@ -318,7 +320,8 @@ if (!WURZEL_RE.test(vorlage)) {
 const { daten, server } = await ladeModule()
 const {
   STATIC_ROUTES, journalArticles, MERCH_PRODUCTS, MERCH_FAMILIES,
-  staticRouteHead, journalArticleHead, merchDetailHead, ldSlotId, SITE, absUrl, IMAGE_VARIANTS,
+  staticRouteHead, journalArticleHead, merchDetailHead, merchCanonicalSlug,
+  ldSlotId, SITE, absUrl, IMAGE_VARIANTS,
 } = daten
 
 /**
@@ -399,11 +402,18 @@ const gesehen = new Set()
 for (const seite of merchSeiten) {
   if (!seite.slug || gesehen.has(seite.slug)) continue
   gesehen.add(seite.slug)
-  const head = merchDetailHead(seite)
-  const koerper = await koerperFuer(head.canonicalPath)
+  // Achtung: geschrieben wird unter dem EIGENEN Pfad. `head.canonicalPath`
+  // zeigt bei Farbvarianten auf die fuehrende Seite der Gruppe (merch.js) —
+  // als Zieldatei waere das die falsche Adresse.
+  const pfad = `/merch/${seite.slug}`
+  const kanonisch = merchCanonicalSlug(seite.slug)
+  const head = merchDetailHead({ ...seite, canonicalSlug: kanonisch })
+  const koerper = await koerperFuer(pfad)
   if (koerper) mitKoerper += 1
-  geschrieben.push(schreibeSeite(vorlage, head.canonicalPath, head, absUrl, SITE, IMAGE_VARIANTS, koerper))
-  sitemapPfade.push(head.canonicalPath)
+  geschrieben.push(schreibeSeite(vorlage, pfad, head, absUrl, SITE, IMAGE_VARIANTS, koerper))
+  // Nur kanonische Seiten in die Sitemap. Die Farbvarianten bleiben crawlbar
+  // und verlinkt, konkurrieren aber nicht mit ihrer eigenen Hauptseite.
+  if (kanonisch === seite.slug) sitemapPfade.push(pfad)
 }
 
 /* 404 — noindex, kein Sitemap-Eintrag.

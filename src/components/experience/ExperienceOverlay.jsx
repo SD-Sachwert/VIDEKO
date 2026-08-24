@@ -51,7 +51,7 @@ export default function ExperienceOverlay() {
         eyebrow="Showroom"
         lines={['Eintauchen', 'statt nur anschauen.']}
         sub="Unser Studio ist kein Möbelhaus. Es ist ein Erlebnisraum für Küchen, Materialien und gute Entscheidungen."
-        primary={{ label: 'Showroom ansehen', to: '/showroom' }}
+        primary={{ label: 'Studio ansehen', to: '/studio' }}
       />
 
       <ExperienceSection

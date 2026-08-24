@@ -26,10 +26,10 @@ const CARDS = [
   {
     num: '02',
     icon: MapPin,
-    title: ['Erlebe', 'unsere', 'Showrooms.'],
-    text: 'Besuche unseren exklusiven Standort und tauche in die Welt von VIDEKO ein.',
-    cta: 'Standorte ansehen',
-    href: '/showroom',
+    title: ['Erlebe', 'unser', 'Küchenstudio.'],
+    text: 'Besuche uns in der Hertzstraße in Würzburg und tauche in die Welt von VIDEKO ein.',
+    cta: 'Studio in Würzburg ansehen',
+    href: '/studio',
     image: cardShowroom,
   },
   {

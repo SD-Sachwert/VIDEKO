@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { MapPin, Mail, Phone, Check, ArrowRight, Compass, PhoneCall, Store, ChevronDown, ShieldCheck, Upload, FileText } from 'lucide-react'
 
 import Reveal from '../components/Reveal.jsx'
+import TextLink from '../components/TextLink.jsx'
 import { KiHinweis } from '../components/legal/KiKennzeichnung.jsx'
 import heroImg from '../assets/images/leistungen/ls-hero.webp'
 import cIdee from '../assets/images/beratung/story-idee.webp'
@@ -131,6 +132,17 @@ export default function Beratung() {
           <Reveal>
             <h2 className="bintro__title">Du musst noch nicht <span className="grad">alles wissen.</span></h2>
             <p className="bintro__text">Ein paar Ideen, ein grobes Ziel oder einfach nur der Wunsch nach Veränderung reichen völlig aus. Wir helfen dir, daraus etwas zu machen, das wirklich zu dir passt.</p>
+            {/* Wer eine Beratungsseite öffnet, sucht in aller Regel jemanden in
+                erreichbarer Nähe. Deshalb steht der Standort hier im sichtbaren
+                Text und nicht nur klein im Formularkasten — und führt zu den
+                beiden Seiten, die danach dran sind. */}
+            <p className="bintro__text">
+              Beraten wird bei uns in der Hertzstraße 4 in Würzburg – oder telefonisch,
+              wenn dir das lieber ist. Wie es vor Ort aussieht, zeigt unser{' '}
+              <TextLink href="/studio">Küchenstudio in Würzburg</TextLink>. Wie aus dem
+              Gespräch ein Plan wird, steht unter{' '}
+              <TextLink href="/planung">Küchenplanung</TextLink>.
+            </p>
           </Reveal>
           {/* DREI EINSTIEGS-KARTEN */}
           <div className="bf-entries">

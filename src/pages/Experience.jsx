@@ -26,7 +26,7 @@ const FB = [
   { img: fbWhy, align: 'right', eyebrow: 'Warum VIDEKO', lines: ['Schluss mit', 'Küchenverkauf von 2008.'], sub: 'Kein Rabattgeschrei, kein Verkaufsdruck. Sondern ehrliche Planung für dein echtes Leben.', cta: { label: 'Den Unterschied erleben', to: '/ueber-uns' } },
   { img: fbMaterial, align: 'left', eyebrow: 'Materialwelt', lines: ['Materialien,', 'die man fühlen will.'], sub: 'Naturstein, Metall, Bronze, Keramik, Holz und Glas – echte Oberflächen.', cta: { label: 'Materialien entdecken', to: '/inspiration' } },
   { img: fbPlanning, align: 'left', eyebrow: 'Planungskompetenz', lines: ['Was du siehst: Küche.', 'Was wir sehen: 184 Entscheidungen.'], sub: 'Licht, Geräte, Arbeitsplatte, Korpus, Fronten, Stauraum, Maß und Montage.', cta: { label: 'Planung entdecken', to: '/planung' } },
-  { img: fbShowroom, align: 'right', eyebrow: 'Showroom', lines: ['Eintauchen', 'statt nur anschauen.'], sub: 'Unser Studio ist kein Möbelhaus. Es ist ein Erlebnisraum für gute Entscheidungen.', cta: { label: 'Showroom ansehen', to: '/showroom' } },
+  { img: fbShowroom, align: 'right', eyebrow: 'Showroom', lines: ['Eintauchen', 'statt nur anschauen.'], sub: 'Unser Studio ist kein Möbelhaus. Es ist ein Erlebnisraum für gute Entscheidungen.', cta: { label: 'Studio ansehen', to: '/studio' } },
   { img: fbFinal, align: 'left', eyebrow: 'Bereit?', lines: ['Bereit für', 'deine Küche?'], sub: 'Dann lass uns reden. Persönlich, ehrlich und ohne Möbelhaus-Theater.', cta: { label: 'Beratung buchen', to: '/beratung' } },
 ]
 

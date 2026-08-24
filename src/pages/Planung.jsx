@@ -10,6 +10,8 @@ import CardGrid from '../components/CardGrid.jsx'
 import FeatureCard from '../components/FeatureCard.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import Reveal from '../components/Reveal.jsx'
+import TextLink from '../components/TextLink.jsx'
+import { BRAND } from '../data/company.js'
 
 import heroImg from '../assets/images/shared/hero-kitchen-arch.webp'
 
@@ -54,6 +56,30 @@ export default function Planung() {
             lead="Ein klarer, ehrlicher Ablauf – du weißt immer, woran du bist."
           />
           <ProcessTimeline steps={PROCESS} />
+        </div>
+      </section>
+
+      {/* Wo geplant wird. Bis SEO-Phase 2 stand auf dieser Seite kein einziger
+          Ortsbezug und kein Link zum Studio — obwohl genau dort geplant wird
+          und die Suche nach „Küchenplanung Würzburg“ hier landen soll. */}
+      <section className="section section--light">
+        <div className="container">
+          <SectionHeader
+            kicker="Wo geplant wird"
+            title={<>Am Plan sitzen wir <span className="grad">gemeinsam.</span></>}
+            lead="Planung passiert nicht per Mail, sondern am Tisch – und später mit dem Laser in deiner Küche."
+          />
+          <Reveal as="p" className="aaeh-note">
+            Die Planungsgespräche führen wir in unserem Studio in der {BRAND.studio.street},{' '}
+            {BRAND.studio.postalCode} {BRAND.studio.city}. Dort liegen Fronten, Arbeitsplatten und
+            Griffe nebeneinander, statt nur als Bild auf dem Bildschirm zu erscheinen – und der
+            3D-Entwurf lässt sich direkt daneben durchgehen. Das Aufmaß nehmen wir anschließend
+            bei dir vor Ort. Ein Blick ins{' '}
+            <TextLink href="/studio">Küchenstudio in Würzburg</TextLink>, die Materialfrage unter{' '}
+            <TextLink href="/arbeitsplatten">Arbeitsplatten</TextLink> – und wenn mit der Küche auch
+            Boden, Wand oder Licht dran sind, steht das unter{' '}
+            <TextLink href="/alles-aus-einer-hand">Alles aus einer Hand</TextLink>.
+          </Reveal>
         </div>
       </section>
 

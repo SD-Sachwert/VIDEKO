@@ -31,13 +31,19 @@ const SHOP = [
   { label: 'Rückgabe & Widerruf', to: '/rueckgabe-widerruf' },
   { label: 'FAQ', to: '/merch#faq' },
 ]
+// Bis SEO-Phase 2 zeigten „Planung", „Montage" und „Garantie" alle auf
+// /leistungen; „Garantie" versprach ausserdem etwas, wozu es keine Seite und
+// keine belegte Zusage gibt. Jetzt steht hier je Eintrag die Seite, die das
+// Thema wirklich behandelt.
 const SERVICE = [
-  { label: 'Beratung', to: '/beratung' },
-  { label: 'Planung', to: '/leistungen' },
-  { label: 'Montage', to: '/leistungen' },
-  { label: 'Materialien', to: '/inspiration' },
-  { label: 'Garantie', to: '/leistungen' },
-  { label: 'FAQ', to: '/journal' },
+  { label: 'Leistungen im Überblick', to: '/leistungen' },
+  { label: 'Küchenstudio Würzburg', to: '/studio' },
+  { label: 'Küchenberatung', to: '/beratung' },
+  { label: 'Küchenplanung', to: '/planung' },
+  { label: 'Küchen nach Maß', to: '/kuechen-nach-mass' },
+  { label: 'Arbeitsplatten', to: '/arbeitsplatten' },
+  { label: 'Küchenmontage', to: '/kuechenmontage-wuerzburg' },
+  { label: 'Alles aus einer Hand', to: '/alles-aus-einer-hand' },
 ]
 
 // Pro Seite leichte Variation: Bildmotiv, Komposition (object-position), Overlay-Ton + die jeweils stärksten Claims.
@@ -131,8 +137,8 @@ export default function Footer() {
             {(imShop ? SHOP : NAV).map((n) => <Link key={n.label} to={n.to}>{n.label}</Link>)}
           </nav>
 
-          <nav className="footer__col" aria-label="Service">
-            <span className="footer__coltitle">Service</span>
+          <nav className="footer__col" aria-label="Leistungen">
+            <span className="footer__coltitle">Leistungen</span>
             {SERVICE.map((n) => <Link key={n.label} to={n.to}>{n.label}</Link>)}
           </nav>
 

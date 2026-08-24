@@ -16,7 +16,7 @@ import PerformanceSection from '../components/merch/PerformanceSection.jsx'
 import { istHydriert } from '../lib/hydration.js'
 import {
   MERCH_FAMILIES, ACCESSORY_PRODUCTS, MERCH_TABS, MERCH_SORTS, passtZuTab,
-  LOGO_STYLE_ORDER, LOGO_STYLE_INFO, WORKWEAR_PRODUCTS,
+  LOGO_STYLE_ORDER, LOGO_STYLE_INFO, WORKWEAR_PRODUCTS, merchIstKanonisch,
   formatPrice, getProduct,
   PERSONALIZATION_MAX, PERSONALIZATION_LABEL, LEAD_TIME_PERSONALIZED,
   SHOW_PUBLIC_PRICES, PRICE_ON_REQUEST,
@@ -41,6 +41,26 @@ const STIL_KARTEN = {
   ONE: { img: stilOne, badge: 'dark', desc: 'Nur das Emblem – klein auf der Brust.', alt: 'One – schwarzes T-Shirt mit kleinem VIDEKO Emblem auf der Brust' },
   PRESTIGE: { img: stilPrestige, badge: 'dark', desc: 'Flock-Veredelung in verschiedenen Farben.', alt: 'Prestige – weißes T-Shirt mit weißer Flock-Veredelung, Emblem und VIDEKO Schriftzug' },
 }
+
+/**
+ * Die Workwear-Teaser standen bis SEO-Phase 2 als reine <span>-Chips da, obwohl
+ * es zu jedem Artikel eine fertige Produktseite gibt — die damit weder von
+ * Besuchern noch von einer Suchmaschine erreichbar war. Ein Chip nennt jetzt
+ * nicht nur den Artikel, er führt auch hin. Farbvarianten sind zu einem Eintrag
+ * zusammengefasst; verlinkt wird die kanonische Seite der Gruppe.
+ */
+const WORKWEAR_ZIELE = (() => {
+  const gesehen = new Set()
+  const ziele = []
+  for (const w of WORKWEAR_PRODUCTS) {
+    if (!merchIstKanonisch(w.slug)) continue
+    const name = w.name.replace(/ Schwarz| Weiß/g, '')
+    if (gesehen.has(name)) continue
+    gesehen.add(name)
+    ziele.push({ name, slug: w.slug })
+  }
+  return ziele
+})()
 
 const SEITE = 12
 
@@ -445,8 +465,8 @@ export default function Merch() {
             </span>
           </Reveal>
           <Reveal className="mwork__list" delay={0.08}>
-            {[...new Set(WORKWEAR_PRODUCTS.map((w) => w.name.replace(/ Schwarz| Weiß/g, '')))].map((name) => (
-              <span className="mwork__chip" key={name}>{name}</span>
+            {WORKWEAR_ZIELE.map((w) => (
+              <Link className="mwork__chip" key={w.slug} to={`/merch/${w.slug}`}>{w.name}</Link>
             ))}
           </Reveal>
         </div>

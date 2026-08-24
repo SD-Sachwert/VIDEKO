@@ -22,6 +22,7 @@ import {
   PERSONALIZATION_MAX, PERSONALIZATION_LABEL, FREE_SHIPPING_FROM, LOGO_STYLE_INFO,
   LOGO_COLOR_ORDER, isPlaceholderStatus, IMAGE_STATUS_TITLE,
   SHOW_PUBLIC_PRICES, PRICE_ON_REQUEST, PRICE_INQUIRY_NOTE, skuFor,
+  merchCanonicalSlug,
 } from '../data/merch.js'
 import { INQUIRY_DISCLAIMER } from '../shop/inquiry.js'
 import { priceView } from '../data/pricing.js'
@@ -409,6 +410,7 @@ function Konfigurator({ family, start }) {
     <main className="pdp">
       <Seo {...merchDetailHead({
         name: family.label, tagline: quelle.tagline, slug: family.slug,
+        canonicalSlug: merchCanonicalSlug(family.slug),
         image: unit.image, extraLd: ld,
       })} />
       <div className="container">
@@ -728,6 +730,7 @@ function Einzelseite({ product }) {
     <main className="pdp">
       <Seo {...merchDetailHead({
         name: product.name, tagline: product.tagline, slug: product.slug,
+        canonicalSlug: merchCanonicalSlug(product.slug),
         image: product.image, extraLd: ld,
       })} />
       <div className="container">

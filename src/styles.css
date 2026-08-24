@@ -5845,6 +5845,14 @@ body {
   text-decoration: none;
 }
 
+.standort__note {
+  font-size: 0.92rem;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  margin: 0 0 26px;
+  max-width: 460px;
+}
+
 .standort__area-label {
   display: block;
   font-size: 0.64rem;
@@ -8371,6 +8379,11 @@ body {
   gap: 12px 24px;
 }
 
+.lstances--center {
+  align-items: center;
+  margin: 0 0 30px;
+}
+
 /* studio experience grid */
 .studio-grid {
   display: grid;
@@ -10679,6 +10692,9 @@ a.footer__contact-line:hover {
 /* BERATUNG — intro, entry cards, collapsible, story cards */
 .bintro__title { text-align: center; font-family: var(--serif); font-size: clamp(1.9rem, 3.6vw, 2.8rem); font-weight: 600; color: var(--ink); margin: 0 auto 12px; max-width: 18ch; }
 .bintro__text { text-align: center; max-width: 620px; margin: 0 auto 40px; color: var(--ink-soft); font-size: 1.02rem; line-height: 1.6; }
+/* Seit SEO-Phase 2 stehen im Beratungs-Intro zwei Absätze. Der untere Abstand
+   gehört an den letzten, sonst klafft er mitten im Gedanken. */
+.bintro__text:not(:last-of-type) { margin-bottom: 14px; }
 .bf-entries { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
 .bf-entry { display: flex; flex-direction: column; overflow: hidden; padding: 0; border-radius: 20px; border: 1px solid var(--line-dark); background: rgba(255, 255, 255, 0.66); box-shadow: 0 30px 60px -44px rgba(120, 90, 40, 0.4); transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
 .bf-entry:hover { transform: translateY(-3px); border-color: rgba(201, 160, 80, 0.45); box-shadow: 0 40px 76px -42px rgba(120, 90, 40, 0.5); }
@@ -11103,6 +11119,9 @@ a.footer__contact-line:hover {
 /* 3 — warum + stylefinder */
 .lp-why-sec { padding-top: 12px; }
 .lp-why-head { text-align: center; margin-bottom: 2px; }
+/* Seit SEO-Phase 2 steht unter der Überschrift ein Absatz: zentriert wie der
+   Rest der Kopfzeile und mit Abstand zum Raster darunter. */
+.lp-why-head .lp-lead { margin: 14px auto 30px; max-width: 620px; }
 .lp-why { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; margin-bottom: 64px; }
 .lpwhy { display: flex; flex-direction: column; gap: 10px; padding: 26px 22px; border-radius: 18px; background: rgba(255, 255, 255, 0.55); border: 1px solid var(--line-dark); width: 100%; text-align: left; font: inherit; color: inherit; cursor: pointer; transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease; }
 .lpwhy:hover { border-color: rgba(201, 160, 80, 0.45); transform: translateY(-3px); }
@@ -13548,6 +13567,9 @@ a.footer__contact-line:hover {
 .mwork__cta:hover { filter: brightness(1.05); }
 .mwork__list { display: flex; flex-wrap: wrap; gap: 10px; align-content: center; }
 .mwork__chip { padding: 10px 16px; border-radius: 999px; font-size: 0.84rem; color: rgba(244, 239, 228, 0.9); background: rgba(244, 239, 228, 0.06); border: 1px solid rgba(244, 239, 228, 0.16); }
+/* Seit SEO-Phase 2 ist der Chip ein Link auf die Produktseite. */
+a.mwork__chip { text-decoration: none; transition: background .2s ease, border-color .2s ease; }
+a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(232, 201, 120, 0.5); }
 
 /* --- Boss-BATTLE Marble-Gold --- */
 .mgames--marble {
@@ -14131,6 +14153,18 @@ a.footer__contact-line:hover {
 .aaeh-final__title { font-family: var(--serif); font-size: clamp(1.8rem, 3.2vw, 2.6rem); color: var(--ink); margin: 10px 0 16px; }
 .aaeh-final__text { font-size: 0.95rem; line-height: 1.75; color: var(--ink-soft); max-width: 620px; margin: 0 auto 28px; }
 .aaeh-final__btns { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+
+/* Seit SEO-Phase 2 bauen /kuechen-nach-mass, /arbeitsplatten und
+   /kuechenmontage-wuerzburg auf denselben Bausteinen auf. Zwei Ergaenzungen:
+   ein Fliesstext-Absatz unterhalb eines Rasters und eine kompakte Ortsliste. */
+.aaeh-note { font-size: 0.95rem; line-height: 1.75; color: var(--ink-soft); max-width: 720px; margin: 32px 0 0; }
+.aaeh-note--center { margin: 32px auto 0; text-align: center; }
+.aaeh-probs--kompakt { list-style: none; padding: 0; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+.aaeh-probs--kompakt .aaeh-prob__title { display: flex; align-items: center; gap: 9px; font-size: 1.02rem; margin: 0; }
+.aaeh-probs--kompakt .aaeh-prob__title svg { color: var(--bronze); flex: none; }
+
+/* Wegweiser auf /leistungen: dieselben Bloecke, zusaetzlich mit Textlink. */
+.leist-hub .aaeh-prob .tlink { margin-top: 14px; }
 
 @media (max-width: 900px) {
   .aaeh-split { grid-template-columns: 1fr; gap: 32px; }

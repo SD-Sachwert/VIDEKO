@@ -26,7 +26,7 @@ if (!fs.existsSync(path.join(DIST, 'index.html'))) {
 const { daten } = await ladeModule()
 const {
   STATIC_ROUTES, journalArticles, MERCH_PRODUCTS, MERCH_FAMILIES,
-  staticRouteHead, journalArticleHead, merchDetailHead, absUrl,
+  staticRouteHead, journalArticleHead, merchDetailHead, merchCanonicalSlug, absUrl,
 } = daten
 
 /* ------------------------------------------------------------------ */
@@ -66,8 +66,13 @@ const gesehen = new Set()
 for (const seite of merchSeiten) {
   if (!seite.slug || gesehen.has(seite.slug)) continue
   gesehen.add(seite.slug)
-  const head = merchDetailHead(seite)
-  routen.push({ pfad: head.canonicalPath, head, inSitemap: true, art: 'merch' })
+  const kanonisch = merchCanonicalSlug(seite.slug)
+  const head = merchDetailHead({ ...seite, canonicalSlug: kanonisch })
+  // Farbvarianten zeigen per Canonical auf die fuehrende Seite ihrer Gruppe
+  // und gehoeren deshalb nicht in die Sitemap.
+  routen.push({
+    pfad: `/merch/${seite.slug}`, head, inSitemap: kanonisch === seite.slug, art: 'merch',
+  })
 }
 
 /* ------------------------------------------------------------------ */
@@ -187,8 +192,10 @@ for (const r of routen) {
   const ldSoll = (soll.jsonLd || []).length
   if (ld < ldSoll) f.push(`JSON-LD ${ld}/${ldSoll}`)
 
-  // 13 Sitemap
-  const inSitemap = sitemapXml.includes(`<loc>${canonSoll}</loc>`)
+  // 13 Sitemap — geprueft wird die EIGENE URL, nicht die kanonische. Sonst
+  // faende eine Farbvariante den Eintrag ihrer fuehrenden Seite und gaelte
+  // faelschlich als aufgenommen.
+  const inSitemap = sitemapXml.includes(`<loc>${absUrl(r.pfad)}</loc>`)
   if (r.inSitemap && !inSitemap) f.push('fehlt in sitemap.xml')
   if (!r.inSitemap && inSitemap) f.push('faelschlich in sitemap.xml')
 

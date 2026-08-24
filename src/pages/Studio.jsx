@@ -1,12 +1,14 @@
 import { useRef, useState } from 'react'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
-import { Check, ArrowRight } from 'lucide-react'
+import { Check, ArrowRight, MapPin, Mail, Phone } from 'lucide-react'
 
 import Reveal from '../components/Reveal.jsx'
 import LazyVideo from '../components/LazyVideo.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
+import TextLink from '../components/TextLink.jsx'
 import { KiBadge, KiHinweis } from '../components/legal/KiKennzeichnung.jsx'
+import { BRAND } from '../data/company.js'
 
 import heroImg from '../assets/images/studio/bilder/01_hero_studio_showroom.webp'
 import introImg from '../assets/images/studio/bilder/02_intro_showroom_hell.webp'
@@ -41,6 +43,13 @@ const STANCE = ['Diskret & respektvoll', 'Ehrlich & transparent', 'Erfahren & sp
 const TEAM_USP = ['Ehrlich & transparent', 'Persönlich & nah', 'Kompetent & erfahren']
 
 const FINAL_HL = ['Individuelle Beratung', 'Premium Materialien', 'Planung auf höchstem Niveau']
+
+/* Einzugsgebiet – uebernommen von der bisherigen Seite /showroom, die seit
+   SEO-Phase 2 dauerhaft hierher weiterleitet. */
+const AREA = ['Würzburg', 'Tauberbischofsheim', 'Kitzingen', 'Main-Tauber', 'Schweinfurt']
+
+const MAPS_URL =
+  'https://www.google.com/maps/search/?api=1&query=Hertzstra%C3%9Fe%204%2C%2097076%20W%C3%BCrzburg'
 
 export default function Studio() {
   const heroRef = useRef(null)
@@ -171,6 +180,114 @@ export default function Studio() {
               </ul>
             </Reveal>
           </div>
+        </div>
+      </section>
+
+      {/* STANDORT — von /showroom uebernommen. Beide Seiten bedienten dieselbe
+          Suchintention („das Küchenstudio in Würzburg ansehen"); /showroom
+          leitet seither dauerhaft hierher. */}
+      <section className="section section--light standort">
+        <div className="container">
+          <SectionHeader
+            kicker="Standort"
+            title="Küchenstudio Würzburg."
+            lead="Planung, Material und Architektur an einem Ort – in der Hertzstraße, im Würzburger Osten."
+          />
+          <div className="standort__grid">
+            <Reveal className="standort__info">
+              <ul className="standort__list">
+                <li>
+                  <MapPin size={18} strokeWidth={1.7} />
+                  <span>
+                    <strong>{BRAND.name}</strong><br />
+                    {BRAND.studio.street}<br />
+                    {BRAND.studio.postalCode} {BRAND.studio.city}
+                  </span>
+                </li>
+                <li>
+                  <Mail size={18} strokeWidth={1.7} />
+                  <a href={`mailto:${BRAND.contactEmail}`}>{BRAND.contactEmail}</a>
+                </li>
+                <li>
+                  <Phone size={18} strokeWidth={1.7} />
+                  <a href={`tel:${BRAND.phoneHref}`}>{BRAND.phone}</a>
+                </li>
+              </ul>
+              <p className="standort__note">
+                Besuche laufen nach Terminvereinbarung – so ist sichergestellt, dass
+                jemand Zeit für dich hat und nicht nebenbei berät.
+              </p>
+              <div className="standort__area">
+                <span className="standort__area-label">Einzugsgebiet</span>
+                <div className="standort__chips">
+                  {AREA.map((a) => <span className="chip" key={a}>{a}</span>)}
+                </div>
+              </div>
+              <CTAButton to="/beratung">Studio-Termin vereinbaren</CTAButton>
+            </Reveal>
+            <Reveal className="standort__map" delay={0.08}>
+              {/* Statt eines sichtbaren „Map-Platzhalters" jetzt ein echter Weg
+                  zur Route. Keine eingebettete Karte, damit ohne Einwilligung
+                  nichts an Google geht. */}
+              <a
+                className="standort__map-ph"
+                href={MAPS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <MapPin size={30} strokeWidth={1.4} />
+                <span>Route auf Google Maps öffnen</span>
+              </a>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* WEITER IM PROJEKT — bis Phase 2 fuehrte von hier nur ein einziger
+          interner Link weg (/beratung). */}
+      <section className="section studio-weiter">
+        <div className="container">
+          <SectionHeader
+            kicker="Nach dem Besuch"
+            title={<>Was danach <span className="grad">passiert.</span></>}
+            lead="Ein Studiobesuch ist der Anfang. Wie es weitergeht, steht hier."
+          />
+          <Reveal as="p" className="lintro__text">
+            Der komplette Weg von der ersten Idee bis zur Abnahme steht unter{' '}
+            <TextLink href="/planung">Küchenplanung</TextLink>. Wie eine Küche für einen
+            konkreten Raum entsteht, zeigt die Seite{' '}
+            <TextLink href="/kuechen-nach-mass">Küchen nach Maß</TextLink>. Und was am
+            Ende bei dir zuhause passiert, beschreibt die{' '}
+            <TextLink href="/kuechenmontage-wuerzburg">Küchenmontage</TextLink>.
+          </Reveal>
+          {/* Heller Abschnitt (leist-page), deshalb TextLink statt
+              leist-hero__link — das ist mit --gold-bright fuer die dunkle
+              Hero-Flaeche gedacht. */}
+          <div className="aaeh-split__links">
+            <TextLink href="/leistungen">Alle Leistungen im Überblick</TextLink>
+            <TextLink href="/arbeitsplatten">Arbeitsplatten</TextLink>
+          </div>
+        </div>
+      </section>
+
+      {/* FINALER CTA */}
+      <section className="section studio-final">
+        <div className="container aaeh-final">
+          <Reveal>
+            <span className="kicker kicker--gold">Nächster Schritt</span>
+            <h2 className="aaeh-final__title">Komm vorbei. In Ruhe.</h2>
+            <p className="aaeh-final__text">
+              Ohne Termindruck, ohne Verkaufstheater. Erzähl uns von deinem Raum – den
+              Rest sortieren wir gemeinsam.
+            </p>
+            <ul className="lstances lstances--center">
+              {FINAL_HL.map((u) => <li key={u}><Check size={16} strokeWidth={2.4} /> {u}</li>)}
+            </ul>
+            <div className="aaeh-final__btns">
+              <CTAButton to="/beratung">Termin vereinbaren</CTAButton>
+              <CTAButton to="/stylefinder" variant="dark">Erst den Stil finden</CTAButton>
+            </div>
+          </Reveal>
         </div>
       </section>
 

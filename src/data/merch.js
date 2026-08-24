@@ -428,6 +428,48 @@ export const MERCH_FAMILIES = baueFamilien()
 export const getFamily = (key) => MERCH_FAMILIES.find((f) => f.key === key)
 export const getFamilyOfProduct = (product) => MERCH_FAMILIES.find((f) => f.key === product.family)
 
+/* ------------------------------------------------------------------ *
+ * Indexierung: eine Seite je Schnitt, nicht je Farbe
+ * ------------------------------------------------------------------ */
+
+/**
+ * Farbvarianten desselben Schnitts (gleiche `variantGroup`) sind fuer eine
+ * Suchmaschine nahezu identische Dokumente: gleicher Text, gleiche Groessen,
+ * gleiche Pflegehinweise — nur ein anderer Farbname. Aus 36 solchen Seiten
+ * wuerden 36 konkurrierende Treffer fuer dieselbe Anfrage.
+ *
+ * Deshalb bekommt jede Gruppe eine fuehrende URL. Die uebrigen Farben bleiben
+ * erreichbar, verlinkt und crawlbar — sie zeigen per Canonical nur auf die
+ * fuehrende Seite und stehen nicht in der sitemap.xml. Es wird nichts
+ * geloescht und nichts weitergeleitet: Wer eine Variantenfarbe direkt aufruft,
+ * sieht weiterhin genau diese Farbe.
+ *
+ * Fuehrend ist die Seite, die der Shop ohnehin als Einstieg zeigt — der
+ * Repraesentant der Familie (siehe baueFamilien). Existiert fuer die Gruppe
+ * kein Familien-Einstieg, entscheidet die Sortierung (`rank`).
+ *
+ * Produkte ohne `variantGroup` (Cap, Beanie, Tote Bag, Workwear-Einzelteile …)
+ * sind eigenstaendige Artikel und bleiben unangetastet indexierbar.
+ */
+const FAMILIEN_SLUGS = new Set(MERCH_FAMILIES.map((f) => f.slug).filter(Boolean))
+
+const kanonischeSlugs = new Map()
+for (const mitglieder of nachGruppe.values()) {
+  if (mitglieder.length < 2) continue
+  const fuehrend =
+    mitglieder.find((p) => FAMILIEN_SLUGS.has(p.slug)) ||
+    [...mitglieder].sort((a, b) => (a.rank ?? 9999) - (b.rank ?? 9999))[0]
+  for (const p of mitglieder) {
+    if (p.slug !== fuehrend.slug) kanonischeSlugs.set(p.slug, fuehrend.slug)
+  }
+}
+
+/** Slug der fuehrenden Seite einer Farbgruppe. Ohne Gruppe: der Slug selbst. */
+export const merchCanonicalSlug = (slug) => kanonischeSlugs.get(slug) || slug
+
+/** true, wenn die Seite selbst kanonisch ist und damit in die Sitemap gehoert. */
+export const merchIstKanonisch = (slug) => !kanonischeSlugs.has(slug)
+
 /** Accessoires als Einzelprodukte (keine sammelbare Familie). */
 export const ACCESSORY_PRODUCTS = MERCH_PRODUCTS.filter((p) => p.category === 'Accessoires')
 /** Workwear für die eigene Teaser-Sektion. */

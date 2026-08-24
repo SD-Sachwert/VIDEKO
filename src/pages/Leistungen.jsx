@@ -10,6 +10,7 @@ import Reveal from '../components/Reveal.jsx'
 import LazyVideo from '../components/LazyVideo.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
+import TextLink from '../components/TextLink.jsx'
 import { KiHinweis } from '../components/legal/KiKennzeichnung.jsx'
 
 import heroImg from '../assets/images/leistungen/ls-hero.webp'
@@ -37,6 +38,51 @@ const BAUSTEINE = [
   { n: '06', title: 'Geräte & Technik', icon: Cpu, short: 'Technik, die zu deinem Alltag passt.', panel: p06 },
   { n: '07', title: 'Koordination & Gewerke', icon: CalendarClock, short: 'Ein Plan, alle Gewerke gesteuert.', panel: p07 },
   { n: '08', title: 'Nachbetreuung & Service', icon: LifeBuoy, short: 'Auch nach dem Einbau für dich da.', panel: p08 },
+]
+
+const WEGWEISER = [
+  {
+    titel: 'Küchenberatung',
+    text: 'Das erste Gespräch: Raum, Alltag, Stil und Budget – unverbindlich und ohne Verkaufsdruck.',
+    link: 'Zur Beratung',
+    to: '/beratung',
+  },
+  {
+    titel: 'Küchenplanung',
+    text: 'Der komplette Weg von der Idee über Aufmaß und 3D-Planung bis zur gemeinsamen Abnahme.',
+    link: 'Ablauf der Planung',
+    to: '/planung',
+  },
+  {
+    titel: 'Küchen nach Maß',
+    text: 'Wie aus Grundriss, Höhen und Materialien eine Einbauküche wird, die in deinen Raum passt.',
+    link: 'Küchen nach Maß ansehen',
+    to: '/kuechen-nach-mass',
+  },
+  {
+    titel: 'Arbeitsplatten',
+    text: 'Massivholz, Naturstein, Keramik oder Compact – und was Kante, Ausschnitte und Aufmaß dabei bedeuten.',
+    link: 'Materialien vergleichen',
+    to: '/arbeitsplatten',
+  },
+  {
+    titel: 'Küchenmontage',
+    text: 'Laseraufmaß, fester Terminplan, Aufbau und Anschluss – in Würzburg und der Region.',
+    link: 'Zur Montage',
+    to: '/kuechenmontage-wuerzburg',
+  },
+  {
+    titel: 'Alles aus einer Hand',
+    text: 'Wenn nicht nur die Küche neu wird: Elektro, Boden, Wand, Decke und Licht koordiniert über einen Ansprechpartner.',
+    link: 'Komplettumbau ansehen',
+    to: '/alles-aus-einer-hand',
+  },
+  {
+    titel: 'Küchenstudio Würzburg',
+    text: 'Oberflächen im echten Licht, Fronten nebeneinander, Planung zum Anfassen – nach Terminvereinbarung.',
+    link: 'Studio ansehen',
+    to: '/studio',
+  },
 ]
 
 const STATS = [
@@ -253,6 +299,30 @@ export default function Leistungen() {
               <span className="svc-comp__head">VIDEKO</span>
               <ul>{VIDEKO.map((c) => <li key={c}><Check size={15} strokeWidth={2.6} /> {c}</li>)}</ul>
             </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* 9 — WEGWEISER
+          Die Leistungsseiten waren bis SEO-Phase 2 von hier aus nicht
+          verlinkt. Dieser Abschnitt macht /leistungen zu dem, was der Titel
+          verspricht: der Einstieg, von dem aus jedes Thema seine eigene Seite
+          hat. */}
+      <section className="section section--light leist-hub">
+        <div className="container">
+          <SectionHeader
+            kicker="Vertiefen"
+            title={<>Jedes Thema hat <span className="grad">seine eigene Seite.</span></>}
+            lead="Diese Übersicht zeigt, wie wir arbeiten. Wenn dich ein einzelner Bereich genauer interessiert, geht es hier weiter."
+          />
+          <div className="aaeh-probs">
+            {WEGWEISER.map((w, i) => (
+              <Reveal key={w.to} className="aaeh-prob" delay={(i % 3) * 0.05}>
+                <h3 className="aaeh-prob__title">{w.titel}</h3>
+                <p className="aaeh-prob__text">{w.text}</p>
+                <TextLink href={w.to}>{w.link}</TextLink>
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>

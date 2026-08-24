@@ -11,7 +11,7 @@ import { inquiryReady } from '../data/release.js'
 const MAIN = [
   { label: 'Studio', to: '/studio' },
   { label: 'Inspiration', to: '/inspiration', menu: 'insp' },
-  { label: 'Leistungen', to: '/leistungen' },
+  { label: 'Leistungen', to: '/leistungen', menu: 'leist' },
   { label: 'Über uns', to: '/ueber-uns', menu: 'about' },
   { label: 'Journal', to: '/journal' },
   { label: 'Merch', to: '/merch' },
@@ -22,6 +22,17 @@ const DROPDOWN = {
     { label: 'Inspiration Übersicht', to: '/inspiration' },
     { label: 'Stylefinder', to: '/stylefinder' },
     { label: 'Vorher / Nachher', to: '/vorher-nachher' },
+  ],
+  // Die Leistungsseiten waren bis SEO-Phase 2 nur ueber /leistungen zu
+  // erreichen. Sie stehen deshalb hier statt in der obersten Leiste — die
+  // bleibt bei sechs Punkten.
+  leist: [
+    { label: 'Leistungen Übersicht', to: '/leistungen' },
+    { label: 'Küchenplanung', to: '/planung' },
+    { label: 'Küchen nach Maß', to: '/kuechen-nach-mass' },
+    { label: 'Arbeitsplatten', to: '/arbeitsplatten' },
+    { label: 'Küchenmontage', to: '/kuechenmontage-wuerzburg' },
+    { label: 'Alles aus einer Hand', to: '/alles-aus-einer-hand' },
   ],
   about: [
     { label: 'Über uns', to: '/ueber-uns' },

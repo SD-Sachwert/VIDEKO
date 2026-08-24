@@ -195,12 +195,12 @@ export default function MaterialsSection({ embedded = false }) {
           <div className="mat-cta__body">
             <h3>Erlebe Materialien<br />in perfekter Harmonie.</h3>
             <p>
-              Besuche einen unserer Showrooms und entdecke die Vielfalt
+              Besuche unser Küchenstudio in Würzburg und entdecke die Vielfalt
               und Qualität unserer Materialien hautnah.
             </p>
           </div>
           <div className="mat-cta__actions">
-            <MagneticButton as="a" href="/showroom">Standorte ansehen</MagneticButton>
+            <MagneticButton as="a" href="/studio">Studio in Würzburg ansehen</MagneticButton>
             <TextLink href="/beratung">Persönliche Beratung buchen</TextLink>
           </div>
         </Reveal>

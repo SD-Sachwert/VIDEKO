@@ -171,6 +171,31 @@ export function articleLd(article, path) {
   }
 }
 
+/**
+ * Eine einzelne Leistung als `Service`.
+ *
+ * Anbieter ist immer die Organisation, das Einzugsgebiet Würzburg — beides
+ * belegt durch company.js. BEWUSST OHNE `offers`, Preis oder Bewertung: Die
+ * Seiten nennen keine Preise, und erfundene Angaben hätten in einem Rich
+ * Result unmittelbare Folgen. `serviceType` und `name` stehen so auch sichtbar
+ * auf der jeweiligen Seite.
+ *
+ * @param {{ name: string, description: string, path: string, serviceType?: string }} s
+ */
+export function serviceLd({ name, description, path, serviceType }) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    '@id': `${absUrl(path)}#service`,
+    name,
+    description,
+    serviceType: serviceType || name,
+    provider: { '@id': `${SITE.origin}/#organization` },
+    areaServed: { '@type': 'City', name: 'Würzburg' },
+    url: absUrl(path),
+  }
+}
+
 /** FAQPage – nur einsetzen, wo die Fragen auch sichtbar auf der Seite stehen. */
 export function faqLd(faqs) {
   return {

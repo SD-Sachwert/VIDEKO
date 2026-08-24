@@ -14,10 +14,17 @@
  */
 import {
   organizationLd, localBusinessLd, webSiteLd, webPageLd, breadcrumbLd, articleLd,
+  serviceLd, faqLd,
 } from './site.js'
 
-/** Seiten, auf denen das Studio als Ort auch tatsächlich Thema ist. */
-const STUDIO_ROUTES = new Set(['/', '/studio', '/showroom'])
+/**
+ * Seiten, auf denen das Studio als Ort auch tatsächlich Thema ist.
+ *
+ * /showroom ist entfallen und leitet dauerhaft auf /studio. /beratung und
+ * /kuechenmontage-wuerzburg sind dazugekommen: Beide nennen den Standort und
+ * das Einzugsgebiet sichtbar im Text — nur dann gehört LocalBusiness dorthin.
+ */
+const STUDIO_ROUTES = new Set(['/', '/studio', '/beratung', '/kuechenmontage-wuerzburg'])
 
 /**
  * Stabile Kennung eines JSON-LD-Blocks für das Attribut `data-seo-id`.
@@ -60,6 +67,13 @@ export function staticRouteHead(meta) {
       !istStart && meta.crumb
         ? breadcrumbLd([{ name: 'Start', path: '/' }, { name: meta.crumb, path: pfad }])
         : null,
+      // Leistungsseiten beschreiben eine konkrete Dienstleistung mit
+      // Einzugsgebiet. Nur dort gesetzt, wo das auch stimmt.
+      meta.service ? serviceLd({ ...meta.service, path: pfad }) : null,
+      // FAQPage nur, wenn dieselben Fragen sichtbar auf der Seite stehen. Die
+      // Sätze kommen aus data/leistungsseiten.js, aus dem sich auch die
+      // Seitenkomponente bedient — zwei Fassungen kann es damit nicht geben.
+      meta.faqs?.length ? faqLd(meta.faqs) : null,
     ].filter(Boolean),
   }
 }
@@ -97,20 +111,28 @@ export function journalArticleHead(article) {
  * (SHOW_PUBLIC_PRICES = false) und arbeitet mit Anfragen statt Bestellungen.
  * Ein `Offer` mit Preis im Markup wäre eine Angabe, die die Seite nicht macht.
  */
-export function merchDetailHead({ name, tagline, slug, image, extraLd }) {
+export function merchDetailHead({ name, tagline, slug, image, extraLd, canonicalSlug }) {
   const pfad = `/merch/${slug}`
+  // Farbvarianten zeigen auf die fuehrende Seite ihrer Gruppe (merch.js).
+  // Ohne Gruppe ist das der eigene Pfad — dann aendert sich nichts.
+  const kanonisch = `/merch/${canonicalSlug || slug}`
   const title = `${name} – VIDEKO Merch`
+  // Die sechs Familien-Einstiegsseiten fuehren keine eigene Tagline, weil sie
+  // mehrere Linien buendeln. Statt eines leeren description-Tags eine Angabe
+  // aus vorhandenen Daten: Produktname und Kollektion. Nichts hinzuerfunden.
+  const description = (tagline || '').trim()
+    || `${name} aus der VIDEKO Kollektion – Ausführungen, Farben und Größen im Überblick.`
   return {
     title,
-    description: tagline,
-    canonicalPath: pfad,
+    description,
+    canonicalPath: kanonisch,
     image,
     imageAlt: name,
     ogType: 'website',
     noindex: false,
     jsonLd: [
       organizationLd(),
-      webPageLd({ path: pfad, title, description: tagline }),
+      webPageLd({ path: kanonisch, title, description }),
       breadcrumbLd([
         { name: 'Start', path: '/' },
         { name: 'Merch', path: '/merch' },
