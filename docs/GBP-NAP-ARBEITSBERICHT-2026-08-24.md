@@ -7,6 +7,13 @@ Alle Werte in diesem Bericht wurden am 2026-08-24 live erhoben. Wo eine Angabe n
 verifiziert werden konnte, steht das ausdrücklich dabei. Es wurde nichts geschätzt,
 ergänzt oder aus einem Screenshot abgeleitet.
 
+> **NACHTRAG 2026-08-24, Teil B (Verwaltungsansicht).** Der Zugriff auf die eingeloggte
+> Google-Sitzung wurde inzwischen hergestellt. Die Verwaltungsansicht hat mehrere Befunde
+> aus Teil A widerlegt (Beschreibung war NICHT leer, Facebook war NICHT ohne Eintrag,
+> Öffnungszeiten sind vollständig hinterlegt). **Maßgeblich ist ab hier Teil B am Ende
+> dieses Dokuments** (Abschnitt 7 ff.). Die Abschnitte 1.1, 1.5, 1.6, 2.1 und 6 sind
+> überholt.
+
 **Zugriffslage (bestimmt den Umfang dieses Berichts):** Die Verwaltungsansicht des Google
 Business Profile und die Search Console waren **nicht erreichbar**. Der eingeloggte
 Chrome-Nutzer existiert (`Dennis.himmel@videko-kuechen.de` ist im lokalen Chrome-Profil
@@ -428,3 +435,260 @@ erzwungener Neustart würde also die offenen Tabs verwerfen.
    sind fertig formuliert und belegt.
 
 Ohne einen dieser Schritte bleiben die Abschnitte 1 und 4 offen.
+
+---
+
+# TEIL B — Arbeit in der Verwaltungsansicht (2026-08-24, nach Chrome-Neustart)
+
+Zugriffsweg: Chrome wurde mit gesicherter Sitzung beendet und mit demselben Benutzerprofil
+neu gestartet. Remote-Debugging (CDP) ist ab Chrome 136 auf dem Standardprofil bewusst
+deaktiviert — das wurde **nicht umgangen**. Stattdessen wurde der real eingeloggte Browser
+über Windows UI Automation bedient. Angemeldet: `dhimmel55@gmail.com` (Chrome-Profil „Dennis").
+
+Sitzungssicherung vor dem Neustart:
+`scratchpad/session-backup/OFFENE-TABS-2026-08-24.txt` — 211 dedupliziert gesicherte URLs
+(offene Tabs inkl. Navigationsverlauf), zusätzlich `Sessions/` und `Preferences.bak`.
+
+---
+
+## 7. Korrektur der Befunde aus Teil A
+
+Vier Aussagen aus Teil A waren nur öffentlich erhoben und sind durch die Verwaltungsansicht
+widerlegt:
+
+| Aussage in Teil A | Tatsächlicher Stand in der Verwaltungsansicht |
+| --- | --- |
+| Beschreibung leer | **Vorhanden**, unternehmenseigener Text (siehe 8.3) |
+| Facebook: kein Eintrag | **Vorhanden**: `https://www.facebook.com/videko.kuechen/` |
+| Öffnungszeiten nur teilweise sichtbar | **Vollständig hinterlegt**, So–Sa je 09:00–18:00 |
+| Search Console: Zugriff unklar | **Property existiert seit 14.08.2026**, bestätigter Inhaber |
+
+---
+
+## 8. Google Business Profile — Feldbestand vorher
+
+Geschäftscode-Ansicht: 2 bestätigte Unternehmen im Konto (100 % bestätigt), davon
+„VIDEKO Küchen eG, Hertzstraße 4, 97076 Würzburg". Profilstärke: „Vollständige Informationen",
+120 Kundeninteraktionen.
+
+### 8.1 Unverändert gelassen (entsprachen den bestätigten Sollwerten)
+
+| Feld | Wert |
+| --- | --- |
+| Unternehmensname | `VIDEKO Küchen eG` |
+| Telefonnummer | `0160 5545818` |
+| Website | `https://videko-kuechen.de/` |
+| Adresse | `Hertzstraße 4, 97076 Würzburg` |
+| Einzugsgebiet | `Würzburg, Deutschland` |
+| Chat | `https://wa.me/491605545818` |
+| Soziale Profile | Facebook, Instagram, YouTube, TikTok (4 Einträge) |
+| Barrierefreiheit | Rollstuhlgerechter Eingang / Parkplatz / Sitzgelegenheiten |
+| Eröffnungsdatum | leer — **bewusst leer gelassen**, siehe 9.4 |
+
+### 8.2 Vorher vorhanden, aber leer bzw. unvollständig
+
+| Feld | Vorher |
+| --- | --- |
+| Leistungen / Dienstleistungen | **0 Einträge** |
+| Unternehmenskategorie | nur `Küchenmöbelgeschäft` (primär), keine Zweitkategorie |
+| Fotos | Titelbild + Logo + 5 Unternehmensfotos |
+
+### 8.3 Beschreibung — vorhanden, nicht überschrieben
+
+Hinterlegter Text (unverändert übernommen):
+
+> VIDEKO Küchen ist ein modernes Küchenstudio in Würzburg für individuell geplante Küchen
+> und komplette Raumlösungen. Wir verbinden persönliche Beratung, ehrliche Planung und
+> hochwertige Materialien mit klarem, modernem Design. Auf Wunsch erhalten unsere Kundinnen
+> und Kunden bei uns alles aus einer Hand: Küche, Elektroarbeiten, Boden, Wände, Spanndecken
+> und weitere Ausbauleistungen – abgestimmt, koordiniert und ohne unnötige Schnittstellen.
+> Von der ersten Idee bis zur fertigen Küche begleiten wir jedes Projekt persönlich. Unser
+> Studio befindet sich aktuell noch im Aufbau. Den Weg bis zur Eröffnung zeigen wir auf
+> Instagram unter @videko.kuechen.
+
+**Entscheidung: nicht ersetzt.** Der Text ist unternehmenseigen, sachlich, ohne
+Keyword-Stuffing und deckt Kernleistung, „alles aus einer Hand" und den Aufbaustatus ab.
+Der in Teil A (Abschnitt 1.5) vorbereitete Entwurf wurde **verworfen** — ein Überschreiben
+wäre eine schlecht umkehrbare Änderung ohne belegbaren Vorteil.
+
+---
+
+## 9. Google Business Profile — was konkret geändert wurde
+
+### 9.1 Kategorien
+
+| | Vorher | Nachher |
+| --- | --- | --- |
+| Primär | Küchenmöbelgeschäft | Küchenmöbelgeschäft (unverändert) |
+| Weitere | — | **Küchenumbauunternehmen** (neu) |
+
+Vorgehen: Googles Live-Autocomplete wurde abgefragt, um zu prüfen, welche Kategorien
+tatsächlich existieren. Ergebnis: `Küchenumbauunternehmen`, `Fachhandel für Arbeitsplatten`,
+`Innenausbauunternehmen` und `Auftragnehmer für den Innenausbau` existieren;
+`Einbauküchen` existiert **nicht** als Kategorie.
+
+**Bewusst nicht ergänzt:**
+
+- `Fachhandel für Arbeitsplatten` — [Arbeitsplatten.jsx](../src/pages/Arbeitsplatten.jsx)
+  stellt ausdrücklich fest, dass Material, Kante und Ausschnitte in die Küchenplanung
+  gehören, „nicht in ein separates Projekt". Arbeitsplatten sind also keine eigenständige
+  Kundenleistung.
+- `Innenausbauunternehmen` / `Auftragnehmer für den Innenausbau` — der Ausbauteil ist
+  laut eigener GBP-Beschreibung eine **koordinierte Zusatzleistung „auf Wunsch"**, kein
+  eigenständiges Geschäftsfeld. „Innenausbau" auf LinkedIn ist als Beleg ausdrücklich
+  nicht ausreichend. Eine solche Kategorie würde außerdem die lokale Relevanz für
+  „Küchenstudio Würzburg" verwässern.
+
+Status: gespeichert, Prüfung durch Google abgeschlossen — Kategorie ist **live sichtbar**.
+
+### 9.2 Leistungen: 0 → 12
+
+Google bietet für diese Kategorie keine vordefinierten Leistungen an; alle Einträge wurden
+als „Eigene Dienstleistung" angelegt. Jeder Eintrag ist durch eine ausgelieferte Seite
+oder einen Abschnitt der Website belegt:
+
+| # | Leistung | Beleg |
+| --- | --- | --- |
+| 1 | Küchenplanung | `/planung` |
+| 2 | Küchenberatung | `/beratung` |
+| 3 | Küchen nach Maß | `/kuechen-nach-mass` |
+| 4 | Einbauküchen | `/kuechen-nach-mass`, `/leistungen` |
+| 5 | 3D-Planung | `/planung` |
+| 6 | Aufmaß vor Ort | `/planung`, `/beratung` |
+| 7 | Arbeitsplatten | `/arbeitsplatten` |
+| 8 | Küchenmontage | `/kuechenmontage-wuerzburg` |
+| 9 | Elektrogeräte | `/leistungen` |
+| 10 | Lichtplanung | `/leistungen` (Leistung 04 „Lichtplanung & Ambiente") |
+| 11 | Raumkonzepte | `/leistungen`, `/alles-aus-einer-hand` |
+| 12 | Alles aus einer Hand | `/alles-aus-einer-hand` |
+
+Alle 12 wurden vor dem Speichern zurückgelesen und stehen inzwischen **live** unter der
+Primärkategorie im Leistungen-Dialog.
+
+### 9.3 Öffnungszeiten — nichts geändert, Befund dokumentiert
+
+Vollständig hinterlegter Stand (Modus „Geöffnet mit Angabe der Öffnungszeiten"):
+
+| Tag | Zeit |
+| --- | --- |
+| Sonntag | 09:00–18:00 |
+| Montag | 09:00–18:00 |
+| Dienstag | 09:00–18:00 |
+| Mittwoch | 09:00–18:00 |
+| Donnerstag | 09:00–18:00 |
+| Freitag | 09:00–18:00 |
+| Samstag | 09:00–18:00 |
+
+Kein einziges „Geschlossen"-Häkchen gesetzt.
+
+**Bewertung: kein belastbarer Sollwert, sehr wahrscheinlich Altbestand.** Begründung:
+
+1. Sonntag 09:00–18:00 ist für ein stationäres Küchenstudio in Deutschland nach dem
+   Ladenschlussrecht nicht zulässig — der Wert kann nicht bewusst gepflegt sein.
+2. Das Studio ist laut eigener GBP-Beschreibung „aktuell noch im Aufbau"; verbindliche
+   Publikumszeiten kann es zum jetzigen Zeitpunkt nicht geben.
+3. Ein über alle sieben Tage identisches 09:00–18:00 ist das typische Muster einer
+   Erstbefüllung, nicht einer gepflegten Angabe.
+
+**Ergebnis: unverändert gelassen und als offen dokumentiert.** Es wurde nichts geraten.
+Nebenbefund: die in Teil A gefundene Cylex-Angabe „Mo–So 09:00–18:00" ist damit keine
+unabhängige Quelle, sondern eine Spiegelung genau dieses GBP-Werts.
+
+**Offen für Dennis:** verbindliche Zeiten festlegen oder — solange das Studio nicht
+eröffnet ist — auf „Vorübergehend geschlossen" bzw. reine Terminvereinbarung umstellen.
+
+### 9.4 Eröffnungsdatum — bewusst leer gelassen
+
+„Winter 2026" ist kein eindeutiges Datum. Ein gesetztes Eröffnungsdatum schaltet das Profil
+zudem in eine „demnächst"-Darstellung um — eine halb irreversible Änderung ohne belegten Wert.
+
+### 9.5 Fotos / Logo / Titelbild — nichts geändert
+
+| Element | Stand |
+| --- | --- |
+| Titelbild | vorhanden |
+| Logo | vorhanden |
+| Unternehmensfotos | 5 |
+
+Es wurden **keine Bilder generiert** und keine hochgeladen. Zusätzliche echte
+VIDEKO-Aufnahmen (Studio im Bau, Team, fertige Projekte) wären der wirksamste nächste
+Hebel, müssen aber von Dennis kommen.
+
+---
+
+## 10. Google Search Console
+
+### 10.1 Property
+
+| | |
+| --- | --- |
+| Property vorhanden | **ja** |
+| Typ | **Domain-Property** (`sc-domain:videko-kuechen.de`) |
+| Eigentumsstatus | **bestätigter Inhaber** — keine DNS-Aktion nötig |
+| Zum Konto hinzugefügt | 14.08.2026 |
+| robots.txt | alle Dateien gültig |
+| Crawling-Anfragen (90 Tage) | 239 |
+| Klicks aus der Websuche | 37 |
+
+Eine Neuanlage und damit ein TXT-Record waren **nicht** erforderlich.
+
+### 10.2 Sitemap
+
+| | |
+| --- | --- |
+| Eingereichte Sitemap | `https://videko-kuechen.de/sitemap.xml` |
+| Erstmals eingereicht | 15.08.2026 |
+| Zuletzt gelesen | 22.08.2026 |
+| Status | Erfolgreich |
+| Erkannte Seiten | 85 |
+| URLs in der Live-Sitemap | 64 |
+
+Da das letzte Lesen (22.08.) **vor** dem SEO-Deploy von heute liegt, wurde die Sitemap
+erneut eingereicht → „Sitemap wurde eingereicht".
+
+### 10.3 Indexierungsstatus der zehn Haupt-URLs (Stand vor der Beantragung)
+
+| URL | Status | Detail | Letztes Crawling |
+| --- | --- | --- | --- |
+| `/` | auf Google | Seite ist indexiert | 15.08.2026, 10:32 |
+| `/studio` | auf Google | Seite ist indexiert | 15.08.2026, 09:49 |
+| `/leistungen` | auf Google | Seite ist indexiert | 15.08.2026, 09:46 |
+| `/planung` | **nicht auf Google** | Gefunden – zurzeit nicht indexiert | – |
+| `/beratung` | **nicht auf Google** | URL ist Google nicht bekannt | – |
+| `/kuechen-nach-mass` | **nicht auf Google** | URL ist Google nicht bekannt | – |
+| `/arbeitsplatten` | **nicht auf Google** | Gefunden – zurzeit nicht indexiert | – |
+| `/kuechenmontage-wuerzburg` | **nicht auf Google** | Gefunden – zurzeit nicht indexiert | – |
+| `/alles-aus-einer-hand` | **nicht auf Google** | Gefunden – zurzeit nicht indexiert | – |
+| `/journal` | **nicht auf Google** | Gefunden – zurzeit nicht indexiert | – |
+
+**7 von 10 Hauptseiten sind nicht im Index.** Die drei indexierten wurden zuletzt am
+15.08.2026 gecrawlt — also vor allen Änderungen aus SEO-Phase 2 und 3.
+
+### 10.4 Beantragte Indexierungen
+
+Bestätigt („URL wurde einer bevorzugten Crawling-Warteschlange hinzugefügt"):
+
+`/planung` · `/beratung` · `/kuechen-nach-mass` · `/arbeitsplatten` ·
+`/kuechenmontage-wuerzburg` · `/alles-aus-einer-hand` · `/journal` · `/studio` · `/leistungen`
+
+= **9 von 10.**
+
+`/` (Startseite) lief wiederholt in „Hoppla. Ein Fehler ist aufgetreten". Die Startseite ist
+bereits indexiert; der Antrag war ausschließlich wegen des alten Crawl-Datums gedacht und
+bringt laut Googles eigenem Hinweis ohnehin keine Priorität. Die neu eingereichte Sitemap
+deckt sie ab. **Kein Blocker.**
+
+---
+
+## 11. Verbleibende echte Blocker
+
+| # | Punkt | Warum blockiert |
+| --- | --- | --- |
+| 1 | Öffnungszeiten | Kein belastbarer Sollwert ermittelbar. Nur Dennis kann die verbindlichen Zeiten bzw. „Vorübergehend geschlossen" festlegen. |
+| 2 | Eröffnungsdatum | „Winter 2026" ist kein Datum. Braucht eine Entscheidung. |
+| 3 | Echte Fotos | Dürfen nicht generiert werden. Neues Bildmaterial muss aus dem Unternehmen kommen. |
+| 4 | Indexierung der 7 Seiten | Liegt jetzt bei Google. Ergebnis in 1–14 Tagen erneut prüfen. |
+| 5 | Fremdportale aus Teil A, Abschnitt 3.2 | Erfordern Accounts/Identitätsprüfung — bewusst nicht angelegt. |
+
+**Nicht blockiert und erledigt:** Kategorien, Leistungen, Beschreibung (bestätigt),
+NAP-Felder (bestätigt), Search-Console-Property, Sitemap, Indexierungsanträge.
