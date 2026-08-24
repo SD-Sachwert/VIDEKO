@@ -709,11 +709,26 @@ body {
   will-change: transform;
 }
 
+/* <picture> ist nur ein Auswahl-Wrapper und darf die Box des <img> nicht
+   uebernehmen — sonst faende `height: 100%` unten keine Bezugshoehe mehr. */
+.hero__kb picture {
+  display: contents;
+}
+
 .hero__img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center right;
+}
+
+/* Der mobile 9:16-Ausschnitt kommt jetzt aus <source media="(max-width:720px)">
+   (Hero.jsx). Die Bildausrichtung dafuer muss deshalb ebenfalls per Media Query
+   greifen statt ueber eine nur mobil gesetzte Klasse. */
+@media (max-width: 720px) {
+  .hero__img {
+    object-position: center center;
+  }
 }
 
 .kenburns {
@@ -13082,6 +13097,28 @@ a.footer__contact-line:hover {
     transform: none !important;
   }
   .reveal {
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* =====================================================================
+   OHNE JAVASCRIPT
+   Seit dem Body-Prerendering steht der vollstaendige Seiteninhalt schon im
+   ausgelieferten HTML. Die Einblend-Effekte werden aber von React bzw. einem
+   IntersectionObserver ausgeloest (Reveal.jsx, Hero-Klassen). Ohne JavaScript
+   bliebe der Text sonst dauerhaft auf `opacity: 0` stehen — sichtbar leer,
+   obwohl er vorhanden ist. `scripting: none` ist die dafuer vorgesehene
+   Media-Feature-Abfrage und greift auch beim Drucken.
+   Bewusst KEIN zweiter, versteckter Textbestand: exakt dieselben Elemente,
+   nur ohne die Animation davor.
+   ===================================================================== */
+@media (scripting: none) {
+  .reveal,
+  .hero-in,
+  .hero__line-in {
+    animation: none !important;
     transition: none !important;
     opacity: 1 !important;
     transform: none !important;

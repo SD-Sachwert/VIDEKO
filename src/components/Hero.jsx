@@ -3,8 +3,8 @@ import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'fram
 
 import CTAButton from './CTAButton.jsx'
 import ValueBand from './ValueBand.jsx'
-import Img from './Img.jsx'
 import { KiHinweis } from './legal/KiKennzeichnung.jsx'
+import { imageMeta } from '../data/image-meta.js'
 import heroImg from '../assets/images/shared/hero-videko-final-16x9.webp'
 import heroMobileImg from '../assets/images/home/Mobile.webp'
 import heroVideo from '../assets/images/home/Header.mp4'
@@ -21,14 +21,27 @@ const LINES = ['Küchenplanung aus Würzburg –', 'für dein Zuhause,', 'nicht 
 export default function Hero() {
   const ref = useRef(null)
 
-  // mobile gets a 9:16 photo (Ken-Burns) instead of the 16:9 video — the video
-  // is never put in the DOM on mobile, so it isn't downloaded.
-  const [isMobile, setIsMobile] = useState(() =>
-    typeof window !== 'undefined' && window.matchMedia('(max-width: 720px)').matches
-  )
+  // GERAETEWEICHE OHNE JAVASCRIPT
+  // -----------------------------
+  // Mobil zeigt der Hero ein 9:16-Foto, ab 721 px ein Video mit 16:9-Poster.
+  // Frueher entschied das `window.matchMedia` im Startwert des States. Seit die
+  // Seite im Build vorgerendert wird, geht das nicht mehr: Node kennt keine
+  // Viewportbreite, das ausgelieferte HTML waere also immer die Desktopvariante
+  // — auf dem Handy haette der Browser damit erst das Video-Markup geparst
+  // (mp4-Metadaten + 16:9-Poster geladen) und React es direkt danach wieder
+  // ersetzt. Genau das soll die Weiche ja verhindern.
+  //
+  // Deshalb ist der erste Render jetzt geraeteunabhaengig ein <picture>: die
+  // `media`-Bedingung im <source> entspricht exakt dem Breakpoint hier und den
+  // beiden Preloads in routes-meta.js, also laedt jedes Geraet weiterhin genau
+  // ein Motiv — schon vor dem ersten Byte JavaScript. Das Video kommt erst nach
+  // dem Mount dazu, und weil sein `poster` dieselbe Datei ist, die der Desktop
+  // ohnehin schon anzeigt, ist der Wechsel unsichtbar.
+  const [zeigeVideo, setZeigeVideo] = useState(false)
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 720px)')
-    const onChange = () => setIsMobile(mq.matches)
+    const onChange = () => setZeigeVideo(!mq.matches)
+    onChange()
     mq.addEventListener('change', onChange)
     return () => mq.removeEventListener('change', onChange)
   }, [])
@@ -75,16 +88,7 @@ export default function Hero() {
       {/* --- Media: scroll (outer) + pointer (middle) + CSS ken-burns (img) --- */}
       <motion.div className="hero__media" style={{ y: imgY, scale: imgScale }}>
         <div className="hero__kb">
-          {isMobile ? (
-            <Img
-              className="hero__img kenburns hero__img--mobile"
-              src={heroMobileImg}
-              alt=""
-              aria-hidden="true"
-              priority
-              sizes="100vw"
-            />
-          ) : (
+          {zeigeVideo ? (
             <video
               className="hero__img kenburns"
               autoPlay
@@ -97,6 +101,29 @@ export default function Hero() {
             >
               <source src={heroVideo} type="video/mp4" />
             </video>
+          ) : (
+            <picture>
+              {/* Bis 720 px das 9:16-Motiv – identische Quellen und `sizes` wie
+                  der zugehoerige Preload in routes-meta.js. */}
+              <source
+                media="(max-width: 720px)"
+                srcSet={imageMeta(heroMobileImg)?.srcSet || heroMobileImg}
+                sizes="100vw"
+              />
+              {/* Ab 721 px das Posterbild des Videos. Bewusst OHNE srcSet: der
+                  Preload liefert genau diese eine Datei (responsive: false),
+                  ein zweiter Kandidat wuerde einen Doppel-Download ausloesen. */}
+              <img
+                className="hero__img kenburns"
+                src={heroImg}
+                width={imageMeta(heroImg)?.w}
+                height={imageMeta(heroImg)?.h}
+                alt=""
+                aria-hidden="true"
+                fetchPriority="high"
+                decoding="sync"
+              />
+            </picture>
           )}
         </div>
       </motion.div>

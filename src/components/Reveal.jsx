@@ -21,16 +21,21 @@ export default function Reveal({
   ...rest
 }) {
   const ref = useRef(null)
-  // Ohne IntersectionObserver ist alles sofort sichtbar bzw. geladen — das wird
-  // beim ersten Render entschieden, nicht nachtraeglich im Effekt.
-  const ohneObserver = () => typeof IntersectionObserver === 'undefined'
-  const [shown, setShown] = useState(ohneObserver)
-  const [bgNah, setBgNah] = useState(ohneObserver)
+  // Feste Startwerte, damit das im Build erzeugte HTML und der erste Render im
+  // Browser exakt uebereinstimmen (siehe LazyBg.jsx). Ohne
+  // IntersectionObserver wird im Effekt sofort aufgedeckt; ganz ohne
+  // JavaScript uebernimmt die CSS-Regel unter `@media (scripting: none)`.
+  const [shown, setShown] = useState(false)
+  const [bgNah, setBgNah] = useState(false)
 
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    if (typeof IntersectionObserver === 'undefined') return
+    // Einmaliger Notausstieg fuer Browser ohne IntersectionObserver: einmal
+    // beim Mounten, danach nie wieder, und im Build laeuft der Effekt gar
+    // nicht. Es gibt hier also keine Kaskade, die die Regel verhindern will.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (typeof IntersectionObserver === 'undefined') { setShown(true); return }
     const io = new IntersectionObserver(
       (entries) => {
         if (entries.some((e) => e.isIntersecting)) {
@@ -48,7 +53,11 @@ export default function Reveal({
     if (!bgImage) return
     const el = ref.current
     if (!el) return
-    if (typeof IntersectionObserver === 'undefined') return
+    // Einmaliger Notausstieg fuer Browser ohne IntersectionObserver: einmal
+    // beim Mounten, danach nie wieder, und im Build laeuft der Effekt gar
+    // nicht. Es gibt hier also keine Kaskade, die die Regel verhindern will.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (typeof IntersectionObserver === 'undefined') { setBgNah(true); return }
     const io = new IntersectionObserver(
       (entries) => {
         if (entries.some((e) => e.isIntersecting)) {

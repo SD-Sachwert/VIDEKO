@@ -35,3 +35,6 @@ dist-ssr
 *.bak-*
 _asset-source-packages/
 review-merch-assets/
+
+# Screenshots der Browserpruefung (scripts/pruefe-hydration.mjs)
+pruefung/

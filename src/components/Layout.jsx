@@ -11,11 +11,17 @@ import RouteSeo from './RouteSeo.jsx'
 // Bestellung, keine Server-Speicherung.
 import { CartProvider } from '../shop/CartContext.jsx'
 import ShopOverlays from './merch/ShopOverlays.jsx'
+import { markiereHydriert } from '../lib/hydration.js'
 
 // Scrollposition je History-Eintrag (location.key) in sessionStorage sichern.
 // Das ist dasselbe Muster wie React Routers eingebautes <ScrollRestoration>
 // und funktioniert daher auch mit dem Browser-Zurueck-Button und nach Reload.
 const SCROLL_PREFIX = 'videko:scroll:'
+
+// useLayoutEffect laeuft im Build (Node) nie und warnt dort nur. Im Browser
+// bleibt es beim Layout-Effekt — nur so wird die Scrollposition vor dem Paint
+// gesetzt, ohne sichtbares Springen.
+const useLayoutEffektImBrowser = typeof window === 'undefined' ? useEffect : useLayoutEffect
 
 const leseScroll = (key) => {
   try {
@@ -31,6 +37,11 @@ export default function Layout() {
   const { pathname, hash, key } = useLocation()
   const navType = useNavigationType() // 'POP' = Verlaufssprung (Zurueck/Vorwaerts, auch Browser-Button)
   const lenis = useLenis()
+
+  // Ab hier ist der erste Render committet, das vorgerenderte HTML also
+  // hydriert. Erst danach duerfen Komponenten Werte aus local-/sessionStorage
+  // in den Render ziehen (siehe src/lib/hydration.js).
+  useEffect(() => { markiereHydriert() }, [])
 
   // Laufende Scrollposition des aktuellen Eintrags festhalten.
   const scrollRef = useRef(0)
@@ -52,7 +63,7 @@ export default function Layout() {
   // Scroll-Wiederherstellung VOR dem Paint, damit es kein sichtbares Springen
   // oder kurzes Scrollen von oben gibt. Bei einem #anker uebernimmt der Effekt
   // darunter (weiches Scrollen zum Ziel).
-  useLayoutEffect(() => {
+  useLayoutEffektImBrowser(() => {
     if (hash) return
     // Nur bei Verlaufsspruengen (POP) die gemerkte Position wiederherstellen,
     // ansonsten (neue Seite via Link) an den Anfang.
@@ -83,7 +94,10 @@ export default function Layout() {
       // Beim Verlassen dieses Eintrags die exakte Endposition sichern.
       schreibeScroll(key, scrollRef.current)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Abhaengigkeiten bewusst auf diese drei begrenzt: Die Helfer aus dem
+    // Modulkopf sind stabil, `scrollRef` ist eine Ref. Der frueher noetige
+    // exhaustive-deps-Ausschalter ist entfallen, weil die Regel den Alias
+    // `useLayoutEffektImBrowser` nicht mehr als Hook erkennt.
   }, [pathname, key, lenis])
 
   // #anker aus Footer-/Sektions-Links anspringen (weiches Scrollen).

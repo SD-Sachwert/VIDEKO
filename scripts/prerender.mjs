@@ -1,5 +1,5 @@
 /**
- * Prerendering der Kopfdaten nach dem Vite-Build.
+ * Statisches Prerendering (SSG) nach dem Vite-Build.
  *
  * PROBLEM
  * -------
@@ -9,13 +9,31 @@
  * JavaScript ausfuehren — allen voran die Vorschau-Bots von WhatsApp, Facebook,
  * LinkedIn, Slack und X — sahen deshalb auf JEDER Unterseite die Startseite.
  *
- * LOESUNG
- * -------
- * Die kleinste robuste Variante: kein SSR, keine Framework-Migration. Nach dem
- * Build wird pro bekannter Route eine eigene `dist/<pfad>/index.html`
- * geschrieben. Identisches Markup, identisches JS-Bundle — nur der Kopf ist
+ * LOESUNG (Stufe 1, 14.08.2026): eigener Kopf pro Route
+ * ----------------------------------------------------
+ * Nach dem Build wird pro bekannter Route eine eigene `dist/<pfad>/index.html`
+ * geschrieben. Identisches Markup, identisches JS-Bundle — nur der Kopf war
  * fest eingebacken. Zusaetzlich entsteht `dist/404.html`, damit unbekannte
  * Pfade von Vercel mit echtem HTTP 404 beantwortet werden koennen.
+ *
+ * LOESUNG (Stufe 2, 24.08.2026): auch der Body
+ * --------------------------------------------
+ * Der Kopf allein reichte nicht. Ein `curl` auf jede der 85 URLs lieferte
+ * unveraendert
+ *
+ *     <body>
+ *       <div id="root"></div>
+ *     </body>
+ *
+ * — 33 Zeichen, keine Ueberschrift, kein Text, kein einziges <a href>. Damit
+ * existierte fuer alles, was kein JavaScript ausfuehrt, weder Inhalt noch
+ * interne Verlinkung; die Auffindbarkeit haing komplett an der sitemap.xml.
+ *
+ * Deshalb rendert dieses Skript die App jetzt zusaetzlich einmal pro Route in
+ * Node (src/entry-server.jsx) und schreibt das Ergebnis in `#root`. Der Client
+ * uebernimmt das Markup per `hydrateRoot` (src/main.jsx), statt es zu
+ * verwerfen. Weiterhin kein Framework-Wechsel, kein Data Router, kein Next.js:
+ * dieselbe App, dieselben Routen, nur einmal zusaetzlich im Build ausgefuehrt.
  *
  * Dafuer musste der Catch-all-Rewrite `/((?!api/).*) -> /index.html` aus
  * vercel.json entfernt werden. Da jede bekannte Route als eigene Datei
@@ -44,105 +62,15 @@
  */
 import fs from 'node:fs'
 import path from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
-import { build } from 'vite'
 
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const DIST = path.join(ROOT, 'dist')
-const TMP = path.join(ROOT, 'node_modules', '.videko-prerender')
-
-const ASSET_RE = /\.(webp|avif|png|jpe?g|gif|svg|mp4|webm|mp3|woff2?|ttf)(\?.*)?$/i
+// Manifest, Asset-Aufloesung und der Vite-SSR-Build liegen in einem eigenen
+// Modul, weil scripts/pruefe-ssg.mjs exakt dieselben Routendaten braucht.
+import {
+  ROOT, DIST, MANIFEST, fehlendeAssets, ladeModule, raeumeTmp,
+} from './_prerender-bundle.mjs'
 
 /* ------------------------------------------------------------------ *
- * 1. Manifest lesen — Quellpfad -> ausgelieferte URL
- * ------------------------------------------------------------------ */
-
-const manifestPfad = path.join(DIST, '.vite', 'manifest.json')
-if (!fs.existsSync(manifestPfad)) {
-  console.error(`✖ ${path.relative(ROOT, manifestPfad)} fehlt. Erst "vite build" laufen lassen (build.manifest: true).`)
-  process.exit(1)
-}
-const MANIFEST = JSON.parse(fs.readFileSync(manifestPfad, 'utf8'))
-
-/** Fallback ueber den Basename, falls ein Asset nicht im Manifest steht. */
-const NACH_BASENAME = new Map()
-for (const [key, eintrag] of Object.entries(MANIFEST)) {
-  if (!eintrag.file) continue
-  NACH_BASENAME.set(path.posix.basename(key), `/${eintrag.file}`)
-}
-
-/** Assets, zu denen kein Manifest-Eintrag gefunden wurde (Warnung am Ende). */
-const fehlendeAssets = new Set()
-
-/** Vite-Standard: alles darunter wird als data:-URI ins Bundle inlined. */
-const INLINE_LIMIT = 4096
-const MIME = {
-  '.webp': 'image/webp', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
-  '.gif': 'image/gif', '.avif': 'image/avif', '.svg': 'image/svg+xml',
-}
-
-function assetUrl(absPfad) {
-  const key = path.relative(ROOT, absPfad).split(path.sep).join('/')
-  const treffer = MANIFEST[key]
-  if (treffer?.file) return `/${treffer.file}`
-
-  // Kleine Assets stehen nicht im Manifest, weil Vite sie als data:-URI
-  // inlined. Genau das hier nachbilden, sonst zeigt ein srcSet-Eintrag auf
-  // eine Datei, die es in dist/ gar nicht gibt.
-  const ext = path.extname(absPfad).toLowerCase()
-  if (MIME[ext] && fs.existsSync(absPfad)) {
-    const buf = fs.readFileSync(absPfad)
-    if (buf.length < INLINE_LIMIT) return `data:${MIME[ext]};base64,${buf.toString('base64')}`
-  }
-
-  const alt = NACH_BASENAME.get(path.posix.basename(key))
-  if (alt) return alt
-  // Kein Manifest-Eintrag: lieber der Quellpfad als eine erfundene URL. Faellt
-  // in der Pruefung unten als kaputtes og:image auf.
-  fehlendeAssets.add(key)
-  return `/${key}`
-}
-
-/* ------------------------------------------------------------------ *
- * 2. Datenmodule per Vite-SSR-Build nach Node holen
- * ------------------------------------------------------------------ */
-
-/** Ersetzt jeden Asset-Import durch die gehashte URL aus dem Manifest. */
-const assetStubPlugin = {
-  name: 'videko-prerender-asset-stub',
-  enforce: 'pre',
-  async resolveId(quelle, importer) {
-    if (!ASSET_RE.test(quelle)) return null
-    const aufgeloest = await this.resolve(quelle, importer, { skipSelf: true })
-    if (!aufgeloest) return null
-    return `\0videko-asset:${aufgeloest.id.split('?')[0]}`
-  },
-  load(id) {
-    if (!id.startsWith('\0videko-asset:')) return null
-    const abs = id.slice('\0videko-asset:'.length)
-    return `export default ${JSON.stringify(assetUrl(abs))}`
-  },
-}
-
-async function ladeDaten() {
-  await build({
-    configFile: false,
-    root: ROOT,
-    logLevel: 'error',
-    plugins: [assetStubPlugin],
-    build: {
-      ssr: true,
-      outDir: path.relative(ROOT, TMP),
-      emptyOutDir: true,
-      minify: false,
-      rollupOptions: { input: path.join(ROOT, 'scripts', '_prerender-data.js') },
-    },
-  })
-  return import(pathToFileURL(path.join(TMP, '_prerender-data.js')).href)
-}
-
-/* ------------------------------------------------------------------ *
- * 3. HTML-Kopf bauen
+ * 1. HTML-Kopf bauen
  * ------------------------------------------------------------------ */
 
 const esc = (s) => String(s)
@@ -325,17 +253,32 @@ function kopfHtml(head, absUrl, SITE, VARIANTS) {
 }
 
 /* ------------------------------------------------------------------ *
- * 4. Schreiben
+ * 2. Schreiben
  * ------------------------------------------------------------------ */
 
 const MARKER_START = '<!--seo:start-->'
 const MARKER_END = '<!--seo:end-->'
 
-function schreibeSeite(vorlage, pfad, head, absUrl, SITE, VARIANTS, dateiname) {
-  const html = vorlage.replace(
+/**
+ * Der Wurzelknoten aus index.html — hier kommt das Markup hinein.
+ *
+ * Der Ausdruck greift absichtlich auch dann, wenn in `#root` bereits Markup
+ * steht. dist/index.html dient gleichzeitig als Vorlage UND als Startseite;
+ * ohne diese Toleranz waere ein zweiter Lauf von `node scripts/prerender.mjs`
+ * ohne vorheriges `vite build` nicht moeglich. Das schliessende `</div>` wird
+ * ueber das unmittelbar folgende `</body>` identifiziert — im gerenderten
+ * Inhalt kommt kein `</body>` vor.
+ */
+const WURZEL_RE = /(<div id="root">)[\s\S]*?(<\/div>\s*<\/body>)/
+
+function schreibeSeite(vorlage, pfad, head, absUrl, SITE, VARIANTS, koerper, dateiname) {
+  let html = vorlage.replace(
     new RegExp(`${MARKER_START}[\\s\\S]*?${MARKER_END}`),
     () => `${MARKER_START}\n${kopfHtml(head, absUrl, SITE, VARIANTS)}\n    ${MARKER_END}`,
   )
+  // Funktion als Ersatz, nicht String: im Markup kommen `$&`-Sequenzen vor
+  // (z. B. in URLs), die String.replace sonst als Rueckverweis auslegen wuerde.
+  html = html.replace(WURZEL_RE, (_, auf, zu) => `${auf}${koerper || ''}${zu}`)
   const ziel = dateiname
     ? path.join(DIST, dateiname)
     : path.join(DIST, pfad === '/' ? '' : pfad.replace(/^\//, ''), 'index.html')
@@ -345,7 +288,7 @@ function schreibeSeite(vorlage, pfad, head, absUrl, SITE, VARIANTS, dateiname) {
 }
 
 /* ------------------------------------------------------------------ *
- * 5. Sitemap
+ * 3. Sitemap
  * ------------------------------------------------------------------ */
 
 function schreibeSitemap(pfade, absUrl) {
@@ -367,27 +310,76 @@ if (!vorlage.includes(MARKER_START) || !vorlage.includes(MARKER_END)) {
   console.error(`✖ index.html enthaelt die Marker ${MARKER_START} / ${MARKER_END} nicht.`)
   process.exit(1)
 }
+if (!WURZEL_RE.test(vorlage)) {
+  console.error('✖ index.html enthaelt kein <div id="root"> vor </body> — Body-Prerendering nicht moeglich.')
+  process.exit(1)
+}
 
-const daten = await ladeDaten()
+const { daten, server } = await ladeModule()
 const {
   STATIC_ROUTES, journalArticles, MERCH_PRODUCTS, MERCH_FAMILIES,
   staticRouteHead, journalArticleHead, merchDetailHead, ldSlotId, SITE, absUrl, IMAGE_VARIANTS,
 } = daten
 
+/**
+ * Routen, deren Body bewusst NICHT vorgerendert wird.
+ *
+ * `/experience` verzweigt in src/pages/Experience.jsx:19-22 die GANZE Seite an
+ * `window.matchMedia`: Desktop bekommt die WebGL-Ansicht, Mobil/Reduced-Motion
+ * die Bildstrecke. Das sind zwei voellig verschiedene DOM-Baeume. Der Build
+ * kennt die Viewportbreite nicht und koennte deshalb nur einen von beiden
+ * schreiben — die jeweils andere Geraeteklasse saehe erst die falsche Variante
+ * und dann, nach der Hydration, einen kompletten Austausch des Teilbaums. Ein
+ * sichtbares Umspringen der Seite waere schlimmer als der heutige Zustand.
+ * Der Kopf (Title, Description, Canonical, JSON-LD) wird weiterhin gesetzt.
+ */
+const OHNE_KOERPER = new Set(['/experience'])
+
+/**
+ * Optionaler Filter fuer die Einfuehrung in Stufen.
+ *
+ *   VIDEKO_SSG_ROUTEN="/,/planung,/studio" node scripts/prerender.mjs
+ *
+ * rendert nur diese Bodys vor; alle uebrigen Seiten behalten voruebergehend das
+ * bisherige Verhalten (nur Kopf). Ohne die Variable wird alles gerendert.
+ */
+const NUR_ROUTEN = process.env.VIDEKO_SSG_ROUTEN
+  ? new Set(process.env.VIDEKO_SSG_ROUTEN.split(',').map((r) => r.trim()).filter(Boolean))
+  : null
+
+/** Routen, bei denen das Rendern fehlgeschlagen ist (Abbruch am Ende). */
+const renderFehler = []
+
+async function koerperFuer(pfad) {
+  if (OHNE_KOERPER.has(pfad)) return null
+  if (NUR_ROUTEN && !NUR_ROUTEN.has(pfad)) return null
+  try {
+    return await server.rendereRoute(pfad)
+  } catch (fehler) {
+    renderFehler.push({ pfad, fehler: fehler?.message || String(fehler) })
+    return null
+  }
+}
+
 const geschrieben = []
 const sitemapPfade = []
+let mitKoerper = 0
 
 /* statische Routen */
 for (const route of STATIC_ROUTES) {
   const head = staticRouteHead(route)
-  geschrieben.push(schreibeSeite(vorlage, route.path, head, absUrl, SITE, IMAGE_VARIANTS))
+  const koerper = await koerperFuer(route.path)
+  if (koerper) mitKoerper += 1
+  geschrieben.push(schreibeSeite(vorlage, route.path, head, absUrl, SITE, IMAGE_VARIANTS, koerper))
   if (route.inSitemap !== false && !route.noindex) sitemapPfade.push(route.path)
 }
 
 /* Journalartikel */
 for (const artikel of journalArticles) {
   const head = journalArticleHead(artikel)
-  geschrieben.push(schreibeSeite(vorlage, head.canonicalPath, head, absUrl, SITE, IMAGE_VARIANTS))
+  const koerper = await koerperFuer(head.canonicalPath)
+  if (koerper) mitKoerper += 1
+  geschrieben.push(schreibeSeite(vorlage, head.canonicalPath, head, absUrl, SITE, IMAGE_VARIANTS, koerper))
   sitemapPfade.push(head.canonicalPath)
 }
 
@@ -408,28 +400,48 @@ for (const seite of merchSeiten) {
   if (!seite.slug || gesehen.has(seite.slug)) continue
   gesehen.add(seite.slug)
   const head = merchDetailHead(seite)
-  geschrieben.push(schreibeSeite(vorlage, head.canonicalPath, head, absUrl, SITE, IMAGE_VARIANTS))
+  const koerper = await koerperFuer(head.canonicalPath)
+  if (koerper) mitKoerper += 1
+  geschrieben.push(schreibeSeite(vorlage, head.canonicalPath, head, absUrl, SITE, IMAGE_VARIANTS, koerper))
   sitemapPfade.push(head.canonicalPath)
 }
 
-/* 404 — noindex, kein Sitemap-Eintrag */
-schreibeSeite(vorlage, '/404', {
-  title: 'Seite nicht gefunden | VIDEKO Küchen',
-  description: 'Diese Seite gibt es nicht (mehr). Zurück zur Startseite oder direkt zur Beratungsanfrage.',
-  canonicalPath: '/404',
-  noindex: true,
-  ogType: 'website',
-  jsonLd: [],
-}, absUrl, SITE, IMAGE_VARIANTS, '404.html')
+/* 404 — noindex, kein Sitemap-Eintrag.
+   Der Body kommt aus der Catch-all-Route in App.jsx, rendert also dieselbe
+   NotFound-Seite, die auch ein Klick im Browser zeigen wuerde. */
+{
+  const koerper = await koerperFuer('/404')
+  if (koerper) mitKoerper += 1
+  schreibeSeite(vorlage, '/404', {
+    title: 'Seite nicht gefunden | VIDEKO Küchen',
+    description: 'Diese Seite gibt es nicht (mehr). Zurück zur Startseite oder direkt zur Beratungsanfrage.',
+    canonicalPath: '/404',
+    noindex: true,
+    ogType: 'website',
+    jsonLd: [],
+  }, absUrl, SITE, IMAGE_VARIANTS, koerper, '404.html')
+}
 
 const anzahlSitemap = schreibeSitemap(sitemapPfade, absUrl)
 
 console.log(`✔ Prerender: ${geschrieben.length} Routen + 404.html`)
 console.log(`  · statisch ${STATIC_ROUTES.length} · Journal ${journalArticles.length} · Shop ${gesehen.size}`)
+console.log(`✔ Body gerendert: ${mitKoerper} von ${geschrieben.length + 1} Seiten`)
+if (OHNE_KOERPER.size) {
+  console.log(`  · bewusst nur Kopf: ${[...OHNE_KOERPER].join(', ')}`)
+}
 console.log(`✔ sitemap.xml: ${anzahlSitemap} URLs`)
 if (fehlendeAssets.size) {
   console.warn(`⚠ ${fehlendeAssets.size} Asset(s) ohne Manifest-Eintrag:`)
   for (const a of fehlendeAssets) console.warn(`   ${a}`)
 }
 
-fs.rmSync(TMP, { recursive: true, force: true })
+raeumeTmp()
+
+// Ein stiller Fehlschlag waere hier besonders teuer: die Seite ginge dann
+// einfach wieder ohne Inhalt live. Deshalb Build abbrechen.
+if (renderFehler.length) {
+  console.error(`✖ ${renderFehler.length} Route(n) liessen sich nicht rendern:`)
+  for (const f of renderFehler) console.error(`   ${f.pfad}: ${f.fehler}`)
+  process.exit(1)
+}

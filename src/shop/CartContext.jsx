@@ -45,19 +45,42 @@ const writeStore = (key, value) => {
 const clampQty = (n) => Math.max(1, Math.min(MAX_QTY, Math.round(Number(n) || 1)))
 
 export function CartProvider({ children }) {
-  const [wishlist, setWishlist] = useState(() => readStore(WISH_KEY, []))
+  // Beide Listen starten leer und werden erst NACH dem ersten Commit aus dem
+  // localStorage nachgeladen.
+  //
+  // Grund: Die Seite wird im Build vorgerendert (scripts/prerender.mjs). Dort
+  // gibt es keinen localStorage, das ausgelieferte HTML zeigt also immer die
+  // leere Anfrageliste. Laese der Startwert hier den echten Speicher, waere der
+  // erste Render im Browser ein anderer als das HTML — React verwuerfe den
+  // Teilbaum und Badge/Drawer flackerten. Eine Runde spaeter ist der Zustand da.
+  const [wishlist, setWishlist] = useState([])
   // Anfrageliste: Array von Positionen mit stabiler `sku` als Identität.
-  const [inquiryItems, setInquiryItems] = useState(() => {
-    const stored = readStore(INQUIRY_KEY, [])
-    return Array.isArray(stored) ? stored.filter((i) => i && i.sku) : []
-  })
+  const [inquiryItems, setInquiryItems] = useState([])
+  // Solange false, wurde noch nicht aus dem Speicher gelesen — bis dahin darf
+  // auch nichts zurueckgeschrieben werden, sonst ueberschriebe der leere
+  // Startwert eine bestehende Liste.
+  const [geladen, setGeladen] = useState(false)
   // Reine UI-Sichtbarkeit des Anfragelisten-Panels (nicht persistiert).
   const [anfrageOpen, setAnfrageOpen] = useState(false)
   // Sichtbarkeit des geführten Anfrage-Dialogs (Kontakt-/Lieferdaten → Absenden).
   const [checkoutOpen, setCheckoutOpen] = useState(false)
 
-  useEffect(() => writeStore(WISH_KEY, wishlist), [wishlist])
-  useEffect(() => writeStore(INQUIRY_KEY, inquiryItems), [inquiryItems])
+  // Bewusst synchron im Effekt: Genau dieses Nachladen haelt das im Build
+  // erzeugte HTML und den ersten Render im Browser identisch (siehe oben).
+  // Es laeuft einmal beim Mounten mit leerer Abhaengigkeitsliste und kann
+  // sich nicht wiederholen. Ein Startwert aus dem localStorage waere genau
+  // der Hydrationsfehler, den dieser Umbau beseitigt hat.
+  useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
+    setWishlist(readStore(WISH_KEY, []))
+    const stored = readStore(INQUIRY_KEY, [])
+    setInquiryItems(Array.isArray(stored) ? stored.filter((i) => i && i.sku) : [])
+    setGeladen(true)
+    /* eslint-enable react-hooks/set-state-in-effect */
+  }, [])
+
+  useEffect(() => { if (geladen) writeStore(WISH_KEY, wishlist) }, [geladen, wishlist])
+  useEffect(() => { if (geladen) writeStore(INQUIRY_KEY, inquiryItems) }, [geladen, inquiryItems])
 
   const toggleWish = useCallback((id) => {
     setWishlist((prev) => (prev.includes(id) ? prev.filter((w) => w !== id) : [...prev, id]))

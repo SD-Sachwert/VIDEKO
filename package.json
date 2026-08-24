@@ -11,6 +11,10 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "prerender": "node scripts/prerender.mjs",
+    "pruefe": "npm run pruefe:ssg && npm run pruefe:links && npm run pruefe:hydration",
+    "pruefe:ssg": "node scripts/pruefe-ssg.mjs",
+    "pruefe:links": "node scripts/pruefe-verlinkung.mjs",
+    "pruefe:hydration": "node scripts/pruefe-hydration.mjs",
     "videos:optimize": "node scripts/optimize-videos.mjs"
   },
   "dependencies": {
@@ -39,6 +43,7 @@
     "eslint-plugin-react-refresh": "^0.5.2",
     "ffmpeg-static": "^5.3.0",
     "globals": "^17.6.0",
+    "puppeteer-core": "^24.43.1",
     "vite": "^8.0.12"
   }
 }

@@ -13,6 +13,7 @@ import FamilyCard from '../components/merch/FamilyCard.jsx'
 import ProductGallery from '../components/merch/ProductGallery.jsx'
 import { KiHinweis } from '../components/legal/KiKennzeichnung.jsx'
 import PerformanceSection from '../components/merch/PerformanceSection.jsx'
+import { istHydriert } from '../lib/hydration.js'
 import {
   MERCH_FAMILIES, ACCESSORY_PRODUCTS, MERCH_TABS, MERCH_SORTS, passtZuTab,
   LOGO_STYLE_ORDER, LOGO_STYLE_INFO, WORKWEAR_PRODUCTS,
@@ -129,8 +130,13 @@ export default function Merch() {
 
   // Gespeicherten Shop-Zustand EINMAL beim Mount lesen (synchron), damit das
   // Grid sofort in der richtigen Groesse rendert und die Scrollposition passt.
+  // Beim allerersten Render (Hydration des vorgerenderten HTML) bleibt der
+  // Speicher aussen vor: Der Build kennt ihn nicht, ein abweichender Zustand
+  // wuerde React den kompletten Shop-Teilbaum neu aufbauen lassen. Ab der
+  // ersten Navigation im Browser greift die Wiederherstellung wie bisher —
+  // und genau dafuer ist sie da (Zurueck aus einem Produkt).
   const startRef = useRef(null)
-  if (startRef.current === null) startRef.current = ladeShopState(key)
+  if (startRef.current === null) startRef.current = istHydriert() ? ladeShopState(key) : {}
   const start = startRef.current
 
   const [tab, setTab] = useState(start.tab ?? 'alle')

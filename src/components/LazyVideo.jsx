@@ -23,13 +23,19 @@ import { useEffect, useRef, useState } from 'react'
  */
 export default function LazyVideo({ src, poster, rootMargin = '300px', ...rest }) {
   const ref = useRef(null)
-  // Ohne IntersectionObserver (sehr alte Browser) lieber sofort laden als ein
-  // Video, das nie startet — deshalb schon im Startwert entschieden.
-  const [sichtbar, setSichtbar] = useState(() => typeof IntersectionObserver === 'undefined')
+  // Fester Startwert, damit das ausgelieferte HTML und der erste Render im
+  // Browser identisch sind (siehe LazyBg.jsx). Browser ohne
+  // IntersectionObserver laden im Effekt sofort nach.
+  const [sichtbar, setSichtbar] = useState(false)
 
   useEffect(() => {
     const el = ref.current
-    if (!el || typeof IntersectionObserver === 'undefined') return
+    if (!el) return
+    // Einmaliger Notausstieg fuer Browser ohne IntersectionObserver: einmal
+    // beim Mounten, danach nie wieder, und im Build laeuft der Effekt gar
+    // nicht. Es gibt hier also keine Kaskade, die die Regel verhindern will.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (typeof IntersectionObserver === 'undefined') { setSichtbar(true); return }
 
     const obs = new IntersectionObserver((eintraege) => {
       if (eintraege.some((e) => e.isIntersecting)) {
