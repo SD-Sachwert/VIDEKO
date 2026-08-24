@@ -131,6 +131,12 @@ freigegebene Vorgabe — nicht durch Übernahme einer der drei Varianten.
   bleiben unverändert getrennt: `organizationLd()` mit dem Sitz der Betreiberin,
   `localBusinessLd()` mit `parentOrganization`-Verweis und der Würzburger Anschrift.
 
+**Deployment-Status:** Commit `35bb00a`, gepusht auf `merch-shop` und `main`
+(beide Branches auf demselben Stand), produktiv auf https://videko-kuechen.de/ am
+2026-08-24 verifiziert: 64 Sitemap-URLs mit 21 `<lastmod>`-Einträgen, alle geprüften
+Routen HTTP 200 mit korrektem Canonical und `index, follow`, `dateModified` in den
+Artikel-JSON-LD, keine `openingHoursSpecification` im `LocalBusiness`.
+
 Reine Fließtext-Erwähnungen der Straße („Beraten wird bei uns in der Hertzstraße …")
 wurden bewusst **nicht** in Variablen aufgelöst — das ist Copy, keine Datenhaltung.
 
