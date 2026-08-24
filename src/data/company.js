@@ -31,6 +31,22 @@
 export const BRAND = {
   name: 'VIDEKO Küchen',
   shortName: 'VIDEKO',
+  /**
+   * Name für EXTERNE Einträge (Google Business Profile, Branchenverzeichnisse,
+   * Social-Media-Profile) – mit Rechtsformzusatz.
+   *
+   * Vorgabe des Auftraggebers vom 2026-08-24: „Der korrekte Unternehmensname lautet
+   * ausdrücklich: VIDEKO Küchen eG. Das ‚eG‘ ist richtig und darf NICHT entfernt
+   * werden.“ Eine frühere Empfehlung, den Zusatz extern zu streichen, ist damit
+   * aufgehoben.
+   *
+   * ABGRENZUNG – dieser Wert wird bewusst NICHT auf der Website ausgegeben:
+   * Im Frontend gilt weiterhin `BRAND.name` (Marke, ohne Zusatz), im Impressum und
+   * auf Vertrags-/Rechnungsebene weiterhin `ACTIVE_OPERATOR` (Süddeutsche Sachwert
+   * eG). Der Wert dient als Sollwert für den NAP-Abgleich in Verzeichnissen.
+   * Siehe docs/LOCAL-SEO-NAP-AUDIT-2026-08-24.md, Abschnitt 1.1a.
+   */
+  listingName: 'VIDEKO Küchen eG',
   domain: 'videko-kuechen.de',
   // Öffentliche Kontaktwege des Geschäftsbereichs VIDEKO Küchen.
   contactEmail: 'info@videko-kuechen.de',
@@ -43,7 +59,17 @@ export const BRAND = {
    * ÖFFNUNGSZEITEN: BEWUSST `null` – OFFENER DATENPUNKT.
    *
    * Im Repository sind keine verbindlichen Öffnungszeiten hinterlegt und es
-   * liegt keine Freigabe dafür vor. Externe Verzeichnisse zeigen widersprüchliche
+   * liegt keine Freigabe dafür vor.
+   *
+   * Stand 2026-08-24 (eigene Live-Recherche, ohne Verwaltungszugriff):
+   * Im Google Business Profile ist öffentlich nur `Montag 09:00–18:00` auslesbar;
+   * Googles eigener Statustext „Geschlossen · Öffnet Di um 09:00“ belegt zusätzlich
+   * einen Dienstag-Beginn um 09:00. Die restlichen Wochentage sind öffentlich nicht
+   * prüfbar. Gleichzeitig sagt der Inhaber-Beitrag vom 13.08.2026 im selben Profil
+   * ausdrücklich „Bis zur Eröffnung im Winter 2026 gibt es noch einiges zu tun“ –
+   * das Studio ist also noch gar nicht für Laufkundschaft geöffnet. Veröffentlichte
+   * Öffnungszeiten wären derzeit also selbst dann fraglich, wenn sie vollständig
+   * bekannt wären. Deshalb bleibt dieser Wert `null`. Externe Verzeichnisse zeigen widersprüchliche
    * Zeiten (Cylex: Mo–So 09–18 Uhr, Das Örtliche: Mo–Fr 09–18 Uhr, Gelbe Seiten:
    * „24 Stunden Service“) – siehe docs/LOCAL-SEO-NAP-AUDIT-2026-08-24.md.
    * Solange dieser Wert `null` ist, schreibt `localBusinessLd()` KEINE

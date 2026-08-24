@@ -14,10 +14,11 @@ gespeist.
 
 | Feld | Sollwert | Quelle |
 | --- | --- | --- |
-| Name (Marke) | **VIDEKO Küchen** | `BRAND.name` |
+| Name — externe Einträge | **VIDEKO Küchen eG** | Vorgabe Auftraggeber 2026-08-24, siehe 1.1a |
+| Name — Website-Marke | VIDEKO Küchen | `BRAND.name` |
 | Rechtliche Betreiberin | Süddeutsche Sachwert eG, Grubenweg 4b, 82327 Tutzing | `ACTIVE_OPERATOR` |
 | Studio-Straße | Hertzstraße 4 | `BRAND.studio.street` |
-| PLZ / Ort | 97076 Würzburg (Stadtteil Grombühl) | `BRAND.studio.postalCode/city` |
+| PLZ / Ort | 97076 Würzburg | `BRAND.studio.postalCode/city` — Stadtteil strittig, siehe 2.3 |
 | Land | Deutschland | `BRAND.studio.country` |
 | Telefon | **0160 5545818** (`+491605545818`) | `BRAND.phone` / `BRAND.phoneHref` |
 | E-Mail | info@videko-kuechen.de | `BRAND.contactEmail` |
@@ -26,15 +27,39 @@ gespeist.
 
 ### 1.1 Zwei Punkte, die bei jeder Korrektur mitgedacht werden müssen
 
-**a) „eG" ist derzeit nicht zutreffend.**
-Die *VIDEKO Küchen eG* ist noch **nicht** im Genossenschaftsregister eingetragen
-(siehe Kopfkommentar in `company.js`). Sie darf deshalb nicht als bereits bestehende
-Betreiberin, Vertragspartnerin oder Rechnungsausstellerin dargestellt werden. Die
-Website führt konsequent den Marken-/Geschäftsbereichsnamen **„VIDEKO Küchen"** —
-ohne Rechtsformzusatz. Mehrere externe Einträge tragen dagegen „VIDEKO Küchen eG"
-bzw. „Videko Küchen eG". Das ist keine reine SEO-Frage, sondern potenziell eine
-Firmierungsfrage. Empfehlung: extern überall auf **„VIDEKO Küchen"** vereinheitlichen,
-bis eine Eintragung tatsächlich vorliegt.
+**a) Zwei Namen mit unterschiedlichem Geltungsbereich - beide korrekt.**
+
+*Korrigiert am 2026-08-24 auf ausdrückliche Vorgabe des Auftraggebers. Die frühere
+Empfehlung dieses Dokuments, den Rechtsformzusatz extern zu entfernen, ist damit
+aufgehoben.*
+
+| Geltungsbereich | Sollname | Begründung |
+| --- | --- | --- |
+| **Externe Einträge** (Google Business Profile, Verzeichnisse, Social Media) | **VIDEKO Küchen eG** | Vorgabe des Auftraggebers: "Der korrekte Unternehmensname lautet ausdrücklich: VIDEKO Küchen eG. Das 'eG' ist richtig und darf NICHT entfernt werden." |
+| **Website-Marke** (Header, Footer, Fließtext, `BRAND.name`) | VIDEKO Küchen | Marken-/Geschäftsbereichsname, bewusst ohne Rechtsformzusatz |
+| **Impressum / Vertrags- und Rechnungsebene** (`ACTIVE_OPERATOR`) | Süddeutsche Sachwert eG, Grubenweg 4b, 82327 Tutzing | Amtsgericht München GnR 2855, am 2026-08-24 über northdata.de verifiziert |
+
+Diese Trennung bleibt bestehen und wird durch die Namenskorrektur **nicht** berührt:
+Ein Verzeichniseintrag benennt den Betrieb vor Ort, das Impressum benennt die
+Vertragspartnerin. Beides darf verschieden sein.
+
+**Offen und dokumentationspflichtig:** Eine Registerrecherche am 2026-08-24 über
+`northdata.de` (Suche "VIDEKO", deutschlandweit) hat **keinen** deutschen Register-
+eintrag zu einer "VIDEKO Küchen eG" gefunden - die Treffer sind ausschließlich
+ausländische Gesellschaften (Belgien, Finnland, Österreich, Slowakei). Der
+Kopfkommentar in `company.js` (Stand 2026-07) geht ebenfalls von einer noch nicht
+erfolgten Eintragung aus. Solange das so ist, gilt: Der Name **VIDEKO Küchen eG**
+wird als Betriebs-/Standortbezeichnung in Verzeichnissen geführt, aber **nicht** als
+Betreiberin, Vertragspartnerin, Zahlungsempfängerin oder Rechnungsausstellerin
+dargestellt. `ACTIVE_OPERATOR` wurde deshalb **nicht** umgestellt - das ist eine
+rechtliche Entscheidung, keine SEO-Maßnahme.
+
+*Nachtrag 2026-08-24:* Auf der selbst gepflegten LinkedIn-Unternehmensseite schreibt das
+Unternehmen ausdrücklich "VIDEKO Küchen ist eine Genossenschaft" und gibt als Gründungsjahr
+2026 an. Das erklärt den northdata-Befund plausibel - eine Eintragung aus dem laufenden Jahr
+ist dort oft noch nicht erfasst - und stützt die Vorgabe des Auftraggebers zum Namen. Es
+ersetzt aber keinen Registerauszug. Die obige Trennung bleibt deshalb unverändert bestehen.
+Siehe auch `docs/GBP-NAP-ARBEITSBERICHT-2026-08-24.md`.
 
 **b) Öffnungszeiten sind nicht freigegeben.**
 Im gesamten Repository sind **keine** verbindlichen Öffnungszeiten hinterlegt; es
@@ -151,7 +176,7 @@ wurden bewusst **nicht** in Variablen aufgelöst — das ist Copy, keine Datenha
 
 | Feld | Sollwert laut Website | Zu prüfen |
 | --- | --- | --- |
-| Unternehmensname | **VIDEKO Küchen** | Steht dort „VIDEKO Küchen eG"? Dann auf „VIDEKO Küchen" ändern (Rechtsform noch nicht eingetragen, siehe 1.1a). |
+| Unternehmensname | **VIDEKO Küchen eG** | Am 2026-08-24 live geprüft: Das Profil führt bereits „VIDEKO Küchen eG“. Korrekt, bleibt unverändert (siehe 1.1a). |
 | Primäre Kategorie | **Küchenstudio** (`Kitchen furniture store` / „Küchenmöbelgeschäft") | Ist die primäre Kategorie gesetzt und passend? Sie hat den größten Einfluss auf das lokale Ranking. |
 | Weitere Kategorien | Küchenplaner, Innenausstatter, Möbelgeschäft, Tischler/Schreiner (nur soweit tatsächlich zutreffend) | Nur echte Leistungen eintragen — nichts aufzählen, was nicht angeboten wird. |
 | Adresse | Hertzstraße 4, 97076 Würzburg | Exakte Schreibweise inkl. „Hertzstraße" (nicht „Hertzstr."); Pin-Position im Kartendienst prüfen (Geolokal meldet fehlende Koordinaten). |

@@ -31,6 +31,13 @@ export const SITE = {
  */
 export const SOCIAL_PROFILES = [
   { key: 'instagram', label: 'Instagram', url: 'https://instagram.com/videko.kuechen' },
+  // LinkedIn und XING am 2026-08-24 live verifiziert: beide Seiten führen
+  // „VIDEKO Küchen eG", Hertzstraße 4 / 97076 Würzburg und info@videko-kuechen.de,
+  // LinkedIn zusätzlich Dennis Himmel als Beschäftigten. Damit sind sie als offizielle
+  // Profile belegt und gehören in `sameAs`.
+  // Siehe docs/GBP-NAP-ARBEITSBERICHT-2026-08-24.md, Abschnitt 3.
+  { key: 'linkedin', label: 'LinkedIn', url: 'https://www.linkedin.com/company/videko-kuechen-eg' },
+  { key: 'xing', label: 'XING', url: 'https://www.xing.com/pages/videko-kuechen-eg' },
   // { key: 'facebook',  label: 'Facebook',  url: null },  // offen – nicht raten
   // { key: 'tiktok',    label: 'TikTok',    url: null },  // offen – nicht raten
 ]
