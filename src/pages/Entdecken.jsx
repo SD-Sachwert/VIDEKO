@@ -1,15 +1,30 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowUpRight, MapPin } from 'lucide-react'
+import { useLenis } from 'lenis/react'
+import {
+  ArrowUpRight,
+  ChefHat,
+  Coffee,
+  DoorOpen,
+  Droplets,
+  LayoutGrid,
+  Lightbulb,
+  MapPin,
+} from 'lucide-react'
 
 import Reveal from '../components/Reveal.jsx'
 import LazyVideo from '../components/LazyVideo.jsx'
+import LazyBg from '../components/LazyBg.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import { BRAND } from '../data/company.js'
 import {
+  DRUECK_NICHT,
   ENTDECKEN_CONFIG,
+  ENTDECKEN_FORTSCHRITT,
   ENTDECKEN_SOCIALS,
   ENTDECKEN_SPOTIFY,
+  ENTDECKEN_SPOTIFY_KACHEL,
+  FORTSCHRITT_HINWEIS,
   STUDIO_ADRESSE,
   STUDIO_MAPS_URL,
 } from '../data/entdecken.js'
@@ -25,16 +40,24 @@ import {
  * KEIN eigenes Tracking und wertet keine Parameter aus — angehaengte
  * UTM-Parameter stoeren sie nicht und werden auch nicht entfernt.
  *
+ * ANSPRUCH
+ * --------
+ * Wer den Code scannt, soll nicht „Infos ueber VIDEKO" lesen, sondern mitten
+ * in der Baustelle stehen. Dramaturgie: hell (Hero, Fortschritt) -> dunkles
+ * Band (Marke, Socials, Easter Egg) -> hell (Standort) -> dunkel (Beratung).
+ * Marmor ist Buehne, Schwarz ist Kontrast, Gold ist Akzent, die echte
+ * Baustelle ist der Inhalt.
+ *
  * AUFBAU
  * ------
- * Hero mit Countdown und Video (alles oben, damit nach dem Scan sofort klar
- * ist, worum es geht und wann aufgemacht wird) -> Socials -> Spotify -> Marke
- * -> Standort -> Beratung.
+ * Hero mit Countdown und Video -> Baufortschritt -> dunkles Band
+ * (Marke, Socials, „Drueck nicht.") -> Standort -> Beratung.
  *
  * Alles Sichtbare kommt aus belegten Quellen: Adresse aus company.js,
- * Social-URLs aus site.js, Eroeffnung und Video aus entdecken.js. Wo eine
- * Angabe fehlt, faellt der Block weg oder zeigt seinen ehrlichen Zustand —
- * nichts wird geschaetzt.
+ * Social-URLs aus site.js, Eroeffnung, Video und Fortschritt aus
+ * entdecken.js. Wo eine Angabe fehlt, faellt der Block weg oder zeigt seinen
+ * ehrlichen Zustand — nichts wird geschaetzt. Insbesondere gibt es KEINE
+ * erfundenen Fortschritts-Prozente (Begruendung in entdecken.js).
  */
 
 /* ------------------------------------------------------------------ *
@@ -129,6 +152,17 @@ const SOCIAL_ICONS = {
   youtube: YoutubeIcon,
   facebook: FacebookIcon,
   linkedin: LinkedinIcon,
+}
+
+// Bereichs-Icons des Baufortschritts — aus lucide, also aus dem bereits
+// vorhandenen Bestand. Keine neue Icon-Library.
+const FORTSCHRITT_ICONS = {
+  ausstellung: LayoutGrid,
+  kuechen: ChefHat,
+  bar: Coffee,
+  empfang: DoorOpen,
+  beleuchtung: Lightbulb,
+  toiletten: Droplets,
 }
 
 /* ------------------------------------------------------------------ *
@@ -256,17 +290,202 @@ function Countdown() {
 }
 
 /* ------------------------------------------------------------------ *
+ * Baufortschritt
+ * ------------------------------------------------------------------ */
+
+const RING_R = 34
+const RING_U = 2 * Math.PI * RING_R
+
+/**
+ * Eine Bereichs-Karte.
+ *
+ * Ohne bestaetigten Wert (`percent === null`) zeigt der Ring bewusst KEINEN
+ * Fuellstand, sondern eine gestrichelte, fuer alle Bereiche identische Spur.
+ * Damit behauptet die Grafik nichts. Sobald in entdecken.js eine echte Zahl
+ * steht, faehrt der Bogen anteilig aus und die Zahl steht in der Mitte.
+ */
+function FortschrittKarte({ bereich, delay }) {
+  const Icon = FORTSCHRITT_ICONS[bereich.icon] || LayoutGrid
+  const hatWert = typeof bereich.percent === 'number' && Number.isFinite(bereich.percent)
+  const anteil = hatWert ? Math.max(0, Math.min(100, bereich.percent)) : 0
+
+  return (
+    <Reveal className="ent-prog" delay={delay}>
+      <span className="ent-prog__ring" aria-hidden="true">
+        <svg viewBox="0 0 80 80" className="ent-prog__svg">
+          <circle className="ent-prog__track" cx="40" cy="40" r={RING_R} />
+          {hatWert ? (
+            <circle
+              className="ent-prog__arc"
+              cx="40"
+              cy="40"
+              r={RING_R}
+              style={{ strokeDasharray: `${(anteil / 100) * RING_U} ${RING_U}` }}
+            />
+          ) : (
+            <circle className="ent-prog__spur" cx="40" cy="40" r={RING_R} />
+          )}
+        </svg>
+        <span className="ent-prog__mid">
+          {hatWert ? (
+            <span className="ent-prog__pct">{anteil}%</span>
+          ) : (
+            <Icon size={21} strokeWidth={1.6} />
+          )}
+        </span>
+      </span>
+      <h3 className="ent-prog__label">{bereich.label}</h3>
+      <p className="ent-prog__status">{bereich.status}</p>
+      <p className="ent-prog__note">{bereich.note}</p>
+    </Reveal>
+  )
+}
+
+/* ------------------------------------------------------------------ *
+ * „Drueck nicht."
+ * ------------------------------------------------------------------ */
+
+/**
+ * Reines Spassmodul. Kein Audio, kein Modal, keine Confetti-Library, kein
+ * Tracking, keine Speicherung. Der Zaehler lebt nur in dieser Session — beim
+ * Neuladen faengt er wieder bei null an, und genau das ist gewollt.
+ *
+ * Der Startzustand ist absichtlich leer: vorgerendertes HTML und erster
+ * Render im Browser muessen identisch sein (siehe useRestzeit oben).
+ */
+function DrueckNicht() {
+  const [zaehler, setZaehler] = useState(0)
+  const [meldung, setMeldung] = useState(null)
+  const [puls, setPuls] = useState(false)
+  const timer = useRef(null)
+
+  useEffect(() => () => clearTimeout(timer.current), [])
+
+  const druecken = useCallback(() => {
+    setZaehler((n) => n + 1)
+
+    const ziel = new Date(ENTDECKEN_CONFIG.openingDate).getTime()
+    const tage = Number.isFinite(ziel) ? Math.max(0, Math.ceil((ziel - Date.now()) / 86400000)) : 0
+    const fertig = (t) => t.replace('{tage}', String(tage))
+
+    setMeldung((vorher) => {
+      const liste = DRUECK_NICHT.meldungen
+      let text = liste[Math.floor(Math.random() * liste.length)]
+      // Nicht zweimal hintereinander dieselbe Zeile — das wirkt wie ein Bug.
+      if (liste.length > 1 && fertig(text) === vorher) {
+        text = liste[(liste.indexOf(text) + 1) % liste.length]
+      }
+      return fertig(text)
+    })
+
+    setPuls(true)
+    clearTimeout(timer.current)
+    timer.current = setTimeout(() => setPuls(false), 640)
+  }, [])
+
+  return (
+    <div className="ent-egg">
+      <span className="kicker kicker--gold">Nicht anfassen</span>
+      <h2 className="ent-h2 ent-egg__h2">{DRUECK_NICHT.label}</h2>
+      <p className="ent-egg__sub">{DRUECK_NICHT.sub}</p>
+
+      <button type="button" className={`ent-knopf${puls ? ' is-puls' : ''}`} onClick={druecken}>
+        <span className="ent-knopf__halo" aria-hidden="true" />
+        <span className="ent-knopf__cap">Drück nicht</span>
+      </button>
+
+      {/* Hoeflich statt aufdringlich: die Meldung wird angesagt, der Zaehler
+          steht daneben als stiller Text. */}
+      <p className="ent-egg__out" aria-live="polite">
+        {meldung || DRUECK_NICHT.ruhe}
+      </p>
+      <p className="ent-egg__count">{zaehler > 0 ? DRUECK_NICHT.zaehler(zaehler) : ' '}</p>
+    </div>
+  )
+}
+
+/* ------------------------------------------------------------------ *
+ * Standort — abstrakte Kartenflaeche
+ * ------------------------------------------------------------------ */
+
+/**
+ * Bewusst KEIN Karten-API und kein erfundenes Gebaeudefoto: im Repo existiert
+ * kein Bild der Hertzstrasse 4. Stattdessen eine rein dekorative, abstrakte
+ * Stadtflaeche aus SVG — sie behauptet keine Geografie. Die einzige Aussage
+ * macht die Adresse darunter, und die ist belegt (company.js).
+ */
+function Kartenflaeche() {
+  return (
+    <div className="ent-karte">
+      <svg
+        viewBox="0 0 400 320"
+        className="ent-karte__svg"
+        aria-hidden="true"
+        preserveAspectRatio="xMidYMid slice"
+      >
+        <defs>
+          <linearGradient id="entKarteGrund" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#1d1a16" />
+            <stop offset="100%" stopColor="#0a0908" />
+          </linearGradient>
+        </defs>
+        <rect width="400" height="320" fill="url(#entKarteGrund)" />
+        <g className="ent-karte__block">
+          <rect x="18" y="26" width="86" height="58" rx="6" />
+          <rect x="122" y="14" width="112" height="70" rx="6" />
+          <rect x="262" y="30" width="118" height="54" rx="6" />
+          <rect x="18" y="112" width="112" height="76" rx="6" />
+          <rect x="156" y="112" width="84" height="76" rx="6" />
+          <rect x="300" y="112" width="80" height="76" rx="6" />
+          <rect x="18" y="216" width="96" height="82" rx="6" />
+          <rect x="136" y="216" width="126" height="82" rx="6" />
+          <rect x="290" y="216" width="90" height="82" rx="6" />
+        </g>
+        <g className="ent-karte__strasse">
+          <path d="M0 100 H400" />
+          <path d="M0 202 H400" />
+          <path d="M146 0 V320" />
+          <path d="M278 0 V320" />
+        </g>
+        <path className="ent-karte__route" d="M40 300 L40 202 L146 202 L146 152 L252 152" />
+        <circle className="ent-karte__start" cx="40" cy="300" r="4.5" />
+      </svg>
+      <span className="ent-karte__pin" aria-hidden="true">
+        <span className="ent-karte__puls" />
+        <MapPin size={19} strokeWidth={2} />
+      </span>
+      <p className="ent-karte__label">{STUDIO_ADRESSE}</p>
+    </div>
+  )
+}
+
+/* ------------------------------------------------------------------ *
  * Seite
  * ------------------------------------------------------------------ */
 
 export default function Entdecken() {
-  const { video } = ENTDECKEN_CONFIG
+  const { video, texturen } = ENTDECKEN_CONFIG
   const socials = ENTDECKEN_SOCIALS.filter((s) => s.url)
-  const instagram = socials.find((s) => s.key === 'instagram')
+  const lenis = useLenis()
+
+  // Sprung in die Baustelle, ohne die Adresszeile anzufassen: angehaengte
+  // UTM-Parameter bleiben dadurch unveraendert stehen (ein Router-Link mit
+  // #anker wuerde den Query-String verlieren). Ohne JS bleibt der Anker als
+  // normaler #-Link funktionsfaehig.
+  const zurBaustelle = useCallback(
+    (e) => {
+      const el = typeof document !== 'undefined' ? document.getElementById('fortschritt') : null
+      if (!el) return
+      e.preventDefault()
+      if (lenis) lenis.scrollTo(el, { offset: -80 })
+      else el.scrollIntoView({ behavior: 'smooth' })
+    },
+    [lenis]
+  )
 
   return (
     <div className="ent">
-      {/* ---------- Hero + Video ---------- */}
+      {/* ---------- Hero + Countdown + Video ---------- */}
       <section className="ent-hero">
         <span className="ent-hero__glow" aria-hidden="true" />
         <div className="container ent-hero__inner">
@@ -282,25 +501,17 @@ export default function Entdecken() {
               <span className="grad">da was.</span>
             </h1>
             <p className="ent-hero__lead">
-              Noch nicht ganz fertig. Aber langweilig wird&rsquo;s hier definitiv nicht.
+              VIDEKO Küchen entsteht in Würzburg. Ein Studio für echte Küche, ehrliches Handwerk und
+              verdammt gute Gespräche.
             </p>
             {/* Ohne Datum: es steht knapp darunter gross unter den Ziffern.
                 Zweimal derselbe Termin auf einer halben Bildschirmhoehe
                 schwaecht beide Stellen. */}
-            <p className="ent-hero__note">
-              Wir bauen in Würzburg ein Küchenstudio – und nehmen dich von Anfang an mit.
-            </p>
+            <p className="ent-hero__note">Wir nehmen dich von Anfang an mit. Staub inklusive.</p>
             <div className="ent-hero__btns">
-              {instagram && (
-                <CTAButton
-                  href={instagram.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  size="md"
-                >
-                  Auf Instagram
-                </CTAButton>
-              )}
+              <CTAButton href="#fortschritt" onClick={zurBaustelle} size="md">
+                Baustelle betreten
+              </CTAButton>
               <CTAButton to="/beratung" variant="dark" size="md">
                 Küche planen
               </CTAButton>
@@ -332,141 +543,228 @@ export default function Entdecken() {
         </div>
       </section>
 
-      {/* ---------- Socials ---------- */}
-      <section className="ent-sec" id="socials">
+      {/* ---------- Baufortschritt ---------- */}
+      <section className="ent-sec ent-sec--prog" id="fortschritt">
         <div className="container">
-          <Reveal className="ent-head">
-            <span className="kicker">Socials</span>
-            <h2 className="ent-h2">
-              Folge dem <span className="grad">Wahnsinn.</span>
-            </h2>
+          <Reveal className="ent-head ent-head--breit">
+            <div className="ent-head__main">
+              <span className="kicker">Wie weit sind wir?</span>
+              <h2 className="ent-h2">
+                Du kommst gerade
+                <br />
+                <span className="grad">mitten rein.</span>
+              </h2>
+            </div>
             <p className="ent-lead">
-              Überall dieselbe Baustelle – nur anders geschnitten. Such dir aus, wo du zuschaust.
+              Sechs Baustellen, ein Termin. Wir schreiben lieber ehrlich hin, dass etwas im Aufbau
+              ist, als eine hübsche Prozentzahl zu erfinden.
             </p>
           </Reveal>
 
-          <div className="ent-socialgrid">
-            {socials.map((s, i) => {
-              const Icon = SOCIAL_ICONS[s.key]
-              return (
-                <Reveal
-                  key={s.key}
-                  as="a"
-                  delay={Math.min(i, 4) * 0.06}
-                  className={`ent-social ent-social--${s.key}${i === 0 ? ' ent-social--lead' : ''}`}
-                  href={s.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`VIDEKO auf ${s.label} — öffnet in neuem Tab`}
-                >
-                  <span className="ent-social__icon" aria-hidden="true">
-                    {Icon ? <Icon size={22} strokeWidth={1.7} /> : null}
-                  </span>
-                  <span className="ent-social__body">
-                    <span className="ent-social__name">{s.label}</span>
-                    <span className="ent-social__note">{s.note}</span>
-                  </span>
-                  <ArrowUpRight className="ent-social__go" size={20} strokeWidth={1.7} aria-hidden="true" />
-                </Reveal>
-              )
-            })}
+          <div className="ent-proggrid">
+            {ENTDECKEN_FORTSCHRITT.map((b, i) => (
+              <FortschrittKarte key={b.key} bereich={b} delay={Math.min(i, 5) * 0.05} />
+            ))}
           </div>
+
+          <Reveal className="ent-proghint">
+            <span className="ent-proghint__dot" aria-hidden="true" />
+            {FORTSCHRITT_HINWEIS}
+          </Reveal>
         </div>
       </section>
 
-      {/* ---------- Spotify: nur mit belegter Profil-URL ---------- */}
-      {ENTDECKEN_SPOTIFY && (
-        <section className="ent-sec">
+      {/* ---------- Dunkles Band: Marke, Socials, Easter Egg ----------
+          Ein durchgehender Kontrastbereich statt drei einzelner dunkler
+          Abschnitte: eine Flaeche, eine Textur, ein Rhythmus. */}
+      <div className="ent-nacht">
+        <LazyBg className="ent-nacht__tex" image={texturen.nacht} aria-hidden="true" />
+        <span className="ent-nacht__schleier" aria-hidden="true" />
+
+        {/* Marke */}
+        <section className="ent-band">
           <div className="container">
-            <Reveal
-              as="a"
-              className="ent-spotify"
-              href={ENTDECKEN_SPOTIFY}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="VIDEKO auf Spotify anhören — öffnet in neuem Tab"
-            >
-              <span className="ent-spotify__icon" aria-hidden="true">
-                <SpotifyIcon size={30} />
-              </span>
-              <span className="ent-spotify__body">
-                <span className="kicker">Musik</span>
-                <span className="ent-spotify__title">VIDEKO klingt übrigens auch so.</span>
-                <span className="ent-spotify__note">Eigene Musik. Auf Spotify anhören.</span>
-              </span>
-              <ArrowUpRight className="ent-social__go" size={22} strokeWidth={1.7} aria-hidden="true" />
+            <Reveal className="ent-brand">
+              <span className="kicker kicker--gold">Was VIDEKO ist</span>
+              <h2 className="ent-h2">
+                Nicht nur ein <span className="grad">Küchenstudio.</span>
+              </h2>
+              <div className="ent-brand__cols">
+                <p className="ent-brand__text">
+                  Wir bauen in Würzburg ein Küchenstudio. Gleichzeitig bauen wir eine Marke, einen
+                  Shop und ungefähr zehn Dinge, die noch keinen richtigen Namen haben.
+                </p>
+                <p className="ent-brand__text">
+                  Das meiste davon passiert öffentlich: Planung, Umbau, Fortschritt, Staub und
+                  gelegentlich Chaos. Wer will, schaut zu.
+                </p>
+              </div>
+              <ul className="ent-chips">
+                {['Küche', 'Umbau', 'Planung', 'Chaos', 'Fortschritt'].map((c) => (
+                  <li className="ent-chip" key={c}>
+                    {c}
+                  </li>
+                ))}
+              </ul>
             </Reveal>
           </div>
         </section>
-      )}
 
-      {/* ---------- Marke ---------- */}
-      <section className="ent-sec ent-sec--dark">
-        <div className="container">
-          <Reveal className="ent-brand">
-            <span className="kicker kicker--gold">Was VIDEKO ist</span>
-            <h2 className="ent-h2">
-              Nicht nur ein <span className="grad">Küchenstudio.</span>
-            </h2>
-            <p className="ent-brand__text">
-              Wir bauen in Würzburg ein Küchenstudio. Gleichzeitig bauen wir eine Marke, einen Shop
-              und ungefähr zehn Dinge, die noch keinen richtigen Namen haben.
-            </p>
-            <p className="ent-brand__text">
-              Das meiste davon passiert öffentlich: Planung, Umbau, Fortschritt, Staub und
-              gelegentlich Chaos. Wer will, schaut zu.
-            </p>
-            <ul className="ent-chips">
-              {['Küche', 'Umbau', 'Planung', 'Chaos', 'Fortschritt'].map((c) => (
-                <li className="ent-chip" key={c}>
-                  {c}
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-        </div>
-      </section>
+        {/* Socials */}
+        <section className="ent-band" id="socials">
+          <div className="container">
+            <Reveal className="ent-head ent-head--breit">
+              <div className="ent-head__main">
+                <span className="kicker kicker--gold">Socials</span>
+                <h2 className="ent-h2">
+                  Folge dem
+                  <br />
+                  <span className="grad">Wahnsinn.</span>
+                </h2>
+              </div>
+              <p className="ent-lead">
+                Behind the Scenes, Baufortschritt und echte Einblicke. Ungefiltert.
+              </p>
+            </Reveal>
+
+            <div className="ent-socialgrid">
+              {socials.map((s, i) => {
+                const Icon = SOCIAL_ICONS[s.key]
+                return (
+                  <Reveal
+                    key={s.key}
+                    as="a"
+                    delay={Math.min(i, 4) * 0.06}
+                    className={`ent-social ent-social--${s.key}${i === 0 ? ' ent-social--lead' : ''}`}
+                    href={s.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`VIDEKO auf ${s.label} — öffnet in neuem Tab`}
+                  >
+                    <span className="ent-social__ghost" aria-hidden="true">
+                      {Icon ? <Icon size={170} /> : null}
+                    </span>
+                    <span className="ent-social__icon" aria-hidden="true">
+                      {Icon ? <Icon size={24} /> : null}
+                    </span>
+                    <span className="ent-social__body">
+                      <span className="ent-social__name">{s.label}</span>
+                      <span className="ent-social__note">{s.note}</span>
+                    </span>
+                    <span className="ent-social__cta">
+                      Ansehen
+                      <ArrowUpRight size={16} strokeWidth={2} aria-hidden="true" />
+                    </span>
+                  </Reveal>
+                )
+              })}
+
+              {/* Spotify: nur mit belegter Profil-URL verlinkt. Solange keine
+                  existiert, bleibt die Kachel sichtbar, aber deaktiviert —
+                  statt eine URL zu erfinden (Begruendung in site.js). */}
+              {ENTDECKEN_SPOTIFY ? (
+                <Reveal
+                  as="a"
+                  delay={0.3}
+                  className="ent-social ent-social--spotify"
+                  href={ENTDECKEN_SPOTIFY}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="VIDEKO auf Spotify — öffnet in neuem Tab"
+                >
+                  <span className="ent-social__ghost" aria-hidden="true">
+                    <SpotifyIcon size={170} />
+                  </span>
+                  <span className="ent-social__icon" aria-hidden="true">
+                    <SpotifyIcon size={24} />
+                  </span>
+                  <span className="ent-social__body">
+                    <span className="ent-social__name">{ENTDECKEN_SPOTIFY_KACHEL.label}</span>
+                    <span className="ent-social__note">{ENTDECKEN_SPOTIFY_KACHEL.note}</span>
+                  </span>
+                  <span className="ent-social__cta">
+                    Anhören
+                    <ArrowUpRight size={16} strokeWidth={2} aria-hidden="true" />
+                  </span>
+                </Reveal>
+              ) : (
+                <Reveal delay={0.3} className="ent-social ent-social--spotify is-aus">
+                  <span className="ent-social__ghost" aria-hidden="true">
+                    <SpotifyIcon size={170} />
+                  </span>
+                  <span className="ent-social__icon" aria-hidden="true">
+                    <SpotifyIcon size={24} />
+                  </span>
+                  <span className="ent-social__body">
+                    <span className="ent-social__name">{ENTDECKEN_SPOTIFY_KACHEL.label}</span>
+                    <span className="ent-social__note">{ENTDECKEN_SPOTIFY_KACHEL.note}</span>
+                  </span>
+                  <span className="ent-social__badge">{ENTDECKEN_SPOTIFY_KACHEL.badge}</span>
+                </Reveal>
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* Easter Egg */}
+        <section className="ent-band ent-band--egg">
+          <div className="container">
+            <Reveal className="ent-eggwrap">
+              <DrueckNicht />
+            </Reveal>
+          </div>
+        </section>
+      </div>
 
       {/* ---------- Standort ---------- */}
-      <section className="ent-sec" id="komm-vorbei">
+      <section className="ent-sec ent-sec--ort" id="komm-vorbei">
         <div className="container">
-          <Reveal className="ent-ort">
-            <span className="kicker">Standort</span>
-            <h2 className="ent-h2">
-              Komm <span className="grad">vorbei.</span>
-            </h2>
-            <address className="ent-ort__adr">
-              {BRAND.studio.street}
-              <br />
-              {BRAND.studio.postalCode} {BRAND.studio.city}
-            </address>
-            <p className="ent-ort__note">Noch Baustelle. Die Adresse stimmt aber schon.</p>
-            <div className="ent-ort__btns">
-              <CTAButton href={STUDIO_MAPS_URL} target="_blank" rel="noopener noreferrer" size="md">
-                <span className="ent-ort__btnlabel">
-                  <MapPin size={17} strokeWidth={1.9} aria-hidden="true" /> Route starten
-                </span>
-              </CTAButton>
-              <Link className="ent-link" to="/studio">
-                Was im Studio entsteht
-              </Link>
-            </div>
-          </Reveal>
+          <div className="ent-ort">
+            <Reveal className="ent-ort__copy">
+              <span className="kicker">Standort</span>
+              <h2 className="ent-h2 ent-ort__h2">
+                Schön hier.
+                <br />
+                Aber warst du schon mal in der <span className="grad">Hertzstraße 4</span>?
+              </h2>
+              <address className="ent-ort__adr">
+                {BRAND.studio.street}
+                <br />
+                {BRAND.studio.postalCode} {BRAND.studio.city}
+              </address>
+              <p className="ent-ort__note">Noch Baustelle. Die Adresse stimmt aber schon.</p>
+              <div className="ent-ort__btns">
+                <CTAButton href={STUDIO_MAPS_URL} target="_blank" rel="noopener noreferrer">
+                  <span className="ent-ort__btnlabel">
+                    <MapPin size={17} strokeWidth={1.9} aria-hidden="true" /> Route starten
+                  </span>
+                </CTAButton>
+                <Link className="ent-link" to="/studio">
+                  Was im Studio entsteht
+                </Link>
+              </div>
+            </Reveal>
+
+            <Reveal className="ent-ort__media" delay={0.08}>
+              <Kartenflaeche />
+            </Reveal>
+          </div>
         </div>
       </section>
 
       {/* ---------- Beratung ---------- */}
-      <section className="ent-sec ent-final">
+      <section className="ent-final">
+        <LazyBg className="ent-final__tex" image={texturen.finale} aria-hidden="true" />
+        <span className="ent-final__schleier" aria-hidden="true" />
         <div className="container">
           <Reveal className="ent-final__inner">
-            <span className="kicker">Schon jetzt</span>
+            <span className="kicker kicker--gold">Schon jetzt</span>
             <h2 className="ent-h2">
-              Schon eine Küche <span className="grad">im Kopf?</span>
+              Du willst nicht nur
+              <br />
+              <span className="grad">zuschauen?</span>
             </h2>
-            <p className="ent-lead">
-              Dann fang nicht bei Pinterest an. Erzähl uns, was du vorhast – den Rest sortieren wir
-              gemeinsam.
-            </p>
+            <p className="ent-lead">Dann lass uns über deine Küche sprechen.</p>
             <div className="ent-final__btns">
               <CTAButton to="/beratung">Beratung starten</CTAButton>
               <Link className="ent-link" to="/leistungen">

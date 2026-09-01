@@ -1,61 +1,123 @@
-/**
- * Werte der Entdecken-Seite (/entdecken).
- *
- * WOZU
- * ----
- * /entdecken ist das Ziel der gedruckten QR-Codes. Die Codes zeigen NICHT auf
- * diese Route, sondern auf go.videko-kuechen.de/<slug>; dort wird der Scan
- * gezaehlt und danach hierher weitergeleitet. Diese Seite braucht davon nichts
- * zu wissen — sie muss nur normal funktionieren, auch mit angehaengten
- * UTM-Parametern. Es gibt hier deshalb bewusst keine Tracking-Logik.
- *
- * WAS HIER STEHT
- * --------------
- * Nur Werte, die sich ohne Code-Aenderung verschieben koennen: Eroeffnung und
- * Video. Adresse kommt aus company.js, Social-URLs aus site.js — beides bleibt
- * die einzige Quelle, hier wird nichts dupliziert.
- */
 import { BRAND } from './company.js'
 import { SOCIAL_PROFILES, socialUrl } from './site.js'
-
 import entdeckenVideo from '../assets/images/studio/bilder/Umbau.mp4'
 import entdeckenPoster from '../assets/images/studio/bilder/02_intro_showroom_hell.webp'
+import texturNacht from '../assets/images/studio/bilder/08_split_section_showroom_gross.webp'
+import texturFinale from '../assets/images/studio/bilder/10_final_cta_studio_banner.webp'
 
+/**
+ * Einzige Quelle der Wahrheit fuer /entdecken.
+ *
+ * /entdecken ist das dauerhafte Ziel der Offline-QR-Codes (Aufkleber, Stadtfest,
+ * Taschen, Banner). Alles, was sich waehrend der Bauphase aendert, steht hier —
+ * nicht in der Seite. Social-URLs bleiben in `site.js`, die Adresse in
+ * `company.js`. Keine Duplikate.
+ */
 export const ENTDECKEN_CONFIG = {
-  /**
-   * Eroeffnungstermin als ISO-String MIT Zeitzone.
-   *
-   * 01.12.2026, Europe/Berlin — im Dezember gilt MEZ, also +01:00. Der Offset
-   * gehoert zwingend dazu: ohne ihn wuerde der Browser die Angabe als UTC
-   * lesen und in Deutschland eine Stunde zu spaet zaehlen.
-   *
-   * Dieser Wert ist die einzige Quelle fuer Zaehlung UND Klartext-Datum auf
-   * /entdecken; das ausgeschriebene Datum wird daraus formatiert, nicht
-   * daneben gepflegt. `null` bleibt als ehrlicher Notfall-Zustand moeglich
-   * (siehe Entdecken.jsx), ist aber nicht mehr der Normalfall.
-   */
+  // Eroeffnungstermin. Bestaetigt. Nicht raten, nicht verschieben.
   openingDate: '2026-12-01T00:00:00+01:00',
-
-  /**
-   * Video im Hero. Umbau.mp4 ist das einzige Motiv im Projekt, das den
-   * Studio-Aufbau zeigt — und mit 1,8 MB / 11 s das leichteste. Es ist 16:9
-   * (1280x720). Der Rahmen auf /entdecken bleibt deshalb bewusst breit
-   * (4:3 mobil, 16:9 ab Tablet): ein hochformatiger Ausschnitt wuerde vom
-   * vorhandenen Bild rund die Haelfte wegschneiden. Sobald ein echtes
-   * 9:16-Motiv existiert: hier tauschen und den Rahmen anpassen.
-   */
+  // Einziges echtes Baustellen-Motiv im Repo. Kein Stock, kein Fake.
   video: {
     src: entdeckenVideo,
     poster: entdeckenPoster,
     label: 'Studio im Aufbau',
   },
+  // Dezente Texturen fuer die dunklen Baender. Eigene Studio-Renderings, stark
+  // abgedunkelt und rein als Flaeche — sie behaupten keinen Bauzustand.
+  texturen: {
+    nacht: texturNacht,
+    finale: texturFinale,
+  },
 }
 
 /**
- * Reihenfolge und Kurztext der Social-Kacheln. Die URL kommt aus site.js —
- * Plattformen ohne belegte Adresse werden nicht gerendert, damit keine toten
- * Kacheln entstehen. Spotify hat einen eigenen Block und fehlt hier deshalb.
+ * Baufortschritt.
+ *
+ * WICHTIG — bewusst keine Prozentzahlen:
+ * Fuer keinen dieser Bereiche liegt ein bestaetigter Fortschrittswert vor.
+ * Erfundene Prozente waeren eine Behauptung gegenueber jedem, der den QR-Code
+ * scannt. Deshalb steht ueberall `percent: null` und ein ehrlicher Status.
+ *
+ * Sobald echte Werte feststehen, hier eintragen:
+ *   percent: 60           -> Ring fuellt sich anteilig, Zahl erscheint im Ring
+ *   percent: null         -> neutraler Status-Ring, keine Zahl
+ *   status: 'Fast fertig' -> freier Text, erscheint als Pille unter dem Titel
+ *
+ * `note` ist Ton, keine Aussage ueber den Bauzustand.
  */
+export const ENTDECKEN_FORTSCHRITT = [
+  {
+    key: 'ausstellung',
+    label: 'Ausstellung',
+    icon: 'ausstellung',
+    percent: null,
+    status: 'Im Aufbau',
+    note: 'Hier stehen bald Küchen, die du anfassen darfst.',
+  },
+  {
+    key: 'kuechen',
+    label: 'Küchen',
+    icon: 'kuechen',
+    percent: null,
+    status: 'Im Aufbau',
+    note: 'Hier wird’s heiß. Demnächst.',
+  },
+  {
+    key: 'bar',
+    label: 'Bar',
+    icon: 'bar',
+    percent: null,
+    status: 'Im Aufbau',
+    note: 'Kaffee fließt noch nicht. Ideen schon.',
+  },
+  {
+    key: 'empfang',
+    label: 'Empfang',
+    icon: 'empfang',
+    percent: null,
+    status: 'Im Aufbau',
+    note: 'Der erste Eindruck braucht noch einen Moment.',
+  },
+  {
+    key: 'beleuchtung',
+    label: 'Beleuchtung',
+    icon: 'beleuchtung',
+    percent: null,
+    status: 'Im Aufbau',
+    note: 'Wir bringen Licht ins Dunkel.',
+  },
+  {
+    key: 'toiletten',
+    label: 'Toiletten',
+    icon: 'toiletten',
+    percent: null,
+    status: 'Im Aufbau',
+    note: 'Fast fertig. Fast. Wie immer.',
+  },
+]
+
+export const FORTSCHRITT_HINWEIS = 'Ändert sich öfter als uns lieb ist.'
+
+/**
+ * Easter Egg „Drück nicht.“
+ * Reiner Spass, nur in der Session. Keine Datenbank, kein Tracking, keine API.
+ * `{tage}` wird zur Laufzeit durch die verbleibenden Tage ersetzt.
+ */
+export const DRUECK_NICHT = {
+  label: 'Drück nicht.',
+  sub: 'Es passiert eh nichts … oder?',
+  ruhe: 'Der Knopf tut nichts. Versprochen.',
+  meldungen: [
+    'Zu spät. Jetzt bist du Teil der Baustelle.',
+    'Nichts passiert. Genau wie versprochen.',
+    'Das war der teuerste Button auf dieser Seite.',
+    'Du hast wirklich gedrückt. Stark.',
+    'Noch {tage} Tage. Danke für den zusätzlichen Druck.',
+    'Immer noch nichts. Aber schön, dass du bleibst.',
+  ],
+  zaehler: (n) => `Du hast ihn ${n}-mal gedrückt.`,
+}
+
 const SOCIAL_TEXTE = {
   instagram: 'Baustelle, Küchen, Alltag. Der direkteste Draht zu uns.',
   tiktok: 'Kurz, schnell, ungefiltert.',
@@ -66,7 +128,6 @@ const SOCIAL_TEXTE = {
 
 const SOCIAL_REIHENFOLGE = ['instagram', 'tiktok', 'youtube', 'facebook', 'linkedin']
 
-/** Alle Plattformen inkl. der unbestaetigten — fuer Anzeige-Entscheidungen. */
 export const ENTDECKEN_SOCIALS = SOCIAL_REIHENFOLGE.map((key) => {
   const profil = SOCIAL_PROFILES.find((p) => p.key === key)
   return {
@@ -77,14 +138,15 @@ export const ENTDECKEN_SOCIALS = SOCIAL_REIHENFOLGE.map((key) => {
   }
 })
 
-/** Spotify separat: eigener Block, aber nur mit belegter Profil-URL. */
+// Spotify ist bewusst nicht bestaetigt (siehe site.js). Solange keine echte URL
+// existiert, erscheint die Kachel deaktiviert — statt eine URL zu erfinden.
 export const ENTDECKEN_SPOTIFY = socialUrl('spotify')
+export const ENTDECKEN_SPOTIFY_KACHEL = {
+  key: 'spotify',
+  label: 'Spotify',
+  note: 'Der Baustellen-Soundtrack. Kommt, wenn er steht.',
+  badge: 'Bald',
+}
 
-/**
- * Kartenlink ohne API und ohne Key — identisch zu dem, was der Footer schon
- * benutzt. Die Adresse selbst kommt aus company.js, nicht aus einer Kopie.
- */
 export const STUDIO_ADRESSE = `${BRAND.studio.street}, ${BRAND.studio.postalCode} ${BRAND.studio.city}`
-export const STUDIO_MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-  STUDIO_ADRESSE
-)}`
+export const STUDIO_MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(STUDIO_ADRESSE)}`
