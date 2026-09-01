@@ -27,8 +27,9 @@ import {
  *
  * AUFBAU
  * ------
- * Hero mit Video (beides oben, damit nach dem Scan sofort klar ist, worum es
- * geht) -> Countdown -> Socials -> Spotify -> Marke -> Standort -> Beratung.
+ * Hero mit Countdown und Video (alles oben, damit nach dem Scan sofort klar
+ * ist, worum es geht und wann aufgemacht wird) -> Socials -> Spotify -> Marke
+ * -> Standort -> Beratung.
  *
  * Alles Sichtbare kommt aus belegten Quellen: Adresse aus company.js,
  * Social-URLs aus site.js, Eroeffnung und Video aus entdecken.js. Wo eine
@@ -233,10 +234,11 @@ function Countdown() {
     { wert: ziffern(sekunden), label: sekunden === 1 ? 'Sekunde' : 'Sekunden' },
   ]
 
+  // Reihenfolge bewusst: erst die Ziffern, dann die Erklaerung. Der Zaehler
+  // steht im Hero und ist dort das Auffaelligste — ein Kicker oder eine
+  // Ueberschrift davor wuerde ihn wieder zu einer Beschriftung machen.
   return (
     <div className="ent-count">
-      <span className="kicker">Noch</span>
-      <h2 className="ent-count__title">Bis wir aufmachen.</h2>
       <div className="ent-count__grid" aria-live="off">
         {einheiten.map((e) => (
           <div className="ent-count__unit" key={e.label}>
@@ -245,6 +247,7 @@ function Countdown() {
           </div>
         ))}
       </div>
+      <h2 className="ent-count__title">Bis wir aufmachen.</h2>
       <p className="ent-count__foot">
         Eröffnung am <strong className="ent-count__date">{EROEFFNUNG_LABEL}</strong>
       </p>
@@ -281,14 +284,11 @@ export default function Entdecken() {
             <p className="ent-hero__lead">
               Noch nicht ganz fertig. Aber langweilig wird&rsquo;s hier definitiv nicht.
             </p>
+            {/* Ohne Datum: es steht knapp darunter gross unter den Ziffern.
+                Zweimal derselbe Termin auf einer halben Bildschirmhoehe
+                schwaecht beide Stellen. */}
             <p className="ent-hero__note">
               Wir bauen in Würzburg ein Küchenstudio – und nehmen dich von Anfang an mit.
-              {EROEFFNUNG_LABEL && (
-                <>
-                  {' '}
-                  Aufgemacht wird am <strong className="ent-hero__date">{EROEFFNUNG_LABEL}</strong>.
-                </>
-              )}
             </p>
             <div className="ent-hero__btns">
               {instagram && (
@@ -307,6 +307,15 @@ export default function Entdecken() {
             </div>
           </div>
 
+          {/* Countdown direkt unter dem Hero-Text — nicht als eigener,
+              spaeter Abschnitt. Auf 390px liegt er damit im ersten Screen,
+              ab 900px in der linken Spalte neben dem Video (Raster in
+              styles.css). Bewusst ohne Reveal: der Block ist sofort sichtbar
+              und darf nicht erst eingeblendet werden. */}
+          <div className="ent-hero__count" id="eroeffnung">
+            <Countdown />
+          </div>
+
           <div className="ent-hero__media">
             <div className="ent-vid">
               <LazyVideo
@@ -320,15 +329,6 @@ export default function Entdecken() {
               <span className="ent-vid__tag">{video.label}</span>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* ---------- Countdown ---------- */}
-      <section className="ent-sec ent-sec--band" id="eroeffnung">
-        <div className="container">
-          <Reveal>
-            <Countdown />
-          </Reveal>
         </div>
       </section>
 

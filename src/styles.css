@@ -14192,9 +14192,8 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
    darin.
 
    Rhythmus der Seite:
-     hell (Hero auf Gold-Marmor) -> dunkles Video als Kontrast im Hero
-     -> helles Cremeband (Countdown) -> hell (Socials)
-     -> EIN dunkler Markenblock -> hell (Standort)
+     hell (Hero auf Gold-Marmor: Text, Countdown, dunkles Video als Kontrast)
+     -> hell (Socials) -> EIN dunkler Markenblock -> hell (Standort)
      -> helle Marmorkarte (Beratung) -> globaler dunkler Footer.
    Marmor/hell ist die Basis, Schwarz der Kontrast, Gold nur Akzent.
 
@@ -14248,6 +14247,9 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
     linear-gradient(78deg, transparent 0 44%, rgba(201, 160, 80, 0.2) 44.5%, transparent 45%),
     linear-gradient(64deg, transparent 0 70%, rgba(139, 107, 56, 0.14) 70.4%, transparent 71%);
 }
+/* Drei Kinder in der Reihenfolge Text -> Countdown -> Video. Auf dem Handy
+   ist das genau die gewuenschte Lesefolge und der Zaehler liegt im ersten
+   Screen; ab 900px verteilt ein Flaechenraster sie auf zwei Spalten. */
 .ent-hero__inner { position: relative; display: grid; gap: 30px; }
 .ent-hero__title {
   font-family: var(--serif);
@@ -14271,7 +14273,6 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   line-height: 1.65;
   color: var(--ink-soft);
 }
-.ent-hero__date { color: var(--bronze); font-weight: 700; white-space: nowrap; }
 .ent-hero__btns { display: flex; flex-wrap: wrap; gap: 12px; }
 
 /* Umbau.mp4 ist 1280x720. Ein hochformatiger Rahmen (4:5) schnitt davon
@@ -14327,13 +14328,6 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
 /* ---------- Sektionen ---------- */
 .ent-sec { position: relative; padding: clamp(48px, 9vw, 88px) 0; }
 
-/* Helles Cremeband — traegt den Countdown, ohne den Marmor zu verdecken. */
-.ent-sec--band {
-  background: linear-gradient(180deg, rgba(255, 253, 248, 0.72), rgba(246, 241, 231, 0.52));
-  border-top: 1px solid rgba(201, 160, 80, 0.3);
-  border-bottom: 1px solid rgba(201, 160, 80, 0.3);
-}
-
 /* Der EINE dunkle Block der Seite: der Markenabschnitt. Gleiche Machart wie
    `.section--dark`, damit er nicht wie ein Fremdkoerper wirkt. */
 .ent-sec--dark {
@@ -14354,9 +14348,7 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(184, 149, 79, 0.6), transparent);
 }
-.ent-sec--band::before,
 .ent-sec--dark::before,
-.ent-sec--band + .ent-sec::before,
 .ent-sec--dark + .ent-sec::before { content: none; }
 
 .ent-h2 {
@@ -14407,17 +14399,24 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
 .ent-sec--dark .ent-link:hover::after { background: rgba(244, 239, 228, 0.6); }
 
 /* ---------- Countdown ----------
-   Keine Kaesten mehr: eine offene Zeile zwischen zwei feinen Goldlinien,
-   getrennt durch Goldhaarlinien. Die Zahlen tragen den Kontrast (Anthrazit
-   auf Marmor), Gold bleibt Akzent. Sekunden laufen mit, deshalb sind
-   Versalziffern mit fester Breite hier Pflicht — sonst springt die Zeile
-   im Sekundentakt. */
-.ent-count { text-align: center; }
+   Sitzt im Hero, nicht in einem eigenen Abschnitt: kein Band, kein Kasten —
+   zwei feine Goldlinien und Goldhaarlinien zwischen den Einheiten tragen ihn
+   direkt auf dem Marmor. Reihenfolge im Markup und damit optisch: erst die
+   grossen Ziffern, darunter zwei kleine Zeilen (Erklaerung, Termin). Die
+   Zahlen tragen den Kontrast (Anthrazit auf Marmor), Gold bleibt Akzent.
+   Sekunden laufen mit, deshalb sind Versalziffern mit fester Breite hier
+   Pflicht — sonst springt die Zeile im Sekundentakt. */
+.ent-hero__count { position: relative; }
+/* Linksbuendig wie der Hero-Text darueber; nur die Ziffern stehen mittig in
+   ihrer Spalte, sonst haengen sie schief unter den Trennlinien. */
+.ent-count { text-align: left; }
+/* Nicht mehr die Ueberschrift des Zaehlers, sondern die Erklaerung darunter:
+   deutlich kleiner als die Ziffern, damit die Gewichtung stimmt. */
 .ent-count__title {
   font-family: var(--serif);
-  font-size: clamp(1.9rem, 7.6vw, 2.7rem);
-  line-height: 1.06;
-  margin: 0 0 26px;
+  font-size: clamp(1.3rem, 5.4vw, 1.75rem);
+  line-height: 1.12;
+  margin: 18px 0 0;
   color: var(--ink);
 }
 .ent-count__grid {
@@ -14425,12 +14424,12 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   grid-template-columns: repeat(4, 1fr);
   gap: 0;
   max-width: 620px;
-  margin: 0 auto;
-  padding: clamp(20px, 5vw, 30px) 0;
-  border-top: 1px solid rgba(184, 149, 79, 0.42);
-  border-bottom: 1px solid rgba(184, 149, 79, 0.42);
+  margin: 0;
+  padding: clamp(16px, 4.4vw, 26px) 0;
+  border-top: 1px solid rgba(184, 149, 79, 0.5);
+  border-bottom: 1px solid rgba(184, 149, 79, 0.5);
 }
-.ent-count__unit { position: relative; padding: 2px 2px 0; }
+.ent-count__unit { position: relative; padding: 2px 2px 0; text-align: center; }
 /* Goldhaarlinie zwischen den Einheiten statt vier Rahmen. */
 .ent-count__unit + .ent-count__unit::before {
   content: "";
@@ -14444,9 +14443,10 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
 .ent-count__num {
   display: block;
   font-family: var(--serif);
-  /* 11vw: bei 390px Breite bleiben pro Spalte ~79px, zwei Versalziffern
-     brauchen davon rund 44px — genug Luft, auch mit vier Einheiten. */
-  font-size: clamp(2.2rem, 11vw, 3.5rem);
+  /* 15.5vw: bei 390px Breite (Container-Padding 22px) bleiben pro Spalte
+     ~86px, zwei Versalziffern brauchen davon rund 62px — die Ziffern duerfen
+     hier dominieren, ohne dass die vier Einheiten kollidieren. */
+  font-size: clamp(3rem, 15.5vw, 4.8rem);
   line-height: 1;
   letter-spacing: -0.015em;
   /* Cormorant setzt Ziffern standardmaessig als Mediaevalziffern: die 1 sieht
@@ -14457,18 +14457,23 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   font-feature-settings: "lnum" 1, "tnum" 1;
   color: var(--ink);
 }
+/* Klar untergeordnet, aber lesbar: neben 60px-Ziffern wirken 9px wie ein
+   Druckfehler, deshalb 0.64rem statt 0.56rem. */
 .ent-count__lab {
   display: block;
   margin-top: 10px;
-  font-size: 0.56rem;
+  font-size: 0.64rem;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--ink-soft);
 }
-.ent-count__foot { margin: 24px 0 0; font-size: 0.88rem; color: var(--ink-soft); }
+.ent-count__foot { margin: 7px 0 0; font-size: 0.88rem; color: var(--ink-soft); }
 .ent-count__date { color: var(--bronze); font-weight: 700; white-space: nowrap; }
-.ent-count--offen .ent-count__foot { max-width: 34ch; margin-inline: auto; line-height: 1.6; }
+/* Der Sonderfall ohne Ziffern (Datum fehlt / Termin erreicht) hat keine
+   Zahlenreihe, die tragen koennte — dort bleibt die Zeile die Ueberschrift. */
+.ent-count--offen .ent-count__title { font-size: clamp(1.9rem, 7.6vw, 2.7rem); margin: 0 0 12px; }
+.ent-count--offen .ent-count__foot { max-width: 34ch; line-height: 1.6; }
 
 /* ---------- Socials ---------- */
 .ent-socialgrid { display: grid; gap: 12px; }
@@ -14676,12 +14681,25 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   .ent-social--lead .ent-social__icon svg { width: 27px; height: 27px; }
   .ent-social--lead .ent-social__name { font-size: 1.3rem; }
   .ent-social--lead .ent-social__note { font-size: 0.9rem; }
-  .ent-count__lab { font-size: 0.62rem; letter-spacing: 0.2em; }
+  .ent-count__lab { font-size: 0.7rem; letter-spacing: 0.2em; }
 }
 
 @media (min-width: 900px) {
   .ent-hero { padding-top: 182px; }
-  .ent-hero__inner { grid-template-columns: 1.04fr 0.96fr; align-items: center; gap: 56px; }
+  /* Text und Countdown links untereinander, Video rechts ueber beide Reihen.
+     So bleibt der Zaehler nah am Hero und liegt auf 1440x900 komplett im
+     ersten Screen — als eigene Zeile unter dem Video waere er es nicht. */
+  .ent-hero__inner {
+    grid-template-columns: 1.04fr 0.96fr;
+    grid-template-areas:
+      "copy media"
+      "count media";
+    align-items: start;
+    gap: 36px 56px;
+  }
+  .ent-hero__copy { grid-area: copy; }
+  .ent-hero__count { grid-area: count; }
+  .ent-hero__media { grid-area: media; align-self: center; }
   .ent-hero__title { font-size: clamp(3.6rem, 4.8vw, 5rem); }
   /* Zweispaltig: 4:3 balanciert die Textspalte aus, ohne wie 1:1 wieder
      ein Viertel der Bildbreite abzuschneiden. */
@@ -14689,12 +14707,14 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   .ent-head { margin-bottom: 34px; }
   .ent-social { padding: 20px; }
   .ent-spotify { padding: 28px 26px; }
-  /* Auf dem Desktop traegt der Zaehler die Sektion allein — kleine Ziffern
-     wirken dort verloren. Mehr Breite, groessere Versalziffern, mehr Luft. */
-  .ent-count__grid { padding: 40px 0; max-width: 760px; }
-  .ent-count__num { font-size: clamp(3.4rem, 4.2vw, 4.6rem); }
-  .ent-count__lab { margin-top: 14px; }
-  .ent-count__foot { margin-top: 30px; font-size: 0.95rem; }
+  /* Der Zaehler fuellt die linke Hero-Spalte aus. Neben einer 5rem-Zeile
+     "Wir bauen da was." duerfen die Ziffern nicht kleiner wirken als die
+     Ueberschrift — deshalb 5.4vw statt 4.2vw. */
+  .ent-count__grid { padding: 30px 0; max-width: none; }
+  .ent-count__num { font-size: clamp(3.8rem, 5.4vw, 6rem); }
+  .ent-count__lab { margin-top: 13px; font-size: 0.72rem; }
+  .ent-count__title { font-size: clamp(1.5rem, 1.9vw, 2rem); margin-top: 22px; }
+  .ent-count__foot { margin-top: 9px; font-size: 0.95rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
