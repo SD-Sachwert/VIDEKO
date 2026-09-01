@@ -48,6 +48,8 @@ const KuechenNachMass = lazy(() => import('./pages/KuechenNachMass.jsx'))
 const Arbeitsplatten = lazy(() => import('./pages/Arbeitsplatten.jsx'))
 const KuechenmontageWuerzburg = lazy(() => import('./pages/KuechenmontageWuerzburg.jsx'))
 const Team = lazy(() => import('./pages/Team.jsx'))
+// Ziel der gedruckten QR-Codes — wie jede andere Unterseite nachgeladen.
+const Entdecken = lazy(() => import('./pages/Entdecken.jsx'))
 
 export default function App() {
   return (
@@ -72,6 +74,9 @@ export default function App() {
         <Route path="/merch" element={<Merch />} />
         <Route path="/merch/:slug" element={<ProductDetail />} />
         <Route path="/vormerkung-bestaetigen" element={<VormerkungBestaetigen />} />
+
+        {/* Landeseite der Offline-QR-Codes */}
+        <Route path="/entdecken" element={<Entdecken />} />
 
         {/* immersive 3D experience (opt-in route) */}
         <Route path="/experience" element={<Experience />} />

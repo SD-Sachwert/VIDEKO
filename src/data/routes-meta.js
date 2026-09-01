@@ -47,6 +47,7 @@ import inspHero from '../assets/images/inspiration/insp-hero-dark.webp'
 import ogLeistungen from '../assets/images/leistungen/ls-hero.webp'
 import ogAllesAusEinerHand from '../assets/images/inspiration/09_premium_architektur_kueche.webp'
 import ogStudio from '../assets/images/studio/bilder/01_hero_studio_showroom.webp'
+import ogEntdecken from '../assets/images/studio/bilder/02_intro_showroom_hell.webp'
 import ogStylefinder from '../assets/images/stylefinder-assets/01_hero_dark_premium_kitchen.webp'
 import ogPlanung from '../assets/images/shared/hero-kitchen-arch.webp'
 import ogVorherNachher from '../assets/images/vorher-nachher/02_hero_dark_kitchen_banner.webp'
@@ -104,6 +105,17 @@ export const STATIC_ROUTES = [
         'Küche, Elektro, Boden, Wand, Decke und Licht werden gemeinsam geplant. VIDEKO koordiniert die Fachpartner und den Terminplan.',
     },
     faqs: ALLES_AUS_EINER_HAND_FAQS,
+  },
+  {
+    // Ziel der gedruckten QR-Codes (Aufkleber, Flyer, Banner). Die Codes
+    // zeigen auf go.videko-kuechen.de und werden von dort hierher
+    // weitergeleitet — die Route selbst ist eine ganz normale Unterseite.
+    path: '/entdecken',
+    title: 'VIDEKO entdecken | Küchen, Socials & mehr',
+    description:
+      'VIDEKO baut in Würzburg ein Küchenstudio. Hier gibt es das Video vom Umbau, den Stand der Eröffnung, unsere Socials und den Weg zur Beratung.',
+    crumb: 'Entdecken',
+    ogImage: ogEntdecken,
   },
   {
     path: '/studio',

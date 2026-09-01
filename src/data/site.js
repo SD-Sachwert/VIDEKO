@@ -25,12 +25,24 @@ export const SITE = {
  * Bestätigte Social-Profile.
  *
  * NUR belegte URLs eintragen. Ein geratenes Profil in `sameAs` verknüpft die
- * Marke im Zweifel mit einem fremden Account. Facebook, TikTok, LinkedIn und
- * YouTube sind derzeit NICHT bestätigt und bleiben deshalb bewusst leer; die
- * Struktur ist so gebaut, dass eine bestätigte URL nur ergänzt werden muss.
+ * Marke im Zweifel mit einem fremden Account. Jede Adresse hier wurde direkt am
+ * Profil geprüft, nicht aus einem Suchtreffer übernommen:
+ *
+ * - instagram  Profiltitel „VIDEKO Küchen (@videko.kuechen)“.
+ * - tiktok     Profil-JSON: uniqueId `videko.kuechen0`, Bio nennt
+ *              „Hertzstraße 4“ und „Eröffnung 2026“.
+ * - youtube    Kanal „VIDEKO“, externalId `UCXGk5hirKY-nEcgFHgxCC4g`. Das
+ *              Handle enthält ein Ü und muss prozentkodiert bleiben; YouTube
+ *              selbst gibt genau diese Form als vanityChannelUrl aus.
+ * - facebook   Seitentitel „Videko Küchen | Würzburg“, Baustellen-Videos.
+ * - linkedin   „VIDEKO Küchen eG“, Hertzstraße 4, 97076 Würzburg.
+ * - xing       „VIDEKO Küchen eG“, gleiche Anschrift und E-Mail.
  */
 export const SOCIAL_PROFILES = [
   { key: 'instagram', label: 'Instagram', url: 'https://instagram.com/videko.kuechen' },
+  { key: 'tiktok', label: 'TikTok', url: 'https://www.tiktok.com/@videko.kuechen0' },
+  { key: 'youtube', label: 'YouTube', url: 'https://www.youtube.com/@VIDEKO.K%C3%9CCHEN' },
+  { key: 'facebook', label: 'Facebook', url: 'https://www.facebook.com/videko.kuechen' },
   // LinkedIn und XING am 2026-08-24 live verifiziert: beide Seiten führen
   // „VIDEKO Küchen eG", Hertzstraße 4 / 97076 Würzburg und info@videko-kuechen.de,
   // LinkedIn zusätzlich Dennis Himmel als Beschäftigten. Damit sind sie als offizielle
@@ -38,9 +50,21 @@ export const SOCIAL_PROFILES = [
   // Siehe docs/GBP-NAP-ARBEITSBERICHT-2026-08-24.md, Abschnitt 3.
   { key: 'linkedin', label: 'LinkedIn', url: 'https://www.linkedin.com/company/videko-kuechen-eg' },
   { key: 'xing', label: 'XING', url: 'https://www.xing.com/pages/videko-kuechen-eg' },
-  // { key: 'facebook',  label: 'Facebook',  url: null },  // offen – nicht raten
-  // { key: 'tiktok',    label: 'TikTok',    url: null },  // offen – nicht raten
+  // NICHT bestätigt. Der Künstler VIDEKO ist eindeutig identifiziert (Apple
+  // Music 1895411542, Deezer 387456961, YouTube-Kanal oben — gleiche Titel,
+  // u. a. „VIDEKO KÜCHEN“ und „NOCH WACH“), die zugehörige
+  // open.spotify.com-Adresse ließ sich aber nicht belegen: Spotify-Suche
+  // erfordert ein Token, Odesli/Songwhip sind abgeschaltet, MusicBrainz kennt
+  // den Künstler nicht, Suchmaschinen haben ihn nicht indexiert. Es gibt
+  // fremde Acts gleichen Namens — deshalb bleibt hier `null` statt eines
+  // geratenen Links. Sobald die Adresse vorliegt: nur hier eintragen.
+  { key: 'spotify', label: 'Spotify', url: null },
 ]
+
+/** Profil-URL zu einem Key — `null`, solange die Adresse nicht belegt ist. */
+export function socialUrl(key) {
+  return SOCIAL_PROFILES.find((p) => p.key === key)?.url || null
+}
 
 /** `sameAs` für schema.org – enthält nur tatsächlich bestätigte Profile. */
 export const SAME_AS = SOCIAL_PROFILES.filter((p) => p.url).map((p) => p.url)

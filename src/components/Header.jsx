@@ -53,7 +53,7 @@ export default function Header() {
   // Seiten, die direkt mit hellem Inhalt beginnen: Der Header braucht dort von
   // Anfang an seinen festen Hintergrund, sonst steht helle Navigation auf Creme.
   const HELLE_SEITEN = [
-    '/impressum', '/datenschutz', '/agb', '/versand-lieferung', '/rueckgabe-widerruf',
+    '/entdecken', '/impressum', '/datenschutz', '/agb', '/versand-lieferung', '/rueckgabe-widerruf',
   ]
   const solidRoute = HELLE_SEITEN.includes(pathname)
 

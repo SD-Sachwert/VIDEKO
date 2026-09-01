@@ -14181,3 +14181,527 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
 .raum-chip { display: inline-flex; align-items: center; gap: 9px; padding: 11px 18px; border-radius: 999px; border: 1px solid var(--line-light); background: rgba(244, 239, 228, 0.05); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.01em; color: var(--cream); }
 .raum-chip svg { color: var(--gold-bright); }
 .raum-sec__cta { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+
+/* =====================================================================
+   /entdecken — Landeseite der Offline-QR-Codes
+   ---------------------------------------------------------------------
+   Eigener, gekapselter Namensraum (.ent-*) — aber KEINE eigene Designwelt:
+   Farben, Schrift, Buttons, Kartenrezept und der Marmor-Untergrund kommen
+   aus denselben Tokens und Mustern wie /leistungen, /studio und /ueber-uns.
+   Die Seite soll wie ein Teil der Website wirken, nicht wie eine Microsite
+   darin.
+
+   Rhythmus der Seite:
+     hell (Hero auf Gold-Marmor) -> dunkles Video als Kontrast im Hero
+     -> helles Cremeband (Countdown) -> hell (Socials)
+     -> EIN dunkler Markenblock -> hell (Standort)
+     -> helle Marmorkarte (Beratung) -> globaler dunkler Footer.
+   Marmor/hell ist die Basis, Schwarz der Kontrast, Gold nur Akzent.
+
+   Drei Dinge, die beim Aendern wichtig sind:
+   - Der Seitenhintergrund kommt aus `body` (Gold-Marmor-Bild + Cremeschleier,
+     siehe :root/body oben). `.ent` setzt deshalb bewusst KEINEN eigenen
+     Hintergrund — genau wie `.section--light` und `.leist-final2--marble`.
+     Kein zweites Marmorbild, keine eigene Textur.
+   - Die Karten sind gleichzeitig .reveal-Elemente. Auf ihnen darf weder
+     `transition` noch `transform` gesetzt werden, sonst kippt die
+     Einblend-Animation aus Reveal.jsx. Hover laeuft deshalb ueber ::before
+     und ueber die Kind-Elemente.
+   - Plattform-Akzente stecken in --sc / --scg und bleiben Andeutung: Icon,
+     Rand, Schimmer. Keine farbigen Flaechen. Die Werte sind fuer hellen
+     Grund abgedunkelt — die Signalfarben der Apps sind auf Creme sonst
+     nicht lesbar.
+   ===================================================================== */
+.ent {
+  position: relative;
+  /* transparent: der Gold-Marmor aus body traegt die ganze Seite */
+  background: transparent;
+  color: var(--ink);
+}
+.ent .kicker { margin-bottom: 12px; }
+
+/* ---------- Hero + Video ---------- */
+/* Heller Einstieg: Marmor aus body, darueber nur ein warmer Goldschleier —
+   dieselbe Machart wie .mgames--marble, aber ohne eigenes Bild. */
+.ent-hero {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(126px, 20vw, 172px) 0 clamp(36px, 6vw, 64px);
+  background: transparent;
+}
+.ent-hero__glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(118% 76% at 84% -8%, rgba(201, 160, 80, 0.22), transparent 58%),
+    radial-gradient(86% 70% at 4% 104%, rgba(201, 160, 80, 0.12), transparent 56%),
+    linear-gradient(180deg, rgba(250, 246, 239, 0.78), rgba(246, 241, 232, 0.34) 52%, transparent);
+}
+/* Feine Goldader wie auf der Merch-Marmorflaeche — reine CSS-Linien, kein Asset. */
+.ent-hero__glow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  background:
+    linear-gradient(78deg, transparent 0 44%, rgba(201, 160, 80, 0.2) 44.5%, transparent 45%),
+    linear-gradient(64deg, transparent 0 70%, rgba(139, 107, 56, 0.14) 70.4%, transparent 71%);
+}
+.ent-hero__inner { position: relative; display: grid; gap: 30px; }
+.ent-hero__title {
+  font-family: var(--serif);
+  font-size: clamp(3rem, 13.5vw, 4.4rem);
+  line-height: 0.94;
+  letter-spacing: -0.02em;
+  margin: 0 0 18px;
+  color: var(--ink);
+}
+.ent-hero__lead {
+  margin: 0 0 12px;
+  max-width: 22ch;
+  font-size: 1.08rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.ent-hero__note {
+  margin: 0 0 26px;
+  max-width: 34ch;
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+.ent-hero__date { color: var(--bronze); font-weight: 700; white-space: nowrap; }
+.ent-hero__btns { display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* Umbau.mp4 ist 1280x720. Ein hochformatiger Rahmen (4:5) schnitt davon
+   rund die Haelfte der Bildbreite weg — Kamerafahrt und Raum waren nicht mehr
+   lesbar. 4:3 laesst gut drei Viertel der Breite stehen und bleibt auf dem
+   Handy trotzdem hoch genug, um zu tragen. Ab Tablet volles 16:9.
+   Das Video bleibt bewusst die dunkle Flaeche der Seite: auf hellem Marmor
+   wirkt es als Kontrast, nicht als Dark Mode. */
+.ent-vid {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 22px;
+  overflow: hidden;
+  background: #0d0c0a;
+  border: 1px solid rgba(201, 160, 80, 0.4);
+  box-shadow:
+    0 48px 92px -46px rgba(90, 66, 20, 0.62),
+    0 2px 0 rgba(255, 255, 255, 0.55);
+}
+.ent-vid__el { display: block; width: 100%; height: 100%; object-fit: cover; }
+.ent-vid__veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(8, 8, 7, 0.04) 42%, rgba(8, 8, 7, 0.72) 100%);
+}
+.ent-vid__tag {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 15px;
+  border-radius: 999px;
+  background: rgba(8, 8, 7, 0.55);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(232, 201, 120, 0.32);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+}
+.ent-vid__tag::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gold-bright);
+  flex: none;
+}
+
+/* ---------- Sektionen ---------- */
+.ent-sec { position: relative; padding: clamp(48px, 9vw, 88px) 0; }
+
+/* Helles Cremeband — traegt den Countdown, ohne den Marmor zu verdecken. */
+.ent-sec--band {
+  background: linear-gradient(180deg, rgba(255, 253, 248, 0.72), rgba(246, 241, 231, 0.52));
+  border-top: 1px solid rgba(201, 160, 80, 0.3);
+  border-bottom: 1px solid rgba(201, 160, 80, 0.3);
+}
+
+/* Der EINE dunkle Block der Seite: der Markenabschnitt. Gleiche Machart wie
+   `.section--dark`, damit er nicht wie ein Fremdkoerper wirkt. */
+.ent-sec--dark {
+  background: radial-gradient(120% 85% at 82% 0%, #201d18 0%, var(--anthracite) 56%, var(--soft-black) 100%);
+  color: var(--cream);
+}
+
+/* Feine Goldlinie zwischen zwei hellen Sektionen — identisch zur globalen
+   Trennlinie zwischen `.section`-Bloecken. Bloecke mit eigener Kante
+   (Band, dunkler Block) brauchen sie nicht. */
+.ent-sec + .ent-sec::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(440px, 46%);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(184, 149, 79, 0.6), transparent);
+}
+.ent-sec--band::before,
+.ent-sec--dark::before,
+.ent-sec--band + .ent-sec::before,
+.ent-sec--dark + .ent-sec::before { content: none; }
+
+.ent-h2 {
+  font-family: var(--serif);
+  font-size: clamp(2.1rem, 8.6vw, 3.2rem);
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+  margin: 0 0 14px;
+}
+.ent-lead {
+  margin: 0;
+  max-width: 46ch;
+  font-size: 0.97rem;
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+.ent-sec--dark .ent-lead { color: rgba(244, 239, 228, 0.66); }
+.ent-head { margin-bottom: 26px; }
+.ent-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  /* 44px hohes Tippziel, ohne dass die Unterlinie vom Text wegrutscht:
+     die Linie liegt als ::after direkt unter der Schrift. */
+  min-height: 44px;
+  padding: 0 2px;
+  color: var(--bronze);
+  text-decoration: none;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.ent-link::after {
+  content: '';
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  top: calc(50% + 0.68em);
+  height: 1px;
+  background: rgba(139, 107, 56, 0.45);
+}
+.ent-link:hover { color: var(--ink); }
+.ent-link:hover::after { background: rgba(34, 31, 26, 0.5); }
+.ent-sec--dark .ent-link { color: var(--gold-bright); }
+.ent-sec--dark .ent-link::after { background: rgba(232, 201, 120, 0.38); }
+.ent-sec--dark .ent-link:hover { color: var(--cream); }
+.ent-sec--dark .ent-link:hover::after { background: rgba(244, 239, 228, 0.6); }
+
+/* ---------- Countdown ----------
+   Keine Kaesten mehr: eine offene Zeile zwischen zwei feinen Goldlinien,
+   getrennt durch Goldhaarlinien. Die Zahlen tragen den Kontrast (Anthrazit
+   auf Marmor), Gold bleibt Akzent. Sekunden laufen mit, deshalb sind
+   Versalziffern mit fester Breite hier Pflicht — sonst springt die Zeile
+   im Sekundentakt. */
+.ent-count { text-align: center; }
+.ent-count__title {
+  font-family: var(--serif);
+  font-size: clamp(1.9rem, 7.6vw, 2.7rem);
+  line-height: 1.06;
+  margin: 0 0 26px;
+  color: var(--ink);
+}
+.ent-count__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  max-width: 620px;
+  margin: 0 auto;
+  padding: clamp(20px, 5vw, 30px) 0;
+  border-top: 1px solid rgba(184, 149, 79, 0.42);
+  border-bottom: 1px solid rgba(184, 149, 79, 0.42);
+}
+.ent-count__unit { position: relative; padding: 2px 2px 0; }
+/* Goldhaarlinie zwischen den Einheiten statt vier Rahmen. */
+.ent-count__unit + .ent-count__unit::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10%;
+  bottom: 10%;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(184, 149, 79, 0.55), transparent);
+}
+.ent-count__num {
+  display: block;
+  font-family: var(--serif);
+  /* 11vw: bei 390px Breite bleiben pro Spalte ~79px, zwei Versalziffern
+     brauchen davon rund 44px — genug Luft, auch mit vier Einheiten. */
+  font-size: clamp(2.2rem, 11vw, 3.5rem);
+  line-height: 1;
+  letter-spacing: -0.015em;
+  /* Cormorant setzt Ziffern standardmaessig als Mediaevalziffern: die 1 sieht
+     dann aus wie ein I, die 9 haengt unter die Grundlinie. Fuer einen Zaehler
+     ist das zu unklar — lnum holt die Versalziffern, tnum haelt die Breite
+     konstant, damit beim Weiterzaehlen nichts springt. */
+  font-variant-numeric: lining-nums tabular-nums;
+  font-feature-settings: "lnum" 1, "tnum" 1;
+  color: var(--ink);
+}
+.ent-count__lab {
+  display: block;
+  margin-top: 10px;
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.ent-count__foot { margin: 24px 0 0; font-size: 0.88rem; color: var(--ink-soft); }
+.ent-count__date { color: var(--bronze); font-weight: 700; white-space: nowrap; }
+.ent-count--offen .ent-count__foot { max-width: 34ch; margin-inline: auto; line-height: 1.6; }
+
+/* ---------- Socials ---------- */
+.ent-socialgrid { display: grid; gap: 12px; }
+.ent-social {
+  --sc: var(--bronze);
+  --scg: rgba(184, 149, 79, 0.45);
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 14px;
+  min-height: 76px;
+  padding: 17px 16px;
+  border-radius: 18px;
+  text-decoration: none;
+  color: var(--ink);
+  /* Kartenrezept der uebrigen Seiten: heller Verlauf, feine dunkle Kante,
+     weicher warmer Schatten. */
+  border: 1px solid var(--line-dark);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.72), rgba(252, 248, 240, 0.5));
+  box-shadow: 0 24px 50px -36px rgba(120, 90, 40, 0.4), 0 1px 0 rgba(255, 255, 255, 0.7) inset;
+}
+.ent-social::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 1px solid transparent;
+  pointer-events: none;
+  transition: border-color 0.3s ease, box-shadow 0.35s ease;
+}
+.ent-social:hover::before { border-color: var(--scg); box-shadow: 0 20px 46px -26px var(--scg); }
+.ent-social__icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  color: var(--sc);
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(168, 127, 58, 0.34);
+  box-shadow: inset 0 0 22px -14px var(--sc);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ent-social:hover .ent-social__icon { transform: translateY(-2px); }
+.ent-social__body { display: grid; gap: 3px; min-width: 0; }
+.ent-social__name { font-weight: 600; font-size: 1rem; color: var(--ink); }
+.ent-social__note { font-size: 0.82rem; line-height: 1.45; color: var(--ink-soft); }
+.ent-social__go {
+  flex: none;
+  color: rgba(43, 41, 37, 0.42);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s ease;
+}
+.ent-social:hover .ent-social__go { color: var(--sc); transform: translate(3px, -3px); }
+
+/* Instagram fuehrt: dieselbe helle Karte, nur mit Goldkante und mehr Gewicht.
+   Bewusst keine schwarze Kachel — der dunkle Akzent der Seite ist der
+   Markenblock, nicht die Social-Liste. */
+.ent-social--lead {
+  min-height: 94px;
+  padding: 21px 18px;
+  border-color: rgba(201, 160, 80, 0.42);
+  background:
+    radial-gradient(110% 90% at 88% 0%, rgba(201, 160, 80, 0.14), transparent 60%),
+    linear-gradient(150deg, rgba(255, 253, 248, 0.9), rgba(247, 240, 226, 0.66));
+  box-shadow: 0 34px 68px -40px rgba(120, 90, 40, 0.5), 0 1px 0 rgba(255, 255, 255, 0.78) inset;
+}
+.ent-social--lead .ent-social__icon { width: 54px; height: 54px; border-radius: 15px; }
+.ent-social--lead .ent-social__name { font-size: 1.14rem; }
+
+/* Auf Creme abgedunkelte Plattformtoene — die Original-Signalfarben
+   (u. a. TikTok-Cyan) verschwinden auf hellem Grund. */
+.ent-social--instagram { --sc: #c1275c; --scg: rgba(193, 39, 92, 0.4); }
+.ent-social--tiktok { --sc: #0e8f8b; --scg: rgba(14, 143, 139, 0.38); }
+.ent-social--youtube { --sc: #cc2222; --scg: rgba(204, 34, 34, 0.38); }
+.ent-social--facebook { --sc: #1a5fd0; --scg: rgba(26, 95, 208, 0.36); }
+.ent-social--linkedin { --sc: #0a66c2; --scg: rgba(10, 102, 194, 0.36); }
+
+/* ---------- Spotify ---------- */
+.ent-spotify {
+  --sc: #12813c;
+  --scg: rgba(18, 129, 60, 0.36);
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 22px 18px;
+  border-radius: 22px;
+  text-decoration: none;
+  color: var(--ink);
+  border: 1px solid var(--line-dark);
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.74), rgba(248, 244, 235, 0.52));
+  box-shadow: 0 28px 56px -38px rgba(120, 90, 40, 0.42), 0 1px 0 rgba(255, 255, 255, 0.7) inset;
+}
+.ent-spotify::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 1px solid transparent;
+  pointer-events: none;
+  transition: border-color 0.3s ease, box-shadow 0.35s ease;
+}
+.ent-spotify:hover::before { border-color: var(--scg); box-shadow: 0 22px 50px -26px var(--scg); }
+.ent-spotify__icon {
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  border-radius: 17px;
+  color: var(--sc);
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(168, 127, 58, 0.34);
+  box-shadow: inset 0 0 28px -16px var(--sc);
+}
+.ent-spotify__body { display: grid; gap: 4px; min-width: 0; }
+.ent-spotify__body .kicker { margin-bottom: 2px; }
+.ent-spotify__title { font-family: var(--serif); font-size: clamp(1.35rem, 5.6vw, 1.9rem); line-height: 1.15; color: var(--ink); }
+.ent-spotify__note { font-size: 0.85rem; color: var(--ink-soft); }
+
+/* ---------- Marke (dunkler Kontrastblock) ---------- */
+.ent-brand__text {
+  margin: 0 0 14px;
+  max-width: 52ch;
+  font-size: 1rem;
+  line-height: 1.72;
+  color: rgba(244, 239, 228, 0.72);
+}
+.ent-chips { list-style: none; display: flex; flex-wrap: wrap; gap: 9px; margin: 24px 0 0; padding: 0; }
+.ent-chip {
+  padding: 9px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(201, 160, 80, 0.3);
+  background: rgba(244, 239, 228, 0.05);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--cream);
+}
+
+/* ---------- Standort ---------- */
+/* Helle Marmorkarte im Kartenrezept der uebrigen Seiten — die Adresse ist
+   der wichtigste Offline-Inhalt der Seite und darf entsprechend stehen. */
+.ent-ort {
+  padding: clamp(26px, 5.5vw, 44px);
+  border-radius: 24px;
+  border: 1px solid var(--line-dark);
+  background:
+    radial-gradient(110% 80% at 90% 6%, rgba(201, 160, 80, 0.13), transparent 58%),
+    linear-gradient(160deg, rgba(255, 253, 248, 0.86), rgba(247, 242, 232, 0.6));
+  box-shadow: 0 44px 88px -48px rgba(120, 90, 40, 0.48), 0 1px 0 rgba(255, 255, 255, 0.75) inset;
+}
+.ent-ort__adr {
+  font-style: normal;
+  font-family: var(--serif);
+  font-size: clamp(1.45rem, 6vw, 2rem);
+  line-height: 1.32;
+  color: var(--ink);
+  /* Hausnummer und PLZ als Versalziffern — Mediaevalziffern lassen "97076"
+     unruhig wirken; eine Adresse muss beim Ueberfliegen stimmen. */
+  font-variant-numeric: lining-nums;
+  font-feature-settings: "lnum" 1;
+  margin: 4px 0 10px;
+}
+.ent-ort__note { margin: 0; font-size: 0.92rem; color: var(--ink-soft); }
+.ent-ort__btns,
+.ent-final__btns {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 22px;
+  margin-top: 26px;
+}
+.ent-ort__btnlabel { display: inline-flex; align-items: center; gap: 9px; }
+
+/* ---------- Beratung ---------- */
+/* Bewusst KEIN dunkles Vollflaechen-Band: direkt darunter folgt der globale
+   Footer-CTA, der genau das schon ist. Zwei gleich aussehende dunkle
+   CTA-Baender hintereinander lesen sich als Dopplung. Stattdessen eine
+   helle, gerahmte Marmorkarte — andere Silhouette, andere Helligkeit, und
+   der Uebergang in den dunklen Footer wird zum Kontrastschritt. */
+.ent-final { text-align: center; padding-bottom: clamp(64px, 10vw, 104px); }
+.ent-final__inner {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: clamp(30px, 6vw, 54px) clamp(22px, 5vw, 46px);
+  border-radius: 26px;
+  border: 1px solid rgba(201, 160, 80, 0.38);
+  background:
+    radial-gradient(120% 80% at 84% 6%, rgba(201, 160, 80, 0.16), transparent 58%),
+    linear-gradient(160deg, rgba(255, 253, 248, 0.92), rgba(245, 238, 226, 0.68));
+  box-shadow: 0 46px 92px -48px rgba(120, 90, 40, 0.52), 0 1px 0 rgba(255, 255, 255, 0.8) inset;
+}
+.ent-final .ent-lead { margin: 0 auto; }
+.ent-final__btns { justify-content: center; }
+
+/* ---------- Breiter ---------- */
+@media (min-width: 620px) {
+  .ent-vid { aspect-ratio: 16 / 9; }
+  .ent-socialgrid { grid-template-columns: 1fr 1fr; gap: 14px; }
+  /* Instagram ist der Kanal, auf dem am meisten passiert: eigene Zeile ueber
+     den vier gleich grossen Kacheln darunter. */
+  .ent-social--lead { grid-column: 1 / -1; min-height: 116px; padding: 26px; gap: 20px; }
+  .ent-social--lead .ent-social__icon { width: 62px; height: 62px; border-radius: 18px; }
+  .ent-social--lead .ent-social__icon svg { width: 27px; height: 27px; }
+  .ent-social--lead .ent-social__name { font-size: 1.3rem; }
+  .ent-social--lead .ent-social__note { font-size: 0.9rem; }
+  .ent-count__lab { font-size: 0.62rem; letter-spacing: 0.2em; }
+}
+
+@media (min-width: 900px) {
+  .ent-hero { padding-top: 182px; }
+  .ent-hero__inner { grid-template-columns: 1.04fr 0.96fr; align-items: center; gap: 56px; }
+  .ent-hero__title { font-size: clamp(3.6rem, 4.8vw, 5rem); }
+  /* Zweispaltig: 4:3 balanciert die Textspalte aus, ohne wie 1:1 wieder
+     ein Viertel der Bildbreite abzuschneiden. */
+  .ent-vid { aspect-ratio: 4 / 3; }
+  .ent-head { margin-bottom: 34px; }
+  .ent-social { padding: 20px; }
+  .ent-spotify { padding: 28px 26px; }
+  /* Auf dem Desktop traegt der Zaehler die Sektion allein — kleine Ziffern
+     wirken dort verloren. Mehr Breite, groessere Versalziffern, mehr Luft. */
+  .ent-count__grid { padding: 40px 0; max-width: 760px; }
+  .ent-count__num { font-size: clamp(3.4rem, 4.2vw, 4.6rem); }
+  .ent-count__lab { margin-top: 14px; }
+  .ent-count__foot { margin-top: 30px; font-size: 0.95rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ent-social::before,
+  .ent-social__icon,
+  .ent-social__go,
+  .ent-spotify::before { transition: none; }
+  .ent-social:hover .ent-social__icon,
+  .ent-social:hover .ent-social__go { transform: none; }
+}

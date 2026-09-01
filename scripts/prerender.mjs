@@ -165,6 +165,7 @@ const SEITEN_MODUL = {
   '/beratung': 'src/pages/Beratung.jsx',
   '/merch': 'src/pages/Merch.jsx',
   '/vormerkung-bestaetigen': 'src/pages/VormerkungBestaetigen.jsx',
+  '/entdecken': 'src/pages/Entdecken.jsx',
   '/experience': 'src/pages/Experience.jsx',
   '/impressum': 'src/pages/Impressum.jsx',
   '/datenschutz': 'src/pages/Datenschutz.jsx',
