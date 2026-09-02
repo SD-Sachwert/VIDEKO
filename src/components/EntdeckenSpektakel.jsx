@@ -93,7 +93,15 @@ const SvgBillard = (
 /* Kaffeemaschine mit Tasse und zwei Dampffahnen. */
 const SvgKaffee = (
   <svg {...svgProps}>
-    <path d="M50 14 q5 -6 0 -12 M62 14 q5 -6 0 -12" stroke={GOLD} strokeWidth="2.6" opacity="0.8" />
+    {/* Der Dampf laeuft waehrend der ganzen Standzeit weiter — die
+        Animation dazu haengt an der Klasse, nicht am Objekt. */}
+    <path
+      className="ent-fly__dampf"
+      d="M50 14 q5 -6 0 -12 M62 14 q5 -6 0 -12"
+      stroke={GOLD}
+      strokeWidth="2.6"
+      opacity="0.8"
+    />
     <rect x="26" y="18" width="52" height="31" rx="6" fill={KORPUS} />
     <rect x="26" y="49" width="13" height="29" fill={KORPUS} />
     <rect x="24" y="78" width="56" height="13" rx="4" fill={KORPUS} />
@@ -173,7 +181,11 @@ export function SpektakelLayer({ objekt, feuer }) {
   return (
     <div className="ent-fly" aria-hidden="true">
       {objekt ? (
-        <div key={objekt.nr} className={`ent-fly__obj ent-fly__obj--${objekt.bahn}`}>
+        <div
+          key={objekt.nr}
+          className={`ent-fly__obj ent-fly__obj--${objekt.bahn}`}
+          style={{ '--dauer': `${objekt.dauer}ms` }}
+        >
           {OBJEKT_SVG[objekt.art]}
         </div>
       ) : null}

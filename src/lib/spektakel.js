@@ -50,7 +50,9 @@ function burstTeile(gross) {
       x: Math.round(Math.cos(winkel) * weite),
       y: Math.round(Math.sin(winkel) * weite * 0.88),
       gr: Math.round((gross ? 7 : 6) + Math.random() * 4),
-      dauer: 800 + Math.round(Math.random() * 240),
+      // Laenger unterwegs und am Ende langsam ausgluehend statt abrupt
+      // weg — die Kurve dazu steht in ent-fw-teil.
+      dauer: (gross ? 1500 : 1150) + Math.round(Math.random() * (gross ? 260 : 220)),
       c1: farbe[0],
       c2: farbe[1],
     })
@@ -59,8 +61,8 @@ function burstTeile(gross) {
 }
 
 /* Mehrere kleine Bursts an unterschiedlichen Stellen im Hero. Der letzte
-   Burst startet spaet genug, dass es nach Kette aussieht, und frueh genug,
-   dass alles unter 1400 ms fertig ist. */
+   Burst startet spaet genug, dass es nach Kette aussieht: klein endet nach
+   rund 1,6 s, gross nach rund 2,1 s. */
 function feuerwerkBauen(gross) {
   const anzahl = gross ? 5 : 3
   const bursts = []
@@ -77,7 +79,7 @@ function feuerwerkBauen(gross) {
   return bursts
 }
 
-const FW_GESAMT = { klein: 1260, gross: 1400 }
+const FW_GESAMT = { klein: 1600, gross: 2120 }
 
 /* ------------------------------------------------------------------ *
  * Auswahl
@@ -143,7 +145,15 @@ export function useSpektakel() {
       if (objTimer.current !== null && !erzwingen) return null
       clearTimeout(objTimer.current)
       lauf.current += 1
-      setObjekt({ nr: lauf.current, art: ereignis.object, bahn: bahn.bahn })
+      // Die Laufzeit geht als CSS-Variable mit an das Element: die drei
+      // Phasen stehen in der Animation in Prozent, die absolute Laenge
+      // bestimmt das Objekt.
+      setObjekt({
+        nr: lauf.current,
+        art: ereignis.object,
+        bahn: bahn.bahn,
+        dauer: bahn.dauer,
+      })
       objTimer.current = setTimeout(() => {
         objTimer.current = null
         setObjekt(null)
@@ -177,6 +187,14 @@ export function useSpektakel() {
     vorgemerkt.current = ereignis || null
   }, [])
 
+  /**
+   * Fliegt gerade ein Objekt? Der Knopf fragt das vor dem Klick ab, um
+   * die Meldung des laufenden Ereignisses stehen zu lassen: Objekt und
+   * Text gehoeren zusammen und duerfen nicht von einem Zwischenklick
+   * ueberschrieben werden. Alles andere am Klick bleibt unberuehrt.
+   */
+  const objektLaeuft = useCallback(() => objTimer.current !== null, [])
+
   const ausloesen = useCallback(
     (n, hatFestenText) => {
       const vor = vorgemerkt.current
@@ -196,6 +214,6 @@ export function useSpektakel() {
     [starten],
   )
 
-  return { objekt, feuer, ausloesen, vormerken }
+  return { objekt, feuer, ausloesen, vormerken, objektLaeuft }
 }
 

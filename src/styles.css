@@ -14507,8 +14507,9 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
    geclippt, ohne Maustreffer. Damit kann nichts davon das Layout
    verschieben oder Scrollbreite erzeugen — das Objekt fliegt innerhalb
    dieses Kastens und wird an seinen Raendern beschnitten. Der Knopf
-   darunter bleibt klickbar. Alles ist nach spaetestens 1,8 s vorbei und
-   verschwindet danach komplett aus dem DOM. */
+   darunter bleibt klickbar. Ein Objekt steht rund 1,5 s gut lesbar im
+   Bild und ist nach spaetestens 3,5 s vorbei; danach verschwindet alles
+   komplett aus dem DOM. */
 
 .ent-fly {
   position: absolute;
@@ -14534,154 +14535,232 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   height: 100%;
 }
 
-/* Vier Bahnen, jedes Objekt bekommt die passende. Die Laufzeiten stehen
-   zusaetzlich in SPEKTAKEL_OBJEKTE — dort raeumt der Timer auf. */
+/* Vier Bahnen, jedes Objekt bekommt die passende. Die Gesamtlaenge kommt
+   pro Objekt aus SPEKTAKEL_OBJEKTE und steht als --dauer am Element; die
+   drei Phasen sind darin feste Anteile:
+
+     0 %  – 22 %  Einflug   (bei 2,75–3,5 s rund 605–770 ms)
+     22 % – 74 %  Halten    (rund 1430–1820 ms, mit kleiner Eigenbewegung)
+     74 % – 100 % Ausflug   (rund 715–910 ms)
+
+   Die Kurven stehen deshalb in den Keyframes selbst und nicht in der
+   Kurzschreibweise — dort steht linear, damit die Phasen sauber sitzen. */
 .ent-fly__obj--quer {
-  animation: ent-fly-quer 1600ms cubic-bezier(0.3, 0.02, 0.3, 1) both;
+  animation: ent-fly-quer var(--dauer, 3000ms) linear both;
 }
 
 .ent-fly__obj--slide {
-  animation: ent-fly-slide 1700ms cubic-bezier(0.24, 0.6, 0.2, 1) both;
+  animation: ent-fly-slide var(--dauer, 3000ms) linear both;
 }
 
 .ent-fly__obj--diagonal {
   top: 7%;
-  animation: ent-fly-diagonal 1400ms cubic-bezier(0.34, 0.06, 0.36, 1) both;
+  animation: ent-fly-diagonal var(--dauer, 3000ms) linear both;
 }
 
 .ent-fly__obj--roll {
   top: 58%;
   width: clamp(84px, 9vw, 132px);
   height: clamp(84px, 9vw, 132px);
-  animation: ent-fly-roll 1250ms cubic-bezier(0.22, 0.5, 0.3, 1) both;
+  animation: ent-fly-roll var(--dauer, 3000ms) linear both;
 }
 
-/* Quer durchs Bild von rechts nach links, mit kurzem Wackler in der
-   Mitte — das ist die Bahn der Spuelmaschine. */
+/* Der Dampf der Kaffeemaschine laeuft waehrend der ganzen Standzeit
+   weiter, damit das Objekt im Halten nicht eingefroren wirkt. */
+.ent-fly__dampf {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: ent-fly-dampf 1500ms ease-in-out infinite;
+}
+
+@keyframes ent-fly-dampf {
+  0%,
+  100% {
+    transform: translateY(0) scaleY(1);
+    opacity: 0.82;
+  }
+  50% {
+    transform: translateY(-5px) scaleY(1.16);
+    opacity: 0.42;
+  }
+}
+
+/* Quer ins Bild von rechts, dann steht das Geraet gut lesbar und wackelt
+   nur leicht — das ist die Bahn der Spuelmaschine. */
 @keyframes ent-fly-quer {
   0% {
     transform: translate3d(112vw, 0, 0) rotate(-9deg);
     opacity: 0;
+    animation-timing-function: cubic-bezier(0.28, 0.58, 0.36, 1);
   }
-  7% {
+  6% {
     opacity: 1;
   }
-  40% {
-    transform: translate3d(56vw, -22px, 0) rotate(7deg);
+  22% {
+    transform: translate3d(42vw, 0, 0) rotate(1.6deg);
+    opacity: 1;
+    animation-timing-function: ease-in-out;
   }
-  50% {
-    transform: translate3d(46vw, 14px, 0) rotate(-4deg);
+  35% {
+    transform: translate3d(41.5vw, -5px, 0) rotate(-1.7deg);
   }
-  58% {
-    transform: translate3d(39vw, -8px, 0) rotate(5deg);
+  48% {
+    transform: translate3d(42.4vw, 3px, 0) rotate(1.8deg);
   }
-  66% {
-    transform: translate3d(32vw, 4px, 0) rotate(-2deg);
+  61% {
+    transform: translate3d(41.7vw, -4px, 0) rotate(-1.3deg);
   }
-  90% {
+  74% {
+    transform: translate3d(42vw, 0, 0) rotate(0deg);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.42, 0.04, 0.66, 0.74);
+  }
+  93% {
     opacity: 1;
   }
   100% {
-    transform: translate3d(-34vw, 10px, 0) rotate(-12deg);
+    transform: translate3d(-34vw, 12px, 0) rotate(-13deg);
     opacity: 0;
   }
 }
 
-/* Faehrt von links herein, setzt sich kurz, faehrt rechts wieder raus. */
+/* Faehrt von links herein, setzt sich mit kurzem Nachfedern und schwebt
+   dann ruhig, bis es rechts wieder rausfaehrt. */
 @keyframes ent-fly-slide {
   0% {
     transform: translate3d(-40vw, 0, 0) rotate(-6deg);
     opacity: 0;
+    animation-timing-function: cubic-bezier(0.28, 0.58, 0.36, 1);
   }
-  8% {
+  7% {
     opacity: 1;
   }
+  22% {
+    transform: translate3d(42vw, -12px, 0) rotate(1.4deg);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.3, 1.4, 0.5, 1);
+  }
   30% {
-    transform: translate3d(30vw, 0, 0) rotate(2deg);
+    transform: translate3d(42vw, 4px, 0) rotate(-0.8deg);
   }
   38% {
-    transform: translate3d(33vw, -10px, 0) rotate(-1deg);
+    transform: translate3d(42vw, -4px, 0) rotate(0.5deg);
   }
   46% {
-    transform: translate3d(31vw, 3px, 0) rotate(1deg);
+    transform: translate3d(42vw, 0, 0) rotate(0deg);
+    animation-timing-function: ease-in-out;
   }
-  62% {
-    transform: translate3d(39vw, 0, 0) rotate(0deg);
+  60% {
+    transform: translate3d(42.2vw, -7px, 0) rotate(0.9deg);
   }
-  92% {
+  74% {
+    transform: translate3d(42vw, 0, 0) rotate(0deg);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.42, 0.04, 0.66, 0.74);
+  }
+  93% {
     opacity: 1;
   }
   100% {
-    transform: translate3d(118vw, -6px, 0) rotate(9deg);
+    transform: translate3d(118vw, -8px, 0) rotate(10deg);
     opacity: 0;
   }
 }
 
-/* Diagonal von oben rechts nach unten links, mit Drehung. */
+/* Diagonal von oben rechts herein, eine volle Drehung im Anflug. Waehrend
+   des Haltens steht das Werkzeug aufrecht und zittert nur leicht, danach
+   dreht es sich beim Abgang nach unten links weiter. */
 @keyframes ent-fly-diagonal {
   0% {
     transform: translate3d(106vw, -40px, 0) rotate(0deg);
     opacity: 0;
+    animation-timing-function: cubic-bezier(0.28, 0.58, 0.36, 1);
   }
-  9% {
+  7% {
     opacity: 1;
+  }
+  22% {
+    transform: translate3d(44vw, 96px, 0) rotate(-360deg);
+    opacity: 1;
+    animation-timing-function: ease-in-out;
+  }
+  36% {
+    transform: translate3d(44vw, 92px, 0) rotate(-363deg);
   }
   50% {
-    transform: translate3d(52vw, 130px, 0) rotate(-192deg);
+    transform: translate3d(44.3vw, 100px, 0) rotate(-357deg);
   }
-  88% {
+  64% {
+    transform: translate3d(43.8vw, 93px, 0) rotate(-362deg);
+  }
+  74% {
+    transform: translate3d(44vw, 96px, 0) rotate(-360deg);
     opacity: 1;
-  }
-  100% {
-    transform: translate3d(-30vw, 290px, 0) rotate(-384deg);
-    opacity: 0;
-  }
-}
-
-/* Rollt von links nach rechts durchs Bild, mit Absprung. */
-@keyframes ent-fly-roll {
-  0% {
-    transform: translate3d(-26vw, 0, 0) rotate(0deg);
-    opacity: 0;
-  }
-  8% {
-    opacity: 1;
-  }
-  46% {
-    transform: translate3d(45vw, -36px, 0) rotate(560deg);
-  }
-  62% {
-    transform: translate3d(62vw, 0, 0) rotate(760deg);
-  }
-  72% {
-    transform: translate3d(72vw, -16px, 0) rotate(880deg);
+    animation-timing-function: cubic-bezier(0.42, 0.04, 0.66, 0.74);
   }
   92% {
     opacity: 1;
   }
   100% {
-    transform: translate3d(112vw, 0, 0) rotate(1180deg);
+    transform: translate3d(-30vw, 300px, 0) rotate(-704deg);
     opacity: 0;
   }
 }
 
-/* Bei reduzierter Bewegung bleibt das Objekt sichtbar, fliegt aber nicht:
-   es taucht mittig auf und geht wieder. Siehe Medienabfrage ganz unten. */
-@keyframes ent-fly-ruhig {
+/* Rollt von links herein, laeuft kurz aus und rollt dann weiter raus. */
+@keyframes ent-fly-roll {
   0% {
-    transform: translate3d(-50%, 14px, 0) scale(0.86);
+    transform: translate3d(-26vw, 0, 0) rotate(0deg);
+    opacity: 0;
+    animation-timing-function: cubic-bezier(0.28, 0.58, 0.36, 1);
+  }
+  7% {
+    opacity: 1;
+  }
+  22% {
+    transform: translate3d(44vw, 0, 0) rotate(700deg);
+    opacity: 1;
+    animation-timing-function: ease-out;
+  }
+  40% {
+    transform: translate3d(45vw, 0, 0) rotate(716deg);
+    animation-timing-function: ease-in-out;
+  }
+  58% {
+    transform: translate3d(44.8vw, -7px, 0) rotate(712deg);
+  }
+  74% {
+    transform: translate3d(45vw, 0, 0) rotate(717deg);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.42, 0.04, 0.66, 0.74);
+  }
+  93% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(112vw, 0, 0) rotate(1420deg);
     opacity: 0;
   }
-  18% {
+}
+
+/* Bei reduzierter Bewegung bleibt das Objekt genauso lange sichtbar, nur
+   ohne Flugweg: einblenden, stehen bleiben, ausblenden. Siehe
+   Medienabfrage ganz unten. */
+@keyframes ent-fly-ruhig {
+  0% {
+    transform: translate3d(-50%, 14px, 0) scale(0.88);
+    opacity: 0;
+  }
+  10% {
     transform: translate3d(-50%, 0, 0) scale(1);
     opacity: 1;
   }
-  72% {
+  84% {
     transform: translate3d(-50%, 0, 0) scale(1);
     opacity: 1;
   }
   100% {
-    transform: translate3d(-50%, 0, 0) scale(1);
+    transform: translate3d(-50%, 0, 0) scale(0.98);
     opacity: 0;
   }
 }
@@ -14759,20 +14838,31 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   }
 }
 
+/* Aufblitzen, weit fliegen, dann ueber ein langes Stueck ausgluehen:
+   die Deckkraft faellt erst spaet und weich, nicht in einem Schritt. */
 @keyframes ent-fw-teil {
   0% {
     transform: translate3d(0, 0, 0) scale(0.4);
     opacity: 0;
   }
-  12% {
-    transform: translate3d(calc(var(--fx) * 0.2), calc(var(--fy) * 0.2), 0) scale(1.15);
+  9% {
+    transform: translate3d(calc(var(--fx) * 0.18), calc(var(--fy) * 0.18), 0) scale(1.15);
     opacity: 1;
   }
-  70% {
+  46% {
+    transform: translate3d(calc(var(--fx) * 0.7), calc(var(--fy) * 0.7), 0) scale(0.94);
     opacity: 1;
+    animation-timing-function: ease-out;
+  }
+  72% {
+    transform: translate3d(calc(var(--fx) * 0.9), calc(var(--fy) * 0.92 + 12px), 0) scale(0.76);
+    opacity: 0.74;
+  }
+  88% {
+    opacity: 0.34;
   }
   100% {
-    transform: translate3d(var(--fx), calc(var(--fy) + 26px), 0) scale(0.5);
+    transform: translate3d(var(--fx), calc(var(--fy) + 30px), 0) scale(0.46);
     opacity: 0;
   }
 }
@@ -16775,13 +16865,19 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   }
 
   /* Das Easter-Egg bleibt sichtbar — nur ohne die grosse Flugbahn: das
-     Objekt taucht mittig auf, der Goldburst faellt deutlich kleiner aus. */
+     Objekt taucht mittig auf und bleibt rund 2,8 s stehen, der Goldburst
+     faellt deutlich kleiner aus. Kurz ist hier nicht das Ziel: man soll
+     den Gag auch ohne Bewegung in Ruhe lesen koennen. */
   .ent-fly .ent-fly__obj {
     left: 50%;
     top: 32%;
     animation-name: ent-fly-ruhig;
-    animation-duration: 1000ms;
+    animation-duration: 2800ms;
     animation-timing-function: ease-out;
+  }
+
+  .ent-fly__dampf {
+    animation: none;
   }
 
   .ent-fly .ent-fw i {

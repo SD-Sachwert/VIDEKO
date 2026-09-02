@@ -455,15 +455,22 @@ export const SPEKTAKEL_GEWICHT = { common: 4, uncommon: 2, rare: 1 }
  * (`ent-fly__obj--<bahn>`), die Laufzeit muss zur zugehoerigen Animation
  * in styles.css passen — danach raeumt die Komponente das Objekt weg.
  */
+/*
+ * Jede Bahn laeuft in drei Phasen, aufgeteilt in festen Anteilen der
+ * Gesamtdauer: rein bis 22 %, halten bis 75 %, raus bis 100 %. Bei den
+ * Werten unten ergibt das rund 620–770 ms Einflug, 1480–1860 ms Hold
+ * und 700–880 ms Ausflug. Die Zahl geht als CSS-Variable an die
+ * Animation und steuert zugleich den Aufraeumtimer.
+ */
 export const SPEKTAKEL_OBJEKTE = {
-  dishwasher: { bahn: 'quer', dauer: 1600 },
-  toilet: { bahn: 'slide', dauer: 1700 },
-  drill: { bahn: 'diagonal', dauer: 1400 },
-  billiard: { bahn: 'roll', dauer: 1250 },
-  coffee: { bahn: 'quer', dauer: 1550 },
-  kitchen: { bahn: 'slide', dauer: 1800 },
-  lamp: { bahn: 'diagonal', dauer: 1500 },
-  toolbox: { bahn: 'quer', dauer: 1450 },
+  dishwasher: { bahn: 'quer', dauer: 3200 },
+  toilet: { bahn: 'slide', dauer: 3200 },
+  drill: { bahn: 'diagonal', dauer: 2800 },
+  billiard: { bahn: 'roll', dauer: 2750 },
+  coffee: { bahn: 'quer', dauer: 3000 },
+  kitchen: { bahn: 'slide', dauer: 3500 },
+  lamp: { bahn: 'diagonal', dauer: 2800 },
+  toolbox: { bahn: 'quer', dauer: 2800 },
 }
 
 /**

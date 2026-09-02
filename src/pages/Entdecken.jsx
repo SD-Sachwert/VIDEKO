@@ -968,7 +968,7 @@ function eggWerte(heute) {
  * (`tonStarten`) — hier entsteht keine zweite Audio-Logik. `onEffekt` meldet
  * dem Hero, welcher kurze Effekt laufen darf.
  */
-function DrueckNicht({ onDruck, onEffekt, onSpektakel }) {
+function DrueckNicht({ onDruck, onEffekt, onSpektakel, onLaeuft }) {
   const heute = useHeute()
   const werte = useMemo(() => eggWerte(heute), [heute])
 
@@ -1013,6 +1013,10 @@ function DrueckNicht({ onDruck, onEffekt, onSpektakel }) {
     // zurueck, damit die passende Meldung dazu erscheint — null heisst:
     // ganz normaler Klick. Der garantierte Knopfdruck weiter unten und
     // alle bestehenden Kurzeffekte bleiben davon unberuehrt.
+    // Vor dem Ausloesen fragen: fliegt gerade noch ein Objekt aus einem
+    // frueheren Klick? Dann bleibt dessen Meldung stehen, damit Text und
+    // Objekt als ein Ereignis lesbar bleiben.
+    const nochUnterwegs = onLaeuft ? onLaeuft() : false
     const ereignis = onSpektakel ? onSpektakel(n, Boolean(fest)) : null
     let roh
     let art
@@ -1035,7 +1039,12 @@ function DrueckNicht({ onDruck, onEffekt, onSpektakel }) {
     }
     letzter.current = roh
 
-    setMeldung({ text: fertig(roh), art, nr: n })
+    // Ein Zwischenklick waehrend eines laufenden Flugs bekommt seine
+    // Effekte und zaehlt normal weiter, ersetzt die Meldung aber nicht.
+    // Ein Meilenstein und ein neues Ereignis duerfen sie ablosen.
+    if (fest || ereignis || !nochUnterwegs) {
+      setMeldung({ text: fertig(roh), art, nr: n })
+    }
 
     // Jeder Druck: Knopf faehrt in den Sockel, Halo blitzt auf, Karte
     // reagiert. Kein Zufall, keine Ausnahme.
@@ -1060,7 +1069,7 @@ function DrueckNicht({ onDruck, onEffekt, onSpektakel }) {
       else basis = [ausListe(EGG_FX_ZUSATZ)]
       onEffekt(ereignis && ereignis.effects ? basis.concat(ereignis.effects) : basis)
     }
-  }, [onDruck, onEffekt, onSpektakel, werte])
+  }, [onDruck, onEffekt, onLaeuft, onSpektakel, werte])
 
   return (
     <div className="ent-egg" ref={eggRef}>
@@ -1220,7 +1229,13 @@ export default function Entdecken() {
   // Die Spektakel-Ebene (fliegende Objekte, Goldfeuerwerk) haelt ihren
   // eigenen Zustand. Sie liegt ueber dem Hero und aendert nichts an den
   // bestehenden Effekten oder an irgendeinem echten Baustellenwert.
-  const { objekt: flugObjekt, feuer: goldFeuer, ausloesen, vormerken } = useSpektakel()
+  const {
+    objekt: flugObjekt,
+    feuer: goldFeuer,
+    ausloesen,
+    vormerken,
+    objektLaeuft,
+  } = useSpektakel()
 
   useEffect(() => {
     const laufend = fxTimer.current
@@ -1332,7 +1347,12 @@ export default function Entdecken() {
           {/* Ebenfalls ohne Reveal — der Knopf muss ohne Scrollen und ohne
               Wartezeit da sein, sonst ist der Gag keiner. */}
           <div className="ent-hero__egg">
-            <DrueckNicht onDruck={tonStarten} onEffekt={effektAus} onSpektakel={ausloesen} />
+            <DrueckNicht
+              onDruck={tonStarten}
+              onEffekt={effektAus}
+              onSpektakel={ausloesen}
+              onLaeuft={objektLaeuft}
+            />
           </div>
 
           <div className="ent-hero__media">
