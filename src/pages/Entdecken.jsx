@@ -1,22 +1,40 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLenis } from 'lenis/react'
-import { ArrowUpRight, ChefHat, Coffee, DoorOpen, Droplets, LayoutGrid, Lightbulb, MapPin } from 'lucide-react'
+import {
+  ArrowUpRight,
+  Bath,
+  ChefHat,
+  DoorOpen,
+  Droplets,
+  LayoutGrid,
+  Lightbulb,
+  MapPin,
+  Martini,
+  ShowerHead,
+  Sofa,
+  Volume2,
+  VolumeX,
+} from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
 import LazyVideo from '../components/LazyVideo.jsx'
 import LazyBg from '../components/LazyBg.jsx'
-import CTAButton from '../components/MagneticButton.jsx'
+import CTAButton from '../components/CTAButton.jsx'
 import { BRAND } from '../data/company.js'
+import { baustellenIndex, heutigerTag, INDEX_BASIS } from '../lib/baustellenindex.js'
 import {
+  BAUSTELLEN_BEREICHE,
+  BAUSTELLEN_TEXTE,
   DRUECK_NICHT,
   ENTDECKEN_CONFIG,
-  ENTDECKEN_FORTSCHRITT,
   ENTDECKEN_SOCIALS,
   ENTDECKEN_SPOTIFY,
   ENTDECKEN_SPOTIFY_KACHEL,
-  FORTSCHRITT_HINWEIS,
+  SOUNDTRACK,
   STUDIO_ADRESSE,
+  STUDIO_KARTE,
   STUDIO_MAPS_URL,
+  STUDIO_ROUTE_URL,
 } from '../data/entdecken.js'
 
 /**
@@ -26,26 +44,26 @@ import {
  * Kein eigenes Tracking, kein Scan-Zaehler, keine Redirect-Logik: der QR-Code
  * zeigt direkt hierher, angehaengte UTM-Parameter bleiben unangetastet stehen.
  *
- * Komposition (Vorgabe: 01_DESIGN_REFERENCE):
- *   Gross, breit, plakativ, dicht. Fuenf Blockformen, jede traegt ihren
- *   Bildschirm allein — kein schmaler Textstrom in einer weiten Flaeche:
- *     1) Hero        hell   — grosse Headline + Countdown links,
- *                             dominantes Video rechts
- *     2) Fortschritt hell   — sechs hochformatige Karten in EINER Reihe
- *     3) Nachtband   dunkel — Marke, sechs grosse Social-Kacheln,
- *                             „Drueck nicht." als breites Bedienfeld
- *     4) Standort    hell   — Text links, grosse Karte rechts, ~50/50
- *     5) Beratung    dunkel — grossflaechiger Abschluss ueber Studio-Motiv
- *   Marmor ist die Buehne, Schwarz der Kontrast, Gold nur Akzent.
+ * Reihenfolge der Seite — hell und dunkel wechseln sich ab, damit jeder Block
+ * seine eigene Buehne bekommt:
+ *   1) Hero            hell   — Headline, CTA, grosser Countdown, grosses Video
+ *   2) Socials         dunkel — direkt nach dem Hero, harter Kontrastwechsel,
+ *                               sechs hochformatige Kacheln
+ *   3) Baustellenindex hell   — automatisch gerechnetes Bau-Dashboard
+ *   4) Marke + Egg     dunkel — wofuer VIDEKO steht, „Drueck nicht."
+ *   5) Standort        hell   — Text links, echte Karte rechts
+ *   6) Beratung        dunkel — grossflaechiger Abschluss
  *
  * Die Seite laeuft in einem eigenen, breiteren Raster (.ent-wide) statt im
  * globalen .container — der ist fuer Fliesstext gebaut und waere hier zu eng.
  * Das globale Raster bleibt davon unberuehrt.
  *
  * Nichts auf dieser Seite behauptet etwas, das nicht belegt ist: keine
- * Prozentzahlen, keine Followerzahlen, keine Bewertungen, keine erfundenen
- * Links, kein Foto der Hertzstrasse. Alle Inhalte stammen aus
- * src/data/entdecken.js, site.js und company.js.
+ * Followerzahlen, keine Bewertungen, keine erfundenen Links, kein erfundenes
+ * Gebaeudefoto. Die Prozente des Baustellenindex sind ausdruecklich als
+ * gerechnetes Stimmungsbarometer gekennzeichnet, nicht als gemessener
+ * Baufortschritt. Alle Inhalte stammen aus src/data/entdecken.js, site.js und
+ * company.js.
  */
 
 /* ------------------------------------------------------------------ *
@@ -141,15 +159,18 @@ const SOCIAL_ICONS = {
   linkedin: LinkedinIcon,
 }
 
-// Bereichs-Icons des Baufortschritts — aus lucide, also aus dem bereits
+// Bereichs-Icons des Baustellenindex — aus lucide, also aus dem bereits
 // vorhandenen Bestand. Keine neue Icon-Library.
-const FORTSCHRITT_ICONS = {
+const BEREICH_ICONS = {
   ausstellung: LayoutGrid,
   kuechen: ChefHat,
-  bar: Coffee,
+  bar: Martini,
   empfang: DoorOpen,
   beleuchtung: Lightbulb,
-  toiletten: Droplets,
+  luxusklo: Bath,
+  dusche: ShowerHead,
+  tropfen: Droplets,
+  aufenthalt: Sofa,
 }
 
 /* ------------------------------------------------------------------ *
@@ -176,6 +197,151 @@ function Goldadern({ seite = 'links' }) {
       <path d="M96 508 L152 470 L196 486" />
       <path d="M22 176 L-14 232" />
     </svg>
+  )
+}
+
+/**
+ * Dunkle Buehne. Die Seite hat davon zwei — einmal fuer die Socials direkt
+ * unter dem Hero, einmal fuer Marke und Easter Egg. Gleiche Textur, gleiche
+ * Adern, damit beide als dasselbe Material lesbar bleiben.
+ */
+function Nachtband({ textur, klasse = '', children }) {
+  return (
+    <div className={`ent-nacht ${klasse}`.trim()}>
+      <LazyBg className="ent-nacht__tex" image={textur} aria-hidden="true" />
+      <span className="ent-nacht__schleier" aria-hidden="true" />
+      <Goldadern seite="links" />
+      <Goldadern seite="rechts" />
+      {children}
+    </div>
+  )
+}
+
+/* ------------------------------------------------------------------ *
+ * Soundtrack
+ * ------------------------------------------------------------------ */
+
+/**
+ * Hintergrundton der Seite.
+ *
+ * Regeln, die hier verdrahtet sind:
+ *   - Es gibt nur eine Quelle: die eigene Datei aus SOUNDTRACK.datei. Steht da
+ *     nichts, existiert der Player nicht — lieber kein Ton als ein kaputter
+ *     Player oder fremdes Audio.
+ *   - Kein Autoplay beim Laden. Browser lehnen das ohne Geste ab, und eine
+ *     abgelehnte play()-Zusage schreibt eine Warnung in die Konsole. Gestartet
+ *     wird erst bei echtem Nutzerwillen: Klick auf „Baustelle betreten", erster
+ *     Zeiger-/Tastendruck oder der Schalter selbst. Reines Scrollen zaehlt
+ *     ausdruecklich nicht.
+ *   - Wer den Ton abschaltet, bekommt ihn nie wieder von selbst: die
+ *     Entscheidung liegt in localStorage und wird vor jedem Start geprueft.
+ *   - Der Speicher wird erst nach der Hydration gelesen (siehe lib/hydration.js
+ *     zum Warum) — der erste Render muss dem vorgerenderten HTML entsprechen.
+ */
+function useSoundtrack() {
+  const verfuegbar = Boolean(SOUNDTRACK.datei)
+  const audioRef = useRef(null)
+  const [an, setAn] = useState(false)
+  const wahl = useRef(null)
+
+  const merken = useCallback((wert) => {
+    wahl.current = wert
+    try {
+      window.localStorage.setItem(SOUNDTRACK.speicher, wert)
+    } catch {
+      /* siehe oben */
+    }
+  }, [])
+
+  const abspielen = useCallback(() => {
+    const el = audioRef.current
+    if (!el) return
+    el.volume = SOUNDTRACK.lautstaerke
+    const zusage = el.play()
+    if (zusage && typeof zusage.then === 'function') {
+      // Lehnt der Browser ab, bleibt es einfach still — keine Fehlermeldung,
+      // kein zweiter Versuch, keine Konsolenausgabe.
+      zusage.then(() => setAn(true)).catch(() => setAn(false))
+    } else {
+      setAn(true)
+    }
+  }, [])
+
+  /** Erster echter Nutzerwille. Startet den Ton, wenn er nicht abgewaehlt ist. */
+  const starten = useCallback(() => {
+    if (!verfuegbar || wahl.current === 'aus') return
+    const el = audioRef.current
+    if (!el || !el.paused) return
+    merken('an')
+    abspielen()
+  }, [verfuegbar, merken, abspielen])
+
+  useEffect(() => {
+    if (!verfuegbar) return
+    // Erst hier — nach der Hydration — darf der Speicher gelesen werden.
+    try {
+      wahl.current = window.localStorage.getItem(SOUNDTRACK.speicher)
+    } catch {
+      // Privater Modus oder gesperrter Speicher — dann eben ohne Gedaechtnis.
+      wahl.current = null
+    }
+    if (wahl.current === 'aus') return
+
+    const los = () => starten()
+    const opt = { once: true, passive: true }
+    // pointerdown und keydown gelten dem Browser als eindeutige Geste.
+    // Scrollen steht hier bewusst nicht — sonst faengt die Seite unaufgefordert
+    // an zu spielen, sobald jemand nur weiterliest.
+    window.addEventListener('pointerdown', los, opt)
+    window.addEventListener('keydown', los, opt)
+    return () => {
+      window.removeEventListener('pointerdown', los)
+      window.removeEventListener('keydown', los)
+    }
+  }, [verfuegbar, starten])
+
+  const umschalten = useCallback(() => {
+    const el = audioRef.current
+    if (!el) return
+    if (el.paused) {
+      merken('an')
+      abspielen()
+    } else {
+      el.pause()
+      setAn(false)
+      merken('aus')
+    }
+  }, [merken, abspielen])
+
+  return { verfuegbar, an, starten, umschalten, audioRef }
+}
+
+/**
+ * Kleiner, dauerhafter Schalter unten rechts. Zeigt den Zustand doppelt an —
+ * Lautsprechersymbol und Klartext — und lebt beim Spielen ueber vier
+ * Equalizer-Balken. Die sind reines CSS, keine Library.
+ */
+function SoundSchalter({ an, umschalten }) {
+  return (
+    <button
+      type="button"
+      className={`ent-sound${an ? ' is-an' : ''}`}
+      onClick={umschalten}
+      aria-pressed={an}
+      aria-label={an ? 'Soundtrack ausschalten' : 'Soundtrack einschalten'}
+      title={SOUNDTRACK.titel}
+    >
+      <span className="ent-sound__icon" aria-hidden="true">
+        {an ? <Volume2 size={17} strokeWidth={1.9} /> : <VolumeX size={17} strokeWidth={1.9} />}
+      </span>
+      <span className="ent-sound__eq" aria-hidden="true">
+        <i />
+        <i />
+        <i />
+        <i />
+      </span>
+      <span className="ent-sound__txt">{an ? SOUNDTRACK.labelAn : SOUNDTRACK.labelAus}</span>
+    </button>
   )
 }
 
@@ -304,58 +470,149 @@ function Countdown() {
 }
 
 /* ------------------------------------------------------------------ *
- * Baufortschritt
+ * VIDEKO-Baustellenindex
  * ------------------------------------------------------------------ */
 
-const RING_R = 34
+const RING_R = 52
 const RING_U = 2 * Math.PI * RING_R
 
+/** `2026-09-02` -> `02.09.2026`. Ohne Intl, damit Build und Browser gleich rechnen. */
+function deutschesDatum(iso) {
+  const [jahr, monat, tag] = iso.split('-')
+  return `${tag}.${monat}.${jahr}`
+}
+
+/** Tagesdifferenz als kleine Plakette. Nur ein Vergleich zu gestern, kein Live-Ticker. */
+function DeltaBadge({ delta, live }) {
+  if (!live) return <span className="ent-idxk__delta" aria-hidden="true" />
+  if (delta > 0) {
+    return <span className="ent-idxk__delta is-plus">+{delta} seit gestern</span>
+  }
+  return <span className="ent-idxk__delta">±0 seit gestern</span>
+}
+
 /**
- * Eine Bereichs-Karte — hochformatig, sechs davon stehen auf dem Desktop in
- * einer Reihe: Icon, Bereichsname, grosser Ring, trockene Zeile.
- *
- * Ohne bestaetigten Wert (`percent === null`) zeigt der Ring bewusst KEINEN
- * Fuellstand, sondern eine gestrichelte, fuer alle Bereiche identische Spur;
- * in seiner Mitte steht der ehrliche Status statt einer erfundenen Zahl.
- * Sobald in entdecken.js eine echte Zahl steht, faehrt der Bogen anteilig aus
- * und die Prozentzahl nimmt den Platz des Status ein.
+ * Eine Bereichskarte des Dashboards: Kopfzeile mit Icon und Bereichsname,
+ * darunter die grosse Zahl mit der Tagesdifferenz, ein Balken, der handgeschriebene
+ * Text des Bereichs und als kleine zweite Zeile die automatische Statusstufe.
  */
-function FortschrittKarte({ bereich, delay }) {
-  const Icon = FORTSCHRITT_ICONS[bereich.icon] || LayoutGrid
-  const hatWert = typeof bereich.percent === 'number' && Number.isFinite(bereich.percent)
-  const anteil = hatWert ? Math.max(0, Math.min(100, bereich.percent)) : 0
+function IndexKarte({ bereich, live, delay }) {
+  const Icon = BEREICH_ICONS[bereich.icon] || LayoutGrid
 
   return (
-    <Reveal className="ent-prog" delay={delay}>
-      <span className="ent-prog__icon" aria-hidden="true">
-        <Icon size={26} strokeWidth={1.5} />
-      </span>
-      <h3 className="ent-prog__label">{bereich.label}</h3>
-      <span className="ent-prog__ring">
-        <svg viewBox="0 0 80 80" className="ent-prog__svg" aria-hidden="true">
-          <circle className="ent-prog__track" cx="40" cy="40" r={RING_R} />
-          {hatWert ? (
-            <circle
-              className="ent-prog__arc"
-              cx="40"
-              cy="40"
-              r={RING_R}
-              style={{ strokeDasharray: `${(anteil / 100) * RING_U} ${RING_U}` }}
-            />
-          ) : (
-            <circle className="ent-prog__spur" cx="40" cy="40" r={RING_R} />
-          )}
-        </svg>
-        <span className="ent-prog__mid">
-          {hatWert ? (
-            <span className="ent-prog__pct">{anteil}%</span>
-          ) : (
-            <span className="ent-prog__status">{bereich.status}</span>
-          )}
+    <Reveal className={`ent-idxk${bereich.akzent ? ' ent-idxk--akzent' : ''}`} delay={delay}>
+      <span className="ent-idxk__kopf">
+        <span className="ent-idxk__icon" aria-hidden="true">
+          <Icon size={20} strokeWidth={1.6} />
         </span>
+        <span className="ent-idxk__label">{bereich.label}</span>
       </span>
-      <p className="ent-prog__note">{bereich.note}</p>
+
+      <span className="ent-idxk__zeile">
+        <span className="ent-idxk__wert">
+          {bereich.prozent}
+          <span className="ent-idxk__pct">%</span>
+        </span>
+        <DeltaBadge delta={bereich.delta} live={live} />
+      </span>
+
+      <span className="ent-idxk__bar">
+        <span className="ent-idxk__fill" style={{ width: `${bereich.prozent}%` }} />
+      </span>
+
+      <p className="ent-idxk__text">{bereich.text}</p>
+      <p className="ent-idxk__stufe">{bereich.stufe}</p>
     </Reveal>
+  )
+}
+
+/**
+ * Das Dashboard.
+ *
+ * Der Tag wird erst im Effekt gesetzt: Das vorgerenderte HTML kennt nur den
+ * Basistag, und genau den rendert auch der erste Durchlauf im Browser — sonst
+ * gaebe es eine Hydrationsdifferenz, sobald jemand die Seite an einem anderen
+ * Tag aufruft als dem, an dem gebaut wurde. Einen Frame spaeter steht das
+ * echte Datum, und alle Werte springen einmalig auf heute.
+ *
+ * Gerechnet wird ausschliesslich in lib/baustellenindex.js — hier steht keine
+ * Zahl, kein Zufall und kein Datum.
+ */
+function BaustellenIndex() {
+  const [tag, setTag] = useState(null)
+
+  useEffect(() => {
+    const messen = () => setTag(heutigerTag())
+    messen()
+    // Wer die Seite ueber Mitternacht offen liegen laesst, bekommt den neuen
+    // Tag mit, ohne neu zu laden.
+    const id = setInterval(messen, 60000)
+    return () => clearInterval(id)
+  }, [])
+
+  const live = tag !== null
+  const daten = useMemo(() => baustellenIndex(BAUSTELLEN_BEREICHE, tag || INDEX_BASIS), [tag])
+  const gefuellt = (daten.gesamt / 100) * RING_U
+
+  return (
+    <>
+      <Reveal className="ent-head ent-head--mitte">
+        <span className="kicker">{BAUSTELLEN_TEXTE.kicker}</span>
+        <h2 className="ent-h2">
+          Der VIDEKO
+          <br />
+          <span className="grad">Baustellenindex.</span>
+        </h2>
+        <p className="ent-lead">{BAUSTELLEN_TEXTE.sub}</p>
+      </Reveal>
+
+      {/* Gesamtindex — Mittelwert aller Bereiche, ebenfalls automatisch. */}
+      <Reveal className="ent-idxg">
+        <span className="ent-idxg__ring">
+          <svg viewBox="0 0 120 120" className="ent-idxg__svg" aria-hidden="true">
+            <circle className="ent-idxg__track" cx="60" cy="60" r={RING_R} />
+            <circle
+              className="ent-idxg__arc"
+              cx="60"
+              cy="60"
+              r={RING_R}
+              style={{ strokeDasharray: `${gefuellt} ${RING_U}` }}
+            />
+          </svg>
+          <span className="ent-idxg__mid">
+            <span className="ent-idxg__num">{daten.gesamt}</span>
+            <span className="ent-idxg__pct">%</span>
+          </span>
+        </span>
+
+        <span className="ent-idxg__text">
+          <span className="kicker kicker--gold">{BAUSTELLEN_TEXTE.gesamtLabel}</span>
+          <span className="ent-idxg__note">{BAUSTELLEN_TEXTE.gesamtNote}</span>
+          <span className="ent-idxg__meta">
+            <span className="ent-idxg__stand">
+              {BAUSTELLEN_TEXTE.standLabel}: {deutschesDatum(daten.tag)}
+            </span>
+            {live && daten.gesamtDelta > 0 ? (
+              <span className="ent-idxg__delta">+{daten.gesamtDelta} seit gestern</span>
+            ) : null}
+          </span>
+          <span className="ent-idxg__hint">{BAUSTELLEN_TEXTE.hinweis}</span>
+        </span>
+      </Reveal>
+
+      <div className="ent-idxgrid">
+        {daten.bereiche.map((b, i) => (
+          <IndexKarte key={b.id} bereich={b} live={live} delay={Math.min(i, 5) * 0.05} />
+        ))}
+      </div>
+
+      {/* Ausdrueckliche Einordnung. Der Index darf lustig sein, aber er darf
+          niemandem einen belegten Baufortschritt vorspielen. */}
+      <Reveal className="ent-idxhint">
+        <span className="ent-idxhint__dot" aria-hidden="true" />
+        {BAUSTELLEN_TEXTE.disclaimer}
+      </Reveal>
+    </>
   )
 }
 
@@ -492,58 +749,57 @@ function DrueckNicht() {
   )
 }
 
+
 /* ------------------------------------------------------------------ *
- * Standort — abstrakte Kartenflaeche
+ * Standort — echte Karte
  * ------------------------------------------------------------------ */
 
 /**
- * Bewusst KEIN Karten-API und kein erfundenes Gebaeudefoto: im Repo existiert
- * kein Bild der Hertzstrasse 4. Stattdessen eine rein dekorative, abstrakte
- * Stadtflaeche aus SVG — sie behauptet keine Geografie. Die einzige Aussage
- * macht die Adresse darunter, und die ist belegt (company.js).
+ * Echte Geografie statt gezeichneter Platzhalterstadt.
+ *
+ * Die Flaeche ist ein selbst gehosteter Kartenausschnitt aus OpenStreetMap
+ * (Zoom 17, Hertzstrasse 4 exakt in der Bildmitte). Bewusst KEIN eingebetteter
+ * Fremd-Frame: unsere Datenschutzerklaerung sagt zu, dass ohne Einwilligung
+ * keine Drittinhalte nachgeladen werden, und /studio dokumentiert dieselbe
+ * Entscheidung. Ein Raster im eigenen Bundle laedt nichts nach, setzt keine
+ * Cookies, braucht keinen API-Key und kann auch nicht ausfallen.
+ *
+ * Weil der Standort in der Bildmitte liegt, sitzt der Pin bei jedem
+ * Seitenverhaeltnis richtig — `object-fit: cover` beschneidet symmetrisch.
  */
 function Kartenflaeche() {
   return (
-    <div className="ent-karte">
-      <svg
-        viewBox="0 0 400 320"
-        className="ent-karte__svg"
-        aria-hidden="true"
-        preserveAspectRatio="none"
-      >
-        <defs>
-          <linearGradient id="entKarteGrund" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#1d1a16" />
-            <stop offset="100%" stopColor="#0a0908" />
-          </linearGradient>
-        </defs>
-        <rect width="400" height="320" fill="url(#entKarteGrund)" />
-        <g className="ent-karte__block">
-          <rect x="18" y="26" width="86" height="58" rx="6" />
-          <rect x="122" y="14" width="112" height="70" rx="6" />
-          <rect x="262" y="30" width="118" height="54" rx="6" />
-          <rect x="18" y="112" width="112" height="76" rx="6" />
-          <rect x="156" y="112" width="84" height="76" rx="6" />
-          <rect x="300" y="112" width="80" height="76" rx="6" />
-          <rect x="18" y="216" width="96" height="82" rx="6" />
-          <rect x="136" y="216" width="126" height="82" rx="6" />
-          <rect x="290" y="216" width="90" height="82" rx="6" />
-        </g>
-        <g className="ent-karte__strasse">
-          <path d="M0 100 H400" />
-          <path d="M0 202 H400" />
-          <path d="M146 0 V320" />
-          <path d="M278 0 V320" />
-        </g>
-        <path className="ent-karte__route" d="M40 300 L40 202 L146 202 L146 152 L252 152" />
-        <circle className="ent-karte__start" cx="40" cy="300" r="4.5" />
-      </svg>
+    <figure className="ent-karte">
+      <img
+        className="ent-karte__bild"
+        src={STUDIO_KARTE.bild}
+        alt={STUDIO_KARTE.alt}
+        width="1200"
+        height="880"
+        loading="lazy"
+        decoding="async"
+      />
+      <span className="ent-karte__vignette" aria-hidden="true" />
       <span className="ent-karte__pin" aria-hidden="true">
         <span className="ent-karte__puls" />
-        <MapPin size={22} strokeWidth={2} />
+        <MapPin size={20} strokeWidth={2.2} />
       </span>
-      <p className="ent-karte__label">{STUDIO_ADRESSE}</p>
-    </div>
+      <figcaption className="ent-karte__fuss">
+        <span className="ent-karte__adr">
+          {BRAND.studio.street}
+          <span className="ent-karte__trenn" aria-hidden="true" />
+          {BRAND.studio.postalCode} {BRAND.studio.city}
+        </span>
+        <a
+          className="ent-karte__quelle"
+          href={STUDIO_KARTE.attributionUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {STUDIO_KARTE.attribution}
+        </a>
+      </figcaption>
+    </figure>
   )
 }
 
@@ -555,24 +811,45 @@ export default function Entdecken() {
   const { video, texturen } = ENTDECKEN_CONFIG
   const socials = ENTDECKEN_SOCIALS.filter((s) => s.url)
   const lenis = useLenis()
+  const { verfuegbar: tonDa, an: tonAn, starten: tonStarten, umschalten: tonUmschalten, audioRef } =
+    useSoundtrack()
 
   // Sprung in die Baustelle, ohne die Adresszeile anzufassen: angehaengte
   // UTM-Parameter bleiben dadurch unveraendert stehen (ein Router-Link mit
   // #anker wuerde den Query-String verlieren). Ohne JS bleibt der Anker als
   // normaler #-Link funktionsfaehig.
+  //
+  // Der Klick ist zugleich die eindeutige Nutzerabsicht, an der der Soundtrack
+  // starten darf — erst Ton, dann Scroll.
   const zurBaustelle = useCallback(
     (e) => {
+      tonStarten()
       const el = typeof document !== 'undefined' ? document.getElementById('fortschritt') : null
       if (!el) return
       e.preventDefault()
       if (lenis) lenis.scrollTo(el, { offset: -80 })
       else el.scrollIntoView({ behavior: 'smooth' })
     },
-    [lenis]
+    [lenis, tonStarten]
   )
 
   return (
     <div className="ent">
+      {/* Der Player wird nur gerendert, wenn wirklich eine eigene Audiodatei
+          im Projekt liegt (SOUNDTRACK.datei). Lieber gar kein Player als ein
+          kaputter — eine fremde Streaming-URL kommt hier nicht rein. */}
+      {tonDa ? (
+        <audio
+          ref={audioRef}
+          src={SOUNDTRACK.datei}
+          loop
+          preload="none"
+          playsInline
+          aria-hidden="true"
+        />
+      ) : null}
+      {tonDa ? <SoundSchalter an={tonAn} umschalten={tonUmschalten} /> : null}
+
       {/* ---------- Hero: Headline + Countdown links, grosses Video rechts ---------- */}
       <section className="ent-hero">
         <span className="ent-hero__glow" aria-hidden="true" />
@@ -627,75 +904,10 @@ export default function Entdecken() {
         </div>
       </section>
 
-      {/* ---------- Baufortschritt: sechs hochformatige Karten in einer Reihe ---------- */}
-      <section className="ent-sec ent-sec--prog" id="fortschritt">
-        <div className="ent-wide">
-          <Reveal className="ent-head ent-head--mitte">
-            <span className="kicker">Wie weit sind wir?</span>
-            <h2 className="ent-h2">
-              Du kommst gerade <span className="grad">mitten rein.</span>
-            </h2>
-            <p className="ent-lead">
-              Sechs Baustellen, ein Termin. Wir schreiben lieber ehrlich hin, dass etwas im Aufbau
-              ist, als eine hübsche Prozentzahl zu erfinden.
-            </p>
-          </Reveal>
-
-          <div className="ent-proggrid">
-            {ENTDECKEN_FORTSCHRITT.map((b, i) => (
-              <FortschrittKarte key={b.key} bereich={b} delay={Math.min(i, 5) * 0.05} />
-            ))}
-          </div>
-
-          <Reveal className="ent-proghint">
-            <span className="ent-proghint__dot" aria-hidden="true" />
-            {FORTSCHRITT_HINWEIS}
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ---------- Dunkles Band: Marke, Socials, Easter Egg ----------
-          Ein durchgehender Kontrastbereich statt drei einzelner dunkler
-          Abschnitte: eine Flaeche, eine Textur, ein Rhythmus. Getragen wird er
-          von grossen Inhalten — keine leeren schwarzen Felder. */}
-      <div className="ent-nacht">
-        <LazyBg className="ent-nacht__tex" image={texturen.nacht} aria-hidden="true" />
-        <span className="ent-nacht__schleier" aria-hidden="true" />
-        <Goldadern seite="links" />
-        <Goldadern seite="rechts" />
-
-        {/* Marke */}
-        <section className="ent-band ent-band--marke">
-          <div className="ent-wide">
-            <Reveal className="ent-brand">
-              <div className="ent-brand__kopf">
-                <span className="kicker kicker--gold">Was VIDEKO ist</span>
-                <h2 className="ent-h2">
-                  Nicht nur ein <span className="grad">Küchenstudio.</span>
-                </h2>
-              </div>
-              <div className="ent-brand__cols">
-                <p className="ent-brand__text">
-                  Wir bauen in Würzburg ein Küchenstudio. Gleichzeitig bauen wir eine Marke, einen
-                  Shop und ungefähr zehn Dinge, die noch keinen richtigen Namen haben.
-                </p>
-                <p className="ent-brand__text">
-                  Das meiste davon passiert öffentlich: Planung, Umbau, Fortschritt, Staub und
-                  gelegentlich Chaos. Wer will, schaut zu.
-                </p>
-              </div>
-              <ul className="ent-chips">
-                {['Küche', 'Umbau', 'Planung', 'Chaos', 'Fortschritt'].map((c) => (
-                  <li className="ent-chip" key={c}>
-                    {c}
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
-          </div>
-        </section>
-
-        {/* Socials */}
+      {/* ---------- Dunkles Band 1: Socials ----------
+          Direkt hinter dem hellen Hero. Der harte Wechsel von Marmor auf
+          Nacht ist der Bruch, der den Abschnitt traegt. */}
+      <Nachtband textur={texturen.nacht}>
         <section className="ent-band ent-band--social" id="socials">
           <div className="ent-wide">
             <Reveal className="ent-head ent-head--hell ent-head--mitte">
@@ -732,6 +944,47 @@ export default function Entdecken() {
             </div>
           </div>
         </section>
+      </Nachtband>
+
+      {/* ---------- Heller Baustellenindex ---------- */}
+      <section className="ent-sec ent-sec--idx" id="fortschritt">
+        <div className="ent-wide">
+          <BaustellenIndex />
+        </div>
+      </section>
+
+      {/* ---------- Dunkles Band 2: Marke + Easter Egg ---------- */}
+      <Nachtband textur={texturen.nacht}>
+        {/* Marke */}
+        <section className="ent-band ent-band--marke">
+          <div className="ent-wide">
+            <Reveal className="ent-brand">
+              <div className="ent-brand__kopf">
+                <span className="kicker kicker--gold">Was VIDEKO ist</span>
+                <h2 className="ent-h2">
+                  Nicht nur ein <span className="grad">Küchenstudio.</span>
+                </h2>
+              </div>
+              <div className="ent-brand__cols">
+                <p className="ent-brand__text">
+                  Wir bauen in Würzburg ein Küchenstudio. Gleichzeitig bauen wir eine Marke, einen
+                  Shop und ungefähr zehn Dinge, die noch keinen richtigen Namen haben.
+                </p>
+                <p className="ent-brand__text">
+                  Das meiste davon passiert öffentlich: Planung, Umbau, Fortschritt, Staub und
+                  gelegentlich Chaos. Wer will, schaut zu.
+                </p>
+              </div>
+              <ul className="ent-chips">
+                {['Küche', 'Umbau', 'Planung', 'Chaos', 'Fortschritt'].map((c) => (
+                  <li className="ent-chip" key={c}>
+                    {c}
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
+          </div>
+        </section>
 
         {/* Easter Egg */}
         <section className="ent-band ent-band--egg">
@@ -741,9 +994,9 @@ export default function Entdecken() {
             </Reveal>
           </div>
         </section>
-      </div>
+      </Nachtband>
 
-      {/* ---------- Standort: Text links, grosse Karte rechts ---------- */}
+      {/* ---------- Standort: Text links, echte Karte rechts ---------- */}
       <section className="ent-sec ent-sec--ort" id="komm-vorbei">
         <div className="ent-wide">
           <div className="ent-ort">
@@ -769,12 +1022,17 @@ export default function Entdecken() {
                 Nähe bist.
               </p>
               <div className="ent-ort__btns">
-                <CTAButton href={STUDIO_MAPS_URL} target="_blank" rel="noopener noreferrer">
-                  Route planen
+                <CTAButton href={STUDIO_ROUTE_URL} target="_blank" rel="noopener noreferrer">
+                  {STUDIO_KARTE.routeCta}
                 </CTAButton>
-                <Link className="ent-link" to="/studio">
-                  Was im Studio entsteht
-                </Link>
+                <a
+                  className="ent-link"
+                  href={STUDIO_MAPS_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Auf der Karte ansehen
+                </a>
               </div>
             </Reveal>
 

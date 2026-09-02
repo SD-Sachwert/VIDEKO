@@ -14281,7 +14281,7 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   padding: clamp(78px, 9vw, 132px) 0;
 }
 
-.ent-sec--prog {
+.ent-sec--idx {
   background: linear-gradient(180deg, var(--silver-cream) 0%, #f6f2ea 58%, var(--silver-cream) 100%);
 }
 
@@ -14527,161 +14527,324 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
 }
 
 /* =====================================================================
-   3 — Baufortschritt: sechs hochformatige Karten in EINER Reihe
+   3 — VIDEKO-Baustellenindex: Gesamtpanel + neun Bereichskarten
    ===================================================================== */
 
-.ent-proggrid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-}
+/* --- Gesamtindex: eine breite Tafel, kein weiteres Kaertchen ---------- */
 
-.ent-prog {
+.ent-idxg {
   position: relative;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
-  text-align: center;
-  padding: 26px 16px 24px;
-  border-radius: 18px;
-  border: 1px solid var(--line-dark);
-  background: linear-gradient(178deg, rgba(255, 255, 255, 0.78) 0%, rgba(244, 239, 228, 0.5) 100%);
-  overflow: hidden;
+  gap: clamp(22px, 3vw, 40px);
+  padding: clamp(24px, 3vw, 38px) clamp(22px, 3vw, 44px);
+  margin-bottom: clamp(26px, 3vw, 44px);
+  border-radius: 26px;
+  border: 1px solid rgba(201, 160, 80, 0.4);
+  background:
+    linear-gradient(150deg, rgba(255, 255, 255, 0.94) 0%, rgba(246, 242, 234, 0.86) 100%);
+  box-shadow:
+    0 34px 76px -46px rgba(20, 17, 12, 0.5),
+    0 0 60px -30px rgba(201, 160, 80, 0.5);
 }
 
-/* Hover-Licht auf dem Pseudoelement — die Karte selbst ist Reveal-Wurzel
-   und darf keine eigene transition/transform tragen. */
-.ent-prog::before {
-  content: '';
+.ent-idxg__ring {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: clamp(104px, 13vw, 152px);
+  height: clamp(104px, 13vw, 152px);
+  flex: none;
+}
+
+.ent-idxg__svg {
   position: absolute;
   inset: 0;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.45s ease;
-  background: radial-gradient(72% 46% at 50% 0%, rgba(232, 201, 120, 0.3) 0%, transparent 70%);
-}
-
-.ent-prog:hover::before {
-  opacity: 1;
-}
-
-.ent-prog__icon {
-  position: relative;
-  color: var(--bronze);
-  opacity: 0.9;
-}
-
-.ent-prog__label {
-  position: relative;
-  font-family: var(--sans);
-  font-size: 0.74rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--ink);
-  margin: 14px 0 20px;
-}
-
-.ent-prog__ring {
-  position: relative;
-  display: block;
-  width: 112px;
-  height: 112px;
-  margin: 0 auto;
-}
-
-.ent-prog__svg {
   width: 100%;
   height: 100%;
   transform: rotate(-90deg);
 }
 
-.ent-prog__track {
+.ent-idxg__track {
   fill: none;
-  stroke: rgba(43, 41, 37, 0.1);
-  stroke-width: 4;
+  stroke: rgba(43, 41, 37, 0.12);
+  stroke-width: 7;
 }
 
-.ent-prog__arc {
+.ent-idxg__arc {
   fill: none;
   stroke: var(--gold);
-  stroke-width: 4;
+  stroke-width: 7;
   stroke-linecap: round;
+  filter: drop-shadow(0 0 8px rgba(201, 160, 80, 0.55));
+  transition: stroke-dasharray 0.9s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Ohne bestaetigten Wert: neutrale, langsam kreisende Spur statt eines
-   erfundenen Fuellstands. */
-.ent-prog__spur {
-  fill: none;
-  stroke: rgba(201, 160, 80, 0.6);
-  stroke-width: 4;
-  stroke-linecap: round;
-  stroke-dasharray: 15 27;
-  transform-origin: 50% 50%;
-  animation: ent-spur 26s linear infinite;
-}
-
-@keyframes ent-spur {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.ent-prog__mid {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  padding: 0 14px;
-}
-
-.ent-prog__pct {
+.ent-idxg__mid {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
   font-family: var(--serif);
-  font-size: 1.9rem;
   color: var(--ink);
+  font-variant-numeric: lining-nums tabular-nums;
+  font-feature-settings: 'lnum' 1, 'tnum' 1;
+}
+
+.ent-idxg__num {
+  font-size: clamp(2.4rem, 4.4vw, 3.5rem);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.ent-idxg__pct {
+  font-size: clamp(1rem, 1.6vw, 1.3rem);
+  font-weight: 300;
+  color: var(--bronze);
+}
+
+.ent-idxg__text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+}
+
+.ent-idxg__text .kicker {
+  font-size: clamp(0.9rem, 1.6vw, 1.18rem);
+  letter-spacing: 0.18em;
+}
+
+.ent-idxg__note {
+  font-family: var(--serif);
+  font-size: clamp(1.15rem, 2vw, 1.6rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--ink-soft);
+  line-height: 1.2;
+}
+
+.ent-idxg__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.ent-idxg__stand,
+.ent-idxg__delta {
+  font-family: var(--sans);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 999px;
   font-variant-numeric: lining-nums tabular-nums;
 }
 
-.ent-prog__status {
+.ent-idxg__stand {
+  border: 1px solid var(--line-dark);
+  color: var(--ink-soft);
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.ent-idxg__delta {
+  border: 1px solid rgba(201, 160, 80, 0.5);
+  color: var(--bronze);
+  background: rgba(201, 160, 80, 0.13);
+}
+
+.ent-idxg__hint {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+/* --- Bereichskarten --------------------------------------------------- */
+
+.ent-idxgrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+}
+
+.ent-idxk {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  padding: 24px 22px 22px;
+  border-radius: 20px;
+  border: 1px solid var(--line-dark);
+  background: rgba(255, 255, 255, 0.72);
+  overflow: hidden;
+}
+
+/* Hover liegt auf dem Pseudoelement — die Karte selbst ist ein
+   Reveal-Element und darf weder transform noch transition tragen. */
+.ent-idxk::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(160deg, rgba(201, 160, 80, 0.11) 0%, transparent 62%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.ent-idxk:hover::before {
+  opacity: 1;
+}
+
+/* Die drei Klos duerfen auffallen — sie sind Teil der Geschichte. */
+.ent-idxk--akzent {
+  border-color: rgba(201, 160, 80, 0.45);
+  background:
+    linear-gradient(155deg, rgba(201, 160, 80, 0.1) 0%, rgba(255, 255, 255, 0.78) 58%);
+}
+
+.ent-idxk__kopf {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.ent-idxk__icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  flex: none;
+  border: 1px solid rgba(201, 160, 80, 0.36);
+  background: rgba(201, 160, 80, 0.1);
+  color: var(--bronze);
+}
+
+.ent-idxk__label {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.19em;
+  text-transform: uppercase;
+  color: var(--ink);
+  line-height: 1.25;
+}
+
+.ent-idxk__zeile {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px;
+  width: 100%;
+  margin-top: 18px;
+}
+
+.ent-idxk__wert {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  font-family: var(--serif);
+  font-size: clamp(2.6rem, 5.2vw, 3.4rem);
+  font-weight: 300;
+  line-height: 0.92;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  font-variant-numeric: lining-nums tabular-nums;
+  font-feature-settings: 'lnum' 1, 'tnum' 1;
+}
+
+.ent-idxk__pct {
+  font-size: 0.42em;
+  color: var(--bronze);
+}
+
+.ent-idxk__delta {
   font-family: var(--sans);
   font-size: 0.6rem;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
+  color: rgba(91, 85, 75, 0.72);
+  font-variant-numeric: lining-nums tabular-nums;
+  min-height: 1em;
+}
+
+.ent-idxk__delta.is-plus {
   color: var(--bronze);
-  line-height: 1.3;
 }
 
-.ent-prog__note {
+.ent-idxk__bar {
   position: relative;
-  font-size: 0.85rem;
-  line-height: 1.5;
-  color: var(--ink-soft);
-  margin: 22px 0 0;
+  display: block;
+  width: 100%;
+  height: 6px;
+  margin-top: 16px;
+  border-radius: 999px;
+  background: rgba(43, 41, 37, 0.11);
+  overflow: hidden;
 }
 
-.ent-proghint {
+.ent-idxk__fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: inherit;
+  background: var(--grad-gold);
+  box-shadow: 0 0 12px rgba(201, 160, 80, 0.55);
+  transition: width 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ent-idxk__text {
+  margin: 18px 0 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+.ent-idxk__stufe {
+  margin: 10px 0 0;
+  font-family: var(--sans);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: rgba(91, 85, 75, 0.66);
+}
+
+/* --- Einordnung ------------------------------------------------------- */
+
+.ent-idxhint {
   display: flex;
-  align-items: center;
-  gap: 11px;
-  width: fit-content;
-  margin: 46px auto 0;
-  padding: 13px 26px;
-  border-radius: 999px;
+  align-items: flex-start;
+  gap: 12px;
+  max-width: 74ch;
+  margin: clamp(30px, 4vw, 50px) auto 0;
+  padding: 15px 26px;
+  border-radius: 20px;
   border: 1px solid var(--line-dark);
   background: rgba(255, 255, 255, 0.6);
   font-size: 0.88rem;
-  letter-spacing: 0.02em;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
   color: var(--ink-soft);
 }
 
-.ent-proghint__dot {
+.ent-idxhint__dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
   background: var(--gold);
   box-shadow: 0 0 10px rgba(201, 160, 80, 0.8);
   flex: none;
+  margin-top: 8px;
 }
 
 /* =====================================================================
@@ -15157,63 +15320,53 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   width: 100%;
   min-height: 300px;
   aspect-ratio: 16 / 10;
+  margin: 0;
   border-radius: 22px;
   overflow: hidden;
   border: 1px solid rgba(201, 160, 80, 0.34);
+  background: #ece6da;
   box-shadow:
     0 36px 80px -38px rgba(20, 17, 12, 0.6),
     0 0 60px -22px rgba(201, 160, 80, 0.34);
 }
 
-.ent-karte__svg {
+/* Der Standort liegt exakt in der Bildmitte, deshalb darf beliebig
+   beschnitten werden — der Pin bei 50/50 bleibt in jedem Format richtig.
+   Der Filter waermt die Karte an, ohne die Strassennamen zuzudecken. */
+.ent-karte__bild {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: sepia(0.3) saturate(0.72) contrast(1.04) brightness(0.94);
 }
 
-.ent-karte__block rect {
-  fill: rgba(244, 239, 228, 0.085);
-  stroke: rgba(244, 239, 228, 0.13);
-  stroke-width: 1;
-}
-
-.ent-karte__strasse path {
-  stroke: rgba(244, 239, 228, 0.17);
-  stroke-width: 2.2;
-  fill: none;
-}
-
-.ent-karte__route {
-  fill: none;
-  stroke: var(--gold);
-  stroke-width: 2.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 7 9;
-  filter: drop-shadow(0 0 6px rgba(201, 160, 80, 0.6));
-  animation: ent-route 3.2s linear infinite;
-}
-
-@keyframes ent-route {
-  to {
-    stroke-dashoffset: -32;
-  }
-}
-
-.ent-karte__start {
-  fill: rgba(232, 201, 120, 0.85);
+.ent-karte__vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(112% 96% at 50% 46%, transparent 34%, rgba(24, 20, 14, 0.5) 100%),
+    linear-gradient(180deg, rgba(24, 20, 14, 0.16) 0%, transparent 26%);
 }
 
 .ent-karte__pin {
   position: absolute;
-  left: 63%;
-  top: 47.5%;
-  transform: translate(-50%, -100%);
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
   display: grid;
   place-items: center;
   color: var(--gold-bright);
-  filter: drop-shadow(0 0 10px rgba(232, 201, 120, 0.75));
+}
+
+.ent-karte__pin svg {
+  position: absolute;
+  bottom: 1px;
+  filter: drop-shadow(0 2px 10px rgba(232, 201, 120, 0.85)) drop-shadow(0 0 2px rgba(8, 8, 7, 0.9));
 }
 
 .ent-karte__puls {
@@ -15221,35 +15374,163 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   width: 46px;
   height: 46px;
   border-radius: 50%;
-  border: 1px solid rgba(232, 201, 120, 0.5);
+  border: 1px solid rgba(232, 201, 120, 0.55);
   animation: ent-puls 2.8s ease-out infinite;
 }
 
 @keyframes ent-puls {
   0% {
-    opacity: 0.8;
-    transform: scale(0.5);
+    opacity: 0.85;
+    transform: scale(0.4);
   }
   100% {
     opacity: 0;
-    transform: scale(1.6);
+    transform: scale(1.7);
   }
 }
 
-.ent-karte__label {
+.ent-karte__fuss {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 18px;
   margin: 0;
-  padding: 42px 24px 20px;
-  background: linear-gradient(180deg, transparent 0%, rgba(8, 8, 7, 0.86) 62%);
+  padding: 46px 22px 16px;
+  background: linear-gradient(180deg, transparent 0%, rgba(8, 8, 7, 0.9) 60%);
+}
+
+.ent-karte__adr {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
   font-family: var(--sans);
   font-size: 0.76rem;
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--champagne);
+}
+
+.ent-karte__trenn {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--gold);
+  flex: none;
+}
+
+.ent-karte__quelle {
+  font-family: var(--sans);
+  font-size: 0.6rem;
+  letter-spacing: 0.09em;
+  color: rgba(244, 239, 228, 0.5);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.ent-karte__quelle:hover {
+  color: var(--champagne);
+  border-bottom-color: rgba(244, 239, 228, 0.4);
+}
+
+/* =====================================================================
+   Soundtrack-Schalter — dauerhaft, klein, unten rechts
+   ===================================================================== */
+
+.ent-sound {
+  position: fixed;
+  right: clamp(14px, 2.2vw, 30px);
+  bottom: clamp(14px, 2.2vw, 30px);
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(201, 160, 80, 0.42);
+  background: rgba(12, 11, 9, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: var(--champagne);
+  cursor: pointer;
+  box-shadow:
+    0 20px 44px -24px rgba(8, 8, 7, 0.85),
+    0 0 30px -18px rgba(201, 160, 80, 0.7);
+  transition:
+    border-color 0.4s ease,
+    background 0.4s ease;
+}
+
+.ent-sound:hover {
+  border-color: rgba(232, 201, 120, 0.75);
+  background: rgba(18, 17, 15, 0.9);
+}
+
+.ent-sound__icon {
+  display: grid;
+  place-items: center;
+  color: var(--gold-bright);
+  flex: none;
+}
+
+.ent-sound__txt {
+  font-family: var(--sans);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Vier Balken, reines CSS. Aus: flach und still. An: sie leben. */
+.ent-sound__eq {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 13px;
+  flex: none;
+}
+
+.ent-sound__eq i {
+  display: block;
+  width: 2px;
+  height: 3px;
+  border-radius: 1px;
+  background: rgba(201, 160, 80, 0.45);
+  transform-origin: bottom;
+}
+
+.ent-sound.is-an .ent-sound__eq i {
+  height: 13px;
+  background: var(--gold-bright);
+  animation: ent-eq 1s ease-in-out infinite alternate;
+}
+
+.ent-sound.is-an .ent-sound__eq i:nth-child(2) {
+  animation-duration: 0.66s;
+}
+
+.ent-sound.is-an .ent-sound__eq i:nth-child(3) {
+  animation-duration: 1.24s;
+}
+
+.ent-sound.is-an .ent-sound__eq i:nth-child(4) {
+  animation-duration: 0.84s;
+}
+
+@keyframes ent-eq {
+  from {
+    transform: scaleY(0.22);
+  }
+  to {
+    transform: scaleY(1);
+  }
 }
 
 /* =====================================================================
@@ -15352,7 +15633,13 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
    ===================================================================== */
 
 @media (min-width: 560px) {
-  .ent-proggrid,
+  /* Ab hier zwei Bereichskarten nebeneinander. Auf 390px bleibt es bei
+     einer — Lesbarkeit geht vor Dichte. */
+  .ent-idxgrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ent-idxgrid,
   .ent-socialgrid {
     gap: 16px;
   }
@@ -15361,10 +15648,6 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
 @media (min-width: 760px) {
   .ent {
     --ent-pad: 32px;
-  }
-
-  .ent-proggrid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .ent-socialgrid {
@@ -15413,6 +15696,11 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
     gap: 58px;
   }
 
+  .ent-idxgrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+  }
+
   .ent-karte {
     aspect-ratio: auto;
     height: 400px;
@@ -15424,17 +15712,11 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
 }
 
 @media (min-width: 1120px) {
-  /* Kernbild der Vorlage: sechs Karten nebeneinander, je ~200px breit. */
-  .ent-proggrid {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 18px;
+  .ent-idxk {
+    padding: 30px 28px 26px;
   }
 
-  .ent-prog {
-    min-height: 330px;
-    padding: 30px 18px 26px;
-  }
-
+  /* Kernbild der Vorlage: sechs Kacheln nebeneinander, je ~200px breit. */
   .ent-socialgrid {
     grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: 18px;
@@ -15450,22 +15732,34 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   }
 }
 
-@media (min-width: 1360px) {
-  .ent-prog__ring {
-    width: 124px;
-    height: 124px;
-  }
-}
-
-/* Sehr schmal: zwei Spalten bleiben, aber flacher. */
+/* Sehr schmal: eine Spalte im Index, der Schalter wird zum Symbol. */
 @media (max-width: 480px) {
-  .ent-prog {
-    padding: 22px 12px 20px;
+  .ent-idxk {
+    padding: 20px 18px 20px;
   }
 
-  .ent-prog__ring {
-    width: 96px;
-    height: 96px;
+  .ent-idxg {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    text-align: center;
+    padding: 26px 20px 24px;
+  }
+
+  .ent-idxg__text {
+    align-items: center;
+  }
+
+  .ent-idxg__meta {
+    justify-content: center;
+  }
+
+  .ent-sound {
+    gap: 8px;
+    padding: 9px 13px;
+  }
+
+  .ent-sound__txt {
+    display: none;
   }
 
   .ent-soc {
@@ -15509,17 +15803,18 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
 
 @media (prefers-reduced-motion: reduce) {
   .ent-vid__tag::before,
-  .ent-prog__spur,
   .ent-knopf__halo,
-  .ent-karte__route,
-  .ent-karte__puls {
+  .ent-karte__puls,
+  .ent-sound.is-an .ent-sound__eq i {
     animation: none;
   }
 
   .ent-soc__bild,
   .ent-soc__cta,
   .ent-knopf,
-  .ent-prog::before {
+  .ent-idxk::before,
+  .ent-idxk__fill,
+  .ent-idxg__arc {
     transition: none;
   }
 

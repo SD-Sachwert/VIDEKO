@@ -1,9 +1,11 @@
 import { BRAND } from './company.js'
 import { SOCIAL_PROFILES, socialUrl } from './site.js'
+import { INDEX_BASIS, INDEX_ZIEL } from '../lib/baustellenindex.js'
 import entdeckenVideo from '../assets/images/studio/bilder/Umbau.mp4'
 import entdeckenPoster from '../assets/images/studio/bilder/02_intro_showroom_hell.webp'
 import texturNacht from '../assets/images/studio/bilder/08_split_section_showroom_gross.webp'
 import texturFinale from '../assets/images/studio/bilder/10_final_cta_studio_banner.webp'
+import karteHertzstrasse from '../assets/images/studio/karte-hertzstrasse-osm.webp'
 
 // Flaechenmotive der Social-Kacheln. Bewusst KEINE Screenshots echter Posts —
 // die liegen nicht im Repo und duerften nicht erfunden werden. Stattdessen
@@ -42,73 +44,173 @@ export const ENTDECKEN_CONFIG = {
   },
 }
 
+/* ------------------------------------------------------------------ *
+ * Soundtrack
+ * ------------------------------------------------------------------ */
+
 /**
- * Baufortschritt.
+ * Hintergrund-Soundtrack der Seite.
  *
- * WICHTIG — bewusst keine Prozentzahlen:
- * Fuer keinen dieser Bereiche liegt ein bestaetigter Fortschrittswert vor.
- * Erfundene Prozente waeren eine Behauptung gegenueber jedem, der den QR-Code
- * scannt. Deshalb steht ueberall `percent: null` und ein ehrlicher Status.
+ * `datei` ist bewusst `null`: Im Repo liegt derzeit KEINE eigene Audiodatei
+ * (durchsucht wurden src/ und public/ nach mp3/ogg/wav/m4a/aac/flac/opus —
+ * gefunden wurde nur ein Video). Fremdes Audio einzubinden oder einen Stream
+ * von Spotify als Quelle zu missbrauchen kommt nicht in Frage, und ein Player
+ * ohne Quelle waere ein kaputter Player.
  *
- * Sobald echte Werte feststehen, hier eintragen:
- *   percent: 60           -> Ring fuellt sich anteilig, Zahl erscheint im Ring
- *   percent: null         -> neutraler Status-Ring, keine Zahl
- *   status: 'Fast fertig' -> freier Text, erscheint als Pille unter dem Titel
+ * Solange `datei` null ist, rendert die Seite die Sound-Steuerung schlicht
+ * nicht — die komplette Logik dahinter steht aber bereits und schaltet sich von
+ * selbst frei, sobald hier eine echte Datei eingetragen wird:
  *
- * `note` ist Ton, keine Aussage ueber den Bauzustand.
+ *   1. eigene VIDEKO-Aufnahme als MP3 nach
+ *      `src/assets/audio/videko-soundtrack.mp3` legen
+ *   2. oben importieren:
+ *      import soundtrack from '../assets/audio/videko-soundtrack.mp3'
+ *   3. hier eintragen: datei: soundtrack
+ *
+ * Mehr ist nicht zu tun. Lautstaerke, Autoplay-Regel, Ein/Aus-Schalter und die
+ * gespeicherte Entscheidung des Besuchers haengen daran.
  */
-export const ENTDECKEN_FORTSCHRITT = [
+export const SOUNDTRACK = {
+  datei: null,
+  typ: 'audio/mpeg',
+  titel: 'VIDEKO Baustellen-Soundtrack',
+  // Leise im Hintergrund, nie auf voller Lautstaerke.
+  lautstaerke: 0.24,
+  // Merker fuer die Entscheidung des Besuchers. localStorage, damit „aus“ auch
+  // beim naechsten Besuch „aus“ bleibt — ausgeschalteter Ton wird nie wieder
+  // von selbst eingeschaltet.
+  speicher: 'videko:sound',
+  labelAn: 'Sound an',
+  labelAus: 'Sound aus',
+  // Pfad, unter dem die Datei erwartet wird.
+  erwarteterPfad: 'src/assets/audio/videko-soundtrack.mp3',
+}
+
+/* ------------------------------------------------------------------ *
+ * VIDEKO-Baustellenindex
+ * ------------------------------------------------------------------ */
+
+/**
+ * Bereiche des Baustellenindex.
+ *
+ * WICHTIG: Die Prozentwerte sind KEIN belegter Baufortschritt. `basePercent`
+ * ist der Startwert am `baseDate`, `targetPercent` der Wert, den der Bereich am
+ * Eroeffnungstag rechnerisch erreicht — dazwischen rechnet
+ * lib/baustellenindex.js eine deterministische, taeglich leicht andere Kurve.
+ * Der Ton der Seite macht das ausdruecklich kenntlich; hier wird nichts
+ * gemessen, hier wird gerechnet.
+ *
+ * `text` ist die Hauptaussage des Bereichs und bleibt handgeschrieben — die
+ * automatische Statusstufe (STATUS_STUFEN in lib/baustellenindex.js) steht nur
+ * als kleine zweite Zeile darunter.
+ *
+ * Reihenfolge = Anzeigereihenfolge.
+ */
+export const BAUSTELLEN_BEREICHE = [
   {
-    key: 'ausstellung',
+    id: 'ausstellung',
     label: 'Ausstellung',
     icon: 'ausstellung',
-    percent: null,
-    status: 'Im Aufbau',
-    note: 'Hier stehen bald Küchen, die du anfassen darfst.',
+    basePercent: 14,
+    targetPercent: 100,
+    baseDate: INDEX_BASIS,
+    text: '600 m². Wir hätten auch kleiner anfangen können.',
   },
   {
-    key: 'kuechen',
+    id: 'kuechen',
     label: 'Küchen',
     icon: 'kuechen',
-    percent: null,
-    status: 'Im Aufbau',
-    note: 'Hier wird’s heiß. Demnächst.',
+    basePercent: 11,
+    targetPercent: 100,
+    baseDate: INDEX_BASIS,
+    text: 'Die wichtigste Kleinigkeit fehlt teilweise noch: Küchen.',
   },
   {
-    key: 'bar',
+    id: 'bar',
     label: 'Bar',
     icon: 'bar',
-    percent: null,
-    status: 'Im Aufbau',
-    note: 'Kaffee fließt noch nicht. Ideen schon.',
+    basePercent: 9,
+    targetPercent: 100,
+    baseDate: INDEX_BASIS,
+    text: 'Zapfen können wir gedanklich schon.',
   },
   {
-    key: 'empfang',
+    id: 'empfang',
     label: 'Empfang',
     icon: 'empfang',
-    percent: null,
-    status: 'Im Aufbau',
-    note: 'Der erste Eindruck braucht noch einen Moment.',
+    basePercent: 12,
+    targetPercent: 100,
+    baseDate: INDEX_BASIS,
+    text: 'Der erste Eindruck kommt. Irgendwann.',
   },
   {
-    key: 'beleuchtung',
+    id: 'beleuchtung',
     label: 'Beleuchtung',
     icon: 'beleuchtung',
-    percent: null,
-    status: 'Im Aufbau',
-    note: 'Wir bringen Licht ins Dunkel.',
+    basePercent: 7,
+    targetPercent: 100,
+    baseDate: INDEX_BASIS,
+    text: 'Licht ist grundsätzlich vorgesehen.',
   },
   {
-    key: 'toiletten',
-    label: 'Toiletten',
-    icon: 'toiletten',
-    percent: null,
-    status: 'Im Aufbau',
-    note: 'Fast fertig. Fast. Wie immer.',
+    id: 'luxusklo',
+    label: 'Luxusklo',
+    icon: 'luxusklo',
+    basePercent: 20,
+    targetPercent: 100,
+    baseDate: INDEX_BASIS,
+    text: 'Vorwände hängen schon. Eine Wand steht. Luxus ist relativ.',
+    // Die Klos gehoeren inzwischen zur Geschichte — sie duerfen auffallen.
+    akzent: true,
+  },
+  {
+    id: 'mitarbeiterklo-1',
+    label: 'Mitarbeiterklo 1',
+    icon: 'dusche',
+    basePercent: 10,
+    targetPercent: 100,
+    baseDate: INDEX_BASIS,
+    text: 'Duschen und aufs Klo gehen reicht. Mehr war nicht versprochen.',
+    akzent: true,
+  },
+  {
+    id: 'mitarbeiterklo-2',
+    label: 'Mitarbeiterklo 2',
+    icon: 'tropfen',
+    basePercent: 5,
+    targetPercent: 100,
+    baseDate: INDEX_BASIS,
+    text: 'Wände stehen. Der Rest hält sich noch bedeckt.',
+    akzent: true,
+  },
+  {
+    id: 'aufenthaltsraum',
+    label: 'Aufenthaltsraum',
+    icon: 'aufenthalt',
+    basePercent: 5,
+    targetPercent: 95,
+    baseDate: INDEX_BASIS,
+    text: 'Billardtisch, PS5 und Beamer sind da. Prioritäten sitzen.',
   },
 ]
 
-export const FORTSCHRITT_HINWEIS = 'Ändert sich öfter als uns lieb ist.'
+/** Texte rund um das Dashboard. Der Ton macht klar, wie ernst der Index ist. */
+export const BAUSTELLEN_TEXTE = {
+  kicker: 'Höchst wissenschaftlich',
+  sub: 'Täglich neu berechnet. Vom Bauleiter ausdrücklich nicht geprüft.',
+  gesamtLabel: 'VIDEKO Baustellenindex',
+  gesamtNote: 'wissenschaftlich ungefähr',
+  standLabel: 'Stand',
+  hinweis: 'Ändert sich öfter als uns lieb ist.',
+  // Ausdrueckliche Einordnung. Steht sichtbar unter dem Dashboard.
+  disclaimer:
+    'Der Baustellenindex ist ein Stimmungsbarometer, kein Bautagebuch: Die Prozente rechnen sich automatisch aus Startwert und Eröffnungstermin. Sie sind kein gemessener Baufortschritt.',
+  zielDatum: INDEX_ZIEL,
+}
+
+/* ------------------------------------------------------------------ *
+ * Easter Egg
+ * ------------------------------------------------------------------ */
 
 /**
  * Easter Egg „Drück nicht.“
@@ -129,6 +231,10 @@ export const DRUECK_NICHT = {
   ],
   zaehler: (n) => `Du hast ihn ${n}-mal gedrückt.`,
 }
+
+/* ------------------------------------------------------------------ *
+ * Socials
+ * ------------------------------------------------------------------ */
 
 const SOCIAL_TEXTE = {
   instagram: 'Baustelle, Küchen, Alltag. Der direkteste Draht zu uns.',
@@ -172,15 +278,55 @@ export const ENTDECKEN_SOCIALS = SOCIAL_REIHENFOLGE.map((key) => {
 
 // Spotify ist bewusst nicht bestaetigt (siehe site.js). Solange keine echte URL
 // existiert, erscheint die Kachel deaktiviert — statt eine URL zu erfinden.
+// Sobald in site.js eine belegte Profiladresse steht, wird die Kachel hier von
+// selbst zum Link; an dieser Datei ist dafuer nichts zu aendern.
 export const ENTDECKEN_SPOTIFY = socialUrl('spotify')
 export const ENTDECKEN_SPOTIFY_KACHEL = {
   key: 'spotify',
-  label: 'Spotify',
+  label: ENTDECKEN_SPOTIFY ? 'VIDEKO Soundtrack' : 'Spotify',
   note: 'Der Baustellen-Soundtrack. Kommt, wenn er steht.',
   badge: 'Bald',
   cta: 'Anhören',
   bild: bildSpotify,
 }
 
+/* ------------------------------------------------------------------ *
+ * Standort
+ * ------------------------------------------------------------------ */
+
 export const STUDIO_ADRESSE = `${BRAND.studio.street}, ${BRAND.studio.postalCode} ${BRAND.studio.city}`
 export const STUDIO_MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(STUDIO_ADRESSE)}`
+
+/**
+ * Kartenbild des Standorts.
+ *
+ * ECHTE Geografie, kein gezeichneter Fantasieplan: Das Bild ist ein Ausschnitt
+ * der OpenStreetMap-Standardkarte (Zoom 17), zentriert auf die Hertzstrasse 4,
+ * einmalig gerendert und selbst gehostet. Selbst gehostet aus zwei Gruenden:
+ *
+ *   1. Datenschutz. Die Datenschutzerklaerung dieser Website sagt zu, dass beim
+ *      Aufruf keine Drittanbieter-Inhalte geladen werden; /studio verzichtet aus
+ *      demselben Grund bereits bewusst auf eine eingebettete Karte. Ein
+ *      Maps-Embed oder ein Live-Tile-Server wuerde bei jedem Aufruf ungefragt
+ *      die IP des Besuchers an einen Dritten geben. Ein Bild aus dem eigenen
+ *      Build tut das nicht.
+ *   2. Verlaesslichkeit. Kein API-Schluessel, kein Kontingent, kein Dienst, der
+ *      irgendwann seine Bedingungen aendert.
+ *
+ * Der Marker liegt in styles.css exakt in der Bildmitte — deshalb darf das
+ * Seitenverhaeltnis des Rahmens nicht veraendert werden, sonst wandert die
+ * Nadel von der Adresse weg.
+ *
+ * Lizenz: OpenStreetMap, ODbL. Die Namensnennung ist Pflicht und steht sichtbar
+ * an der Karte.
+ */
+export const STUDIO_KARTE = {
+  bild: karteHertzstrasse,
+  alt: `Kartenausschnitt mit dem Standort ${STUDIO_ADRESSE} in der Bildmitte`,
+  attribution: '© OpenStreetMap-Mitwirkende',
+  attributionUrl: 'https://www.openstreetmap.org/copyright',
+  routeCta: 'Route starten',
+}
+
+/** Routenlink auf die Studio-Anschrift — oeffnet die Navigation in Google Maps. */
+export const STUDIO_ROUTE_URL = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(STUDIO_ADRESSE)}`
