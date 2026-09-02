@@ -879,19 +879,54 @@ function SocialKachel({ daten, Icon, href, aus = false, delay = 0 }) {
  * „Drueck nicht."
  * ------------------------------------------------------------------ */
 
-/* Die kurzen CSS-Effekte, die ein Klick ausloesen darf. Klein bei normalen
-   Klicks, kraeftiger bei den festen Meilensteinen. Immer nur einer, immer
-   unter einer Sekunde, und unter `prefers-reduced-motion` gar keiner (das
-   entscheidet das Stylesheet, nicht dieses Modul). */
-const EGG_FX_KLEIN = ['halo', 'ziffern', 'linie']
-const EGG_FX_GROSS = ['blitz', 'beben', 'video', 'linie']
+/* Die kurzen Effekte, die ein Klick ausloesen darf. Jeder Druck bekommt den
+   Knopf-Effekt (Eindruecken, Halo, Karte) plus genau einen Zusatzeffekt aus
+   dieser Liste; die festen Meilensteine bekommen mehrere gleichzeitig.
+   Nichts davon laeuft dauerhaft, und `prefers-reduced-motion` ersetzt im
+   Stylesheet jede Bewegung durch ein reines Aufleuchten. */
+const EGG_FX_ZUSATZ = ['beben', 'blitz', 'ziffern', 'video', 'linie', 'hopser']
 
-/** Anteil der normalen Klicks, die ueberhaupt einen Effekt bekommen. */
-const EGG_FX_CHANCE = 0.3
+/* Laufzeit je Effekt in Millisekunden — muss zu den @keyframes in styles.css
+   passen. Danach nimmt der Hero die Klasse wieder ab, es bleibt nichts
+   haengen. */
+const EGG_FX_DAUER = {
+  beben: 380,
+  blitz: 460,
+  ziffern: 420,
+  video: 640,
+  linie: 720,
+  hopser: 440,
+}
+
+/** Laufzeit des Knopf-Effekts (Halo ist der laengste Teil davon). */
+const EGG_DRUCK_MS = 560
+
+/* Die festen Klickzahlen reagieren deutlich groesser als ein normaler
+   Druck — aber immer noch aus denselben sechs Effekten. */
+const EGG_FX_MEILEN = {
+  1: ['hopser'],
+  3: ['blitz'],
+  5: ['ziffern'],
+  7: ['beben', 'hopser'],
+  10: ['beben', 'blitz'],
+  15: ['video', 'linie'],
+  20: ['beben', 'ziffern'],
+  25: ['blitz', 'video', 'ziffern'],
+  50: ['beben', 'blitz', 'linie'],
+  100: ['blitz', 'beben', 'video', 'ziffern', 'linie'],
+  250: ['blitz', 'linie', 'hopser'],
+}
 
 /** Zufaelliges Element — nur im Klick-Handler benutzt, nie beim Render. */
 function ausListe(liste) {
   return liste[Math.floor(Math.random() * liste.length)]
+}
+
+/** Zwei verschiedene Effekte aus der Liste — fuer die seltenen Sprueche. */
+function zweiAus(liste) {
+  const a = Math.floor(Math.random() * liste.length)
+  const b = (a + 1 + Math.floor(Math.random() * (liste.length - 1))) % liste.length
+  return [liste[a], liste[b]]
 }
 
 /**
@@ -937,10 +972,17 @@ function DrueckNicht({ onDruck, onEffekt }) {
 
   const [zaehler, setZaehler] = useState(0)
   const [meldung, setMeldung] = useState(null)
-  const [puls, setPuls] = useState(false)
   const timer = useRef(null)
   const anzahl = useRef(0)
   const letzter = useRef(null)
+
+  // Der Knopf-Effekt laeuft absichtlich am React-Zustand vorbei: eine
+  // CSS-Animation startet nur dann neu, wenn die Klasse wirklich kurz weg
+  // war. Ueber setState laesst sich das nicht zuverlaessig erzwingen (React
+  // fasst beide Updates zu einem Render zusammen, der Browser sieht keinen
+  // Wechsel und spielt nichts ab). Deshalb hier direkt am Knoten:
+  // Klasse ab, Reflow erzwingen, Klasse dran.
+  const eggRef = useRef(null)
 
   useEffect(() => () => clearTimeout(timer.current), [])
 
@@ -983,24 +1025,34 @@ function DrueckNicht({ onDruck, onEffekt }) {
 
     setMeldung({ text: fertig(roh), art, nr: n })
 
-    setPuls(true)
-    clearTimeout(timer.current)
-    timer.current = setTimeout(() => setPuls(false), 640)
+    // Jeder Druck: Knopf faehrt in den Sockel, Halo blitzt auf, Karte
+    // reagiert. Kein Zufall, keine Ausnahme.
+    const el = eggRef.current
+    if (el) {
+      clearTimeout(timer.current)
+      el.classList.remove('is-druck')
+      void el.offsetWidth
+      el.classList.add('is-druck')
+      timer.current = setTimeout(() => {
+        el.classList.remove('is-druck')
+      }, EGG_DRUCK_MS + 40)
+    }
 
+    // Dazu immer genau ein weiterer Effekt — bei Meilensteinen mehrere.
     if (onEffekt) {
-      if (art === 'fest') onEffekt(ausListe(EGG_FX_GROSS))
-      else if (art === 'selten') onEffekt('video')
-      else if (Math.random() < EGG_FX_CHANCE) onEffekt(ausListe(EGG_FX_KLEIN))
+      if (art === 'fest') onEffekt(EGG_FX_MEILEN[n] || zweiAus(EGG_FX_ZUSATZ))
+      else if (art === 'selten') onEffekt(zweiAus(EGG_FX_ZUSATZ))
+      else onEffekt([ausListe(EGG_FX_ZUSATZ)])
     }
   }, [onDruck, onEffekt, werte])
 
   return (
-    <div className="ent-egg">
+    <div className="ent-egg" ref={eggRef}>
       <div className="ent-egg__pult">
         <span className="ent-knopf__sockel" aria-hidden="true" />
         <button
           type="button"
-          className={`ent-knopf${puls ? ' is-puls' : ''}`}
+          className="ent-knopf"
           onClick={druecken}
           aria-describedby="ent-egg-out"
         >
@@ -1137,25 +1189,43 @@ export default function Entdecken() {
     [lenis, tonStarten]
   )
 
-  // Ein kurzer, rein visueller Effekt pro Klick auf den Knopf. Der Zustand
-  // liegt hier oben, weil Countdown, Video und Lichtschein alle im Hero
-  // haengen — als Klasse an der Section erreicht sie alle drei ohne
-  // zusaetzliche Verkabelung. Nichts davon laeuft dauerhaft, und
-  // `prefers-reduced-motion` schaltet im Stylesheet alles ab.
-  const [fx, setFx] = useState(null)
-  const fxTimer = useRef(null)
-  useEffect(() => () => clearTimeout(fxTimer.current), [])
+  // Die kurzen Effekte pro Klick haengen als Klasse am Hero, weil Countdown,
+  // Video, Lichtschein und Knopf alle darin liegen. Gesetzt wird sie direkt
+  // am Knoten statt ueber setState: eine CSS-Animation startet nur neu, wenn
+  // die Klasse zwischendurch wirklich weg war — mit React-Zustand landen
+  // Entfernen und Setzen im selben Render, der Browser sieht keinen Wechsel
+  // und spielt beim zweiten gleichen Effekt nichts ab. Reflow dazwischen
+  // erzwingen loest genau das. Jeder Effekt hat seinen eigenen Timer, damit
+  // mehrere gleichzeitig laufen koennen (Meilensteine) und keiner haengen
+  // bleibt.
+  const heroRef = useRef(null)
+  const fxTimer = useRef({})
 
-  const effektAus = useCallback((name) => {
-    if (!name) return
-    clearTimeout(fxTimer.current)
-    // Erst abraeumen, dann im naechsten Frame neu setzen: sonst startet
-    // dieselbe Animation beim zweiten Klick nicht noch einmal.
-    setFx(null)
-    requestAnimationFrame(() => {
-      setFx(name)
-      fxTimer.current = setTimeout(() => setFx(null), 780)
-    })
+  useEffect(() => {
+    const laufend = fxTimer.current
+    return () => {
+      for (const name of Object.keys(laufend)) clearTimeout(laufend[name])
+    }
+  }, [])
+
+  const effektAus = useCallback((namen) => {
+    const hero = heroRef.current
+    if (!hero || !namen || !namen.length) return
+    for (const name of namen) {
+      const dauer = EGG_FX_DAUER[name]
+      if (!dauer) continue
+      const klasse = `is-fx-${name}`
+      clearTimeout(fxTimer.current[name])
+      hero.classList.remove(klasse)
+      // Erzwingt den Reflow. Ohne diese Zeile laeuft derselbe Effekt beim
+      // zweiten Klick nicht noch einmal.
+      void hero.offsetWidth
+      hero.classList.add(klasse)
+      fxTimer.current[name] = setTimeout(() => {
+        hero.classList.remove(klasse)
+        delete fxTimer.current[name]
+      }, dauer + 40)
+    }
   }, [])
 
   return (
@@ -1182,7 +1252,7 @@ export default function Entdecken() {
       {/* ---------- Hero: Copy links, Countdown in der Mitte, der Knopf
            rechts, darunter das grosse Baustellenvideo ueber die volle
            Breite. Alles drei liegt damit im ersten Screen. ---------- */}
-      <section className={`ent-hero${fx ? ` is-fx-${fx}` : ''}`}>
+      <section className="ent-hero" ref={heroRef}>
         <span className="ent-hero__glow" aria-hidden="true" />
         <span className="ent-hero__blitz" aria-hidden="true" />
         <span className="ent-hero__linie" aria-hidden="true" />

@@ -14321,75 +14321,85 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
 }
 
 /* ---------- Kurze Reaktionen auf den Knopf ----------
-   Alles rein per CSS und immer nur eine Sache auf einmal: ein warmer
-   Lichtblitz, eine durchlaufende Goldlinie, ein Wackler von zwei Pixeln,
-   ein Zucken der Countdown-Ziffern oder ein kurzes Gluehen des
-   Videorahmens. Nichts davon laeuft dauerhaft, nichts blockiert Klicks,
-   und bei reduzierter Bewegung faellt alles weg. */
+   Jeder Druck loest genau einen dieser Effekte aus (der Knopf selbst
+   reagiert zusaetzlich immer, siehe .ent-egg.is-druck weiter unten).
+   Wichtig: Lichtimpuls und Goldlinie liegen UEBER dem Inhalt. Vorher
+   lagen sie mit z-index 0 hinter .ent-hero__inner (z-index 1) und waren
+   auf dem hellen Hero praktisch unsichtbar. Alles ist unter einer
+   Sekunde vorbei, nichts faengt Klicks ab, und bei reduzierter Bewegung
+   bleibt das Aufleuchten ohne die Bewegung. */
 
 .ent-hero__blitz,
 .ent-hero__linie {
   position: absolute;
   pointer-events: none;
   opacity: 0;
-  z-index: 0;
+  z-index: 4;
 }
 
+/* Warmer Lichtimpuls. Der Hero ist hell, deshalb saettigtes Gold statt
+   Weiss — ein Weissblitz saehe hier nach Darstellungsfehler aus. */
 .ent-hero__blitz {
   inset: 0;
   background: radial-gradient(
-    72% 62% at 62% 16%,
-    rgba(255, 238, 196, 0.72) 0%,
-    rgba(232, 201, 120, 0.26) 40%,
-    transparent 72%
+    84% 76% at 58% 20%,
+    rgba(232, 201, 120, 0.96) 0%,
+    rgba(201, 160, 80, 0.62) 36%,
+    rgba(139, 107, 56, 0.2) 66%,
+    transparent 82%
   );
 }
 
+/* Schmale Lichtlinie, die einmal quer durch den Hero laeuft. */
 .ent-hero__linie {
-  left: -28%;
+  left: -24%;
   top: 0;
   bottom: 0;
-  width: 22%;
+  width: 14%;
   background: linear-gradient(
     100deg,
     transparent 0%,
-    rgba(232, 201, 120, 0.42) 44%,
-    rgba(255, 249, 230, 0.82) 50%,
-    rgba(232, 201, 120, 0.42) 56%,
+    rgba(201, 160, 80, 0.3) 34%,
+    rgba(255, 250, 232, 0.96) 50%,
+    rgba(201, 160, 80, 0.3) 66%,
     transparent 100%
   );
+  box-shadow: 0 0 60px 10px rgba(232, 201, 120, 0.45);
 }
 
 .ent-hero.is-fx-blitz .ent-hero__blitz {
-  animation: ent-fx-blitz 620ms ease-out;
+  animation: ent-fx-blitz 460ms ease-out;
 }
 
 .ent-hero.is-fx-linie .ent-hero__linie {
-  animation: ent-fx-linie 740ms ease-in-out;
+  animation: ent-fx-linie 720ms ease-in-out;
 }
 
 .ent-hero.is-fx-beben .ent-hero__inner {
-  animation: ent-fx-beben 300ms ease-in-out;
+  animation: ent-fx-beben 380ms ease-in-out;
 }
 
 .ent-hero.is-fx-ziffern .ent-count__num {
-  animation: ent-fx-ziffer 460ms ease-out;
+  animation: ent-fx-ziffer 420ms ease-out;
 }
 
 .ent-hero.is-fx-video .ent-vid {
-  animation: ent-fx-glut 660ms ease-out;
+  animation: ent-fx-glut 640ms ease-out;
 }
 
-.ent-hero.is-fx-halo .ent-knopf__halo {
-  animation: ent-fx-halo 620ms ease-out;
+.ent-hero.is-fx-hopser .ent-egg__pult {
+  animation: ent-fx-hopser 440ms cubic-bezier(0.28, 0.9, 0.32, 1.04);
 }
 
 @keyframes ent-fx-blitz {
   0% {
     opacity: 0;
   }
-  22% {
-    opacity: 1;
+  18% {
+    opacity: 0.44;
+  }
+  46% {
+    opacity: 0.3;
   }
   100% {
     opacity: 0;
@@ -14401,41 +14411,53 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
     opacity: 0;
     transform: translateX(0);
   }
-  14% {
+  10% {
     opacity: 1;
   }
-  86% {
+  88% {
     opacity: 1;
   }
   100% {
     opacity: 0;
-    transform: translateX(560%);
+    transform: translateX(900%);
   }
 }
 
 @keyframes ent-fx-beben {
   0%,
   100% {
-    transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0) rotate(0deg);
   }
-  22% {
-    transform: translate3d(-2px, 1px, 0);
+  18% {
+    transform: translate3d(-4px, 0, 0) rotate(-0.15deg);
   }
-  48% {
-    transform: translate3d(2px, -1px, 0);
+  38% {
+    transform: translate3d(5px, 0, 0) rotate(0.15deg);
   }
-  74% {
-    transform: translate3d(-1px, 0, 0);
+  58% {
+    transform: translate3d(-3px, 0, 0) rotate(-0.08deg);
+  }
+  78% {
+    transform: translate3d(2px, 0, 0) rotate(0.05deg);
   }
 }
 
 @keyframes ent-fx-ziffer {
   0%,
   100% {
-    transform: none;
+    transform: scale(1);
+    color: var(--ink);
+    text-shadow: none;
   }
-  32% {
-    transform: translateY(-4px) scale(1.04);
+  24% {
+    transform: scale(1.07);
+    color: var(--bronze);
+    text-shadow:
+      0 0 10px rgba(232, 201, 120, 0.8),
+      0 0 30px rgba(232, 201, 120, 0.95);
+  }
+  56% {
+    transform: scale(0.985);
   }
 }
 
@@ -14448,24 +14470,35 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
       0 0 0 1px rgba(244, 239, 228, 0.4),
       0 0 76px -18px rgba(201, 160, 80, 0.42);
   }
-  35% {
+  30% {
     box-shadow:
       0 44px 100px -34px rgba(20, 17, 12, 0.58),
-      0 12px 34px -16px rgba(20, 17, 12, 0.4),
-      0 0 0 1px rgba(232, 201, 120, 0.85),
-      0 0 96px -6px rgba(232, 201, 120, 0.75);
+      0 0 0 1px rgba(232, 201, 120, 0.95),
+      0 0 35px rgba(232, 201, 120, 0.6),
+      0 0 80px rgba(232, 201, 120, 0.28);
+  }
+  62% {
+    box-shadow:
+      0 44px 100px -34px rgba(20, 17, 12, 0.58),
+      0 0 0 1px rgba(232, 201, 120, 0.6),
+      0 0 26px rgba(232, 201, 120, 0.34),
+      0 0 60px rgba(232, 201, 120, 0.16);
   }
 }
 
-@keyframes ent-fx-halo {
+@keyframes ent-fx-hopser {
   0%,
   100% {
-    opacity: 0.3;
-    transform: scale(1);
+    transform: translateY(0);
   }
-  30% {
-    opacity: 1;
-    transform: scale(1.3);
+  26% {
+    transform: translateY(-13px);
+  }
+  58% {
+    transform: translateY(4px);
+  }
+  80% {
+    transform: translateY(-3px);
   }
 }
 
@@ -15463,15 +15496,119 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
     0 0 86px -10px rgba(232, 201, 120, 0.8);
 }
 
-/* Gedrueckt: der Knopf faehrt sichtbar in den Sockel, das Licht wird flacher. */
-.ent-knopf:active,
-.ent-knopf.is-puls {
+/* Gedrueckt gehalten: der Knopf faehrt sichtbar in den Sockel. */
+.ent-knopf:active {
   transform: translateY(6px) scale(0.972);
   box-shadow:
     inset 0 2px 5px rgba(255, 246, 220, 0.4),
     inset 0 -4px 10px rgba(56, 39, 12, 0.85),
     0 5px 12px -6px rgba(0, 0, 0, 0.92),
     0 0 48px -14px rgba(232, 201, 120, 0.58);
+}
+
+/* ---------- Jeder einzelne Druck ----------
+   Nicht zufaellig, nicht gelegentlich: bei jedem Klick setzt das Skript
+   `is-druck` auf die Karte. Der Knopf faehrt in den Sockel und federt
+   zurueck, der Halo blaest sich einmal auf, Sockelschatten und
+   Kartenrand ziehen mit. Die Klasse wird vorher entfernt und nach einem
+   erzwungenen Reflow neu gesetzt, sonst startet die Animation beim
+   zweiten Klick nicht noch einmal. */
+.ent-egg.is-druck .ent-knopf {
+  animation: ent-druck-knopf 400ms cubic-bezier(0.22, 0.9, 0.3, 1.04);
+}
+
+.ent-egg.is-druck .ent-knopf__halo {
+  animation: ent-druck-halo 560ms ease-out;
+}
+
+.ent-egg.is-druck .ent-knopf__sockel {
+  animation: ent-druck-sockel 400ms ease-out;
+}
+
+.ent-egg.is-druck {
+  animation: ent-druck-karte 460ms ease-out;
+}
+
+@keyframes ent-druck-knopf {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    box-shadow:
+      inset 0 3px 9px rgba(255, 246, 220, 0.6),
+      inset 0 -10px 20px rgba(56, 39, 12, 0.75),
+      0 18px 32px -10px rgba(0, 0, 0, 0.85),
+      0 0 62px -12px rgba(232, 201, 120, 0.6);
+  }
+  8%,
+  46% {
+    transform: translateY(5px) scale(0.955);
+    box-shadow:
+      inset 0 2px 5px rgba(255, 246, 220, 0.34),
+      inset 0 -3px 8px rgba(56, 39, 12, 0.92),
+      0 3px 8px -6px rgba(0, 0, 0, 0.95),
+      0 0 30px -16px rgba(232, 201, 120, 0.45);
+  }
+  70% {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow:
+      inset 0 3px 9px rgba(255, 246, 220, 0.75),
+      inset 0 -10px 20px rgba(56, 39, 12, 0.68),
+      0 26px 44px -10px rgba(0, 0, 0, 0.9),
+      0 0 110px -6px rgba(232, 201, 120, 0.95);
+  }
+  88% {
+    transform: translateY(1px) scale(0.994);
+  }
+}
+
+@keyframes ent-druck-halo {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(1);
+  }
+  22% {
+    opacity: 0.95;
+    transform: scale(1.5);
+  }
+  56% {
+    opacity: 0.5;
+    transform: scale(1.24);
+  }
+}
+
+@keyframes ent-druck-sockel {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 2px 6px rgba(0, 0, 0, 0.85),
+      inset 0 -1px 0 rgba(232, 201, 120, 0.14),
+      0 20px 38px -16px rgba(0, 0, 0, 0.9);
+  }
+  8%,
+  46% {
+    box-shadow:
+      inset 0 4px 10px rgba(0, 0, 0, 0.96),
+      inset 0 -1px 0 rgba(232, 201, 120, 0.34),
+      0 5px 10px -10px rgba(0, 0, 0, 0.9);
+  }
+}
+
+@keyframes ent-druck-karte {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 1px 0 rgba(244, 239, 228, 0.1),
+      0 38px 84px -42px rgba(20, 17, 12, 0.85),
+      0 0 0 1px rgba(244, 239, 228, 0.35);
+  }
+  20% {
+    box-shadow:
+      inset 0 1px 0 rgba(244, 239, 228, 0.2),
+      0 38px 84px -42px rgba(20, 17, 12, 0.85),
+      0 0 0 2px rgba(232, 201, 120, 0.8),
+      0 0 54px -8px rgba(232, 201, 120, 0.55);
+  }
 }
 
 /* Gefraeste Metallkante zwischen Rand und Deckplatte. */
@@ -15515,11 +15652,20 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   pointer-events: none;
 }
 
+/* Der Halo war vorher nur eine 1px-Haarlinie — aufblasen liess sich da
+   nichts sichtbar. Jetzt ein weicher Goldring, der den Knopf umgibt. */
 .ent-knopf__halo {
   position: absolute;
   inset: -22px;
   border-radius: 50%;
   border: 1px solid rgba(232, 201, 120, 0.3);
+  background: radial-gradient(
+    circle,
+    rgba(232, 201, 120, 0) 0 44%,
+    rgba(232, 201, 120, 0.6) 58%,
+    rgba(201, 160, 80, 0.26) 70%,
+    rgba(232, 201, 120, 0) 84%
+  );
   pointer-events: none;
   animation: ent-halo 3.4s ease-in-out infinite;
 }
@@ -15527,12 +15673,12 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
 @keyframes ent-halo {
   0%,
   100% {
-    opacity: 0.28;
+    opacity: 0.2;
     transform: scale(1);
   }
   50% {
-    opacity: 0.7;
-    transform: scale(1.06);
+    opacity: 0.42;
+    transform: scale(1.05);
   }
 }
 
@@ -16282,13 +16428,27 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   .ent-karte__puls,
   .ent-sound.is-laeuft .ent-sound__eq i,
   .ent-egg__zeile,
-  .ent-hero.is-fx-blitz .ent-hero__blitz,
   .ent-hero.is-fx-linie .ent-hero__linie,
   .ent-hero.is-fx-beben .ent-hero__inner,
-  .ent-hero.is-fx-ziffern .ent-count__num,
-  .ent-hero.is-fx-video .ent-vid,
-  .ent-hero.is-fx-halo .ent-knopf__halo {
+  .ent-hero.is-fx-hopser .ent-egg__pult {
     animation: none;
+  }
+
+  /* Reduzierte Bewegung heisst nicht: der Knopf reagiert gar nicht.
+     Alles Wandernde faellt weg, das kurze Aufleuchten bleibt — Knopf,
+     Halo und Ziffern wechseln nur noch Helligkeit und Farbe. Der
+     Lichtimpuls, das Gluehen des Videorahmens und der Kartenrand
+     bewegen nichts und laufen darum unveraendert weiter. */
+  .ent-egg.is-druck .ent-knopf {
+    animation: ent-druck-knopf-ruhig 420ms ease-out;
+  }
+
+  .ent-egg.is-druck .ent-knopf__halo {
+    animation: ent-druck-halo-ruhig 520ms ease-out;
+  }
+
+  .ent-hero.is-fx-ziffern .ent-count__num {
+    animation: ent-fx-ziffer-ruhig 420ms ease-out;
   }
 
   .ent-soc__bild,
@@ -16301,12 +16461,55 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   }
 
   .ent-knopf:hover,
-  .ent-knopf:active,
-  .ent-knopf.is-puls {
+  .ent-knopf:active {
     transform: none;
   }
 
   .ent-soc:hover .ent-soc__bild {
     transform: scale(1.04);
+  }
+}
+
+/* Die bewegungsfreien Gegenstuecke. Stehen ausserhalb der Media-Query,
+   weil @keyframes ohnehin global gelten. */
+@keyframes ent-druck-knopf-ruhig {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 3px 9px rgba(255, 246, 220, 0.6),
+      inset 0 -10px 20px rgba(56, 39, 12, 0.75),
+      0 18px 32px -10px rgba(0, 0, 0, 0.85),
+      0 0 62px -12px rgba(232, 201, 120, 0.6);
+    filter: none;
+  }
+  24% {
+    box-shadow:
+      inset 0 3px 9px rgba(255, 246, 220, 0.8),
+      inset 0 -10px 20px rgba(56, 39, 12, 0.6),
+      0 18px 32px -10px rgba(0, 0, 0, 0.85),
+      0 0 110px -4px rgba(232, 201, 120, 0.98);
+    filter: brightness(1.24);
+  }
+}
+
+@keyframes ent-druck-halo-ruhig {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  24% {
+    opacity: 0.95;
+  }
+}
+
+@keyframes ent-fx-ziffer-ruhig {
+  0%,
+  100% {
+    color: var(--ink);
+    text-shadow: none;
+  }
+  28% {
+    color: var(--bronze);
+    text-shadow: 0 0 24px rgba(232, 201, 120, 0.9);
   }
 }
