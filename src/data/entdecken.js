@@ -312,19 +312,114 @@ export const BAUSTELLEN_TEXTE = {
  * Reiner Spass, nur in der Session. Keine Datenbank, kein Tracking, keine API.
  * `{tage}` wird zur Laufzeit durch die verbleibenden Tage ersetzt.
  */
+/**
+ * „Drueck nicht." — der Knopf im Hero.
+ *
+ * Drei Ebenen, alle rein lokal: bei jedem Klick eine zufaellige Zeile aus
+ * `meldungen`, mit `seltenChance` stattdessen eine aus `selten`, und bei
+ * bestimmten Klickzahlen zwingend die Zeile aus `meilensteine`. Kein
+ * Speicher, keine Datenbank, kein Tracking, kein Netzaufruf — der Zaehler
+ * lebt nur in der laufenden Session.
+ *
+ * Platzhalter in den Texten werden in Entdecken.jsx ersetzt:
+ *   {count}    Anzahl der Klicks in dieser Session
+ *   {days}     Resttage bis zum geplanten Termin (auch {tage})
+ *   {index}    aktueller Gesamt-Baustellenindex in Prozent
+ *   {kuechen}  Prozentwert des Bereichs „Kuechen"
+ *   {klo}      Prozentwert des Bereichs „Luxusklo"
+ * Die Werte kommen aus derselben Rechnung wie der Baustellenindex — der
+ * Knopf erfindet keine Zahlen.
+ */
 export const DRUECK_NICHT = {
   label: 'Drück nicht.',
   sub: 'Es passiert eh nichts … oder?',
   ruhe: 'Der Knopf tut nichts. Versprochen.',
+
   meldungen: [
-    'Zu spät. Jetzt bist du Teil der Baustelle.',
-    'Nichts passiert. Genau wie versprochen.',
+    'Ich hab doch gesagt: nicht drücken.',
+    'Nichts passiert. Wie angekündigt.',
     'Das war der teuerste Button auf dieser Seite.',
-    'Du hast wirklich gedrückt. Stark.',
-    'Noch {tage} Tage. Danke für den zusätzlichen Druck.',
-    'Immer noch nichts. Aber schön, dass du bleibst.',
+    'Danke. Jetzt dauert die Eröffnung einen Tag länger.',
+    'Der Bauleiter wurde informiert.',
+    'Das Luxusklo bleibt trotzdem bei {klo} %.',
+    'Küchenlieferung wurde dadurch nicht beschleunigt.',
+    'Sehr gut. Genau diese Energie fehlt auf der Baustelle.',
+    'Du hast gerade aktiv nichts beigetragen.',
+    'Bitte nicht nochmal. Also wirklich.',
+    'Stark. Der Knopf funktioniert.',
+    'Wir prüfen gerade, was du kaputt gemacht hast.',
+    'Fortschritt: weiterhin wissenschaftlich ungefähr.',
+    'Eine Wand ist gerade nicht umgefallen.',
+    'Irgendwo hat ein Handwerker kurz gezuckt.',
+    'Das Licht geht davon auch nicht schneller an.',
+    'Der Empfang bleibt trotzdem stehen.',
+    'Die Küchen sind immer noch nicht da.',
+    'Wir hätten den Knopf besser verstecken sollen.',
+    'Das stand so nicht im Bauzeitenplan.',
+    'Heiko sagt, du sollst aufhören.',
+    'Vitali war’s.',
+    'Danke für den zusätzlichen Druck.',
+    'Das wird schon irgendwie.',
+    'Kurze Systemprüfung: Chaos vorhanden.',
+    'Bitte warten. Baustelle lädt.',
+    'Fehler 404: Küche nicht gefunden.',
+    'Erfolgreich gedrückt. Sinn weiterhin unklar.',
+    'Das war jetzt wirklich unnötig.',
+    'Noch einmal und du bekommst einen Akkuschrauber.',
+    'Du bist hartnäckiger als unsere Liefertermine.',
+    'Wir zählen das übrigens mit.',
+    'Der Knopf merkt sich alles.',
+    'Das war Klick Nummer {count}.',
+    'Du könntest stattdessen eine Küche kaufen.',
+    'Kleiner Hinweis: Beratung funktioniert auch.',
+    'Irgendwann passiert hier bestimmt was.',
+    'Vielleicht beim nächsten Mal.',
+    'Nein.',
+    'Auch nein.',
+    'Immer noch nein.',
+    'Jetzt erst recht nicht.',
+    'Überraschung: nichts.',
+    'Immerhin läuft jetzt der Sound.',
+    'Der Countdown läuft. Wir eher hinterher.',
+    '{kuechen} % Küchen. Aber der Button glänzt.',
+    'Noch {days} Tage. Danke für den zusätzlichen Druck.',
+    'Baustellenindex: {index} %. Unverändert seit dem Klick.',
   ],
-  zaehler: (n) => `Du hast ihn ${n}-mal gedrückt.`,
+
+  // Seltene Zeilen. Kein Gewinnspiel, kein Achievement-System — nur ein
+  // trockener Gag, der eben nicht bei jedem Klick kommt.
+  selten: [
+    'BREAKING: Eine Schraube wurde gefunden.',
+    'Der Vorstand wurde soeben informiert. Leider.',
+    'Du hast einen geheimen Baustellenstatus freigeschaltet: Ahnungslos.',
+    'Glückwunsch. Dieser Klick war komplett kostenlos.',
+    'VIDEKO Achievement unlocked: Knopfdrücker.',
+    'Ein Kollege behauptet, kurz Licht gesehen zu haben.',
+    'Der Bauzeitenplan wurde daraufhin neu ausgedruckt.',
+    'Der Statiker sagt: unbedenklich. Diesmal.',
+    'Ein Kabel wurde beschriftet. Mehr ist nicht passiert.',
+    'Zwischenstand nach {count} Klicks: du bist immer noch hier.',
+  ],
+
+  seltenChance: 0.08,
+
+  // Feste Klickzahlen schlagen den Zufall. Die Reihe ist bewusst kurz — sie
+  // soll auffallen, nicht zum Sammelspiel werden.
+  meilensteine: {
+    1: 'Ich hab doch gesagt: nicht drücken.',
+    3: 'Okay. Du lernst es offensichtlich nicht.',
+    5: 'NICHT NOCHMAL.',
+    7: 'Du bist ab jetzt offiziell Bauhelfer. Unbezahlt.',
+    10: '10-mal gedrückt. Produktivität: überschaubar.',
+    15: 'Dennis wurde soeben nervös.',
+    20: 'Luxusklo +0 %. Danke fürs Nachfragen.',
+    25: 'Baustelle erfolgreich neu gestartet.',
+    50: 'Du hast eindeutig zu viel Zeit. Wir hätten Arbeit für dich.',
+    100: 'Herzlichen Glückwunsch. Es ist immer noch nichts fertig.',
+    250: 'Bitte geh jetzt wirklich nach Hause.',
+  },
+
+  zaehler: (n) => `${n}× gedrückt`,
 }
 
 /* ------------------------------------------------------------------ *

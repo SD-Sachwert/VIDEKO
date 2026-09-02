@@ -879,70 +879,163 @@ function SocialKachel({ daten, Icon, href, aus = false, delay = 0 }) {
  * „Drueck nicht."
  * ------------------------------------------------------------------ */
 
+/* Die kurzen CSS-Effekte, die ein Klick ausloesen darf. Klein bei normalen
+   Klicks, kraeftiger bei den festen Meilensteinen. Immer nur einer, immer
+   unter einer Sekunde, und unter `prefers-reduced-motion` gar keiner (das
+   entscheidet das Stylesheet, nicht dieses Modul). */
+const EGG_FX_KLEIN = ['halo', 'ziffern', 'linie']
+const EGG_FX_GROSS = ['blitz', 'beben', 'video', 'linie']
+
+/** Anteil der normalen Klicks, die ueberhaupt einen Effekt bekommen. */
+const EGG_FX_CHANCE = 0.3
+
+/** Zufaelliges Element — nur im Klick-Handler benutzt, nie beim Render. */
+function ausListe(liste) {
+  return liste[Math.floor(Math.random() * liste.length)]
+}
+
 /**
- * Reines Spassmodul. Kein Audio, kein Modal, keine Confetti-Library, kein
- * Tracking, keine Speicherung. Der Zaehler lebt nur in dieser Session — beim
- * Neuladen faengt er wieder bei null an, und genau das ist gewollt.
+ * Die Zahlen, die in den Sprüchen auftauchen duerfen — aus genau derselben
+ * Rechnung wie der Baustellenindex weiter unten. Der Knopf erfindet nichts:
+ * Steht der Index auf 12 %, sagt auch der Spruch 12 %.
+ */
+function eggWerte(heute) {
+  const stand = terminStand(heute)
+  const daten = baustellenIndex(BAUSTELLEN_BEREICHE, heute || INDEX_BASIS, BAUSTELLEN_GATES)
+  const prozent = (id) => {
+    const b = daten.bereiche.find((x) => x.id === id)
+    return b ? b.prozent : 0
+  }
+  return {
+    days: stand.tage === null ? 0 : stand.tage,
+    index: daten.gesamt,
+    kuechen: prozent('kuechen'),
+    klo: prozent('luxusklo'),
+  }
+}
+
+/**
+ * Reines Spassmodul. Kein Modal, keine Library, kein Tracking, kein
+ * Netzaufruf, keine Speicherung. Der Zaehler lebt nur in dieser Session —
+ * beim Neuladen faengt er wieder bei null an, und genau das ist gewollt.
  *
  * Der Startzustand ist absichtlich leer: vorgerendertes HTML und erster
- * Render im Browser muessen identisch sein (siehe useRestzeit oben).
+ * Render im Browser muessen identisch sein (siehe useRestzeit oben). Deshalb
+ * faellt auch kein Math.random beim Render — der Zufall passiert
+ * ausschliesslich im Klick-Handler.
  *
- * Aufbau wie ein breites Bedienfeld: links der Knopf auf seinem Sockel,
- * rechts Text und Rueckmeldung.
+ * Drei Ebenen in dieser Reihenfolge: fester Meilenstein schlaegt seltenen
+ * Spruch schlaegt normalen Spruch.
+ *
+ * `onDruck` haengt den Klick an die bereits vorhandene Sound-Logik
+ * (`tonStarten`) — hier entsteht keine zweite Audio-Logik. `onEffekt` meldet
+ * dem Hero, welcher kurze Effekt laufen darf.
  */
-function DrueckNicht() {
+function DrueckNicht({ onDruck, onEffekt }) {
+  const heute = useHeute()
+  const werte = useMemo(() => eggWerte(heute), [heute])
+
   const [zaehler, setZaehler] = useState(0)
   const [meldung, setMeldung] = useState(null)
   const [puls, setPuls] = useState(false)
   const timer = useRef(null)
+  const anzahl = useRef(0)
+  const letzter = useRef(null)
 
   useEffect(() => () => clearTimeout(timer.current), [])
 
   const druecken = useCallback(() => {
-    setZaehler((n) => n + 1)
+    // Der Klick ist eindeutige Nutzerabsicht: der bereits laufende oder noch
+    // blockierte Soundtrack darf hier starten.
+    if (onDruck) onDruck()
 
-    const ziel = new Date(ENTDECKEN_CONFIG.openingDate).getTime()
-    const tage = Number.isFinite(ziel) ? Math.max(0, Math.ceil((ziel - Date.now()) / 86400000)) : 0
-    const fertig = (t) => t.replace('{tage}', String(tage))
+    const n = anzahl.current + 1
+    anzahl.current = n
+    setZaehler(n)
 
-    setMeldung((vorher) => {
+    const fertig = (t) =>
+      t
+        .replace('{count}', String(n))
+        .replace('{days}', String(werte.days))
+        .replace('{tage}', String(werte.days))
+        .replace('{index}', String(werte.index))
+        .replace('{kuechen}', String(werte.kuechen))
+        .replace('{klo}', String(werte.klo))
+
+    const fest = DRUECK_NICHT.meilensteine[n]
+    let roh
+    let art
+    if (fest) {
+      roh = fest
+      art = 'fest'
+    } else if (DRUECK_NICHT.selten.length && Math.random() < DRUECK_NICHT.seltenChance) {
+      roh = ausListe(DRUECK_NICHT.selten)
+      art = 'selten'
+    } else {
       const liste = DRUECK_NICHT.meldungen
-      let text = liste[Math.floor(Math.random() * liste.length)]
+      let i = Math.floor(Math.random() * liste.length)
       // Nicht zweimal hintereinander dieselbe Zeile — das wirkt wie ein Bug.
-      if (liste.length > 1 && fertig(text) === vorher) {
-        text = liste[(liste.indexOf(text) + 1) % liste.length]
-      }
-      return fertig(text)
-    })
+      if (liste.length > 1 && liste[i] === letzter.current) i = (i + 1) % liste.length
+      roh = liste[i]
+      art = 'normal'
+    }
+    letzter.current = roh
+
+    setMeldung({ text: fertig(roh), art, nr: n })
 
     setPuls(true)
     clearTimeout(timer.current)
     timer.current = setTimeout(() => setPuls(false), 640)
-  }, [])
+
+    if (onEffekt) {
+      if (art === 'fest') onEffekt(ausListe(EGG_FX_GROSS))
+      else if (art === 'selten') onEffekt('video')
+      else if (Math.random() < EGG_FX_CHANCE) onEffekt(ausListe(EGG_FX_KLEIN))
+    }
+  }, [onDruck, onEffekt, werte])
 
   return (
     <div className="ent-egg">
       <div className="ent-egg__pult">
         <span className="ent-knopf__sockel" aria-hidden="true" />
-        <button type="button" className={`ent-knopf${puls ? ' is-puls' : ''}`} onClick={druecken}>
+        <button
+          type="button"
+          className={`ent-knopf${puls ? ' is-puls' : ''}`}
+          onClick={druecken}
+          aria-describedby="ent-egg-out"
+        >
           <span className="ent-knopf__halo" aria-hidden="true" />
+          <span className="ent-knopf__rand" aria-hidden="true" />
           <span className="ent-knopf__cap" aria-hidden="true" />
+          <span className="ent-knopf__glanz" aria-hidden="true" />
           <span className="ent-knopf__sr">{DRUECK_NICHT.label}</span>
         </button>
       </div>
 
       <div className="ent-egg__text">
-        <span className="kicker kicker--gold">Nicht anfassen</span>
-        <h2 className="ent-h2 ent-egg__h2">
+        {/* Der Knopf traegt denselben Text schon als Screenreader-Label —
+            diese Zeile ist reine Optik. */}
+        <p className="ent-egg__label" aria-hidden="true">
           Drück <span className="grad">nicht.</span>
-        </h2>
+        </p>
         <p className="ent-egg__sub">{DRUECK_NICHT.sub}</p>
 
-        {/* Hoeflich statt aufdringlich: die Meldung wird angesagt, der Zaehler
-            steht darunter als stiller Text. */}
-        <p className="ent-egg__out" aria-live="polite">
-          {meldung || DRUECK_NICHT.ruhe}
+        {/* Die Rueckmeldung steht direkt am Knopf, nicht in einem Overlay.
+            Feste Hoehe, damit beim Wechsel nichts springt. */}
+        <p
+          className={`ent-egg__out${meldung ? ` is-${meldung.art}` : ''}`}
+          id="ent-egg-out"
+          aria-live="polite"
+        >
+          {meldung ? (
+            <span className="ent-egg__zeile" key={meldung.nr}>
+              {meldung.text}
+            </span>
+          ) : (
+            DRUECK_NICHT.ruhe
+          )}
         </p>
+
         <p className="ent-egg__count">{zaehler > 0 ? DRUECK_NICHT.zaehler(zaehler) : ' '}</p>
       </div>
     </div>
@@ -1044,6 +1137,27 @@ export default function Entdecken() {
     [lenis, tonStarten]
   )
 
+  // Ein kurzer, rein visueller Effekt pro Klick auf den Knopf. Der Zustand
+  // liegt hier oben, weil Countdown, Video und Lichtschein alle im Hero
+  // haengen — als Klasse an der Section erreicht sie alle drei ohne
+  // zusaetzliche Verkabelung. Nichts davon laeuft dauerhaft, und
+  // `prefers-reduced-motion` schaltet im Stylesheet alles ab.
+  const [fx, setFx] = useState(null)
+  const fxTimer = useRef(null)
+  useEffect(() => () => clearTimeout(fxTimer.current), [])
+
+  const effektAus = useCallback((name) => {
+    if (!name) return
+    clearTimeout(fxTimer.current)
+    // Erst abraeumen, dann im naechsten Frame neu setzen: sonst startet
+    // dieselbe Animation beim zweiten Klick nicht noch einmal.
+    setFx(null)
+    requestAnimationFrame(() => {
+      setFx(name)
+      fxTimer.current = setTimeout(() => setFx(null), 780)
+    })
+  }, [])
+
   return (
     <div className="ent">
       {/* Der Player wird nur gerendert, wenn wirklich eine eigene Audiodatei
@@ -1065,9 +1179,13 @@ export default function Entdecken() {
         <SoundSchalter an={tonAn} laeuft={tonLaeuft} umschalten={tonUmschalten} />
       ) : null}
 
-      {/* ---------- Hero: Headline + Countdown links, grosses Video rechts ---------- */}
-      <section className="ent-hero">
+      {/* ---------- Hero: Copy links, Countdown in der Mitte, der Knopf
+           rechts, darunter das grosse Baustellenvideo ueber die volle
+           Breite. Alles drei liegt damit im ersten Screen. ---------- */}
+      <section className={`ent-hero${fx ? ` is-fx-${fx}` : ''}`}>
         <span className="ent-hero__glow" aria-hidden="true" />
+        <span className="ent-hero__blitz" aria-hidden="true" />
+        <span className="ent-hero__linie" aria-hidden="true" />
         <div className="ent-wide ent-hero__inner">
           <div className="ent-hero__copy">
             {/* Kein zweites Logo im Hero: der Header steht auf /entdecken
@@ -1092,14 +1210,18 @@ export default function Entdecken() {
                 Küche planen
               </CTAButton>
             </div>
+          </div>
 
-            {/* Countdown direkt unter den Buttons — nicht als eigener, spaeter
-                Abschnitt. Auf 390px liegt er damit im ersten Screen. Bewusst
-                ohne Reveal: der Block ist sofort sichtbar und darf nicht erst
-                eingeblendet werden. */}
-            <div className="ent-hero__count" id="eroeffnung">
-              <Countdown />
-            </div>
+          {/* Bewusst ohne Reveal: der Countdown ist sofort sichtbar und darf
+              nicht erst eingeblendet werden. */}
+          <div className="ent-hero__count" id="eroeffnung">
+            <Countdown />
+          </div>
+
+          {/* Ebenfalls ohne Reveal — der Knopf muss ohne Scrollen und ohne
+              Wartezeit da sein, sonst ist der Gag keiner. */}
+          <div className="ent-hero__egg">
+            <DrueckNicht onDruck={tonStarten} onEffekt={effektAus} />
           </div>
 
           <div className="ent-hero__media">
@@ -1197,15 +1319,6 @@ export default function Entdecken() {
                   </li>
                 ))}
               </ul>
-            </Reveal>
-          </div>
-        </section>
-
-        {/* Easter Egg */}
-        <section className="ent-band ent-band--egg">
-          <div className="ent-wide">
-            <Reveal className="ent-eggwrap">
-              <DrueckNicht />
             </Reveal>
           </div>
         </section>

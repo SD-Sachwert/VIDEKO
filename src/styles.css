@@ -14296,7 +14296,7 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
 .ent-hero {
   position: relative;
   overflow: hidden;
-  padding: clamp(112px, 12vw, 158px) 0 clamp(72px, 8vw, 116px);
+  padding: clamp(86px, 9.2vw, 132px) 0 clamp(72px, 8vw, 116px);
   background: linear-gradient(168deg, #fbf8f1 0%, var(--silver-cream) 46%, var(--stone) 100%);
 }
 
@@ -14320,10 +14320,160 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
     linear-gradient(102deg, transparent 63%, rgba(232, 201, 120, 0.16) 64%, transparent 65%);
 }
 
+/* ---------- Kurze Reaktionen auf den Knopf ----------
+   Alles rein per CSS und immer nur eine Sache auf einmal: ein warmer
+   Lichtblitz, eine durchlaufende Goldlinie, ein Wackler von zwei Pixeln,
+   ein Zucken der Countdown-Ziffern oder ein kurzes Gluehen des
+   Videorahmens. Nichts davon laeuft dauerhaft, nichts blockiert Klicks,
+   und bei reduzierter Bewegung faellt alles weg. */
+
+.ent-hero__blitz,
+.ent-hero__linie {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 0;
+}
+
+.ent-hero__blitz {
+  inset: 0;
+  background: radial-gradient(
+    72% 62% at 62% 16%,
+    rgba(255, 238, 196, 0.72) 0%,
+    rgba(232, 201, 120, 0.26) 40%,
+    transparent 72%
+  );
+}
+
+.ent-hero__linie {
+  left: -28%;
+  top: 0;
+  bottom: 0;
+  width: 22%;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(232, 201, 120, 0.42) 44%,
+    rgba(255, 249, 230, 0.82) 50%,
+    rgba(232, 201, 120, 0.42) 56%,
+    transparent 100%
+  );
+}
+
+.ent-hero.is-fx-blitz .ent-hero__blitz {
+  animation: ent-fx-blitz 620ms ease-out;
+}
+
+.ent-hero.is-fx-linie .ent-hero__linie {
+  animation: ent-fx-linie 740ms ease-in-out;
+}
+
+.ent-hero.is-fx-beben .ent-hero__inner {
+  animation: ent-fx-beben 300ms ease-in-out;
+}
+
+.ent-hero.is-fx-ziffern .ent-count__num {
+  animation: ent-fx-ziffer 460ms ease-out;
+}
+
+.ent-hero.is-fx-video .ent-vid {
+  animation: ent-fx-glut 660ms ease-out;
+}
+
+.ent-hero.is-fx-halo .ent-knopf__halo {
+  animation: ent-fx-halo 620ms ease-out;
+}
+
+@keyframes ent-fx-blitz {
+  0% {
+    opacity: 0;
+  }
+  22% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes ent-fx-linie {
+  0% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  14% {
+    opacity: 1;
+  }
+  86% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(560%);
+  }
+}
+
+@keyframes ent-fx-beben {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  22% {
+    transform: translate3d(-2px, 1px, 0);
+  }
+  48% {
+    transform: translate3d(2px, -1px, 0);
+  }
+  74% {
+    transform: translate3d(-1px, 0, 0);
+  }
+}
+
+@keyframes ent-fx-ziffer {
+  0%,
+  100% {
+    transform: none;
+  }
+  32% {
+    transform: translateY(-4px) scale(1.04);
+  }
+}
+
+@keyframes ent-fx-glut {
+  0%,
+  100% {
+    box-shadow:
+      0 44px 100px -34px rgba(20, 17, 12, 0.58),
+      0 12px 34px -16px rgba(20, 17, 12, 0.4),
+      0 0 0 1px rgba(244, 239, 228, 0.4),
+      0 0 76px -18px rgba(201, 160, 80, 0.42);
+  }
+  35% {
+    box-shadow:
+      0 44px 100px -34px rgba(20, 17, 12, 0.58),
+      0 12px 34px -16px rgba(20, 17, 12, 0.4),
+      0 0 0 1px rgba(232, 201, 120, 0.85),
+      0 0 96px -6px rgba(232, 201, 120, 0.75);
+  }
+}
+
+@keyframes ent-fx-halo {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+}
+
 .ent-hero__inner {
   position: relative;
+  z-index: 1;
   display: grid;
-  gap: 46px;
+  gap: clamp(26px, 3.4vw, 44px);
 }
 
 .ent-hero__copy {
@@ -14443,7 +14593,7 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
    ===================================================================== */
 
 .ent-hero__count {
-  margin-top: clamp(38px, 4.4vw, 58px);
+  margin-top: 0;
 }
 
 .ent-count {
@@ -15223,35 +15373,35 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   filter: grayscale(0.86) brightness(0.42);
 }
 
-/* ---------- „Drueck nicht." — breites Bedienfeld ---------- */
+/* ---------- „Drueck nicht." — Bedienpult im Hero ---------- */
 
-.ent-band--egg {
-  padding-top: clamp(24px, 3vw, 44px);
-}
-
-.ent-eggwrap {
-  max-width: 980px;
-  margin: 0 auto;
+.ent-hero__egg {
+  min-width: 0;
+  display: flex;
+  justify-content: center;
 }
 
 .ent-egg {
+  width: 100%;
+  max-width: 380px;
   display: grid;
-  gap: 30px;
-  align-items: center;
-  padding: clamp(20px, 2.2vw, 28px) clamp(26px, 3vw, 40px);
-  border-radius: 24px;
-  border: 1px solid rgba(201, 160, 80, 0.28);
-  background: linear-gradient(140deg, rgba(32, 29, 24, 0.94) 0%, rgba(10, 9, 8, 0.94) 100%);
+  justify-items: center;
+  gap: 16px;
+  padding: 24px 22px 24px;
+  border-radius: 26px;
+  border: 1px solid rgba(201, 160, 80, 0.34);
+  background: linear-gradient(150deg, rgba(34, 30, 24, 0.96) 0%, rgba(10, 9, 8, 0.97) 100%);
   box-shadow:
-    inset 0 1px 0 rgba(244, 239, 228, 0.08),
-    0 34px 80px -40px rgba(0, 0, 0, 0.9);
+    inset 0 1px 0 rgba(244, 239, 228, 0.1),
+    0 38px 84px -42px rgba(20, 17, 12, 0.85),
+    0 0 0 1px rgba(244, 239, 228, 0.35);
 }
 
 .ent-egg__pult {
   position: relative;
   display: grid;
   place-items: center;
-  padding: 6px 22px 24px;
+  padding: 8px 22px 26px;
 }
 
 /* Sockel unter dem Knopf: flache Ellipse mit Schatten und Goldkante —
@@ -15260,60 +15410,108 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   position: absolute;
   left: 50%;
   bottom: 0;
-  width: 164px;
-  height: 40px;
+  width: 178px;
+  height: 44px;
   transform: translateX(-50%);
   border-radius: 50%;
-  background: linear-gradient(180deg, #26221c 0%, #0d0c0a 100%);
-  border: 1px solid rgba(201, 160, 80, 0.24);
+  background: radial-gradient(62% 130% at 50% 0%, #3a342a 0%, #1b1815 48%, #0b0a09 100%);
+  border: 1px solid rgba(201, 160, 80, 0.3);
   box-shadow:
-    inset 0 2px 6px rgba(0, 0, 0, 0.8),
-    0 18px 34px -16px rgba(0, 0, 0, 0.9);
+    inset 0 2px 6px rgba(0, 0, 0, 0.85),
+    inset 0 -1px 0 rgba(232, 201, 120, 0.14),
+    0 20px 38px -16px rgba(0, 0, 0, 0.9);
+}
+
+/* Metallkragen: der Ring, in dem der Knopf steckt. */
+.ent-knopf__sockel::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -11px;
+  width: 140px;
+  height: 34px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: linear-gradient(180deg, #6b5c42 0%, #2a251d 58%, #14120f 100%);
+  box-shadow: inset 0 1px 0 rgba(232, 201, 120, 0.36);
 }
 
 .ent-knopf {
   position: relative;
-  width: 124px;
-  height: 124px;
+  z-index: 1;
+  width: 132px;
+  height: 132px;
   border: none;
   border-radius: 50%;
   cursor: pointer;
   padding: 0;
-  background: radial-gradient(circle at 34% 26%, #f6e2ac 0%, #e8c978 22%, #c9a050 52%, #8b6b38 78%, #5f4722 100%);
+  background: radial-gradient(circle at 34% 26%, #f8e8ba 0%, #e8c978 24%, #c9a050 54%, #8b6b38 79%, #5a4320 100%);
   box-shadow:
-    inset 0 3px 8px rgba(255, 244, 214, 0.55),
-    inset 0 -8px 18px rgba(60, 42, 14, 0.7),
-    0 16px 30px -10px rgba(0, 0, 0, 0.85),
-    0 0 60px -12px rgba(232, 201, 120, 0.6);
+    inset 0 3px 9px rgba(255, 246, 220, 0.6),
+    inset 0 -10px 20px rgba(56, 39, 12, 0.75),
+    0 18px 32px -10px rgba(0, 0, 0, 0.85),
+    0 0 62px -12px rgba(232, 201, 120, 0.6);
   transition: transform 0.14s ease, box-shadow 0.24s ease;
 }
 
 .ent-knopf:hover {
   transform: translateY(-2px);
   box-shadow:
-    inset 0 3px 8px rgba(255, 244, 214, 0.6),
-    inset 0 -8px 18px rgba(60, 42, 14, 0.7),
-    0 22px 38px -10px rgba(0, 0, 0, 0.9),
-    0 0 84px -10px rgba(232, 201, 120, 0.78);
+    inset 0 3px 9px rgba(255, 246, 220, 0.66),
+    inset 0 -10px 20px rgba(56, 39, 12, 0.75),
+    0 24px 40px -10px rgba(0, 0, 0, 0.9),
+    0 0 86px -10px rgba(232, 201, 120, 0.8);
 }
 
+/* Gedrueckt: der Knopf faehrt sichtbar in den Sockel, das Licht wird flacher. */
 .ent-knopf:active,
 .ent-knopf.is-puls {
-  transform: translateY(5px) scale(0.975);
+  transform: translateY(6px) scale(0.972);
   box-shadow:
-    inset 0 2px 5px rgba(255, 244, 214, 0.4),
-    inset 0 -4px 10px rgba(60, 42, 14, 0.8),
-    0 6px 14px -6px rgba(0, 0, 0, 0.9),
-    0 0 52px -14px rgba(232, 201, 120, 0.6);
+    inset 0 2px 5px rgba(255, 246, 220, 0.4),
+    inset 0 -4px 10px rgba(56, 39, 12, 0.85),
+    0 5px 12px -6px rgba(0, 0, 0, 0.92),
+    0 0 48px -14px rgba(232, 201, 120, 0.58);
+}
+
+/* Gefraeste Metallkante zwischen Rand und Deckplatte. */
+.ent-knopf__rand {
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: conic-gradient(
+    from 206deg,
+    rgba(255, 249, 230, 0.55) 0deg,
+    rgba(90, 67, 32, 0.5) 76deg,
+    rgba(255, 249, 230, 0.42) 166deg,
+    rgba(90, 67, 32, 0.55) 260deg,
+    rgba(255, 249, 230, 0.5) 360deg
+  );
+  -webkit-mask: radial-gradient(circle, transparent 0 62%, #000 63%);
+  mask: radial-gradient(circle, transparent 0 62%, #000 63%);
 }
 
 /* Deckplatte: feiner, hellerer Kreis obenauf — gibt dem Knopf Tiefe. */
 .ent-knopf__cap {
   position: absolute;
-  inset: 15px;
+  inset: 16px;
   border-radius: 50%;
-  background: radial-gradient(circle at 38% 28%, rgba(255, 249, 230, 0.72) 0%, rgba(232, 201, 120, 0.12) 42%, transparent 68%);
-  border: 1px solid rgba(255, 244, 214, 0.28);
+  background: radial-gradient(circle at 38% 28%, rgba(255, 250, 234, 0.7) 0%, rgba(232, 201, 120, 0.14) 44%, transparent 70%);
+  border: 1px solid rgba(255, 244, 214, 0.3);
+  pointer-events: none;
+}
+
+/* Der eine harte Lichtreflex, an dem das Auge die Woelbung erkennt. */
+.ent-knopf__glanz {
+  position: absolute;
+  left: 20%;
+  top: 13%;
+  width: 44%;
+  height: 28%;
+  border-radius: 50%;
+  background: linear-gradient(158deg, rgba(255, 253, 245, 0.86) 0%, rgba(255, 253, 245, 0) 72%);
+  filter: blur(1px);
   pointer-events: none;
 }
 
@@ -15347,37 +15545,77 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   white-space: nowrap;
 }
 
-.ent-egg .kicker {
-  margin-bottom: 14px;
+.ent-egg__text {
+  width: 100%;
+  text-align: center;
 }
 
-.ent-egg__h2 {
+.ent-egg__label {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(1.62rem, 2.2vw, 2.05rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
   color: var(--cream);
   margin: 0;
-  font-size: clamp(2.1rem, 3.6vw, 3.2rem);
 }
 
 .ent-egg__sub {
-  font-size: 1rem;
+  font-size: 0.84rem;
   color: var(--cream-soft);
-  margin: 12px 0 0;
+  margin: 9px 0 0;
 }
 
+/* Die Rueckmeldung sitzt direkt unter dem Knopf, nicht in einem Overlay.
+   Feste Mindesthoehe fuer drei Zeilen: dadurch springt beim Wechsel von
+   kurzem auf langen Spruch nichts. */
 .ent-egg__out {
-  margin: 16px 0 0;
-  min-height: 1.6em;
+  margin: 14px 0 0;
+  min-height: 4.4em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: var(--serif);
-  font-size: clamp(1.1rem, 1.7vw, 1.42rem);
-  line-height: 1.42;
+  font-size: 1.04rem;
+  line-height: 1.4;
   color: var(--gold-bright);
 }
 
+.ent-egg__out.is-selten {
+  font-style: italic;
+  color: var(--cream);
+}
+
+.ent-egg__out.is-fest {
+  color: #f6e2ac;
+  text-shadow: 0 0 24px rgba(232, 201, 120, 0.42);
+}
+
+.ent-egg__zeile {
+  animation: ent-egg-ein 260ms ease-out both;
+}
+
+@keyframes ent-egg-ein {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Sichtbar, aber nicht dominant. */
 .ent-egg__count {
-  margin: 8px 0 0;
+  margin: 10px 0 0;
   min-height: 1.4em;
-  font-size: 0.82rem;
-  letter-spacing: 0.04em;
-  color: rgba(244, 239, 228, 0.46);
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(244, 239, 228, 0.44);
 }
 
 /* =====================================================================
@@ -15820,10 +16058,40 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
     gap: 40px;
   }
 
-  .ent-egg {
-    grid-template-columns: auto minmax(0, 1fr);
-    gap: 46px;
-    min-height: 196px;
+  /* Hero-Text links, Countdown darunter, der Knopf rechts daneben —
+     darunter das Video ueber die volle Breite. */
+  .ent-hero__inner {
+    grid-template-columns: minmax(0, 1fr) minmax(276px, 320px);
+    grid-template-areas:
+      'copy egg'
+      'count egg'
+      'media media';
+    align-items: start;
+    column-gap: 40px;
+  }
+
+  .ent-hero__copy {
+    grid-area: copy;
+  }
+
+  .ent-hero__count {
+    grid-area: count;
+  }
+
+  .ent-hero__egg {
+    grid-area: egg;
+  }
+
+  .ent-hero__media {
+    grid-area: media;
+    margin-top: clamp(6px, 1.2vw, 20px);
+  }
+
+  /* Breiter statt hoeher: das Video bleibt gross, treibt den Hero aber
+     nicht ins Endlose. */
+  .ent-vid {
+    aspect-ratio: 16 / 9;
+    max-height: min(62vh, 620px);
   }
 
   .ent-count__num {
@@ -15836,11 +16104,9 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
     --ent-pad: 40px;
   }
 
-  /* Hero-Split ~43 / 57 — links Text und Countdown, rechts das Video. */
   .ent-hero__inner {
-    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
-    gap: 58px;
-    align-items: center;
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 340px);
+    column-gap: 52px;
   }
 
   .ent-hero__note {
@@ -15869,6 +16135,24 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
 
   .ent-head {
     margin-bottom: 70px;
+  }
+}
+
+@media (min-width: 1440px) {
+  /* Drei Spalten: Copy, grosser Countdown, Knopf — darunter das Video ueber
+     die volle Breite. Die mittlere Spalte behaelt mindestens die Breite, die
+     die vierstellige Countdown-Zeile in ihrer heutigen Groesse braucht. */
+  .ent-hero__inner {
+    grid-template-columns: minmax(400px, 1fr) minmax(572px, 1.08fr) minmax(300px, 328px);
+    grid-template-areas:
+      'copy count egg'
+      'media media media';
+    align-items: center;
+    column-gap: 36px;
+  }
+
+  .ent-hero__egg {
+    justify-content: flex-end;
   }
 }
 
@@ -15934,8 +16218,32 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
     margin-bottom: 14px;
   }
 
+  /* Auf kleinen Geraeten zaehlt jeder Pixel: der Knopf samt Beschriftung
+     muss ohne Scrollen im ersten Screen stehen. Deshalb hier enger, aber
+     ohne den Countdown zu verkleinern. */
+  .ent-hero {
+    padding-top: 62px;
+  }
+
+  .ent-hero__inner {
+    gap: 20px;
+  }
+
+  .ent-hero__copy .kicker {
+    margin-bottom: 16px;
+  }
+
+  .ent-hero__title {
+    margin-bottom: 18px;
+  }
+
+  .ent-hero__lead {
+    margin-bottom: 22px;
+  }
+
   .ent-egg {
-    padding: 26px 20px 28px;
+    gap: 12px;
+    padding: 18px 20px 20px;
   }
 
   .ent-knopf {
@@ -15944,8 +16252,14 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   }
 
   .ent-knopf__sockel {
-    width: 146px;
-    height: 30px;
+    width: 156px;
+    height: 34px;
+  }
+
+  .ent-knopf__sockel::after {
+    width: 122px;
+    height: 28px;
+    top: -9px;
   }
 
   .ent-count__lab {
@@ -15966,7 +16280,14 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   .ent-vid__tag::before,
   .ent-knopf__halo,
   .ent-karte__puls,
-  .ent-sound.is-laeuft .ent-sound__eq i {
+  .ent-sound.is-laeuft .ent-sound__eq i,
+  .ent-egg__zeile,
+  .ent-hero.is-fx-blitz .ent-hero__blitz,
+  .ent-hero.is-fx-linie .ent-hero__linie,
+  .ent-hero.is-fx-beben .ent-hero__inner,
+  .ent-hero.is-fx-ziffern .ent-count__num,
+  .ent-hero.is-fx-video .ent-vid,
+  .ent-hero.is-fx-halo .ent-knopf__halo {
     animation: none;
   }
 
