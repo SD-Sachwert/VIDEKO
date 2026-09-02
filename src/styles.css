@@ -14526,6 +14526,60 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   margin-top: 14px;
 }
 
+/* --- Nach dem Termin: derselbe Zaehler, umgedrehte Aussage ------------ */
+
+/* Eine einzelne Einheit steht nicht mehr im Vierer-Raster, sondern so breit
+   wie sie ist — sonst haengt die Zahl im linken Viertel der Flaeche. */
+.ent-count__grid--eins {
+  grid-template-columns: max-content;
+  max-width: none;
+}
+
+.ent-count__grid--eins .ent-count__num {
+  font-size: clamp(3.4rem, 15vw, 5.2rem);
+}
+
+.ent-count__title--gross {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 3.4vw, 3rem);
+  font-weight: 300;
+  letter-spacing: 0;
+  text-transform: none;
+  margin-top: 4px;
+}
+
+.ent-count__sub {
+  font-family: var(--serif);
+  font-size: clamp(1.15rem, 2vw, 1.5rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--ink-soft);
+  margin: 10px 0 0;
+}
+
+/* Kein Fehlerzustand, kein Rot: dieselbe Goldplakette wie ueberall auf der
+   Seite, nur mit einer trockeneren Zeile darin. */
+.ent-count__badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(201, 160, 80, 0.5);
+  background: rgba(201, 160, 80, 0.13);
+  font-family: var(--sans);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--bronze);
+  white-space: nowrap;
+  vertical-align: middle;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.ent-count--plan .ent-count__foot {
+  margin-top: 18px;
+}
 /* =====================================================================
    3 — VIDEKO-Baustellenindex: Gesamtpanel + neun Bereichskarten
    ===================================================================== */
@@ -14618,6 +14672,28 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   letter-spacing: 0.18em;
 }
 
+/* Restzeit und Index stehen bewusst direkt uebereinander: Die Tage werden
+   weniger, der Index laesst sich Zeit. Genau diese Diskrepanz ist gewollt —
+   sie bleibt deshalb auch nach dem Termin stehen. */
+.ent-idxg__tage {
+  font-family: var(--sans);
+  font-size: clamp(1.02rem, 2vw, 1.4rem);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+  line-height: 1.15;
+  font-variant-numeric: lining-nums tabular-nums;
+  font-feature-settings: 'lnum' 1, 'tnum' 1;
+}
+
+.ent-idxg__status {
+  font-family: var(--serif);
+  font-size: clamp(1.3rem, 2.4vw, 1.85rem);
+  font-weight: 300;
+  color: var(--bronze);
+  line-height: 1.2;
+}
 .ent-idxg__note {
   font-family: var(--serif);
   font-size: clamp(1.15rem, 2vw, 1.6rem);
@@ -14782,6 +14858,47 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   color: var(--bronze);
 }
 
+/* Blockierte Bereiche sehen anders aus als langsame — aber ruhig: Gold und
+   Anthrazit, kein Rot, kein Warnzeichen. Hier ist nichts kaputt, hier ist
+   nur noch nichts geliefert. */
+.ent-idxk--gate {
+  border-color: rgba(43, 41, 37, 0.2);
+  background: linear-gradient(155deg, rgba(43, 41, 37, 0.07) 0%, rgba(255, 255, 255, 0.7) 60%);
+}
+
+.ent-idxk--gate .ent-idxk__icon {
+  border-color: rgba(43, 41, 37, 0.2);
+  background: rgba(43, 41, 37, 0.07);
+  color: var(--ink-soft);
+}
+
+.ent-idxk--gate .ent-idxk__fill {
+  background: linear-gradient(105deg, rgba(139, 107, 56, 0.5), rgba(201, 160, 80, 0.42));
+}
+
+.ent-idxk__gate {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+  flex: none;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(43, 41, 37, 0.22);
+  background: rgba(43, 41, 37, 0.06);
+  font-family: var(--sans);
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.ent-idxk__delta.is-gate {
+  color: var(--bronze);
+  letter-spacing: 0.13em;
+}
 .ent-idxk__bar {
   position: relative;
   display: block;
@@ -15326,13 +15443,16 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   border: 1px solid rgba(201, 160, 80, 0.34);
   background: #ece6da;
   box-shadow:
-    0 36px 80px -38px rgba(20, 17, 12, 0.6),
-    0 0 60px -22px rgba(201, 160, 80, 0.34);
+    0 40px 90px -40px rgba(20, 17, 12, 0.62),
+    0 12px 30px -18px rgba(20, 17, 12, 0.4),
+    0 0 64px -24px rgba(201, 160, 80, 0.36);
 }
 
 /* Der Standort liegt exakt in der Bildmitte, deshalb darf beliebig
    beschnitten werden — der Pin bei 50/50 bleibt in jedem Format richtig.
-   Der Filter waermt die Karte an, ohne die Strassennamen zuzudecken. */
+   Die Karte ist bereits als warme Cremefassung erzeugt (echte OSM-Kacheln,
+   nur entfaerbt und getont), deshalb steht hier kein harter Filter mehr:
+   Strassennamen sollen lesbar bleiben, nicht unter Sepia verschwinden. */
 .ent-karte__bild {
   position: absolute;
   inset: 0;
@@ -15340,16 +15460,19 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   height: 100%;
   object-fit: cover;
   object-position: center;
-  filter: sepia(0.3) saturate(0.72) contrast(1.04) brightness(0.94);
+  filter: contrast(1.02);
 }
 
+/* Nur so viel Abdunklung, dass Karte und Kachelrand zusammenfinden — und ein
+   warmer Goldschimmer ueber der Mitte, damit der Pin Tiefe bekommt. */
 .ent-karte__vignette {
   position: absolute;
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(112% 96% at 50% 46%, transparent 34%, rgba(24, 20, 14, 0.5) 100%),
-    linear-gradient(180deg, rgba(24, 20, 14, 0.16) 0%, transparent 26%);
+    radial-gradient(52% 52% at 50% 46%, rgba(232, 201, 120, 0.16) 0%, transparent 70%),
+    radial-gradient(122% 104% at 50% 44%, transparent 48%, rgba(24, 20, 14, 0.34) 100%),
+    linear-gradient(180deg, rgba(24, 20, 14, 0.1) 0%, transparent 22%);
 }
 
 .ent-karte__pin {
@@ -15360,32 +15483,53 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   height: 0;
   display: grid;
   place-items: center;
-  color: var(--gold-bright);
 }
 
-.ent-karte__pin svg {
+/* Schatten auf dem Boden — der Pin steht auf der Karte, er klebt nicht darauf. */
+.ent-karte__pin::after {
+  content: '';
   position: absolute;
-  bottom: 1px;
-  filter: drop-shadow(0 2px 10px rgba(232, 201, 120, 0.85)) drop-shadow(0 0 2px rgba(8, 8, 7, 0.9));
+  bottom: -3px;
+  width: 26px;
+  height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(24, 20, 14, 0.42), transparent);
+}
+
+.ent-karte__nadel {
+  position: absolute;
+  bottom: 4px;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--grad-gold);
+  color: var(--soft-black);
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  box-shadow:
+    0 10px 20px -8px rgba(20, 17, 12, 0.75),
+    0 0 0 7px rgba(201, 160, 80, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 .ent-karte__puls {
   position: absolute;
-  width: 46px;
-  height: 46px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
-  border: 1px solid rgba(232, 201, 120, 0.55);
+  border: 1px solid rgba(201, 160, 80, 0.6);
   animation: ent-puls 2.8s ease-out infinite;
 }
 
 @keyframes ent-puls {
   0% {
     opacity: 0.85;
-    transform: scale(0.4);
+    transform: scale(0.5);
   }
   100% {
     opacity: 0;
-    transform: scale(1.7);
+    transform: scale(1.9);
   }
 }
 
@@ -15396,49 +15540,60 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   bottom: 0;
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: flex-end;
   justify-content: space-between;
-  gap: 8px 18px;
+  gap: 10px 18px;
   margin: 0;
-  padding: 46px 22px 16px;
-  background: linear-gradient(180deg, transparent 0%, rgba(8, 8, 7, 0.9) 60%);
+  padding: 52px 18px 15px;
+  background: linear-gradient(180deg, transparent 0%, rgba(8, 8, 7, 0.1) 34%, rgba(8, 8, 7, 0.58) 100%);
 }
 
+/* Kleine Adresskarte direkt in der Kartenflaeche — kein zweiter Kasten
+   darunter, die Information steht dort, wo der Ort ist. */
 .ent-karte__adr {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--sans);
-  font-size: 0.76rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--champagne);
+  flex-direction: column;
+  gap: 3px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(201, 160, 80, 0.4);
+  background: rgba(12, 11, 9, 0.68);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 14px 34px -20px rgba(0, 0, 0, 0.9);
 }
 
-.ent-karte__trenn {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--gold);
-  flex: none;
+.ent-karte__marke {
+  font-family: var(--sans);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+}
+
+.ent-karte__zeile {
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--champagne);
+  font-variant-numeric: lining-nums tabular-nums;
 }
 
 .ent-karte__quelle {
   font-family: var(--sans);
   font-size: 0.6rem;
   letter-spacing: 0.09em;
-  color: rgba(244, 239, 228, 0.5);
+  color: rgba(244, 239, 228, 0.55);
   text-decoration: none;
   border-bottom: 1px solid transparent;
+  padding-bottom: 4px;
 }
 
 .ent-karte__quelle:hover {
   color: var(--champagne);
   border-bottom-color: rgba(244, 239, 228, 0.4);
 }
-
 /* =====================================================================
    Soundtrack-Schalter — dauerhaft, klein, unten rechts
    ===================================================================== */

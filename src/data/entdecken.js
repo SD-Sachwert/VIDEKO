@@ -1,11 +1,12 @@
 import { BRAND } from './company.js'
 import { SOCIAL_PROFILES, socialUrl } from './site.js'
-import { INDEX_BASIS, INDEX_ZIEL } from '../lib/baustellenindex.js'
+import { INDEX_BASIS, INDEX_ZIEL, MODUS } from '../lib/baustellenindex.js'
 import entdeckenVideo from '../assets/images/studio/bilder/Umbau.mp4'
 import entdeckenPoster from '../assets/images/studio/bilder/02_intro_showroom_hell.webp'
 import texturNacht from '../assets/images/studio/bilder/08_split_section_showroom_gross.webp'
 import texturFinale from '../assets/images/studio/bilder/10_final_cta_studio_banner.webp'
 import karteHertzstrasse from '../assets/images/studio/karte-hertzstrasse-osm.webp'
+import soundtrack from '../assets/audio/videko-soundtrack.mp3'
 
 // Flaechenmotive der Social-Kacheln. Bewusst KEINE Screenshots echter Posts —
 // die liegen nicht im Repo und duerften nicht erfunden werden. Stattdessen
@@ -19,6 +20,29 @@ import bildFacebook from '../assets/images/studio/bilder/09_team_beratung_auf_au
 import bildLinkedin from '../assets/images/studio/bilder/07_studio_card_beratung_vertiefen.webp'
 import bildSpotify from '../assets/images/studio/bilder/05_studio_card_materialien_fuehlen.webp'
 
+/* ------------------------------------------------------------------ *
+ * Eroeffnung
+ * ------------------------------------------------------------------ */
+
+/**
+ * Eroeffnungszustand — die einzige Stelle, an der steht, ob wir offen haben.
+ *
+ * `plannedDate` ist der oeffentlich angekuendigte Termin und bleibt stehen, auch
+ * wenn er verstreicht. Ab da zaehlt die Seite von selbst weiter, aber sie
+ * behauptet NICHT, dass geoeffnet ist: „Wir haben geoeffnet.“ erscheint
+ * ausschliesslich, wenn hier jemand `actualOpen: true` setzt. Das ist Absicht —
+ * ein Datum im Kalender ist kein offenes Studio.
+ *
+ * Wenn es tatsaechlich soweit ist: `actualOpen: true` und `actualOpeningDate`
+ * auf den echten Tag setzen. Die Seite rechnet daraus selbst aus, wie viel
+ * spaeter es geworden ist.
+ */
+export const OPENING = {
+  plannedDate: '2026-12-01T00:00:00+01:00',
+  actualOpen: false,
+  actualOpeningDate: null,
+}
+
 /**
  * Einzige Quelle der Wahrheit fuer /entdecken.
  *
@@ -28,8 +52,8 @@ import bildSpotify from '../assets/images/studio/bilder/05_studio_card_materiali
  * `company.js`. Keine Duplikate.
  */
 export const ENTDECKEN_CONFIG = {
-  // Eroeffnungstermin. Bestaetigt. Nicht raten, nicht verschieben.
-  openingDate: '2026-12-01T00:00:00+01:00',
+  // Eroeffnungstermin. Steht genau einmal im Projekt, naemlich in OPENING.
+  openingDate: OPENING.plannedDate,
   // Einziges echtes Baustellen-Motiv im Repo. Kein Stock, kein Fake.
   video: {
     src: entdeckenVideo,
@@ -51,27 +75,19 @@ export const ENTDECKEN_CONFIG = {
 /**
  * Hintergrund-Soundtrack der Seite.
  *
- * `datei` ist bewusst `null`: Im Repo liegt derzeit KEINE eigene Audiodatei
- * (durchsucht wurden src/ und public/ nach mp3/ogg/wav/m4a/aac/flac/opus —
- * gefunden wurde nur ein Video). Fremdes Audio einzubinden oder einen Stream
- * von Spotify als Quelle zu missbrauchen kommt nicht in Frage, und ein Player
- * ohne Quelle waere ein kaputter Player.
+ * Die Quelle ist unsere eigene Aufnahme — kein fremdes Audio, kein Stream, kein
+ * Drittanbieter. Das Original liegt als 48-kHz-24-Bit-WAV vor (52 MB, 3:09) und
+ * bleibt unangetastet; ausgeliefert wird eine daraus erzeugte MP3 mit 160 kbit/s
+ * (3,6 MB). Eine 52-MB-WAV in einen Seitenaufruf zu haengen waere niemandem
+ * zuzumuten, hoerbar billig komprimieren wollen wir den Track aber auch nicht.
  *
- * Solange `datei` null ist, rendert die Seite die Sound-Steuerung schlicht
- * nicht — die komplette Logik dahinter steht aber bereits und schaltet sich von
- * selbst frei, sobald hier eine echte Datei eingetragen wird:
- *
- *   1. eigene VIDEKO-Aufnahme als MP3 nach
- *      `src/assets/audio/videko-soundtrack.mp3` legen
- *   2. oben importieren:
- *      import soundtrack from '../assets/audio/videko-soundtrack.mp3'
- *   3. hier eintragen: datei: soundtrack
- *
- * Mehr ist nicht zu tun. Lautstaerke, Autoplay-Regel, Ein/Aus-Schalter und die
- * gespeicherte Entscheidung des Besuchers haengen daran.
+ * Geladen wird die Datei erst, wenn sie wirklich gebraucht wird: Das <audio>
+ * steht auf `preload="none"`, der Ton startet ausschliesslich nach einer
+ * eindeutigen Nutzergeste, und wer ihn ausschaltet, bekommt ihn nie wieder
+ * ungefragt zu hoeren (siehe `speicher`).
  */
 export const SOUNDTRACK = {
-  datei: null,
+  datei: soundtrack,
   typ: 'audio/mpeg',
   titel: 'VIDEKO Baustellen-Soundtrack',
   // Leise im Hintergrund, nie auf voller Lautstaerke.
@@ -82,7 +98,7 @@ export const SOUNDTRACK = {
   speicher: 'videko:sound',
   labelAn: 'Sound an',
   labelAus: 'Sound aus',
-  // Pfad, unter dem die Datei erwartet wird.
+  // Pfad der ausgelieferten Webfassung im Repo.
   erwarteterPfad: 'src/assets/audio/videko-soundtrack.mp3',
 }
 
@@ -91,18 +107,40 @@ export const SOUNDTRACK = {
  * ------------------------------------------------------------------ */
 
 /**
+ * Gates des Baustellenindex — echte Ereignisse, nicht Kalenderarithmetik.
+ *
+ * Solange `kitchensDeliveredAt` auf `null` steht, sind die davon abhaengigen
+ * Bereiche eingefroren: Kuechen und Beleuchtung stehen auf 0, Bar und Empfang
+ * ruehren sich nicht, die Ausstellung kommt nicht ueber ihre Obergrenze hinaus.
+ * Kein taeglicher Pflegeaufwand, kein Nachtragen von Prozenten.
+ *
+ * Sobald die Kuechen wirklich geliefert sind, hier EIN Datum eintragen
+ * (`'2026-10-15'`) — ab diesem Tag laufen alle vier Bereiche von selbst los und
+ * die Ausstellung waechst ueber ihren bisherigen Deckel hinaus.
+ */
+export const BAUSTELLEN_GATES = {
+  kitchensDeliveredAt: null,
+}
+
+/**
  * Bereiche des Baustellenindex.
  *
- * WICHTIG: Die Prozentwerte sind KEIN belegter Baufortschritt. `basePercent`
- * ist der Startwert am `baseDate`, `targetPercent` der Wert, den der Bereich am
- * Eroeffnungstag rechnerisch erreicht — dazwischen rechnet
- * lib/baustellenindex.js eine deterministische, taeglich leicht andere Kurve.
- * Der Ton der Seite macht das ausdruecklich kenntlich; hier wird nichts
- * gemessen, hier wird gerechnet.
+ * WICHTIG: Die Prozentwerte sind KEIN belegter Baufortschritt, und sie laufen
+ * ausdruecklich NICHT auf den Eroeffnungstermin zu. Jeder Bereich waechst fuer
+ * sich — oder eben gar nicht:
  *
- * `text` ist die Hauptaussage des Bereichs und bleibt handgeschrieben — die
- * automatische Statusstufe (STATUS_STUFEN in lib/baustellenindex.js) steht nur
- * als kleine zweite Zeile darunter.
+ *   MODUS.AUTO           waechst taeglich mit `dailyPace` gegen `softCap`.
+ *   MODUS.AUTO_BIS_GATE  waechst nur bis `preDeliveryCap`; erst nach dem Gate
+ *                        weiter gegen `softCap`.
+ *   MODUS.GATED          steht exakt auf `basePercent`, bis das Gate faellt.
+ *
+ * `variance` streut das Tagestempo (deterministisch, aus Bereich + Datum), damit
+ * es Tage ohne Bewegung und Tage mit zwei Punkten gibt. `softCap` wird nie ganz
+ * erreicht, 100 % gibt es nur ueber `completedAt` — die Rechnung in
+ * lib/baustellenindex.js deckelt sonst bei 99.
+ *
+ * `text` ist die Hauptaussage des Bereichs und bleibt handgeschrieben.
+ * `gateText` ersetzt die Tagesdifferenz, solange der Bereich blockiert ist.
  *
  * Reihenfolge = Anzeigereihenfolge.
  */
@@ -111,54 +149,98 @@ export const BAUSTELLEN_BEREICHE = [
     id: 'ausstellung',
     label: 'Ausstellung',
     icon: 'ausstellung',
+    modus: MODUS.AUTO_BIS_GATE,
     basePercent: 14,
-    targetPercent: 100,
+    dailyPace: 0.46,
+    variance: 0.5,
+    // Ohne Kuechen ist bei rund einem Drittel Schluss — Boden, Wand und Licht
+    // bringen einen Ausstellungsraum nur so weit.
+    preDeliveryCap: 35,
+    softCap: 82,
+    gatePace: 0.6,
+    gate: 'kitchensDeliveredAt',
+    gateText: 'Wartet auf Küchen',
     baseDate: INDEX_BASIS,
+    completedAt: null,
     text: '600 m². Wir hätten auch kleiner anfangen können.',
   },
   {
     id: 'kuechen',
     label: 'Küchen',
     icon: 'kuechen',
-    basePercent: 11,
-    targetPercent: 100,
+    modus: MODUS.GATED,
+    basePercent: 0,
+    dailyPace: 0.95,
+    variance: 0.5,
+    softCap: 88,
+    gate: 'kitchensDeliveredAt',
+    gateText: 'Wartet auf Lieferung',
+    gateBadge: 'Wartet',
     baseDate: INDEX_BASIS,
-    text: 'Die wichtigste Kleinigkeit fehlt teilweise noch: Küchen.',
+    completedAt: null,
+    text: 'Noch keine Küche da. Für ein Küchenstudio mutig.',
   },
   {
     id: 'bar',
     label: 'Bar',
     icon: 'bar',
+    modus: MODUS.GATED,
     basePercent: 9,
-    targetPercent: 100,
+    dailyPace: 0.62,
+    variance: 0.5,
+    softCap: 70,
+    gate: 'kitchensDeliveredAt',
+    gateText: 'Pausiert',
+    gateBadge: 'Pausiert',
     baseDate: INDEX_BASIS,
+    completedAt: null,
     text: 'Zapfen können wir gedanklich schon.',
   },
   {
     id: 'empfang',
     label: 'Empfang',
     icon: 'empfang',
+    modus: MODUS.GATED,
     basePercent: 12,
-    targetPercent: 100,
+    dailyPace: 0.66,
+    variance: 0.5,
+    softCap: 72,
+    gate: 'kitchensDeliveredAt',
+    gateText: 'Pausiert',
+    gateBadge: 'Pausiert',
     baseDate: INDEX_BASIS,
+    completedAt: null,
     text: 'Der erste Eindruck kommt. Irgendwann.',
   },
   {
     id: 'beleuchtung',
     label: 'Beleuchtung',
     icon: 'beleuchtung',
-    basePercent: 7,
-    targetPercent: 100,
+    modus: MODUS.GATED,
+    basePercent: 0,
+    dailyPace: 0.72,
+    variance: 0.5,
+    softCap: 75,
+    gate: 'kitchensDeliveredAt',
+    // Beleuchtung haengt technisch an den Kuechen: Wo nichts steht, wird auch
+    // nichts beleuchtet.
+    gateText: 'Blockiert von: Küchen',
+    gateBadge: 'Blockiert',
     baseDate: INDEX_BASIS,
+    completedAt: null,
     text: 'Licht ist grundsätzlich vorgesehen.',
   },
   {
     id: 'luxusklo',
     label: 'Luxusklo',
     icon: 'luxusklo',
+    modus: MODUS.AUTO,
     basePercent: 20,
-    targetPercent: 100,
+    dailyPace: 1.15,
+    variance: 0.55,
+    softCap: 78,
     baseDate: INDEX_BASIS,
+    completedAt: null,
     text: 'Vorwände hängen schon. Eine Wand steht. Luxus ist relativ.',
     // Die Klos gehoeren inzwischen zur Geschichte — sie duerfen auffallen.
     akzent: true,
@@ -167,9 +249,13 @@ export const BAUSTELLEN_BEREICHE = [
     id: 'mitarbeiterklo-1',
     label: 'Mitarbeiterklo 1',
     icon: 'dusche',
+    modus: MODUS.AUTO,
     basePercent: 10,
-    targetPercent: 100,
+    dailyPace: 0.89,
+    variance: 0.55,
+    softCap: 65,
     baseDate: INDEX_BASIS,
+    completedAt: null,
     text: 'Duschen und aufs Klo gehen reicht. Mehr war nicht versprochen.',
     akzent: true,
   },
@@ -177,9 +263,14 @@ export const BAUSTELLEN_BEREICHE = [
     id: 'mitarbeiterklo-2',
     label: 'Mitarbeiterklo 2',
     icon: 'tropfen',
+    modus: MODUS.AUTO,
+    // Ausdruecklich der langsamste Bereich der Seite.
     basePercent: 5,
-    targetPercent: 100,
+    dailyPace: 0.5,
+    variance: 0.6,
+    softCap: 45,
     baseDate: INDEX_BASIS,
+    completedAt: null,
     text: 'Wände stehen. Der Rest hält sich noch bedeckt.',
     akzent: true,
   },
@@ -187,9 +278,13 @@ export const BAUSTELLEN_BEREICHE = [
     id: 'aufenthaltsraum',
     label: 'Aufenthaltsraum',
     icon: 'aufenthalt',
+    modus: MODUS.AUTO,
     basePercent: 5,
-    targetPercent: 95,
+    dailyPace: 0.5,
+    variance: 0.55,
+    softCap: 38,
     baseDate: INDEX_BASIS,
+    completedAt: null,
     text: 'Billardtisch, PS5 und Beamer sind da. Prioritäten sitzen.',
   },
 ]
@@ -204,7 +299,7 @@ export const BAUSTELLEN_TEXTE = {
   hinweis: 'Ändert sich öfter als uns lieb ist.',
   // Ausdrueckliche Einordnung. Steht sichtbar unter dem Dashboard.
   disclaimer:
-    'Der Baustellenindex ist ein Stimmungsbarometer, kein Bautagebuch: Die Prozente rechnen sich automatisch aus Startwert und Eröffnungstermin. Sie sind kein gemessener Baufortschritt.',
+    'Der Baustellenindex ist ein Stimmungsbarometer, kein Bautagebuch: Die Prozente rechnen sich automatisch. Manche Bereiche wachsen langsam von selbst, andere stehen still, bis wirklich etwas passiert. Ein gemessener Baufortschritt ist das nicht.',
   zielDatum: INDEX_ZIEL,
 }
 
@@ -276,15 +371,16 @@ export const ENTDECKEN_SOCIALS = SOCIAL_REIHENFOLGE.map((key) => {
   }
 })
 
-// Spotify ist bewusst nicht bestaetigt (siehe site.js). Solange keine echte URL
-// existiert, erscheint die Kachel deaktiviert — statt eine URL zu erfinden.
-// Sobald in site.js eine belegte Profiladresse steht, wird die Kachel hier von
-// selbst zum Link; an dieser Datei ist dafuer nichts zu aendern.
+// Spotify ist ueber site.js belegt und damit ein normaler Link wie die
+// anderen Kacheln auch. Es steht hier bewusst KEINE zweite Spotify-Adresse:
+// Faellt der Eintrag in site.js weg, schaltet sich die Kachel von selbst
+// wieder ab, statt ins Leere zu zeigen.
 export const ENTDECKEN_SPOTIFY = socialUrl('spotify')
 export const ENTDECKEN_SPOTIFY_KACHEL = {
   key: 'spotify',
   label: ENTDECKEN_SPOTIFY ? 'VIDEKO Soundtrack' : 'Spotify',
-  note: 'Der Baustellen-Soundtrack. Kommt, wenn er steht.',
+  note: 'Der Soundtrack zur Baustelle. Läuft hier auch im Hintergrund.',
+  // Nur noch der Ruecktritt fuer den Fall, dass die URL wieder verschwindet.
   badge: 'Bald',
   cta: 'Anhören',
   bild: bildSpotify,

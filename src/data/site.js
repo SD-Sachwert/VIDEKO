@@ -50,15 +50,19 @@ export const SOCIAL_PROFILES = [
   // Siehe docs/GBP-NAP-ARBEITSBERICHT-2026-08-24.md, Abschnitt 3.
   { key: 'linkedin', label: 'LinkedIn', url: 'https://www.linkedin.com/company/videko-kuechen-eg' },
   { key: 'xing', label: 'XING', url: 'https://www.xing.com/pages/videko-kuechen-eg' },
-  // NICHT bestätigt. Der Künstler VIDEKO ist eindeutig identifiziert (Apple
-  // Music 1895411542, Deezer 387456961, YouTube-Kanal oben — gleiche Titel,
-  // u. a. „VIDEKO KÜCHEN“ und „NOCH WACH“), die zugehörige
-  // open.spotify.com-Adresse ließ sich aber nicht belegen: Spotify-Suche
-  // erfordert ein Token, Odesli/Songwhip sind abgeschaltet, MusicBrainz kennt
-  // den Künstler nicht, Suchmaschinen haben ihn nicht indexiert. Es gibt
-  // fremde Acts gleichen Namens — deshalb bleibt hier `null` statt eines
-  // geratenen Links. Sobald die Adresse vorliegt: nur hier eintragen.
-  { key: 'spotify', label: 'Spotify', url: null },
+  // Spotify: vom Betreiber selbst bestätigter Künstlerlink (Künstler-ID
+  // 2a10d0BvdwjxFUKYnXzWp7). Damit ist die Adresse belegt, die sich vorher
+  // technisch nicht verifizieren ließ — sie steht ausschließlich hier, alles
+  // andere im Projekt liest sie über `socialUrl('spotify')`.
+  //
+  // Der `?si=`-Parameter des Teilen-Links ist bewusst nicht übernommen: Das ist
+  // eine Sitzungskennung des Teilenden, kein Bestandteil der Profiladresse. Sie
+  // gehört weder in `sameAs` noch auf jede ausgelieferte Seite.
+  {
+    key: 'spotify',
+    label: 'Spotify',
+    url: 'https://open.spotify.com/intl-de/artist/2a10d0BvdwjxFUKYnXzWp7',
+  },
 ]
 
 /** Profil-URL zu einem Key — `null`, solange die Adresse nicht belegt ist. */

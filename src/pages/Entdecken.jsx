@@ -9,8 +9,10 @@ import {
   Droplets,
   LayoutGrid,
   Lightbulb,
+  Lock,
   MapPin,
   Martini,
+  Pause,
   ShowerHead,
   Sofa,
   Volume2,
@@ -21,15 +23,17 @@ import LazyVideo from '../components/LazyVideo.jsx'
 import LazyBg from '../components/LazyBg.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import { BRAND } from '../data/company.js'
-import { baustellenIndex, heutigerTag, INDEX_BASIS } from '../lib/baustellenindex.js'
+import { baustellenIndex, heutigerTag, INDEX_BASIS, tageZwischen } from '../lib/baustellenindex.js'
 import {
   BAUSTELLEN_BEREICHE,
+  BAUSTELLEN_GATES,
   BAUSTELLEN_TEXTE,
   DRUECK_NICHT,
   ENTDECKEN_CONFIG,
   ENTDECKEN_SOCIALS,
   ENTDECKEN_SPOTIFY,
   ENTDECKEN_SPOTIFY_KACHEL,
+  OPENING,
   SOUNDTRACK,
   STUDIO_ADRESSE,
   STUDIO_KARTE,
@@ -398,8 +402,82 @@ function zweistellig(n) {
   return String(n).padStart(2, '0')
 }
 
+/**
+ * Kalendertag des geplanten Termins („2026-12-01“), in Europa/Berlin gelesen.
+ * Der Umschlag von Countdown auf Verzug haengt genau an diesem Tageswechsel —
+ * nicht an der Uhrzeit des Besuchergeraets.
+ */
+const PLAN_TAG = OPENING.plannedDate ? heutigerTag(new Date(OPENING.plannedDate)) : null
+
+/** Derselbe Termin als Zeitstempel — fuer die Restzeit auf Stundenebene. */
+const PLAN_ZEIT = OPENING.plannedDate ? new Date(OPENING.plannedDate).getTime() : null
+
+/** Tage zwischen geplantem und tatsaechlichem Eroeffnungstag. 0, solange zu ist. */
+const VERSPAETUNG =
+  OPENING.actualOpen && OPENING.actualOpeningDate && PLAN_TAG
+    ? Math.max(0, tageZwischen(PLAN_TAG, OPENING.actualOpeningDate))
+    : 0
+
+/** `3` -> `3 Tage`, `1` -> `1 Tag`. */
+function tageWort(n) {
+  return `${n} ${n === 1 ? 'Tag' : 'Tage'}`
+}
+
+/**
+ * Heutiges Datum als `YYYY-MM-DD` — `null`, solange noch nicht gemessen wurde.
+ *
+ * Wie beim Countdown darf im ersten Render keine Uhr gelesen werden: Die Seite
+ * liegt als fertiges HTML im Build (scripts/prerender.mjs) und wird hydriert.
+ * Der Effekt setzt den echten Tag einen Frame spaeter und haelt ihn ueber
+ * Mitternacht hinweg aktuell.
+ */
+function useHeute() {
+  const [tag, setTag] = useState(null)
+
+  useEffect(() => {
+    const messen = () => setTag(heutigerTag())
+    messen()
+    const id = setInterval(messen, 60000)
+    return () => clearInterval(id)
+  }, [])
+
+  return tag
+}
+
+/**
+ * Der Terminzustand der Seite. Eine Funktion, zwei Anzeigeorte (Countdown im
+ * Hero und Kopf des Baustellenindex) — damit beide nie Verschiedenes behaupten.
+ *
+ * Wichtig: `offen` entsteht ausschliesslich aus `OPENING.actualOpen`. Ein
+ * verstrichenes Datum macht kein Studio auf, deshalb zaehlt die Seite danach
+ * einfach in die andere Richtung weiter.
+ */
+function terminStand(heute) {
+  if (OPENING.actualOpen) return { art: 'offen', tage: VERSPAETUNG }
+  if (!PLAN_TAG || heute === null) return { art: 'vorher', tage: null }
+  const differenz = tageZwischen(PLAN_TAG, heute)
+  // Vorher zaehlt die Seite dieselben ganzen Tage wie die grosse Zahl im
+  // Countdown, damit Hero und Index nie zwei verschiedene Zahlen behaupten.
+  if (differenz < 0) {
+    const rest = PLAN_ZEIT === null ? -differenz : Math.floor((PLAN_ZEIT - Date.now()) / 86400000)
+    return { art: 'vorher', tage: Math.max(0, rest) }
+  }
+  if (differenz === 0) return { art: 'heute', tage: 0 }
+  return { art: 'verzug', tage: differenz }
+}
+
+/** Die eine Zeile, die den Terminzustand in Worte fasst. */
+function standZeile(stand) {
+  if (stand.art === 'offen') return 'Wir haben geöffnet.'
+  if (stand.art === 'heute') return 'Heute war der Plan.'
+  if (stand.art === 'verzug') return `${tageWort(stand.tage)} im Verzug.`
+  if (stand.tage === null) return 'Noch –– Tage.'
+  return stand.tage === 0 ? 'Nur noch heute.' : `Noch ${tageWort(stand.tage)}.`
+}
+
 function Countdown() {
   const { gueltig, rest } = useRestzeit(ENTDECKEN_CONFIG.openingDate)
+  const stand = terminStand(useHeute())
 
   // Ohne belegtes Datum bleibt der ehrliche Zustand. Mit dem Termin aus
   // entdecken.js wird dieser Zweig nicht erreicht.
@@ -413,14 +491,54 @@ function Countdown() {
     )
   }
 
-  // Ab dem Termin: umschalten statt ins Minus weiterzaehlen. `null` heisst
-  // "noch nicht gemessen" und darf hier nicht als erreichter Termin gelten.
-  if (rest !== null && rest <= 0) {
+  // Geoeffnet wird ausschliesslich behauptet, wenn es in OPENING so steht.
+  // Kein Kalendertag schaltet das von selbst um.
+  if (stand.art === 'offen') {
     return (
       <div className="ent-count ent-count--offen">
         <span className="kicker">Eröffnung</span>
         <h2 className="ent-count__title">Wir haben geöffnet.</h2>
-        <p className="ent-count__foot">{STUDIO_ADRESSE}. Tür ist auf.</p>
+        <p className="ent-count__foot">
+          {VERSPAETUNG > 0
+            ? `Hat nur ${tageWort(VERSPAETUNG)} länger gedauert als gedacht.`
+            : `${STUDIO_ADRESSE}. Tür ist auf.`}
+        </p>
+      </div>
+    )
+  }
+
+  // Der Termintag selbst. Noch kein Verzug — aber auch keine Eroeffnung.
+  // Erst ab dem Folgetag wird gezaehlt (sonst stuende schon um 00:05 Uhr
+  // „1 Tag im Verzug“ da, und das waere schlicht falsch).
+  if (stand.art === 'heute') {
+    return (
+      <div className="ent-count ent-count--plan">
+        <h2 className="ent-count__title ent-count__title--gross">Heute war der Plan.</h2>
+        <p className="ent-count__sub">Schauen wir mal.</p>
+        <p className="ent-count__foot">
+          <span className="ent-count__badge">Plan war {PLAN_TAG ? deutschesDatum(PLAN_TAG) : ''}</span>
+        </p>
+      </div>
+    )
+  }
+
+  // Ab dem Folgetag laeuft derselbe Zaehler weiter, nur mit umgedrehter
+  // Aussage. Kein Fehlerzustand, keine Alarmfarbe — dieselbe Typografie,
+  // dieselbe Flaeche, ein Satz weniger Zuversicht.
+  if (stand.art === 'verzug') {
+    return (
+      <div className="ent-count ent-count--verzug">
+        <div className="ent-count__grid ent-count__grid--eins" aria-live="off">
+          <div className="ent-count__unit">
+            <span className="ent-count__num">{stand.tage}</span>
+            <span className="ent-count__lab">{stand.tage === 1 ? 'Tag' : 'Tage'}</span>
+          </div>
+        </div>
+        <h2 className="ent-count__title">Im Verzug.</h2>
+        <p className="ent-count__foot">
+          Der Plan war der <strong className="ent-count__date">{EROEFFNUNG_LABEL}</strong>. Die
+          Baustelle hatte andere Pläne. <span className="ent-count__badge">Offiziell drüber</span>
+        </p>
       </div>
     )
   }
@@ -430,7 +548,7 @@ function Countdown() {
   // sind dieselben wie danach, nur die Ziffern fehlen; der Effekt ersetzt sie
   // einen Frame spaeter. `?? 0` haelt dabei alle Labels im Plural, damit auch
   // der Platzhalter-Render deterministisch ist.
-  const gemessen = rest ?? 0
+  const gemessen = Math.max(0, rest ?? 0)
   const tage = Math.floor(gemessen / 86400000)
   const stunden = Math.floor((gemessen % 86400000) / 3600000)
   const minuten = Math.floor((gemessen % 3600000) / 60000)
@@ -482,8 +600,15 @@ function deutschesDatum(iso) {
   return `${tag}.${monat}.${jahr}`
 }
 
-/** Tagesdifferenz als kleine Plakette. Nur ein Vergleich zu gestern, kein Live-Ticker. */
-function DeltaBadge({ delta, live }) {
+/**
+ * Rechte Spalte der Kartenkopfzeile.
+ *
+ * Normalerweise die Tagesdifferenz. Steht ein Bereich dagegen an einem Gate —
+ * er wartet auf ein echtes Ereignis und nicht auf den Kalender —, waere „±0 seit
+ * gestern“ nur eine langweilige Halbwahrheit. Dann steht dort der Grund.
+ */
+function DeltaBadge({ delta, live, hinweis }) {
+  if (hinweis) return <span className="ent-idxk__delta is-gate">{hinweis}</span>
   if (!live) return <span className="ent-idxk__delta" aria-hidden="true" />
   if (delta > 0) {
     return <span className="ent-idxk__delta is-plus">+{delta} seit gestern</span>
@@ -495,17 +620,33 @@ function DeltaBadge({ delta, live }) {
  * Eine Bereichskarte des Dashboards: Kopfzeile mit Icon und Bereichsname,
  * darunter die grosse Zahl mit der Tagesdifferenz, ein Balken, der handgeschriebene
  * Text des Bereichs und als kleine zweite Zeile die automatische Statusstufe.
+ *
+ * Blockierte Bereiche sehen bewusst anders aus als langsame: Schloss- oder
+ * Pausenzeichen, eine ruhige Plakette, gedaempfter Balken. Kein Rot, kein
+ * Warnzeichen — hier ist nichts kaputt, hier ist nur nichts geliefert.
  */
 function IndexKarte({ bereich, live, delay }) {
   const Icon = BEREICH_ICONS[bereich.icon] || LayoutGrid
+  const GateIcon = bereich.gateBadge === 'Pausiert' ? Pause : Lock
 
   return (
-    <Reveal className={`ent-idxk${bereich.akzent ? ' ent-idxk--akzent' : ''}`} delay={delay}>
+    <Reveal
+      className={`ent-idxk${bereich.akzent ? ' ent-idxk--akzent' : ''}${
+        bereich.gesperrt ? ' ent-idxk--gate' : ''
+      }`}
+      delay={delay}
+    >
       <span className="ent-idxk__kopf">
         <span className="ent-idxk__icon" aria-hidden="true">
           <Icon size={20} strokeWidth={1.6} />
         </span>
         <span className="ent-idxk__label">{bereich.label}</span>
+        {bereich.gesperrt && bereich.gateBadge ? (
+          <span className="ent-idxk__gate">
+            <GateIcon size={12} strokeWidth={2} aria-hidden="true" />
+            {bereich.gateBadge}
+          </span>
+        ) : null}
       </span>
 
       <span className="ent-idxk__zeile">
@@ -513,7 +654,7 @@ function IndexKarte({ bereich, live, delay }) {
           {bereich.prozent}
           <span className="ent-idxk__pct">%</span>
         </span>
-        <DeltaBadge delta={bereich.delta} live={live} />
+        <DeltaBadge delta={bereich.delta} live={live} hinweis={bereich.hinweis} />
       </span>
 
       <span className="ent-idxk__bar">
@@ -529,29 +670,27 @@ function IndexKarte({ bereich, live, delay }) {
 /**
  * Das Dashboard.
  *
- * Der Tag wird erst im Effekt gesetzt: Das vorgerenderte HTML kennt nur den
- * Basistag, und genau den rendert auch der erste Durchlauf im Browser — sonst
- * gaebe es eine Hydrationsdifferenz, sobald jemand die Seite an einem anderen
- * Tag aufruft als dem, an dem gebaut wurde. Einen Frame spaeter steht das
- * echte Datum, und alle Werte springen einmalig auf heute.
+ * Der Tag wird erst im Effekt gesetzt (useHeute): Das vorgerenderte HTML kennt
+ * nur den Basistag, und genau den rendert auch der erste Durchlauf im Browser —
+ * sonst gaebe es eine Hydrationsdifferenz, sobald jemand die Seite an einem
+ * anderen Tag aufruft als dem, an dem gebaut wurde. Einen Frame spaeter steht
+ * das echte Datum, und alle Werte springen einmalig auf heute.
  *
  * Gerechnet wird ausschliesslich in lib/baustellenindex.js — hier steht keine
- * Zahl, kein Zufall und kein Datum.
+ * Zahl, kein Zufall und kein Datum. Die Gates kommen aus entdecken.js.
+ *
+ * Der Kopf zeigt Restzeit und Index absichtlich nebeneinander: Die Tage werden
+ * weniger, der Index waechst in aller Ruhe. Genau diese Diskrepanz ist der Witz
+ * und sie bleibt auch nach dem Termin stehen.
  */
 function BaustellenIndex() {
-  const [tag, setTag] = useState(null)
-
-  useEffect(() => {
-    const messen = () => setTag(heutigerTag())
-    messen()
-    // Wer die Seite ueber Mitternacht offen liegen laesst, bekommt den neuen
-    // Tag mit, ohne neu zu laden.
-    const id = setInterval(messen, 60000)
-    return () => clearInterval(id)
-  }, [])
-
-  const live = tag !== null
-  const daten = useMemo(() => baustellenIndex(BAUSTELLEN_BEREICHE, tag || INDEX_BASIS), [tag])
+  const heute = useHeute()
+  const live = heute !== null
+  const daten = useMemo(
+    () => baustellenIndex(BAUSTELLEN_BEREICHE, heute || INDEX_BASIS, BAUSTELLEN_GATES),
+    [heute]
+  )
+  const stand = terminStand(heute)
   const gefuellt = (daten.gesamt / 100) * RING_U
 
   return (
@@ -587,6 +726,8 @@ function BaustellenIndex() {
 
         <span className="ent-idxg__text">
           <span className="kicker kicker--gold">{BAUSTELLEN_TEXTE.gesamtLabel}</span>
+          <span className="ent-idxg__tage">{standZeile(stand)}</span>
+          <span className="ent-idxg__status">{daten.status}</span>
           <span className="ent-idxg__note">{BAUSTELLEN_TEXTE.gesamtNote}</span>
           <span className="ent-idxg__meta">
             <span className="ent-idxg__stand">
@@ -774,21 +915,25 @@ function Kartenflaeche() {
         className="ent-karte__bild"
         src={STUDIO_KARTE.bild}
         alt={STUDIO_KARTE.alt}
-        width="1200"
-        height="880"
+        width="880"
+        height="640"
         loading="lazy"
         decoding="async"
       />
       <span className="ent-karte__vignette" aria-hidden="true" />
       <span className="ent-karte__pin" aria-hidden="true">
         <span className="ent-karte__puls" />
-        <MapPin size={20} strokeWidth={2.2} />
+        <span className="ent-karte__nadel">
+          <MapPin size={19} strokeWidth={2.1} />
+        </span>
       </span>
       <figcaption className="ent-karte__fuss">
         <span className="ent-karte__adr">
-          {BRAND.studio.street}
-          <span className="ent-karte__trenn" aria-hidden="true" />
-          {BRAND.studio.postalCode} {BRAND.studio.city}
+          <span className="ent-karte__marke">{BRAND.name}</span>
+          <span className="ent-karte__zeile">{BRAND.studio.street}</span>
+          <span className="ent-karte__zeile">
+            {BRAND.studio.postalCode} {BRAND.studio.city}
+          </span>
         </span>
         <a
           className="ent-karte__quelle"
@@ -802,7 +947,6 @@ function Kartenflaeche() {
     </figure>
   )
 }
-
 /* ------------------------------------------------------------------ *
  * Seite
  * ------------------------------------------------------------------ */
