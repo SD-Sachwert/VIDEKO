@@ -15661,21 +15661,27 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   transform-origin: bottom;
 }
 
+/* Gewollt, aber vom Browser noch nicht freigegeben: die Balken stehen still
+   und behaupten nichts — nur der Ton der Leiste zeigt, dass er scharf ist. */
 .ent-sound.is-an .ent-sound__eq i {
+  background: rgba(232, 201, 120, 0.6);
+}
+
+.ent-sound.is-laeuft .ent-sound__eq i {
   height: 13px;
   background: var(--gold-bright);
   animation: ent-eq 1s ease-in-out infinite alternate;
 }
 
-.ent-sound.is-an .ent-sound__eq i:nth-child(2) {
+.ent-sound.is-laeuft .ent-sound__eq i:nth-child(2) {
   animation-duration: 0.66s;
 }
 
-.ent-sound.is-an .ent-sound__eq i:nth-child(3) {
+.ent-sound.is-laeuft .ent-sound__eq i:nth-child(3) {
   animation-duration: 1.24s;
 }
 
-.ent-sound.is-an .ent-sound__eq i:nth-child(4) {
+.ent-sound.is-laeuft .ent-sound__eq i:nth-child(4) {
   animation-duration: 0.84s;
 }
 
@@ -15960,7 +15966,7 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   .ent-vid__tag::before,
   .ent-knopf__halo,
   .ent-karte__puls,
-  .ent-sound.is-an .ent-sound__eq i {
+  .ent-sound.is-laeuft .ent-sound__eq i {
     animation: none;
   }
 

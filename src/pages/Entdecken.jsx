@@ -232,13 +232,20 @@ function Nachtband({ textur, klasse = '', children }) {
  *   - Es gibt nur eine Quelle: die eigene Datei aus SOUNDTRACK.datei. Steht da
  *     nichts, existiert der Player nicht — lieber kein Ton als ein kaputter
  *     Player oder fremdes Audio.
- *   - Kein Autoplay beim Laden. Browser lehnen das ohne Geste ab, und eine
- *     abgelehnte play()-Zusage schreibt eine Warnung in die Konsole. Gestartet
- *     wird erst bei echtem Nutzerwillen: Klick auf „Baustelle betreten", erster
- *     Zeiger-/Tastendruck oder der Schalter selbst. Reines Scrollen zaehlt
- *     ausdruecklich nicht.
+ *   - Der Ton gilt als gewollt, solange ihn niemand ausdruecklich abgewaehlt
+ *     hat. Direkt nach der Hydration versucht die Seite deshalb sofort zu
+ *     spielen — mit Ton, nicht stumm. Keine Browser-Policy wird dabei
+ *     umgangen: es ist ein ganz normaler play()-Aufruf.
+ *   - Lehnt der Browser ab (ohne vorherige Geste tun das die meisten), bleibt
+ *     es still: kein Konsolenfehler, kein Overlay, kein Modal. Die Seite
+ *     wartet dann auf den ersten echten Nutzerkontakt — pointerdown,
+ *     touchstart, click oder keydown — und startet in dem Moment. Reines
+ *     Scrollen zaehlt ausdruecklich nicht.
  *   - Wer den Ton abschaltet, bekommt ihn nie wieder von selbst: die
  *     Entscheidung liegt in localStorage und wird vor jedem Start geprueft.
+ *   - Zwei Zustaende, damit die Oberflaeche nicht luegt: `an` ist der Wunsch
+ *     (Symbol und Text), `laeuft` ist die Wirklichkeit (Equalizer). Solange
+ *     der Browser blockiert, stehen die Balken still.
  *   - Der Speicher wird erst nach der Hydration gelesen (siehe lib/hydration.js
  *     zum Warum) — der erste Render muss dem vorgerenderten HTML entsprechen.
  */
@@ -246,6 +253,7 @@ function useSoundtrack() {
   const verfuegbar = Boolean(SOUNDTRACK.datei)
   const audioRef = useRef(null)
   const [an, setAn] = useState(false)
+  const [laeuft, setLaeuft] = useState(false)
   const wahl = useRef(null)
 
   const merken = useCallback((wert) => {
@@ -253,25 +261,46 @@ function useSoundtrack() {
     try {
       window.localStorage.setItem(SOUNDTRACK.speicher, wert)
     } catch {
-      /* siehe oben */
+      /* Privater Modus oder gesperrter Speicher — dann eben ohne Gedaechtnis. */
     }
   }, [])
 
+  /**
+   * Startversuch. Die zurueckgegebene Zusage sagt, ob wirklich Ton laeuft.
+   * Ein abgelehntes play() ist hier ein normaler Zustand, kein Fehler — es
+   * wird abgefangen und erzeugt darum auch keine Konsolenausgabe.
+   */
   const abspielen = useCallback(() => {
     const el = audioRef.current
-    if (!el) return
+    if (!el) return Promise.resolve(false)
     el.volume = SOUNDTRACK.lautstaerke
-    const zusage = el.play()
-    if (zusage && typeof zusage.then === 'function') {
-      // Lehnt der Browser ab, bleibt es einfach still — keine Fehlermeldung,
-      // kein zweiter Versuch, keine Konsolenausgabe.
-      zusage.then(() => setAn(true)).catch(() => setAn(false))
-    } else {
-      setAn(true)
+    el.muted = false
+    // Geladen wird erst hier: Wer den Ton abgewaehlt hat, holt die Datei nie.
+    // metadata reicht zum Anspielen, den Rest streamt der Browser nach.
+    if (el.preload !== 'metadata') el.preload = 'metadata'
+    let zusage
+    try {
+      zusage = el.play()
+    } catch {
+      zusage = null
     }
+    return Promise.resolve(zusage).then(
+      () => {
+        setAn(true)
+        setLaeuft(true)
+        return true
+      },
+      () => {
+        // Autoplay verweigert. Der Wunsch bleibt sichtbar, die Balken stehen
+        // still — die Seite behauptet nicht, dass etwas laeuft.
+        setAn(true)
+        setLaeuft(false)
+        return false
+      }
+    )
   }, [])
 
-  /** Erster echter Nutzerwille. Startet den Ton, wenn er nicht abgewaehlt ist. */
+  /** Eindeutiger Nutzerwille, z. B. der Klick auf „Baustelle betreten". */
   const starten = useCallback(() => {
     if (!verfuegbar || wahl.current === 'aus') return
     const el = audioRef.current
@@ -286,23 +315,47 @@ function useSoundtrack() {
     try {
       wahl.current = window.localStorage.getItem(SOUNDTRACK.speicher)
     } catch {
-      // Privater Modus oder gesperrter Speicher — dann eben ohne Gedaechtnis.
       wahl.current = null
     }
+    // Ohne gespeicherte Entscheidung gilt der Ton als gewollt.
     if (wahl.current === 'aus') return
 
-    const los = () => starten()
-    const opt = { once: true, passive: true }
-    // pointerdown und keydown gelten dem Browser als eindeutige Geste.
-    // Scrollen steht hier bewusst nicht — sonst faengt die Seite unaufgefordert
-    // an zu spielen, sobald jemand nur weiterliest.
-    window.addEventListener('pointerdown', los, opt)
-    window.addEventListener('keydown', los, opt)
-    return () => {
-      window.removeEventListener('pointerdown', los)
-      window.removeEventListener('keydown', los)
+    const typen = ['pointerdown', 'touchstart', 'click', 'keydown']
+    let abgemeldet = false
+    const abmelden = () => {
+      if (abgemeldet) return
+      abgemeldet = true
+      typen.forEach((typ) => window.removeEventListener(typ, beiGeste))
     }
-  }, [verfuegbar, starten])
+    function beiGeste() {
+      if (wahl.current === 'aus') {
+        abmelden()
+        return
+      }
+      const el = audioRef.current
+      if (!el) return
+      if (!el.paused) {
+        abmelden()
+        return
+      }
+      merken('an')
+      abspielen().then((gelungen) => {
+        if (gelungen) abmelden()
+      })
+    }
+    // Scrollen steht hier bewusst nicht in der Liste: sonst faengt die Seite
+    // unaufgefordert an zu spielen, sobald jemand nur weiterliest.
+    typen.forEach((typ) => window.addEventListener(typ, beiGeste, { passive: true }))
+
+    // Der Sofortversuch. Klappt er, ist die Geste-Reserve ueberfluessig.
+    abspielen().then((gelungen) => {
+      if (!gelungen) return
+      merken('an')
+      abmelden()
+    })
+
+    return abmelden
+  }, [verfuegbar, merken, abspielen])
 
   const umschalten = useCallback(() => {
     const el = audioRef.current
@@ -313,11 +366,17 @@ function useSoundtrack() {
     } else {
       el.pause()
       setAn(false)
+      setLaeuft(false)
       merken('aus')
     }
   }, [merken, abspielen])
 
-  return { verfuegbar, an, starten, umschalten, audioRef }
+  // Der Browser ist die letzte Instanz: pausiert das Betriebssystem den Ton,
+  // faellt der Equalizer von selbst zurueck.
+  const beiPlay = useCallback(() => setLaeuft(true), [])
+  const beiPause = useCallback(() => setLaeuft(false), [])
+
+  return { verfuegbar, an, laeuft, starten, umschalten, audioRef, beiPlay, beiPause }
 }
 
 /**
@@ -325,11 +384,11 @@ function useSoundtrack() {
  * Lautsprechersymbol und Klartext — und lebt beim Spielen ueber vier
  * Equalizer-Balken. Die sind reines CSS, keine Library.
  */
-function SoundSchalter({ an, umschalten }) {
+function SoundSchalter({ an, laeuft, umschalten }) {
   return (
     <button
       type="button"
-      className={`ent-sound${an ? ' is-an' : ''}`}
+      className={`ent-sound${an ? ' is-an' : ''}${laeuft ? ' is-laeuft' : ''}`}
       onClick={umschalten}
       aria-pressed={an}
       aria-label={an ? 'Soundtrack ausschalten' : 'Soundtrack einschalten'}
@@ -955,8 +1014,16 @@ export default function Entdecken() {
   const { video, texturen } = ENTDECKEN_CONFIG
   const socials = ENTDECKEN_SOCIALS.filter((s) => s.url)
   const lenis = useLenis()
-  const { verfuegbar: tonDa, an: tonAn, starten: tonStarten, umschalten: tonUmschalten, audioRef } =
-    useSoundtrack()
+  const {
+    verfuegbar: tonDa,
+    an: tonAn,
+    laeuft: tonLaeuft,
+    starten: tonStarten,
+    umschalten: tonUmschalten,
+    audioRef,
+    beiPlay,
+    beiPause,
+  } = useSoundtrack()
 
   // Sprung in die Baustelle, ohne die Adresszeile anzufassen: angehaengte
   // UTM-Parameter bleiben dadurch unveraendert stehen (ein Router-Link mit
@@ -989,10 +1056,14 @@ export default function Entdecken() {
           loop
           preload="none"
           playsInline
+          onPlay={beiPlay}
+          onPause={beiPause}
           aria-hidden="true"
         />
       ) : null}
-      {tonDa ? <SoundSchalter an={tonAn} umschalten={tonUmschalten} /> : null}
+      {tonDa ? (
+        <SoundSchalter an={tonAn} laeuft={tonLaeuft} umschalten={tonUmschalten} />
+      ) : null}
 
       {/* ---------- Hero: Headline + Countdown links, grosses Video rechts ---------- */}
       <section className="ent-hero">
