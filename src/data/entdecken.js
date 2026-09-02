@@ -423,6 +423,201 @@ export const DRUECK_NICHT = {
 }
 
 /* ------------------------------------------------------------------ *
+ * Spektakel — die Easter-Egg-Ebene ueber „Drueck nicht."
+ * ------------------------------------------------------------------ */
+
+/**
+ * Diese Ebene liegt ZUSAETZLICH ueber den bestehenden kurzen Effekten
+ * (Knopfdruck, Halo, Beben, Blitz, Countdown-Kick, Video-Glut, Goldlinie,
+ * Hopser). Sie ersetzt davon nichts.
+ *
+ * Wichtig: Ein Spektakel ist reine Optik. Es veraendert weder den
+ * Baustellenindex noch ein Gate noch den Countdown — „Küchenlieferung
+ * erfolgreich simuliert." ist ein Gag, kein Fortschritt.
+ *
+ * Aufbau eines Events:
+ *   id       eindeutiger Schluessel (auch fuer den internen Testtrigger)
+ *   message  Text in der Knopf-Ausgabe; null = bestehender Text bleibt
+ *   object   fliegendes Objekt aus SPEKTAKEL_OBJEKTE oder null
+ *   effects  bestehende Kurzeffekte, dazu optional 'firework'
+ *   rarity   'common' | 'uncommon' | 'rare' — steuert nur die Gewichtung
+ *   firework Groesse des Goldfeuerwerks, wenn 'firework' in effects steht
+ */
+
+/** Anteil der normalen Klicks, die ueberhaupt ein Spektakel ausloesen. */
+export const SPEKTAKEL_CHANCE = 0.1
+
+/** Gewicht je Seltenheitsstufe innerhalb der Spektakel-Auswahl. */
+export const SPEKTAKEL_GEWICHT = { common: 4, uncommon: 2, rare: 1 }
+
+/**
+ * Flugbahn und Laufzeit je Objekt. Die Bahn ist eine CSS-Klasse
+ * (`ent-fly__obj--<bahn>`), die Laufzeit muss zur zugehoerigen Animation
+ * in styles.css passen — danach raeumt die Komponente das Objekt weg.
+ */
+export const SPEKTAKEL_OBJEKTE = {
+  dishwasher: { bahn: 'quer', dauer: 1600 },
+  toilet: { bahn: 'slide', dauer: 1700 },
+  drill: { bahn: 'diagonal', dauer: 1400 },
+  billiard: { bahn: 'roll', dauer: 1250 },
+  coffee: { bahn: 'quer', dauer: 1550 },
+  kitchen: { bahn: 'slide', dauer: 1800 },
+  lamp: { bahn: 'diagonal', dauer: 1500 },
+  toolbox: { bahn: 'quer', dauer: 1450 },
+}
+
+/**
+ * Der Pool der zufaelligen Spektakel. Die Spuelmaschine steht bewusst
+ * zweimal drin und ist damit haeufiger als die grossen Auftritte.
+ */
+export const SPEKTAKEL_EVENTS = [
+  {
+    id: 'dishwasher',
+    message: 'Du hast eine Spülmaschine gekauft.',
+    object: 'dishwasher',
+    effects: ['blitz', 'firework'],
+    rarity: 'common',
+    firework: 'klein',
+  },
+  {
+    id: 'dishwasher-2',
+    message: 'Spülmaschine unterwegs. Küche leider nicht.',
+    object: 'dishwasher',
+    effects: ['beben'],
+    rarity: 'common',
+  },
+  {
+    id: 'toilet',
+    message: 'Luxusklo freigeschaltet.',
+    object: 'toilet',
+    effects: ['firework'],
+    rarity: 'uncommon',
+    firework: 'klein',
+  },
+  {
+    id: 'toilet-2',
+    message: 'Das Luxusklo hat gerade 0 % Fortschritt gemacht.',
+    object: 'toilet',
+    effects: ['ziffern'],
+    rarity: 'rare',
+  },
+  {
+    id: 'drill',
+    message: 'Akkuschrauber unterwegs.',
+    object: 'drill',
+    effects: ['beben'],
+    rarity: 'common',
+  },
+  {
+    id: 'drill-2',
+    message: 'Noch einmal und du bekommst einen Akkuschrauber.',
+    object: 'drill',
+    effects: ['hopser'],
+    rarity: 'uncommon',
+  },
+  {
+    id: 'billiard',
+    message: 'Prioritäten wurden gesetzt.',
+    object: 'billiard',
+    effects: ['linie'],
+    rarity: 'common',
+  },
+  {
+    id: 'billiard-2',
+    message: 'Der Billardtisch ist weiter als die Küche.',
+    object: 'billiard',
+    effects: [],
+    rarity: 'uncommon',
+  },
+  {
+    id: 'coffee',
+    message: 'Kaffeemaschine im Anflug.',
+    object: 'coffee',
+    effects: ['firework'],
+    rarity: 'common',
+    firework: 'klein',
+  },
+  {
+    id: 'kitchen',
+    message: 'Küchenlieferung erfolgreich simuliert.',
+    object: 'kitchen',
+    effects: ['blitz', 'firework'],
+    rarity: 'rare',
+    firework: 'gross',
+  },
+  {
+    id: 'lamp',
+    message: 'Beleuchtungskonzept freigegeben: eine Lampe.',
+    object: 'lamp',
+    effects: [],
+    rarity: 'uncommon',
+  },
+  {
+    id: 'toolbox',
+    message: 'Werkzeugkiste geliefert. Inhalt: Optimismus.',
+    object: 'toolbox',
+    effects: ['beben'],
+    rarity: 'uncommon',
+  },
+  {
+    id: 'firework',
+    message: 'Goldregen. Rein dekorativ.',
+    object: null,
+    effects: ['firework'],
+    rarity: 'common',
+    firework: 'klein',
+  },
+]
+
+/**
+ * Feste Spektakel an bestimmten Klickzahlen. Sie schlagen den Zufall und
+ * kommen zusaetzlich zum bestehenden Meilenstein-Text und den bestehenden
+ * Meilenstein-Effekten — deshalb steht hier `message: null`.
+ */
+export const SPEKTAKEL_MEILEN = {
+  10: {
+    id: 'meilen-10',
+    message: null,
+    object: null,
+    effects: ['firework'],
+    rarity: 'common',
+    firework: 'klein',
+  },
+  25: {
+    id: 'meilen-25',
+    message: null,
+    object: 'dishwasher',
+    effects: ['blitz'],
+    rarity: 'common',
+    firework: 'klein',
+  },
+  50: {
+    id: 'meilen-50',
+    message: null,
+    object: 'kitchen',
+    effects: ['firework', 'beben'],
+    rarity: 'rare',
+    firework: 'gross',
+  },
+  100: {
+    id: 'meilen-100',
+    message: null,
+    object: 'toilet',
+    effects: ['firework', 'video', 'ziffern', 'blitz'],
+    rarity: 'rare',
+    firework: 'gross',
+  },
+  250: {
+    id: 'meilen-250',
+    message: null,
+    object: 'kitchen',
+    effects: ['firework', 'blitz', 'beben', 'video', 'linie'],
+    rarity: 'rare',
+    firework: 'gross',
+  },
+}
+
+/* ------------------------------------------------------------------ *
  * Socials
  * ------------------------------------------------------------------ */
 

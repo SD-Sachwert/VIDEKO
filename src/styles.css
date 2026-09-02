@@ -14502,6 +14502,320 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   }
 }
 
+/* ---------- Spektakel: fliegende Objekte und Goldfeuerwerk ----------
+   Die Easter-Egg-Ebene liegt als eigener Kasten ueber dem Hero: absolut,
+   geclippt, ohne Maustreffer. Damit kann nichts davon das Layout
+   verschieben oder Scrollbreite erzeugen — das Objekt fliegt innerhalb
+   dieses Kastens und wird an seinen Raendern beschnitten. Der Knopf
+   darunter bleibt klickbar. Alles ist nach spaetestens 1,8 s vorbei und
+   verschwindet danach komplett aus dem DOM. */
+
+.ent-fly {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ent-fly__obj {
+  position: absolute;
+  left: 0;
+  top: 34%;
+  width: clamp(128px, 15vw, 210px);
+  height: clamp(128px, 15vw, 210px);
+  will-change: transform, opacity;
+  filter: drop-shadow(0 18px 26px rgba(20, 17, 12, 0.24));
+}
+
+.ent-fly__obj svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Vier Bahnen, jedes Objekt bekommt die passende. Die Laufzeiten stehen
+   zusaetzlich in SPEKTAKEL_OBJEKTE — dort raeumt der Timer auf. */
+.ent-fly__obj--quer {
+  animation: ent-fly-quer 1600ms cubic-bezier(0.3, 0.02, 0.3, 1) both;
+}
+
+.ent-fly__obj--slide {
+  animation: ent-fly-slide 1700ms cubic-bezier(0.24, 0.6, 0.2, 1) both;
+}
+
+.ent-fly__obj--diagonal {
+  top: 7%;
+  animation: ent-fly-diagonal 1400ms cubic-bezier(0.34, 0.06, 0.36, 1) both;
+}
+
+.ent-fly__obj--roll {
+  top: 58%;
+  width: clamp(84px, 9vw, 132px);
+  height: clamp(84px, 9vw, 132px);
+  animation: ent-fly-roll 1250ms cubic-bezier(0.22, 0.5, 0.3, 1) both;
+}
+
+/* Quer durchs Bild von rechts nach links, mit kurzem Wackler in der
+   Mitte — das ist die Bahn der Spuelmaschine. */
+@keyframes ent-fly-quer {
+  0% {
+    transform: translate3d(112vw, 0, 0) rotate(-9deg);
+    opacity: 0;
+  }
+  7% {
+    opacity: 1;
+  }
+  40% {
+    transform: translate3d(56vw, -22px, 0) rotate(7deg);
+  }
+  50% {
+    transform: translate3d(46vw, 14px, 0) rotate(-4deg);
+  }
+  58% {
+    transform: translate3d(39vw, -8px, 0) rotate(5deg);
+  }
+  66% {
+    transform: translate3d(32vw, 4px, 0) rotate(-2deg);
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(-34vw, 10px, 0) rotate(-12deg);
+    opacity: 0;
+  }
+}
+
+/* Faehrt von links herein, setzt sich kurz, faehrt rechts wieder raus. */
+@keyframes ent-fly-slide {
+  0% {
+    transform: translate3d(-40vw, 0, 0) rotate(-6deg);
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  30% {
+    transform: translate3d(30vw, 0, 0) rotate(2deg);
+  }
+  38% {
+    transform: translate3d(33vw, -10px, 0) rotate(-1deg);
+  }
+  46% {
+    transform: translate3d(31vw, 3px, 0) rotate(1deg);
+  }
+  62% {
+    transform: translate3d(39vw, 0, 0) rotate(0deg);
+  }
+  92% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(118vw, -6px, 0) rotate(9deg);
+    opacity: 0;
+  }
+}
+
+/* Diagonal von oben rechts nach unten links, mit Drehung. */
+@keyframes ent-fly-diagonal {
+  0% {
+    transform: translate3d(106vw, -40px, 0) rotate(0deg);
+    opacity: 0;
+  }
+  9% {
+    opacity: 1;
+  }
+  50% {
+    transform: translate3d(52vw, 130px, 0) rotate(-192deg);
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(-30vw, 290px, 0) rotate(-384deg);
+    opacity: 0;
+  }
+}
+
+/* Rollt von links nach rechts durchs Bild, mit Absprung. */
+@keyframes ent-fly-roll {
+  0% {
+    transform: translate3d(-26vw, 0, 0) rotate(0deg);
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  46% {
+    transform: translate3d(45vw, -36px, 0) rotate(560deg);
+  }
+  62% {
+    transform: translate3d(62vw, 0, 0) rotate(760deg);
+  }
+  72% {
+    transform: translate3d(72vw, -16px, 0) rotate(880deg);
+  }
+  92% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(112vw, 0, 0) rotate(1180deg);
+    opacity: 0;
+  }
+}
+
+/* Bei reduzierter Bewegung bleibt das Objekt sichtbar, fliegt aber nicht:
+   es taucht mittig auf und geht wieder. Siehe Medienabfrage ganz unten. */
+@keyframes ent-fly-ruhig {
+  0% {
+    transform: translate3d(-50%, 14px, 0) scale(0.86);
+    opacity: 0;
+  }
+  18% {
+    transform: translate3d(-50%, 0, 0) scale(1);
+    opacity: 1;
+  }
+  72% {
+    transform: translate3d(-50%, 0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0) scale(1);
+    opacity: 0;
+  }
+}
+
+/* ---------- Goldfeuerwerk ----------
+   Keine Library, keine Canvas-Schleife: ein Burst ist ein Punkt im Hero
+   mit einem Lichtkern und elf bis dreizehn Partikeln. Richtung, Weite,
+   Groesse und Farbe stehen als Custom Properties am Element, die
+   Bewegung macht eine einzige Keyframe-Regel. Farben ausschliesslich
+   Gold, Champagner, Warmweiss und Bronze. */
+
+.ent-fw {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.ent-fw__kern {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 251, 238, 0.96) 0%,
+    rgba(232, 201, 120, 0.8) 42%,
+    rgba(201, 160, 80, 0) 72%
+  );
+  animation: ent-fw-kern 440ms ease-out both;
+}
+
+.ent-fw--gross .ent-fw__kern {
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+}
+
+.ent-fw i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--fgr, 7px);
+  height: var(--fgr, 7px);
+  margin-top: calc(var(--fgr, 7px) / -2);
+  margin-left: calc(var(--fgr, 7px) / -2);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 38% 32%,
+    var(--fc1, #fffdf3) 0%,
+    var(--fc2, #c9a050) 62%,
+    rgba(139, 107, 56, 0.92) 100%
+  );
+  box-shadow: 0 0 13px 2px rgba(232, 201, 120, 0.72);
+  will-change: transform, opacity;
+  animation-name: ent-fw-teil;
+  animation-timing-function: cubic-bezier(0.14, 0.72, 0.28, 1);
+  animation-fill-mode: both;
+}
+
+@keyframes ent-fw-kern {
+  0% {
+    transform: scale(0.2);
+    opacity: 0;
+  }
+  22% {
+    transform: scale(1.3);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+@keyframes ent-fw-teil {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.4);
+    opacity: 0;
+  }
+  12% {
+    transform: translate3d(calc(var(--fx) * 0.2), calc(var(--fy) * 0.2), 0) scale(1.15);
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(var(--fx), calc(var(--fy) + 26px), 0) scale(0.5);
+    opacity: 0;
+  }
+}
+
+@keyframes ent-fw-teil-ruhig {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.5);
+    opacity: 0;
+  }
+  20% {
+    transform: translate3d(calc(var(--fx) * 0.22), calc(var(--fy) * 0.22), 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(calc(var(--fx) * 0.3), calc(var(--fy) * 0.3), 0) scale(0.7);
+    opacity: 0;
+  }
+}
+
+/* Auf schmalen Geraeten kleiner — sonst verdeckt ein fliegender
+   Kuechenblock auf 390 px den halben Hero samt CTA. */
+@media (max-width: 560px) {
+  .ent-fly__obj {
+    top: 28%;
+    width: clamp(92px, 27vw, 128px);
+    height: clamp(92px, 27vw, 128px);
+  }
+
+  .ent-fly__obj--diagonal {
+    top: 6%;
+  }
+
+  .ent-fly__obj--roll {
+    top: 54%;
+    width: 58px;
+    height: 58px;
+  }
+
+  .ent-fw i {
+    box-shadow: 0 0 9px 1px rgba(232, 201, 120, 0.66);
+  }
+}
+
 .ent-hero__inner {
   position: relative;
   z-index: 1;
@@ -16458,6 +16772,20 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   .ent-idxk__fill,
   .ent-idxg__arc {
     transition: none;
+  }
+
+  /* Das Easter-Egg bleibt sichtbar — nur ohne die grosse Flugbahn: das
+     Objekt taucht mittig auf, der Goldburst faellt deutlich kleiner aus. */
+  .ent-fly .ent-fly__obj {
+    left: 50%;
+    top: 32%;
+    animation-name: ent-fly-ruhig;
+    animation-duration: 1000ms;
+    animation-timing-function: ease-out;
+  }
+
+  .ent-fly .ent-fw i {
+    animation-name: ent-fw-teil-ruhig;
   }
 
   .ent-knopf:hover,

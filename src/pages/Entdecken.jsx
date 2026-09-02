@@ -22,6 +22,8 @@ import Reveal from '../components/Reveal.jsx'
 import LazyVideo from '../components/LazyVideo.jsx'
 import LazyBg from '../components/LazyBg.jsx'
 import CTAButton from '../components/CTAButton.jsx'
+import { SpektakelLayer } from '../components/EntdeckenSpektakel.jsx'
+import { spektakelNachId, useSpektakel } from '../lib/spektakel.js'
 import { BRAND } from '../data/company.js'
 import { baustellenIndex, heutigerTag, INDEX_BASIS, tageZwischen } from '../lib/baustellenindex.js'
 import {
@@ -966,7 +968,7 @@ function eggWerte(heute) {
  * (`tonStarten`) — hier entsteht keine zweite Audio-Logik. `onEffekt` meldet
  * dem Hero, welcher kurze Effekt laufen darf.
  */
-function DrueckNicht({ onDruck, onEffekt }) {
+function DrueckNicht({ onDruck, onEffekt, onSpektakel }) {
   const heute = useHeute()
   const werte = useMemo(() => eggWerte(heute), [heute])
 
@@ -1005,11 +1007,21 @@ function DrueckNicht({ onDruck, onEffekt }) {
         .replace('{klo}', String(werte.klo))
 
     const fest = DRUECK_NICHT.meilensteine[n]
+
+    // Spektakel-Ebene: fragt zentral nach, ob dieser Klick ein Easter-Egg
+    // bekommt (ca. jeder zehnte, feste Klickzahlen immer). Gibt das Event
+    // zurueck, damit die passende Meldung dazu erscheint — null heisst:
+    // ganz normaler Klick. Der garantierte Knopfdruck weiter unten und
+    // alle bestehenden Kurzeffekte bleiben davon unberuehrt.
+    const ereignis = onSpektakel ? onSpektakel(n, Boolean(fest)) : null
     let roh
     let art
     if (fest) {
       roh = fest
       art = 'fest'
+    } else if (ereignis && ereignis.message) {
+      roh = ereignis.message
+      art = 'selten'
     } else if (DRUECK_NICHT.selten.length && Math.random() < DRUECK_NICHT.seltenChance) {
       roh = ausListe(DRUECK_NICHT.selten)
       art = 'selten'
@@ -1039,12 +1051,16 @@ function DrueckNicht({ onDruck, onEffekt }) {
     }
 
     // Dazu immer genau ein weiterer Effekt — bei Meilensteinen mehrere.
+    // Ein Spektakel legt seine eigenen Effekte oben drauf, ersetzt die
+    // Basis aber nicht: jeder Klick behaelt seinen sichtbaren Zusatz.
     if (onEffekt) {
-      if (art === 'fest') onEffekt(EGG_FX_MEILEN[n] || zweiAus(EGG_FX_ZUSATZ))
-      else if (art === 'selten') onEffekt(zweiAus(EGG_FX_ZUSATZ))
-      else onEffekt([ausListe(EGG_FX_ZUSATZ)])
+      let basis
+      if (art === 'fest') basis = EGG_FX_MEILEN[n] || zweiAus(EGG_FX_ZUSATZ)
+      else if (art === 'selten') basis = zweiAus(EGG_FX_ZUSATZ)
+      else basis = [ausListe(EGG_FX_ZUSATZ)]
+      onEffekt(ereignis && ereignis.effects ? basis.concat(ereignis.effects) : basis)
     }
-  }, [onDruck, onEffekt, werte])
+  }, [onDruck, onEffekt, onSpektakel, werte])
 
   return (
     <div className="ent-egg" ref={eggRef}>
@@ -1201,6 +1217,11 @@ export default function Entdecken() {
   const heroRef = useRef(null)
   const fxTimer = useRef({})
 
+  // Die Spektakel-Ebene (fliegende Objekte, Goldfeuerwerk) haelt ihren
+  // eigenen Zustand. Sie liegt ueber dem Hero und aendert nichts an den
+  // bestehenden Effekten oder an irgendeinem echten Baustellenwert.
+  const { objekt: flugObjekt, feuer: goldFeuer, ausloesen, vormerken } = useSpektakel()
+
   useEffect(() => {
     const laufend = fxTimer.current
     return () => {
@@ -1227,6 +1248,25 @@ export default function Entdecken() {
       }, dauer + 40)
     }
   }, [])
+
+  // Deterministischer Ausloeser fuer genau ein Event — ohne ihn liesse
+  // sich ein 10-%-Zufallsereignis nicht gezielt pruefen. Er stellt das
+  // Ereignis nur scharf; ausgeloest wird es vom naechsten echten Klick,
+  // damit Meldung, Effekte und Objekt exakt denselben Weg nehmen wie im
+  // Normalbetrieb. Bewusst nur eine Funktion am window-Objekt: kein
+  // Debug-Menue, kein sichtbarer Schalter, keine geaenderte Chance.
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined
+    window.__videkoSpektakel = (id) => {
+      const ereignis = spektakelNachId(id)
+      if (!ereignis) return false
+      vormerken(ereignis)
+      return true
+    }
+    return () => {
+      delete window.__videkoSpektakel
+    }
+  }, [vormerken])
 
   return (
     <div className="ent">
@@ -1256,6 +1296,7 @@ export default function Entdecken() {
         <span className="ent-hero__glow" aria-hidden="true" />
         <span className="ent-hero__blitz" aria-hidden="true" />
         <span className="ent-hero__linie" aria-hidden="true" />
+        <SpektakelLayer objekt={flugObjekt} feuer={goldFeuer} />
         <div className="ent-wide ent-hero__inner">
           <div className="ent-hero__copy">
             {/* Kein zweites Logo im Hero: der Header steht auf /entdecken
@@ -1291,7 +1332,7 @@ export default function Entdecken() {
           {/* Ebenfalls ohne Reveal — der Knopf muss ohne Scrollen und ohne
               Wartezeit da sein, sonst ist der Gag keiner. */}
           <div className="ent-hero__egg">
-            <DrueckNicht onDruck={tonStarten} onEffekt={effektAus} />
+            <DrueckNicht onDruck={tonStarten} onEffekt={effektAus} onSpektakel={ausloesen} />
           </div>
 
           <div className="ent-hero__media">
