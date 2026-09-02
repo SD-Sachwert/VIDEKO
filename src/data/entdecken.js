@@ -5,6 +5,18 @@ import entdeckenPoster from '../assets/images/studio/bilder/02_intro_showroom_he
 import texturNacht from '../assets/images/studio/bilder/08_split_section_showroom_gross.webp'
 import texturFinale from '../assets/images/studio/bilder/10_final_cta_studio_banner.webp'
 
+// Flaechenmotive der Social-Kacheln. Bewusst KEINE Screenshots echter Posts —
+// die liegen nicht im Repo und duerften nicht erfunden werden. Stattdessen
+// eigene VIDEKO-Studio-Renderings, in styles.css stark abgedunkelt und
+// entsaettigt: sie tragen die Kachel als Material und Licht, nicht als
+// Inhaltsversprechen. Reihenfolge = SOCIAL_REIHENFOLGE weiter unten.
+import bildInstagram from '../assets/images/studio/bilder/03_studio_card_ankommen_lounge.webp'
+import bildTiktok from '../assets/images/studio/bilder/06_studio_card_planung_erleben.webp'
+import bildYoutube from '../assets/images/studio/bilder/04_studio_card_kuechenwelten_entdecken.webp'
+import bildFacebook from '../assets/images/studio/bilder/09_team_beratung_auf_augenhoehe.webp'
+import bildLinkedin from '../assets/images/studio/bilder/07_studio_card_beratung_vertiefen.webp'
+import bildSpotify from '../assets/images/studio/bilder/05_studio_card_materialien_fuehlen.webp'
+
 /**
  * Einzige Quelle der Wahrheit fuer /entdecken.
  *
@@ -126,6 +138,24 @@ const SOCIAL_TEXTE = {
   linkedin: 'Die Firma hinter der Baustelle.',
 }
 
+// Beschriftung des Kachel-Buttons. Reine Handlungsaufforderung, keine Aussage
+// ueber Reichweite oder Inhalte.
+const SOCIAL_CTA = {
+  instagram: 'Folgen',
+  tiktok: 'Folgen',
+  youtube: 'Abonnieren',
+  facebook: 'Folgen',
+  linkedin: 'Folgen',
+}
+
+const SOCIAL_BILDER = {
+  instagram: bildInstagram,
+  tiktok: bildTiktok,
+  youtube: bildYoutube,
+  facebook: bildFacebook,
+  linkedin: bildLinkedin,
+}
+
 const SOCIAL_REIHENFOLGE = ['instagram', 'tiktok', 'youtube', 'facebook', 'linkedin']
 
 export const ENTDECKEN_SOCIALS = SOCIAL_REIHENFOLGE.map((key) => {
@@ -135,6 +165,8 @@ export const ENTDECKEN_SOCIALS = SOCIAL_REIHENFOLGE.map((key) => {
     label: profil?.label || key,
     url: profil?.url || null,
     note: SOCIAL_TEXTE[key] || '',
+    cta: SOCIAL_CTA[key] || 'Ansehen',
+    bild: SOCIAL_BILDER[key] || null,
   }
 })
 
@@ -146,6 +178,8 @@ export const ENTDECKEN_SPOTIFY_KACHEL = {
   label: 'Spotify',
   note: 'Der Baustellen-Soundtrack. Kommt, wenn er steht.',
   badge: 'Bald',
+  cta: 'Anhören',
+  bild: bildSpotify,
 }
 
 export const STUDIO_ADRESSE = `${BRAND.studio.street}, ${BRAND.studio.postalCode} ${BRAND.studio.city}`

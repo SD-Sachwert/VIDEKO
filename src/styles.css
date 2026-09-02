@@ -14184,917 +14184,1352 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
 
 /* =====================================================================
    /entdecken — Landeseite der Offline-QR-Codes
-   ---------------------------------------------------------------------
-   Eigener, gekapselter Namensraum (.ent-*) — aber KEINE eigene Designwelt:
-   Farben, Schrift, Buttons, Kartenrezept und der Marmor-Untergrund kommen
-   aus denselben Tokens und Mustern wie /leistungen, /studio und /ueber-uns.
-   Die Seite soll wie ein Teil der Website wirken, nicht wie eine Microsite
-   darin.
+   =====================================================================
+   Komposition nach 01_DESIGN_REFERENCE: gross, breit, plakativ, dicht.
+   Kein schmaler Textstrom in einer weiten Flaeche — jede Sektion traegt
+   ihren Bildschirm allein.
 
-   Rhythmus der Seite:
-     hell   (Hero: Text, Countdown, dunkles Video als Kontrast)
-     hell   (Baufortschritt)
-     DUNKEL (ein durchgehendes Band: Marke, Socials, „Drueck nicht.")
-     hell   (Standort)
-     DUNKEL (Beratung) -> globaler Footer.
-   Marmor/hell ist die Buehne, Schwarz der Kontrast, Gold nur Akzent,
-   die echte Baustelle der Inhalt.
+   Eigenes Raster: .ent-wide statt des globalen .container. Der globale
+   Container ist auf Fliesstextbreite (1240px, 36px Rand) ausgelegt und
+   waere hier zu eng; er bleibt unveraendert und gilt weiter fuer alle
+   anderen Seiten.
 
-   Vier Dinge, die beim Aendern wichtig sind:
-   - Der Seitenhintergrund kommt aus `body` (Gold-Marmor-Bild + Cremeschleier,
-     siehe :root/body oben). `.ent` setzt deshalb bewusst KEINEN eigenen
-     Hintergrund — genau wie `.section--light` und `.leist-final2--marble`.
-     Kein zweites Marmorbild fuer die hellen Teile.
-   - Viele Bloecke sind gleichzeitig .reveal-Elemente. Auf ihnen darf weder
-     `transition` noch `transform` gesetzt werden, sonst kippt die
-     Einblend-Animation aus Reveal.jsx. Hover laeuft deshalb ueber ::before
-     und ueber die Kind-Elemente.
-   - Plattform-Akzente stecken in --sc / --scg und bleiben Andeutung: Icon,
-     Rand, Schimmer, Geistglyphe. Keine farbigen Flaechen. Die Werte sind
-     fuer den DUNKLEN Grund aufgehellt.
-   - Der Fortschrittsring zeigt nur dann einen Fuellstand, wenn in
-     entdecken.js ein bestaetigter Wert steht. Ohne Wert laeuft die
-     gestrichelte, fuer alle Bereiche identische Spur — sie behauptet nichts.
+   Bewegung laeuft ueber die gemeinsame .reveal-Mechanik (Reveal.jsx).
+   Reveal-Wurzeln duerfen deshalb weder transition noch transform selbst
+   setzen — Hover-Effekte liegen auf ::before und auf Kindelementen.
    ===================================================================== */
-.ent {
-  position: relative;
-  /* transparent: der Gold-Marmor aus body traegt die hellen Teile */
-  background: transparent;
-  color: var(--ink);
-}
-.ent .kicker { margin-bottom: 12px; }
 
-/* ---------- Hero + Countdown + Video ---------- */
-/* Heller Einstieg: Marmor aus body, darueber nur ein warmer Goldschleier —
-   dieselbe Machart wie .mgames--marble, aber ohne eigenes Bild. */
+.ent {
+  --ent-pad: 22px;
+  --ent-max: 1380px;
+  background: var(--silver-cream);
+}
+
+.ent-wide {
+  width: 100%;
+  max-width: calc(var(--ent-max) + 2 * var(--ent-pad));
+  margin: 0 auto;
+  padding: 0 var(--ent-pad);
+}
+
+/* ---------- gemeinsame Bausteine ---------- */
+
+.ent-h2 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(2.15rem, 4.4vw, 4.25rem);
+  line-height: 1.02;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin: 0;
+}
+
+.ent-lead {
+  font-size: clamp(1rem, 1.15vw, 1.12rem);
+  line-height: 1.65;
+  color: var(--ink-soft);
+  margin: 22px 0 0;
+  max-width: 62ch;
+}
+
+.ent-head {
+  margin-bottom: 62px;
+  max-width: 980px;
+}
+
+.ent-head--mitte {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.ent-head--mitte .ent-lead {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ent-head--hell .ent-h2 {
+  color: var(--cream);
+}
+
+.ent-head--hell .ent-lead {
+  color: var(--cream-soft);
+}
+
+.ent-link {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--sans);
+  font-size: 0.94rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  text-decoration: none;
+  padding-bottom: 3px;
+  border-bottom: 1px solid var(--line-dark);
+  transition: border-color 0.35s ease, color 0.35s ease;
+}
+
+.ent-link:hover {
+  color: var(--bronze);
+  border-bottom-color: var(--gold);
+}
+
+.ent-sec {
+  position: relative;
+  padding: clamp(78px, 9vw, 132px) 0;
+}
+
+.ent-sec--prog {
+  background: linear-gradient(180deg, var(--silver-cream) 0%, #f6f2ea 58%, var(--silver-cream) 100%);
+}
+
+.ent-sec--ort {
+  background: var(--silver-cream);
+}
+
+/* =====================================================================
+   1 — Hero: grosse Headline + Countdown links, dominantes Video rechts
+   ===================================================================== */
+
 .ent-hero {
   position: relative;
   overflow: hidden;
-  padding: clamp(120px, 19vw, 164px) 0 clamp(34px, 6vw, 58px);
-  background: transparent;
+  padding: clamp(112px, 12vw, 158px) 0 clamp(72px, 8vw, 116px);
+  background: linear-gradient(168deg, #fbf8f1 0%, var(--silver-cream) 46%, var(--stone) 100%);
 }
+
+/* Warmes Streiflicht von oben rechts plus zwei Goldhaarlinien — dieselbe
+   Lichtidee wie im Entwurf, nur mit CSS statt mit einem Bild. */
 .ent-hero__glow {
   position: absolute;
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(118% 76% at 84% -8%, rgba(201, 160, 80, 0.24), transparent 58%),
-    radial-gradient(86% 70% at 4% 104%, rgba(201, 160, 80, 0.13), transparent 56%),
-    linear-gradient(180deg, rgba(250, 246, 239, 0.78), rgba(246, 241, 232, 0.34) 52%, transparent);
+    radial-gradient(58% 62% at 78% 8%, rgba(232, 201, 120, 0.3) 0%, transparent 62%),
+    radial-gradient(46% 52% at 6% 92%, rgba(201, 160, 80, 0.18) 0%, transparent 66%);
 }
-/* Feine Goldader wie auf der Merch-Marmorflaeche — reine CSS-Linien, kein Asset. */
+
 .ent-hero__glow::after {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
-  opacity: 0.5;
   background:
-    linear-gradient(78deg, transparent 0 44%, rgba(201, 160, 80, 0.2) 44.5%, transparent 45%),
-    linear-gradient(64deg, transparent 0 70%, rgba(139, 107, 56, 0.14) 70.4%, transparent 71%);
+    linear-gradient(102deg, transparent 34%, rgba(201, 160, 80, 0.24) 35%, transparent 36%),
+    linear-gradient(102deg, transparent 63%, rgba(232, 201, 120, 0.16) 64%, transparent 65%);
 }
-/* Drei Kinder in der Reihenfolge Text -> Countdown -> Video. Auf dem Handy
-   ist das genau die gewuenschte Lesefolge und der Zaehler liegt im ersten
-   Screen; ab 900px verteilt ein Flaechenraster sie auf zwei Spalten. */
-.ent-hero__inner { position: relative; display: grid; gap: 28px; }
+
+.ent-hero__inner {
+  position: relative;
+  display: grid;
+  gap: 46px;
+}
+
+.ent-hero__copy {
+  min-width: 0;
+}
+
 .ent-hero__title {
   font-family: var(--serif);
-  font-size: clamp(3.1rem, 14vw, 4.6rem);
+  font-weight: 300;
+  font-size: clamp(3.35rem, 6.4vw, 6rem);
   line-height: 0.94;
-  letter-spacing: -0.02em;
-  margin: 0 0 18px;
+  letter-spacing: -0.012em;
   color: var(--ink);
+  margin: 0 0 26px;
 }
-.ent-hero__lead {
-  margin: 0 0 10px;
-  max-width: 25ch;
-  font-size: 1.08rem;
-  line-height: 1.5;
-  color: var(--ink);
-}
-.ent-hero__note {
-  margin: 0 0 24px;
-  max-width: 34ch;
-  font-size: 0.92rem;
-  line-height: 1.65;
-  color: var(--ink-soft);
-}
-.ent-hero__btns { display: flex; flex-wrap: wrap; gap: 12px; }
 
-/* Umbau.mp4 ist 1280x720. Ein hochformatiger Rahmen (4:5) schnitt davon
-   rund die Haelfte der Bildbreite weg — Kamerafahrt und Raum waren nicht mehr
-   lesbar. 4:3 laesst gut drei Viertel der Breite stehen und bleibt auf dem
-   Handy trotzdem hoch genug, um zu tragen. Ab Tablet volles 16:9.
-   Das Video bleibt bewusst die dunkle Flaeche des Heros: auf hellem Marmor
-   wirkt es als Kontrast, nicht als Dark Mode. */
+.ent-hero__lead {
+  font-size: clamp(1.02rem, 1.2vw, 1.18rem);
+  line-height: 1.62;
+  color: var(--ink-soft);
+  max-width: 34ch;
+  margin: 0 0 34px;
+}
+
+.ent-hero__btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.ent-hero__note {
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+  margin: 18px 0 0;
+}
+
+/* ---------- Video ---------- */
+
+.ent-hero__media {
+  min-width: 0;
+}
+
 .ent-vid {
   position: relative;
+  width: 100%;
   aspect-ratio: 4 / 3;
-  border-radius: 22px;
+  border-radius: 26px;
   overflow: hidden;
-  background: #0d0c0a;
-  border: 1px solid rgba(201, 160, 80, 0.46);
+  border: 1px solid rgba(201, 160, 80, 0.5);
+  background: var(--anthracite);
   box-shadow:
-    0 54px 100px -46px rgba(90, 66, 20, 0.66),
-    0 0 0 6px rgba(201, 160, 80, 0.07),
-    0 2px 0 rgba(255, 255, 255, 0.55);
+    0 44px 100px -34px rgba(20, 17, 12, 0.58),
+    0 12px 34px -16px rgba(20, 17, 12, 0.4),
+    0 0 0 1px rgba(244, 239, 228, 0.4),
+    0 0 76px -18px rgba(201, 160, 80, 0.42);
 }
-.ent-vid__el { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+.ent-vid__el {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 .ent-vid__veil {
   position: absolute;
   inset: 0;
+  pointer-events: none;
   background:
-    radial-gradient(120% 90% at 50% 0%, rgba(201, 160, 80, 0.12), transparent 58%),
-    linear-gradient(180deg, rgba(8, 8, 7, 0.04) 42%, rgba(8, 8, 7, 0.74) 100%);
+    linear-gradient(180deg, rgba(8, 8, 7, 0.22) 0%, transparent 34%, rgba(8, 8, 7, 0.5) 100%),
+    radial-gradient(72% 68% at 82% 6%, rgba(232, 201, 120, 0.16) 0%, transparent 60%);
 }
+
 .ent-vid__tag {
   position: absolute;
-  left: 14px;
-  bottom: 14px;
+  left: 22px;
+  bottom: 20px;
   display: inline-flex;
   align-items: center;
-  gap: 9px;
-  padding: 8px 15px;
+  gap: 10px;
+  padding: 9px 17px;
   border-radius: 999px;
-  background: rgba(8, 8, 7, 0.55);
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(232, 201, 120, 0.32);
-  font-size: 0.68rem;
+  background: rgba(8, 8, 7, 0.62);
+  backdrop-filter: blur(7px);
+  border: 1px solid rgba(232, 201, 120, 0.34);
+  font-family: var(--sans);
+  font-size: 0.72rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--gold-bright);
+  color: var(--champagne);
 }
+
 .ent-vid__tag::before {
-  content: "";
+  content: '';
   width: 7px;
   height: 7px;
   border-radius: 50%;
   background: var(--gold-bright);
-  flex: none;
-  animation: ent-blink 2.6s ease-in-out infinite;
+  box-shadow: 0 0 12px rgba(232, 201, 120, 0.9);
+  animation: ent-blink 2.4s ease-in-out infinite;
 }
+
 @keyframes ent-blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.28; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.24;
+  }
 }
 
-/* ---------- Sektionen ---------- */
-.ent-sec { position: relative; padding: clamp(52px, 8.5vw, 92px) 0; }
+/* =====================================================================
+   2 — Countdown: grosse Ziffern direkt in der Flaeche, kein Kasten
+   ===================================================================== */
 
-.ent-h2 {
-  font-family: var(--serif);
-  font-size: clamp(2.2rem, 8.8vw, 3.4rem);
-  line-height: 1.02;
-  letter-spacing: -0.015em;
-  margin: 0 0 14px;
+.ent-hero__count {
+  margin-top: clamp(38px, 4.4vw, 58px);
 }
-.ent-lead {
-  margin: 0;
-  max-width: 46ch;
-  font-size: 0.97rem;
-  line-height: 1.7;
-  color: var(--ink-soft);
-}
-.ent-head { margin-bottom: 26px; }
-/* Ueberschrift links, Einordnung rechts — ab Tablet nebeneinander, damit der
-   Kopf einer Sektion nicht drei Zeilen Leerraum erzeugt. */
-.ent-head--breit { display: grid; gap: 14px; }
-.ent-head--breit .ent-h2 { margin-bottom: 0; }
 
-.ent-link {
+.ent-count {
   position: relative;
-  display: inline-flex;
-  align-items: center;
-  /* 44px hohes Tippziel, ohne dass die Unterlinie vom Text wegrutscht:
-     die Linie liegt als ::after direkt unter der Schrift. */
-  min-height: 44px;
-  padding: 0 2px;
-  color: var(--bronze);
-  text-decoration: none;
-  font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
 }
-.ent-link::after {
-  content: '';
-  position: absolute;
-  left: 2px;
-  right: 2px;
-  top: calc(50% + 0.68em);
-  height: 1px;
-  background: rgba(139, 107, 56, 0.45);
-}
-.ent-link:hover { color: var(--ink); }
-.ent-link:hover::after { background: rgba(34, 31, 26, 0.5); }
-/* Auf den dunklen Flaechen dreht sich die Helligkeit um. */
-.ent-nacht .ent-link,
-.ent-final .ent-link { color: var(--gold-bright); }
-.ent-nacht .ent-link::after,
-.ent-final .ent-link::after { background: rgba(232, 201, 120, 0.38); }
-.ent-nacht .ent-link:hover,
-.ent-final .ent-link:hover { color: var(--cream); }
-.ent-nacht .ent-link:hover::after,
-.ent-final .ent-link:hover::after { background: rgba(244, 239, 228, 0.6); }
-.ent-nacht .ent-lead,
-.ent-final .ent-lead { color: rgba(244, 239, 228, 0.68); }
 
-/* ---------- Countdown ----------
-   Sitzt im Hero, nicht in einem eigenen Abschnitt: kein Band, kein Kasten —
-   zwei feine Goldlinien und Goldhaarlinien zwischen den Einheiten tragen ihn
-   direkt auf dem Marmor. Reihenfolge im Markup und damit optisch: erst die
-   grossen Ziffern, darunter zwei kleine Zeilen (Erklaerung, Termin). Die
-   Zahlen tragen den Kontrast (Anthrazit auf Marmor), Gold bleibt Akzent.
-   Sekunden laufen mit, deshalb sind Versalziffern mit fester Breite hier
-   Pflicht — sonst springt die Zeile im Sekundentakt. */
-.ent-hero__count { position: relative; }
-/* Linksbuendig wie der Hero-Text darueber; nur die Ziffern stehen mittig in
-   ihrer Spalte, sonst haengen sie schief unter den Trennlinien. */
-.ent-count { text-align: left; }
-/* Nicht mehr die Ueberschrift des Zaehlers, sondern die Erklaerung darunter:
-   deutlich kleiner als die Ziffern, damit die Gewichtung stimmt. */
-.ent-count__title {
-  font-family: var(--serif);
-  font-size: clamp(1.3rem, 5.4vw, 1.75rem);
-  line-height: 1.12;
-  margin: 18px 0 0;
-  color: var(--ink);
-}
 .ent-count__grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0;
-  max-width: 620px;
-  margin: 0;
-  padding: clamp(16px, 4.4vw, 26px) 0;
-  border-top: 1px solid rgba(184, 149, 79, 0.5);
-  border-bottom: 1px solid rgba(184, 149, 79, 0.5);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  max-width: 640px;
 }
-.ent-count__unit { position: relative; padding: 2px 2px 0; text-align: center; }
-/* Goldhaarlinie zwischen den Einheiten statt vier Rahmen. */
+
+.ent-count__unit {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 4px;
+}
+
+/* Nur feine Goldhaarlinien zwischen den Einheiten — bewusst kein Rahmen,
+   keine Karte, kein Kasten. */
 .ent-count__unit + .ent-count__unit::before {
-  content: "";
+  content: '';
   position: absolute;
   left: 0;
-  top: 10%;
-  bottom: 10%;
+  top: 12%;
+  bottom: 26%;
   width: 1px;
-  background: linear-gradient(180deg, transparent, rgba(184, 149, 79, 0.55), transparent);
+  background: linear-gradient(180deg, transparent, rgba(201, 160, 80, 0.55), transparent);
 }
-.ent-count__num {
-  display: block;
-  font-family: var(--serif);
-  /* 15.5vw: bei 390px Breite (Container-Padding 22px) bleiben pro Spalte
-     ~86px, zwei Versalziffern brauchen davon rund 62px — die Ziffern duerfen
-     hier dominieren, ohne dass die vier Einheiten kollidieren. */
-  font-size: clamp(3rem, 15.5vw, 4.8rem);
-  line-height: 1;
-  letter-spacing: -0.015em;
-  /* Cormorant setzt Ziffern standardmaessig als Mediaevalziffern: die 1 sieht
-     dann aus wie ein I, die 9 haengt unter die Grundlinie. Fuer einen Zaehler
-     ist das zu unklar — lnum holt die Versalziffern, tnum haelt die Breite
-     konstant, damit beim Weiterzaehlen nichts springt. */
-  font-variant-numeric: lining-nums tabular-nums;
-  font-feature-settings: "lnum" 1, "tnum" 1;
-  color: var(--ink);
-}
-/* Klar untergeordnet, aber lesbar: neben 60px-Ziffern wirken 9px wie ein
-   Druckfehler, deshalb 0.64rem statt 0.56rem. */
-.ent-count__lab {
-  display: block;
-  margin-top: 10px;
-  font-size: 0.64rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-}
-.ent-count__foot { margin: 7px 0 0; font-size: 0.88rem; color: var(--ink-soft); }
-.ent-count__date { color: var(--bronze); font-weight: 700; white-space: nowrap; }
-/* Der Sonderfall ohne Ziffern (Datum fehlt / Termin erreicht) hat keine
-   Zahlenreihe, die tragen koennte — dort bleibt die Zeile die Ueberschrift. */
-.ent-count--offen .ent-count__title { font-size: clamp(1.9rem, 7.6vw, 2.7rem); margin: 0 0 12px; }
-.ent-count--offen .ent-count__foot { max-width: 34ch; line-height: 1.6; }
 
-/* ---------- Baufortschritt ----------
-   Sechs kleine, dichte Karten statt einer luftigen Liste. Der Ring ist der
-   Traeger: mit bestaetigtem Wert ein anteiliger Bogen, ohne Wert eine
-   gestrichelte Spur, die fuer alle Bereiche gleich aussieht. */
-.ent-sec--prog { padding-top: clamp(34px, 6vw, 58px); }
+.ent-count__num {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(2.9rem, 12.4vw, 4.1rem);
+  line-height: 0.9;
+  color: var(--ink);
+  font-variant-numeric: lining-nums tabular-nums;
+  font-feature-settings: 'lnum' 1, 'tnum' 1;
+}
+
+.ent-count__lab {
+  margin-top: 12px;
+  font-family: var(--sans);
+  font-size: 0.63rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--bronze);
+}
+
+.ent-count__title {
+  font-family: var(--sans);
+  font-size: clamp(0.92rem, 1.4vw, 1.18rem);
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin: 30px 0 0;
+}
+
+.ent-count__foot {
+  font-size: 0.98rem;
+  color: var(--ink-soft);
+  margin: 12px 0 0;
+}
+
+.ent-count__date {
+  font-weight: 600;
+  color: var(--bronze);
+}
+
+.ent-count--offen .ent-count__title {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 3.4vw, 3rem);
+  font-weight: 300;
+  letter-spacing: 0;
+  margin-top: 14px;
+}
+
+/* =====================================================================
+   3 — Baufortschritt: sechs hochformatige Karten in EINER Reihe
+   ===================================================================== */
+
 .ent-proggrid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
 }
+
 .ent-prog {
   position: relative;
-  padding: 20px 15px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 26px 16px 24px;
   border-radius: 18px;
   border: 1px solid var(--line-dark);
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.74), rgba(252, 248, 240, 0.5));
-  box-shadow: 0 24px 50px -36px rgba(120, 90, 40, 0.4), 0 1px 0 rgba(255, 255, 255, 0.7) inset;
+  background: linear-gradient(178deg, rgba(255, 255, 255, 0.78) 0%, rgba(244, 239, 228, 0.5) 100%);
+  overflow: hidden;
 }
-/* Hover ueber ::before, damit .reveal seine eigene transform/transition behaelt. */
+
+/* Hover-Licht auf dem Pseudoelement — die Karte selbst ist Reveal-Wurzel
+   und darf keine eigene transition/transform tragen. */
 .ent-prog::before {
-  content: "";
+  content: '';
   position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  border: 1px solid transparent;
+  inset: 0;
   pointer-events: none;
-  transition: border-color 0.3s ease, box-shadow 0.35s ease;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  background: radial-gradient(72% 46% at 50% 0%, rgba(232, 201, 120, 0.3) 0%, transparent 70%);
 }
+
 .ent-prog:hover::before {
-  border-color: rgba(201, 160, 80, 0.5);
-  box-shadow: 0 22px 48px -26px rgba(201, 160, 80, 0.42);
+  opacity: 1;
 }
+
+.ent-prog__icon {
+  position: relative;
+  color: var(--bronze);
+  opacity: 0.9;
+}
+
+.ent-prog__label {
+  position: relative;
+  font-family: var(--sans);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin: 14px 0 20px;
+}
+
 .ent-prog__ring {
   position: relative;
   display: block;
-  width: 74px;
-  height: 74px;
-  margin-bottom: 14px;
+  width: 112px;
+  height: 112px;
+  margin: 0 auto;
 }
-.ent-prog__svg { display: block; width: 100%; height: 100%; transform: rotate(-90deg); }
+
+.ent-prog__svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
 .ent-prog__track {
   fill: none;
   stroke: rgba(43, 41, 37, 0.1);
   stroke-width: 4;
 }
-/* Nur mit echtem Wert: anteiliger Goldbogen. */
+
 .ent-prog__arc {
   fill: none;
   stroke: var(--gold);
   stroke-width: 4;
   stroke-linecap: round;
 }
-/* Ohne Wert: gleichmaessige Strichspur, die sich langsam dreht. Sie zeigt
-   Bewegung, aber keinen Fuellstand — und behauptet damit nichts. */
+
+/* Ohne bestaetigten Wert: neutrale, langsam kreisende Spur statt eines
+   erfundenen Fuellstands. */
 .ent-prog__spur {
   fill: none;
-  stroke: rgba(184, 149, 79, 0.6);
-  stroke-width: 3;
+  stroke: rgba(201, 160, 80, 0.6);
+  stroke-width: 4;
   stroke-linecap: round;
-  stroke-dasharray: 3 11;
-  transform-origin: 40px 40px;
+  stroke-dasharray: 15 27;
+  transform-origin: 50% 50%;
   animation: ent-spur 26s linear infinite;
 }
+
 @keyframes ent-spur {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
+
 .ent-prog__mid {
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
-  color: var(--bronze);
+  padding: 0 14px;
 }
+
 .ent-prog__pct {
   font-family: var(--serif);
-  font-size: 1.32rem;
+  font-size: 1.9rem;
+  color: var(--ink);
   font-variant-numeric: lining-nums tabular-nums;
-  font-feature-settings: "lnum" 1, "tnum" 1;
-  color: var(--ink);
 }
-.ent-prog__label {
-  margin: 0 0 8px;
-  font-family: var(--serif);
-  font-size: 1.28rem;
-  line-height: 1.1;
-  color: var(--ink);
-}
+
 .ent-prog__status {
-  display: inline-block;
-  margin: 0 0 10px;
-  padding: 5px 11px;
-  border-radius: 999px;
-  border: 1px solid rgba(184, 149, 79, 0.38);
-  background: rgba(201, 160, 80, 0.09);
-  font-size: 0.62rem;
+  font-family: var(--sans);
+  font-size: 0.6rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--bronze);
+  line-height: 1.3;
 }
+
 .ent-prog__note {
-  margin: 0;
+  position: relative;
   font-size: 0.85rem;
   line-height: 1.5;
   color: var(--ink-soft);
+  margin: 22px 0 0;
 }
+
 .ent-proghint {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 18px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  gap: 11px;
+  width: fit-content;
+  margin: 46px auto 0;
+  padding: 13px 26px;
+  border-radius: 999px;
+  border: 1px solid var(--line-dark);
+  background: rgba(255, 255, 255, 0.6);
+  font-size: 0.88rem;
+  letter-spacing: 0.02em;
   color: var(--ink-soft);
 }
+
 .ent-proghint__dot {
   width: 7px;
   height: 7px;
-  flex: none;
   border-radius: 50%;
   background: var(--gold);
-  animation: ent-blink 2.6s ease-in-out infinite;
+  box-shadow: 0 0 10px rgba(201, 160, 80, 0.8);
+  flex: none;
 }
 
-/* ---------- Dunkles Band: Marke, Socials, Easter Egg ----------
-   EIN durchgehender Kontrastbereich statt drei einzelner dunkler Abschnitte:
-   eine Flaeche, eine Textur, ein Rhythmus. Die Textur ist ein eigenes
-   Studio-Rendering, stark abgedunkelt und rein als Flaeche — sie behauptet
-   keinen Bauzustand. */
+/* =====================================================================
+   4 — Dunkles Band: Marke, Socials, „Drueck nicht."
+   ===================================================================== */
+
 .ent-nacht {
   position: relative;
   overflow: hidden;
-  color: var(--cream);
-  background: radial-gradient(122% 80% at 82% 0%, #201d18 0%, var(--anthracite) 54%, var(--soft-black) 100%);
+  background: radial-gradient(120% 74% at 50% 0%, #201d18 0%, var(--anthracite) 46%, var(--soft-black) 100%);
 }
+
 .ent-nacht__tex {
   position: absolute;
   inset: 0;
   background-size: cover;
   background-position: center;
-  opacity: 0.16;
-  filter: grayscale(0.4) contrast(1.05);
-  pointer-events: none;
+  opacity: 0.24;
+  filter: grayscale(0.4) contrast(1.12);
 }
+
 .ent-nacht__schleier {
   position: absolute;
   inset: 0;
-  pointer-events: none;
   background:
-    radial-gradient(90% 60% at 12% 18%, rgba(201, 160, 80, 0.14), transparent 62%),
-    linear-gradient(180deg, rgba(8, 8, 7, 0.86), rgba(8, 8, 7, 0.5) 38%, rgba(8, 8, 7, 0.9));
+    linear-gradient(180deg, rgba(8, 8, 7, 0.86) 0%, rgba(8, 8, 7, 0.62) 32%, rgba(8, 8, 7, 0.9) 100%),
+    radial-gradient(58% 40% at 50% 34%, rgba(201, 160, 80, 0.14) 0%, transparent 70%);
 }
-.ent-band { position: relative; padding: clamp(46px, 6.4vw, 74px) 0; }
-/* Feine Goldlinie zwischen den Baendern — dieselbe Trennung wie zwischen
-   zwei hellen Sektionen, nur in Gold auf Schwarz. */
-.ent-band + .ent-band::before {
-  content: "";
+
+/* Goldadern — feine Lichtlinien wie in einer Marmorplatte. Material, kein
+   Glitzer: niedrige Deckkraft, weiches Leuchten, keine Animation. */
+.ent-adern {
   position: absolute;
   top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(440px, 46%);
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(201, 160, 80, 0.5), transparent);
+  bottom: 0;
+  width: clamp(120px, 15vw, 230px);
+  height: 100%;
+  pointer-events: none;
+  fill: none;
+  stroke: rgba(201, 160, 80, 0.6);
+  stroke-width: 1.5;
+  opacity: 0.9;
+  filter: drop-shadow(0 0 11px rgba(232, 201, 120, 0.45));
+}
+
+.ent-adern--links {
+  left: 0;
+}
+
+.ent-adern--rechts {
+  right: 0;
+  transform: scaleX(-1);
+}
+
+.ent-band {
+  position: relative;
+  padding: clamp(74px, 8vw, 118px) 0;
+}
+
+.ent-band--marke {
+  padding-bottom: clamp(56px, 6vw, 84px);
 }
 
 /* ---------- Marke ---------- */
-.ent-brand__cols { display: grid; gap: 12px; margin-top: 6px; }
-.ent-brand__text {
-  margin: 0;
-  max-width: 52ch;
-  font-size: 1rem;
-  line-height: 1.72;
-  color: rgba(244, 239, 228, 0.72);
+
+.ent-brand__kopf {
+  margin-bottom: 34px;
 }
-.ent-chips { list-style: none; display: flex; flex-wrap: wrap; gap: 9px; margin: 26px 0 0; padding: 0; }
-.ent-chip {
-  padding: 9px 16px;
-  border-radius: 999px;
-  border: 1px solid rgba(201, 160, 80, 0.3);
-  background: rgba(244, 239, 228, 0.05);
-  font-size: 0.8rem;
-  font-weight: 600;
+
+.ent-brand .ent-h2 {
   color: var(--cream);
 }
 
-/* ---------- Socials ---------- */
-.ent-socialgrid { display: grid; gap: 12px; }
-.ent-social {
+.ent-brand__cols {
+  display: grid;
+  gap: 22px;
+}
+
+.ent-brand__text {
+  font-size: clamp(1rem, 1.15vw, 1.12rem);
+  line-height: 1.68;
+  color: var(--cream-soft);
+  margin: 0;
+}
+
+.ent-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+  margin: 34px 0 0;
+}
+
+.ent-chip {
+  padding: 9px 19px;
+  border-radius: 999px;
+  border: 1px solid rgba(201, 160, 80, 0.34);
+  background: rgba(232, 201, 120, 0.06);
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--champagne);
+}
+
+/* ---------- Socials: grosse hochformatige Kacheln ---------- */
+
+.ent-socialgrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.ent-soc {
   --sc: var(--gold-bright);
   --scg: rgba(232, 201, 120, 0.5);
   position: relative;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 14px;
-  min-height: 86px;
-  padding: 18px 16px;
-  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 300px;
+  padding: 24px 20px 20px;
+  border-radius: 20px;
   overflow: hidden;
+  border: 1px solid rgba(244, 239, 228, 0.14);
+  background: rgba(12, 11, 10, 0.72);
   text-decoration: none;
-  color: var(--cream);
-  border: 1px solid rgba(244, 239, 228, 0.13);
-  background: linear-gradient(155deg, rgba(244, 239, 228, 0.075), rgba(244, 239, 228, 0.02));
-  box-shadow: 0 30px 60px -40px rgba(0, 0, 0, 0.9);
+  isolation: isolate;
 }
-.ent-social::before {
-  content: "";
+
+.ent-soc--instagram {
+  --sc: #e8698f;
+  --scg: rgba(232, 105, 143, 0.42);
+}
+.ent-soc--tiktok {
+  --sc: #3fd8d2;
+  --scg: rgba(63, 216, 210, 0.42);
+}
+.ent-soc--youtube {
+  --sc: #ef6a5f;
+  --scg: rgba(239, 106, 95, 0.42);
+}
+.ent-soc--facebook {
+  --sc: #6ea3ef;
+  --scg: rgba(110, 163, 239, 0.42);
+}
+.ent-soc--linkedin {
+  --sc: #5aa9e8;
+  --scg: rgba(90, 169, 232, 0.42);
+}
+.ent-soc--spotify {
+  --sc: #4bd07b;
+  --scg: rgba(75, 208, 123, 0.42);
+}
+
+/* Bildflaeche: stark abgedunkelt und entsaettigt. Sie traegt die Kachel als
+   Material und Licht — sie behauptet keinen Beitragsinhalt. */
+.ent-soc__bild {
   position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  border: 1px solid transparent;
-  pointer-events: none;
-  transition: border-color 0.3s ease, box-shadow 0.35s ease;
+  inset: 0;
+  z-index: -2;
+  background-size: cover;
+  background-position: center;
+  filter: grayscale(0.32) brightness(0.62) contrast(1.06);
+  transform: scale(1.04);
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
 }
-.ent-social:hover::before { border-color: var(--scg); box-shadow: 0 24px 54px -24px var(--scg) inset; }
-/* Grosse, fast unsichtbare Plattform-Glyphe als Flaechenmotiv. Ersetzt die
-   Bildkachel: im Repo liegen keine echten Social-Posts, und ein
-   Showroom-Rendering wuerde hier ein fertiges Studio behaupten. */
-.ent-social__ghost {
+
+.ent-soc__schleier {
   position: absolute;
-  right: -34px;
-  bottom: -52px;
-  color: var(--sc);
-  opacity: 0.09;
-  pointer-events: none;
-  transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(180deg, rgba(8, 8, 7, 0.76) 0%, rgba(8, 8, 7, 0.26) 42%, rgba(8, 8, 7, 0.9) 100%),
+    radial-gradient(84% 50% at 50% 100%, var(--scg) 0%, transparent 72%);
+  opacity: 0.94;
+  transition: opacity 0.5s ease;
 }
-.ent-social:hover .ent-social__ghost { opacity: 0.16; transform: translate(-6px, -6px); }
-.ent-social__icon {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
-  color: var(--sc);
-  background: rgba(8, 8, 7, 0.5);
-  border: 1px solid rgba(244, 239, 228, 0.16);
-  box-shadow: inset 0 0 26px -12px var(--sc);
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+.ent-soc:hover .ent-soc__bild {
+  transform: scale(1.11);
+  filter: grayscale(0.08) brightness(0.78) contrast(1.06);
 }
-.ent-social:hover .ent-social__icon { transform: translateY(-2px); }
-.ent-social__body { position: relative; display: grid; gap: 3px; min-width: 0; }
-.ent-social__name { font-weight: 600; font-size: 1.05rem; color: var(--cream); }
-.ent-social__note { font-size: 0.83rem; line-height: 1.45; color: rgba(244, 239, 228, 0.6); }
-.ent-social__cta {
-  position: relative;
+
+.ent-soc__kopf {
+  display: block;
+}
+
+.ent-soc__icon {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  flex: none;
-  font-size: 0.66rem;
+  justify-content: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 15px;
+  border: none;
+  background: var(--sc);
+  color: #0b0a09;
+  box-shadow: 0 10px 24px -12px rgba(0, 0, 0, 0.9);
+  margin-bottom: 18px;
+}
+
+.ent-soc__name {
+  display: block;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--cream);
+}
+
+.ent-soc__note {
+  display: block;
+  margin-top: 10px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--cream-soft);
+}
+
+.ent-soc__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  align-self: flex-start;
+  margin-top: 24px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(232, 201, 120, 0.36);
+  background: rgba(232, 201, 120, 0.08);
+  font-family: var(--sans);
+  font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(244, 239, 228, 0.5);
-  transition: color 0.3s ease;
-}
-.ent-social__cta svg { transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
-.ent-social:hover .ent-social__cta { color: var(--sc); }
-.ent-social:hover .ent-social__cta svg { transform: translate(3px, -3px); }
-
-/* Instagram fuehrt: dieselbe Kachel, nur breiter, mit Goldkante und mehr
-   Gewicht. */
-.ent-social--lead {
-  min-height: 104px;
-  padding: 22px 18px;
-  border-color: rgba(201, 160, 80, 0.34);
-  background:
-    radial-gradient(110% 110% at 88% 0%, rgba(201, 160, 80, 0.16), transparent 62%),
-    linear-gradient(155deg, rgba(244, 239, 228, 0.1), rgba(244, 239, 228, 0.02));
-}
-.ent-social--lead .ent-social__icon { width: 56px; height: 56px; border-radius: 16px; }
-.ent-social--lead .ent-social__name { font-size: 1.2rem; }
-
-/* Aufgehellte Plattformtoene — die Original-Signalfarben sind auf Schwarz
-   teils zu dunkel (Facebook, LinkedIn) oder zu grell (YouTube). */
-.ent-social--instagram { --sc: #e8698f; --scg: rgba(232, 105, 143, 0.42); }
-.ent-social--tiktok { --sc: #3fd8d2; --scg: rgba(63, 216, 210, 0.36); }
-.ent-social--youtube { --sc: #ef6a5f; --scg: rgba(239, 106, 95, 0.38); }
-.ent-social--facebook { --sc: #6ea3ef; --scg: rgba(110, 163, 239, 0.36); }
-.ent-social--linkedin { --sc: #5aa9e8; --scg: rgba(90, 169, 232, 0.36); }
-.ent-social--spotify { --sc: #4bd07b; --scg: rgba(75, 208, 123, 0.34); }
-
-/* Spotify ohne bestaetigte URL: sichtbar, aber erkennbar noch nicht da.
-   Kein Link, kein Hover, keine erfundene Adresse. */
-.ent-social.is-aus {
-  --sc: rgba(244, 239, 228, 0.42);
-  border-style: dashed;
-  border-color: rgba(244, 239, 228, 0.16);
-  background: linear-gradient(155deg, rgba(244, 239, 228, 0.04), rgba(244, 239, 228, 0.012));
-  box-shadow: none;
-}
-.ent-social.is-aus .ent-social__name { color: rgba(244, 239, 228, 0.7); }
-.ent-social.is-aus .ent-social__note { color: rgba(244, 239, 228, 0.44); }
-.ent-social.is-aus .ent-social__ghost { opacity: 0.05; }
-.ent-social__badge {
-  flex: none;
-  padding: 6px 12px;
-  border-radius: 999px;
-  border: 1px dashed rgba(244, 239, 228, 0.26);
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(244, 239, 228, 0.5);
+  color: var(--champagne);
+  transition: background 0.35s ease, border-color 0.35s ease, color 0.35s ease;
 }
 
-/* ---------- „Drueck nicht." ----------
-   Reines Spassmodul: kein Audio, kein Modal, keine Library. Der Knopf ist
-   die einzige Stelle der Seite, an der Gold eine Flaeche sein darf. */
-.ent-band--egg { padding-bottom: clamp(56px, 7.6vw, 88px); }
-.ent-eggwrap {
-  max-width: 680px;
-  margin: 0 auto;
-  padding: clamp(28px, 6vw, 48px) clamp(20px, 5vw, 40px);
-  border-radius: 26px;
-  border: 1px solid rgba(201, 160, 80, 0.24);
-  background:
-    radial-gradient(120% 90% at 50% 0%, rgba(201, 160, 80, 0.1), transparent 62%),
-    linear-gradient(160deg, rgba(244, 239, 228, 0.05), rgba(244, 239, 228, 0.012));
-  text-align: center;
-}
-.ent-egg .kicker { margin-bottom: 10px; }
-.ent-egg__h2 { margin-bottom: 8px; }
-.ent-egg__sub { margin: 0 0 30px; font-size: 0.95rem; color: rgba(244, 239, 228, 0.6); }
-.ent-knopf {
-  position: relative;
-  display: inline-grid;
-  place-items: center;
-  width: clamp(150px, 40vw, 184px);
-  height: clamp(150px, 40vw, 184px);
-  border-radius: 50%;
-  border: 1px solid rgba(255, 240, 200, 0.5);
-  background: radial-gradient(120% 120% at 32% 22%, #f0d896 0%, #d3ac5c 44%, #9a7530 100%);
-  color: #221f1a;
-  font-family: var(--sans);
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  cursor: pointer;
-  box-shadow:
-    0 26px 54px -22px rgba(201, 160, 80, 0.6),
-    0 1px 0 rgba(255, 255, 255, 0.5) inset,
-    0 -14px 26px -18px rgba(0, 0, 0, 0.6) inset;
-  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease;
-}
-.ent-knopf:hover { transform: translateY(-2px); }
-.ent-knopf:active { transform: translateY(2px) scale(0.985); }
-.ent-knopf:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 6px; }
-.ent-knopf__cap { position: relative; padding: 0 12px; text-align: center; }
-/* Der Halo laeuft nur beim Druck einmal nach aussen — kein Dauerpuls. */
-.ent-knopf__halo {
-  position: absolute;
-  inset: -3px;
-  border-radius: 50%;
-  border: 1px solid rgba(232, 201, 120, 0.7);
-  opacity: 0;
-  pointer-events: none;
-}
-.ent-knopf.is-puls .ent-knopf__halo { animation: ent-halo 0.64s cubic-bezier(0.16, 1, 0.3, 1); }
-.ent-knopf.is-puls { box-shadow: 0 14px 34px -18px rgba(201, 160, 80, 0.7), 0 1px 0 rgba(255, 255, 255, 0.5) inset; }
-@keyframes ent-halo {
-  0% { opacity: 0.9; transform: scale(1); }
-  100% { opacity: 0; transform: scale(1.34); }
-}
-/* Feste Hoehe fuer Meldung und Zaehler: sonst springt der ganze Block bei
-   jedem Klick, weil die Zeilen unterschiedlich lang sind. */
-.ent-egg__out {
-  min-height: 3em;
-  margin: 26px auto 0;
-  max-width: 34ch;
-  font-family: var(--serif);
-  font-size: clamp(1.15rem, 4.6vw, 1.4rem);
-  line-height: 1.4;
+.ent-soc:hover .ent-soc__cta {
+  background: rgba(232, 201, 120, 0.18);
+  border-color: rgba(232, 201, 120, 0.66);
   color: var(--cream);
 }
-.ent-egg__count {
-  min-height: 1.4em;
-  margin: 4px 0 0;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+
+.ent-soc__cta--aus {
+  border-color: rgba(244, 239, 228, 0.18);
+  background: rgba(244, 239, 228, 0.05);
+  color: rgba(244, 239, 228, 0.5);
+}
+
+.ent-soc.is-aus {
+  cursor: default;
+}
+
+.ent-soc.is-aus .ent-soc__bild {
+  filter: grayscale(0.86) brightness(0.42);
+}
+
+/* ---------- „Drueck nicht." — breites Bedienfeld ---------- */
+
+.ent-band--egg {
+  padding-top: clamp(24px, 3vw, 44px);
+}
+
+.ent-eggwrap {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.ent-egg {
+  display: grid;
+  gap: 30px;
+  align-items: center;
+  padding: clamp(20px, 2.2vw, 28px) clamp(26px, 3vw, 40px);
+  border-radius: 24px;
+  border: 1px solid rgba(201, 160, 80, 0.28);
+  background: linear-gradient(140deg, rgba(32, 29, 24, 0.94) 0%, rgba(10, 9, 8, 0.94) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(244, 239, 228, 0.08),
+    0 34px 80px -40px rgba(0, 0, 0, 0.9);
+}
+
+.ent-egg__pult {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 6px 22px 24px;
+}
+
+/* Sockel unter dem Knopf: flache Ellipse mit Schatten und Goldkante —
+   der Knopf sitzt darauf statt frei zu schweben. */
+.ent-knopf__sockel {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 164px;
+  height: 40px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: linear-gradient(180deg, #26221c 0%, #0d0c0a 100%);
+  border: 1px solid rgba(201, 160, 80, 0.24);
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.8),
+    0 18px 34px -16px rgba(0, 0, 0, 0.9);
+}
+
+.ent-knopf {
+  position: relative;
+  width: 124px;
+  height: 124px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+  background: radial-gradient(circle at 34% 26%, #f6e2ac 0%, #e8c978 22%, #c9a050 52%, #8b6b38 78%, #5f4722 100%);
+  box-shadow:
+    inset 0 3px 8px rgba(255, 244, 214, 0.55),
+    inset 0 -8px 18px rgba(60, 42, 14, 0.7),
+    0 16px 30px -10px rgba(0, 0, 0, 0.85),
+    0 0 60px -12px rgba(232, 201, 120, 0.6);
+  transition: transform 0.14s ease, box-shadow 0.24s ease;
+}
+
+.ent-knopf:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 3px 8px rgba(255, 244, 214, 0.6),
+    inset 0 -8px 18px rgba(60, 42, 14, 0.7),
+    0 22px 38px -10px rgba(0, 0, 0, 0.9),
+    0 0 84px -10px rgba(232, 201, 120, 0.78);
+}
+
+.ent-knopf:active,
+.ent-knopf.is-puls {
+  transform: translateY(5px) scale(0.975);
+  box-shadow:
+    inset 0 2px 5px rgba(255, 244, 214, 0.4),
+    inset 0 -4px 10px rgba(60, 42, 14, 0.8),
+    0 6px 14px -6px rgba(0, 0, 0, 0.9),
+    0 0 52px -14px rgba(232, 201, 120, 0.6);
+}
+
+/* Deckplatte: feiner, hellerer Kreis obenauf — gibt dem Knopf Tiefe. */
+.ent-knopf__cap {
+  position: absolute;
+  inset: 15px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 28%, rgba(255, 249, 230, 0.72) 0%, rgba(232, 201, 120, 0.12) 42%, transparent 68%);
+  border: 1px solid rgba(255, 244, 214, 0.28);
+  pointer-events: none;
+}
+
+.ent-knopf__halo {
+  position: absolute;
+  inset: -22px;
+  border-radius: 50%;
+  border: 1px solid rgba(232, 201, 120, 0.3);
+  pointer-events: none;
+  animation: ent-halo 3.4s ease-in-out infinite;
+}
+
+@keyframes ent-halo {
+  0%,
+  100% {
+    opacity: 0.28;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.06);
+  }
+}
+
+.ent-knopf__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.ent-egg .kicker {
+  margin-bottom: 14px;
+}
+
+.ent-egg__h2 {
+  color: var(--cream);
+  margin: 0;
+  font-size: clamp(2.1rem, 3.6vw, 3.2rem);
+}
+
+.ent-egg__sub {
+  font-size: 1rem;
+  color: var(--cream-soft);
+  margin: 12px 0 0;
+}
+
+.ent-egg__out {
+  margin: 16px 0 0;
+  min-height: 1.6em;
+  font-family: var(--serif);
+  font-size: clamp(1.1rem, 1.7vw, 1.42rem);
+  line-height: 1.42;
   color: var(--gold-bright);
 }
 
-/* ---------- Standort ---------- */
-.ent-ort { display: grid; gap: 26px; align-items: center; }
-.ent-ort__h2 { margin-bottom: 18px; }
-.ent-ort__adr {
-  font-style: normal;
-  font-family: var(--serif);
-  font-size: clamp(1.45rem, 6vw, 2rem);
-  line-height: 1.32;
-  color: var(--ink);
-  /* Hausnummer und PLZ als Versalziffern — Mediaevalziffern lassen "97076"
-     unruhig wirken; eine Adresse muss beim Ueberfliegen stimmen. */
-  font-variant-numeric: lining-nums;
-  font-feature-settings: "lnum" 1;
-  margin: 4px 0 10px;
+.ent-egg__count {
+  margin: 8px 0 0;
+  min-height: 1.4em;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  color: rgba(244, 239, 228, 0.46);
 }
-.ent-ort__note { margin: 0; font-size: 0.92rem; color: var(--ink-soft); }
-.ent-ort__btns,
-.ent-final__btns {
+
+/* =====================================================================
+   5 — Standort: Text links, grosse Karte rechts
+   ===================================================================== */
+
+.ent-ort {
+  display: grid;
+  gap: 44px;
+  align-items: center;
+}
+
+.ent-ort__h2 {
+  font-size: clamp(1.9rem, 3.4vw, 3.6rem);
+  line-height: 1.06;
+}
+
+.ent-ort__adr {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin: 30px 0 0;
+  font-style: normal;
+  font-size: clamp(1.05rem, 1.5vw, 1.35rem);
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.ent-ort__adr svg {
+  color: var(--bronze);
+  flex: none;
+  margin-top: 3px;
+}
+
+.ent-ort__note {
+  font-size: 1rem;
+  line-height: 1.66;
+  color: var(--ink-soft);
+  margin: 20px 0 0;
+  max-width: 46ch;
+}
+
+.ent-ort__btns {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 16px 22px;
-  margin-top: 26px;
+  gap: 20px;
+  margin-top: 34px;
 }
-.ent-ort__btnlabel { display: inline-flex; align-items: center; gap: 9px; }
 
-/* Abstrakte Kartenflaeche — bewusst KEIN Karten-API und kein erfundenes
-   Gebaeudefoto (im Repo existiert keins von der Hertzstrasse). Die Grafik
-   behauptet keine Geografie; die Aussage macht die Adresse darunter. */
+.ent-ort__media {
+  min-width: 0;
+}
+
 .ent-karte {
   position: relative;
-  aspect-ratio: 5 / 4;
-  border-radius: 24px;
+  width: 100%;
+  min-height: 300px;
+  aspect-ratio: 16 / 10;
+  border-radius: 22px;
   overflow: hidden;
-  border: 1px solid rgba(201, 160, 80, 0.4);
-  box-shadow: 0 48px 92px -46px rgba(90, 66, 20, 0.6), 0 2px 0 rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(201, 160, 80, 0.34);
+  box-shadow:
+    0 36px 80px -38px rgba(20, 17, 12, 0.6),
+    0 0 60px -22px rgba(201, 160, 80, 0.34);
 }
-.ent-karte__svg { display: block; width: 100%; height: 100%; }
-.ent-karte__block rect { fill: rgba(244, 239, 228, 0.055); stroke: rgba(244, 239, 228, 0.09); stroke-width: 1; }
-.ent-karte__strasse path { stroke: rgba(244, 239, 228, 0.11); stroke-width: 6; fill: none; }
+
+.ent-karte__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.ent-karte__block rect {
+  fill: rgba(244, 239, 228, 0.085);
+  stroke: rgba(244, 239, 228, 0.13);
+  stroke-width: 1;
+}
+
+.ent-karte__strasse path {
+  stroke: rgba(244, 239, 228, 0.17);
+  stroke-width: 2.2;
+  fill: none;
+}
+
 .ent-karte__route {
   fill: none;
-  stroke: var(--gold-bright);
-  stroke-width: 3.5;
+  stroke: var(--gold);
+  stroke-width: 2.6;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-dasharray: 10 8;
-  filter: drop-shadow(0 0 6px rgba(232, 201, 120, 0.5));
-  animation: ent-route 1.6s linear infinite;
+  stroke-dasharray: 7 9;
+  filter: drop-shadow(0 0 6px rgba(201, 160, 80, 0.6));
+  animation: ent-route 3.2s linear infinite;
 }
+
 @keyframes ent-route {
-  to { stroke-dashoffset: -18; }
+  to {
+    stroke-dashoffset: -32;
+  }
 }
-.ent-karte__start { fill: rgba(232, 201, 120, 0.7); }
-/* Der Pin sitzt am Endpunkt der Route (252/152 im 400x320-Raster). */
+
+.ent-karte__start {
+  fill: rgba(232, 201, 120, 0.85);
+}
+
 .ent-karte__pin {
   position: absolute;
   left: 63%;
   top: 47.5%;
+  transform: translate(-50%, -100%);
   display: grid;
   place-items: center;
-  width: 42px;
-  height: 42px;
-  margin: -21px 0 0 -21px;
-  border-radius: 50%;
-  background: var(--grad-gold);
-  color: #1a1712;
-  box-shadow: 0 10px 24px -8px rgba(0, 0, 0, 0.8);
-}
-.ent-karte__puls {
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  border: 1px solid rgba(232, 201, 120, 0.6);
-  animation: ent-puls 2.8s ease-out infinite;
-}
-@keyframes ent-puls {
-  0% { opacity: 0.8; transform: scale(1); }
-  70%, 100% { opacity: 0; transform: scale(1.9); }
-}
-.ent-karte__label {
-  position: absolute;
-  left: 16px;
-  right: 16px;
-  bottom: 16px;
-  margin: 0;
-  padding: 11px 15px;
-  border-radius: 14px;
-  background: rgba(8, 8, 7, 0.62);
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(232, 201, 120, 0.26);
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--cream);
-  font-variant-numeric: lining-nums;
+  color: var(--gold-bright);
+  filter: drop-shadow(0 0 10px rgba(232, 201, 120, 0.75));
 }
 
-/* ---------- Beratung ----------
-   Dunkles Vollflaechen-Band als Schlusspunkt: nach der hellen Standortflaeche
-   der letzte Kontrastschritt, mit demselben Textur-Rezept wie das
-   Nachtband. */
+.ent-karte__puls {
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid rgba(232, 201, 120, 0.5);
+  animation: ent-puls 2.8s ease-out infinite;
+}
+
+@keyframes ent-puls {
+  0% {
+    opacity: 0.8;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+}
+
+.ent-karte__label {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 42px 24px 20px;
+  background: linear-gradient(180deg, transparent 0%, rgba(8, 8, 7, 0.86) 62%);
+  font-family: var(--sans);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--champagne);
+}
+
+/* =====================================================================
+   6 — Beratung: grossflaechiger Abschluss
+   ===================================================================== */
+
 .ent-final {
   position: relative;
   overflow: hidden;
-  padding: clamp(64px, 10vw, 118px) 0;
-  text-align: center;
-  color: var(--cream);
-  background: radial-gradient(120% 90% at 50% 0%, #1d1a16 0%, var(--anthracite) 52%, var(--soft-black) 100%);
+  display: grid;
+  align-items: center;
+  min-height: clamp(420px, 44vw, 560px);
+  padding: clamp(84px, 9vw, 128px) 0;
+  background: var(--soft-black);
 }
+
 .ent-final__tex {
   position: absolute;
   inset: 0;
   background-size: cover;
   background-position: center 62%;
-  opacity: 0.2;
-  pointer-events: none;
+  opacity: 0.58;
 }
+
 .ent-final__schleier {
   position: absolute;
   inset: 0;
-  pointer-events: none;
   background:
-    radial-gradient(80% 60% at 50% 8%, rgba(201, 160, 80, 0.16), transparent 64%),
-    linear-gradient(180deg, rgba(8, 8, 7, 0.82), rgba(8, 8, 7, 0.58) 46%, rgba(8, 8, 7, 0.92));
-}
-.ent-final .container { position: relative; }
-.ent-final__inner { max-width: 720px; margin: 0 auto; }
-.ent-final .ent-lead { margin: 0 auto; }
-.ent-final__btns { justify-content: center; }
-
-/* ---------- Breiter ---------- */
-@media (min-width: 620px) {
-  .ent-vid { aspect-ratio: 16 / 9; }
-  .ent-count__lab { font-size: 0.7rem; letter-spacing: 0.2em; }
-
-  .ent-proggrid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
-  .ent-prog { padding: 24px 18px 22px; }
-
-  .ent-socialgrid { grid-template-columns: 1fr 1fr; gap: 14px; }
-  /* Instagram ist der Kanal, auf dem am meisten passiert: eigene Zeile ueber
-     den Kacheln darunter. Spotify schliesst die Reihe genauso breit ab —
-     sonst bliebe eine halbe Zeile Loch. */
-  .ent-social--lead { grid-column: 1 / -1; min-height: 128px; padding: 28px; gap: 20px; }
-  .ent-social--lead .ent-social__icon { width: 64px; height: 64px; border-radius: 18px; }
-  .ent-social--lead .ent-social__icon svg { width: 28px; height: 28px; }
-  .ent-social--lead .ent-social__name { font-size: 1.34rem; }
-  .ent-social--lead .ent-social__note { font-size: 0.92rem; }
-  .ent-social--spotify { grid-column: 1 / -1; }
-
-  .ent-ort { grid-template-columns: 1fr 1fr; gap: 34px; }
-  .ent-brand__cols { grid-template-columns: 1fr 1fr; gap: 22px; }
+    linear-gradient(180deg, rgba(8, 8, 7, 0.86) 0%, rgba(8, 8, 7, 0.48) 42%, rgba(8, 8, 7, 0.9) 100%),
+    radial-gradient(62% 56% at 50% 42%, rgba(201, 160, 80, 0.2) 0%, transparent 72%);
 }
 
-@media (min-width: 900px) {
-  /* 150px statt 182px: Hero-Text, groesserer Zaehler und das breitere Video
-     muessen auf 1440x900 gemeinsam in den ersten Screen passen. */
-  .ent-hero { padding-top: 150px; }
-  /* Text und Countdown links untereinander, Video rechts ueber beide Reihen.
-     So bleibt der Zaehler nah am Hero und liegt auf 1440x900 komplett im
-     ersten Screen — als eigene Zeile unter dem Video waere er es nicht. */
-  .ent-hero__inner {
-    grid-template-columns: 0.94fr 1.06fr;
-    grid-template-areas:
-      "copy media"
-      "count media";
-    align-items: start;
-    gap: 34px 48px;
+.ent-final .ent-wide {
+  position: relative;
+}
+
+.ent-final__inner {
+  max-width: 900px;
+}
+
+.ent-final .ent-h2 {
+  color: var(--cream);
+  font-size: clamp(2.3rem, 4.7vw, 4.5rem);
+}
+
+.ent-final .ent-lead {
+  color: var(--cream-soft);
+  font-size: clamp(1.02rem, 1.25vw, 1.2rem);
+}
+
+.ent-final__btns {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 22px;
+  margin-top: 38px;
+}
+
+.ent-final .ent-link {
+  color: var(--cream);
+  border-bottom-color: var(--line-light);
+}
+
+.ent-final .ent-link:hover {
+  color: var(--gold-bright);
+  border-bottom-color: var(--gold);
+}
+
+.ent-final__werte {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 30px;
+  list-style: none;
+  padding: 0;
+  margin: 44px 0 0;
+}
+
+.ent-final__werte li {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--champagne);
+}
+
+.ent-final__punkt {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 10px rgba(201, 160, 80, 0.85);
+}
+
+/* =====================================================================
+   Breakpoints — Mobile ist eine eigene Fassung, keine Mini-Version
+   ===================================================================== */
+
+@media (min-width: 560px) {
+  .ent-proggrid,
+  .ent-socialgrid {
+    gap: 16px;
   }
-  .ent-hero__copy { grid-area: copy; }
-  .ent-hero__count { grid-area: count; }
-  .ent-hero__media { grid-area: media; align-self: center; }
-  .ent-hero__title { font-size: clamp(3.6rem, 4.8vw, 5rem); }
-  /* Zweispaltig: 4:3 balanciert die Textspalte aus, ohne wie 1:1 wieder
-     ein Viertel der Bildbreite abzuschneiden. */
-  .ent-vid { aspect-ratio: 4 / 3; }
+}
 
-  .ent-head { margin-bottom: 34px; }
-  .ent-head--breit {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 0.82fr);
-    align-items: end;
+@media (min-width: 760px) {
+  .ent {
+    --ent-pad: 32px;
+  }
+
+  .ent-proggrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .ent-socialgrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .ent-brand__cols {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 40px;
   }
-  .ent-head--breit .ent-lead { padding-bottom: 6px; }
 
-  .ent-prog { padding: 28px 22px 24px; }
-  .ent-prog__ring { width: 82px; height: 82px; }
-  .ent-prog__label { font-size: 1.42rem; }
-  .ent-prog__note { font-size: 0.89rem; }
+  .ent-egg {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 46px;
+    min-height: 196px;
+  }
 
-  .ent-social { padding: 20px; min-height: 96px; }
-
-  /* Der Zaehler fuellt die linke Hero-Spalte aus. Neben einer 5rem-Zeile
-     "Wir bauen da was." duerfen die Ziffern nicht kleiner wirken als die
-     Ueberschrift — deshalb 5.4vw statt 4.2vw. */
-  .ent-count__grid { padding: 30px 0; max-width: none; }
-  .ent-count__num { font-size: clamp(3.8rem, 5.4vw, 6rem); }
-  .ent-count__lab { margin-top: 13px; font-size: 0.72rem; }
-  .ent-count__title { font-size: clamp(1.5rem, 1.9vw, 2rem); margin-top: 22px; }
-  .ent-count__foot { margin-top: 9px; font-size: 0.95rem; }
+  .ent-count__num {
+    font-size: clamp(3.4rem, 8vw, 4.4rem);
+  }
 }
 
-@media (min-width: 1040px) {
-  .ent-socialgrid { grid-template-columns: repeat(3, 1fr); }
-  /* Instagram als breites Banner, Spotify schliesst die letzte Reihe. */
-  .ent-social--lead { grid-column: 1 / -1; }
-  .ent-social--spotify { grid-column: span 2; }
-  .ent-ort { grid-template-columns: 1.02fr 0.98fr; gap: 56px; }
+@media (min-width: 940px) {
+  .ent {
+    --ent-pad: 40px;
+  }
+
+  /* Hero-Split ~43 / 57 — links Text und Countdown, rechts das Video. */
+  .ent-hero__inner {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
+    gap: 58px;
+    align-items: center;
+  }
+
+  .ent-hero__note {
+    text-align: right;
+    margin-top: 20px;
+  }
+
+  .ent-count__num {
+    font-size: clamp(4.4rem, 6vw, 5.6rem);
+  }
+
+  .ent-ort {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 58px;
+  }
+
+  .ent-karte {
+    aspect-ratio: auto;
+    height: 400px;
+  }
+
+  .ent-head {
+    margin-bottom: 70px;
+  }
 }
+
+@media (min-width: 1120px) {
+  /* Kernbild der Vorlage: sechs Karten nebeneinander, je ~200px breit. */
+  .ent-proggrid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .ent-prog {
+    min-height: 330px;
+    padding: 30px 18px 26px;
+  }
+
+  .ent-socialgrid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .ent-soc {
+    min-height: 384px;
+    padding: 26px 22px 22px;
+  }
+
+  .ent-karte {
+    height: 430px;
+  }
+}
+
+@media (min-width: 1360px) {
+  .ent-prog__ring {
+    width: 124px;
+    height: 124px;
+  }
+}
+
+/* Sehr schmal: zwei Spalten bleiben, aber flacher. */
+@media (max-width: 480px) {
+  .ent-prog {
+    padding: 22px 12px 20px;
+  }
+
+  .ent-prog__ring {
+    width: 96px;
+    height: 96px;
+  }
+
+  .ent-soc {
+    min-height: 272px;
+    padding: 20px 16px 18px;
+  }
+
+  .ent-soc__icon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 14px;
+  }
+
+  .ent-egg {
+    padding: 26px 20px 28px;
+  }
+
+  .ent-knopf {
+    width: 112px;
+    height: 112px;
+  }
+
+  .ent-knopf__sockel {
+    width: 146px;
+    height: 30px;
+  }
+
+  .ent-count__lab {
+    font-size: 0.55rem;
+    letter-spacing: 0.14em;
+  }
+
+  .ent-vid {
+    border-radius: 20px;
+  }
+}
+
+/* =====================================================================
+   Bewegung reduzieren
+   ===================================================================== */
 
 @media (prefers-reduced-motion: reduce) {
-  .ent-social::before,
-  .ent-social__ghost,
-  .ent-social__icon,
-  .ent-social__cta,
-  .ent-social__cta svg,
-  .ent-prog::before,
-  .ent-knopf { transition: none; }
-  .ent-social:hover .ent-social__icon,
-  .ent-social:hover .ent-social__ghost,
-  .ent-social:hover .ent-social__cta svg,
-  .ent-knopf:hover,
-  .ent-knopf:active { transform: none; }
   .ent-vid__tag::before,
-  .ent-proghint__dot,
   .ent-prog__spur,
+  .ent-knopf__halo,
   .ent-karte__route,
-  .ent-karte__puls,
-  .ent-knopf.is-puls .ent-knopf__halo { animation: none; }
-  .ent-karte__puls { opacity: 0; }
+  .ent-karte__puls {
+    animation: none;
+  }
+
+  .ent-soc__bild,
+  .ent-soc__cta,
+  .ent-knopf,
+  .ent-prog::before {
+    transition: none;
+  }
+
+  .ent-knopf:hover,
+  .ent-knopf:active,
+  .ent-knopf.is-puls {
+    transform: none;
+  }
+
+  .ent-soc:hover .ent-soc__bild {
+    transform: scale(1.04);
+  }
 }
