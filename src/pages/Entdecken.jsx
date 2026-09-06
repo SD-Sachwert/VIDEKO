@@ -2,9 +2,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLenis } from 'lenis/react'
 import {
+  ArrowRight,
   ArrowUpRight,
   Bath,
   ChefHat,
+  ContactRound,
   DoorOpen,
   Droplets,
   LayoutGrid,
@@ -13,6 +15,7 @@ import {
   MapPin,
   Martini,
   Pause,
+  QrCode,
   ShowerHead,
   Sofa,
   Volume2,
@@ -22,8 +25,11 @@ import Reveal from '../components/Reveal.jsx'
 import LazyVideo from '../components/LazyVideo.jsx'
 import LazyBg from '../components/LazyBg.jsx'
 import CTAButton from '../components/CTAButton.jsx'
+import MagneticButton from '../components/MagneticButton.jsx'
 import { SpektakelLayer } from '../components/EntdeckenSpektakel.jsx'
 import { spektakelNachId, useSpektakel } from '../lib/spektakel.js'
+import { useLiveTicker, useQrBadge } from '../lib/entdecken-extras.js'
+import { vcardSpeichern } from '../lib/vcard.js'
 import { BRAND } from '../data/company.js'
 import { baustellenIndex, heutigerTag, INDEX_BASIS, tageZwischen } from '../lib/baustellenindex.js'
 import {
@@ -35,6 +41,7 @@ import {
   ENTDECKEN_SOCIALS,
   ENTDECKEN_SPOTIFY,
   ENTDECKEN_SPOTIFY_KACHEL,
+  LIVE_TICKER,
   OPENING,
   SOUNDTRACK,
   STUDIO_ADRESSE,
@@ -1180,6 +1187,102 @@ function Kartenflaeche() {
  * Seite
  * ------------------------------------------------------------------ */
 
+/**
+ * Kleine Plakette ganz oben im Hero. Sie erscheint ausschliesslich dann,
+ * wenn der Besuch nachweislich von einem gedruckten QR-Code kommt (siehe
+ * QR_BADGE in data/entdecken.js) — sonst rendert hier gar nichts. Niemandem
+ * wird unterstellt, er habe gescannt, nur weil er die Seite aufruft.
+ */
+function QrPlakette() {
+  const text = useQrBadge()
+  if (!text) return null
+
+  return (
+    <p className="ent-qr">
+      <QrCode size={15} strokeWidth={2} aria-hidden="true" />
+      <span>{text}</span>
+    </p>
+  )
+}
+
+/**
+ * Schmale Live-Zeile zwischen Hero und Socials. Eine Meldung, sanft
+ * gewechselt, dann die naechste — keine Laufschrift.
+ *
+ * Gepflegt wird hier nichts: Jede Zeile entsteht aus denselben Zahlen wie
+ * der Baustellenindex weiter unten (lib/entdecken-extras.js). Mauszeiger
+ * und Tastaturfokus halten den Wechsel an, damit man eine Meldung in Ruhe
+ * zu Ende lesen kann.
+ */
+function LiveTicker() {
+  const heute = useHeute()
+  const stand = useMemo(() => terminStand(heute), [heute])
+  const { text, sichtbar, pausieren, weiter } = useLiveTicker(heute, stand)
+
+  return (
+    <aside
+      className="ent-ticker"
+      aria-label={LIVE_TICKER.label}
+      tabIndex={0}
+      onMouseEnter={pausieren}
+      onMouseLeave={weiter}
+      onFocus={pausieren}
+      onBlur={weiter}
+    >
+      <div className="ent-wide ent-ticker__inner">
+        <span className="ent-ticker__lab">
+          <span className="ent-ticker__dot" aria-hidden="true" />
+          {LIVE_TICKER.label}
+        </span>
+        <p className={`ent-ticker__text${sichtbar ? '' : ' is-weg'}`} aria-live="polite">
+          {text}
+        </p>
+      </div>
+    </aside>
+  )
+}
+
+/**
+ * „Kontakt speichern“ — erzeugt die vCard aus den zentralen Firmendaten
+ * (data/company.js) und uebergibt sie dem Geraet. Kein Netzaufruf, keine
+ * zweite gepflegte Kontaktdatei im Projekt.
+ *
+ * Bewusst ohne Erfolgsmeldung: Ob das Telefon den Kontakt am Ende wirklich
+ * uebernimmt, entscheidet das Telefon. Die Seite bestaetigt hoechstens,
+ * dass die Datei rausgegangen ist.
+ */
+function KontaktSpeichern() {
+  const [notiz, setNotiz] = useState('')
+  const timer = useRef(null)
+
+  useEffect(() => () => clearTimeout(timer.current), [])
+
+  const speichern = useCallback(() => {
+    const los = vcardSpeichern()
+    clearTimeout(timer.current)
+    setNotiz(los ? 'Kontaktdatei geöffnet.' : '')
+    if (los) timer.current = setTimeout(() => setNotiz(''), 6000)
+  }, [])
+
+  return (
+    <span className="ent-vcf">
+      <MagneticButton
+        type="button"
+        variant="dark"
+        arrow={false}
+        className="ent-vcf__btn"
+        onClick={speichern}
+      >
+        <ContactRound size={19} strokeWidth={1.9} aria-hidden="true" />
+        Kontakt speichern
+      </MagneticButton>
+      <span className="ent-vcf__note" role="status">
+        {notiz}
+      </span>
+    </span>
+  )
+}
+
 export default function Entdecken() {
   const { video, texturen } = ENTDECKEN_CONFIG
   const socials = ENTDECKEN_SOCIALS.filter((s) => s.url)
@@ -1314,6 +1417,7 @@ export default function Entdecken() {
         <SpektakelLayer objekt={flugObjekt} feuer={goldFeuer} />
         <div className="ent-wide ent-hero__inner">
           <div className="ent-hero__copy">
+            <QrPlakette />
             {/* Kein zweites Logo im Hero: der Header steht auf /entdecken
                 in seinem hellen Zustand (HELLE_SEITEN in Header.jsx) direkt
                 darueber, sein Logo ist voll sichtbar. Ein kleineres Duplikat
@@ -1336,6 +1440,17 @@ export default function Entdecken() {
                 Küche planen
               </CTAButton>
             </div>
+
+            {/* Ausdruecklicher Weg zurueck auf die normale Website. Bewusst
+                als Textlink und nicht als dritter Knopf: Er steht sichtbar
+                im ersten Screen, ohne den beiden CTAs darueber die
+                Aufmerksamkeit zu nehmen. */}
+            <p className="ent-hero__web">
+              <Link className="ent-link" to="/">
+                Zur VIDEKO Website
+                <ArrowRight size={16} strokeWidth={2} aria-hidden="true" />
+              </Link>
+            </p>
           </div>
 
           {/* Bewusst ohne Reveal: der Countdown ist sofort sichtbar und darf
@@ -1371,6 +1486,12 @@ export default function Entdecken() {
           </div>
         </div>
       </section>
+
+      {/* ---------- Live-Zeile ----------
+           Sitzt genau im Uebergang vom hellen Hero in das dunkle
+           Social-Band und leitet farblich schon dorthin ueber. Keine
+           eigene Section, nur ein schmaler Streifen. ---------- */}
+      <LiveTicker />
 
       {/* ---------- Dunkles Band 1: Socials ----------
           Direkt hinter dem hellen Hero. Der harte Wechsel von Marmor auf
@@ -1484,6 +1605,7 @@ export default function Entdecken() {
                 <CTAButton href={STUDIO_ROUTE_URL} target="_blank" rel="noopener noreferrer">
                   {STUDIO_KARTE.routeCta}
                 </CTAButton>
+                <KontaktSpeichern />
                 <a
                   className="ent-link"
                   href={STUDIO_MAPS_URL}

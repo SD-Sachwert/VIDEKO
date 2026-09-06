@@ -684,6 +684,107 @@ export const ENTDECKEN_SPOTIFY_KACHEL = {
 }
 
 /* ------------------------------------------------------------------ *
+ * QR-Plakette
+ * ------------------------------------------------------------------ */
+
+/**
+ * Kleine Plakette ganz oben im Hero — sie erscheint ausschliesslich dann,
+ * wenn der Besuch nachweislich von einem gedruckten QR-Code kommt.
+ *
+ * Hier entsteht KEIN Tracking: nichts wird gezaehlt, gespeichert, gesendet
+ * oder umgeleitet. Gelesen wird nur, was der Browser ohnehin mitbringt —
+ * der Query-String der aufgerufenen Adresse und der Verweis (`referrer`).
+ * Das QR-System unter go.videko-kuechen.de bleibt unveraendert.
+ *
+ * Ohne belastbaren Hinweis erscheint die Plakette nicht. Wir behaupten
+ * niemandem gegenueber, er habe gescannt, nur weil er die Seite aufruft.
+ */
+export const QR_BADGE = {
+  // Werte in utm_source oder utm_medium, die als QR-Herkunft gelten.
+  quellen: ['qr', 'qr-code', 'qrcode', 'qr_code'],
+  // Parameter, deren blosse Anwesenheit reicht (?qr=1, ?qr=aufkleber).
+  parameter: ['qr'],
+  // Verweisende Hosts, die zu unserem eigenen Kurzlink gehoeren.
+  referrer: ['go.videko-kuechen.de'],
+  // Ein Text pro Besuch, einmal gezogen, danach unveraendert.
+  texte: [
+    'QR-Code gefunden. Gute Entscheidung.',
+    'Du hast gescannt. Jetzt musst du auch gucken.',
+    'QR-Code erfolgreich überlebt.',
+    'Du bist hier gelandet. Selbst schuld.',
+  ],
+}
+
+/* ------------------------------------------------------------------ *
+ * Live-Ticker
+ * ------------------------------------------------------------------ */
+
+/**
+ * Die schmale Live-Zeile zwischen Hero und Socials.
+ *
+ * Sie wird NICHT gepflegt. Jede Meldung entsteht aus Zahlen, die die Seite
+ * ohnehin schon rechnet: Baustellenindex, die einzelnen Bereiche, der
+ * Terminstand und der Lieferstatus der Kuechen. Keine zusaetzlichen Fakten,
+ * keine zweite Datenquelle, kein Netzaufruf.
+ *
+ * Platzhalter, ersetzt in lib/entdecken-extras.js:
+ *   {index}        Gesamt-Baustellenindex in Prozent
+ *   {days}         Resttage bis zum geplanten Termin
+ *   {delay}        Tage im Verzug (nur im Zustand „verzug“)
+ *   {kuechen}      Bereich „Kuechen“
+ *   {klo}          Bereich „Luxusklo“
+ *   {klo1} {klo2}  Mitarbeiterklo 1 und 2
+ *   {bar}          Bereich „Bar“
+ *   {light}        Bereich „Beleuchtung“
+ *   {empfang}      Bereich „Empfang“
+ *   {ausstellung}  Bereich „Ausstellung“
+ *   {breakroom}    Bereich „Aufenthaltsraum“
+ *
+ * `nur` haelt eine Meldung zurueck, solange sie nicht stimmen wuerde:
+ *   'vorher' | 'heute' | 'verzug'   Terminzustand (siehe terminStand)
+ *   'gate-zu' | 'gate-offen'        Kuechenlieferung noch offen bzw. da
+ */
+export const LIVE_TICKER = {
+  label: 'Live aus der Baustelle',
+  // Erste Zeile im vorgerenderten HTML: ohne Uhr, ohne Zufall, ohne Zahlen —
+  // dadurch sind Build-HTML und erster Render im Browser identisch.
+  start: 'Wir bauen. Die Zahlen kommen gleich.',
+  // Standzeit einer Meldung, leicht gestreut, damit es nicht tickt.
+  standzeit: { min: 5200, max: 7000 },
+  // Ausblenden, dann naechste Meldung. Passt zur Transition in styles.css.
+  blende: 420,
+
+  meldungen: [
+    { text: 'Baustellenindex {index} %. Wissenschaftlich ungefähr.' },
+    { text: 'Küchen: {kuechen} %. Für ein Küchenstudio ambitioniert.', nur: 'gate-zu' },
+    { text: 'Luxusklo: {klo} %. Läuft besser als erwartet.' },
+    { text: 'Noch {days} Tage. Baustellenindex {index} %.', nur: 'vorher' },
+    { text: 'Küchenlieferung: wartet.', nur: 'gate-zu' },
+    { text: '{delay} Tage im Verzug. Das wird schon irgendwie.', nur: 'verzug' },
+    { text: 'Beleuchtung: {light} %. Es bleibt vorerst dunkel.', nur: 'gate-zu' },
+    { text: 'Empfang: {empfang} %. Es empfängt noch niemand.' },
+    { text: 'Bar: {bar} %. Der Rest ist Vorfreude.' },
+    { text: 'Ausstellung: {ausstellung} %. Mehr geht ohne Küchen nicht.', nur: 'gate-zu' },
+    { text: 'Aufenthaltsraum: {breakroom} %. Prioritäten sitzen.' },
+    { text: 'Mitarbeiterklo 1: {klo1} %. Mitarbeiterklo 2: {klo2} %.' },
+    { text: 'Luxusklo {klo} %, Küchen {kuechen} %. Kein Kommentar.' },
+    { text: 'Beleuchtung wartet auf Küchen. Küchen warten auf Lieferung.', nur: 'gate-zu' },
+    { text: 'Stand heute: {index} %. Morgen vermutlich auch.' },
+    { text: 'Noch {days} Tage bis zum Termin. Wir zählen mit.', nur: 'vorher' },
+    { text: 'Heute war der Plan.', nur: 'heute' },
+    { text: 'Küchen bei {kuechen} %. Wir bleiben zuversichtlich.' },
+    { text: 'Mitarbeiterklo 2: {klo2} %. Das langsamste Klo im Haus.' },
+    { text: 'Der Index steht bei {index} %. Vom Bauleiter nicht geprüft.' },
+    { text: 'Empfang {empfang} %, Bar {bar} %. Wir setzen Schwerpunkte.' },
+    { text: 'Küchen: {kuechen} %. Die Lieferung ist da, jetzt wird es ernst.', nur: 'gate-offen' },
+    { text: 'Beleuchtung: {light} %. Endlich nicht mehr blockiert.', nur: 'gate-offen' },
+    { text: '{days} Tage. Das reicht. Vermutlich.', nur: 'vorher' },
+    { text: 'Baustellenindex {index} %. Der Rest ist Handwerk.' },
+    { text: 'Aufenthaltsraum {breakroom} %, Küchen {kuechen} %. Wir arbeiten dran.' },
+    { text: 'Wir sind {delay} Tage drüber. Der Index sagt {index} %.', nur: 'verzug' },
+  ],
+}
+/* ------------------------------------------------------------------ *
  * Standort
  * ------------------------------------------------------------------ */
 
