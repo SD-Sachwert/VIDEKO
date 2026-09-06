@@ -16984,6 +16984,14 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   min-height: 1.1em;
 }
 
+/* Der Hero beginnt bis knapp unter Desktopbreite unter dem durchsichtigen
+   Header. Ohne Plakette faellt das nicht auf, mit Plakette schon. */
+@media (min-width: 561px) and (max-width: 1339px) {
+  .ent-qr {
+    margin-top: 32px;
+  }
+}
+
 /* Mobil — steht bewusst hinter den Grundregeln oben. */
 @media (max-width: 560px) {
   /* Der Hero beginnt auf Mobil unter dem transparenten Header — die
