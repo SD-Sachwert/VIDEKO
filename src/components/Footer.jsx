@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { MapPin, Mail, Phone, ArrowRight } from 'lucide-react'
-import logoMark from '../assets/brand/logo-main-v2-288.webp'
+import logoMark from '../assets/brand/logo-web-auf-dunkel.webp'
 import Img from './Img.jsx'
 import { BRAND, ACTIVE_OPERATOR, OPERATOR_NOTICE, STUDIO_MAPS_URL } from '../data/company.js'
 
@@ -128,7 +128,7 @@ export default function Footer() {
 
         <div className="footer__cols">
           <div className="footer__brand">
-            <img src={logoMark} alt="VIDEKO" className="footer__logo" />
+            <img src={logoMark} alt="VIDEKO Küchen" className="footer__logo" />
             <p>Küchen.<br />Die Kunst des Lebens.</p>
           </div>
 

@@ -408,11 +408,42 @@ body {
   color: var(--ink);
 }
 
+/* Das Logo liegt in zwei Fassungen uebereinander: solange der Header
+   transparent ueber dem Hero steht, die helle Wortmarke, sobald er
+   cremefarben wird, die anthrazitfarbene. Bewusst zwei saubere Assets
+   statt eines Filters — Kontrast laesst sich nicht wegrechnen. */
 .brand__logo {
-  width: auto;
-  height: 79px;
-  object-fit: contain;
-  filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.38));
+  position: relative;
+  display: block;
+  flex: none;
+  width: 104px;
+}
+
+.brand__logo-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: opacity 0.4s ease;
+}
+
+/* Ueber Fotos braucht die helle Fassung eine leise Kante — als
+   Ergaenzung, nicht als Ersatz fuer den Kontrast im Asset selbst. */
+.brand__logo-img--dunkel {
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45));
+}
+
+.brand__logo-img--hell {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+.header--scrolled .brand__logo-img--dunkel {
+  opacity: 0;
+}
+
+.header--scrolled .brand__logo-img--hell {
+  opacity: 1;
 }
 
 .brand__text {
@@ -1520,7 +1551,7 @@ body {
   padding-top: clamp(28px, 4vw, 44px); border-top: 1px solid rgba(244, 239, 228, 0.14);
 }
 .footer__brand { display: flex; flex-direction: column; gap: 16px; }
-.footer__logo { width: 83px; height: 83px; object-fit: contain; }
+.footer__logo { width: 104px; height: auto; }
 .footer__brand p { margin: 0; font-family: var(--serif); font-size: 1.32rem; line-height: 1.2; color: var(--gold-bright); }
 
 .footer__col { display: flex; flex-direction: column; gap: 12px; }
@@ -7498,7 +7529,6 @@ body {
 
 @media (max-width: 720px) {
   .header__actions .pill--cta { display: none; }
-  .brand__logo { width: auto; height: 62px; }
   .luxury {
     padding: 60px 0 50px;
   }
@@ -12707,7 +12737,7 @@ a.footer__contact-line:hover {
     display: inline-flex;
   }
   .header__inner { height: 92px; }
-  .brand__logo { width: 66px; height: 66px; }
+  .brand__logo { width: 88px; }
   .brand__name { font-size: 1.7rem; }
   .paths__grid {
     grid-template-columns: 1fr;

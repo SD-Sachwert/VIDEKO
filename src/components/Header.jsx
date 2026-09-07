@@ -1,10 +1,15 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { Menu, X, MapPin, ChevronDown, ShoppingBag } from 'lucide-react'
-// 288 px breite Fassung des Markenlogos (Performance 1.1): dargestellt wird es
-// hier mit 79 px Hoehe, im Footer mit 83 px — das 902px-Original kostete 56 kB
-// vor dem LCP auf jeder Route, diese Fassung 13 kB. Master bleibt im Repo.
-import logoMain from '../assets/brand/logo-main-v2-288.webp'
+// Zwei kleine Web-Fassungen des Markenlogos, erzeugt von
+// scripts/logo-web-varianten.mjs aus dem Master. Geometrie und Symbolfarben
+// stammen unveraendert aus dem Original; nur die Wortmarke ist auf Kontrast
+// gefaerbt, und die winzige KUECHEN-Zeile bleibt in dieser Groesse weg — sie
+// waere im Header rund 6 px hoch und damit ohnehin nur ein Strichmuster.
+// Solange der Header transparent ueber dem dunklen Hero steht, laeuft die
+// helle Fassung; sobald er cremefarben wird, die anthrazitfarbene.
+import logoAufDunkel from '../assets/brand/logo-web-auf-dunkel.webp'
+import logoAufHell from '../assets/brand/logo-web-auf-hell.webp'
 import { useCart } from '../shop/cart-context.js'
 import { inquiryReady } from '../data/release.js'
 
@@ -96,7 +101,19 @@ export default function Header() {
     <header className={`header ${scrolled || solidRoute ? 'header--scrolled' : ''}`}>
       <div className="container header__inner">
         <Link className="brand" to="/" aria-label="VIDEKO Küchen — Startseite" onClick={close}>
-          <img className="brand__logo" src={logoMain} alt="VIDEKO Küchen" />
+          <span className="brand__logo">
+            <img
+              className="brand__logo-img brand__logo-img--dunkel"
+              src={logoAufDunkel}
+              alt="VIDEKO Küchen"
+            />
+            <img
+              className="brand__logo-img brand__logo-img--hell"
+              src={logoAufHell}
+              alt=""
+              aria-hidden="true"
+            />
+          </span>
         </Link>
 
         <nav className="nav" aria-label="Hauptnavigation">
