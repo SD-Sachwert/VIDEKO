@@ -16483,101 +16483,6 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
 }
 
 /* =====================================================================
-   6 — Beratung: grossflaechiger Abschluss
-   ===================================================================== */
-
-.ent-final {
-  position: relative;
-  overflow: hidden;
-  display: grid;
-  align-items: center;
-  min-height: clamp(420px, 44vw, 560px);
-  padding: clamp(84px, 9vw, 128px) 0;
-  background: var(--soft-black);
-}
-
-.ent-final__tex {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center 62%;
-  opacity: 0.58;
-}
-
-.ent-final__schleier {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(180deg, rgba(8, 8, 7, 0.86) 0%, rgba(8, 8, 7, 0.48) 42%, rgba(8, 8, 7, 0.9) 100%),
-    radial-gradient(62% 56% at 50% 42%, rgba(201, 160, 80, 0.2) 0%, transparent 72%);
-}
-
-.ent-final .ent-wide {
-  position: relative;
-}
-
-.ent-final__inner {
-  max-width: 900px;
-}
-
-.ent-final .ent-h2 {
-  color: var(--cream);
-  font-size: clamp(2.3rem, 4.7vw, 4.5rem);
-}
-
-.ent-final .ent-lead {
-  color: var(--cream-soft);
-  font-size: clamp(1.02rem, 1.25vw, 1.2rem);
-}
-
-.ent-final__btns {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 22px;
-  margin-top: 38px;
-}
-
-.ent-final .ent-link {
-  color: var(--cream);
-  border-bottom-color: var(--line-light);
-}
-
-.ent-final .ent-link:hover {
-  color: var(--gold-bright);
-  border-bottom-color: var(--gold);
-}
-
-.ent-final__werte {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px 30px;
-  list-style: none;
-  padding: 0;
-  margin: 44px 0 0;
-}
-
-.ent-final__werte li {
-  display: inline-flex;
-  align-items: center;
-  gap: 11px;
-  font-family: var(--sans);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--champagne);
-}
-
-.ent-final__punkt {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--gold);
-  box-shadow: 0 0 10px rgba(201, 160, 80, 0.85);
-}
-
-/* =====================================================================
    Breakpoints — Mobile ist eine eigene Fassung, keine Mini-Version
    ===================================================================== */
 
@@ -16852,10 +16757,19 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   color: var(--gold);
 }
 
-/* Der ausdrueckliche Weg zurueck auf videko-kuechen.de. Sekundaer gegenueber
+/* Die zweite, leise Zeile im Hero: Kontakt speichern und der
+   ausdrueckliche Weg zurueck auf videko-kuechen.de. Sekundaer gegenueber
    den beiden CTAs darueber, aber ohne Suchen zu finden. */
-.ent-hero__web {
+.ent-hero__util {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 22px;
   margin: 20px 0 0;
+}
+
+.ent-hero__web {
+  margin: 0;
 }
 
 .ent-hero__web .ent-link {
@@ -16960,28 +16874,63 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   transform: translateY(-6px);
 }
 
-/* Kontakt speichern steht gleichberechtigt neben „Route starten“. Die
-   Zeile darunter ist Platz fuer den kurzen Hinweis nach dem Klick und
-   bleibt leer, solange nichts passiert ist. */
-.ent-vcf {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 7px;
-}
-
-.ent-vcf__btn .btn__label {
+/* Kontakt speichern im Hero: sichtbar, aber bewusst als Umriss-Knopf.
+   Er darf neben der goldenen Hauptaktion darueber nie lauter wirken.
+   Masse bewusst an .btn--md angelehnt, damit die Zeile ruhig bleibt. */
+.ent-ghost {
   display: inline-flex;
   align-items: center;
   gap: 10px;
+  padding: 14px 24px;
+  border-radius: 13px;
+  border: 1px solid rgba(20, 17, 12, 0.22);
+  background: rgba(255, 255, 255, 0.4);
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.3s ease, background 0.3s ease, transform 0.18s ease;
+}
+
+.ent-ghost svg {
+  flex: none;
+  color: var(--bronze);
+}
+
+.ent-ghost:hover {
+  border-color: rgba(139, 107, 56, 0.55);
+  background: rgba(255, 255, 255, 0.72);
+  transform: translateY(-1px);
+}
+
+.ent-ghost:active {
+  transform: translateY(0);
+}
+
+.ent-ghost:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+/* Der Hinweis nach dem Klick haengt unter dem Knopf, ohne die Zeile
+   hoeher zu machen — sonst springt der Hero beim Speichern. */
+.ent-vcf {
+  position: relative;
+  display: inline-flex;
 }
 
 .ent-vcf__note {
+  position: absolute;
+  top: calc(100% + 7px);
+  left: 2px;
+  white-space: nowrap;
   font-family: var(--sans);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   letter-spacing: 0.03em;
   color: var(--ink-soft);
-  min-height: 1.1em;
 }
 
 /* Der Hero beginnt bis knapp unter Desktopbreite unter dem durchsichtigen
@@ -17004,8 +16953,17 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
     letter-spacing: 0.06em;
   }
 
-  .ent-hero__web {
+  /* Auf 390 px passen Knopf und Link nicht nebeneinander — sie brechen
+     um und stehen dann jeweils allein. */
+  .ent-hero__util {
+    gap: 12px 18px;
     margin-top: 16px;
+  }
+
+  .ent-ghost {
+    padding: 13px 20px;
+    font-size: 0.69rem;
+    letter-spacing: 0.1em;
   }
 
   /* Label ueber die Meldung statt daneben — sonst bleiben auf 390 px
@@ -17026,9 +16984,6 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
     font-size: 0.9rem;
   }
 
-  .ent-ort__btns {
-    gap: 16px;
-  }
 }
 
 /* =====================================================================

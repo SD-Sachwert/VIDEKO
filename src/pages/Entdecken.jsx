@@ -25,7 +25,6 @@ import Reveal from '../components/Reveal.jsx'
 import LazyVideo from '../components/LazyVideo.jsx'
 import LazyBg from '../components/LazyBg.jsx'
 import CTAButton from '../components/CTAButton.jsx'
-import MagneticButton from '../components/MagneticButton.jsx'
 import { SpektakelLayer } from '../components/EntdeckenSpektakel.jsx'
 import { spektakelNachId, useSpektakel } from '../lib/spektakel.js'
 import { useLiveTicker, useQrBadge } from '../lib/entdecken-extras.js'
@@ -1266,16 +1265,10 @@ function KontaktSpeichern() {
 
   return (
     <span className="ent-vcf">
-      <MagneticButton
-        type="button"
-        variant="dark"
-        arrow={false}
-        className="ent-vcf__btn"
-        onClick={speichern}
-      >
-        <ContactRound size={19} strokeWidth={1.9} aria-hidden="true" />
+      <button type="button" className="ent-ghost ent-vcf__btn" onClick={speichern}>
+        <ContactRound size={18} strokeWidth={1.9} aria-hidden="true" />
         Kontakt speichern
-      </MagneticButton>
+      </button>
       <span className="ent-vcf__note" role="status">
         {notiz}
       </span>
@@ -1441,16 +1434,19 @@ export default function Entdecken() {
               </CTAButton>
             </div>
 
-            {/* Ausdruecklicher Weg zurueck auf die normale Website. Bewusst
-                als Textlink und nicht als dritter Knopf: Er steht sichtbar
-                im ersten Screen, ohne den beiden CTAs darueber die
-                Aufmerksamkeit zu nehmen. */}
-            <p className="ent-hero__web">
-              <Link className="ent-link" to="/">
-                Zur VIDEKO Website
-                <ArrowRight size={16} strokeWidth={2} aria-hidden="true" />
-              </Link>
-            </p>
+            {/* Zweite, leisere Zeile direkt unter den beiden Hauptaktionen:
+                der Kontakt zum Mitnehmen und der ausdrueckliche Weg zurueck
+                auf die normale Website. Beides steht im ersten Screen, ohne
+                den CTAs darueber die Aufmerksamkeit zu nehmen. */}
+            <div className="ent-hero__util">
+              <KontaktSpeichern />
+              <p className="ent-hero__web">
+                <Link className="ent-link" to="/">
+                  Zur VIDEKO Website
+                  <ArrowRight size={16} strokeWidth={2} aria-hidden="true" />
+                </Link>
+              </p>
+            </div>
           </div>
 
           {/* Bewusst ohne Reveal: der Countdown ist sofort sichtbar und darf
@@ -1605,7 +1601,6 @@ export default function Entdecken() {
                 <CTAButton href={STUDIO_ROUTE_URL} target="_blank" rel="noopener noreferrer">
                   {STUDIO_KARTE.routeCta}
                 </CTAButton>
-                <KontaktSpeichern />
                 <a
                   className="ent-link"
                   href={STUDIO_MAPS_URL}
@@ -1621,42 +1616,6 @@ export default function Entdecken() {
               <Kartenflaeche />
             </Reveal>
           </div>
-        </div>
-      </section>
-
-      {/* ---------- Beratung ---------- */}
-      <section className="ent-final">
-        <LazyBg className="ent-final__tex" image={texturen.finale} aria-hidden="true" />
-        <span className="ent-final__schleier" aria-hidden="true" />
-        <div className="ent-wide">
-          <Reveal className="ent-final__inner">
-            <span className="kicker kicker--gold">Schon jetzt</span>
-            <h2 className="ent-h2">
-              Du willst nicht nur
-              <br />
-              <span className="grad">zuschauen?</span>
-            </h2>
-            <p className="ent-lead">
-              Dann lass uns über deine Küche sprechen. Gemeinsam planen wir etwas, das bleibt.
-            </p>
-            <div className="ent-final__btns">
-              <CTAButton to="/beratung">Beratung starten</CTAButton>
-              <Link className="ent-link" to="/leistungen">
-                Was wir machen
-              </Link>
-            </div>
-            {/* Haltung, keine Kennzahl: dieselbe Markenzeile, die auch im
-                globalen Footer steht (Footer.jsx). Keine Bewertungen, keine
-                Zahlen, keine Auszeichnungen. */}
-            <ul className="ent-final__werte">
-              {['Persönlich', 'Ehrlich', 'Anspruchsvoll'].map((w) => (
-                <li key={w}>
-                  <span className="ent-final__punkt" aria-hidden="true" />
-                  {w}
-                </li>
-              ))}
-            </ul>
-          </Reveal>
         </div>
       </section>
     </div>
