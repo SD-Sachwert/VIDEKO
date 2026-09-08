@@ -6,6 +6,8 @@ import { Menu, X, MapPin, ChevronDown, ShoppingBag } from 'lucide-react'
 // stammen unveraendert aus dem Original; nur die Wortmarke ist auf Kontrast
 // gefaerbt, und die winzige KUECHEN-Zeile bleibt in dieser Groesse weg — sie
 // waere im Header rund 6 px hoch und damit ohnehin nur ein Strichmuster.
+// Die helle Fassung traegt zusaetzlich eine feine anthrazitfarbene Keyline am
+// Symbol, weil Silber und Gold sonst auf der cremefarbenen Leiste verschwimmen.
 // Solange der Header transparent ueber dem dunklen Hero steht, laeuft die
 // helle Fassung; sobald er cremefarben wird, die anthrazitfarbene.
 import logoAufDunkel from '../assets/brand/logo-web-auf-dunkel.webp'
