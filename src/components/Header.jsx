@@ -1,17 +1,15 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { Menu, X, MapPin, ChevronDown, ShoppingBag } from 'lucide-react'
-// Zwei kleine Web-Fassungen des Markenlogos, erzeugt von
-// scripts/logo-web-varianten.mjs aus dem Master. Geometrie und Symbolfarben
-// stammen unveraendert aus dem Original; nur die Wortmarke ist auf Kontrast
-// gefaerbt, und die winzige KUECHEN-Zeile bleibt in dieser Groesse weg — sie
-// waere im Header rund 6 px hoch und damit ohnehin nur ein Strichmuster.
-// Die helle Fassung traegt zusaetzlich eine feine anthrazitfarbene Keyline am
-// Symbol, weil Silber und Gold sonst auf der cremefarbenen Leiste verschwimmen.
-// Solange der Header transparent ueber dem dunklen Hero steht, laeuft die
-// helle Fassung; sobald er cremefarben wird, die anthrazitfarbene.
+// Eine einzige kleine Web-Fassung des Markenlogos, erzeugt von
+// scripts/logo-web-varianten.mjs aus dem Master. Geometrie und Farben stammen
+// unveraendert aus dem Original; nur die winzige KUECHEN-Zeile bleibt in dieser
+// Groesse weg — sie waere im Header rund 6 px hoch und damit ohnehin nur ein
+// Strichmuster. Frueher lag hier zusaetzlich eine umgefaerbte Fassung fuer den
+// hellen Headerzustand. Die ist raus: statt das Logo umzufaerben, bekommt es
+// auf Creme eine dunkle Plakette als Untergrund (.brand__plate), sodass in
+// beiden Headerzustaenden exakt dasselbe Logo sichtbar ist.
 import logoAufDunkel from '../assets/brand/logo-web-auf-dunkel.webp'
-import logoAufHell from '../assets/brand/logo-web-auf-hell.webp'
 import { useCart } from '../shop/cart-context.js'
 import { inquiryReady } from '../data/release.js'
 
@@ -104,17 +102,8 @@ export default function Header() {
       <div className="container header__inner">
         <Link className="brand" to="/" aria-label="VIDEKO Küchen — Startseite" onClick={close}>
           <span className="brand__logo">
-            <img
-              className="brand__logo-img brand__logo-img--dunkel"
-              src={logoAufDunkel}
-              alt="VIDEKO Küchen"
-            />
-            <img
-              className="brand__logo-img brand__logo-img--hell"
-              src={logoAufHell}
-              alt=""
-              aria-hidden="true"
-            />
+            <span className="brand__plate" aria-hidden="true" />
+            <img className="brand__logo-img" src={logoAufDunkel} alt="VIDEKO Küchen" />
           </span>
         </Link>
 

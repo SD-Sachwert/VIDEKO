@@ -408,46 +408,96 @@ body {
   color: var(--ink);
 }
 
-/* Das Logo liegt in zwei Fassungen uebereinander: solange der Header
-   transparent ueber dem Hero steht, die helle Wortmarke, sobald er
-   cremefarben wird, die anthrazitfarbene. Bewusst zwei saubere Assets
-   statt eines Filters — Kontrast laesst sich nicht wegrechnen. */
+/* Im Header laeuft in beiden Zustaenden dasselbe Logo — dieselbe Datei,
+   dieselben Farben, dieselbe Geometrie. Silber und Gold brauchen einen
+   dunklen Grund; sobald der Header cremefarben wird, blendet deshalb nicht
+   ein zweites Logo ein, sondern hinter dem einen Logo eine dunkle Plakette.
+   Das ist ruhiger als zwei Fassungen uebereinanderzublenden und spart eine
+   umgefaerbte Sonderversion des Assets. */
 .brand__logo {
   position: relative;
   display: block;
   flex: none;
   width: 104px;
+  /* Innenabstand der Plakette — steht hier, weil beide Ebenen ihn brauchen. */
+  --plakette-x: 13px;
+  --plakette-y: 9px;
+  --plakette-fase: 14px;
 }
 
 .brand__logo-img {
+  position: relative;
+  z-index: 1;
   display: block;
   width: 100%;
   height: auto;
-  transition: opacity 0.4s ease;
-}
-
-/* Ueber Fotos braucht die helle Fassung eine leise Kante — als
-   Ergaenzung, nicht als Ersatz fuer den Kontrast im Asset selbst. */
-.brand__logo-img--dunkel {
+  /* Ueber Fotos braucht das Logo eine leise Kante. Auf der Plakette faellt
+     der Schatten nicht auf — der Grund ist dort ohnehin dunkel. */
   filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45));
 }
 
-/* Auf Creme traegt die Keyline im Asset den Kontrast. Der Schatten ist
-   nur Beiwerk: er setzt das Logo minimal von der Flaeche ab, ohne einen
-   sichtbaren Rand oder eine Kastenform zu erzeugen. */
-.brand__logo-img--hell {
+/* Die Plakette: abgerundetes Rechteck mit zwei abgeschraegten Ecken oben
+   links und unten rechts — dieselbe Diagonale, die das V/D-Symbol vorgibt.
+   Zwei Ebenen, weil eine clip-path-Kante keinen Rahmen traegt: diese hier
+   ist die feine Goldkante, das ::before darin der anthrazitfarbene Grund.
+   Der Versatz von 1px laesst genau die Kante stehen. */
+.brand__plate {
   position: absolute;
-  inset: 0;
+  z-index: 0;
+  inset: calc(var(--plakette-y) * -1) calc(var(--plakette-x) * -1);
+  border-radius: 14px;
+  clip-path: polygon(
+    var(--plakette-fase) 0,
+    100% 0,
+    100% calc(100% - var(--plakette-fase)),
+    calc(100% - var(--plakette-fase)) 100%,
+    0 100%,
+    0 var(--plakette-fase)
+  );
+  background: linear-gradient(
+    165deg,
+    rgba(212, 172, 84, 0.62),
+    rgba(190, 145, 55, 0.34) 55%,
+    rgba(152, 114, 44, 0.5)
+  );
+  box-shadow: 0 6px 18px -12px rgba(23, 22, 18, 0.6);
   opacity: 0;
-  filter: drop-shadow(0 1px 2px rgba(34, 31, 26, 0.18));
+  transform: scale(0.96);
+  transition: opacity 0.22s ease, transform 0.22s ease;
 }
 
-.header--scrolled .brand__logo-img--dunkel {
-  opacity: 0;
+.brand__plate::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: 13px;
+  clip-path: polygon(
+    var(--plakette-fase) 0,
+    100% 0,
+    100% calc(100% - var(--plakette-fase)),
+    calc(100% - var(--plakette-fase)) 100%,
+    0 100%,
+    0 var(--plakette-fase)
+  );
+  background: linear-gradient(
+    168deg,
+    rgba(36, 33, 27, 0.95),
+    rgba(28, 26, 21, 0.95) 52%,
+    rgba(23, 22, 18, 0.96)
+  );
+  backdrop-filter: blur(6px) saturate(120%);
 }
 
-.header--scrolled .brand__logo-img--hell {
+.header--scrolled .brand__plate {
   opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand__plate {
+    transform: none;
+    transition: opacity 0.22s ease;
+  }
 }
 
 .brand__text {
@@ -12741,7 +12791,12 @@ a.footer__contact-line:hover {
     display: inline-flex;
   }
   .header__inner { height: 92px; }
-  .brand__logo { width: 88px; }
+  .brand__logo {
+    width: 88px;
+    --plakette-x: 10px;
+    --plakette-y: 7px;
+    --plakette-fase: 11px;
+  }
   .brand__name { font-size: 1.7rem; }
   .paths__grid {
     grid-template-columns: 1fr;
