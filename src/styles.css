@@ -409,20 +409,49 @@ body {
 }
 
 /* Im Header laeuft in beiden Zustaenden dasselbe Logo — dieselbe Datei,
-   dieselben Farben, dieselbe Geometrie. Silber und Gold brauchen einen
-   dunklen Grund; sobald der Header cremefarben wird, blendet deshalb nicht
-   ein zweites Logo ein, sondern hinter dem einen Logo eine dunkle Plakette.
-   Das ist ruhiger als zwei Fassungen uebereinanderzublenden und spart eine
-   umgefaerbte Sonderversion des Assets. */
+   dieselben Farben, dieselbe Geometrie. Auf Creme fehlt Silber und Gold
+   allerdings der dunkle Grund, gegen den sie sich sonst absetzen. Statt einer
+   Plakette oder einer Umfaerbung liegt dort ein sehr weiches radiales
+   Kontrastfeld hinter dem Logo: keine Kante, kein Rahmen, kein Radius, keine
+   erkennbare Form. Es soll nur so wirken, als haette das Logo etwas mehr
+   Tiefe. */
 .brand__logo {
   position: relative;
   display: block;
   flex: none;
   width: 104px;
-  /* Innenabstand der Plakette — steht hier, weil beide Ebenen ihn brauchen. */
-  --plakette-x: 13px;
-  --plakette-y: 9px;
-  --plakette-fase: 14px;
+  /* Deutlich groesser als das Logo, damit der Verlauf lange vor der eigenen
+     Kante bei null angekommen ist. */
+  --feld-breite: 158px;
+  --feld-hoehe: 98px;
+}
+
+/* Das Kontrastfeld. Der Verlauf laeuft schon bei 75% aus, der Blur loescht
+   den Rest — deshalb bleibt keine Form uebrig, die man benennen koennte. */
+.brand__logo::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  left: 50%;
+  width: var(--feld-breite);
+  height: var(--feld-hoehe);
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(20, 18, 15, 0.2) 0%,
+    rgba(20, 18, 15, 0.1) 35%,
+    rgba(20, 18, 15, 0.04) 55%,
+    rgba(20, 18, 15, 0) 75%
+  );
+  filter: blur(12px);
+  opacity: 0;
+  transition: opacity 0.22s ease;
+  pointer-events: none;
+}
+
+.header--scrolled .brand__logo::before {
+  opacity: 1;
 }
 
 .brand__logo-img {
@@ -431,73 +460,14 @@ body {
   display: block;
   width: 100%;
   height: auto;
-  /* Ueber Fotos braucht das Logo eine leise Kante. Auf der Plakette faellt
-     der Schatten nicht auf — der Grund ist dort ohnehin dunkel. */
+  /* Ueber dem dunklen Hero-Foto braucht das Logo eine leise Kante. */
   filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45));
 }
 
-/* Die Plakette: abgerundetes Rechteck mit zwei abgeschraegten Ecken oben
-   links und unten rechts — dieselbe Diagonale, die das V/D-Symbol vorgibt.
-   Zwei Ebenen, weil eine clip-path-Kante keinen Rahmen traegt: diese hier
-   ist die feine Goldkante, das ::before darin der anthrazitfarbene Grund.
-   Der Versatz von 1px laesst genau die Kante stehen. */
-.brand__plate {
-  position: absolute;
-  z-index: 0;
-  inset: calc(var(--plakette-y) * -1) calc(var(--plakette-x) * -1);
-  border-radius: 14px;
-  clip-path: polygon(
-    var(--plakette-fase) 0,
-    100% 0,
-    100% calc(100% - var(--plakette-fase)),
-    calc(100% - var(--plakette-fase)) 100%,
-    0 100%,
-    0 var(--plakette-fase)
-  );
-  background: linear-gradient(
-    165deg,
-    rgba(212, 172, 84, 0.62),
-    rgba(190, 145, 55, 0.34) 55%,
-    rgba(152, 114, 44, 0.5)
-  );
-  box-shadow: 0 6px 18px -12px rgba(23, 22, 18, 0.6);
-  opacity: 0;
-  transform: scale(0.96);
-  transition: opacity 0.22s ease, transform 0.22s ease;
-}
-
-.brand__plate::before {
-  content: '';
-  position: absolute;
-  inset: 1px;
-  border-radius: 13px;
-  clip-path: polygon(
-    var(--plakette-fase) 0,
-    100% 0,
-    100% calc(100% - var(--plakette-fase)),
-    calc(100% - var(--plakette-fase)) 100%,
-    0 100%,
-    0 var(--plakette-fase)
-  );
-  background: linear-gradient(
-    168deg,
-    rgba(36, 33, 27, 0.95),
-    rgba(28, 26, 21, 0.95) 52%,
-    rgba(23, 22, 18, 0.96)
-  );
-  backdrop-filter: blur(6px) saturate(120%);
-}
-
-.header--scrolled .brand__plate {
-  opacity: 1;
-  transform: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .brand__plate {
-    transform: none;
-    transition: opacity 0.22s ease;
-  }
+/* Auf Creme waere derselbe Schatten ein sichtbarer dunkler Hof. Dort genuegt
+   ein Hauch Tiefe direkt an der Kante. */
+.header--scrolled .brand__logo-img {
+  filter: drop-shadow(0 1px 1px rgba(10, 10, 10, 0.4));
 }
 
 .brand__text {
@@ -12793,9 +12763,8 @@ a.footer__contact-line:hover {
   .header__inner { height: 92px; }
   .brand__logo {
     width: 88px;
-    --plakette-x: 10px;
-    --plakette-y: 7px;
-    --plakette-fase: 11px;
+    --feld-breite: 132px;
+    --feld-hoehe: 84px;
   }
   .brand__name { font-size: 1.7rem; }
   .paths__grid {

@@ -6,9 +6,9 @@ import { Menu, X, MapPin, ChevronDown, ShoppingBag } from 'lucide-react'
 // unveraendert aus dem Original; nur die winzige KUECHEN-Zeile bleibt in dieser
 // Groesse weg — sie waere im Header rund 6 px hoch und damit ohnehin nur ein
 // Strichmuster. Frueher lag hier zusaetzlich eine umgefaerbte Fassung fuer den
-// hellen Headerzustand. Die ist raus: statt das Logo umzufaerben, bekommt es
-// auf Creme eine dunkle Plakette als Untergrund (.brand__plate), sodass in
-// beiden Headerzustaenden exakt dasselbe Logo sichtbar ist.
+// hellen Headerzustand. Die ist raus: statt das Logo umzufaerben, liegt auf
+// Creme ein sehr weiches dunkles Kontrastfeld dahinter (.brand__logo::before),
+// sodass in beiden Headerzustaenden exakt dasselbe Logo sichtbar ist.
 import logoAufDunkel from '../assets/brand/logo-web-auf-dunkel.webp'
 import { useCart } from '../shop/cart-context.js'
 import { inquiryReady } from '../data/release.js'
@@ -102,7 +102,6 @@ export default function Header() {
       <div className="container header__inner">
         <Link className="brand" to="/" aria-label="VIDEKO Küchen — Startseite" onClick={close}>
           <span className="brand__logo">
-            <span className="brand__plate" aria-hidden="true" />
             <img className="brand__logo-img" src={logoAufDunkel} alt="VIDEKO Küchen" />
           </span>
         </Link>
