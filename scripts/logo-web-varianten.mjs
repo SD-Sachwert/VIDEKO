@@ -8,11 +8,10 @@
  *    KUECHEN darunter ist im Master nur 58 px hoch und landet im Header
  *    bei rund 6 px Zeichenhoehe — das ist keine Schrift mehr, sondern ein
  *    Strichmuster. In den kleinen Web-Groessen bleibt sie deshalb weg.
- * 2. Die Wortmarke wird umgefaerbt: auf hellen Flaechen nach Anthrazit,
- *    auf dunklen Flaechen nach hellem Silber. Die Helligkeitsverlaeufe des
- *    Originals bleiben dabei als Modulation erhalten, damit der metallische
- *    Charakter nicht zu einem flachen Aufkleber wird. Das Symbol behaelt in
- *    beiden Fassungen exakt seine Originalfarben (Silber/Gold).
+ * 2. Die Wortmarke wird umgefaerbt: auf dunklen Flaechen nach hellem Silber
+ *    (Modus "mischung"), auf hellen Flaechen nach dunklem Metall (Modus
+ *    "verlauf"). Beide Verfahren sind bei FASSUNGEN erklaert. Das Symbol
+ *    behaelt in beiden Fassungen exakt seine Originalfarben (Silber/Gold).
  * 3. Nur fuer helle Flaechen bekommt das Symbol eine feine Keyline
  *    (siehe KEYLINE weiter unten).
  *
@@ -21,6 +20,7 @@
 import sharp from 'sharp'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
+import { statSync } from 'node:fs'
 
 const WURZEL = join(dirname(fileURLToPath(import.meta.url)), '..')
 const MASTER = join(WURZEL, 'src/assets/brand/logo-main-v2.png')
@@ -52,9 +52,8 @@ const EXPORT_BREITE = 340
  * 13 Masterpixel entsprechen im Header 13 * 104/902 = 1.50 px. Auf der
  * schmalen Kopfleiste (88 px Logobreite) sind es 1.27 px.
  *
- * Die Wortmarke bleibt ausgenommen (BIS_Y): sie ist bereits anthrazit, eine
- * anthrazitfarbene Kontur wuerde die Buchstaben nur fetter machen und damit
- * die Originalform der Wortmarke veraendern.
+ * Die Wortmarke bleibt ausgenommen (BIS_Y): eine Kontur wuerde die
+ * Buchstaben nur fetter machen und damit die Originalform veraendern.
  *
  * Am oberen Bildrand sitzt das Symbol im Master buendig auf y = 0. Dort ist
  * fuer eine Aussenlinie kein Platz, die Kontur wird an der Kante beschnitten.
@@ -64,10 +63,53 @@ const EXPORT_BREITE = 340
  */
 const KEYLINE = { radius: 13, bisY: 520, farbe: [34, 31, 26] }
 
+/* Faerbung der Wortmarke — zwei Verfahren.
+ *
+ * "mischung" (dunkle Fassung): Die relative Helligkeit jedes Originalpixels
+ * mischt zwischen VON und BIS. Auf dunklem Grund traegt das gut, weil die
+ * Wortmarke dort ohnehin ins Helle laeuft.
+ *
+ * "verlauf" (helle Fassung): Dasselbe Verfahren lief hier gegen eine sehr
+ * dunkle Spanne (20,18,15 bis 58,53,45) und presste die Wortmarke damit auf
+ * nahezu Schwarz — gut lesbar, aber flach; vom Metall blieb nichts uebrig.
+ * Stattdessen wird der Grundton jetzt ueber die Zeilenposition gesetzt
+ * (OBEN -> MITTE -> UNTEN, weich ueberblendet), und aus dem Original kommt
+ * nur noch die Abweichung des einzelnen Pixels vom Mittel SEINER Zeile
+ * dazu. Das trennt beides sauber: der Ton ist gewaehlt, die Metalltextur
+ * (Kanten, Schliff, Fasen) bleibt exakt die des Originals.
+ *
+ * AMPLITUDE skaliert diese Textur, DECKEL begrenzt sie nach oben — ohne den
+ * Deckel kaemen aus den Glanzkanten des Masters weisse Spitzen und damit ein
+ * Chromeffekt, der hier nicht gewollt ist.
+ *
+ * Die Toene sind gegen die cremefarbene Kopfleiste (#f0ece2) gemessen: bei
+ * 104 px Anzeigebreite 5.5:1 Kontrast im Mittel, die hellsten zehn Prozent
+ * der Wortmarke liegen noch bei 3.8:1. Die frueher verwendete fast schwarze
+ * Spanne kam auf 12:1 — mehr, als hier gebraucht wird.
+ */
 const FASSUNGEN = [
-  { name: 'logo-web-auf-hell.webp', von: [20, 18, 15], bis: [58, 53, 45], keyline: KEYLINE },
-  { name: 'logo-web-auf-dunkel.webp', von: [168, 163, 154], bis: [252, 249, 243], keyline: null },
+  {
+    name: 'logo-web-auf-hell.webp',
+    modus: 'verlauf',
+    oben: [120, 120, 116],
+    mitte: [65, 65, 62],
+    unten: [95, 95, 90],
+    amplitude: 60,
+    deckel: 200,
+    keyline: KEYLINE,
+  },
+  {
+    name: 'logo-web-auf-dunkel.webp',
+    modus: 'mischung',
+    von: [168, 163, 154],
+    bis: [252, 249, 243],
+    keyline: null,
+  },
 ]
+
+/* Weiche Ueberblendung (smoothstep) — linear gemischt entstehen an den
+   Stuetzstellen sichtbare Knicke im Verlauf. */
+const weich = (t) => t * t * (3 - 2 * t)
 
 /* Exakte Distanztransformation nach Felzenszwalb/Huttenlocher: erst
    spaltenweise, dann zeilenweise die untere Einhuellende der Parabeln. */
@@ -120,6 +162,32 @@ const { data, info } = await sharp(MASTER)
 
 const { width: b, height: h, channels: k } = info
 
+/* Helligkeit jedes Wortmarkenpixels und das Mittel seiner Zeile. Die
+   Differenz aus beidem ist die Metalltextur, die der Modus "verlauf" ueber
+   den gewaehlten Grundton legt. Zeilen mit zu wenig Deckung (An- und
+   Auslauf der Buchstaben) liefern kein belastbares Mittel und bleiben
+   deshalb aus der Wortmarkenspanne heraus. */
+const helligkeit = new Float64Array(b * h)
+const zeilenMittel = new Float64Array(h)
+let wortVon = h
+let wortBis = 0
+for (let y = WORTMARKE_AB; y < h; y++) {
+  let summe = 0
+  let anzahl = 0
+  for (let x = 0; x < b; x++) {
+    const i = (y * b + x) * k
+    if (data[i + 3] < 8) continue
+    const l = (0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2]) / 255
+    helligkeit[y * b + x] = l
+    if (data[i + 3] >= 200) { summe += l; anzahl++ }
+  }
+  if (anzahl > 40) {
+    zeilenMittel[y] = summe / anzahl
+    if (y < wortVon) wortVon = y
+    if (y > wortBis) wortBis = y
+  }
+}
+
 /* Silhouette des Originals — Grundlage der Keyline. */
 const silhouette = new Uint8Array(b * h)
 for (let i = 0; i < b * h; i++) silhouette[i] = data[i * k + 3] >= 128 ? 1 : 0
@@ -127,13 +195,37 @@ const abstand = distanzfeld(silhouette, b, h)
 
 for (const f of FASSUNGEN) {
   const kopie = Buffer.from(data)
-  for (let y = WORTMARKE_AB; y < h; y++) {
-    for (let x = 0; x < b; x++) {
-      const i = (y * b + x) * k
-      if (kopie[i + 3] === 0) continue
-      /* Relative Helligkeit des Originalpixels als Mischfaktor. */
-      const l = (0.2126 * kopie[i] + 0.7152 * kopie[i + 1] + 0.0722 * kopie[i + 2]) / 255
-      for (let c = 0; c < 3; c++) kopie[i + c] = Math.round(f.von[c] + (f.bis[c] - f.von[c]) * l)
+
+  if (f.modus === 'mischung') {
+    for (let y = WORTMARKE_AB; y < h; y++) {
+      for (let x = 0; x < b; x++) {
+        const i = (y * b + x) * k
+        if (kopie[i + 3] === 0) continue
+        /* Relative Helligkeit des Originalpixels als Mischfaktor. */
+        const l = (0.2126 * kopie[i] + 0.7152 * kopie[i + 1] + 0.0722 * kopie[i + 2]) / 255
+        for (let c = 0; c < 3; c++) kopie[i + c] = Math.round(f.von[c] + (f.bis[c] - f.von[c]) * l)
+      }
+    }
+  } else {
+    for (let y = wortVon; y <= wortBis; y++) {
+      const t = (y - wortVon) / (wortBis - wortVon)
+      /* Dreipunktverlauf oben -> mitte -> unten. */
+      const ton = []
+      for (let c = 0; c < 3; c++) {
+        ton[c] = t < 0.5
+          ? f.oben[c] + (f.mitte[c] - f.oben[c]) * weich(t / 0.5)
+          : f.mitte[c] + (f.unten[c] - f.mitte[c]) * weich((t - 0.5) / 0.5)
+      }
+      for (let x = 0; x < b; x++) {
+        const i = (y * b + x) * k
+        if (kopie[i + 3] === 0) continue
+        /* Nur die oertliche Abweichung vom Zeilenmittel — sie traegt die
+           Metalltextur, der Vertikalverlauf kommt aus ton[]. */
+        const ab = helligkeit[y * b + x] - zeilenMittel[y]
+        for (let c = 0; c < 3; c++) {
+          kopie[i + c] = Math.max(0, Math.min(f.deckel, Math.round(ton[c] + ab * f.amplitude)))
+        }
+      }
     }
   }
 
@@ -163,5 +255,6 @@ for (const f of FASSUNGEN) {
     .webp({ quality: 92, effort: 6 })
     .toFile(join(ZIEL, f.name))
   const m = await sharp(join(ZIEL, f.name)).metadata()
-  console.log(f.name, `${m.width}x${m.height}`, `${(m.size / 1024).toFixed(1)} kB`, f.keyline ? `Keyline r=${f.keyline.radius}` : 'ohne Keyline')
+  const bytes = statSync(join(ZIEL, f.name)).size
+  console.log(f.name, `${m.width}x${m.height}`, `${(bytes / 1024).toFixed(1)} kB`, f.keyline ? `Keyline r=${f.keyline.radius}` : 'ohne Keyline')
 }
