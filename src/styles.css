@@ -470,6 +470,31 @@ body {
   filter: drop-shadow(0 1px 1px rgba(10, 10, 10, 0.4));
 }
 
+/* Die helle Fassung liegt deckungsgleich ueber der dunklen — gleiche Datei-
+   masse, gleiche Geometrie, deshalb kein Versatz und kein Layoutsprung. Das
+   erste Bild bleibt im Fluss und bestimmt weiterhin die Hoehe der Box; nur der
+   Deckel wird ein- und ausgeblendet. Beide Bilder erben die Schattenregeln
+   oben, sodass sich am Verhalten der Zustaende nichts aendert. */
+.brand__logo-img--hell {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  opacity: 0;
+}
+
+.brand__logo-img {
+  transition: opacity 0.22s ease;
+}
+
+.header--scrolled .brand__logo-img {
+  opacity: 0;
+}
+
+.header--scrolled .brand__logo-img--hell {
+  opacity: 1;
+}
+
 .brand__text {
   display: flex;
   flex-direction: column;
