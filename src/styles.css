@@ -419,7 +419,7 @@ body {
   position: relative;
   display: block;
   flex: none;
-  width: 104px;
+  width: 96px;
   /* Deutlich groesser als das Logo, damit der Verlauf lange vor der eigenen
      Kante bei null angekommen ist. */
   --feld-breite: 158px;
@@ -12787,7 +12787,7 @@ a.footer__contact-line:hover {
   }
   .header__inner { height: 92px; }
   .brand__logo {
-    width: 88px;
+    width: 82px;
     --feld-breite: 132px;
     --feld-hoehe: 84px;
   }
