@@ -214,9 +214,8 @@ function Goldadern({ seite = 'links' }) {
 }
 
 /**
- * Dunkle Buehne. Die Seite hat davon zwei — einmal fuer die Socials direkt
- * unter dem Hero, einmal fuer Marke und Easter Egg. Gleiche Textur, gleiche
- * Adern, damit beide als dasselbe Material lesbar bleiben.
+ * Dunkle Buehne. Die Seite hat genau eine davon: sie traegt das Gewerkehaus
+ * und darunter die Socials als einen zusammenhaengenden dunklen Abschnitt.
  */
 function Nachtband({ textur, klasse = '', children }) {
   return (
@@ -1490,10 +1489,21 @@ export default function Entdecken() {
            eigene Section, nur ein schmaler Streifen. ---------- */}
       <LiveTicker />
 
-      {/* ---------- Dunkles Band 1: Socials ----------
-          Direkt hinter dem hellen Hero. Der harte Wechsel von Marmor auf
-          Nacht ist der Bruch, der den Abschnitt traegt. */}
+      {/* ---------- Dunkles Band: erst das Gewerkehaus, dann die Socials ----------
+          Direkt hinter dem hellen Hero und dem Live-Ticker. Der harte Wechsel
+          von Marmor auf Nacht ist der Bruch, der den Abschnitt traegt.
+
+          Beide Sections liegen bewusst in EINEM Nachtband. Zwei gestapelte
+          Baender haetten an der Naht einen sichtbaren Helligkeitssprung: der
+          Verlauf von .ent-nacht hellt oben wieder auf, und die Goldadern
+          wuerden neu ansetzen. ---------- */}
       <Nachtband textur={texturen.nacht}>
+        <section className="ent-band ent-band--marke">
+          <div className="ent-wide">
+            <EntdeckenGewerkeHaus />
+          </div>
+        </section>
+
         <section className="ent-band ent-band--social" id="socials">
           <div className="ent-wide">
             <Reveal className="ent-head ent-head--hell ent-head--mitte">
@@ -1538,15 +1548,6 @@ export default function Entdecken() {
           <BaustellenIndex />
         </div>
       </section>
-
-      {/* ---------- Dunkles Band 2: Das Gewerkehaus ---------- */}
-      <Nachtband textur={texturen.nacht}>
-        <section className="ent-band ent-band--marke">
-          <div className="ent-wide">
-            <EntdeckenGewerkeHaus />
-          </div>
-        </section>
-      </Nachtband>
 
       {/* ---------- Standort: Text links, echte Karte rechts ---------- */}
       <section className="ent-sec ent-sec--ort" id="komm-vorbei">
