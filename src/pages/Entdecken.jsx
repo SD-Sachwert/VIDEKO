@@ -22,6 +22,7 @@ import {
   VolumeX,
 } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
+import EntdeckenGewerkeHaus from '../components/EntdeckenGewerkeHaus.jsx'
 import LazyVideo from '../components/LazyVideo.jsx'
 import LazyBg from '../components/LazyBg.jsx'
 import CTAButton from '../components/CTAButton.jsx'
@@ -1538,36 +1539,11 @@ export default function Entdecken() {
         </div>
       </section>
 
-      {/* ---------- Dunkles Band 2: Marke + Easter Egg ---------- */}
+      {/* ---------- Dunkles Band 2: Das Gewerkehaus ---------- */}
       <Nachtband textur={texturen.nacht}>
-        {/* Marke */}
         <section className="ent-band ent-band--marke">
           <div className="ent-wide">
-            <Reveal className="ent-brand">
-              <div className="ent-brand__kopf">
-                <span className="kicker kicker--gold">Was VIDEKO ist</span>
-                <h2 className="ent-h2">
-                  Nicht nur ein <span className="grad">Küchenstudio.</span>
-                </h2>
-              </div>
-              <div className="ent-brand__cols">
-                <p className="ent-brand__text">
-                  Wir bauen in Würzburg ein Küchenstudio. Gleichzeitig bauen wir eine Marke, einen
-                  Shop und ungefähr zehn Dinge, die noch keinen richtigen Namen haben.
-                </p>
-                <p className="ent-brand__text">
-                  Das meiste davon passiert öffentlich: Planung, Umbau, Fortschritt, Staub und
-                  gelegentlich Chaos. Wer will, schaut zu.
-                </p>
-              </div>
-              <ul className="ent-chips">
-                {['Küche', 'Umbau', 'Planung', 'Chaos', 'Fortschritt'].map((c) => (
-                  <li className="ent-chip" key={c}>
-                    {c}
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
+            <EntdeckenGewerkeHaus />
           </div>
         </section>
       </Nachtband>

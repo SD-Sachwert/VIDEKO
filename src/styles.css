@@ -15695,48 +15695,541 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   padding-bottom: clamp(56px, 6vw, 84px);
 }
 
-/* ---------- Marke ---------- */
+/* ---------- Gewerkehaus: die neun Gewerke am Hausschnitt ---------- */
 
-.ent-brand__kopf {
-  margin-bottom: 34px;
+.ent-gewerke__kopf {
+  max-width: 640px;
+  margin-bottom: clamp(30px, 3.4vw, 48px);
 }
 
-.ent-brand .ent-h2 {
+.ent-gewerke .ent-h2 {
   color: var(--cream);
 }
 
-.ent-brand__cols {
-  display: grid;
-  gap: 22px;
-}
-
-.ent-brand__text {
+.ent-gewerke__lead {
+  margin: 16px 0 0;
   font-size: clamp(1rem, 1.15vw, 1.12rem);
   line-height: 1.68;
   color: var(--cream-soft);
-  margin: 0;
 }
 
-.ent-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  list-style: none;
-  padding: 0;
-  margin: 34px 0 0;
-}
-
-.ent-chip {
-  padding: 9px 19px;
-  border-radius: 999px;
-  border: 1px solid rgba(201, 160, 80, 0.34);
-  background: rgba(232, 201, 120, 0.06);
+.ent-gewerke__hinweis {
+  margin: 20px 0 0;
   font-family: var(--sans);
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* Buehne. Mobil eine Spalte mit dem Haus zuoberst (order), ab 1200 px ein
+   Dreispalter mit dem Haus in der Mitte. Position relativ, weil das
+   SVG-Overlay der Verbindungslinien darauf liegt. */
+.ent-gewerke__buehne {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ent-gewerke__haus {
+  position: relative;
+  order: -1;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto clamp(18px, 3vw, 30px);
+  transition: filter 0.45s ease;
+}
+
+.ent-gewerke__bild {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Immobilien & Versicherungen ist kein Raum, sondern das ganze Haus. Aktiv
+   bekommt deshalb die komplette Kontur einen leichten Schein — der
+   drop-shadow folgt dem Alphakanal, also exakt der Hausform. */
+.ent-gewerke__haus.ist-huelle {
+  filter: drop-shadow(0 0 24px rgba(232, 201, 120, 0.3));
+}
+
+/* ---- Hotspots ---- */
+
+.ent-gewerke__punkt {
+  position: absolute;
+  z-index: 3;
+  translate: -50% -50%;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  cursor: pointer;
+}
+
+.ent-gewerke__punkt-schein {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: radial-gradient(
+    circle,
+    rgba(232, 201, 120, 0.42) 0%,
+    rgba(232, 201, 120, 0.14) 46%,
+    transparent 72%
+  );
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.ent-gewerke__punkt-kern {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: var(--gold-bright);
+  /* Dunkler Saum: der Punkt muss auch auf hellen, warm beleuchteten
+     Innenraeumen des Hausbildes lesbar bleiben, ohne heller zu werden. */
+  box-shadow:
+    0 0 0 1.5px rgba(10, 9, 8, 0.55),
+    0 0 0 2.5px rgba(232, 201, 120, 0.4);
+  opacity: 0.55;
+  transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ent-gewerke__punkt.is-hover .ent-gewerke__punkt-schein {
+  opacity: 0.7;
+  transform: scale(1);
+}
+
+.ent-gewerke__punkt.is-hover .ent-gewerke__punkt-kern {
+  opacity: 0.9;
+}
+
+.ent-gewerke__punkt.is-aktiv .ent-gewerke__punkt-schein {
+  opacity: 1;
+  transform: scale(1.3);
+}
+
+.ent-gewerke__punkt.is-aktiv .ent-gewerke__punkt-kern {
+  opacity: 1;
+  transform: scale(1.15);
+  box-shadow:
+    0 0 0 2px rgba(10, 9, 8, 0.7),
+    0 0 0 3.5px rgba(232, 201, 120, 0.95),
+    0 0 0 9px rgba(232, 201, 120, 0.18);
+}
+
+/* ---- Verbindungslinien ---- */
+
+.ent-gewerke__linien {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.ent-gewerke__linie {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.28;
+  transition: opacity 0.35s ease, stroke 0.35s ease;
+}
+
+.ent-gewerke__linien g[data-zustand='hover'] .ent-gewerke__linie {
+  opacity: 0.65;
+}
+
+.ent-gewerke__linien g[data-zustand='aktiv'] .ent-gewerke__linie {
+  opacity: 0.95;
+  stroke: var(--gold-bright);
+}
+
+/* Einmaliger Lichtimpuls beim Aktivieren, vom Label zum Haus. Der Pfad traegt
+   pathLength="1", deshalb sind Strich und Luecke Bruchteile der Gesamtlaenge
+   und der Impuls ist auf jeder Linie gleich schnell. Er laeuft genau einmal —
+   das <path> existiert nur, solange das Gewerk aktiv ist. */
+.ent-gewerke__puls {
+  fill: none;
+  stroke: var(--gold-bright);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 0.12 0.88;
+  animation: ent-gewerke-puls 0.85s cubic-bezier(0.33, 0, 0.2, 1) 1 forwards;
+}
+
+@keyframes ent-gewerke-puls {
+  from {
+    stroke-dashoffset: 0.12;
+    opacity: 1;
+  }
+  to {
+    stroke-dashoffset: -0.88;
+    opacity: 0;
+  }
+}
+
+/* ---- Gewerke-Label ---- */
+
+.ent-gewerke__spalte {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ent-gewerke__eintrag {
+  min-width: 0;
+}
+
+.ent-gewerke__label {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 15px;
+  border: 1px solid rgba(244, 239, 228, 0.09);
+  border-radius: 12px;
+  background: rgba(18, 17, 15, 0.5);
+  text-align: left;
+  cursor: pointer;
+  transition: opacity 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+}
+
+.ent-gewerke__label:focus-visible {
+  outline: 2px solid var(--gold-bright);
+  outline-offset: 3px;
+}
+
+.ent-gewerke__icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(201, 160, 80, 0.26);
+  border-radius: 9px;
+  background: rgba(232, 201, 120, 0.05);
+  color: var(--gold);
+  transition: border-color 0.3s ease, background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ent-gewerke__text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.ent-gewerke__name {
+  font-family: var(--sans);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--champagne);
+  transition: color 0.3s ease;
+}
+
+.ent-gewerke__kurz {
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: rgba(244, 239, 228, 0.5);
+  transition: color 0.3s ease;
+}
+
+.ent-gewerke__marke {
+  display: none;
+}
+
+.ent-gewerke__label:hover .ent-gewerke__icon {
+  border-color: rgba(232, 201, 120, 0.6);
+  color: var(--gold-bright);
+}
+
+.ent-gewerke__label:hover .ent-gewerke__name {
+  color: var(--gold-bright);
+}
+
+.ent-gewerke__label.is-aktiv {
+  border-color: rgba(232, 201, 120, 0.5);
+  background: rgba(232, 201, 120, 0.07);
+}
+
+.ent-gewerke__label.is-aktiv .ent-gewerke__name {
+  color: var(--gold-bright);
+}
+
+.ent-gewerke__label.is-aktiv .ent-gewerke__kurz {
+  color: var(--cream-soft);
+}
+
+/* Der Ring am Icon ist der zweite, farbunabhaengige Traeger des Aktivzustands
+   — zusammen mit Linie und Detailkarte. */
+.ent-gewerke__label.is-aktiv .ent-gewerke__icon {
+  border-color: rgba(232, 201, 120, 0.8);
+  background: rgba(232, 201, 120, 0.14);
+  color: var(--gold-bright);
+  box-shadow: 0 0 0 4px rgba(232, 201, 120, 0.09);
+}
+
+/* Ist ein Gewerk aktiv, treten die anderen zurueck. */
+.ent-gewerke.hat-aktiv .ent-gewerke__label:not(.is-aktiv) {
+  opacity: 0.45;
+}
+
+.ent-gewerke.hat-aktiv .ent-gewerke__label:not(.is-aktiv):hover {
+  opacity: 0.85;
+}
+
+/* ---- Detailkarte ---- */
+
+.ent-gewerke__karte {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 10px 0 2px;
+  padding: 14px 16px;
+  border: 1px solid rgba(232, 201, 120, 0.3);
+  border-radius: 12px;
+  background: rgba(13, 12, 11, 0.94);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
+  animation: ent-gewerke-karte 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes ent-gewerke-karte {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.ent-gewerke__karte-name {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+}
+
+.ent-gewerke__karte-kurz {
+  font-size: 0.94rem;
+  line-height: 1.5;
+  color: var(--cream);
+}
+
+.ent-gewerke__karte-link {
+  align-self: flex-start;
+  margin-top: 8px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid rgba(232, 201, 120, 0.4);
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+  transition: color 0.25s ease, border-color 0.25s ease;
+}
+
+.ent-gewerke__karte-link:hover {
+  color: var(--cream);
+  border-color: var(--cream);
+}
+
+/* ---- Tablet: Haus oben, darunter zwei Spalten ---- */
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .ent-gewerke__spalte {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ent-gewerke__haus {
+    max-width: 640px;
+  }
+}
+
+/* ---- Unter 1200 px: echtes Akkordeon ----
+   Das Label traegt nur den Gewerkenamen, der Kurztext steht ausschliesslich
+   in der aufgeklappten Karte. Sonst stuende derselbe Satz doppelt da. */
+
+@media (max-width: 1199px) {
+  .ent-gewerke__kurz,
+  .ent-gewerke__karte-name {
+    display: none;
+  }
+
+  .ent-gewerke__karte {
+    margin: 6px 0 2px;
+  }
+}
+
+/* ---- Desktop: Haus mittig, vier Gewerke links, vier rechts ---- */
+
+@media (min-width: 1200px) {
+  .ent-gewerke__buehne {
+    --ent-haus: 61%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(--ent-haus) minmax(0, 1fr);
+    grid-template-areas:
+      "links haus rechts"
+      "unten unten unten";
+    column-gap: clamp(12px, 1.4vw, 24px);
+    row-gap: clamp(22px, 2.6vw, 36px);
+  }
+
+  .ent-gewerke__haus {
+    grid-area: haus;
+    order: 0;
+    max-width: none;
+    margin: 0;
+  }
+
+  .ent-gewerke__spalte--links {
+    grid-area: links;
+  }
+
+  .ent-gewerke__spalte--rechts {
+    grid-area: rechts;
+  }
+
+  /* Die vier Label verteilen sich ueber die Haushoehe, damit die Linien flach
+     bleiben statt steil zu ihrem Punkt zu klettern. */
+  .ent-gewerke__spalte--links,
+  .ent-gewerke__spalte--rechts {
+    align-content: space-around;
+    gap: clamp(10px, 1.6vw, 22px);
+  }
+
+  .ent-gewerke__spalte--unten {
+    grid-area: unten;
+    justify-self: center;
+    width: min(320px, 100%);
+  }
+
+  /* Auf dem Desktop kein Kastenlook: nur Icon, Name, Kurztext. Der Rahmen
+     bleibt transparent vorhanden, damit beim Aktivieren nichts springt. */
+  .ent-gewerke__label {
+    padding: 9px 12px;
+    border-color: transparent;
+    background: none;
+  }
+
+  .ent-gewerke__label.is-aktiv {
+    border-color: rgba(232, 201, 120, 0.34);
+    background: rgba(232, 201, 120, 0.05);
+  }
+
+  /* Rechte Spalte spiegelt sich: Icon aussen, Ansatz der Linie innen. */
+  .ent-gewerke__spalte--rechts .ent-gewerke__label {
+    text-align: right;
+  }
+
+  .ent-gewerke__spalte--rechts .ent-gewerke__marke {
+    order: 1;
+  }
+
+  .ent-gewerke__spalte--rechts .ent-gewerke__text {
+    order: 2;
+    align-items: flex-end;
+  }
+
+  .ent-gewerke__spalte--rechts .ent-gewerke__icon {
+    order: 3;
+  }
+
+  /* Feiner goldener Ansatz an der Innenkante, dort wo die Linie beginnt. */
+  .ent-gewerke__spalte--links .ent-gewerke__marke,
+  .ent-gewerke__spalte--rechts .ent-gewerke__marke {
+    display: block;
+    width: 1px;
+    height: 22px;
+    background: linear-gradient(180deg, transparent, rgba(232, 201, 120, 0.55), transparent);
+    opacity: 0.5;
+    transition: opacity 0.3s ease, height 0.3s ease;
+  }
+
+  .ent-gewerke__label:hover .ent-gewerke__marke {
+    opacity: 0.9;
+  }
+
+  .ent-gewerke__label.is-aktiv .ent-gewerke__marke {
+    height: 32px;
+    opacity: 1;
+    background: linear-gradient(180deg, transparent, var(--gold-bright), transparent);
+  }
+
+  /* Die Karte legt sich ans Haus, immer diagonal gegenueber dem aktiven
+     Punkt — so verdeckt sie nie die Stelle, um die es gerade geht. */
+  .ent-gewerke__karte {
+    position: absolute;
+    z-index: 4;
+    width: min(270px, 36%);
+    margin: 0;
+  }
+
+  .ent-gewerke__karte[data-oben="ja"] {
+    top: 5%;
+  }
+
+  .ent-gewerke__karte[data-oben="nein"] {
+    bottom: 5%;
+  }
+
+  .ent-gewerke__karte[data-rechts="ja"] {
+    right: 1%;
+  }
+
+  .ent-gewerke__karte[data-rechts="nein"] {
+    left: 1%;
+  }
+}
+
+@media (min-width: 1440px) {
+  .ent-gewerke__buehne {
+    --ent-haus: 63%;
+  }
+}
+
+/* Ohne Bewegung: keine laufende Linie, kein wanderndes Gluehen, kein
+   Aufblenden. Alle Zustaende schalten hart um, die Funktion bleibt komplett. */
+@media (prefers-reduced-motion: reduce) {
+  .ent-gewerke__haus,
+  .ent-gewerke__label,
+  .ent-gewerke__icon,
+  .ent-gewerke__name,
+  .ent-gewerke__kurz,
+  .ent-gewerke__marke,
+  .ent-gewerke__linie,
+  .ent-gewerke__punkt-kern,
+  .ent-gewerke__punkt-schein,
+  .ent-gewerke__karte,
+  .ent-gewerke__karte-link {
+    transition: none;
+    animation: none;
+  }
+
+  .ent-gewerke__puls {
+    display: none;
+  }
 }
 
 /* ---------- Socials: grosse hochformatige Kacheln ---------- */
@@ -16589,11 +17082,6 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
 
   .ent-socialgrid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .ent-brand__cols {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 40px;
   }
 
   /* Hero-Text links, Countdown darunter, der Knopf rechts daneben —
