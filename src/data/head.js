@@ -57,6 +57,7 @@ export function staticRouteHead(meta) {
     canonicalPath: pfad,
     image: meta.ogImage,
     noindex: !!meta.noindex,
+    nofollow: !!meta.nofollow,
     ogType: 'website',
     preload: meta.preload || null,
     jsonLd: [

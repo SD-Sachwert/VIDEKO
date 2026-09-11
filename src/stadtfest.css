@@ -1,0 +1,890 @@
+/* ======================================================================
+   /stadtfest — Event-Flow, mobile first.
+
+   Eigene Datei, damit die Aktionsseite die restliche Website nicht
+   beruehrt. Alle Klassen tragen das Praefix `stf-`. Eingebunden ueber
+   einen @import ganz oben in styles.css: die Seite liegt ausserhalb des
+   Layouts, und ein lazy geladenes Page-CSS wuerde beim Prerender kurz
+   ungestylt aufblitzen (der Prerender schreibt nur modulepreload, kein
+   stylesheet-Link).
+
+   Grundhaltung: eine Saeule, eine Handbewegung, Daumen unten. Kein
+   Header, keine acht Sections, kein Footer. Nur der Flow.
+   ====================================================================== */
+
+.stf {
+  --stf-gold: var(--gold, #c9a050);
+  --stf-gold-hell: var(--gold-bright, #e8c978);
+  --stf-nacht: var(--anthracite, #12110f);
+  --stf-creme: var(--cream, #f4efe4);
+  --stf-creme-weich: rgba(244, 239, 228, 0.66);
+  --stf-linie: rgba(201, 160, 80, 0.26);
+  --stf-feld-bg: rgba(244, 239, 228, 0.045);
+  --stf-rot: #d98a6a;
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 0 0 clamp(48px, 12vw, 96px);
+  background: var(--stf-nacht);
+  color: var(--stf-creme);
+  font-family: var(--sans, 'Inter', system-ui, sans-serif);
+  overflow-x: hidden;
+}
+
+/* Metall-/Marmoranleihe: zwei sehr weiche Lichter, kein Bild, kein Request. */
+.stf::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 70% at 50% -10%, rgba(201, 160, 80, 0.16), transparent 62%),
+    radial-gradient(90% 50% at 110% 20%, rgba(240, 236, 226, 0.05), transparent 60%),
+    linear-gradient(180deg, rgba(8, 8, 7, 0) 55%, rgba(8, 8, 7, 0.55) 100%);
+}
+
+.stf > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Eine Spalte. Auf Desktop bewusst schmal — das hier ist ein Formular,
+   keine Landingpage. */
+.stf__spalte {
+  width: min(100%, 560px);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ---------------------------------------------------------------- */
+/* Kopf                                                              */
+/* ---------------------------------------------------------------- */
+
+.stf-kopf {
+  padding: clamp(22px, 7vw, 40px) 0 clamp(18px, 5vw, 28px);
+}
+
+.stf-kopf__marken {
+  margin: 0 0 clamp(18px, 6vw, 28px);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--stf-gold);
+}
+
+.stf-kopf__titel {
+  margin: 0;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(42px, 13.5vw, 64px);
+  line-height: 0.94;
+  font-weight: 300;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+  background: linear-gradient(104deg, #b9863a 0%, #e8c978 44%, #c9a050 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.stf-kopf__sub {
+  margin: clamp(14px, 4vw, 20px) 0 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--stf-creme);
+}
+
+.stf-kopf__micro {
+  margin: 8px 0 0;
+  min-height: 2.7em;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--stf-creme-weich);
+  transition: opacity 0.4s ease;
+}
+
+.stf-kopf__micro[data-wechsel='1'] {
+  opacity: 0.25;
+}
+
+.stf-trenner {
+  height: 1px;
+  margin: clamp(18px, 5vw, 26px) 0 0;
+  background: linear-gradient(90deg, var(--stf-gold), rgba(201, 160, 80, 0.06) 82%, transparent);
+}
+
+/* ---------------------------------------------------------------- */
+/* Formular                                                          */
+/* ---------------------------------------------------------------- */
+
+.stf-form {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(20px, 5vw, 26px);
+  padding-top: clamp(24px, 7vw, 34px);
+}
+
+.stf-gruppe__titel {
+  margin: 0 0 14px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--stf-gold);
+}
+
+/* Erklaerzeile unter einem Gruppentitel. Nur dort, wo der Titel allein
+   missverstanden werden koennte. */
+.stf-gruppe__text {
+  margin: -6px 0 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--stf-creme-weich);
+}
+
+.stf-reihe {
+  display: grid;
+  gap: 14px;
+}
+
+@media (min-width: 420px) {
+  .stf-reihe--zwei {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.stf-feld {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.stf-feld__label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--stf-creme-weich);
+}
+
+.stf-feld__opt {
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  opacity: 0.7;
+}
+
+.stf-feld__input {
+  width: 100%;
+  min-height: 52px;
+  padding: 14px 15px;
+  border: 1px solid var(--stf-linie);
+  border-radius: 2px;
+  background: var(--stf-feld-bg);
+  color: var(--stf-creme);
+  /* 16px verhindert den automatischen Zoom auf iOS. Nicht kleiner machen. */
+  font-size: 16px;
+  font-family: inherit;
+  line-height: 1.3;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.stf-feld__input::placeholder {
+  color: rgba(244, 239, 228, 0.3);
+}
+
+.stf-feld__input:focus {
+  outline: none;
+  border-color: var(--stf-gold);
+  background: rgba(244, 239, 228, 0.07);
+  box-shadow: 0 0 0 3px rgba(201, 160, 80, 0.16);
+}
+
+.stf-feld--fehler .stf-feld__input {
+  border-color: var(--stf-rot);
+}
+
+.stf-feld__fehler {
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: var(--stf-rot);
+}
+
+/* Honigtopf. Bewusst nicht display:none — manche Bots erkennen das. */
+.stf-honig {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+}
+
+/* ---------------------------------------------------------------- */
+/* Interessen-Chips                                                  */
+/* ---------------------------------------------------------------- */
+
+.stf-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.stf-chip {
+  min-height: 48px;
+  padding: 12px 17px;
+  border: 1px solid var(--stf-linie);
+  border-radius: 999px;
+  background: var(--stf-feld-bg);
+  color: var(--stf-creme);
+  font-family: inherit;
+  font-size: 14.5px;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: border-color 0.16s ease, background 0.16s ease, color 0.16s ease, transform 0.12s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.stf-chip:focus-visible {
+  outline: 2px solid var(--stf-gold-hell);
+  outline-offset: 2px;
+}
+
+.stf-chip:active {
+  transform: scale(0.97);
+}
+
+.stf-chip[aria-pressed='true'] {
+  border-color: var(--stf-gold);
+  background: linear-gradient(104deg, rgba(185, 134, 58, 0.9), rgba(232, 201, 120, 0.86));
+  color: #17140f;
+  font-weight: 600;
+}
+
+/* ---------------------------------------------------------------- */
+/* Checkboxen                                                        */
+/* ---------------------------------------------------------------- */
+
+.stf-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 12px 0;
+  min-height: 48px;
+  cursor: pointer;
+}
+
+.stf-check__box {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  margin: 1px 0 0;
+  border: 1px solid var(--stf-gold);
+  border-radius: 2px;
+  background: var(--stf-feld-bg);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 0.16s ease, border-color 0.16s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.stf-check__box::after {
+  content: '';
+  width: 13px;
+  height: 7px;
+  border-left: 2px solid #17140f;
+  border-bottom: 2px solid #17140f;
+  transform: rotate(-45deg) scale(0.4);
+  opacity: 0;
+  transition: opacity 0.14s ease, transform 0.14s ease;
+}
+
+.stf-check__box:checked {
+  background: linear-gradient(104deg, #b9863a, #e8c978);
+}
+
+.stf-check__box:checked::after {
+  opacity: 1;
+  transform: rotate(-45deg) scale(1) translate(1px, -1px);
+}
+
+.stf-check__box:focus-visible {
+  outline: 2px solid var(--stf-gold-hell);
+  outline-offset: 2px;
+}
+
+.stf-check--fehler .stf-check__box {
+  border-color: var(--stf-rot);
+}
+
+.stf-check__text {
+  font-size: 14.5px;
+  line-height: 1.45;
+  color: var(--stf-creme);
+}
+
+.stf-check__klein {
+  display: block;
+  margin-top: 4px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--stf-creme-weich);
+}
+
+/* ---------------------------------------------------------------- */
+/* Karten: Teilnahmebedingungen und Marketing                        */
+/* ---------------------------------------------------------------- */
+
+.stf-karte {
+  padding: clamp(16px, 4.5vw, 22px);
+  border: 1px solid rgba(244, 239, 228, 0.1);
+  border-radius: 3px;
+  background: rgba(244, 239, 228, 0.035);
+}
+
+/* Der Marketingblock ist sichtbar ein anderes Objekt als die
+   Teilnahmebedingungen. Genau das ist der Punkt. */
+.stf-karte--marketing {
+  border-color: var(--stf-linie);
+  background:
+    linear-gradient(180deg, rgba(201, 160, 80, 0.07), rgba(201, 160, 80, 0.015)),
+    rgba(8, 8, 7, 0.3);
+}
+
+.stf-karte__titel {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--stf-gold-hell);
+}
+
+.stf-karte__frei {
+  margin: 7px 0 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--stf-creme-weich);
+}
+
+.stf-firma {
+  padding-top: 6px;
+  border-top: 1px solid rgba(244, 239, 228, 0.07);
+  margin-top: 14px;
+}
+
+.stf-firma:first-of-type {
+  border-top: 0;
+  margin-top: 10px;
+  padding-top: 0;
+}
+
+.stf-firma__name {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* Kanalwahl. Erscheint erst, wenn das Unternehmen angehakt wurde. */
+.stf-kanal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 2px 0 8px 39px;
+}
+
+.stf-kanal__frage {
+  width: 100%;
+  margin: 0 0 2px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--stf-creme-weich);
+}
+
+.stf-kanal__knopf {
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid var(--stf-linie);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--stf-creme);
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.16s ease, color 0.16s ease, border-color 0.16s ease;
+}
+
+.stf-kanal__knopf[aria-pressed='true'] {
+  border-color: var(--stf-gold);
+  background: rgba(201, 160, 80, 0.22);
+  color: var(--stf-gold-hell);
+  font-weight: 600;
+}
+
+.stf-kanal__knopf:focus-visible {
+  outline: 2px solid var(--stf-gold-hell);
+  outline-offset: 2px;
+}
+
+/* Telefon ohne Nummer ist nicht waehlbar — sichtbar gesperrt, nicht versteckt. */
+.stf-kanal__knopf:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+
+.stf-kanal__hinweis,
+.stf-kanal .stf-feld__fehler {
+  width: 100%;
+  margin: 2px 0 0;
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+.stf-kanal__hinweis {
+  color: var(--stf-creme-weich);
+}
+
+/* Textlink in Rechtstexte. Kein Knopf-Look — das ist Information. */
+.stf-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--stf-gold-hell);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.stf-linkreihe {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  padding-top: 4px;
+  font-size: 13.5px;
+}
+
+/* ---------------------------------------------------------------- */
+/* CTA                                                               */
+/* ---------------------------------------------------------------- */
+
+.stf-cta {
+  width: 100%;
+  min-height: 60px;
+  margin-top: 4px;
+  padding: 18px 22px;
+  border: 0;
+  border-radius: 2px;
+  background: linear-gradient(104deg, #b9863a 0%, #e8c978 46%, #c9a050 100%);
+  color: #14110c;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: filter 0.16s ease, transform 0.12s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.stf-cta:hover {
+  filter: brightness(1.06);
+}
+
+.stf-cta:active {
+  transform: scale(0.99);
+}
+
+.stf-cta:disabled {
+  cursor: progress;
+  filter: saturate(0.55) brightness(0.82);
+}
+
+.stf-cta:focus-visible {
+  outline: 2px solid var(--stf-creme);
+  outline-offset: 3px;
+}
+
+.stf-hinweis {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(244, 239, 228, 0.45);
+  text-align: center;
+}
+
+.stf-sammelfehler {
+  padding: 13px 15px;
+  border: 1px solid rgba(217, 138, 106, 0.5);
+  border-radius: 2px;
+  background: rgba(217, 138, 106, 0.09);
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: #f0c7b4;
+}
+
+/* ---------------------------------------------------------------- */
+/* Erfolg                                                            */
+/* ---------------------------------------------------------------- */
+
+.stf-erfolg {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(20px, 5vw, 26px);
+  padding-top: clamp(10px, 4vw, 18px);
+}
+
+/* Am Stand wird dieser Schirm auf Armeslaenge vorgezeigt. Auf dem Handy
+   sitzt er deshalb mittig im Bild statt oben am Rand zu kleben. min-height,
+   nicht height: reicht der Platz nicht, waechst der Block einfach. Auf
+   Desktop bleibt er kompakt, dort wird nichts vorgezeigt. */
+@media (max-width: 700px) {
+  .stf-erfolg {
+    min-height: calc(100dvh - 170px);
+  }
+}
+
+.stf-erfolg__haken {
+  margin: 0;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(36px, 11vw, 54px);
+  line-height: 1;
+  font-weight: 300;
+  text-transform: uppercase;
+  background: linear-gradient(104deg, #b9863a 0%, #e8c978 44%, #c9a050 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.stf-erfolg__zeig {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Die Nachweisplatte. Sie bewegt sich sichtbar — ein Standbild sieht
+   anders aus als dieser Schirm. */
+.stf-platte {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(18px, 5vw, 24px);
+  border: 1px solid var(--stf-gold);
+  border-radius: 3px;
+  background: linear-gradient(160deg, rgba(201, 160, 80, 0.14), rgba(8, 8, 7, 0.5));
+}
+
+.stf-platte::after {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: -40%;
+  width: 45%;
+  height: 220%;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    transparent,
+    rgba(255, 244, 214, 0.42),
+    transparent
+  );
+  transform: rotate(14deg);
+  animation: stf-schimmer 2.6s linear infinite;
+}
+
+@keyframes stf-schimmer {
+  from {
+    left: -45%;
+  }
+  to {
+    left: 125%;
+  }
+}
+
+.stf-platte__live {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--stf-gold-hell);
+}
+
+.stf-platte__punkt {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--stf-gold-hell);
+  box-shadow: 0 0 0 0 rgba(232, 201, 120, 0.7);
+  animation: stf-puls 1.4s ease-out infinite;
+}
+
+@keyframes stf-puls {
+  0% {
+    box-shadow: 0 0 0 0 rgba(232, 201, 120, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 9px rgba(232, 201, 120, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(232, 201, 120, 0);
+  }
+}
+
+.stf-platte__name {
+  margin: 14px 0 0;
+  font-size: clamp(20px, 6vw, 26px);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.stf-platte__uhr {
+  margin: 6px 0 0;
+  font-size: clamp(30px, 10vw, 42px);
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+  color: var(--stf-gold-hell);
+}
+
+.stf-platte__zeile {
+  margin: 10px 0 0;
+  font-size: 13px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--stf-creme-weich);
+}
+
+/* Der Code ist die Nummer, die das Team abliest. Er darf nie zwischen
+   Wort und Ziffer umbrechen. */
+.stf-platte__code {
+  display: inline-block;
+  color: var(--stf-creme);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.stf-erfolg__fuss {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: rgba(244, 239, 228, 0.42);
+}
+
+/* ---------------------------------------------------------------- */
+/* Phasen PRE und POST                                               */
+/* ---------------------------------------------------------------- */
+
+/* Vor und nach dem Fest ist die Seite keine Warteschlange, sondern eine
+   Seite zum Lesen. Sie bekommt deshalb einen eigenen Kopf statt des
+   Gewinnspiel-Heros und bleibt kompakt. */
+.stf-phase {
+  padding-top: clamp(18px, 7vw, 34px);
+}
+
+.stf-phase__titel {
+  margin: 0;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(38px, 12vw, 56px);
+  line-height: 1;
+  font-weight: 300;
+  text-transform: uppercase;
+  color: var(--stf-creme);
+}
+
+.stf-phase__sub {
+  margin: 14px 0 0;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--stf-creme-weich);
+}
+
+.stf-phase__text {
+  margin: 18px 0 0;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--stf-creme-weich);
+}
+
+/* Die Eckdaten stehen als Liste, nicht im Fliesstext: sie werden im
+   Vorbeigehen gesucht, nicht gelesen. */
+.stf-eck {
+  margin: 22px 0 0;
+  padding: clamp(14px, 4vw, 18px) 0 0;
+  border-top: 1px solid var(--stf-linie);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.stf-eck__zeile {
+  display: grid;
+  grid-template-columns: 68px 1fr;
+  gap: 12px;
+  align-items: baseline;
+}
+
+.stf-eck__dt {
+  margin: 0;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--stf-gold);
+}
+
+.stf-eck__dd {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--stf-creme);
+}
+/* ---------------------------------------------------------------- */
+/* Rechtstext-Sheet                                                  */
+/* ---------------------------------------------------------------- */
+
+.stf-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(6, 6, 5, 0.72);
+  backdrop-filter: blur(3px);
+}
+
+.stf-sheet__panel {
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 620px);
+  max-height: 88dvh;
+  border: 1px solid var(--stf-linie);
+  border-bottom: 0;
+  border-radius: 6px 6px 0 0;
+  background: #141310;
+  animation: stf-hoch 0.26s ease-out;
+}
+
+@keyframes stf-hoch {
+  from {
+    transform: translateY(22px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.stf-sheet__kopf {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 18px;
+  border-bottom: 1px solid rgba(244, 239, 228, 0.1);
+}
+
+.stf-sheet__titel {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--stf-gold-hell);
+}
+
+.stf-sheet__zu {
+  min-width: 48px;
+  min-height: 48px;
+  border: 1px solid var(--stf-linie);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--stf-creme);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.stf-sheet__body {
+  padding: 18px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.stf-sheet__warnung {
+  margin: 0 0 18px;
+  padding: 12px 14px;
+  border: 1px dashed var(--stf-gold);
+  border-radius: 2px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--stf-gold-hell);
+}
+
+.stf-sheet__abschnitt {
+  margin: 0 0 18px;
+}
+
+.stf-sheet__h {
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--stf-creme);
+}
+
+.stf-sheet__p {
+  margin: 0 0 8px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--stf-creme-weich);
+}
+
+.stf-sheet__stand {
+  margin: 22px 0 0;
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  color: rgba(244, 239, 228, 0.34);
+}
+
+.stf-sheet__extern {
+  color: var(--stf-gold-hell);
+  text-underline-offset: 3px;
+}
+
+/* ---------------------------------------------------------------- */
+/* Bewegung aus                                                      */
+/* ---------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .stf-platte::after,
+  .stf-platte__punkt,
+  .stf-sheet__panel {
+    animation: none;
+  }
+
+  .stf-platte::after {
+    opacity: 0.18;
+    left: 20%;
+  }
+
+  .stf-chip,
+  .stf-cta,
+  .stf-feld__input,
+  .stf-kopf__micro {
+    transition: none;
+  }
+}

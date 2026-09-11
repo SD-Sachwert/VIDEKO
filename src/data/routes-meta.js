@@ -333,6 +333,19 @@ export const STATIC_ROUTES = [
     noindex: true,
     inSitemap: false,
   },
+
+  /* Aktionsseite zum Stadtfest. Erreichbar ausschliesslich ueber den
+     Event-QR-Code: nicht in der Navigation, nicht im Footer, nicht in der
+     Sitemap. nofollow zusaetzlich zu noindex, damit Suchmaschinen den
+     Rechtstext-Links der Seite gar nicht erst folgen. */
+  {
+    path: '/stadtfest',
+    title: 'Stadtfest | VIDEKO Küchen',
+    description: 'Aktionsseite zum Stadtfest. Nur über den Event-QR-Code erreichbar.',
+    noindex: true,
+    nofollow: true,
+    inSitemap: false,
+  },
 ]
 
 /** Schneller Zugriff auf die Metadaten eines Pfads. */

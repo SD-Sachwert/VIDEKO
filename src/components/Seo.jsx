@@ -92,6 +92,7 @@ export default function Seo({
   imageAlt,
   jsonLd,
   noindex = false,
+  nofollow = false,
   ogType,
 }) {
   // Arrays/Objekte aus dem JSX erzeugen bei jedem Render eine neue Referenz.
@@ -108,7 +109,11 @@ export default function Seo({
 
     if (description) setName('description', description)
     // Utility-, Bestätigungs- und Fehlerseiten nicht indexieren.
-    setName('robots', noindex ? 'noindex, follow' : 'index, follow')
+    /* nofollow kommt nur dort zum Einsatz, wo eine Seite ueberhaupt nicht
+       in den Index soll — etwa die Aktionsseite hinter dem Event-QR. */
+    const indexTeil = noindex ? 'noindex' : 'index'
+    const folgeTeil = nofollow ? 'nofollow' : 'follow'
+    setName('robots', indexTeil + ', ' + folgeTeil)
 
     // Canonical immer ohne Query-Parameter und immer auf die Produktionsdomain.
     const canonicalHref = BASE + (canonicalPath || '/')
@@ -146,7 +151,7 @@ export default function Seo({
       document.title = prevTitle
       restore.forEach((fn) => fn())
     }
-  }, [title, description, canonicalPath, image, imageAlt, jsonLdKey, noindex, ogType, jsonLd])
+  }, [title, description, canonicalPath, image, imageAlt, jsonLdKey, noindex, nofollow, ogType, jsonLd])
 
   return null
 }

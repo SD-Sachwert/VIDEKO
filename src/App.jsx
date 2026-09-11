@@ -50,10 +50,17 @@ const KuechenmontageWuerzburg = lazy(() => import('./pages/KuechenmontageWuerzbu
 const Team = lazy(() => import('./pages/Team.jsx'))
 // Ziel der gedruckten QR-Codes — wie jede andere Unterseite nachgeladen.
 const Entdecken = lazy(() => import('./pages/Entdecken.jsx'))
+// Aktionsseite zum Stadtfest. Bewusst ausserhalb von <Layout> — siehe Route unten.
+const Stadtfest = lazy(() => import('./pages/Stadtfest.jsx'))
 
 export default function App() {
   return (
     <Routes>
+      {/* Aktionsseite zum Stadtfest: eigener Event-Flow ohne Header, Navigation
+          und Footer. Sie liegt deshalb ausserhalb des Layouts und bringt ihr
+          eigenes <Seo> mit (noindex, nofollow, nicht in der Sitemap). */}
+      <Route path="/stadtfest" element={<Stadtfest />} />
+
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
 

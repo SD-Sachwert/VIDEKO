@@ -1,6 +1,9 @@
 /* Schriften werden lokal eingebunden (DSGVO – keine externe Google-Anfrage).
    Quelle/Regeneration: scripts/fetch-fonts.mjs, Dateien in src/assets/fonts/. */
 @import './fonts.css';
+/* Aktionsseite /stadtfest. Eigene Datei, alle Klassen mit sf- praefixiert.
+   @import muss vor allen Regeln stehen, deshalb direkt hier. */
+@import './stadtfest.css';
 
 /* =====================================================================
    VIDEKO Küchen — Premium brand world
