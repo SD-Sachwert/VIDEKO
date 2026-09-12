@@ -180,22 +180,26 @@ export function zeitraumText(event = STADTFEST_EVENT) {
  * Interessen (§4). Freiwillig, Mehrfachauswahl, keine Auswahl erforderlich.
  * `key` wandert in die Datenbank, `label` steht auf dem Chip.
  *
- * `imLead` sagt, ob der Chip auch im Kontaktformular außerhalb des Events
- * (PRE und POST) auftaucht. „Nur wegen dem Gewinn hier" ergibt dort keinen
- * Sinn — es gibt in diesen Phasen kein Gewinnspiel.
+ * `nurMitGewinnspiel` markiert den einen Chip, der nach dem Stadtfest
+ * verschwindet: „Nur wegen dem Gewinn hier" ergibt keinen Sinn mehr, wenn es
+ * nichts mehr zu gewinnen gibt. Registriert werden darf man trotzdem.
  */
 export const STADTFEST_INTERESSEN = [
-  { key: 'kueche-bad', label: 'Küche & Bad', imLead: true },
-  { key: 'pv', label: 'PV', imLead: true },
-  { key: 'innenausbau', label: 'Innenausbau', imLead: true },
-  { key: 'smart-home', label: 'Smart Home', imLead: true },
-  { key: 'immobilie', label: 'Immobilie', imLead: true },
-  { key: 'finanzen', label: 'Versicherung / Finanzen', imLead: true },
-  { key: 'nur-gewinn', label: 'Nur wegen dem Gewinn hier', imLead: false },
+  { key: 'kueche-bad', label: 'Küche & Bad' },
+  { key: 'pv', label: 'PV' },
+  { key: 'innenausbau', label: 'Innenausbau' },
+  { key: 'smart-home', label: 'Smart Home' },
+  { key: 'immobilie', label: 'Immobilie' },
+  { key: 'finanzen', label: 'Versicherung / Finanzen' },
+  { key: 'nur-gewinn', label: 'Nur wegen dem Gewinn hier', nurMitGewinnspiel: true },
 ]
 
-/** Die sechs Chips des Kontaktformulars in PRE und POST. */
-export const LEAD_INTERESSEN = STADTFEST_INTERESSEN.filter((i) => i.imLead)
+/** Die Chips einer Phase. Ohne Gewinnspiel fällt genau einer weg. */
+export function interessenFuer(mitGewinnspiel) {
+  return mitGewinnspiel
+    ? STADTFEST_INTERESSEN
+    : STADTFEST_INTERESSEN.filter((i) => !i.nurMitGewinnspiel)
+}
 
 /** Obergrenzen. Gelten im Browser als maxLength und auf dem Server als Kappung. */
 export const FELD_GRENZEN = {
@@ -329,14 +333,6 @@ export const STADTFEST_GEWINNMECHANIK = {
 /** Der einzig zulässige Satz nach einem Hauptpreis-Feld. */
 export const HAUPTPREIS_QUALIFIKATION_TEXT = 'Du bist für die Hauptpreis-Verlosung qualifiziert.'
 
-/** Kurzformen für die Staff-Ansicht (§15). Keine Gewinnbehauptung. */
-export const HAUPTPREIS_STAFF_TEXT = {
-  knopf: 'HAUPTPREIS QUALIFIZIERT',
-  frisch: 'IM LOSTOPF. ✓',
-  freigeschaltet: 'HAUPTPREIS-CHANCE FREIGESCHALTET.',
-  bereits: 'BEREITS IM LOSTOPF',
-}
-
 /* ------------------------------------------------------------------ */
 /* Hauptpreise (§6, §7)                                                */
 /* ------------------------------------------------------------------ */
@@ -458,57 +454,118 @@ export function freigabeMoeglich(event = STADTFEST_EVENT) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Microcopy                                                           */
-/* ------------------------------------------------------------------ */
-
-/**
- * Trockene Zeilen unter der Subline. Der erste Eintrag steht fest im
- * vorgerenderten HTML; gewechselt wird erst nach der Hydration (kein
- * Math.random beim Render).
- */
-export const STADTFEST_MICROCOPY = [
-  'Kein Kauf. Kein Abo. Kein Vertreterbesuch.',
-  'Wir hätten auch Zettel nehmen können. Wollten wir aber nicht.',
-  'Der Stempel ist analog. Alles andere nicht.',
-  'Pflichtfelder sind drei. Das ist weniger als beim Einwohnermeldeamt.',
-  'Die Häkchen unten sind freiwillig. Wirklich.',
-]
-
-export const CTA_TEXT = 'STEMPEL FREISCHALTEN'
-export const CTA_TEXT_LAEUFT = 'WIRD OFFIZIELL ...'
-
-/* ------------------------------------------------------------------ */
-/* PRE und POST                                                        */
+/* Texte der drei Phasen                                               */
 /* ------------------------------------------------------------------ */
 
 /**
  * Die Route /stadtfest ist dauerhaft erreichbar — vor dem Fest, während des
- * Festes und Monate danach. Was dort steht, entscheidet allein die Phase.
+ * Festes und Monate danach. Das Formular ebenfalls: eintragen darf man sich
+ * immer.
  *
- * Für PRE und POST gilt gleichermaßen: hier gibt es kein Gewinnspiel. Kein
- * Stempel, keine Hauptpreisqualifikation, kein Lostopf, kein nachträglicher
- * Eintritt. Das Formular in diesen Phasen ist ein Kontaktformular, sonst
- * nichts — und es wird auch getrennt gespeichert.
+ * Was die Phase ändert, sind ausschließlich Texte, Pflichthäkchen und
+ * Erfolgsbildschirm. Nicht, ob gespeichert werden darf.
+ *
+ * Streng getrennt bleiben dabei drei Dinge, die gern verwechselt werden:
+ *
+ *   A) REGISTRIERUNG — jemand trägt hier seine Daten ein. Das ist eine
+ *      Registrierung und ausdrücklich KEINE Gewinnspielteilnahme.
+ *   B) GEWINNSPIELTEILNAHME — entsteht erst am Stand: Person vor Ort,
+ *      Mitarbeiter bestätigt den Vorgang, Person dreht das Glücksrad.
+ *   C) HAUPTPREISQUALIFIKATION — nur, wenn das Glücksrad auf dem Feld
+ *      HAUPTPREIS stehen bleibt.
+ *
+ * Kein Text auf dieser Seite darf A wie B oder B wie C klingen lassen.
+ *
+ * Die Schlüssel heißen genau wie die Werte der Spalte `registrierungs_phase`
+ * in der Datenbank: vorher, event, nachher.
  */
-export const STADTFEST_PRE = {
-  titel: 'Das Stadtfest kommt.',
-  subline: 'Den QR hast du schon mal richtig benutzt.',
-  formularTitel: 'Sollen wir uns vorher melden?',
-  formularText: 'Freiwillig. Das Gewinnspiel startet trotzdem erst am Stand.',
+export const PHASEN_TEXTE = {
+  vorher: {
+    mitGewinnspiel: true,
+    titel: 'Schon mal eintragen.',
+    subline: 'Dann musst du am Stadtfest nur noch vorzeigen, Stempel holen und drehen.',
+    formularTitel: 'Einmal Daten. Das war der schwere Teil.',
+    formularText:
+      'Eintragen kannst du dich ab sofort. Am Gewinnspiel nimmst du damit noch nicht teil — das passiert erst am Stand.',
+    cta: 'JETZT EINTRAGEN',
+    ctaLaeuft: 'WIRD GESPEICHERT ...',
+    erfolgTitel: 'Du bist schon mal drin. ✓',
+    erfolgText: 'Zeig diesen Code am Stadtfest. Dann gibt\u2019s den Stempel.',
+    erfolgHinweis:
+      'Die Teilnahme am Gewinnspiel entsteht erst vor Ort — mit dem bestätigten Dreh am Glücksrad.',
+    duplikatTitel: 'Dich kennen wir doch.',
+    duplikatText: 'Du bist schon eingetragen. Dein Code von damals gilt weiter.',
+    microcopy: [
+      'Kein Kauf. Kein Abo. Kein Vertreterbesuch.',
+      'Wir hätten auch Zettel nehmen können. Wollten wir aber nicht.',
+      'Pflichtfelder sind drei. Das ist weniger als beim Einwohnermeldeamt.',
+      'Die Häkchen unten sind freiwillig. Wirklich.',
+    ],
+  },
+  event: {
+    mitGewinnspiel: true,
+    titel: 'Hol dir deinen Stempel.',
+    subline: 'Eintragen, Bildschirm zeigen, Stempel holen, drehen.',
+    formularTitel: 'Kurz eintragen.',
+    formularText: 'Danach zeigst du unserem Team den Bildschirm. Den Rest machen wir.',
+    cta: 'STEMPEL FREISCHALTEN',
+    ctaLaeuft: 'WIRD OFFIZIELL ...',
+    erfolgTitel: 'Stempel freigegeben. ✓',
+    erfolgText: 'Zeig diesen Bildschirm unserem Team.',
+    erfolgHinweis:
+      'Im Lostopf für die Hauptpreise bist du damit noch nicht. Das entscheidet das Glücksrad.',
+    duplikatTitel: 'Dich kennen wir doch.',
+    duplikatText: 'Du bist schon eingetragen. Zeig einfach diesen Code.',
+    microcopy: [
+      'Kein Kauf. Kein Abo. Kein Vertreterbesuch.',
+      'Der Stempel ist analog. Alles andere nicht.',
+      'Pflichtfelder sind drei. Das ist weniger als beim Einwohnermeldeamt.',
+      'Die Häkchen unten sind freiwillig. Wirklich.',
+    ],
+  },
+  nachher: {
+    mitGewinnspiel: false,
+    titel: 'Das Stadtfest ist vorbei.',
+    subline: 'Der QR funktioniert trotzdem noch. Praktisch.',
+    hinweis:
+      'Das Gewinnspiel ist beendet. Stempel, Drehungen und Lose gibt es dafür nicht mehr.',
+    formularTitel: 'Wenn wir uns bei dir melden dürfen, lass uns kurz deine Daten da.',
+    formularText: 'Kurz. Freiwillig. Ohne Gewinnspiel.',
+    cta: 'DATEN DALASSEN',
+    ctaLaeuft: 'GEHT RAUS ...',
+    erfolgTitel: 'Ist angekommen. ✓',
+    erfolgText: 'Wir melden uns, wenn du uns das erlaubt hast.',
+    erfolgHinweis: '',
+    duplikatTitel: 'Dich kennen wir doch.',
+    duplikatText: 'Deine Daten liegen schon bei uns. Ein zweites Mal brauchen wir sie nicht.',
+    microcopy: [
+      'Kein Kauf. Kein Abo. Kein Vertreterbesuch.',
+      'Wir hätten auch Zettel nehmen können. Wollten wir aber nicht.',
+      'Pflichtfelder sind drei. Das ist weniger als beim Einwohnermeldeamt.',
+      'Die Häkchen unten sind freiwillig. Wirklich.',
+    ],
+  },
 }
 
-export const STADTFEST_POST = {
-  titel: 'Das Stadtfest ist vorbei.',
-  subline: 'Der QR funktioniert trotzdem noch. Praktisch.',
-  hinweis: 'Das Gewinnspiel ist beendet. Neue Teilnahmen, Stempel oder Lose gibt es dafür nicht mehr.',
-  formularTitel: 'Wenn wir uns bei dir melden dürfen, lass uns kurz deine Daten da.',
-  formularText: 'Kurz. Freiwillig. Ohne Gewinnspiel.',
+/**
+ * Welcher Textblock gilt gerade?
+ *
+ * Der Kalender allein entscheidet das nicht. Die Eventtexte versprechen einen
+ * Stempel am Stand; dieses Versprechen darf erst stehen, wenn neben dem
+ * Zeitfenster auch die fachliche Freigabe steht. Fehlt sie, bleibt es bei den
+ * zurückhaltenden Vorher-Texten — eintragen darf man sich trotzdem.
+ *
+ * Davon unberührt bleibt, was in der Datenbank landet: dort wird die
+ * tatsächliche Kalenderphase festgehalten, nicht die angezeigte.
+ */
+export function phasenSchluessel(jetzt = Date.now(), event = STADTFEST_EVENT) {
+  const phase = eventPhase(jetzt, event)
+  if (phase === PHASE_NACHHER) return 'nachher'
+  if (phase === PHASE_LAEUFT && event.datenBestaetigt) return 'event'
+  return 'vorher'
 }
 
-export const LEAD_CTA_TEXT = 'DATEN DALASSEN'
-export const LEAD_CTA_TEXT_LAEUFT = 'GEHT RAUS ...'
-
-/* Bewusst NICHT „STEMPEL FREIGEGEBEN": hier wurde nichts freigeschaltet,
-   hier wurde etwas gespeichert. */
-export const LEAD_ERFOLG_TITEL = 'Ist angekommen. ✓'
-export const LEAD_ERFOLG_TEXT = 'Wir melden uns, wenn du uns das erlaubt hast.'
+/** Bequemer Zugriff auf den passenden Textblock. */
+export function phasenTexte(jetzt = Date.now(), event = STADTFEST_EVENT) {
+  return PHASEN_TEXTE[phasenSchluessel(jetzt, event)]
+}

@@ -119,6 +119,9 @@ export const TEILNAHMEBEDINGUNGEN = {
       titel: '3. Teilnahmezeitraum',
       absaetze: [
         `Die Aktion findet statt am ${zeitraumText()}.`,
+        'Das Registrierungsformular auf dieser Seite kann auch vor und nach diesem Zeitraum '
+        + 'ausgefüllt werden. Eine Teilnahme am Gewinnspiel entsteht dadurch nicht; sie ist '
+        + 'ausschließlich innerhalb des Aktionszeitraums am Aktionsstand möglich.',
         STADTFEST_EVENT.zeitenBestaetigt
           ? 'Nach Ablauf des Zeitraums eingehende Teilnahmen werden nicht berücksichtigt.'
           : `Die Stand- und Aktionszeiten je Tag stehen noch nicht fest: ${FEHLT}. Maßgeblich `
@@ -155,27 +158,37 @@ export const TEILNAHMEBEDINGUNGEN = {
     {
       titel: '7. Einmalige Teilnahme',
       absaetze: [
-        'Pro Person ist eine Teilnahme zulässig. Mehrfachteilnahmen unter derselben '
-        + 'E-Mail-Adresse werden nicht zusätzlich gewertet.',
+        'Pro Person ist eine Registrierung und eine Teilnahme zulässig. Mehrfachregistrierungen '
+        + 'unter derselben E-Mail-Adresse werden zu einem Datensatz zusammengeführt und nicht '
+        + 'zusätzlich gewertet.',
       ],
     },
     {
-      titel: '8. Ablauf der Teilnahme',
+      titel: '8. Registrierung und Teilnahme sind zweierlei',
       absaetze: [
-        'Die Teilnahme erfolgt über das Formular auf dieser Seite. Erforderlich sind Vorname, '
-        + 'Nachname und E-Mail-Adresse sowie die Zustimmung zu diesen Teilnahmebedingungen.',
-        'Nach dem Absenden wird auf dem Gerät der teilnehmenden Person eine Teilnahmebestätigung '
-        + 'mit einem Teilnahmecode angezeigt. Diese Bestätigung dient ausschließlich dazu, die '
-        + 'Teilnahme am Aktionsstand vorzuzeigen.',
-        'Gegen Vorzeigen der Bestätigung wird am Stand ein Stempel vergeben.',
+        'Über das Formular auf dieser Seite erfolgt eine Registrierung. Erforderlich sind '
+        + 'Vorname, Nachname und E-Mail-Adresse sowie die Zustimmung zu diesen '
+        + 'Teilnahmebedingungen.',
+        'Das Absenden des Formulars allein begründet noch keine Teilnahme am Gewinnspiel. Die '
+        + 'Registrierung dient dazu, den Ablauf am Aktionsstand zu beschleunigen.',
+        'Nach dem Absenden wird auf dem Gerät eine Bestätigung mit einem Registrierungscode '
+        + 'angezeigt. Dieser Code wird am Aktionsstand vorgezeigt.',
+        'Gegen Vorzeigen des Codes wird am Stand ein Stempel vergeben. Die Ausgabe des Stempels '
+        + 'wird vom Standpersonal im internen System bestätigt.',
+        'Die Teilnahme am Gewinnspiel entsteht erst dadurch, dass die Person während des '
+        + 'Aktionszeitraums persönlich am Stand ist und das Standpersonal die Drehung am '
+        + 'Glücksrad bestätigt.',
       ],
     },
     {
       titel: '9. Eine Drehung am Glücksrad',
       absaetze: [
-        `Jede gültige Teilnahme berechtigt vor Ort zu genau ${STADTFEST_GEWINNMECHANIK.drehungenProTeilnahme} `
+        `Jede gültige Registrierung berechtigt vor Ort zu genau ${STADTFEST_GEWINNMECHANIK.drehungenProTeilnahme} `
         + 'Drehung am Glücksrad am Aktionsstand.',
         'Die Drehung ist nur während der Aktionszeiten und nur persönlich am Stand möglich.',
+        'Die Drehung wird vom Standpersonal bestätigt und dabei einmalig festgehalten. Mit '
+        + 'dieser Bestätigung gilt die Teilnahme am Gewinnspiel als erfolgt. Eine zweite '
+        + 'reguläre Drehung ist danach ausgeschlossen.',
       ],
     },
     {
@@ -226,9 +239,10 @@ export const TEILNAHMEBEDINGUNGEN = {
         + 'verlost.',
         `Termin und Uhrzeit der Ziehung: ${ziehungTermin}.`,
         `Streamingkanal: ${ziehungKanal}.`,
-        'Gezogen wird zufällig aus allen Teilnahmen, für die eine Hauptpreis-Qualifikation '
-        + 'bestätigt wurde. Eine Beeinflussung der Ziehung über die öffentliche Aktionsseite '
-        + 'ist technisch nicht möglich.',
+        'Gezogen wird zufällig aus allen Teilnahmen, für die sowohl eine bestätigte Drehung am '
+        + 'Glücksrad als auch eine bestätigte Hauptpreis-Qualifikation vorliegt. Eine bloße '
+        + 'Registrierung über diese Seite nimmt an der Verlosung nicht teil. Eine Beeinflussung '
+        + 'der Ziehung über die öffentliche Aktionsseite ist technisch nicht möglich.',
         STADTFEST_ZIEHUNG.regelBestaetigt
           ? `Eine Person kann höchstens ${STADTFEST_ZIEHUNG.maxGewinneProPerson} Hauptpreis `
             + 'gewinnen. Wird eine bereits gezogene Person erneut gezogen, wird die Ziehung für '
@@ -326,18 +340,26 @@ export const DATENSCHUTZ_EVENT = {
       ],
     },
     {
-      titel: 'A) Durchführung des Gewinnspiels',
+      titel: 'A) Registrierung und Durchführung des Gewinnspiels',
       absaetze: [
-        'Verarbeitete Daten: Vorname, Nachname, E-Mail-Adresse, freiwillig Mobilnummer und '
-        + 'Postleitzahl, freiwillig angegebene Interessen, Zeitpunkt der Teilnahme, '
-        + 'Bestätigung der Teilnahmebedingungen sowie ein technischer Teilnahmecode.',
-        'Zusätzlich wird gespeichert, ob am Glücksrad das Feld HAUPTPREIS erreicht und die '
-        + 'Qualifikation für die Verlosung durch das Standpersonal bestätigt wurde, '
-        + 'einschließlich Zeitpunkt und bestätigender Person. Einzelne Sofortgewinne werden '
-        + 'nicht gespeichert.',
-        'Zweck: Durchführung des Gewinnspiels, Vermeidung von Mehrfachteilnahmen, Nachweis der '
-        + 'Teilnahme am Aktionsstand, Ermittlung der Hauptpreis-Teilnahmen sowie Durchführung '
-        + 'und Protokollierung der Verlosung.',
+        'Verarbeitete Daten der Registrierung: Vorname, Nachname, E-Mail-Adresse, freiwillig '
+        + 'Mobilnummer und Postleitzahl, freiwillig angegebene Interessen, Zeitpunkt der '
+        + 'Registrierung, ob die Registrierung vor, während oder nach dem Stadtfest erfolgt ist, '
+        + 'gegebenenfalls die Bestätigung der Teilnahmebedingungen sowie ein technischer '
+        + 'Registrierungscode.',
+        'Findet die Registrierung nach dem Stadtfest statt, werden keine Bestätigung der '
+        + 'Teilnahmebedingungen und keine Altersbestätigung erhoben, weil dann kein Gewinnspiel '
+        + 'mehr stattfindet.',
+        'Zusätzlich wird für Personen, die am Aktionsstand waren, gespeichert: die Ausgabe des '
+        + 'Stempels, die bestätigte Drehung am Glücksrad und, falls am Glücksrad das Feld '
+        + 'HAUPTPREIS erreicht wurde, die Qualifikation für die Verlosung — jeweils mit '
+        + 'Zeitpunkt und bestätigender Person. Diese Angaben werden ausschließlich vom '
+        + 'Standpersonal im geschützten internen System gesetzt, nie über die öffentliche '
+        + 'Aktionsseite. Einzelne Sofortgewinne werden nicht gespeichert.',
+        'Zweck: Registrierung und Beschleunigung des Ablaufs am Stand, Durchführung des '
+        + 'Gewinnspiels, Vermeidung von Mehrfachteilnahmen, Nachweis der Teilnahme am '
+        + 'Aktionsstand, Ermittlung der Hauptpreis-Teilnahmen sowie Durchführung und '
+        + 'Protokollierung der Verlosung.',
         'Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO (Durchführung des Teilnahmeverhältnisses) '
         + 'sowie Art. 6 Abs. 1 lit. f DSGVO für die Abwehr von Missbrauch (dazu wird ein '
         + 'gekürzter, nicht rückrechenbarer Prüfwert der IP-Adresse gespeichert).',

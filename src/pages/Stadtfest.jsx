@@ -1,31 +1,33 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Seo from '../components/Seo.jsx'
-import LeadFormular from '../components/stadtfest/LeadFormular.jsx'
 import {
-  CTA_TEXT,
-  CTA_TEXT_LAEUFT,
   FELD_GRENZEN,
   KANAELE,
-  LEAD_ERFOLG_TEXT,
-  LEAD_ERFOLG_TITEL,
-  PHASE_LAEUFT,
-  PHASE_NACHHER,
-  PHASE_VORHER,
+  PHASEN_TEXTE,
   STADTFEST_EVENT,
   STADTFEST_FIRMEN,
-  STADTFEST_INTERESSEN,
-  STADTFEST_MICROCOPY,
-  STADTFEST_POST,
-  STADTFEST_PRE,
-  eventPhase,
   eventTagText,
+  interessenFuer,
+  phasenSchluessel,
   uhrzeitText,
   zeitraumText,
 } from '../data/stadtfest.js'
 import { DATENSCHUTZ_EVENT, TEILNAHMEBEDINGUNGEN } from '../data/stadtfest-recht.js'
 
 /**
- * /stadtfest — Gewinnspiel- und Leadseite fuer den Aktionsstand.
+ * /stadtfest — die Registrierungsseite zum Aktionsstand.
+ *
+ * Das Formular ist immer da: vor dem Stadtfest, waehrend des Stadtfests und
+ * Monate danach. Eine Registrierung ist aber ausdruecklich KEINE
+ * Gewinnspielteilnahme. Drei Dinge, die hier sauber getrennt bleiben:
+ *
+ *   A) REGISTRIERUNG — passiert genau hier, auf dieser Seite.
+ *   B) GEWINNSPIELTEILNAHME — entsteht erst am Stand, wenn ein Mitarbeiter
+ *      den Vorgang bestaetigt und die Person das Gluecksrad dreht.
+ *   C) HAUPTPREISQUALIFIKATION — nur, wenn das Rad auf HAUPTPREIS steht.
+ *
+ * Diese Seite kann ausschliesslich A. B und C entstehen im Studio, ueber die
+ * geschuetzte Staff-API. Kein Text hier darf etwas anderes behaupten.
  *
  * Kein Header, kein Footer, keine acht Sections. Ein Flow: scannen,
  * ausfuellen, Bestaetigung vorzeigen. Die Seite liegt deshalb bewusst
@@ -42,13 +44,6 @@ import { DATENSCHUTZ_EVENT, TEILNAHMEBEDINGUNGEN } from '../data/stadtfest-recht
    Speicherung zu sehen. */
 const VORSCHAU = import.meta.env.VITE_STADTFEST_VORSCHAU === '1'
 
-/* Das Kontaktformular der Phasen PRE und POST schreibt in eine eigene
-   Tabelle. Solange die Migration nicht produktiv ausgefuehrt ist, gibt es
-   dafuer kein Backend — und dann wird das Formular gar nicht erst
-   angezeigt. Ein Formular, das niemand speichern kann, ist schlimmer als
-   keines: es verspricht etwas. */
-const LEADS_AKTIV = import.meta.env.VITE_STADTFEST_LEADS === '1'
-
 const LEER = {
   vorname: '',
   nachname: '',
@@ -59,6 +54,9 @@ const LEER = {
 }
 
 const EMAIL_MUSTER = /^[^@\s]+@[^@\s]+\.[^@\s]+$/
+
+/* Eine einzige leere Liste statt eines neuen Arrays pro Render. */
+const LEERE_MICROCOPY = []
 
 function kurzName(vorname, nachname) {
   const initial = (nachname || '').trim().slice(0, 1)
@@ -162,7 +160,7 @@ export default function Stadtfest() {
      der phasenneutrale Block (stillstand), der in PRE, EVENT und POST
      gleichermassen stimmt. Server- und erster Browser-Render sind identisch,
      es gibt also keinen Hydrationskonflikt. */
-  const [phase, setPhase] = useState(null)
+  const [phasenKey, setPhasenKey] = useState(null)
   const [ansicht, setAnsicht] = useState('formular')
   const [werte, setWerte] = useState(LEER)
   const [interessen, setInteressen] = useState([])
@@ -180,36 +178,35 @@ export default function Stadtfest() {
 
   const laeuftRef = useRef(false)
 
+  /* Die Texte der aktuellen Phase. Vor der Hydration steht hier null; dann
+     rendert die Seite den phasenneutralen Block. */
+  const texte = phasenKey ? PHASEN_TEXTE[phasenKey] : null
+
+  /* Der eine Schalter, der ueber Pflichthaekchen, Wortwahl und
+     Erfolgsschirm entscheidet — nicht darueber, ob gespeichert werden darf.
+     Eintragen kann man sich in jeder Phase. */
+  const gewinnspiel = texte ? texte.mitGewinnspiel : false
+  const microcopy = texte ? texte.microcopy : LEERE_MICROCOPY
+  const microAnzahl = microcopy.length
+
   /* --- Phase und Vorschau erst im Browser bestimmen -----------------
      Das vorgerenderte HTML kann die aktuelle Uhrzeit nicht kennen. Deshalb
-     rendert die Seite zuerst mit dem Normalfall und bestimmt die echte Phase
-     erst hier. Die Regel set-state-in-effect ist genau dafuer ausgeschaltet: der
-     "externe Zustand", mit dem hier abgeglichen wird, ist die Uhr. */
+     rendert die Seite zuerst den phasenneutralen Block und bestimmt die echte
+     Phase erst hier. Die Regel set-state-in-effect ist genau dafuer
+     ausgeschaltet: der "externe Zustand", mit dem hier abgeglichen wird, ist
+     die Uhr. */
   useEffect(() => {
     const vorschau = VORSCHAU
       ? new URLSearchParams(window.location.search).get('vorschau')
       : null
 
-    if (vorschau === 'vorher') {
+    if (vorschau === 'vorher' || vorschau === 'event' || vorschau === 'nachher') {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setPhase(PHASE_VORHER)
-      return
-    }
-    if (vorschau === 'nachher') {
-      setPhase(PHASE_NACHHER)
-      return
-    }
-    if (vorschau === 'lead-erfolg') {
-      setPhase(PHASE_NACHHER)
-      setAnsicht('lead-erfolg')
-      return
-    }
-    if (vorschau === 'formular') {
-      setPhase(PHASE_LAEUFT)
+      setPhasenKey(vorschau)
       return
     }
 
-    setPhase(eventPhase(Date.now()))
+    setPhasenKey(phasenSchluessel(Date.now()))
 
     if (vorschau === 'erfolg' || vorschau === 'duplikat') {
       setBeleg({
@@ -233,16 +230,16 @@ export default function Stadtfest() {
 
   /* --- Microcopy erst nach der Hydration wechseln ------------------- */
   useEffect(() => {
-    if (ansicht !== 'formular' || STADTFEST_MICROCOPY.length < 2) return undefined
+    if (ansicht !== 'formular' || microAnzahl < 2) return undefined
     const takt = setInterval(() => {
       setMicroWechsel(true)
       setTimeout(() => {
-        setMicroIndex((i) => (i + 1) % STADTFEST_MICROCOPY.length)
+        setMicroIndex((i) => (i + 1) % microAnzahl)
         setMicroWechsel(false)
       }, 380)
     }, 5200)
     return () => clearInterval(takt)
-  }, [ansicht])
+  }, [ansicht, microAnzahl])
 
   /* --- Laufende Uhr auf dem Erfolgsschirm --------------------------- */
   useEffect(() => {
@@ -309,9 +306,14 @@ export default function Stadtfest() {
     if (werte.telefon.trim() && werte.telefon.replace(/\D/g, '').length < 6) {
       f.telefon = 'Diese Nummer wirkt zu kurz.'
     }
-    if (!agb) f.agb = 'Ohne die Teilnahmebedingungen geht es leider nicht.'
-    if (STADTFEST_EVENT.minimumAge && !alter) {
-      f.alter = `Die Teilnahme ist erst ab ${STADTFEST_EVENT.minimumAge} möglich.`
+    /* Teilnahmebedingungen und Mindestalter gehoeren zum Gewinnspiel. Nach
+       dem Stadtfest gibt es keines mehr — ein Haekchen waere dann die
+       Zustimmung zu etwas, das gar nicht mehr stattfindet. */
+    if (gewinnspiel) {
+      if (!agb) f.agb = 'Ohne die Teilnahmebedingungen geht es leider nicht.'
+      if (STADTFEST_EVENT.minimumAge && !alter) {
+        f.alter = `Die Teilnahme ist erst ab ${STADTFEST_EVENT.minimumAge} möglich.`
+      }
     }
     /* Werbeeinwilligung: ein gesetztes Haekchen ohne Kanal ist keine
        Einwilligung. Statt still zu speichern oder still zu verwerfen wird
@@ -359,8 +361,8 @@ export default function Stadtfest() {
       telefon: werte.telefon.trim(),
       plz: werte.plz.trim(),
       interessen,
-      teilnahmebedingungen: true,
-      mindestalterBestaetigt: STADTFEST_EVENT.minimumAge ? alter : null,
+      teilnahmebedingungen: gewinnspiel,
+      mindestalterBestaetigt: gewinnspiel && STADTFEST_EVENT.minimumAge ? alter : null,
       consent: consentSauber,
       website: werte.website, /* Honigtopf — gefuellt heisst Bot */
       quelle: typeof window !== 'undefined' ? window.location.search : '',
@@ -400,17 +402,17 @@ export default function Stadtfest() {
 
   /* --- Bausteine --------------------------------------------------- */
 
-  const kopf = (
+  const kopf = texte ? (
     <header className="stf-kopf">
       <p className="stf-kopf__marken">VIDEKO × ATLAS WEALTH</p>
-      <h1 className="stf-kopf__titel">Hol dir deinen Stempel.</h1>
-      <p className="stf-kopf__sub">30 Sekunden Bürokratie. Dann darfst du wieder Spaß haben.</p>
+      <h1 className="stf-kopf__titel">{texte.titel}</h1>
+      <p className="stf-kopf__sub">{texte.subline}</p>
       <p className="stf-kopf__micro" data-wechsel={microWechsel ? '1' : '0'}>
-        {STADTFEST_MICROCOPY[microIndex]}
+        {microcopy[microIndex] ?? ''}
       </p>
       <div className="stf-trenner" />
     </header>
-  )
+  ) : null
 
   function feld({ name, label, typ = 'text', autoComplete, inputMode, pflicht, platzhalter }) {
     return (
@@ -443,10 +445,11 @@ export default function Stadtfest() {
     )
   }
 
-  const formular = (
+  const formular = texte ? (
     <form className="stf-form" onSubmit={absenden} noValidate>
       <div>
-        <p className="stf-gruppe__titel">Wer bekommt den Stempel?</p>
+        <p className="stf-gruppe__titel">{texte.formularTitel}</p>
+        <p className="stf-gruppe__text">{texte.formularText}</p>
         <div className="stf-reihe stf-reihe--zwei">
           {feld({ name: 'vorname', label: 'Vorname', autoComplete: 'given-name', pflicht: true })}
           {feld({ name: 'nachname', label: 'Nachname', autoComplete: 'family-name', pflicht: true })}
@@ -496,7 +499,7 @@ export default function Stadtfest() {
       <div>
         <p className="stf-gruppe__titel">Was könnte bei dir irgendwann interessant werden?</p>
         <div className="stf-chips">
-          {STADTFEST_INTERESSEN.map((interesse) => (
+          {interessenFuer(gewinnspiel).map((interesse) => (
             <button
               key={interesse.key}
               type="button"
@@ -511,7 +514,12 @@ export default function Stadtfest() {
       </div>
 
       {/* Teilnahmebedingungen. Bewusst eine eigene, neutrale Karte —
-          hier steht nichts von Werbung. */}
+          hier steht nichts von Werbung.
+
+          Ohne Gewinnspiel entfaellt diese Karte vollstaendig: es gibt dann
+          nichts zu akzeptieren und kein Mindestalter zu bestaetigen. Der
+          Datenschutzhinweis bleibt, denn gespeichert wird trotzdem. */}
+      {gewinnspiel ? (
       <div className="stf-karte">
         <label className={`stf-check${fehler.agb ? ' stf-check--fehler' : ''}`} htmlFor="stf-agb">
           <input
@@ -558,12 +566,23 @@ export default function Stadtfest() {
           </button>
         </div>
       </div>
+      ) : (
+        <div className="stf-linkreihe">
+          <button type="button" className="stf-link" onClick={() => setSheet('datenschutz')}>
+            Datenschutzhinweise
+          </button>
+        </div>
+      )}
 
       {/* Marketing. Technisch und visuell getrennt von allem darueber.
           Nichts ist vorausgewaehlt, nichts ist Voraussetzung. */}
       <div className="stf-karte stf-karte--marketing">
         <h2 className="stf-karte__titel">Dürfen wir uns nochmal melden?</h2>
-        <p className="stf-karte__frei">Freiwillig. Dein Gewinnspiel hängt nicht davon ab.</p>
+        <p className="stf-karte__frei">
+          {gewinnspiel
+            ? 'Freiwillig. Dein Gewinnspiel hängt nicht davon ab.'
+            : 'Freiwillig. Ohne die Häkchen bleibt es einfach beim Eintrag.'}
+        </p>
 
         {STADTFEST_FIRMEN.map((firma) => {
           const an = Boolean(consent[firma.key])
@@ -626,136 +645,103 @@ export default function Stadtfest() {
       )}
 
       <button type="submit" className="stf-cta" disabled={sendet}>
-        {sendet ? CTA_TEXT_LAEUFT : CTA_TEXT}
+        {sendet ? texte.ctaLaeuft : texte.cta}
       </button>
 
       <p className="stf-hinweis">
-        {STADTFEST_EVENT.name} · Teilnahme kostenlos · kein Kauf erforderlich
+        {gewinnspiel
+          ? `${STADTFEST_EVENT.name} · Teilnahme kostenlos · kein Kauf erforderlich`
+          : `${STADTFEST_EVENT.name} · Registrierung ohne Gewinnspiel`}
       </p>
     </form>
-  )
-
-  const erfolg = beleg ? (
-    <section className="stf-erfolg">
-      <h1 className="stf-erfolg__haken">
-        {ansicht === 'duplikat' ? 'Dich kennen wir doch.' : '✓ Stempel freigegeben.'}
-      </h1>
-      <p className="stf-erfolg__zeig">
-        {ansicht === 'duplikat'
-          ? 'Du bist schon dabei. Zeig diesen Bildschirm jetzt unserem Team.'
-          : 'Zeig diesen Bildschirm jetzt unserem Team.'}
-      </p>
-
-      <div className="stf-platte">
-        <span className="stf-platte__live">
-          <span className="stf-platte__punkt" />
-          Live
-        </span>
-        <p className="stf-platte__name">{beleg.name}</p>
-        <p className="stf-platte__uhr">{uhrzeitText(jetzt ?? beleg.zeitpunkt)}</p>
-        <p className="stf-platte__zeile">
-          {eventTagText(beleg.zeitpunkt)} · <span className="stf-platte__code">Code {beleg.code}</span>
-        </p>
-      </div>
-
-      <p className="stf-erfolg__fuss">Screenshot zählt nicht. Wahrscheinlich.</p>
-
-      <div className="stf-linkreihe">
-        <button type="button" className="stf-link" onClick={() => setSheet('teilnahme')}>
-          Teilnahmebedingungen
-        </button>
-        <button type="button" className="stf-link" onClick={() => setSheet('datenschutz')}>
-          Datenschutzhinweise
-        </button>
-      </div>
-    </section>
   ) : null
 
-  /* Das Kontaktformular der Phasen PRE und POST.
-     Kein Gewinnspiel: kein Stempel, keine Hauptpreisqualifikation, kein
-     Lostopf. Es wird nur angezeigt, wenn es dafuer auch ein Backend gibt. */
-  function leadFormular(fuerPhase, quelle) {
-    if (!LEADS_AKTIV) return null
-    return (
-      <LeadFormular
-        phase={fuerPhase}
-        titel={quelle.formularTitel}
-        text={quelle.formularText}
-        onErfolg={() => setAnsicht('lead-erfolg')}
-      />
-    )
-  }
+  /* Der Beleg. Er bestaetigt genau eine Sache: die Registrierung ist
+     gespeichert. Ob daraus eine Gewinnspielteilnahme wird, entscheidet
+     spaeter der bestaetigte Dreh am Stand — deshalb steht das auch dort,
+     wo man es sonst ueberlesen wuerde. */
+  const erfolg =
+    beleg && texte ? (
+      <section className="stf-erfolg">
+        <h1 className="stf-erfolg__haken">
+          {ansicht === 'duplikat' ? texte.duplikatTitel : texte.erfolgTitel}
+        </h1>
+        <p className="stf-erfolg__zeig">
+          {ansicht === 'duplikat' ? texte.duplikatText : texte.erfolgText}
+        </p>
 
-  /* PRE — die Seite lebt schon, das Gewinnspiel noch nicht. Wichtig ist hier
-     nur, dass niemand den Eindruck bekommt, er habe bereits teilgenommen. */
-  const vorher = (
-    <section className="stf-phase">
-      <h1 className="stf-phase__titel">{STADTFEST_PRE.titel}</h1>
-      <p className="stf-phase__sub">{STADTFEST_PRE.subline}</p>
-
-      <dl className="stf-eck">
-        <div className="stf-eck__zeile">
-          <dt className="stf-eck__dt">Wann</dt>
-          <dd className="stf-eck__dd">{zeitraumText()}</dd>
+        <div className="stf-platte">
+          {phasenKey === 'event' && (
+            <span className="stf-platte__live">
+              <span className="stf-platte__punkt" />
+              Live
+            </span>
+          )}
+          <p className="stf-platte__name">{beleg.name}</p>
+          {phasenKey === 'event' && (
+            <p className="stf-platte__uhr">{uhrzeitText(jetzt ?? beleg.zeitpunkt)}</p>
+          )}
+          <p className="stf-platte__zeile">
+            {eventTagText(beleg.zeitpunkt)} ·{' '}
+            <span className="stf-platte__code">Code {beleg.code}</span>
+          </p>
         </div>
-        <div className="stf-eck__zeile">
-          <dt className="stf-eck__dt">Wo</dt>
-          <dd className="stf-eck__dd">{STADTFEST_EVENT.ort}</dd>
+
+        {texte.erfolgHinweis ? (
+          <p className="stf-phase__text">{texte.erfolgHinweis}</p>
+        ) : null}
+
+        {gewinnspiel && (
+          <p className="stf-erfolg__fuss">Screenshot zählt nicht. Wahrscheinlich.</p>
+        )}
+
+        <div className="stf-linkreihe">
+          {gewinnspiel && (
+            <button type="button" className="stf-link" onClick={() => setSheet('teilnahme')}>
+              Teilnahmebedingungen
+            </button>
+          )}
+          <button type="button" className="stf-link" onClick={() => setSheet('datenschutz')}>
+            Datenschutzhinweise
+          </button>
         </div>
-        <div className="stf-eck__zeile">
-          <dt className="stf-eck__dt">Wer</dt>
-          <dd className="stf-eck__dd">VIDEKO K&uuml;chen &times; ATLAS Wealth</dd>
-        </div>
-      </dl>
+      </section>
+    ) : null
 
-      <p className="stf-phase__text">
-        Am Stand steht ein Gl&uuml;cksrad, und daran h&auml;ngt ein Gewinnspiel.
-        Teilnehmen kannst du dort &mdash; vor Ort, an diesen beiden Tagen. Nicht
-        vorher, nicht von hier aus.
-      </p>
+  /* Was die Phase zusaetzlich zum Formular sagt.
 
-      <div className="stf-linkreihe">
-        <a className="stf-link" href="/entdecken">VIDEKO entdecken</a>
-      </div>
+     Vorher: die Eckdaten, damit klar ist, wohin man den Code mitbringt.
+     Nachher: der Hinweis, dass das Gewinnspiel vorbei ist.
+     Waehrend des Fests braucht es beides nicht — da steht man davor. */
+  const phasenBlock =
+    phasenKey === 'vorher' ? (
+      <section className="stf-phase">
+        <dl className="stf-eck">
+          <div className="stf-eck__zeile">
+            <dt className="stf-eck__dt">Wann</dt>
+            <dd className="stf-eck__dd">{zeitraumText()}</dd>
+          </div>
+          <div className="stf-eck__zeile">
+            <dt className="stf-eck__dt">Wo</dt>
+            <dd className="stf-eck__dd">{STADTFEST_EVENT.ort}</dd>
+          </div>
+          <div className="stf-eck__zeile">
+            <dt className="stf-eck__dt">Wer</dt>
+            <dd className="stf-eck__dd">VIDEKO K&uuml;chen &times; ATLAS Wealth</dd>
+          </div>
+        </dl>
+        <p className="stf-phase__text">
+          Am Stand steht ein Gl&uuml;cksrad. Der Eintrag hier ist die Vorarbeit
+          &mdash; die Teilnahme am Gewinnspiel entsteht erst vor Ort, mit dem
+          best&auml;tigten Dreh.
+        </p>
+      </section>
+    ) : phasenKey === 'nachher' ? (
+      <section className="stf-phase">
+        <p className="stf-phase__text">{texte?.hinweis}</p>
+      </section>
+    ) : null
 
-      {leadFormular(PHASE_VORHER, STADTFEST_PRE)}
-    </section>
-  )
-
-  /* POST — die Route bleibt, das Gewinnspiel ist zu. Kein nachtraeglicher
-     Eintritt in den Lostopf, auch nicht fuer dieselbe E-Mail. */
-  const nachher = (
-    <section className="stf-phase">
-      <h1 className="stf-phase__titel">{STADTFEST_POST.titel}</h1>
-      <p className="stf-phase__sub">{STADTFEST_POST.subline}</p>
-      <p className="stf-phase__text">{STADTFEST_POST.hinweis}</p>
-
-      <div className="stf-linkreihe">
-        <a className="stf-link" href="/entdecken">VIDEKO entdecken</a>
-      </div>
-
-      {leadFormular(PHASE_NACHHER, STADTFEST_POST)}
-    </section>
-  )
-
-  /* Bewusst nicht der Stempelschirm: hier wurde nichts freigeschaltet und
-     nichts qualifiziert, hier wurde eine Anfrage gespeichert. */
-  const leadErfolg = (
-    <section className="stf-erfolg">
-      <h1 className="stf-erfolg__haken">{LEAD_ERFOLG_TITEL}</h1>
-      <p className="stf-erfolg__zeig">{LEAD_ERFOLG_TEXT}</p>
-      <p className="stf-phase__text">
-        Gespeichert sind dein Name, deine E-Mail und das, was du angekreuzt hast.
-        Kein Gewinnspiel, kein Los, kein Stempel &mdash; das lief ausschlie&szlig;lich
-        am Stand.
-      </p>
-      <div className="stf-linkreihe">
-        <button type="button" className="stf-link" onClick={() => setSheet('datenschutz')}>
-          Datenschutzhinweise
-        </button>
-      </div>
-    </section>
-  )
   /* Der vorgerenderte Stand: Name, Termin, Ort. Alles drei gilt vor, waehrend
      und nach dem Fest. Was nicht gilt, steht hier auch nicht — kein Stempel,
      kein Lostopf, keine Absage. */
@@ -781,13 +767,18 @@ export default function Stadtfest() {
     </section>
   )
 
+  /* Das Formular gibt es in jeder Phase. Unterschiedlich sind die Texte, die
+     Pflichthaken und der Beleg — nicht die Frage, ob gespeichert wird. */
   let inhalt
-  if (phase === null) inhalt = stillstand
-  else if (ansicht === 'lead-erfolg') inhalt = leadErfolg
+  if (phasenKey === null) inhalt = stillstand
   else if (ansicht === 'erfolg' || ansicht === 'duplikat') inhalt = erfolg
-  else if (phase === PHASE_VORHER) inhalt = vorher
-  else if (phase === PHASE_NACHHER) inhalt = nachher
-  else if (phase === PHASE_LAEUFT) inhalt = formular
+  else
+    inhalt = (
+      <>
+        {phasenBlock}
+        {formular}
+      </>
+    )
 
   return (
     <>
@@ -804,7 +795,7 @@ export default function Stadtfest() {
           {/* Der Erfolgsschirm ersetzt das Formular vollstaendig — inklusive
               Hero. Stehen bleibt nur die Markenzeile, damit klar ist, wessen
               Bildschirm das Team da vor sich hat. */}
-          {ansicht === 'formular' && phase === PHASE_LAEUFT ? (
+          {ansicht === 'formular' && kopf ? (
             kopf
           ) : (
             <header className="stf-kopf">
