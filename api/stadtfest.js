@@ -1,6 +1,7 @@
 import crypto from 'node:crypto'
 import {
   FELD_GRENZEN,
+  MARKETING_EINWILLIGUNG,
   PHASE_LAEUFT,
   PHASE_VORHER,
   STADTFEST_EVENT,
@@ -81,6 +82,14 @@ const clean = (s, max = 200) =>
   String(s ?? '').replace(/[\r\n\t]+/g, ' ').trim().slice(0, max)
 
 const EMAIL_MUSTER = /^[^@\s]+@[^@\s]+\.[^@\s]+$/
+
+/* Telefon: erlaubt sind Ziffern, Leerzeichen, Punkt, Schraegstrich,
+   Bindestrich, Klammern und ein fuehrendes Plus. Kein Buchstabe, kein
+   Komma, kein "auf Anfrage". Die Laenge pruefen wir ueber die reinen
+   Ziffern — sieben bis fuenfzehn, das deckt 0176... genauso ab wie
+   +49 176 ... und schliesst Tippfehler und Fantasienummern grob aus. */
+const TELEFON_MUSTER = /^\+?[\d\s./()-]{6,}$/
+const ziffern = (s) => String(s ?? '').replace(/\D/g, '').length
 
 /**
  * Kalenderphase -> Wert der Spalte `registrierungs_phase`.
@@ -174,11 +183,19 @@ function pruefen(b, phaseWert) {
   const telefon = clean(b.telefon, FELD_GRENZEN.telefon)
   const plz = clean(b.plz, FELD_GRENZEN.plz)
 
+  /* Alle fuenf Felder sind Pflicht. Mobilnummer und PLZ sind ausdruecklich
+     NICHT mehr optional — am Stand entscheidet die Nummer darueber, ob wir
+     einen Gewinner ueberhaupt erreichen. Die Spalten bleiben in der Datenbank
+     nullable (keine riskante Migration nur wegen NOT NULL); erzwungen wird
+     hier, und im Browser ein zweites Mal. */
   if (!vorname) fehler.push('vorname')
   if (!nachname) fehler.push('nachname')
   if (!email || !EMAIL_MUSTER.test(email)) fehler.push('email')
-  if (plz && !/^\d{5}$/.test(plz)) fehler.push('plz')
-  if (telefon && telefon.replace(/\D/g, '').length < 6) fehler.push('telefon')
+  /* Deutschland: genau fuenf Ziffern. */
+  if (!plz || !/^\d{5}$/.test(plz)) fehler.push('plz')
+  if (!telefon || !TELEFON_MUSTER.test(telefon) || ziffern(telefon) < 7 || ziffern(telefon) > 15) {
+    fehler.push('telefon')
+  }
 
   /* Teilnahmebedingungen und Mindestalter nur dort, wo es ein Gewinnspiel
      gibt. Nach dem Stadtfest ist das Formular ein reines Kontaktformular —
@@ -201,16 +218,31 @@ function pruefen(b, phaseWert) {
      Einwilligung. Das Frontend erzwingt das bereits, der Server verlaesst
      sich nicht darauf. */
   const consent = {}
-  const roh = b.consent && typeof b.consent === 'object' ? b.consent : {}
-  for (const [firma, kanaele] of Object.entries(roh)) {
-    if (!FIRMEN_KEYS.has(firma) || !Array.isArray(kanaele)) continue
-    const erlaubt = kanaele
-      .map((k) => clean(k, 20))
-      .filter((k) => k === 'email' || (k === 'telefon' && telefon))
-    if (erlaubt.length) consent[firma] = [...new Set(erlaubt)]
+
+  /* Der Normalfall seit der finalen Standfassung: EIN Haken. Was er abdeckt,
+     bestimmt ausschliesslich der Server aus MARKETING_EINWILLIGUNG.deckt —
+     der Client schickt nur ein true. So kann kein Aufrufer Marken, Kanaele
+     oder Wortlaute dazuerfinden. */
+  const sammel = b.marketing === true
+  if (sammel) {
+    for (const firma of MARKETING_EINWILLIGUNG.deckt.firmen) {
+      if (!FIRMEN_KEYS.has(firma)) continue
+      const kanaele = MARKETING_EINWILLIGUNG.deckt.kanaele
+        .filter((k) => k === 'email' || (k === 'telefon' && telefon))
+      if (kanaele.length) consent[firma] = [...kanaele]
+    }
+  } else {
+    const roh = b.consent && typeof b.consent === 'object' ? b.consent : {}
+    for (const [firma, kanaele] of Object.entries(roh)) {
+      if (!FIRMEN_KEYS.has(firma) || !Array.isArray(kanaele)) continue
+      const erlaubt = kanaele
+        .map((k) => clean(k, 20))
+        .filter((k) => k === 'email' || (k === 'telefon' && telefon))
+      if (erlaubt.length) consent[firma] = [...new Set(erlaubt)]
+    }
   }
 
-  return { fehler, vorname, nachname, email, telefon, plz, interessen, consent }
+  return { fehler, vorname, nachname, email, telefon, plz, interessen, consent, sammel }
 }
 
 /**
@@ -218,7 +250,7 @@ function pruefen(b, phaseWert) {
  * Kanal, wann und mit welchem Wortlaut eingewilligt hat. Fuer
  * Telefoneinwilligungen verlangt § 7a UWG genau das.
  */
-function nachweisBauen(consent, jetztIso, phaseWert) {
+function nachweisBauen(consent, jetztIso, phaseWert, sammel = false) {
   return Object.entries(consent).map(([firma, kanaele]) => {
     const eintrag = STADTFEST_FIRMEN.find((f) => f.key === firma)
     return {
@@ -227,7 +259,13 @@ function nachweisBauen(consent, jetztIso, phaseWert) {
       rechtstraeger: eintrag?.traeger ?? null,
       zweck: 'Werbliche Ansprache zu eigenen Angeboten',
       kanaele,
-      wortlaut: eintrag?.text ?? null,
+      /* Gespeichert wird der Wortlaut, den die Person tatsaechlich gelesen
+         hat. Bei der gemeinsamen Standeinwilligung ist das der gemeinsame
+         Satz — zusammen mit der Information, dass er beide Marken und beide
+         Kanaele abdeckt. Nur so bleibt der Nachweis nach § 7a UWG ehrlich. */
+      wortlaut: sammel ? MARKETING_EINWILLIGUNG.nachweisWortlaut : (eintrag?.text ?? null),
+      sammeleinwilligung: sammel,
+      deckt: sammel ? { ...MARKETING_EINWILLIGUNG.deckt } : null,
       textVersion: STADTFEST_EVENT.consentVersion,
       erteiltAt: jetztIso,
       registrierungsPhase: phaseWert,
@@ -343,9 +381,9 @@ export default async function handler(req, res) {
            Angaben. Es wird nichts geschrieben und nichts veraendert.
        Von aussen sind beide Faelle nicht unterscheidbar.
 
-       Der einmal vergebene Code bleibt stehen. Wer sich vorab eingetragen
-       hat und spaeter noch einmal absendet, bekommt denselben Code wieder
-       zu sehen — genau den zeigt er am Stand vor. */
+       Der einmal vergebene Code bleibt stehen. Wer sich eingetragen hat und
+       spaeter noch einmal absendet, bekommt denselben Code wieder zu sehen —
+       genau den zeigt er am Stand vor. */
     const suche = await fetch(
       `${STADTFEST_SUPABASE_URL}/rest/v1/${TABELLE}`
         + `?select=vorname,nachname,submission_code,created_at,registrierungs_phase`
@@ -378,7 +416,7 @@ export default async function handler(req, res) {
        Mitarbeiter-IDs) stehen hier bewusst nicht und duerfen hier auch
        nie stehen: sie entstehen nur am Stand, bestaetigt durch das Team,
        ueber die geschuetzte Studio-API. */
-    const nachweis = nachweisBauen(daten.consent, jetztIso, phaseWert)
+    const nachweis = nachweisBauen(daten.consent, jetztIso, phaseWert, daten.sammel)
     const zeile = {
       company_id: STADTFEST_COMPANY_ID,
       event_id: STADTFEST_EVENT.id,

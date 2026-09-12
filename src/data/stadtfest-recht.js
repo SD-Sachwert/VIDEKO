@@ -110,9 +110,11 @@ export const TEILNAHMEBEDINGUNGEN = {
             + `Verantwortlich ist ${atlasVerantwortlicherLang}. Es findet daher keine `
             + 'Weitergabe von Teilnahmedaten an ein drittes Unternehmen statt.'
           : `Verantwortlich für ${ATLAS_RECHTSDATEN.marke}: ${atlasVerantwortlicher}.`,
-        'Die Werbeeinwilligungen für die beiden Marken werden dennoch getrennt erhoben, weil es '
-        + 'sich um unterschiedliche Werbezwecke handelt. Beide sind freiwillig und für die '
-        + 'Teilnahme ohne Bedeutung.',
+        'Die Werbeeinwilligung wird als eine gemeinsame, freiwillige Einwilligung erhoben, die '
+        + 'beide Marken und die Kanäle E-Mail und Telefon umfasst. Sie ist nicht Bestandteil '
+        + 'dieser Teilnahmebedingungen, keine Voraussetzung für die Teilnahme und hat keinen '
+        + 'Einfluss auf die Gewinnchance. Zum Nachweis werden Zeitpunkt, Wortlaut, Version und '
+        + 'der Umfang der Einwilligung gespeichert.',
       ],
     },
     {
@@ -167,8 +169,9 @@ export const TEILNAHMEBEDINGUNGEN = {
       titel: '8. Registrierung und Teilnahme sind zweierlei',
       absaetze: [
         'Über das Formular auf dieser Seite erfolgt eine Registrierung. Erforderlich sind '
-        + 'Vorname, Nachname und E-Mail-Adresse sowie die Zustimmung zu diesen '
-        + 'Teilnahmebedingungen.',
+        + 'Vorname, Nachname, E-Mail-Adresse, Mobilnummer und Postleitzahl sowie die Bestätigung '
+        + 'des Mindestalters und die Zustimmung zu diesen Teilnahmebedingungen und den '
+        + 'Datenschutzhinweisen. Eine Anschrift und ein Geburtsdatum werden nicht erhoben.',
         'Das Absenden des Formulars allein begründet noch keine Teilnahme am Gewinnspiel. Die '
         + 'Registrierung dient dazu, den Ablauf am Aktionsstand zu beschleunigen.',
         'Nach dem Absenden wird auf dem Gerät eine Bestätigung mit einem Registrierungscode '
@@ -259,9 +262,9 @@ export const TEILNAHMEBEDINGUNGEN = {
       absaetze: [
         'Der Livestream ersetzt die persönliche Benachrichtigung nicht. Gewinnende Personen '
         + 'werden zusätzlich an die bei der Teilnahme angegebene E-Mail-Adresse benachrichtigt.',
-        'Wurde eine Mobilnummer angegeben, kann diese für die Abwicklung des Gewinns verwendet '
-        + 'werden. Das ist ausdrücklich keine Einwilligung in Werbung; die Nummer wird für '
-        + 'Werbung nur verwendet, wenn dafür gesondert eingewilligt wurde.',
+        'Die bei der Registrierung angegebene Mobilnummer kann für die Abwicklung des Gewinns '
+        + 'verwendet werden. Das ist ausdrücklich keine Einwilligung in Werbung; die Nummer wird '
+        + 'für Werbung nur verwendet, wenn dafür gesondert eingewilligt wurde.',
         'Für die Übergabe oder Zustellung des Gewinns wird die Anschrift erst nach der '
         + 'Benachrichtigung gesondert erfragt. Bei der Teilnahme wird keine Anschrift erhoben.',
       ],
@@ -342,8 +345,8 @@ export const DATENSCHUTZ_EVENT = {
     {
       titel: 'A) Registrierung und Durchführung des Gewinnspiels',
       absaetze: [
-        'Verarbeitete Daten der Registrierung: Vorname, Nachname, E-Mail-Adresse, freiwillig '
-        + 'Mobilnummer und Postleitzahl, freiwillig angegebene Interessen, Zeitpunkt der '
+        'Verarbeitete Daten der Registrierung: Vorname, Nachname, E-Mail-Adresse, Mobilnummer '
+        + 'und Postleitzahl als Pflichtangaben, freiwillig angegebene Interessen, Zeitpunkt der '
         + 'Registrierung, ob die Registrierung vor, während oder nach dem Stadtfest erfolgt ist, '
         + 'gegebenenfalls die Bestätigung der Teilnahmebedingungen sowie ein technischer '
         + 'Registrierungscode.',
@@ -372,17 +375,18 @@ export const DATENSCHUTZ_EVENT = {
     {
       titel: `B) Freiwillige Werbeeinwilligung ${BRAND.name}`,
       absaetze: [
-        `Nur wenn das entsprechende Häkchen gesetzt und mindestens ein Kanal gewählt wurde: Die `
-        + `${ACTIVE_OPERATOR.legalName} verarbeitet Name, E-Mail-Adresse und – sofern angegeben `
-        + `und für den Kanal Telefon eingewilligt – die Mobilnummer, um über Angebote und `
-        + `Aktionen der Marke ${BRAND.name} zu informieren.`,
+        'Im Formular gibt es dafür genau ein freiwilliges Häkchen. Es umfasst beide Marken und '
+        + 'die Kanäle E-Mail und Telefon; ohne dieses Häkchen erfolgt keine Werbung.',
+        `Nur wenn das Häkchen gesetzt wurde: Die ${ACTIVE_OPERATOR.legalName} verarbeitet Name, `
+        + `E-Mail-Adresse und Mobilnummer, um über Angebote und Aktionen der Marke `
+        + `${BRAND.name} zu informieren.`,
         'Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO, für Telefonwerbung zusätzlich § 7 Abs. 2 '
         + 'Nr. 1 UWG.',
         'Die Einwilligung ist freiwillig und jederzeit mit Wirkung für die Zukunft widerrufbar, '
         + `formlos an ${BRAND.contactEmail}. Die Rechtmäßigkeit der bis zum Widerruf erfolgten `
         + 'Verarbeitung bleibt unberührt.',
-        'Gespeichert werden zum Nachweis der Einwilligung: Zeitpunkt, gewählter Kanal, '
-        + 'Wortlaut und Version des Einwilligungstextes.',
+        'Gespeichert werden zum Nachweis der Einwilligung: Zeitpunkt, umfasste Marken und '
+        + 'Kanäle, Wortlaut und Version des Einwilligungstextes.',
         'Diese Einwilligung hat keinen Einfluss auf die Teilnahme und keinen Einfluss auf die '
         + 'Gewinnchance.',
       ],
@@ -393,11 +397,9 @@ export const DATENSCHUTZ_EVENT = {
         `Verantwortlich: ${atlasVerantwortlicher}.`,
         `${ATLAS_RECHTSDATEN.marke} ist eine Marke der Genossenschaft ${ATLAS_RECHTSDATEN.firmierung}. `
         + 'Eine eigenständige Genossenschaft „Atlas Wealth eG" besteht nicht.',
-        'Nur wenn das entsprechende Häkchen gesetzt und mindestens ein Kanal gewählt wurde, '
-        + 'werden Name, E-Mail-Adresse und – sofern angegeben und für den Kanal Telefon '
-        + `eingewilligt – die Mobilnummer verwendet, um über Angebote von `
-        + `${ATLAS_RECHTSDATEN.marke} aus den Bereichen Immobilie, Vorsorge und Finanzen zu `
-        + 'informieren.',
+        'Nur wenn das gemeinsame freiwillige Häkchen gesetzt wurde, werden Name, E-Mail-Adresse '
+        + `und Mobilnummer verwendet, um über Angebote von ${ATLAS_RECHTSDATEN.marke} aus den `
+        + 'Bereichen Immobilie, Vorsorge und Finanzen zu informieren.',
         'Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO, für Telefonwerbung zusätzlich § 7 Abs. 2 '
         + 'Nr. 1 UWG.',
         `Vermittlerstatus: ${ATLAS_RECHTSDATEN.vermittlerstatus}, Registrierungsnummer `
@@ -412,8 +414,8 @@ export const DATENSCHUTZ_EVENT = {
     {
       titel: 'D) Gewinnabwicklung',
       absaetze: [
-        'Im Gewinnfall werden E-Mail-Adresse und – sofern angegeben – Mobilnummer verwendet, um '
-        + 'die gewinnende Person zu benachrichtigen und den Gewinn abzuwickeln.',
+        'Im Gewinnfall werden E-Mail-Adresse und Mobilnummer verwendet, um die gewinnende Person '
+        + 'zu benachrichtigen und den Gewinn abzuwickeln.',
         'Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO. Das ist keine Werbeeinwilligung. Eine '
         + 'Verwendung dieser Kontaktdaten für Werbung erfolgt nur bei gesonderter Einwilligung '
         + 'nach B) oder C).',

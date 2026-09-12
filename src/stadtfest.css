@@ -49,12 +49,20 @@
   z-index: 1;
 }
 
-/* Eine Spalte. Auf Desktop bewusst schmal — das hier ist ein Formular,
-   keine Landingpage. */
+/* Eine Spalte. Am Handy randnah, auf dem Desktop deutlich breiter gefasst:
+   mit 560 px sass die Seite auf 1440 und 1920 als schmaler Streifen in sehr
+   viel leerem Schwarz. Zweispaltig wird sie trotzdem nicht — das hier ist
+   eine Eventseite, kein Buerovordruck. */
 .stf__spalte {
-  width: min(100%, 560px);
+  width: min(100%, 780px);
   margin: 0 auto;
   padding: 0 20px;
+}
+
+@media (min-width: 900px) {
+  .stf__spalte {
+    padding: 0 32px;
+  }
 }
 
 /* ---------------------------------------------------------------- */
@@ -62,7 +70,7 @@
 /* ---------------------------------------------------------------- */
 
 .stf-kopf {
-  padding: clamp(22px, 7vw, 40px) 0 clamp(18px, 5vw, 28px);
+  padding: clamp(22px, 7vw, 56px) 0 clamp(18px, 5vw, 34px);
 }
 
 .stf-kopf__marken {
@@ -77,7 +85,7 @@
 .stf-kopf__titel {
   margin: 0;
   font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
-  font-size: clamp(42px, 13.5vw, 64px);
+  font-size: clamp(42px, 13.5vw, 82px);
   line-height: 0.94;
   font-weight: 300;
   letter-spacing: -0.015em;
@@ -89,9 +97,10 @@
 }
 
 .stf-kopf__sub {
-  margin: clamp(14px, 4vw, 20px) 0 0;
-  font-size: 15px;
+  margin: clamp(14px, 4vw, 22px) 0 0;
+  font-size: clamp(15px, 1.5vw, 19px);
   line-height: 1.5;
+  letter-spacing: 0.01em;
   color: var(--stf-creme);
 }
 
@@ -123,6 +132,21 @@
   flex-direction: column;
   gap: clamp(20px, 5vw, 26px);
   padding-top: clamp(24px, 7vw, 34px);
+}
+
+/* Ab Desktopbreite bekommt das Formular einen eigenen Rahmen. Das Innenmass
+   liegt dann bei rund 650 px: breit genug, dass nichts verloren wirkt, schmal
+   genug, dass keine zweispaltige Formularoptik entsteht. */
+@media (min-width: 900px) {
+  .stf-form {
+    gap: 30px;
+    padding: 36px 38px 40px;
+    border: 1px solid var(--stf-linie);
+    border-radius: 4px;
+    background:
+      linear-gradient(180deg, rgba(244, 239, 228, 0.045), rgba(244, 239, 228, 0.012)),
+      rgba(8, 8, 7, 0.5);
+  }
 }
 
 .stf-gruppe__titel {
@@ -168,12 +192,6 @@
   color: var(--stf-creme-weich);
 }
 
-.stf-feld__opt {
-  font-weight: 400;
-  letter-spacing: 0.04em;
-  text-transform: none;
-  opacity: 0.7;
-}
 
 .stf-feld__input {
   width: 100%;
@@ -338,7 +356,7 @@
 }
 
 /* ---------------------------------------------------------------- */
-/* Karten: Teilnahmebedingungen und Marketing                        */
+/* Pflichthaken und Marketingzeile                                   */
 /* ---------------------------------------------------------------- */
 
 .stf-karte {
@@ -348,105 +366,18 @@
   background: rgba(244, 239, 228, 0.035);
 }
 
-/* Der Marketingblock ist sichtbar ein anderes Objekt als die
-   Teilnahmebedingungen. Genau das ist der Punkt. */
-.stf-karte--marketing {
-  border-color: var(--stf-linie);
-  background:
-    linear-gradient(180deg, rgba(201, 160, 80, 0.07), rgba(201, 160, 80, 0.015)),
-    rgba(8, 8, 7, 0.3);
+/* Die eine freiwillige Marketingzeile. Bewusst keine Karte: sie soll weder
+   wie ein zweiter Pflichtblock aussehen noch wie ein Angebot draengen.
+   Ein Haken, eine Zeile, eine kleine Fussnote. Die 39 px Einzug bringen
+   die Fussnote unter den Text, nicht unter das Kaestchen. */
+.stf-marketing {
+  padding: 2px 0 0;
 }
 
-.stf-karte__titel {
-  margin: 0;
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
-  color: var(--stf-gold-hell);
-}
-
-.stf-karte__frei {
-  margin: 7px 0 0;
+.stf-marketing__frei {
+  margin: 6px 0 0 39px;
   font-size: 12.5px;
   line-height: 1.45;
-  color: var(--stf-creme-weich);
-}
-
-.stf-firma {
-  padding-top: 6px;
-  border-top: 1px solid rgba(244, 239, 228, 0.07);
-  margin-top: 14px;
-}
-
-.stf-firma:first-of-type {
-  border-top: 0;
-  margin-top: 10px;
-  padding-top: 0;
-}
-
-.stf-firma__name {
-  font-weight: 600;
-  letter-spacing: 0.02em;
-}
-
-/* Kanalwahl. Erscheint erst, wenn das Unternehmen angehakt wurde. */
-.stf-kanal {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 2px 0 8px 39px;
-}
-
-.stf-kanal__frage {
-  width: 100%;
-  margin: 0 0 2px;
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--stf-creme-weich);
-}
-
-.stf-kanal__knopf {
-  min-height: 44px;
-  padding: 10px 16px;
-  border: 1px solid var(--stf-linie);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--stf-creme);
-  font-family: inherit;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background 0.16s ease, color 0.16s ease, border-color 0.16s ease;
-}
-
-.stf-kanal__knopf[aria-pressed='true'] {
-  border-color: var(--stf-gold);
-  background: rgba(201, 160, 80, 0.22);
-  color: var(--stf-gold-hell);
-  font-weight: 600;
-}
-
-.stf-kanal__knopf:focus-visible {
-  outline: 2px solid var(--stf-gold-hell);
-  outline-offset: 2px;
-}
-
-/* Telefon ohne Nummer ist nicht waehlbar — sichtbar gesperrt, nicht versteckt. */
-.stf-kanal__knopf:disabled {
-  opacity: 0.42;
-  cursor: not-allowed;
-}
-
-.stf-kanal__hinweis,
-.stf-kanal .stf-feld__fehler {
-  width: 100%;
-  margin: 2px 0 0;
-  font-size: 12.5px;
-  line-height: 1.4;
-}
-
-.stf-kanal__hinweis {
   color: var(--stf-creme-weich);
 }
 
@@ -718,10 +649,12 @@
 
 /* Die Eckdaten stehen als Liste, nicht im Fliesstext: sie werden im
    Vorbeigehen gesucht, nicht gelesen. */
+/* Kein eigener Oberstrich mehr: direkt darueber sitzt bereits der goldene
+   Trenner des Kopfes. Zwei Linien mit nichts dazwischen sahen aus, als
+   waere an der Stelle Inhalt verloren gegangen. */
 .stf-eck {
-  margin: 22px 0 0;
-  padding: clamp(14px, 4vw, 18px) 0 0;
-  border-top: 1px solid var(--stf-linie);
+  margin: clamp(16px, 4vw, 22px) 0 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
   gap: 10px;

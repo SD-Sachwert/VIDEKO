@@ -149,6 +149,25 @@ export function eventTageText(event = STADTFEST_EVENT) {
 }
 
 /**
+ * „18. + 19. September 2026" — die Kurzform für den Kopf der Seite.
+ *
+ * Am Stand liest niemand „Freitag, 18. September 2026 und Samstag, 19.
+ * September 2026 — jeweils ganztägig". Für Rechtstexte bleibt die Langform
+ * (zeitraumText) unverändert zuständig.
+ */
+export function eventDatumKurz(event = STADTFEST_EVENT) {
+  const tage = event.tage || []
+  if (tage.length === 0) return ''
+  const d = (iso) => new Date(Date.parse(iso + 'T12:00:00+02:00'))
+  const tagNr = new Intl.DateTimeFormat('de-DE', { timeZone: BERLIN, day: 'numeric' })
+  const monatJahr = new Intl.DateTimeFormat('de-DE', { timeZone: BERLIN, month: 'long', year: 'numeric' })
+  const letzter = d(tage[tage.length - 1].datum)
+  if (tage.length === 1) return `${tagNr.format(letzter)}. ${monatJahr.format(letzter)}`
+  const zahlen = tage.map((t) => `${tagNr.format(d(t.datum))}.`).join(' + ')
+  return `${zahlen} ${monatJahr.format(letzter)}`
+}
+
+/**
  * Zeitraum für die Rechtstexte.
  *
  * Solange die Zeiten nicht bestätigt sind (zeitenBestaetigt), werden bewusst
@@ -180,18 +199,35 @@ export function zeitraumText(event = STADTFEST_EVENT) {
  * Interessen (§4). Freiwillig, Mehrfachauswahl, keine Auswahl erforderlich.
  * `key` wandert in die Datenbank, `label` steht auf dem Chip.
  *
+ * Die Reihenfolge ist nicht alphabetisch, sondern thematisch gruppiert —
+ * erst das Innere des Hauses, dann Technik, dann Gebäude, dann Vermögen.
+ * Wer am Stand steht, soll seinen Punkt finden, ohne zu suchen.
+ *
  * `nurMitGewinnspiel` markiert den einen Chip, der nach dem Stadtfest
  * verschwindet: „Nur wegen dem Gewinn hier" ergibt keinen Sinn mehr, wenn es
  * nichts mehr zu gewinnen gibt. Registriert werden darf man trotzdem.
+ *
+ * Diese Liste ist zugleich die Whitelist des Servers (api/stadtfest.js baut
+ * sein Set daraus). Was hier nicht steht, wird nicht gespeichert.
  */
 export const STADTFEST_INTERESSEN = [
-  { key: 'kueche-bad', label: 'Küche & Bad' },
-  { key: 'pv', label: 'PV' },
+  /* Innenraum */
+  { key: 'kueche_bad', label: 'Küche & Bad' },
   { key: 'innenausbau', label: 'Innenausbau' },
-  { key: 'smart-home', label: 'Smart Home' },
+  { key: 'interior_design', label: 'Interior Design' },
+  { key: 'spanndecke', label: 'Spanndecke' },
+  { key: 'fussboden', label: 'Fußboden' },
+  { key: 'waende', label: 'Wände' },
+  /* Technik */
+  { key: 'pv', label: 'PV' },
+  { key: 'smart_home', label: 'Smart Home' },
+  /* Gebäude */
+  { key: 'gebaeudereinigung', label: 'Gebäudereinigung' },
+  /* Vermögen */
   { key: 'immobilie', label: 'Immobilie' },
-  { key: 'finanzen', label: 'Versicherung / Finanzen' },
-  { key: 'nur-gewinn', label: 'Nur wegen dem Gewinn hier', nurMitGewinnspiel: true },
+  { key: 'versicherung_finanzen', label: 'Versicherung / Finanzen' },
+  /* Ehrlich bleiben dürfen */
+  { key: 'nur_gewinn', label: 'Nur wegen dem Gewinn hier', nurMitGewinnspiel: true },
 ]
 
 /** Die Chips einer Phase. Ohne Gewinnspiel fällt genau einer weg. */
@@ -260,11 +296,53 @@ export const STADTFEST_FIRMEN = [
   },
 ]
 
-/** Die beiden Kanäle, für die pro Unternehmen einzeln eingewilligt wird. */
+/** Die beiden Kanäle, die von der Einwilligung abgedeckt werden. */
 export const KANAELE = [
   { key: 'email', label: 'E-Mail' },
   { key: 'telefon', label: 'Telefon' },
 ]
+
+/**
+ * Die EINE freiwillige Marketingzeile am Stand (§6).
+ *
+ * Am Stand liest niemand zwei Karten mit je einer Kanalauswahl. Sichtbar ist
+ * deshalb genau ein Haken. Was dahinter gespeichert wird, bleibt aber exakt
+ * so granular wie vorher: beide Marken, beide Kanäle, Zeitpunkt, Wortlaut
+ * und Version — der Nachweis nach § 7a UWG braucht das.
+ *
+ * Rechtlich ist das sauber, weil hinter BEIDEN Marken dieselbe juristische
+ * Person steht: die Süddeutsche Sachwert eG. Es werden also nicht zwei
+ * Verantwortliche in einem Haken versteckt, sondern ein Verantwortlicher
+ * benennt seine zwei Marken und zwei Kanäle. Die abgedeckten Marken und
+ * Zwecke stehen unten in `deckt` und wandern wörtlich in den Nachweis.
+ *
+ * Nicht vorausgewählt. Keine Voraussetzung für Registrierung oder Teilnahme.
+ */
+export const MARKETING_EINWILLIGUNG = {
+  key: 'marketing',
+  /* Der sichtbare Satz neben der Checkbox. */
+  text:
+    'VIDEKO Küchen und ATLAS Wealth dürfen mich per E-Mail und Telefon zu ihren '
+    + 'Angeboten kontaktieren.',
+  /* Die kleine Zeile darunter. */
+  zusatz: 'Freiwillig. Jederzeit widerrufbar.',
+  /* Der vollständige Wortlaut, der als Nachweis gespeichert wird. Er nennt
+     den Verantwortlichen, beide Marken, beide Kanäle und den Widerruf. */
+  nachweisWortlaut:
+    'Die Süddeutsche Sachwert eG, Grubenweg 4b, 82327 Tutzing, info@atlas-wealth.de, '
+    + 'darf mich unter ihren Marken VIDEKO Küchen und ATLAS Wealth per E-Mail und '
+    + 'per Telefon zu ihren Angeboten kontaktieren — VIDEKO Küchen zu Küche, Bad und '
+    + 'Innenausbau, ATLAS Wealth zu Immobilie, Vorsorge und Finanzen. Ich kann diese '
+    + 'Einwilligung jederzeit für die Zukunft widerrufen.',
+  /* Welche Marken und Kanäle der eine Haken abdeckt. Der Server leitet daraus
+     die gespeicherten Einzelfelder ab — nichts wird dazuerfunden. */
+  deckt: {
+    firmen: ['videko', 'atlas'],
+    kanaele: ['email', 'telefon'],
+  },
+  vorausgewaehlt: false,
+  teilnahmeBedingung: false,
+}
 
 /* ------------------------------------------------------------------ */
 /* Rechtsdaten ATLAS (§10)                                             */
@@ -482,45 +560,46 @@ export function freigabeMoeglich(event = STADTFEST_EVENT) {
 export const PHASEN_TEXTE = {
   vorher: {
     mitGewinnspiel: true,
-    titel: 'Schon mal eintragen.',
-    subline: 'Dann musst du am Stadtfest nur noch vorzeigen, Stempel holen und drehen.',
-    formularTitel: 'Einmal Daten. Das war der schwere Teil.',
-    formularText:
-      'Eintragen kannst du dich ab sofort. Am Gewinnspiel nimmst du damit noch nicht teil — das passiert erst am Stand.',
-    cta: 'JETZT EINTRAGEN',
-    ctaLaeuft: 'WIRD GESPEICHERT ...',
-    erfolgTitel: 'Du bist schon mal drin. ✓',
-    erfolgText: 'Zeig diesen Code am Stadtfest. Dann gibt\u2019s den Stempel.',
-    erfolgHinweis:
-      'Die Teilnahme am Gewinnspiel entsteht erst vor Ort — mit dem bestätigten Dreh am Glücksrad.',
-    duplikatTitel: 'Dich kennen wir doch.',
-    duplikatText: 'Du bist schon eingetragen. Dein Code von damals gilt weiter.',
-    microcopy: [
-      'Kein Kauf. Kein Abo. Kein Vertreterbesuch.',
-      'Wir hätten auch Zettel nehmen können. Wollten wir aber nicht.',
-      'Pflichtfelder sind drei. Das ist weniger als beim Einwohnermeldeamt.',
-      'Die Häkchen unten sind freiwillig. Wirklich.',
-    ],
-  },
-  event: {
-    mitGewinnspiel: true,
     titel: 'Hol dir deinen Stempel.',
-    subline: 'Eintragen, Bildschirm zeigen, Stempel holen, drehen.',
-    formularTitel: 'Kurz eintragen.',
-    formularText: 'Danach zeigst du unserem Team den Bildschirm. Den Rest machen wir.',
+    subline: 'Eintragen. Vorzeigen. Stempel holen. Drehen.',
+    formularTitel: 'Deine Daten.',
+    formularText: 'Eintragen, Bildschirm zeigen, Stempel holen und am Glücksrad drehen.',
+    teilnahmeHinweis:
+      'Die Gewinnspielteilnahme entsteht erst mit dem bestätigten Dreh am Stand.',
     cta: 'STEMPEL FREISCHALTEN',
-    ctaLaeuft: 'WIRD OFFIZIELL ...',
+    ctaLaeuft: 'WIRD FREIGESCHALTET ...',
     erfolgTitel: 'Stempel freigegeben. ✓',
     erfolgText: 'Zeig diesen Bildschirm unserem Team.',
     erfolgHinweis:
-      'Im Lostopf für die Hauptpreise bist du damit noch nicht. Das entscheidet das Glücksrad.',
+      'Die Teilnahme am Gewinnspiel entsteht erst mit dem bestätigten Dreh am Glücksrad.',
     duplikatTitel: 'Dich kennen wir doch.',
     duplikatText: 'Du bist schon eingetragen. Zeig einfach diesen Code.',
     microcopy: [
       'Kein Kauf. Kein Abo. Kein Vertreterbesuch.',
       'Der Stempel ist analog. Alles andere nicht.',
-      'Pflichtfelder sind drei. Das ist weniger als beim Einwohnermeldeamt.',
-      'Die Häkchen unten sind freiwillig. Wirklich.',
+      'Der Haken unten ist freiwillig. Wirklich.',
+    ],
+  },
+  event: {
+    mitGewinnspiel: true,
+    titel: 'Hol dir deinen Stempel.',
+    subline: 'Eintragen. Vorzeigen. Stempel holen. Drehen.',
+    formularTitel: 'Deine Daten.',
+    formularText: 'Eintragen, Bildschirm zeigen, Stempel holen und am Glücksrad drehen.',
+    teilnahmeHinweis:
+      'Die Gewinnspielteilnahme entsteht erst mit dem bestätigten Dreh am Stand.',
+    cta: 'STEMPEL FREISCHALTEN',
+    ctaLaeuft: 'WIRD FREIGESCHALTET ...',
+    erfolgTitel: 'Stempel freigegeben. ✓',
+    erfolgText: 'Zeig diesen Bildschirm unserem Team.',
+    erfolgHinweis:
+      'Die Teilnahme am Gewinnspiel entsteht erst mit dem bestätigten Dreh am Glücksrad.',
+    duplikatTitel: 'Dich kennen wir doch.',
+    duplikatText: 'Du bist schon eingetragen. Zeig einfach diesen Code.',
+    microcopy: [
+      'Kein Kauf. Kein Abo. Kein Vertreterbesuch.',
+      'Der Stempel ist analog. Alles andere nicht.',
+      'Der Haken unten ist freiwillig. Wirklich.',
     ],
   },
   nachher: {
@@ -541,8 +620,7 @@ export const PHASEN_TEXTE = {
     microcopy: [
       'Kein Kauf. Kein Abo. Kein Vertreterbesuch.',
       'Wir hätten auch Zettel nehmen können. Wollten wir aber nicht.',
-      'Pflichtfelder sind drei. Das ist weniger als beim Einwohnermeldeamt.',
-      'Die Häkchen unten sind freiwillig. Wirklich.',
+      'Der Haken unten ist freiwillig. Wirklich.',
     ],
   },
 }

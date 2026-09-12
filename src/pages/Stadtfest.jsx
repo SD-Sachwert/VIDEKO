@@ -2,15 +2,14 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import Seo from '../components/Seo.jsx'
 import {
   FELD_GRENZEN,
-  KANAELE,
+  MARKETING_EINWILLIGUNG,
   PHASEN_TEXTE,
   STADTFEST_EVENT,
-  STADTFEST_FIRMEN,
+  eventDatumKurz,
   eventTagText,
   interessenFuer,
   phasenSchluessel,
   uhrzeitText,
-  zeitraumText,
 } from '../data/stadtfest.js'
 import { DATENSCHUTZ_EVENT, TEILNAHMEBEDINGUNGEN } from '../data/stadtfest-recht.js'
 
@@ -166,7 +165,10 @@ export default function Stadtfest() {
   const [interessen, setInteressen] = useState([])
   const [agb, setAgb] = useState(false)
   const [alter, setAlter] = useState(false)
-  const [consent, setConsent] = useState({}) /* { videko: ['email'], ... } */
+  /* Ein einziger freiwilliger Haken (§6). Nicht vorausgewaehlt, nie
+     Voraussetzung. Welche Marken und Kanaele er abdeckt, steht in
+     MARKETING_EINWILLIGUNG und wird serverseitig aufgeloest. */
+  const [marketing, setMarketing] = useState(false)
   const [fehler, setFehler] = useState({})
   const [sammelfehler, setSammelfehler] = useState('')
   const [sendet, setSendet] = useState(false)
@@ -261,36 +263,6 @@ export default function Stadtfest() {
     )
   }, [])
 
-  /**
-   * Firma an- oder abwaehlen.
-   *
-   * Es wird bewusst KEIN Kanal vorausgewaehlt. Das Haekchen oeffnet nur die
-   * Kanalauswahl; die Einwilligung entsteht erst, wenn mindestens ein Kanal
-   * bewusst angetippt wurde. Eine Firma mit leerer Kanalliste wird beim
-   * Absenden als Fehler gemeldet und nie gespeichert.
-   */
-  const firmaUmschalten = useCallback((key) => {
-    setConsent((c) => {
-      const naechste = { ...c }
-      if (naechste[key]) delete naechste[key]
-      else naechste[key] = []
-      return naechste
-    })
-  }, [])
-
-  const kanalUmschalten = useCallback((firma, kanal) => {
-    setConsent((c) => {
-      const aktuell = c[firma]
-      if (!aktuell) return c
-      const neu = aktuell.includes(kanal)
-        ? aktuell.filter((k) => k !== kanal)
-        : [...aktuell, kanal]
-      /* Leere Liste bleibt stehen: das Haekchen ist gesetzt, der Kanal fehlt
-         noch. Abgehakt wird ausschliesslich ueber die Checkbox. */
-      return { ...c, [firma]: neu }
-    })
-  }, [])
-
   /* --- Pruefung ---------------------------------------------------- */
   function pruefen() {
     const f = {}
@@ -300,11 +272,22 @@ export default function Stadtfest() {
     else if (!EMAIL_MUSTER.test(werte.email.trim())) {
       f.email = 'Diese E-Mail-Adresse sieht nicht vollständig aus.'
     }
-    if (werte.plz.trim() && !/^\d{5}$/.test(werte.plz.trim())) {
-      f.plz = 'Fünf Ziffern, bitte.'
-    }
-    if (werte.telefon.trim() && werte.telefon.replace(/\D/g, '').length < 6) {
+    /* Mobilnummer und PLZ sind Pflicht. Ohne Nummer erreichen wir am Ende
+       keinen Gewinner, ohne PLZ wissen wir nicht, ob eine Kuechenplanung
+       ueberhaupt in Reichweite liegt. */
+    if (!werte.telefon.trim()) {
+      f.telefon = 'Bitte trag deine Mobilnummer ein.'
+    } else if (werte.telefon.replace(/\D/g, '').length < 7) {
       f.telefon = 'Diese Nummer wirkt zu kurz.'
+    } else if (werte.telefon.replace(/\D/g, '').length > 15) {
+      f.telefon = 'Diese Nummer wirkt zu lang.'
+    } else if (!/^\+?[\d\s./()-]+$/.test(werte.telefon.trim())) {
+      f.telefon = 'Bitte nur Ziffern, Leerzeichen und + eintragen.'
+    }
+    if (!werte.plz.trim()) {
+      f.plz = 'Bitte trag deine PLZ ein.'
+    } else if (!/^\d{5}$/.test(werte.plz.trim())) {
+      f.plz = 'Fünf Ziffern, bitte.'
     }
     /* Teilnahmebedingungen und Mindestalter gehoeren zum Gewinnspiel. Nach
        dem Stadtfest gibt es keines mehr — ein Haekchen waere dann die
@@ -315,18 +298,8 @@ export default function Stadtfest() {
         f.alter = `Die Teilnahme ist erst ab ${STADTFEST_EVENT.minimumAge} möglich.`
       }
     }
-    /* Werbeeinwilligung: ein gesetztes Haekchen ohne Kanal ist keine
-       Einwilligung. Statt still zu speichern oder still zu verwerfen wird
-       nachgefragt — der Haken bleibt sichtbar, die Wahl wird bewusst. */
-    for (const firma of STADTFEST_FIRMEN) {
-      const kanaele = consent[firma.key]
-      if (!kanaele) continue
-      if (kanaele.length === 0) {
-        f[`consent-${firma.key}`] = `Bitte wähl für ${firma.label} mindestens einen Weg — oder nimm das Häkchen wieder weg.`
-      } else if (kanaele.includes('telefon') && !werte.telefon.trim()) {
-        f.telefon = 'Für die Einwilligung per Telefon brauchen wir eine Nummer.'
-      }
-    }
+    /* Der Marketinghaken wird bewusst NICHT geprueft: er ist freiwillig, und
+       ob er gesetzt ist oder nicht, darf das Absenden nie verhindern. */
     return f
   }
 
@@ -346,13 +319,6 @@ export default function Stadtfest() {
     setSendet(true)
 
     const jetztMs = Date.now()
-    /* Defensiv: ein gesetztes Haekchen ohne Kanal wird nicht als Einwilligung
-       uebertragen. Die Pruefung oben faengt den Fall bereits ab — aber eine
-       inhaltsleere Einwilligung darf unter keinen Umstaenden im Datensatz
-       landen. */
-    const consentSauber = Object.fromEntries(
-      Object.entries(consent).filter(([, kanaele]) => kanaele.length > 0),
-    )
     const nutzlast = {
       eventId: STADTFEST_EVENT.id,
       vorname: werte.vorname.trim(),
@@ -363,7 +329,10 @@ export default function Stadtfest() {
       interessen,
       teilnahmebedingungen: gewinnspiel,
       mindestalterBestaetigt: gewinnspiel && STADTFEST_EVENT.minimumAge ? alter : null,
-      consent: consentSauber,
+      /* Nur ein Boolean. Welche Marken und Kanaele damit abgedeckt sind,
+         entscheidet ausschliesslich der Server aus MARKETING_EINWILLIGUNG —
+         so kann kein Aufrufer Zwecke dazuerfinden. */
+      marketing,
       website: werte.website, /* Honigtopf — gefuellt heisst Bot */
       quelle: typeof window !== 'undefined' ? window.location.search : '',
     }
@@ -419,7 +388,6 @@ export default function Stadtfest() {
       <div className={`stf-feld${fehler[name] ? ' stf-feld--fehler' : ''}`}>
         <label className="stf-feld__label" htmlFor={`stf-${name}`}>
           {label}
-          {!pflicht && <span className="stf-feld__opt"> · optional</span>}
         </label>
         <input
           id={`stf-${name}`}
@@ -472,12 +440,14 @@ export default function Stadtfest() {
             typ: 'tel',
             autoComplete: 'tel',
             inputMode: 'tel',
+            pflicht: true,
           })}
           {feld({
             name: 'plz',
             label: 'PLZ',
             autoComplete: 'postal-code',
             inputMode: 'numeric',
+            pflicht: true,
           })}
         </div>
       </div>
@@ -497,7 +467,7 @@ export default function Stadtfest() {
       </div>
 
       <div>
-        <p className="stf-gruppe__titel">Was könnte bei dir irgendwann interessant werden?</p>
+        <p className="stf-gruppe__titel">Was interessiert dich?</p>
         <div className="stf-chips">
           {interessenFuer(gewinnspiel).map((interesse) => (
             <button
@@ -521,23 +491,6 @@ export default function Stadtfest() {
           Datenschutzhinweis bleibt, denn gespeichert wird trotzdem. */}
       {gewinnspiel ? (
       <div className="stf-karte">
-        <label className={`stf-check${fehler.agb ? ' stf-check--fehler' : ''}`} htmlFor="stf-agb">
-          <input
-            id="stf-agb"
-            className="stf-check__box"
-            type="checkbox"
-            checked={agb}
-            onChange={(e) => {
-              setAgb(e.target.checked)
-              setFehler((f) => ({ ...f, agb: undefined }))
-            }}
-          />
-          <span className="stf-check__text">
-            Ich akzeptiere die Teilnahmebedingungen.
-            {fehler.agb && <span className="stf-feld__fehler"> {fehler.agb}</span>}
-          </span>
-        </label>
-
         {STADTFEST_EVENT.minimumAge ? (
           <label className={`stf-check${fehler.alter ? ' stf-check--fehler' : ''}`} htmlFor="stf-alter">
             <input
@@ -557,6 +510,23 @@ export default function Stadtfest() {
           </label>
         ) : null}
 
+        <label className={`stf-check${fehler.agb ? ' stf-check--fehler' : ''}`} htmlFor="stf-agb">
+          <input
+            id="stf-agb"
+            className="stf-check__box"
+            type="checkbox"
+            checked={agb}
+            onChange={(e) => {
+              setAgb(e.target.checked)
+              setFehler((f) => ({ ...f, agb: undefined }))
+            }}
+          />
+          <span className="stf-check__text">
+            Ich akzeptiere die Teilnahmebedingungen und Datenschutzhinweise.
+            {fehler.agb && <span className="stf-feld__fehler"> {fehler.agb}</span>}
+          </span>
+        </label>
+
         <div className="stf-linkreihe">
           <button type="button" className="stf-link" onClick={() => setSheet('teilnahme')}>
             Teilnahmebedingungen
@@ -574,68 +544,22 @@ export default function Stadtfest() {
         </div>
       )}
 
-      {/* Marketing. Technisch und visuell getrennt von allem darueber.
-          Nichts ist vorausgewaehlt, nichts ist Voraussetzung. */}
-      <div className="stf-karte stf-karte--marketing">
-        <h2 className="stf-karte__titel">Dürfen wir uns nochmal melden?</h2>
-        <p className="stf-karte__frei">
-          {gewinnspiel
-            ? 'Freiwillig. Dein Gewinnspiel hängt nicht davon ab.'
-            : 'Freiwillig. Ohne die Häkchen bleibt es einfach beim Eintrag.'}
-        </p>
-
-        {STADTFEST_FIRMEN.map((firma) => {
-          const an = Boolean(consent[firma.key])
-          return (
-            <div className="stf-firma" key={firma.key}>
-              <label className="stf-check" htmlFor={`stf-firma-${firma.key}`}>
-                <input
-                  id={`stf-firma-${firma.key}`}
-                  className="stf-check__box"
-                  type="checkbox"
-                  checked={an}
-                  onChange={() => firmaUmschalten(firma.key)}
-                />
-                <span className="stf-check__text">
-                  <span className="stf-firma__name">{firma.label}</span>
-                  <span className="stf-check__klein">{firma.text}</span>
-                </span>
-              </label>
-
-              {an && (
-                <div className="stf-kanal">
-                  <p className="stf-kanal__frage">Wie? Bitte mindestens einen Weg wählen.</p>
-                  {KANAELE.map((kanal) => {
-                    const gewaehlt = consent[firma.key]?.includes(kanal.key)
-                    /* Telefon ist erst waehlbar, wenn eine Nummer dasteht.
-                       Sonst entstuende eine Einwilligung ins Leere. */
-                    const gesperrt = kanal.key === 'telefon' && !werte.telefon.trim()
-                    return (
-                      <button
-                        key={kanal.key}
-                        type="button"
-                        className="stf-kanal__knopf"
-                        aria-pressed={Boolean(gewaehlt)}
-                        disabled={gesperrt}
-                        onClick={() => kanalUmschalten(firma.key, kanal.key)}
-                      >
-                        {kanal.label}
-                      </button>
-                    )
-                  })}
-                  {!werte.telefon.trim() && (
-                    <p className="stf-kanal__hinweis">
-                      Telefon geht erst, wenn oben eine Mobilnummer steht.
-                    </p>
-                  )}
-                  {fehler[`consent-${firma.key}`] && (
-                    <p className="stf-feld__fehler" role="alert">{fehler[`consent-${firma.key}`]}</p>
-                  )}
-                </div>
-              )}
-            </div>
-          )
-        })}
+      {/* Marketing (§6). Eine Zeile, ein Haken, nicht vorausgewaehlt.
+          Steht bewusst UNTER den Pflichthaken und optisch abgesetzt: das
+          hier ist kein Bestandteil der Teilnahmebedingungen, und die
+          Teilnahme haengt an keiner Stelle davon ab. */}
+      <div className="stf-marketing">
+        <label className="stf-check" htmlFor="stf-marketing">
+          <input
+            id="stf-marketing"
+            className="stf-check__box"
+            type="checkbox"
+            checked={marketing}
+            onChange={(e) => setMarketing(e.target.checked)}
+          />
+          <span className="stf-check__text">{MARKETING_EINWILLIGUNG.text}</span>
+        </label>
+        <p className="stf-marketing__frei">{MARKETING_EINWILLIGUNG.zusatz}</p>
       </div>
 
       {sammelfehler && (
@@ -670,15 +594,19 @@ export default function Stadtfest() {
           {ansicht === 'duplikat' ? texte.duplikatText : texte.erfolgText}
         </p>
 
+        {/* Die Platte ist das, was am Stand vorgezeigt wird. Sie sieht vor
+            und waehrend des Fests gleich aus — der Stempel wird schliesslich
+            genauso gestempelt. Nur nach dem Fest faellt die laufende Uhr weg,
+            weil es dann nichts mehr live zu zeigen gibt. */}
         <div className="stf-platte">
-          {phasenKey === 'event' && (
+          {phasenKey !== 'nachher' && (
             <span className="stf-platte__live">
               <span className="stf-platte__punkt" />
               Live
             </span>
           )}
           <p className="stf-platte__name">{beleg.name}</p>
-          {phasenKey === 'event' && (
+          {phasenKey !== 'nachher' && (
             <p className="stf-platte__uhr">{uhrzeitText(jetzt ?? beleg.zeitpunkt)}</p>
           )}
           <p className="stf-platte__zeile">
@@ -718,23 +646,21 @@ export default function Stadtfest() {
       <section className="stf-phase">
         <dl className="stf-eck">
           <div className="stf-eck__zeile">
+            <dt className="stf-eck__dt">Was</dt>
+            <dd className="stf-eck__dd">{STADTFEST_EVENT.name}</dd>
+          </div>
+          <div className="stf-eck__zeile">
             <dt className="stf-eck__dt">Wann</dt>
-            <dd className="stf-eck__dd">{zeitraumText()}</dd>
+            <dd className="stf-eck__dd">{eventDatumKurz()}</dd>
           </div>
           <div className="stf-eck__zeile">
             <dt className="stf-eck__dt">Wo</dt>
             <dd className="stf-eck__dd">{STADTFEST_EVENT.ort}</dd>
           </div>
-          <div className="stf-eck__zeile">
-            <dt className="stf-eck__dt">Wer</dt>
-            <dd className="stf-eck__dd">VIDEKO K&uuml;chen &times; ATLAS Wealth</dd>
-          </div>
         </dl>
-        <p className="stf-phase__text">
-          Am Stand steht ein Gl&uuml;cksrad. Der Eintrag hier ist die Vorarbeit
-          &mdash; die Teilnahme am Gewinnspiel entsteht erst vor Ort, mit dem
-          best&auml;tigten Dreh.
-        </p>
+        {texte?.teilnahmeHinweis ? (
+          <p className="stf-phase__text">{texte.teilnahmeHinweis}</p>
+        ) : null}
       </section>
     ) : phasenKey === 'nachher' ? (
       <section className="stf-phase">
@@ -749,7 +675,7 @@ export default function Stadtfest() {
     <section className="stf-phase">
       <h1 className="stf-phase__titel">{STADTFEST_EVENT.name}</h1>
       <p className="stf-phase__sub">
-        {zeitraumText()} &middot; {STADTFEST_EVENT.ort}
+        {eventDatumKurz()} &middot; {STADTFEST_EVENT.ort}
       </p>
       <p className="stf-phase__text">
         VIDEKO K&uuml;chen &times; ATLAS Wealth.
