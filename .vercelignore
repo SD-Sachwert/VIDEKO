@@ -1,0 +1,33 @@
+# Was NICHT zu Vercel hochgeladen wird.
+#
+# Ohne diese Datei laedt die Vercel-CLI den kompletten Projektordner hoch
+# (rund 1,4 GB), was den Upload wiederholt mit "Upload aborted" abbrechen
+# liess. Gebaut wird auf Vercel ohnehin nur aus dem Quellcode.
+#
+# WICHTIG: Sobald eine .vercelignore existiert, steuert sie den Upload.
+# Deshalb stehen die ohnehin unnoetigen Standardordner hier explizit drin.
+
+# Wird auf Vercel neu installiert bzw. erzeugt
+node_modules
+dist
+dist-ssr
+
+# Werkzeug-/Metadatenordner
+.git
+.vercel
+
+# Zugangsdaten bleiben lokal
+.env
+.env.local
+.env.*.local
+
+# Reines Arbeits- und Archivmaterial: Referenzscreenshots, Rohbilder und
+# ZIP-Pakete aus der Designphase. 681 MB, 263 Dateien, davon 32 ZIPs.
+# Nachgewiesen unbenutzt: kein Import, kein import.meta.glob-Muster trifft
+# darauf zu (merch/**.webp und performance/*.webp), keine CSS-URL, keine
+# Erwaehnung in scripts/ oder api/, und keine einzige dieser Dateien liegt
+# byte-identisch im Build-Output dist/.
+src/assets/images/unbenutzt
+
+# Screenshots der Browserpruefung (scripts/pruefe-hydration.mjs)
+pruefung
