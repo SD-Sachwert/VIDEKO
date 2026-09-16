@@ -20,7 +20,7 @@ import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 
-import { PRACTICE_STANDARD, TEXTE, probeRangSatz } from '../src/data/terminal.js'
+import { PRACTICE_STANDARD, TEXTE, probeListeAus, probeRangSatz } from '../src/data/terminal.js'
 
 const wurzel = join(dirname(fileURLToPath(import.meta.url)), '..')
 const lies = (p) => readFileSync(join(wurzel, p), 'utf8')
@@ -108,6 +108,59 @@ console.log('\n— Der Satz, wenn es nichts zu vergleichen gibt')
   pruefe(
     'Ohne Punktzahl wird mit 0 gerechnet, nicht mit NaN',
     !/NaN/.test(probeRangSatz('da', [100], undefined)?.text ?? ''),
+  )
+}
+
+/* ---------------------------------------------------------------- */
+console.log('\n— Die Serverantwort auspacken: genau die Form, die wirklich kommt')
+{
+  /* Diese Pruefungen gibt es, weil der Fehler schon einmal live stand und
+     hier trotzdem alles gruen war: der Testaufbau lieferte je Spiel ein
+     flaches Array, der echte Server liefert ein Objekt mit `eintraege`.
+     Also wird hier die Serverform nachgebaut — Feld fuer Feld so, wie
+     listeBauen() in api/_terminal-kern.js sie zusammensetzt. */
+  const serverform = {
+    ok: true,
+    listen: {
+      kuechen_merge: {
+        eintraege: [
+          { platz: 1, instagram: 'a_name', punkte: 8450, ich: false },
+          { platz: 2, instagram: 'b_name', punkte: 6100, ich: false },
+        ],
+        eigenerPlatz: null,
+        eigenePunkte: null,
+        gelistet: false,
+      },
+    },
+  }
+
+  const raus = probeListeAus(serverform, 'kuechen_merge')
+  pruefe('Die echte Serverform wird gelesen, nicht verworfen', Array.isArray(raus), JSON.stringify(raus))
+  pruefe('Es kommen die Punktwerte heraus, absteigend', JSON.stringify(raus) === '[8450,6100]', JSON.stringify(raus))
+
+  /* Und der Satz danach muss daraus wirklich einen Platz machen — das war
+     der sichtbare Schaden: „noch keine oeffentliche Rangliste", obwohl eine
+     da war. */
+  const satz = probeRangSatz('da', raus, 25955)
+  pruefe('Aus der Serverform entsteht ein echter Platz', satz?.art === 'platz', satz?.text)
+
+  /* Die flache Form darf weiterhin durchgehen: aeltere Antworten und die
+     Tests, die damit rechnen, sollen nicht brechen. */
+  const flach = probeListeAus({ ok: true, listen: { kuechen_merge: [{ punkte: 300 }, { punkte: 900 }] } }, 'kuechen_merge')
+  pruefe('Die flache Form wird weiterhin angenommen', JSON.stringify(flach) === '[900,300]', JSON.stringify(flach))
+
+  /* Und alles, was keine Liste ist, muss `null` sein — das ist etwas anderes
+     als eine leere Liste und wird auf der Seite auch anders gesagt. */
+  pruefe('Ohne ok kommt null', probeListeAus({ ok: false, listen: { kuechen_merge: { eintraege: [] } } }, 'kuechen_merge') === null)
+  pruefe('Ohne Antwort kommt null', probeListeAus(null, 'kuechen_merge') === null)
+  pruefe('Unbekanntes Spiel gibt null', probeListeAus(serverform, 'gibt_es_nicht') === null)
+  pruefe(
+    'Leere eintraege geben eine leere Liste, nicht null',
+    JSON.stringify(probeListeAus({ ok: true, listen: { x: { eintraege: [] } } }, 'x')) === '[]',
+  )
+  pruefe(
+    'Kaputte Eintraege fallen raus statt NaN zu erzeugen',
+    JSON.stringify(probeListeAus({ ok: true, listen: { x: { eintraege: [{ punkte: 'abc' }, { punkte: 0 }, { punkte: 50 }] } } }, 'x')) === '[50]',
   )
 }
 

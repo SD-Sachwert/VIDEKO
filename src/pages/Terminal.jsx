@@ -58,6 +58,7 @@ import {
   fuelle,
   instagramNormalisieren,
   missionStand,
+  probeListeAus,
   probeRangSatz,
   terminText,
   zahl,
@@ -1377,17 +1378,14 @@ export default function Terminal() {
     setProbeRang({ stand: 'laedt', liste: [] })
     ranglisteHolen(null)
       .then((antwort) => {
-        const roh = antwort?.ok ? antwort.listen?.[probeKey] : null
-        if (!Array.isArray(roh)) {
+        /* Nur die Punktzahlen, absteigend. Namen braucht der Vergleich
+           nicht, und was die Seite nicht haelt, kann sie nicht zeigen.
+           Das Auspacken steht in terminal.js, damit es pruefbar ist. */
+        const liste = probeListeAus(antwort, probeKey)
+        if (!liste) {
           setProbeRang({ stand: 'leer', liste: [] })
           return
         }
-        /* Nur die Punktzahlen, absteigend. Namen braucht der Vergleich
-           nicht, und was die Seite nicht haelt, kann sie nicht zeigen. */
-        const liste = roh
-          .map((eintrag) => Number(eintrag?.punkte))
-          .filter((p) => Number.isFinite(p) && p > 0)
-          .sort((a, b) => b - a)
         setProbeRang({ stand: liste.length ? 'da' : 'leer', liste })
       })
       .catch(() => setProbeRang({ stand: 'fehler', liste: [] }))

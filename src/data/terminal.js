@@ -758,6 +758,34 @@ export function probeRangSatz(stand, liste, punkte) {
   }
 }
 
+/**
+ * Die Punktwerte eines Spiels aus einer Ranglisten-Antwort — absteigend.
+ *
+ * Steht hier und nicht in der Seite, weil genau diese Stelle einmal falsch
+ * lag und es niemandem auffiel: der Server liefert je Spiel ein Objekt
+ * (`{ eintraege: [...], eigenerPlatz, ... }`), die Seite las es als flaches
+ * Array. `Array.isArray` sagte nein, der Vergleich meldete "keine
+ * oeffentliche Rangliste" — und zwar immer, auch wenn eine da war. Getestet
+ * wurde das damals gegen einen selbstgebauten Stub, der die Liste direkt
+ * lieferte; der Fehler konnte so gar nicht auffallen.
+ *
+ * Darum werden beide Formen angenommen, und darum liegt die Umwandlung als
+ * reine Funktion hier, wo ein Test die echte Serverform nachstellen kann.
+ *
+ * Gibt `null` zurueck, wenn die Antwort fuer dieses Spiel nichts hergibt —
+ * das ist etwas anderes als eine leere Liste und wird auch anders gesagt.
+ */
+export function probeListeAus(antwort, key) {
+  if (!antwort?.ok) return null
+  const roh = antwort.listen?.[key]
+  const eintraege = Array.isArray(roh) ? roh : Array.isArray(roh?.eintraege) ? roh.eintraege : null
+  if (!eintraege) return null
+  return eintraege
+    .map((eintrag) => Number(eintrag?.punkte))
+    .filter((p) => Number.isFinite(p) && p > 0)
+    .sort((a, b) => b - a)
+}
+
 /** Die drei Stufen des Fortschrittsanzeigers in Zustand B. */
 export const SCHRITTE = ['Rätsel lösen', 'Code knacken', 'Deckel aktivieren']
 
