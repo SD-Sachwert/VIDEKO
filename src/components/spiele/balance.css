@@ -1,0 +1,340 @@
+/* ------------------------------------------------------------------ */
+/* Küchen-Balance — der wackelige Turm                                 */
+/* ------------------------------------------------------------------ */
+
+/* Alles rechnet in Welteinheiten: --s ist die Pixelgroesse einer Einheit
+   (setzt die Komponente beim Messen), --w/--h sind die Masse eines Teils in
+   seiner Lage, --w0/--h0 die unverdrehte Form. Position und Neigung kommen
+   als transform aus der Spielschleife — CSS liefert nur das Aussehen. */
+
+.trm-balance-buehne {
+  --s: 36;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  cursor: grab;
+  outline: none;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  /* Schwarzer Marmor: ein paar feine Adern, unten ein warmer Schimmer. */
+  background:
+    linear-gradient(118deg, transparent 0 38%, color-mix(in srgb, var(--trm-gold) 8%, transparent) 39%, transparent 40.5% 100%),
+    linear-gradient(164deg, transparent 0 62%, color-mix(in srgb, var(--trm-creme) 5%, transparent) 63%, transparent 64.2% 100%),
+    linear-gradient(72deg, transparent 0 20%, color-mix(in srgb, var(--trm-creme) 3%, transparent) 21%, transparent 22.2% 100%),
+    radial-gradient(80% 45% at 50% 100%, color-mix(in srgb, var(--trm-gold-tief) 24%, transparent), transparent 72%),
+    linear-gradient(180deg, color-mix(in srgb, var(--trm-nacht) 30%, transparent), color-mix(in srgb, var(--trm-nacht) 70%, transparent));
+}
+
+.trm-balance-buehne:active {
+  cursor: grabbing;
+}
+
+.trm-balance-buehne:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--trm-gold-hell);
+}
+
+/* Boden und Sockel (eine Palette) */
+.trm-balance-boden {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--trm-linie-stark) 14%, var(--trm-linie-stark) 86%, transparent);
+  will-change: transform;
+  pointer-events: none;
+}
+
+.trm-balance-boden::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--s) * 0.5px);
+  height: 600px;
+  background: color-mix(in srgb, var(--trm-nacht) 55%, transparent);
+}
+
+.trm-balance-sockel {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(var(--sockel-b) * var(--s) * 1px);
+  height: calc(var(--s) * 0.5px);
+  box-sizing: border-box;
+  border-top: 2px solid var(--trm-gold);
+  border-radius: 2px;
+  background:
+    repeating-linear-gradient(90deg, var(--trm-gold-tief) 0 14%, transparent 14% 21%),
+    color-mix(in srgb, var(--trm-nacht) 80%, transparent);
+  opacity: 0.9;
+  will-change: transform;
+  pointer-events: none;
+}
+
+/* Ein Teil: Huelle in Lage, Form darin zentriert (und bei Bedarf gedreht). */
+.trm-balance-teil {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(var(--w) * var(--s) * 1px);
+  height: calc(var(--h) * var(--s) * 1px);
+  transform-origin: 0 0;
+  will-change: transform;
+  pointer-events: none;
+}
+
+.trm-balance-form {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  box-sizing: border-box;
+  width: calc(var(--w0) * var(--s) * 1px);
+  height: calc(var(--h0) * var(--s) * 1px);
+  border: 1px solid color-mix(in srgb, var(--trm-gold) 62%, transparent);
+  border-radius: 3px;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--trm-creme) 15%, var(--trm-nacht)) 0%,
+    color-mix(in srgb, var(--trm-creme) 6%, var(--trm-nacht)) 100%
+  );
+  box-shadow: inset 0 -3px 0 color-mix(in srgb, var(--trm-nacht) 45%, transparent);
+  transform: translate(-50%, -50%);
+}
+
+.trm-balance-teil[data-quer='1'] .trm-balance-form {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.trm-balance-teil[data-spiegel='1'] .trm-balance-form {
+  transform: translate(-50%, -50%) scaleX(-1);
+}
+
+.trm-balance-form > span {
+  position: absolute;
+  box-sizing: border-box;
+}
+
+.trm-balance-front {
+  border: 1px solid color-mix(in srgb, var(--trm-gold) 28%, transparent);
+  border-radius: 2px;
+  background: linear-gradient(160deg, color-mix(in srgb, var(--trm-creme) 7%, transparent), transparent 60%);
+}
+
+.trm-balance-griff {
+  border-radius: 2px;
+  background: var(--trm-gold-hell);
+  box-shadow: 0 0 4px color-mix(in srgb, var(--trm-gold-hell) 40%, transparent);
+}
+
+.trm-balance-platte {
+  border-radius: 2px 2px 0 0;
+  background: linear-gradient(90deg, var(--trm-gold-tief), var(--trm-gold-hell) 50%, var(--trm-gold-tief));
+}
+
+.trm-balance-leiste {
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--trm-nacht) 75%, transparent);
+}
+
+.trm-balance-knopf {
+  border-radius: 50%;
+  background: var(--trm-gold);
+}
+
+.trm-balance-glas {
+  border: 1px solid color-mix(in srgb, var(--trm-gold) 70%, transparent);
+  border-radius: 3px;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--trm-gold-hell) 18%, var(--trm-nacht)), var(--trm-nacht) 60%);
+}
+
+.trm-balance-rund {
+  border: 2px solid var(--trm-gold);
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 35%, color-mix(in srgb, var(--trm-creme) 16%, var(--trm-nacht)), var(--trm-nacht) 70%);
+}
+
+.trm-balance-becken {
+  border: 1px solid var(--trm-gold-tief);
+  border-radius: 3px;
+  background: var(--trm-nacht);
+}
+
+.trm-balance-hahn {
+  border-radius: 1px;
+  background: var(--trm-creme-weich);
+}
+
+.trm-balance-sockelleiste {
+  background: color-mix(in srgb, var(--trm-nacht) 80%, transparent);
+}
+
+.trm-balance-kante {
+  background: color-mix(in srgb, var(--trm-nacht) 35%, transparent);
+}
+
+/* Sonderformen */
+.trm-balance-form--kuehlschrank,
+.trm-balance-form--waschmaschine {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--trm-creme) 22%, var(--trm-nacht)) 0%,
+    color-mix(in srgb, var(--trm-creme) 30%, var(--trm-nacht)) 45%,
+    color-mix(in srgb, var(--trm-creme) 16%, var(--trm-nacht)) 100%
+  );
+}
+
+.trm-balance-form--arbeitsplatte {
+  border-color: var(--trm-gold-hell);
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--trm-gold-tief), var(--trm-gold-hell) 30%, var(--trm-gold) 70%, var(--trm-gold-tief));
+  box-shadow: none;
+}
+
+.trm-balance-form--karton {
+  border-color: var(--trm-gold-tief);
+  border-radius: 2px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--trm-gold-tief) 72%, var(--trm-nacht)), color-mix(in srgb, var(--trm-gold-tief) 55%, var(--trm-nacht)));
+}
+
+.trm-balance-klebeband {
+  background: color-mix(in srgb, var(--trm-creme) 38%, var(--trm-gold-tief));
+  opacity: 0.8;
+}
+
+.trm-balance-pfeile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(var(--s) * 0.3px);
+  line-height: 1;
+  color: var(--trm-nacht);
+  opacity: 0.6;
+}
+
+.trm-balance-pfeile::before {
+  content: '▲▲';
+  letter-spacing: 0.1em;
+}
+
+.trm-balance-form--hochschrank,
+.trm-balance-form--kuecheninsel {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--trm-creme) 11%, var(--trm-nacht)) 0%,
+    color-mix(in srgb, var(--trm-creme) 4%, var(--trm-nacht)) 100%
+  );
+}
+
+/* Das schwebende Teil leuchtet leicht — daran erkennt man, was man bewegt. */
+.trm-balance-teil--haengt .trm-balance-form {
+  box-shadow:
+    inset 0 -3px 0 color-mix(in srgb, var(--trm-nacht) 45%, transparent),
+    0 0 calc(var(--s) * 0.45px) color-mix(in srgb, var(--trm-gold-hell) 42%, transparent);
+  animation: trm-balance-auftauchen 0.28s ease-out both;
+}
+
+@keyframes trm-balance-auftauchen {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.trm-balance-teil[data-perfekt='1'] .trm-balance-form {
+  animation: trm-balance-glanz 0.7s ease-out;
+}
+
+@keyframes trm-balance-glanz {
+  from {
+    filter: brightness(1.8);
+    box-shadow: 0 0 18px color-mix(in srgb, var(--trm-gold-hell) 70%, transparent);
+  }
+  to {
+    filter: brightness(1);
+  }
+}
+
+.trm-balance-drehen {
+  position: absolute;
+  right: -4px;
+  top: -18px;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--trm-gold-hell);
+  text-shadow: 0 0 8px var(--trm-nacht);
+}
+
+/* Lot und Mittelmarke: die Zielhilfe. Leise, damit der Turm die Hauptsache bleibt. */
+.trm-balance-lot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  transform-origin: 0 0;
+  background: color-mix(in srgb, var(--trm-gold-hell) 38%, transparent);
+  will-change: transform;
+  pointer-events: none;
+}
+
+.trm-balance-marke {
+  position: absolute;
+  left: -7px;
+  top: -2px;
+  width: 14px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--trm-gold-hell);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--trm-gold-hell) 60%, transparent);
+  will-change: transform;
+  pointer-events: none;
+}
+
+.trm-balance-hinweis {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 10px;
+  z-index: 2;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--trm-creme-weich);
+  pointer-events: none;
+  animation: trm-balance-puls 1.6s ease-in-out infinite;
+}
+
+@keyframes trm-balance-puls {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+.trm-balance-buehne[data-crash='1'] .trm-balance-sockel {
+  animation: trm-balance-ruck 0.35s ease-in-out;
+}
+
+@keyframes trm-balance-ruck {
+  25% {
+    translate: -4px 0;
+  }
+  75% {
+    translate: 4px 0;
+  }
+}
+
+/* Weniger Bewegung: kein Ruckeln, kein Pulsieren, kein Aufblitzen. */
+.trm-balance-buehne[data-sanft='1'] .trm-balance-hinweis,
+.trm-balance-buehne[data-sanft='1'][data-crash='1'] .trm-balance-sockel,
+.trm-balance-buehne[data-sanft='1'] .trm-balance-teil[data-perfekt='1'] .trm-balance-form {
+  animation: none;
+}

@@ -1,0 +1,6330 @@
+/* ======================================================================
+   /terminal — Bierdeckel-Aktion, mobile first.
+
+   Eigene Datei nach dem Vorbild von stadtfest.css: die Aktionsseite liegt
+   ausserhalb von <Layout> und soll die restliche Website nicht beruehren.
+   Alle Klassen tragen das Praefix `trm-`. Eingebunden ueber einen @import
+   ganz oben in styles.css — ein lazy geladenes Page-CSS wuerde beim
+   Prerender kurz ungestylt aufblitzen, weil der Prerender nur
+   modulepreload schreibt und keinen stylesheet-Link.
+
+   WARUM DIESE SEITE IHREN EIGENEN HINTERGRUND MALT
+   ------------------------------------------------
+   Das globale <body> traegt den hellen Marmor der Hauptwebsite. Diese
+   Seite ist schwarz. Sie setzt ihren Grund deshalb selbst und deckt den
+   Viewport vollstaendig ab (zwei fixe Layer, siehe .trm::before/::after).
+
+   FARBDISZIPLIN
+   -------------
+   Gold traegt die Seite. Gruen erscheint ausschliesslich am Zustand
+   "aktiviert", Rot ausschliesslich am Live-Signal der Ziehung. Beide
+   Farben stehen nie allein: neben dem gruenen Haken steht das Wort
+   AKTIVIERT, neben dem roten Punkt das Wort LIVE. Wer Farben nicht
+   unterscheidet, liest denselben Zustand.
+   ====================================================================== */
+
+.trm {
+  --trm-gold: var(--gold, #c9a050);
+  --trm-gold-hell: var(--gold-bright, #e8c978);
+  --trm-gold-tief: var(--bronze, #8b6b38);
+  --trm-nacht: #0a0908;
+  --trm-creme: var(--cream, #f4efe4);
+  --trm-creme-weich: rgba(244, 239, 228, 0.72);
+  --trm-creme-leise: rgba(244, 239, 228, 0.5);
+
+  --trm-linie: rgba(201, 160, 80, 0.26);
+  --trm-linie-stark: rgba(201, 160, 80, 0.58);
+  --trm-panel: rgba(9, 8, 7, 0.62);
+  --trm-panel-tief: rgba(6, 5, 4, 0.78);
+  --trm-feld: rgba(3, 3, 2, 0.62);
+
+  /* Gruen nur fuer "aktiviert", Rot nur fuer "live". Sonst nirgends. */
+  --trm-gruen: #57c47c;
+  --trm-gruen-tief: rgba(48, 122, 74, 0.22);
+  --trm-rot: #e2453a;
+
+  /* Der Marmorgrund in zwei Groessen, umgeschaltet weiter unten. Der Master
+     ist 941 px breit; alles darueber waere hochskalierte Unschaerfe. */
+  --trm-bild: url('./assets/images/terminal/terminal-marmor-560w.webp');
+
+  --trm-rand: clamp(16px, 4.6vw, 28px);
+  --trm-radius: 14px;
+
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--trm-nacht);
+  color: var(--trm-creme);
+  font-family: var(--sans, 'Inter', system-ui, sans-serif);
+  overflow-x: hidden;
+}
+
+/* Ab 480 px Breite oder auf jedem Retina-Display die volle Aufloesung. Ein
+   Handy mit 390 px CSS-Breite und Faktor 2 zeigt 780 echte Pixel — die
+   kleine Datei waere dort sichtbar weich. */
+@media (min-width: 480px), (min-resolution: 1.5dppx) {
+  .trm {
+    --trm-bild: url('./assets/images/terminal/terminal-marmor-941w.webp');
+  }
+}
+
+/* Der Marmor. Fix im Viewport statt ueber die Seitenhoehe gestreckt: die
+   Seite wird je nach Zustand 2.000 bis 6.000 px lang, ein `cover` darueber
+   wuerde das Motiv zu einem Farbverlauf ziehen. Fix bleibt die Maserung in
+   echter Groesse und scrollt ruhig unter dem Inhalt durch. */
+.trm::before,
+.trm::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.trm::before {
+  background-image: var(--trm-bild);
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+}
+
+/* Darueber die Abdunklung: aussen fast schwarz, in der Mitte ein warmes
+   Goldlicht, das die Adern im Stein aufnimmt und die Truhe traegt. */
+.trm::after {
+  background:
+    radial-gradient(120% 68% at 50% 26%, rgba(201, 150, 60, 0.16) 0%, rgba(10, 9, 8, 0) 62%),
+    radial-gradient(150% 100% at 50% 50%, rgba(8, 7, 6, 0.28) 0%, rgba(8, 7, 6, 0.86) 100%);
+}
+
+/* Die Saeule. Eine Spalte, eine Handbewegung, Daumen unten. */
+.trm__spalte {
+  position: relative;
+  /* Eine eigene Ebene ueber der Introschicht. Der Ersteinstieg legt Rauch,
+     Lichtadern und den fernen Lichtpunkt hinter die Spalte — die Truhe steht
+     mitten darin und muss davor bleiben, nicht dahinter. */
+  z-index: 2;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 0 var(--trm-rand) clamp(40px, 12vw, 72px);
+}
+
+/* ------------------------------------------------------------------ */
+/* Kopf                                                                */
+/* ------------------------------------------------------------------ */
+
+.trm-kopf {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: clamp(14px, 4vw, 22px) 0 clamp(10px, 3vw, 16px);
+}
+
+.trm-kopf__marke {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-right: auto;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Das Markenlogo enthaelt den Schriftzug bereits — daneben steht deshalb
+   kein zweites "VIDEKO". Hoehe statt Breite gesetzt, das Seitenverhaeltnis
+   steht im Markup. */
+.trm-kopf__logo {
+  display: block;
+  width: auto;
+  height: clamp(34px, 9.4vw, 44px);
+}
+
+/* Instagram-Pille. Auf sehr schmalen Geraeten faellt der Name weg und nur
+   das Symbol bleibt stehen — die Zeile darf den Kopf nicht sprengen. */
+.trm-ig {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--trm-linie-stark);
+  border-radius: 999px;
+  background: rgba(8, 7, 6, 0.55);
+  color: var(--trm-gold-hell);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.trm-ig:hover,
+.trm-ig:focus-visible {
+  border-color: var(--trm-gold-hell);
+  background: rgba(201, 160, 80, 0.12);
+}
+
+.trm-ig__name {
+  display: none;
+}
+
+@media (min-width: 380px) {
+  .trm-ig__name {
+    display: inline;
+  }
+}
+
+/* Menueknopf. Oeffnet ein kleines Blatt mit den Sprungzielen dieser Seite
+   und dem Weg zurueck auf die Hauptwebsite — mehr Navigation gibt es hier
+   bewusst nicht. */
+.trm-menue {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--trm-linie);
+  border-radius: 10px;
+  background: rgba(8, 7, 6, 0.55);
+  color: var(--trm-gold-hell);
+  cursor: pointer;
+}
+
+.trm-menue:hover,
+.trm-menue:focus-visible {
+  border-color: var(--trm-gold-hell);
+}
+
+.trm-menue-blatt {
+  display: grid;
+  gap: 2px;
+  margin: 0 0 12px;
+  padding: 8px;
+  border: 1px solid var(--trm-linie);
+  border-radius: var(--trm-radius);
+  background: var(--trm-panel-tief);
+  backdrop-filter: blur(6px);
+}
+
+.trm-menue-blatt a {
+  display: block;
+  padding: 11px 12px;
+  border-radius: 8px;
+  color: var(--trm-creme);
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+}
+
+.trm-menue-blatt a:hover,
+.trm-menue-blatt a:focus-visible {
+  background: rgba(201, 160, 80, 0.14);
+  color: var(--trm-gold-hell);
+}
+
+/* ------------------------------------------------------------------ */
+/* Ueberschriften, Trenner, Schmuckschrift                             */
+/* ------------------------------------------------------------------ */
+
+/* Gold als Verlauf im Buchstaben statt als Flaeche — das ist der
+   Unterschied zwischen "goldfarben" und "aus Metall". `color` bleibt als
+   Rueckfall stehen; wo background-clip fehlt, ist die Zeile schlicht gold. */
+.trm-gold {
+  color: var(--trm-gold-hell);
+  background: linear-gradient(176deg, #fbeec4 2%, #e2bd6e 34%, #b3853a 64%, #f2d99b 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+  .trm-gold {
+    background: none;
+    -webkit-text-fill-color: currentColor;
+  }
+}
+
+.trm-titel {
+  margin: 0;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(30px, 9.4vw, 46px);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: 0.005em;
+  text-align: center;
+  text-transform: uppercase;
+  filter: drop-shadow(0 0 22px rgba(201, 150, 60, 0.34));
+}
+
+.trm-sub {
+  margin: 10px 0 0;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(17px, 4.9vw, 22px);
+  line-height: 1.3;
+  text-align: center;
+  color: var(--trm-creme);
+}
+
+/* Linie — Raute — Linie. Der Trenner der Marke, hier in klein. */
+.trm-raute {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: clamp(12px, 3.4vw, 18px) 0;
+}
+
+.trm-raute::before,
+.trm-raute::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(201, 160, 80, 0) 0%, var(--trm-linie-stark) 50%, rgba(201, 160, 80, 0) 100%);
+}
+
+.trm-raute__stein {
+  width: 7px;
+  height: 7px;
+  flex: none;
+  background: var(--trm-gold-hell);
+  transform: rotate(45deg);
+  box-shadow: 0 0 10px rgba(232, 201, 120, 0.6);
+}
+
+/* Der handschriftliche Schriftzug neben der Truhe. Eine eigene
+   Handschrift-Webfont waere eine zusaetzliche Datei fuer drei Woerter;
+   stattdessen die vorhandene Serife, kursiv und leicht gedreht. */
+.trm-skript {
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-style: italic;
+  font-size: clamp(15px, 4.2vw, 19px);
+  line-height: 1.14;
+  color: var(--trm-gold-hell);
+  text-shadow: 0 0 14px rgba(232, 201, 120, 0.4);
+}
+
+/* ------------------------------------------------------------------ */
+/* Truhe                                                               */
+/* ------------------------------------------------------------------ */
+
+.trm-truhe {
+  position: relative;
+  /* Eigener Stapelraum: so liegt der Rauch (z-index -1) hinter dem Motiv und
+     trotzdem vor dem Marmor der Seite. */
+  isolation: isolate;
+  margin: clamp(4px, 2vw, 12px) 0 clamp(10px, 3vw, 18px);
+}
+
+.trm-truhe__bild {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 18px 46px rgba(196, 132, 36, 0.3));
+}
+
+/* Schriftzug links, Schild rechts — beide liegen im Mockup ueber den
+   Raendern des Motivs. Absolut positioniert, damit sie mitwandern, und
+   ueber `clamp` so klein, dass sie auf 320 px nicht ins Bild ragen.
+   Auf dem Handy (390 px) fuellt das Motiv die Breite fast ganz aus: der
+   Schriftzug lief dort ueber den goldenen Beschlag und das Schild sass mitten
+   auf dem Deckel — beides kaum lesbar. Position bleibt, aber beide ruecken in
+   die dunkleren Rauchzonen und bekommen einen dunklen Hof, damit die Schrift
+   sich vom Gold abhebt. Stil, Farben und Komposition bleiben unveraendert. */
+.trm-truhe__skript {
+  position: absolute;
+  left: 0;
+  top: 21%;
+  max-width: 30%;
+  transform: rotate(-8deg);
+  transform-origin: left top;
+  /* Dunkler Hof zuerst, Goldschimmer darueber: auf dem Rauch bleibt der
+     Schimmer sichtbar, auf dem Beschlag traegt der Hof die Lesbarkeit. */
+  text-shadow:
+    0 1px 3px rgba(3, 2, 1, 0.95),
+    0 0 10px rgba(3, 2, 1, 0.9),
+    0 0 18px rgba(3, 2, 1, 0.7),
+    0 0 14px rgba(232, 201, 120, 0.4);
+  pointer-events: none;
+}
+
+.trm-truhe__schild {
+  position: absolute;
+  right: 1%;
+  top: 3%;
+  max-width: 38%;
+  padding: 8px 10px;
+  border: 1px solid var(--trm-linie-stark);
+  border-radius: 4px;
+  background: rgba(6, 5, 4, 0.74);
+  box-shadow: 0 6px 18px rgba(3, 2, 1, 0.5);
+  transform: rotate(5deg);
+  transform-origin: right top;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(10px, 2.9vw, 13px);
+  line-height: 1.24;
+  letter-spacing: 0.05em;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--trm-gold-hell);
+  text-shadow: 0 1px 3px rgba(3, 2, 1, 0.9);
+  pointer-events: none;
+}
+
+/* Eine kleine Notiz neben der Truhe im Dashboard ("Noch verschlossen."). */
+.trm-truhe__notiz {
+  position: absolute;
+  right: 0;
+  bottom: 22%;
+  max-width: 40%;
+  font-size: 12px;
+  line-height: 1.32;
+  text-align: left;
+  color: var(--trm-creme-weich);
+  pointer-events: none;
+}
+
+.trm-truhe__notiz b {
+  display: block;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--trm-gold-hell);
+}
+
+/* ---- Leben in der Truhe -------------------------------------------- */
+
+/* Drei Schichten, die nichts bedienen und nichts erklaeren: Rauch dahinter,
+   ein Lichtspalt in der Fuge, ein Glanz, der ueber das Metall zieht. Alle drei
+   sind absichtlich so leise, dass man sie eher spuert als sieht — eine Seite,
+   die dauernd blinkt, wirkt billig, nicht wertvoll. */
+
+.trm-truhe__rauch {
+  position: absolute;
+  z-index: -1;
+  left: -14%;
+  right: -14%;
+  bottom: -6%;
+  height: 62%;
+  background:
+    radial-gradient(48% 60% at 32% 78%, rgba(178, 166, 148, 0.15) 0%, rgba(10, 9, 8, 0) 72%),
+    radial-gradient(42% 56% at 68% 86%, rgba(201, 150, 60, 0.13) 0%, rgba(10, 9, 8, 0) 74%);
+  filter: blur(5px);
+  opacity: 0.85;
+  pointer-events: none;
+  animation: trm-rauch 26s ease-in-out infinite;
+}
+
+/* Sehr langsam, sehr wenig Weg. Zwei Radialverlaeufe, die aneinander
+   vorbeiziehen — das reicht fuer den Eindruck von Zug unter der Truhe. */
+@keyframes trm-rauch {
+  0%,
+  100% {
+    transform: translate3d(-2%, 0, 0) scale(1);
+    opacity: 0.72;
+  }
+  50% {
+    transform: translate3d(2%, -3%, 0) scale(1.07);
+    opacity: 1;
+  }
+}
+
+/* Der Lichtspalt zwischen Deckel und Korpus. Auf der Startseite nur zu
+   erahnen; waehrend ACCESS GRANTED wird er kurz deutlich. */
+.trm-truhe__fuge {
+  position: absolute;
+  left: 21%;
+  top: 44.4%;
+  width: 58%;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(
+    90deg,
+    rgba(232, 201, 120, 0) 0%,
+    rgba(232, 201, 120, 0.8) 22%,
+    rgba(255, 236, 180, 0.95) 50%,
+    rgba(232, 201, 120, 0.8) 78%,
+    rgba(232, 201, 120, 0) 100%
+  );
+  box-shadow: 0 0 10px rgba(232, 201, 120, 0.45);
+  opacity: 0.16;
+  pointer-events: none;
+  animation: trm-fuge 7s ease-in-out infinite;
+}
+
+@keyframes trm-fuge {
+  0%,
+  100% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 0.26;
+  }
+}
+
+/* Der Glanz. Ein schmaler Streifen, der fast die ganze Zeit neben dem Bild
+   wartet und nur selten darueber laeuft. */
+.trm-truhe__glanz {
+  position: absolute;
+  left: 0;
+  top: 10%;
+  width: 34%;
+  height: 74%;
+  background: linear-gradient(
+    104deg,
+    rgba(255, 245, 214, 0) 0%,
+    rgba(255, 245, 214, 0.16) 46%,
+    rgba(255, 245, 214, 0) 100%
+  );
+  opacity: 0;
+  pointer-events: none;
+  animation: trm-glanz 13s ease-in-out infinite;
+}
+
+@keyframes trm-glanz {
+  0%,
+  62%,
+  100% {
+    transform: translate3d(-10%, 0, 0);
+    opacity: 0;
+  }
+  70% {
+    opacity: 0.9;
+  }
+  88% {
+    transform: translate3d(210%, 0, 0);
+    opacity: 0;
+  }
+}
+
+/* Die Lichtschicht der Zugangssequenz. Ausserhalb von ACCESS GRANTED steht
+   sie unsichtbar neben dem Bild und hat keine Animation — sie kostet dort
+   nichts. Breiter und weicher als der Glanz und in Gold statt in Creme: das
+   hier ist Licht, das durch das Material laeuft, kein Reflex darauf. */
+.trm-truhe__adern {
+  position: absolute;
+  left: -14%;
+  top: 4%;
+  width: 26%;
+  height: 86%;
+  background: linear-gradient(
+    100deg,
+    rgba(232, 201, 120, 0) 0%,
+    rgba(255, 236, 180, 0.4) 42%,
+    rgba(214, 162, 68, 0.22) 66%,
+    rgba(232, 201, 120, 0) 100%
+  );
+  filter: blur(7px);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Im Zustand Z ist die Truhe wach: mehr Schein, deutlichere Fuge. */
+.trm-truhe--wach .trm-truhe__bild {
+  filter: drop-shadow(0 18px 52px rgba(212, 152, 40, 0.44));
+}
+
+.trm-truhe--wach .trm-truhe__fuge {
+  opacity: 0.34;
+}
+
+/* Schloss angetippt: ein kurzes Rucken, nicht mehr. */
+.trm-truhe--wackelt .trm-truhe__bild {
+  animation: trm-ruck 0.42s ease both;
+}
+
+@keyframes trm-ruck {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  18% {
+    transform: translate3d(-5px, 0, 0) rotate(-0.5deg);
+  }
+  42% {
+    transform: translate3d(4px, 0, 0) rotate(0.4deg);
+  }
+  68% {
+    transform: translate3d(-2px, 0, 0) rotate(-0.2deg);
+  }
+}
+
+/* VIDEKO-Zeichen angetippt: der Schriftzug leuchtet auf, und der Glanz laeuft
+   einmal ausserhalb seines Takts ueber das Metall. */
+.trm-truhe--zeichen .trm-truhe__skript {
+  filter: drop-shadow(0 0 16px rgba(255, 236, 180, 0.85));
+}
+
+.trm-truhe--zeichen .trm-truhe__glanz {
+  animation: trm-glanz-einmal 0.9s ease-out both;
+}
+
+@keyframes trm-glanz-einmal {
+  from {
+    transform: translate3d(-20%, 0, 0);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  to {
+    transform: translate3d(215%, 0, 0);
+    opacity: 0;
+  }
+}
+
+/* ACCESS GRANTED an der Truhe.
+
+   Die Sequenz ist in Stufen geschnitten, und jede Schicht traegt ihre eigene
+   Dauer und ihre eigene Verzoegerung in Millisekunden — statt einer
+   gemeinsamen Dauer mit verbogenen Prozentmarken. Das sind ein paar Zeilen
+   mehr, dafuer laesst sich jede Zeit am Drehbuch nachrechnen; das Drehbuch
+   steht in Terminal.jsx ueber BUEHNE_MS.
+
+   Die Truhe geht nicht auf. Sie kommt naeher, das Schloss schnappt einmal,
+   und danach steht in der Fuge ein Lichtspalt. Mehr nicht. */
+
+/* 1300–2000 ms — die Truhe kommt nach vorn, bei ~1800 ms schnappt es. */
+.trm-truhe--gewaehrt .trm-truhe__bild {
+  animation: trm-naeher 700ms cubic-bezier(0.25, 0.7, 0.35, 1) 1300ms both;
+}
+
+@keyframes trm-naeher {
+  from {
+    transform: scale(1);
+    filter: drop-shadow(0 18px 46px rgba(196, 132, 36, 0.3));
+  }
+  /* Der Schnapper: ein einzelner harter Ruck, nicht mehrere. Bei 700 ms
+     Dauer und 1300 ms Vorlauf liegt 71 % genau auf 1,8 Sekunden. */
+  62% {
+    transform: scale(1.048);
+  }
+  71% {
+    transform: scale(1.056) translate3d(-4px, 1px, 0);
+  }
+  80% {
+    transform: scale(1.052) translate3d(2px, 0, 0);
+  }
+  to {
+    transform: scale(1.06);
+    filter: drop-shadow(0 22px 62px rgba(232, 201, 120, 0.55));
+  }
+}
+
+/* 600–1500 ms — das Licht wandert durch die Truhe. Ein einzelner weicher
+   Streifen, der ueber das Motiv zieht; die Adern im Stein nimmt das Auge sich
+   selbst dazu. Mehr waere Kitsch. */
+.trm-truhe--gewaehrt .trm-truhe__adern {
+  animation: trm-adern 900ms cubic-bezier(0.36, 0, 0.28, 1) 600ms both;
+}
+
+@keyframes trm-adern {
+  from {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  72% {
+    opacity: 0.95;
+  }
+  to {
+    transform: translate3d(360%, 0, 0);
+    opacity: 0;
+  }
+}
+
+/* 1800–2500 ms — erst nach dem Schnapper, nie davor: der Lichtspalt ist die
+   Folge, nicht die Ankuendigung. Danach bleibt er stehen.
+   `scaleY` statt `height`: die Fuge soll dicker werden, ohne dass der Browser
+   dafuer neu rechnen muss, wo sie liegt. */
+.trm-truhe--gewaehrt .trm-truhe__fuge {
+  animation: trm-fuge-auf 700ms ease-out 1800ms both;
+}
+
+@keyframes trm-fuge-auf {
+  from {
+    opacity: 0.16;
+    transform: scaleY(1);
+  }
+  36% {
+    opacity: 1;
+    transform: scaleY(3.2) scaleX(1.06);
+    box-shadow:
+      0 0 16px rgba(255, 244, 210, 0.95),
+      0 0 46px rgba(232, 201, 120, 0.8),
+      0 -10px 60px rgba(232, 201, 120, 0.5);
+  }
+  to {
+    opacity: 0.95;
+    transform: scaleY(2.4) scaleX(1.04);
+    box-shadow:
+      0 0 12px rgba(255, 244, 210, 0.85),
+      0 0 36px rgba(232, 201, 120, 0.6);
+  }
+}
+
+/* 900–1800 ms — der Rauch zieht an, waehrend das Licht noch laeuft. */
+.trm-truhe--gewaehrt .trm-truhe__rauch {
+  animation: trm-rauch-auf 900ms ease-out 900ms both;
+}
+
+@keyframes trm-rauch-auf {
+  from {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.5) translate3d(0, -9%, 0);
+  }
+}
+
+/* Der Weg durch das Schloss. Der Ursprung liegt im Schluesselloch, damit die
+   Kamera scheinbar genau dort hineinfaehrt und nicht in die Bildmitte.
+   120–1020 ms der 1,3 Sekunden langen Sequenz — danach uebernimmt die
+   schwarze Schlossform (siehe .trm-buehne--schluessel). */
+.trm-truhe--flug .trm-truhe__bild {
+  transform-origin: 49.6% 69.5%;
+  animation: trm-flug 900ms cubic-bezier(0.5, 0, 0.85, 0.4) 120ms both;
+}
+
+@keyframes trm-flug {
+  from {
+    transform: scale(1.06);
+    opacity: 1;
+  }
+  64% {
+    opacity: 1;
+  }
+  to {
+    transform: scale(6);
+    opacity: 0;
+  }
+}
+
+/* Alles, was auf dem Bild liegt, geht sofort weg: mitskalierte Schrift und
+   mitskalierte Knoepfe wuerden den Eindruck von Tiefe zerstoeren. */
+.trm-truhe--flug .trm-truhe__skript,
+.trm-truhe--flug .trm-truhe__schild,
+.trm-truhe--flug .trm-truhe__fuge,
+.trm-truhe--flug .trm-truhe__glanz,
+.trm-truhe--flug .trm-punkte {
+  animation: none;
+  opacity: 0;
+  transition: opacity 0.22s ease;
+}
+
+/* ---- Die drei Punkte auf der Truhe --------------------------------- */
+
+/* Prozentgeometrie, keine Pixel: die Punkte muessen auf 320 und auf 768 px
+   ueber derselben Stelle des Motivs liegen. Die Werte sind am Bild
+   abgemessen — Schloss, Zeichen, Schluesselloch. */
+.trm-punkte {
+  position: absolute;
+  inset: 0;
+}
+
+.trm-punkt {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.trm-punkt:focus-visible {
+  outline: 2px solid var(--trm-gold-hell);
+  outline-offset: 2px;
+}
+
+.trm-punkt--schloss {
+  left: 39%;
+  top: 36.5%;
+  width: 22%;
+  height: 16.5%;
+}
+
+.trm-punkt--zeichen {
+  left: 39%;
+  top: 53%;
+  width: 22%;
+  height: 13%;
+}
+
+/* Das Schluesselloch fuehrt hinein. Es darf deshalb — und nur es — einen
+   eigenen, sehr langsamen Schein haben: niemand soll das Motiv absuchen
+   muessen. */
+.trm-punkt--schluessel {
+  left: 41%;
+  top: 66%;
+  width: 18%;
+  height: 15%;
+  border-radius: 50% 50% 44% 44%;
+  box-shadow:
+    0 0 0 1px rgba(232, 201, 120, 0.35),
+    0 0 26px rgba(232, 201, 120, 0.4);
+  animation: trm-punkt-puls 3.4s ease-in-out infinite;
+}
+
+@keyframes trm-punkt-puls {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 1px rgba(232, 201, 120, 0.28),
+      0 0 18px rgba(232, 201, 120, 0.26);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px rgba(232, 201, 120, 0.5),
+      0 0 34px rgba(232, 201, 120, 0.52);
+  }
+}
+
+/* Nach ACCESS GRANTED ist das Schluesselloch der Blickpunkt: ein Ring aus
+   Gold, der immer wieder von dort nach aussen laeuft. */
+.trm-truhe--wach .trm-punkt--schluessel {
+  animation-name: trm-punkt-puls-stark;
+  animation-duration: 2.4s;
+}
+
+.trm-truhe--wach .trm-punkt--schluessel::before {
+  content: '';
+  position: absolute;
+  inset: -18%;
+  border: 1.5px solid rgba(255, 226, 150, 0.85);
+  border-radius: inherit;
+  pointer-events: none;
+  animation: trm-schluessel-ring 2.4s ease-out infinite;
+}
+
+@keyframes trm-punkt-puls-stark {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 1px rgba(232, 201, 120, 0.45),
+      0 0 22px rgba(232, 201, 120, 0.4),
+      inset 0 0 14px rgba(255, 226, 150, 0.2);
+  }
+  50% {
+    box-shadow:
+      0 0 0 2px rgba(255, 226, 150, 0.8),
+      0 0 54px rgba(232, 201, 120, 0.8),
+      inset 0 0 20px rgba(255, 226, 150, 0.45);
+  }
+}
+
+@keyframes trm-schluessel-ring {
+  0% {
+    opacity: 0.9;
+    transform: scale(0.7);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(1.9);
+  }
+}
+
+/* Die Beschriftung unter dem Schluesselloch. Sie steht da, weil ein Punkt,
+   den man nur durch Probieren findet, kein Eingang ist, sondern ein Raetsel
+   zu viel. */
+.trm-punkt__wort {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 6px);
+  width: max-content;
+  max-width: 52vw;
+  transform: translateX(-50%);
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(11px, 3vw, 13px);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--trm-gold-hell);
+  text-shadow: 0 0 12px rgba(232, 201, 120, 0.5);
+  pointer-events: none;
+}
+
+/* Funken am Schloss. Acht Punkte aus einem einzigen Element: `box-shadow`
+   kostet kein zusaetzliches DOM und keine Bilddatei. */
+.trm-punkt__funken {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 3px;
+  height: 3px;
+  margin: -1.5px 0 0 -1.5px;
+  border-radius: 50%;
+  background: rgba(255, 240, 196, 0.95);
+  box-shadow:
+    14px -10px 0 rgba(255, 226, 150, 0.9),
+    -16px -7px 0 rgba(255, 226, 150, 0.8),
+    9px 13px 0 rgba(255, 214, 120, 0.85),
+    -11px 12px 0 rgba(255, 214, 120, 0.7),
+    22px 3px 0 rgba(255, 236, 180, 0.7),
+    -23px 2px 0 rgba(255, 236, 180, 0.6),
+    0 -18px 0 rgba(255, 240, 196, 0.75);
+  pointer-events: none;
+  animation: trm-funken 0.6s ease-out both;
+}
+
+@keyframes trm-funken {
+  from {
+    transform: scale(0.3);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
+/* Das Wort zum angetippten Punkt, unter der Truhe. Die Hoehe steht fest,
+   damit die Seite beim Auftauchen nicht springt. */
+.trm-truhe__ruf {
+  min-height: 1.7em;
+  margin: 0 0 clamp(6px, 2vw, 12px);
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(17px, 4.8vw, 22px);
+  letter-spacing: 0.04em;
+  text-align: center;
+  color: var(--trm-gold-hell);
+  text-shadow: 0 0 16px rgba(232, 201, 120, 0.4);
+}
+
+/* ------------------------------------------------------------------ */
+/* Buehne — die beiden Inszenierungen                                  */
+/* ------------------------------------------------------------------ */
+
+/* Zwei kurze Szenen liegen ueber der ganzen Seite: ACCESS GRANTED nach dem
+   richtigen Code und der Weg durch das Schluesselloch. Beide sind Vorhang,
+   nicht Bedienung — `pointer-events: none` laesst keinen Zweifel daran, und
+   solange sie laufen, sperrt die Seite in JavaScript ihre Eingaben.
+
+   Beide sind in Stufen geschnitten: jede Schicht hat ihre eigene Dauer und
+   ihre eigene Verzoegerung. Die Zeiten stehen als Drehbuch in Terminal.jsx.
+   Bewegt werden fast nur `transform` und `opacity` — beides geht ohne neues
+   Layout durch, und nur so laeuft das auf einem Telefon rund.
+   Die Szenen dauern 3,4 s und 1,3 s; laenger hiesse warten. */
+.trm-buehne {
+  /* Die Buehne haengt als Geschwister neben .trm im Baum und nicht darin —
+     sonst laege sie unter den beiden fixen Grundschichten der Seite. Damit
+     erbt sie deren Farbtoken aber auch nicht. Sie bringt die drei Goldwerte
+     deshalb selbst mit, mit derselben globalen Quelle und demselben
+     Rueckfallwert wie .trm. Fehlt das, faellt `linear-gradient(...)` als
+     ungueltig aus — und ein goldener Schriftzug mit `background-clip: text`
+     ohne Hintergrund ist schlicht unsichtbar. */
+  --trm-gold: var(--gold, #c9a050);
+  --trm-gold-hell: var(--gold-bright, #e8c978);
+  --trm-gold-tief: var(--bronze, #8b6b38);
+
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* ---- ACCESS GRANTED ------------------------------------------------ */
+
+/* 0–300 ms: die Seite reagiert, der Hintergrund wird dunkler. Die Mitte
+   bleibt offen, damit die Truhe naeher zu kommen scheint statt zu
+   verschwinden.
+
+   Der mittlere Wert war zuerst deutlich heller. Die Truhe leuchtet an dieser
+   Stelle aber selbst in fast weissem Gold — und ACCESS GRANTED steht genau
+   darueber. Bei 0,22 kaempfen zwei goldene Dinge um dieselbe Flaeche und
+   keines gewinnt. Bei 0,5 bleibt die Truhe gut sichtbar, der Schriftzug liegt
+   aber klar davor. Das ist der Unterschied zwischen dunkel und ueberladen. */
+.trm-buehne--gewaehrt {
+  background: radial-gradient(
+    circle at 50% 56%,
+    rgba(3, 3, 2, 0.52) 0%,
+    rgba(3, 3, 2, 0.74) 46%,
+    rgba(3, 3, 2, 0.93) 100%
+  );
+  animation: trm-buehne-auf 300ms ease both;
+}
+
+@keyframes trm-buehne-auf {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 900–2300 ms: Rauch von unten — derselbe Gedanke wie unter der Truhe, nur
+   kraeftiger und ueber die ganze Breite. Er setzt gleichzeitig mit dem Rauch
+   an der Truhe ein, damit das eine Bewegung ist und nicht zwei. */
+.trm-buehne__rauch {
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  bottom: -20%;
+  height: 70%;
+  background:
+    radial-gradient(50% 60% at 30% 90%, rgba(196, 176, 144, 0.42) 0%, rgba(10, 9, 8, 0) 70%),
+    radial-gradient(46% 56% at 72% 96%, rgba(214, 162, 68, 0.36) 0%, rgba(10, 9, 8, 0) 72%),
+    radial-gradient(40% 40% at 50% 70%, rgba(226, 210, 178, 0.2) 0%, rgba(10, 9, 8, 0) 70%);
+  filter: blur(10px);
+  animation: trm-buehne-rauch 1400ms ease-out 900ms both;
+}
+
+@keyframes trm-buehne-rauch {
+  from {
+    transform: translate3d(0, 26%, 0) scale(0.9);
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  to {
+    transform: translate3d(0, -14%, 0) scale(1.18);
+    opacity: 0.55;
+  }
+}
+
+/* ~1800 ms: der Schlag. Ein Goldblitz ueber der Mitte und zwei Wolken aus
+   Funken, die nach aussen fliegen. Liegt ueber dem Abdunkeln, damit er nicht
+   mit abgedunkelt wird. */
+.trm-buehne__blitz {
+  position: absolute;
+  inset: 0;
+  /* `closest-side`: der Verlauf ist an jeder Kante des Elements sicher bei
+     null — sonst zeichnet das Skalieren einen hellen Rahmen. */
+  background: radial-gradient(
+    circle closest-side at 50% 56%,
+    rgba(255, 244, 210, 0.6) 0%,
+    rgba(232, 201, 120, 0.26) 42%,
+    rgba(232, 201, 120, 0) 96%
+  );
+  mix-blend-mode: screen;
+  opacity: 0;
+  animation: trm-buehne-blitz 700ms ease-out 1780ms both;
+}
+
+@keyframes trm-buehne-blitz {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  18% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.3);
+  }
+}
+
+.trm-buehne__funken {
+  position: absolute;
+  left: 50%;
+  top: 56%;
+  width: 4px;
+  height: 4px;
+  margin: -2px 0 0 -2px;
+  border-radius: 50%;
+  background: #fff4d2;
+  box-shadow:
+    60px -70px 0 0 rgba(255, 230, 160, 0.95),
+    -72px -52px 0 0 rgba(255, 220, 140, 0.9),
+    96px 6px 0 -1px rgba(255, 236, 180, 0.9),
+    -98px 14px 0 -1px rgba(255, 214, 120, 0.85),
+    30px 80px 0 -1px rgba(255, 214, 120, 0.8),
+    -40px 72px 0 -1px rgba(255, 226, 150, 0.8),
+    8px -104px 0 0 rgba(255, 244, 210, 0.95),
+    120px -40px 0 -1px rgba(255, 226, 150, 0.75),
+    -126px -30px 0 -1px rgba(255, 226, 150, 0.7),
+    74px 50px 0 -1px rgba(232, 201, 120, 0.8),
+    -70px 44px 0 -1px rgba(232, 201, 120, 0.75),
+    -18px -90px 0 -1px rgba(255, 236, 180, 0.85);
+  opacity: 0;
+  animation: trm-buehne-funken 1100ms cubic-bezier(0.12, 0.7, 0.35, 1) 1800ms both;
+}
+
+.trm-buehne__funken--zwei {
+  rotate: 32deg;
+  animation-duration: 1300ms;
+  animation-delay: 1860ms;
+}
+
+@keyframes trm-buehne-funken {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(0.1);
+  }
+  55% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 40px, 0) scale(2.4);
+  }
+}
+
+/* 300–1380 ms: das Goldlicht zum Wort. Zwei schmale Striche, die quer ueber
+   den Bildschirm wischen — der zweite spaeter und in die andere Richtung.
+   Sie liegen ueber dem Zeitfenster von ACCESS GRANTED und hoeren danach auf;
+   spaeter wuerden sie dem Schnapper die Aufmerksamkeit nehmen. */
+.trm-buehne__strich {
+  position: absolute;
+  left: -40%;
+  top: 34%;
+  width: 180%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(232, 201, 120, 0) 0%,
+    rgba(232, 201, 120, 0.85) 42%,
+    rgba(255, 244, 206, 1) 50%,
+    rgba(232, 201, 120, 0.85) 58%,
+    rgba(232, 201, 120, 0) 100%
+  );
+  box-shadow: 0 0 22px rgba(232, 201, 120, 0.6);
+  animation: trm-strich 820ms cubic-bezier(0.3, 0, 0.2, 1) 300ms both;
+}
+
+.trm-buehne__strich--zwei {
+  top: 62%;
+  animation: trm-strich-zurueck 820ms cubic-bezier(0.3, 0, 0.2, 1) 560ms both;
+}
+
+@keyframes trm-strich {
+  from {
+    transform: translate3d(-60%, 0, 0);
+    opacity: 0;
+  }
+  22% {
+    opacity: 1;
+  }
+  to {
+    transform: translate3d(60%, 0, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes trm-strich-zurueck {
+  from {
+    transform: translate3d(60%, 0, 0);
+    opacity: 0;
+  }
+  22% {
+    opacity: 1;
+  }
+  to {
+    transform: translate3d(-60%, 0, 0);
+    opacity: 0;
+  }
+}
+
+/* Die beiden Saetze. Gesperrte Laufweite, Goldverlauf im Buchstaben —
+   dieselbe Behandlung wie die Ueberschriften der Seite, nur groesser. Sie
+   stehen an derselben Stelle; ihre Zeitfenster ueberschneiden sich nicht. */
+.trm-buehne__wort {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: 90%;
+  max-width: 520px;
+  margin: 0;
+  transform: translate(-50%, -50%);
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(26px, 9vw, 46px);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: 0.16em;
+  text-align: center;
+  text-transform: uppercase;
+  background: linear-gradient(
+    172deg,
+    var(--trm-gold-hell) 0%,
+    var(--trm-gold) 46%,
+    var(--trm-gold-tief) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 18px rgba(3, 3, 2, 0.9)) drop-shadow(0 0 30px rgba(232, 201, 120, 0.5));
+  animation: trm-wort 2000ms ease 300ms both;
+}
+
+/* 300–2300 ms: ACCESS GRANTED. Steht ab 900 ms voll da und geht ab 2000 ms
+   wieder weg — der Schnapper bei 1800 ms soll nicht unter Schrift liegen. */
+@keyframes trm-wort {
+  0% {
+    opacity: 0;
+    letter-spacing: 0.4em;
+  }
+  30% {
+    opacity: 1;
+    letter-spacing: 0.16em;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* 2400–3400 ms: DU HAST ZUGANG. Kommt nach dem Lichtspalt, bleibt stehen und
+   wird vom Zustand Z uebernommen, der denselben Satz als Ueberschrift traegt.
+   Der Wechsel soll deshalb wie Stehenbleiben aussehen, nicht wie ein Schnitt. */
+.trm-buehne__wort--zwei {
+  animation: trm-wort-zwei 1000ms ease 2400ms both;
+}
+
+@keyframes trm-wort-zwei {
+  from {
+    opacity: 0;
+    letter-spacing: 0.3em;
+  }
+  60% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    letter-spacing: 0.16em;
+  }
+}
+
+/* ---- Der Weg durch das Schluesselloch ------------------------------ */
+
+/* Eine Kamera, die auf das Schloss zufaehrt und hindurchgeht. Kein 3D, keine
+   Bibliothek: vier flache Schichten, von denen drei nur skaliert werden.
+
+   Die Schlossform ist ein SVG aus zwei schwarzen Formen. Sie waechst, bis sie
+   den Bildschirm ausfuellt — das ist der Schnitt in den Tresor. Dahinter das
+   warme Licht, davor nichts. 1,3 Sekunden von der ersten Bewegung bis
+   Schwarz. */
+
+/* 0–260 ms: Fokus auf das Schloss. Die Mitte bleibt scharf, der Rest wird
+   leicht unscharf und dunkel. Der Weichzeichner hat einen festen Radius und
+   wird nur eingeblendet: eine wandernde Blendenweite muesste in jedem
+   einzelnen Bild neu berechnet werden, und genau das ruckelt auf dem
+   Telefon. Die Maske haelt die Mitte frei — deshalb ist das eine eigene
+   Schicht und nicht der Rahmen selbst, dessen Maske sonst auch das Schloss
+   und das Licht darin wegschneiden wuerde. */
+.trm-buehne__weich {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 50% 52%,
+    rgba(3, 3, 2, 0) 0%,
+    rgba(3, 3, 2, 0) 20%,
+    rgba(3, 3, 2, 0.62) 58%,
+    rgba(3, 3, 2, 0.88) 100%
+  );
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  -webkit-mask-image: radial-gradient(
+    circle at 50% 52%,
+    transparent 0%,
+    transparent 14%,
+    #000 40%
+  );
+  mask-image: radial-gradient(circle at 50% 52%, transparent 0%, transparent 14%, #000 40%);
+  animation: trm-weich-auf 260ms ease both;
+}
+
+@keyframes trm-weich-auf {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 200–1300 ms: das warme Licht hinter dem Schloss. Es bleibt groesser als
+   die schwarze Form, damit es an ihren Raendern stehen bleibt statt von ihr
+   verschluckt zu werden. */
+.trm-buehne__strahl {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  width: 26vmax;
+  height: 26vmax;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 248, 222, 0.95) 0%,
+    rgba(232, 201, 120, 0.72) 30%,
+    rgba(196, 132, 36, 0.3) 56%,
+    rgba(232, 201, 120, 0) 74%
+  );
+  transform: translate(-50%, -50%) scale(0.3);
+  animation: trm-strahl 1100ms cubic-bezier(0.5, 0, 0.85, 0.4) 200ms both;
+}
+
+@keyframes trm-strahl {
+  from {
+    transform: translate(-50%, -50%) scale(0.3);
+    opacity: 0;
+  }
+  26% {
+    opacity: 0.9;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(7);
+    opacity: 1;
+  }
+}
+
+/* 120–1300 ms: die schwarze Schlossform. Sie startet ungefaehr in der
+   Groesse des Schlosses auf dem Bild und wird zum Schluss sehr schnell sehr
+   gross — daher die stark beschleunigende Kurve. Der Tunnel entsteht allein
+   daraus; es gibt keine zweite Schicht, die ihn bauen muesste.
+   Groesse in `vmax`, damit die Form auch ein breites Fenster sicher fuellt. */
+.trm-buehne__maske {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  width: 50vmax;
+  height: 50vmax;
+  overflow: visible;
+  transform-origin: 50% 51.5%;
+  transform: translate(-50%, -50%) scale(0.5);
+  animation: trm-maske 1180ms cubic-bezier(0.55, 0, 0.9, 0.32) 120ms both;
+}
+
+@keyframes trm-maske {
+  from {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(26);
+    opacity: 1;
+  }
+}
+
+/* 1080–1300 ms: das Sicherheitsnetz. Bei ungewoehnlichen Fensterformaten
+   koennte an einem Rand ein Rest stehen bleiben — hier ist garantiert
+   schwarz, bevor der Tresor aufblendet. */
+.trm-buehne__schwarz {
+  position: absolute;
+  inset: 0;
+  background: #030302;
+  animation: trm-schwarz 220ms ease-in 1080ms both;
+}
+
+@keyframes trm-schwarz {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Wer Bewegung abbestellt hat, bekommt beide Szenen als ruhige Blende: die
+   Saetze stehen da, der Rest bewegt sich nicht. Terminal.jsx kuerzt die
+   Sequenzen dann ohnehin auf 900 und 320 ms. */
+@media (prefers-reduced-motion: reduce) {
+  .trm-buehne__rauch,
+  .trm-buehne__strich,
+  .trm-buehne__wort--zwei,
+  .trm-buehne__weich,
+  .trm-buehne__strahl,
+  .trm-buehne__maske {
+    display: none;
+  }
+
+  .trm-buehne--gewaehrt {
+    animation-duration: 200ms;
+  }
+
+  .trm-buehne__wort {
+    animation: trm-wort-sanft 500ms ease both;
+  }
+
+  @keyframes trm-wort-sanft {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .trm-buehne__schwarz {
+    animation: trm-schwarz 300ms ease both;
+  }
+
+  .trm-truhe--gewaehrt .trm-truhe__bild,
+  .trm-truhe--gewaehrt .trm-truhe__adern,
+  .trm-truhe--gewaehrt .trm-truhe__rauch,
+  .trm-truhe--flug .trm-truhe__bild {
+    animation: none;
+  }
+
+  /* Der Lichtspalt bleibt — er ist die Aussage der Szene, nicht ihre
+     Bewegung. Er steht nur sofort da, statt aufzuziehen. */
+  .trm-truhe--gewaehrt .trm-truhe__fuge {
+    animation: none;
+    opacity: 0.92;
+    transform: scaleY(1.6);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Tresor-Code                                                         */
+/* ------------------------------------------------------------------ */
+
+.trm-code {
+  margin: clamp(6px, 2vw, 14px) 0 0;
+}
+
+.trm-code__label {
+  display: block;
+  margin: 0 0 10px;
+  font-size: clamp(13px, 3.6vw, 15px);
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-align: center;
+  color: var(--trm-gold-hell);
+}
+
+/* Acht Felder, die zusammen in jede Handybreite passen muessen. `1fr` je
+   Feld plus eine Luecke, die mit der Breite mitwaechst: bei 320 px bleiben
+   rund 32 px je Feld, das ist noch gut zu treffen. Die Hoehe bleibt
+   unabhaengig davon bei 52 px — Tippziel vor Symmetrie. */
+.trm-code__felder {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: clamp(4px, 1.6vw, 8px);
+}
+
+.trm-code__feld {
+  width: 100%;
+  height: 52px;
+  padding: 0;
+  border: 1px solid var(--trm-linie-stark);
+  border-radius: 9px;
+  background: var(--trm-feld);
+  color: var(--trm-creme);
+  font-family: var(--sans, 'Inter', system-ui, sans-serif);
+  font-size: clamp(16px, 4.6vw, 20px);
+  font-weight: 600;
+  text-align: center;
+  text-transform: uppercase;
+  caret-color: var(--trm-gold-hell);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  /* 16px Mindestgroesse, sonst zoomt iOS Safari beim Fokus in das Feld. */
+}
+
+.trm-code__feld:focus {
+  outline: none;
+  border-color: var(--trm-gold-hell);
+  box-shadow: 0 0 0 2px rgba(232, 201, 120, 0.28), 0 0 18px rgba(201, 150, 60, 0.28) inset;
+}
+
+.trm-code__feld:focus-visible {
+  outline: 2px solid var(--trm-gold-hell);
+  outline-offset: 2px;
+}
+
+.trm-code__feld[data-voll='1'] {
+  border-color: var(--trm-gold);
+  background: rgba(201, 160, 80, 0.1);
+}
+
+.trm-code[data-fehler='1'] .trm-code__feld {
+  border-color: rgba(226, 69, 58, 0.55);
+}
+
+/* Bereits aktiviert? Zuerst nur ein ruhiger Umrissknopf, aufgeklappt eine
+   Karte mit einem einzigen Feld. */
+.trm-wieder {
+  margin: clamp(14px, 4vw, 20px) 0 0;
+  text-align: center;
+}
+
+.trm-wieder__knopf {
+  display: inline-flex;
+  max-width: 100%;
+  margin: 0;
+}
+
+.trm-wieder__karte {
+  margin: 0;
+  text-align: left;
+}
+
+.trm-wieder__text {
+  margin: 0 0 14px;
+  font-size: clamp(14px, 3.9vw, 16px);
+  line-height: 1.45;
+  color: var(--trm-creme-weich);
+}
+
+.trm-wieder__meldung {
+  text-align: left;
+}
+
+.trm-wieder__test {
+  display: inline-flex;
+  margin: 12px 0 0;
+}
+
+/* Die Fehlermeldung bleibt an Ort und Stelle — kein Seitenwechsel, kein
+   Dialog. Sie sagt nie, was richtig gewesen waere. */
+.trm-meldung {
+  margin: 10px 0 0;
+  font-size: 14px;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--trm-creme);
+}
+
+.trm-meldung--fehler {
+  color: #f0a89e;
+}
+
+.trm-meldung--fehler::before {
+  content: '! ';
+  font-weight: 700;
+}
+
+.trm-hinweis {
+  margin: 12px 0 0;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(15px, 4.2vw, 18px);
+  text-align: center;
+  color: var(--trm-creme-weich);
+}
+
+/* ------------------------------------------------------------------ */
+/* Knoepfe                                                             */
+/* ------------------------------------------------------------------ */
+
+.trm-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 54px;
+  margin: 14px 0 0;
+  padding: 0 20px;
+  border: 1px solid rgba(255, 236, 189, 0.5);
+  border-radius: 999px;
+  background: linear-gradient(178deg, #f3d791 0%, #d7ad5c 42%, #b98a3c 100%);
+  color: #1a1408;
+  font-family: var(--sans, 'Inter', system-ui, sans-serif);
+  font-size: clamp(14px, 4vw, 17px);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(180, 130, 45, 0.3);
+  transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
+}
+
+.trm-cta:hover,
+.trm-cta:focus-visible {
+  filter: brightness(1.06);
+  box-shadow: 0 12px 36px rgba(200, 150, 55, 0.42);
+}
+
+.trm-cta:active {
+  transform: translateY(1px);
+}
+
+.trm-cta[disabled],
+.trm-cta[aria-disabled='true'] {
+  filter: grayscale(0.35) brightness(0.78);
+  cursor: progress;
+  box-shadow: none;
+}
+
+/* Zweitrangige Aktion: gleiche Form, nur als Umriss. */
+.trm-cta--umriss {
+  border-color: var(--trm-linie-stark);
+  background: rgba(8, 7, 6, 0.5);
+  color: var(--trm-gold-hell);
+  box-shadow: none;
+}
+
+.trm-cta--umriss:hover,
+.trm-cta--umriss:focus-visible {
+  border-color: var(--trm-gold-hell);
+  background: rgba(201, 160, 80, 0.12);
+  filter: none;
+  box-shadow: none;
+}
+
+.trm-cta--klein {
+  width: auto;
+  min-height: 46px;
+  font-size: 13px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Karten und Flaechen                                                 */
+/* ------------------------------------------------------------------ */
+
+.trm-karte {
+  margin: clamp(16px, 4.4vw, 26px) 0 0;
+  padding: clamp(14px, 4vw, 20px);
+  border: 1px solid var(--trm-linie);
+  border-radius: var(--trm-radius);
+  background: var(--trm-panel);
+}
+
+.trm-karte__kopf {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 12px;
+}
+
+.trm-karte__titel {
+  margin: 0;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(18px, 5.2vw, 23px);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--trm-gold-hell);
+}
+
+.trm-karte__sub {
+  margin: 4px 0 0;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(14px, 4vw, 17px);
+  color: var(--trm-creme-weich);
+}
+
+.trm-ikon {
+  flex: none;
+  color: var(--trm-gold-hell);
+}
+
+/* ------------------------------------------------------------------ */
+/* Gewinne                                                             */
+/* ------------------------------------------------------------------ */
+
+.trm-gewinne__titel {
+  margin: 0;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(17px, 5vw, 23px);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: 0.03em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.trm-gewinne__sub {
+  margin: 6px 0 14px;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(14px, 4vw, 17px);
+  text-align: center;
+  color: var(--trm-creme-weich);
+}
+
+/* Zwei grosse Karten oben, drei kleine darunter — genau wie im Entwurf.
+   Auf 320 px sind drei Spalten a 88 px noch lesbar, weil unter dem Bild
+   nur zwei kurze Zeilen stehen. */
+.trm-gewinne__netz {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: clamp(6px, 2vw, 10px);
+}
+
+.trm-gewinn {
+  grid-column: span 2;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--trm-linie);
+  border-radius: 10px;
+  background: rgba(6, 5, 4, 0.55);
+}
+
+.trm-gewinn--gross {
+  grid-column: span 3;
+}
+
+.trm-gewinn__bild {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.trm-gewinn--gross .trm-gewinn__bild {
+  aspect-ratio: 16 / 11;
+}
+
+.trm-gewinn__text {
+  padding: 8px clamp(5px, 1.8vw, 10px) clamp(9px, 2.6vw, 12px);
+  text-align: center;
+}
+
+.trm-gewinn__titel {
+  margin: 0;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(12px, 3.4vw, 16px);
+  font-weight: 700;
+  line-height: 1.14;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--trm-gold-hell);
+}
+
+.trm-gewinn__zeile {
+  margin: 3px 0 0;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(11px, 3.1vw, 14px);
+  line-height: 1.24;
+  color: var(--trm-creme-weich);
+}
+
+/* ------------------------------------------------------------------ */
+/* Ablaufstreifen (Zustand A, ganz unten)                              */
+/* ------------------------------------------------------------------ */
+
+.trm-ablauf {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin: clamp(16px, 4.4vw, 26px) 0 0;
+  padding: 14px 0;
+  border-top: 1px solid var(--trm-linie);
+  border-bottom: 1px solid var(--trm-linie);
+}
+
+.trm-ablauf__schritt {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+
+.trm-ablauf__wort {
+  font-size: clamp(9px, 2.7vw, 12px);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--trm-creme-weich);
+  white-space: nowrap;
+}
+
+.trm-ablauf__pfeil {
+  flex: none;
+  color: var(--trm-gold);
+  opacity: 0.7;
+}
+
+/* ------------------------------------------------------------------ */
+/* Fortschritt der drei Stufen (Zustand B)                             */
+/* ------------------------------------------------------------------ */
+
+.trm-stufen {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  margin: clamp(12px, 3.4vw, 18px) 0 clamp(6px, 2vw, 12px);
+  list-style: none;
+  padding: 0;
+}
+
+/* Die verbindende Linie liegt hinter den Kreisen und endet an deren
+   Mitte — deshalb links und rechts je ein Sechstel Einzug. */
+.trm-stufen::before {
+  content: '';
+  position: absolute;
+  left: 16.6%;
+  right: 16.6%;
+  top: 21px;
+  height: 1px;
+  background: var(--trm-linie-stark);
+}
+
+.trm-stufe {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.trm-stufe__kreis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--trm-gold);
+  border-radius: 50%;
+  background: var(--trm-nacht);
+  color: var(--trm-gold-hell);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.trm-stufe--fertig .trm-stufe__kreis {
+  border-color: var(--trm-gold-hell);
+  box-shadow: 0 0 16px rgba(232, 201, 120, 0.32);
+}
+
+.trm-stufe--jetzt .trm-stufe__kreis {
+  background: linear-gradient(178deg, #f3d791 0%, #d7ad5c 100%);
+  color: #1a1408;
+  box-shadow: 0 0 20px rgba(232, 201, 120, 0.45);
+}
+
+.trm-stufe__text {
+  font-size: clamp(10px, 3vw, 13px);
+  line-height: 1.2;
+  color: var(--trm-creme-weich);
+}
+
+.trm-stufe--jetzt .trm-stufe__text {
+  color: var(--trm-creme);
+}
+
+/* ------------------------------------------------------------------ */
+/* Formularfelder                                                      */
+/* ------------------------------------------------------------------ */
+
+.trm-feld {
+  margin: 0 0 14px;
+}
+
+.trm-feld__label {
+  display: block;
+  margin: 0 0 6px;
+  font-size: clamp(13px, 3.7vw, 15px);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--trm-creme);
+}
+
+.trm-feld__pflicht {
+  color: var(--trm-gold-hell);
+}
+
+/* Die Deckelnummer steht neben einem festen "/ 5000". Der Zusatz ist reine
+   Beschriftung; vorgelesen wird er ueber aria-describedby am Feld. */
+.trm-feld__zeile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.trm-feld__von {
+  flex: none;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(18px, 5vw, 22px);
+  color: var(--trm-creme-weich);
+  white-space: nowrap;
+}
+
+.trm-eingabe {
+  width: 100%;
+  min-height: 50px;
+  padding: 0 14px;
+  border: 1px solid var(--trm-linie-stark);
+  border-radius: 9px;
+  background: var(--trm-feld);
+  color: var(--trm-creme);
+  font-family: var(--sans, 'Inter', system-ui, sans-serif);
+  /* 16px, sonst zoomt iOS Safari beim Fokus. */
+  font-size: 16px;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.trm-eingabe::placeholder {
+  color: rgba(244, 239, 228, 0.34);
+}
+
+.trm-eingabe:focus {
+  outline: none;
+  border-color: var(--trm-gold-hell);
+  box-shadow: 0 0 0 2px rgba(232, 201, 120, 0.24);
+}
+
+.trm-eingabe:focus-visible {
+  outline: 2px solid var(--trm-gold-hell);
+  outline-offset: 2px;
+}
+
+.trm-eingabe[aria-invalid='true'] {
+  border-color: rgba(226, 69, 58, 0.6);
+}
+
+textarea.trm-eingabe {
+  min-height: 110px;
+  padding: 12px 14px;
+  line-height: 1.45;
+  resize: vertical;
+}
+
+/* Hilfstext unter einem Feld. Haengt per aria-describedby am Eingabefeld,
+   wird also mit vorgelesen statt nur daneben zu stehen. */
+.trm-feld__hilfe {
+  margin: 6px 0 0;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--trm-creme-leise);
+}
+
+.trm-feld__fehler {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: #f0a89e;
+}
+
+.trm-feld__fehler::before {
+  content: '! ';
+  font-weight: 700;
+}
+
+/* Der Pflichthaken. Grosses Tippziel, echte <input>, sichtbarer Fokus. */
+.trm-haken {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  margin: 16px 0 0;
+  padding: 4px 0;
+  cursor: pointer;
+  font-size: clamp(14px, 4vw, 16px);
+  line-height: 1.35;
+  color: var(--trm-creme);
+}
+
+.trm-haken input {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  accent-color: var(--trm-gold);
+}
+
+.trm-haken input:focus-visible {
+  outline: 2px solid var(--trm-gold-hell);
+  outline-offset: 3px;
+}
+
+/* Der freiwillige Haken (oeffentliches Leaderboard). Optisch leiser als die
+   Pflichthaken, damit niemand ihn fuer eine Bedingung der Teilnahme haelt —
+   er ist keine. */
+.trm-haken--frei {
+  margin-top: 12px;
+  font-size: clamp(13px, 3.7vw, 15px);
+  color: var(--trm-creme-weich);
+}
+
+/* Das Honigtopf-Feld. Fuer Menschen unsichtbar, fuer Formularroboter
+   verlockend. Nicht display:none — das ueberspringen viele Skripte. */
+.trm-topf {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* ------------------------------------------------------------------ */
+/* Erklaerkarten                                                       */
+/* ------------------------------------------------------------------ */
+
+.trm-infos {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(8px, 2.4vw, 12px);
+  margin: clamp(12px, 3.4vw, 18px) 0 0;
+}
+
+.trm-infos--vier {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.trm-info {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 10px;
+  padding: clamp(10px, 3vw, 14px);
+  border: 1px solid var(--trm-linie);
+  border-radius: 10px;
+  background: rgba(6, 5, 4, 0.5);
+}
+
+.trm-info__nr {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--trm-gold);
+  border-radius: 50%;
+  color: var(--trm-gold-hell);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.trm-info__ikon {
+  grid-row: 2;
+  grid-column: 1;
+  color: var(--trm-gold-hell);
+}
+
+.trm-info__titel {
+  grid-column: 2;
+  margin: 0;
+  font-size: clamp(12px, 3.4vw, 14px);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--trm-gold-hell);
+}
+
+.trm-info__text {
+  grid-column: 2;
+  margin: 0;
+  font-size: clamp(11px, 3.2vw, 13px);
+  line-height: 1.36;
+  color: var(--trm-creme-weich);
+}
+
+/* ------------------------------------------------------------------ */
+/* Zustand C — aktiviert                                               */
+/* ------------------------------------------------------------------ */
+
+/* Das einzige Gruen der Seite. Es steht nie ohne das Wort AKTIVIERT. */
+.trm-abzeichen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: clamp(12px, 3.4vw, 18px) 0;
+  padding: 13px 18px;
+  border: 1px solid rgba(87, 196, 124, 0.55);
+  border-radius: 10px;
+  background: var(--trm-gruen-tief);
+  box-shadow: 0 0 26px rgba(72, 172, 108, 0.22);
+}
+
+.trm-abzeichen__haken {
+  flex: none;
+  color: var(--trm-gruen);
+}
+
+.trm-abzeichen__wort {
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(20px, 6vw, 27px);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--trm-gold-hell);
+}
+
+/* Countdown. Drei bis vier Kacheln, die auch bei 320 px nebeneinander
+   passen, weil die Beschriftung darunter statt daneben steht. */
+.trm-uhr {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: clamp(6px, 2vw, 10px);
+}
+
+.trm-uhr__kachel {
+  padding: 10px 4px;
+  border: 1px solid var(--trm-linie);
+  border-radius: 9px;
+  background: rgba(4, 4, 3, 0.6);
+  text-align: center;
+}
+
+.trm-uhr__zahl {
+  display: block;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(24px, 7.4vw, 34px);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--trm-gold-hell);
+  font-variant-numeric: tabular-nums;
+}
+
+.trm-uhr__wort {
+  display: block;
+  margin: 5px 0 0;
+  font-size: clamp(9px, 2.6vw, 11px);
+  letter-spacing: 0.12em;
+  color: var(--trm-creme-leise);
+}
+
+.trm-fuss-notiz {
+  margin: 10px 0 0;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(13px, 3.7vw, 15px);
+  text-align: center;
+  color: var(--trm-creme-weich);
+}
+
+/* Statusliste. Der gruene Haken ist Schmuck; die Aussage steht im Text. */
+.trm-status {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 9px;
+}
+
+.trm-status li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: clamp(14px, 4vw, 16px);
+  line-height: 1.34;
+  color: var(--trm-creme);
+}
+
+.trm-status svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--trm-gruen);
+}
+
+.trm-status li[data-offen='1'] svg {
+  color: var(--trm-gold-hell);
+}
+
+/* Zwei Messkarten nebeneinander. Unter 360 px untereinander, sonst wird
+   die Zahl kleiner als die Beschriftung. */
+.trm-metriken {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(10px, 2.6vw, 14px);
+  /* Gleicher Abstand wie eine Karte — die Messkarten stehen an deren Stelle. */
+  margin: clamp(16px, 4.4vw, 26px) 0 0;
+}
+
+@media (min-width: 400px) {
+  .trm-metriken {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.trm-metrik {
+  padding: clamp(12px, 3.4vw, 16px);
+  border: 1px solid var(--trm-linie);
+  border-radius: var(--trm-radius);
+  background: var(--trm-panel);
+  text-align: center;
+}
+
+.trm-metrik__kopf {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 0 10px;
+  font-size: clamp(11px, 3.2vw, 13px);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--trm-gold-hell);
+}
+
+.trm-balken {
+  height: 12px;
+  overflow: hidden;
+  border: 1px solid var(--trm-linie-stark);
+  border-radius: 999px;
+  background: rgba(3, 3, 2, 0.7);
+}
+
+.trm-balken__fuellung {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #b9863a 0%, #f3d791 60%, #e2bd6e 100%);
+  box-shadow: 0 0 14px rgba(232, 201, 120, 0.45);
+  transition: width 0.6s ease;
+}
+
+.trm-metrik__zahl {
+  margin: 9px 0 0;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(19px, 5.4vw, 24px);
+  font-weight: 700;
+  color: var(--trm-gold-hell);
+  font-variant-numeric: tabular-nums;
+}
+
+.trm-metrik__zahl small {
+  font-size: 0.62em;
+  color: var(--trm-creme-weich);
+}
+
+.trm-metrik__text {
+  margin: 6px 0 0;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(13px, 3.6vw, 15px);
+  line-height: 1.3;
+  color: var(--trm-creme-weich);
+}
+
+/* ------------------------------------------------------------------ */
+/* Tresor — Freischaltung, Tresorkoenig, Spielbereich                  */
+/* ------------------------------------------------------------------ */
+
+/* "Zugang vollstaendig freigeschaltet". Eine Zeile, kein Banner: der Satz
+   soll bestaetigen, nicht feiern — gefeiert wird am Ziehungstag. */
+.trm-frei {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: clamp(14px, 4vw, 22px) 0 0;
+  padding: clamp(11px, 3.2vw, 15px) clamp(12px, 3.4vw, 16px);
+  border: 1px solid var(--trm-linie-stark);
+  border-radius: var(--trm-radius);
+  background:
+    radial-gradient(120% 160% at 0% 0%, rgba(201, 150, 60, 0.12) 0%, rgba(10, 9, 8, 0) 70%),
+    var(--trm-panel);
+  font-size: clamp(13px, 3.6vw, 15px);
+  line-height: 1.4;
+  color: var(--trm-creme-weich);
+}
+
+.trm-frei svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--trm-gold-hell);
+}
+
+.trm-frei__wort {
+  display: block;
+  margin-bottom: 3px;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(15px, 4.2vw, 18px);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--trm-gold-hell);
+}
+
+.trm-frei__text {
+  display: block;
+}
+
+/* Der Tresorkoenig. Eine eigene Karte, weil ein Name, der oben steht, auch
+   oben stehen soll — aber in derselben Karte-Form wie alles andere. */
+.trm-koenig {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  /* Etwas mehr Gewicht als die uebrigen Karten: ein schmaler Goldrand und
+     ein warmer Schimmer von oben. Keine neue Formensprache, nur mehr
+     Nachdruck auf derselben. */
+  box-shadow:
+    inset 0 0 0 1px rgba(232, 201, 120, 0.34),
+    0 18px 44px -28px rgba(201, 150, 60, 0.6);
+}
+
+/* Der Lichtschein hinter der Krone. Liegt unter dem Inhalt und faengt
+   nichts ab. */
+.trm-koenig::before {
+  content: '';
+  position: absolute;
+  inset: -40% 12% auto;
+  height: 70%;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at 50% 100%,
+    rgba(201, 150, 60, 0.26) 0%,
+    rgba(201, 150, 60, 0.08) 42%,
+    transparent 72%
+  );
+}
+
+.trm-koenig > * {
+  position: relative;
+  z-index: 1;
+}
+
+.trm-koenig .trm-karte__kopf {
+  justify-content: center;
+}
+
+/* Die Krone ueber dem Namen. Groesser als das Kopfzeilen-Icon, damit klar
+   ist, wer hier gemeint ist. */
+.trm-koenig__krone {
+  display: block;
+  margin: clamp(10px, 3vw, 16px) 0 0;
+  color: var(--trm-gold-hell);
+  filter: drop-shadow(0 0 16px rgba(201, 150, 60, 0.55));
+}
+
+.trm-koenig__frage {
+  margin: clamp(10px, 2.8vw, 14px) 0 0;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(16px, 4.6vw, 19px);
+  font-style: italic;
+  color: var(--trm-creme);
+}
+
+.trm-koenig__taste {
+  margin: clamp(10px, 2.8vw, 14px) auto 0;
+}
+
+.trm-koenig__name {
+  margin: clamp(4px, 1.6vw, 8px) 0 0;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(25px, 7.4vw, 34px);
+  font-weight: 600;
+  line-height: 1.12;
+  /* Langer Instagram-Name auf 320 px: umbrechen statt die Karte aufreissen. */
+  overflow-wrap: anywhere;
+  background: linear-gradient(
+    172deg,
+    var(--trm-gold-hell) 0%,
+    var(--trm-gold) 48%,
+    var(--trm-gold-tief) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.trm-koenig__punkte {
+  margin: 5px 0 0;
+  font-size: clamp(13px, 3.7vw, 15px);
+  letter-spacing: 0.08em;
+  color: var(--trm-creme-weich);
+  font-variant-numeric: tabular-nums;
+}
+
+.trm-koenig__eigen {
+  margin: clamp(10px, 2.8vw, 14px) 0 0;
+  padding-top: clamp(10px, 2.8vw, 14px);
+  border-top: 1px solid var(--trm-linie);
+  font-size: clamp(13px, 3.7vw, 15px);
+  letter-spacing: 0.06em;
+  color: var(--trm-gold-hell);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Der Spielbereich. Zwei Spielkarten untereinander — nebeneinander waeren
+   die Spielfelder auf dem Handy zu klein, und auf dem Tablet wuerde man
+   zwei laufende Spiele gleichzeitig sehen. */
+.trm-spiele {
+  margin: clamp(16px, 4.4vw, 26px) 0 0;
+}
+
+.trm-spiele__kopf {
+  margin-bottom: clamp(10px, 2.6vw, 14px);
+}
+
+/* ------------------------------------------------------------------ */
+/* Mini-Spiel                                                          */
+/* ------------------------------------------------------------------ */
+
+.trm-spiel__kopf {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.trm-spiel__text {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Schmale Handys: Titel behaelt die ganze Breite, der Startknopf rutscht
+   darunter. Sonst bricht TRUHENKNACKER Buchstabe fuer Buchstabe um. */
+@media (max-width: 479px) {
+  .trm-spiel__kopf {
+    flex-wrap: wrap;
+  }
+
+  .trm-spiel__text {
+    flex-basis: calc(100% - 38px);
+  }
+
+  .trm-spiel__kopf > .trm-cta {
+    flex: 1 0 100%;
+  }
+}
+
+.trm-spiel__zeile {
+  margin: 3px 0 0;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(13px, 3.6vw, 15px);
+  color: var(--trm-creme-weich);
+}
+
+/* Das Spielfeld. Feste Hoehe, damit beim Start nichts springt. Beide Spiele
+   teilen es sich: der Truhenknacker stellt sein Schloss hinein, der
+   Goldrausch laesst seine Objekte darin fallen. */
+.trm-feld-spiel {
+  position: relative;
+  height: clamp(260px, 62vw, 340px);
+  margin: 14px 0 0;
+  overflow: hidden;
+  border: 1px solid var(--trm-linie-stark);
+  border-radius: var(--trm-radius);
+  background:
+    radial-gradient(90% 70% at 50% 40%, rgba(201, 150, 60, 0.16) 0%, rgba(4, 4, 3, 0) 70%),
+    rgba(3, 3, 2, 0.72);
+  touch-action: manipulation;
+  user-select: none;
+}
+
+/* Hochformat fuer die Game-Lab-Spiele: Tuerme, Sprungwelten und Raster
+   brauchen Hoehe. Nie hoeher als der Bildschirm, damit Kopf und Leiste im
+   Blick bleiben. */
+.trm-feld-spiel--hoch {
+  height: clamp(420px, min(72svh, 150vw), 600px);
+  touch-action: none;
+}
+
+@supports not (height: 1svh) {
+  .trm-feld-spiel--hoch {
+    height: clamp(420px, min(72vh, 150vw), 600px);
+  }
+}
+
+/* Kompakte Auswahlkarte: ein Spiel, eine Zeile. Das Spiel selbst wird erst
+   beim Antippen nachgeladen. */
+.trm-spielwahl {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin: 0 0 10px;
+  padding: 12px 14px;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.trm-spielwahl:focus-visible {
+  outline: 2px solid var(--trm-gold-hell);
+  outline-offset: 2px;
+}
+
+.trm-spielwahl__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.trm-spielwahl__titel {
+  display: block;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(16px, 4.6vw, 19px);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--trm-gold-hell);
+}
+
+.trm-spielwahl__zeile {
+  display: block;
+  margin-top: 2px;
+  font-size: clamp(12px, 3.4vw, 13px);
+  color: var(--trm-creme-weich);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trm-spielwahl__best {
+  display: block;
+  margin-top: 2px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--trm-creme-leise);
+  font-variant-numeric: tabular-nums;
+}
+
+.trm-spielwahl__los {
+  flex: none;
+  padding: 8px 12px;
+  border: 1px solid var(--trm-linie-stark);
+  border-radius: var(--trm-radius);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--trm-gold-hell);
+}
+
+.trm-spielwahl--laedt {
+  justify-content: center;
+  min-height: 120px;
+  cursor: default;
+}
+
+/* Ohne aktivierten Deckel: sichtbar, aber nicht spielbar. */
+.trm-spielwahl--gesperrt {
+  cursor: default;
+  opacity: 0.62;
+}
+
+.trm-spielwahl--gesperrt .trm-spielwahl__los {
+  color: var(--trm-creme-leise);
+  border-color: var(--trm-linie);
+  text-align: right;
+  max-width: 45%;
+}
+
+.trm-practice > .trm-spielwahl__best {
+  margin: 0 0 6px;
+  color: var(--trm-gold-hell);
+}
+
+/* Warnfenster: Nummer bereits aktiviert. */
+.trm-belegt {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 20px 16px;
+  background: rgba(6, 6, 5, 0.82);
+}
+
+.trm-belegt__blatt {
+  width: min(460px, 100%);
+  margin: 0;
+}
+
+.trm-belegt__tasten {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+@keyframes trm-auftauchen {
+  from {
+    opacity: 0;
+    transform: scale(0.72);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.trm-spiel__leiste {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 12px 0 0;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: var(--trm-creme-weich);
+}
+
+.trm-spiel__wert {
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--trm-gold-hell);
+  font-variant-numeric: tabular-nums;
+}
+
+.trm-spiel__mitte {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px;
+  text-align: center;
+}
+
+.trm-spiel__mitte .trm-cta {
+  width: auto;
+  margin: 0;
+}
+
+/* Der persoenliche Bestwert in der Ruhelage des Spielfelds. */
+.trm-spiel__best {
+  margin: 0;
+  font-size: clamp(12px, 3.4vw, 14px);
+  letter-spacing: 0.08em;
+  color: var(--trm-creme-leise);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Das Ergebnis nach dem Lauf. Dunkler als die Ruhelage, damit die Zahl
+   allein traegt. */
+.trm-spiel__mitte--ergebnis {
+  /* Enger als die Ruhelage: hier stehen bis zu sechs Zeilen im selben Feld,
+     das sonst nur zwei traegt. */
+  gap: 6px;
+  padding: 14px;
+  background: rgba(3, 3, 2, 0.86);
+  overflow-y: auto;
+  /* Die Schicht liegt ueber einem Feld mit touch-action:none — hier soll
+     man trotzdem tippen und notfalls scrollen koennen. */
+  touch-action: manipulation;
+  z-index: 5;
+}
+
+/* Die eine Ansage unter dem Ergebnis. Heller als die Marken: sie ist der
+   Grund fuer den naechsten Tipp. */
+.trm-spiel__motiv {
+  max-width: 30ch;
+  font-weight: 700;
+  color: var(--trm-creme);
+  text-wrap: balance;
+}
+
+/* NOCHMAL mitten im Ergebnis — dort, wo der Daumen gerade ist. */
+.trm-spiel__mitte .trm-spiel__nochmal {
+  min-width: min(220px, 80%);
+  min-height: 46px;
+  margin-top: 6px;
+  font-size: clamp(14px, 4vw, 16px);
+  letter-spacing: 0.16em;
+}
+
+.trm-spiel__status {
+  margin: 0;
+  font-size: clamp(11px, 3vw, 12px);
+}
+
+.trm-spiel__status:empty {
+  display: none;
+}
+
+.trm-feld-spiel--hoch .trm-spiel__endstand {
+  font-size: clamp(44px, 14vw, 64px);
+}
+
+.trm-feld-spiel--hoch .trm-spiel__mitte--ergebnis {
+  gap: 10px;
+}
+
+.trm-spiel__ergebnis-label {
+  margin: 0;
+  font-size: clamp(11px, 3.2vw, 13px);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--trm-gold-hell);
+}
+
+.trm-spiel__endstand {
+  /* Erbt .trm-metrik__zahl und bleibt die groesste Zahl im Bild — aber
+     nicht so gross, dass Platz und Abstand darunter keinen Platz mehr
+     haetten. */
+  margin: 0;
+  line-height: 1.05;
+  font-size: clamp(32px, 9.6vw, 44px);
+}
+
+.trm-spiel__neu {
+  margin: 0;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(14px, 4vw, 17px);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--trm-gold-hell);
+  text-shadow: 0 0 14px rgba(232, 201, 120, 0.45);
+  animation: trm-auftauchen 0.4s ease both;
+}
+
+.trm-spiel__platz {
+  margin: 0;
+  font-size: clamp(13px, 3.8vw, 15px);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--trm-gold-hell);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Der Abstand nach oben. Leiser als der eigene Platz — es ist eine
+   Einladung, keine Meldung. */
+.trm-spiel__jagd {
+  margin: 0;
+  font-size: clamp(12px, 3.4vw, 13px);
+  letter-spacing: 0.06em;
+  color: var(--trm-creme-weich);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Tagesbestwert und eigener Bestwert nebeneinander, durch eine Linie
+   getrennt wie die Kennzahlen im Dashboard. */
+.trm-spiel__marken {
+  display: flex;
+  gap: clamp(14px, 5vw, 26px);
+  margin: 4px 0 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--trm-linie);
+}
+
+.trm-spiel__marke {
+  min-width: 8ch;
+}
+
+.trm-spiel__marke dt {
+  font-size: clamp(9px, 2.6vw, 10px);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--trm-creme-leise);
+}
+
+.trm-spiel__marke dd {
+  margin: 2px 0 0;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(15px, 4.4vw, 18px);
+  font-weight: 700;
+  color: var(--trm-gold-hell);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Die Combo-Anzeige sitzt in der Fussleiste des Spielfelds. Sie behaelt
+   ihren Platz auch leer — sonst huepfen Zeit und Punkte bei jeder Serie. */
+.trm-spiel__combo {
+  min-width: 7ch;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-align: center;
+  color: var(--trm-gold-hell);
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+
+.trm-spiel__combo[data-an='1'] {
+  opacity: 1;
+  text-shadow: 0 0 14px rgba(232, 201, 120, 0.55);
+}
+
+/* Der Zuruf nach einem Treffer. Liegt ueber dem Spielfeld, zieht nach oben
+   weg und verschwindet von selbst. Der `key` am Element ist der Trick:
+   React tauscht den Knoten, die Animation startet neu. */
+.trm-spiel__ruf {
+  position: absolute;
+  left: 50%;
+  bottom: 14%;
+  z-index: 3;
+  width: max-content;
+  max-width: 88%;
+  margin: 0;
+  transform: translateX(-50%);
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(15px, 4.4vw, 19px);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--trm-gold-hell);
+  text-shadow: 0 0 16px rgba(3, 3, 2, 0.9);
+  pointer-events: none;
+  animation: trm-ruf 1.1s ease-out both;
+}
+
+@keyframes trm-ruf {
+  from {
+    transform: translate(-50%, 14px);
+    opacity: 0;
+  }
+  22% {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+  to {
+    transform: translate(-50%, -26px);
+    opacity: 0;
+  }
+}
+
+/* Vier Toene fuer vier Ereignisse. Der Unterschied liegt in Helligkeit und
+   Groesse, nicht allein in der Farbe — das Spiel soll auch ohne
+   Farbunterscheidung lesbar bleiben. */
+.trm-spiel__ruf--perfekt {
+  font-size: clamp(19px, 6vw, 26px);
+  color: #fff6db;
+  text-shadow:
+    0 0 10px rgba(3, 3, 2, 0.9),
+    0 0 26px rgba(255, 236, 180, 0.85);
+}
+
+.trm-spiel__ruf--gold {
+  font-size: clamp(18px, 5.6vw, 24px);
+  color: #fff6db;
+  text-shadow:
+    0 0 10px rgba(3, 3, 2, 0.9),
+    0 0 30px rgba(255, 214, 120, 0.9);
+}
+
+.trm-spiel__ruf--gut {
+  color: var(--trm-gold-hell);
+}
+
+.trm-spiel__ruf--treffer {
+  font-size: clamp(14px, 4vw, 17px);
+  color: var(--trm-creme);
+}
+
+.trm-spiel__ruf--verkantet {
+  color: var(--trm-rot);
+  text-shadow: 0 0 14px rgba(3, 3, 2, 0.95);
+}
+
+/* ------------------------------------------------------------------ */
+/* Truhenknacker — das goldene Zahlenschloss                           */
+/* ------------------------------------------------------------------ */
+
+/* Drei bis vier Ringe drehen sich, oben steht ein Zeiger, und man muss die
+   goldene Zone im richtigen Moment stoppen. Gedreht wird in JavaScript per
+   `transform` auf der SVG-Gruppe — CSS liefert hier nur das Aussehen, damit
+   die Bewegung auf dem Handy nicht von Animationsneustarts abhaengt. */
+
+.trm-ring-runde {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: clamp(8px, 2.4vw, 12px);
+  z-index: 2;
+  margin: 0;
+  font-size: clamp(11px, 3.2vw, 13px);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--trm-creme-weich);
+  pointer-events: none;
+}
+
+.trm-ring-runde .trm-spiel__wert {
+  font-size: 1.3em;
+  vertical-align: -0.06em;
+}
+
+/* Das ganze Schloss ist der Knopf. Ein Ziel so gross wie das Spielfeld —
+   auf dem Handy trifft man damit immer, und es geht nur um den Moment,
+   nicht um die Stelle. */
+.trm-ring-taste {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(26px, 8vw, 38px) 12px clamp(14px, 4vw, 20px);
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.trm-ring-taste:focus-visible {
+  outline: 2px solid var(--trm-gold-hell);
+  outline-offset: -4px;
+  border-radius: var(--trm-radius);
+}
+
+.trm-ring-feld {
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  /* Der Schein des Schlosses. Liegt im Filter, nicht in einem zweiten
+     Element — eine Ebene weniger, die das Handy zeichnen muss. */
+  filter: drop-shadow(0 0 18px rgba(201, 150, 60, 0.35));
+  overflow: visible;
+}
+
+/* Die feste Bahn eines Rings. */
+.trm-ring__bahn {
+  fill: none;
+  stroke: rgba(118, 98, 62, 0.42);
+}
+
+/* Fake-Markierungen. Sie sehen nach Zone aus, sind aber keine — deshalb
+   dieselbe Form, nur matt und ohne Schein. */
+.trm-ring__attrappe {
+  fill: none;
+  stroke: rgba(150, 134, 104, 0.45);
+}
+
+/* Die echte Trefferzone. `butt` als Linienende, damit sie optisch genau so
+   breit ist, wie sie rechnerisch zaehlt. */
+.trm-ring__zone {
+  fill: none;
+  stroke: var(--trm-gold-hell);
+  stroke-linecap: butt;
+}
+
+/* Noch nicht dran: deutlich zurueckgenommen, damit nur ein Ring Aufmerksam-
+   keit verlangt. */
+.trm-ring--offen .trm-ring__bahn {
+  stroke: rgba(118, 98, 62, 0.22);
+}
+
+.trm-ring--offen .trm-ring__zone {
+  stroke: rgba(232, 201, 120, 0.3);
+}
+
+.trm-ring--offen .trm-ring__attrappe {
+  stroke: rgba(150, 134, 104, 0.18);
+}
+
+/* Der aktive Ring. Die Zone leuchtet. */
+.trm-ring--aktiv .trm-ring__bahn {
+  stroke: rgba(142, 118, 72, 0.6);
+}
+
+.trm-ring--aktiv .trm-ring__zone {
+  stroke: #ffeab4;
+  filter: drop-shadow(0 0 7px rgba(255, 226, 150, 0.9));
+}
+
+/* Eingerastet. Die Zone steht still und hell unter dem Zeiger — der Ring
+   ist abgehakt, nicht mehr wichtig. */
+.trm-ring--fest .trm-ring__bahn {
+  stroke: rgba(160, 132, 78, 0.5);
+}
+
+.trm-ring--fest .trm-ring__zone {
+  stroke: rgba(255, 244, 214, 0.92);
+}
+
+.trm-ring--fest .trm-ring__attrappe {
+  stroke: rgba(150, 134, 104, 0.12);
+}
+
+/* Der kurze Strich, der den aktiven Ring markiert. */
+.trm-ring__marke {
+  stroke: var(--trm-gold-hell);
+  stroke-width: 2;
+}
+
+/* Der Zeiger oben. Er ist der Bezugspunkt fuer alles. */
+.trm-ring__zeiger {
+  fill: #ffeab4;
+  filter: drop-shadow(0 0 8px rgba(255, 226, 150, 0.8));
+}
+
+/* Die Mitte des Schlosses. Reine Optik. */
+.trm-ring__kern {
+  fill: rgba(14, 12, 9, 0.9);
+  stroke: rgba(201, 150, 60, 0.55);
+  stroke-width: 1.5;
+}
+
+/* ------------------------------------------------------------------ */
+/* Goldrausch                                                          */
+/* ------------------------------------------------------------------ */
+
+/* Die Buehne fuellt das Spielfeld. Jedes Objekt sitzt bei 0/0 und wird von
+   der Animationsschleife per `transform` an seinen Platz geschoben — in
+   Pixeln, die aus genau dieser Box kommen. Deshalb darf sie weder Rand noch
+   Polsterung haben. */
+.trm-gold-buehne {
+  position: absolute;
+  inset: 0;
+  transition: filter 0.3s ease;
+}
+
+/* Bier: das Bild schwankt und wird weich. Nichts wird unbedienbar — die
+   Knoepfe bleiben dort, wo sie aussehen, weil der Browser verschobene
+   Elemente genauso trifft wie gerade. */
+.trm-gold-buehne[data-stoerung='bier'] {
+  filter: blur(2.2px) saturate(1.25);
+  animation: trm-gold-schwanken 2.2s ease-in-out infinite;
+}
+
+@keyframes trm-gold-schwanken {
+  0%,
+  100% {
+    transform: translate3d(-2.5%, 0, 0) rotate(-1.1deg);
+  }
+  50% {
+    transform: translate3d(2.5%, 0, 0) rotate(1.1deg);
+  }
+}
+
+/* Kater: das Bild kippt langsam hin und her, das Zielen wird laestig.
+   Laestig, nicht unmoeglich. */
+.trm-gold-buehne[data-stoerung='kater'] {
+  animation: trm-gold-kater 1.5s ease-in-out infinite;
+}
+
+@keyframes trm-gold-kater {
+  0%,
+  100% {
+    transform: rotate(-3.4deg) scale(1.02);
+  }
+  34% {
+    transform: rotate(2.6deg) scale(0.99);
+  }
+  67% {
+    transform: rotate(-1.4deg) scale(1.03);
+  }
+}
+
+/* Wer wenig Bewegung will, bekommt die Stoerungen nur als Faerbung. Das
+   Spiel bleibt gleich schwer fuer die Punkte — es wackelt nur nicht. */
+.trm-gold-buehne[data-sanft='1'][data-stoerung='bier'],
+.trm-gold-buehne[data-sanft='1'][data-stoerung='kater'] {
+  animation: none;
+  filter: saturate(0.6) brightness(0.8);
+}
+
+/* Ein fallendes Objekt. Rund, dunkel, goldener Rand — dieselbe Sprache wie
+   die Karten der Seite, nur klein. 46 px sind die Untergrenze fuer einen
+   Daumen. */
+.trm-stueck {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border: 1px solid var(--trm-linie-stark);
+  border-radius: 50%;
+  background: rgba(10, 9, 8, 0.78);
+  color: var(--trm-gold-hell);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  will-change: transform;
+}
+
+.trm-stueck:focus-visible {
+  outline: 2px solid var(--trm-gold-hell);
+  outline-offset: 2px;
+}
+
+.trm-stueck--muenze {
+  border-color: rgba(201, 150, 60, 0.75);
+  box-shadow: 0 0 14px rgba(201, 150, 60, 0.35);
+}
+
+.trm-stueck--diamant {
+  border-color: rgba(214, 232, 240, 0.8);
+  color: #e8f4fa;
+  box-shadow: 0 0 18px rgba(196, 226, 240, 0.45);
+}
+
+.trm-stueck--ente {
+  width: 52px;
+  height: 52px;
+  border-color: var(--trm-gold-hell);
+  box-shadow: 0 0 22px rgba(232, 201, 120, 0.5);
+}
+
+/* Die goldene Ente. Sie kommt fast nie — wenn sie kommt, soll man sie nicht
+   uebersehen. */
+.trm-stueck--goldente {
+  width: 58px;
+  height: 58px;
+  border-color: #fff3cf;
+  color: #fff6db;
+  background: radial-gradient(circle, rgba(86, 62, 18, 0.9) 0%, rgba(10, 9, 8, 0.85) 70%);
+  box-shadow:
+    0 0 30px rgba(255, 226, 150, 0.8),
+    inset 0 0 16px rgba(255, 226, 150, 0.35);
+  animation: trm-gold-ente 1.1s ease-in-out infinite;
+}
+
+@keyframes trm-gold-ente {
+  0%,
+  100% {
+    box-shadow:
+      0 0 22px rgba(255, 226, 150, 0.6),
+      inset 0 0 12px rgba(255, 226, 150, 0.25);
+  }
+  50% {
+    box-shadow:
+      0 0 42px rgba(255, 226, 150, 0.95),
+      inset 0 0 20px rgba(255, 226, 150, 0.45);
+  }
+}
+
+/* Die Bombe. Das einzige Rot im Spielfeld — und es steht fuer Abzug. */
+.trm-stueck--bombe {
+  border-color: rgba(178, 58, 46, 0.85);
+  color: #f2a79c;
+  box-shadow: 0 0 16px rgba(178, 58, 46, 0.4);
+}
+
+.trm-stueck--bier {
+  border-color: rgba(196, 146, 62, 0.6);
+  color: #e7c98a;
+}
+
+.trm-stueck--kater {
+  border-color: rgba(150, 134, 104, 0.6);
+  color: var(--trm-creme-weich);
+}
+
+.trm-stueck--stein {
+  border-radius: 8px;
+  border-color: rgba(120, 114, 102, 0.65);
+  color: rgba(190, 184, 172, 0.85);
+  background: rgba(22, 21, 19, 0.85);
+}
+
+/* Der Tresor am unteren Rand des Spielfelds. Ein goldener Schlitz, in dem
+   alles verschwindet, was niemand gefangen hat. */
+.trm-gold-tresor {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: 0;
+  height: 10px;
+  border-radius: 8px 8px 0 0;
+  background: linear-gradient(
+    180deg,
+    rgba(232, 201, 120, 0.55) 0%,
+    rgba(140, 100, 36, 0.4) 45%,
+    rgba(3, 3, 2, 0.9) 100%
+  );
+  box-shadow: 0 -10px 26px rgba(201, 150, 60, 0.3);
+  pointer-events: none;
+}
+
+/* Der Lichtblitz, wenn die goldene Ente gefangen wurde. Er liegt ueber dem
+   ganzen Spielfeld, dauert eine gute halbe Sekunde und ist danach wieder weg.
+   Ein einzelnes Element mit einer Opacity-Animation — nichts, was das Layout
+   anfasst, damit auch ein mittleres Telefon nicht ins Stocken geraet. */
+.trm-gold-blitz {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(255, 238, 190, 0.85) 0%, rgba(255, 214, 120, 0.28) 38%, transparent 68%),
+    linear-gradient(180deg, rgba(255, 226, 150, 0.22) 0%, transparent 60%);
+  animation: trm-gold-blitz 0.62s cubic-bezier(0.16, 0.84, 0.44, 1) both;
+}
+
+@keyframes trm-gold-blitz {
+  0% {
+    opacity: 0;
+    transform: scale(0.82);
+  }
+  18% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.12);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Kein Aufblitzen, aber der Moment bleibt sichtbar: ein ruhiger Schein. */
+  .trm-gold-blitz {
+    animation: trm-gold-blitz-sanft 0.6s ease both;
+    transform: none;
+  }
+
+  @keyframes trm-gold-blitz-sanft {
+    0%,
+    100% {
+      opacity: 0;
+    }
+    40% {
+      opacity: 0.5;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Küchen-Stack — ein Tipp, ein Modul                                  */
+/* ------------------------------------------------------------------ */
+
+/* Alles rechnet in Anteilen des Feldes: --x und --b sind Anteile der
+   Breite, --stufe zaehlt Module von unten, --stack-h ist die Modulhoehe als
+   Anteil der Feldhoehe. So passt der Turm auf 320 px wie auf dem Desktop. */
+.trm-stack-buehne,
+.trm-dash-buehne {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.trm-stack-buehne:focus-visible,
+.trm-dash-buehne:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--trm-gold-hell);
+}
+
+.trm-stack-buehne {
+  --stack-h: 0.09;
+  --stack-kamera: 0;
+  background: linear-gradient(180deg, rgba(3, 3, 2, 0) 0%, rgba(201, 150, 60, 0.08) 100%);
+}
+
+.trm-stack-boden {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: calc(8% - var(--stack-kamera) * var(--stack-h) * 100%);
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--trm-gold) 20%, var(--trm-gold) 80%, transparent);
+  transition: bottom 0.35s ease;
+}
+
+.trm-stack-turm {
+  position: absolute;
+  inset: 0;
+  transform: translateY(calc(var(--stack-kamera) * var(--stack-h) * 100%));
+  transition: transform 0.35s ease;
+}
+
+.trm-stack-modul {
+  position: absolute;
+  left: calc(var(--x) * 100%);
+  bottom: calc(8% + var(--stufe) * var(--stack-h) * 100%);
+  width: calc(var(--b) * 100%);
+  height: calc(var(--stack-h) * 100%);
+  padding: 0 0 2px;
+  box-sizing: border-box;
+}
+
+/* Das fahrende Modul liegt ausserhalb des Turms und bekommt Breite und
+   Verschiebung per JS; die Kamera rechnet es selbst heraus. */
+.trm-stack-modul--faehrt {
+  left: 0;
+  width: 60%;
+  bottom: calc(8% + (var(--stufe) - var(--stack-kamera)) * var(--stack-h) * 100%);
+  transition: bottom 0.35s ease;
+  will-change: transform;
+}
+
+.trm-stack-modul__koerper {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 1px solid rgba(232, 201, 120, 0.55);
+  border-radius: 3px;
+  background: linear-gradient(180deg, #2c2822 0%, #1a1814 100%);
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.35);
+}
+
+.trm-stack-modul__platte {
+  position: absolute;
+  left: -1px;
+  right: -1px;
+  top: -1px;
+  height: 22%;
+  border-radius: 3px 3px 0 0;
+  background: linear-gradient(90deg, #b8893a, #f0d58e 50%, #b8893a);
+}
+
+.trm-stack-modul__griff {
+  position: absolute;
+  left: 30%;
+  right: 30%;
+  top: 52%;
+  height: 2px;
+  border-radius: 1px;
+  background: rgba(232, 201, 120, 0.75);
+}
+
+.trm-stack-modul__koerper--perfekt {
+  box-shadow:
+    inset 0 -3px 0 rgba(0, 0, 0, 0.35),
+    0 0 14px rgba(255, 220, 140, 0.55);
+  animation: trm-stack-glanz 0.6s ease-out;
+}
+
+@keyframes trm-stack-glanz {
+  from {
+    filter: brightness(1.9);
+  }
+  to {
+    filter: brightness(1);
+  }
+}
+
+.trm-stack-modul--faellt {
+  animation: trm-stack-fall 0.85s ease-in forwards;
+}
+
+@keyframes trm-stack-fall {
+  to {
+    transform: translate(calc(var(--seite, 1) * 40px), 260px) rotate(calc(var(--seite, 1) * 38deg));
+    opacity: 0;
+  }
+}
+
+.trm-stack-funken {
+  position: absolute;
+  left: calc(var(--x) * 100%);
+  bottom: calc(8% + (var(--stufe) + 1) * var(--stack-h) * 100%);
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.trm-stack-funken span {
+  position: absolute;
+  left: -2px;
+  top: -2px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #fff1c4;
+  box-shadow: 0 0 8px rgba(255, 214, 120, 0.9);
+  transform: rotate(var(--w)) translateX(0);
+  animation: trm-stack-funke 0.65s ease-out forwards;
+}
+
+@keyframes trm-stack-funke {
+  to {
+    transform: rotate(var(--w)) translateX(46px);
+    opacity: 0;
+  }
+}
+
+.trm-stack-buehne[data-crash="1"] .trm-stack-turm {
+  animation: trm-stack-wackeln 0.4s ease-in-out;
+}
+
+@keyframes trm-stack-wackeln {
+  25% {
+    translate: -4px 0;
+  }
+  75% {
+    translate: 4px 0;
+  }
+}
+
+.trm-stack-tipp {
+  position: absolute;
+  right: 10px;
+  top: 8px;
+  z-index: 3;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--trm-creme-weich);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.trm-spiel__pause {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 20px;
+  text-align: center;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  color: var(--trm-gold-hell);
+  background: rgba(3, 3, 2, 0.72);
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------------ */
+/* Küchen-Dash — laufen, springen, nicht hängen bleiben                */
+/* ------------------------------------------------------------------ */
+
+.trm-dash-buehne {
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(20, 17, 12, 0.2) 0%, rgba(3, 3, 2, 0) 80%, rgba(3, 3, 2, 0.6) 80%);
+}
+
+/* Die Ferne: Studiowand mit Fensterbaendern und Oberschraenken. Nur
+   Verlaeufe, kein Bild; die Verschiebung setzt die Spielschleife. */
+.trm-dash-fern {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 18%;
+  height: 62%;
+  opacity: 0.55;
+  background-image:
+    linear-gradient(90deg, transparent 0 18px, rgba(232, 201, 120, 0.22) 18px 20px, transparent 20px 120px),
+    linear-gradient(180deg, transparent 0 28%, rgba(42, 37, 30, 0.9) 28% 46%, transparent 46% 70%, rgba(26, 23, 19, 0.95) 70% 100%),
+    linear-gradient(90deg, rgba(232, 201, 120, 0.08) 0 60px, transparent 60px 160px);
+  background-size: 120px 100%, 220px 100%, 160px 100%;
+  background-repeat: repeat-x;
+}
+
+.trm-dash-schilder {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.trm-dash-schild {
+  position: absolute;
+  left: 0;
+  top: 26%;
+  transform: translate3d(-9999px, 0, 0);
+  padding: 4px 8px;
+  border: 1px solid rgba(232, 201, 120, 0.6);
+  border-radius: 3px;
+  background: rgba(10, 9, 7, 0.85);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  white-space: nowrap;
+  color: var(--trm-gold-hell);
+}
+
+.trm-dash-schild--gag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.trm-dash-schild__bild {
+  display: inline-block;
+  width: 18px;
+  height: 20px;
+}
+
+.trm-dash-boden {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 80%;
+  height: 4px;
+  border-top: 1px solid var(--trm-gold);
+  background-image: linear-gradient(90deg, rgba(232, 201, 120, 0.55) 0 28px, transparent 28px 64px);
+  background-size: 64px 3px;
+  background-repeat: repeat-x;
+  background-position: 0 2px;
+}
+
+.trm-dash-hindernis,
+.trm-dash-laeufer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  transform: translate3d(-9999px, 0, 0);
+  will-change: transform;
+  pointer-events: none;
+}
+
+.trm-dash-hindernis svg,
+.trm-dash-laeufer svg {
+  display: block;
+  overflow: visible;
+}
+
+.trm-dash-laeufer {
+  z-index: 2;
+}
+
+.trm-dash-bein {
+  transform-box: fill-box;
+  transform-origin: 50% 0;
+  animation: trm-dash-schritt 0.34s ease-in-out infinite alternate;
+}
+
+.trm-dash-bein--b {
+  animation-direction: alternate-reverse;
+}
+
+.trm-dash-laeufer[data-luft="1"] .trm-dash-bein,
+.trm-dash-buehne[data-crash="1"] .trm-dash-bein,
+.trm-dash-buehne[data-pause="1"] .trm-dash-bein {
+  animation-play-state: paused;
+}
+
+@keyframes trm-dash-schritt {
+  from {
+    transform: rotate(-24deg);
+  }
+  to {
+    transform: rotate(24deg);
+  }
+}
+
+.trm-dash-buehne[data-crash="1"] .trm-dash-laeufer svg {
+  transform: rotate(-70deg) translate(-10%, 30%);
+  transition: transform 0.3s ease-in;
+}
+
+@keyframes trm-stack-weg {
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trm-stack-turm,
+  .trm-stack-boden,
+  .trm-stack-modul--faehrt,
+  .trm-dash-buehne[data-crash="1"] .trm-dash-laeufer svg {
+    transition: none;
+  }
+
+  .trm-stack-modul__koerper--perfekt,
+  .trm-stack-buehne[data-crash="1"] .trm-stack-turm,
+  .trm-dash-bein {
+    animation: none;
+  }
+
+  .trm-stack-modul--faellt {
+    animation: trm-stack-weg 0.4s linear forwards;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Leaderboard                                                         */
+/* ------------------------------------------------------------------ */
+
+.trm-rang {
+  margin-top: clamp(16px, 4.4vw, 26px);
+}
+
+/* Drei Reiter, die auch auf 320 px in eine Zeile passen muessen. `1fr` je
+   Reiter statt Flex mit Umbruch: drei gleich breite Felder lesen sich als
+   Gruppe, drei ungleiche nicht. */
+.trm-reiter {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin: clamp(12px, 3.2vw, 16px) 0 0;
+  padding: 5px;
+  border: 1px solid var(--trm-linie);
+  border-radius: var(--trm-radius);
+  background: rgba(3, 3, 2, 0.5);
+}
+
+.trm-reiter__taste {
+  padding: 10px 4px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  font: inherit;
+  /* 10 px, weil GOLDRAUSCH auf 320 px sonst umbricht. Gesperrt gesetzt
+     bleibt es trotzdem lesbar. */
+  font-size: clamp(10px, 3vw, 12px);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--trm-creme-weich);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.trm-reiter__taste[aria-selected='true'] {
+  background: linear-gradient(180deg, rgba(201, 150, 60, 0.3) 0%, rgba(140, 100, 36, 0.16) 100%);
+  box-shadow: inset 0 0 0 1px rgba(232, 201, 120, 0.55);
+  color: var(--trm-gold-hell);
+}
+
+.trm-reiter__taste:focus-visible {
+  outline: 2px solid var(--trm-gold-hell);
+  outline-offset: 2px;
+}
+
+.trm-rang__feld {
+  /* Zwanzig Plaetze brauchen Platz, aber kein Springen: die Mindesthoehe
+     haelt die Karte ruhig, waehrend die Liste laedt oder der Reiter
+     wechselt. */
+  min-height: 120px;
+  margin: clamp(12px, 3.2vw, 16px) 0 0;
+}
+
+.trm-rang__liste {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Eine Zeile: Platz — Name — Punkte. Der Name darf schrumpfen, die Punkte
+   nie. */
+.trm-rang__zeile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 9px;
+}
+
+.trm-rang__zeile + .trm-rang__zeile {
+  border-top: 1px solid var(--trm-linie);
+}
+
+/* Der eigene Eintrag. Gold umrandet statt nur gold gefaerbt — man soll ihn
+   beim Scrollen finden, ohne zu lesen. */
+.trm-rang__zeile[data-ich='1'] {
+  border-top-color: transparent;
+  background: linear-gradient(90deg, rgba(201, 150, 60, 0.22) 0%, rgba(201, 150, 60, 0.06) 100%);
+  box-shadow: inset 0 0 0 1px rgba(232, 201, 120, 0.5);
+}
+
+.trm-rang__platz {
+  flex: none;
+  min-width: 1.8em;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(15px, 4.2vw, 18px);
+  font-weight: 700;
+  text-align: center;
+  color: var(--trm-gold-hell);
+  font-variant-numeric: tabular-nums;
+}
+
+.trm-rang__name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: clamp(13px, 3.8vw, 15px);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--trm-creme);
+}
+
+.trm-rang__punkte {
+  flex: none;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(15px, 4.2vw, 18px);
+  font-weight: 700;
+  color: var(--trm-gold-hell);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Der freie Thron. Steht nur da, solange noch kein Lauf gewertet ist —
+   also praktisch nur vor dem Start der Aktion. Kein eigener Look: dieselbe
+   Krone, dasselbe Gold, derselbe Knopf wie ueberall im Terminal. */
+.trm-thron {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: clamp(20px, 6vw, 34px) clamp(14px, 4vw, 22px);
+  text-align: center;
+}
+
+.trm-thron__krone {
+  color: var(--trm-gold-hell);
+  filter: drop-shadow(0 0 14px rgba(201, 150, 60, 0.42));
+}
+
+.trm-thron__titel {
+  margin: 0;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(19px, 5.6vw, 25px);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--trm-gold-hell);
+}
+
+.trm-thron__text {
+  margin: 0;
+  font-size: clamp(13px, 3.8vw, 15px);
+  color: var(--trm-creme-weich);
+}
+
+.trm-thron__taste {
+  margin-top: 6px;
+}
+
+/* Der eigene Stand unter der Liste. */
+.trm-rang__eigen {
+  margin: clamp(12px, 3.2vw, 16px) 0 0;
+  padding-top: clamp(10px, 2.8vw, 14px);
+  border-top: 1px solid var(--trm-linie-stark);
+  font-size: clamp(13px, 3.7vw, 15px);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-align: center;
+  color: var(--trm-gold-hell);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Gesamtranking ueber die fuenf Hauptgames — Dashboard-Karte und Reiter. */
+.trm-rang__name[data-anonym='1'] {
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.trm-gr__kopf {
+  margin-bottom: clamp(10px, 2.8vw, 14px);
+}
+
+.trm-gr__hinweis,
+.trm-gr__stand {
+  margin: 8px 0;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--trm-gold-hell);
+  font-variant-numeric: tabular-nums;
+}
+
+.trm-gr__spiele,
+.trm-gr__preisliste {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+}
+
+.trm-gr__spiel {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 12px;
+  padding: 8px 0;
+  font-size: clamp(13px, 3.6vw, 14px);
+  font-variant-numeric: tabular-nums;
+}
+
+.trm-gr__spiel + .trm-gr__spiel {
+  border-top: 1px solid var(--trm-linie);
+}
+
+.trm-gr__spiel-name {
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.trm-gr__spiel-wert {
+  color: var(--trm-creme);
+  opacity: 0.85;
+}
+
+.trm-gr__preise {
+  margin-top: clamp(12px, 3.2vw, 16px);
+  padding: 10px 12px;
+  border: 1px solid var(--trm-linie);
+  border-radius: var(--trm-radius);
+}
+
+.trm-gr__preise-titel {
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--trm-gold);
+}
+
+.trm-gr__preisliste li {
+  padding: 3px 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* Zustand D — Live-Ziehung                                            */
+/* ------------------------------------------------------------------ */
+
+.trm-gesucht {
+  padding: clamp(12px, 3.4vw, 18px) clamp(16px, 5vw, 26px);
+  border: 1px solid var(--trm-linie-stark);
+  border-radius: var(--trm-radius);
+  background: rgba(6, 5, 4, 0.66);
+  text-align: center;
+  box-shadow: 0 0 36px rgba(201, 150, 60, 0.2);
+}
+
+.trm-gesucht__wort {
+  display: block;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(15px, 4.4vw, 19px);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--trm-gold-hell);
+}
+
+.trm-gesucht__nummer {
+  display: block;
+  margin: 2px 0 0;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(48px, 16vw, 78px);
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  filter: drop-shadow(0 0 24px rgba(232, 201, 120, 0.45));
+}
+
+.trm-gesucht__leer {
+  display: block;
+  margin: 6px 0 0;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(16px, 4.6vw, 20px);
+  color: var(--trm-creme-weich);
+}
+
+/* Das einzige Rot der Seite. Es steht nie ohne das Wort LIVE. */
+.trm-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0 0;
+  padding: 10px 18px;
+  border: 1px solid rgba(226, 69, 58, 0.65);
+  border-radius: 10px;
+  background: rgba(96, 20, 16, 0.42);
+  box-shadow: 0 0 24px rgba(226, 69, 58, 0.3);
+}
+
+.trm-live__punkt {
+  flex: none;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--trm-rot);
+  box-shadow: 0 0 12px rgba(226, 69, 58, 0.9);
+  animation: trm-puls 1.6s ease-in-out infinite;
+}
+
+@keyframes trm-puls {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.trm-live__wort {
+  font-size: clamp(14px, 4vw, 17px);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #ffd9d3;
+}
+
+.trm-live__zusatz {
+  display: block;
+  margin: 2px 0 0;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: rgba(255, 217, 211, 0.75);
+}
+
+/* Der Zeilenblock unten: Aufforderung links, Knopf rechts, auf schmalen
+   Geraeten untereinander. */
+.trm-zeile {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.trm-zeile__text {
+  flex: 1 1 180px;
+  min-width: 0;
+}
+
+.trm-zeile .trm-cta {
+  flex: 0 0 auto;
+  width: auto;
+  margin: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* Fuss                                                                */
+/* ------------------------------------------------------------------ */
+
+.trm-fuss {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  margin: clamp(22px, 6vw, 38px) 0 0;
+  padding: clamp(16px, 4.4vw, 22px) 0 0;
+  border-top: 1px solid var(--trm-linie);
+  font-size: 12px;
+  color: var(--trm-creme-leise);
+}
+
+.trm-fuss__marke {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: auto;
+}
+
+.trm-fuss__logo {
+  display: block;
+  width: auto;
+  height: 20px;
+  opacity: 0.85;
+}
+
+.trm-fuss a {
+  color: var(--trm-creme-weich);
+  text-decoration: none;
+}
+
+.trm-fuss a:hover,
+.trm-fuss a:focus-visible {
+  color: var(--trm-gold-hell);
+  text-decoration: underline;
+}
+
+/* ------------------------------------------------------------------ */
+/* Nur fuer Screenreader                                               */
+/* ------------------------------------------------------------------ */
+
+.trm-nur-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* Breitere Geraete                                                    */
+/* ------------------------------------------------------------------ */
+
+/* Ab Tablet darf die Saeule atmen. Sie bleibt eine Saeule — der Entwurf
+   fuer grosse Schirme ist dieselbe Seite, nur ruhiger gesetzt. */
+@media (min-width: 768px) {
+  .trm__spalte {
+    max-width: 720px;
+  }
+
+  .trm-infos {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .trm-info {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .trm-info__nr,
+  .trm-info__ikon {
+    grid-row: auto;
+    grid-column: auto;
+  }
+
+  .trm-info__titel,
+  .trm-info__text {
+    grid-column: auto;
+  }
+}
+
+@media (min-width: 1100px) {
+  .trm__spalte {
+    max-width: 860px;
+  }
+
+  .trm-titel {
+    font-size: 54px;
+  }
+
+  .trm-gewinne__netz {
+    gap: 14px;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Teilnahmebedingungen                                                */
+/* ------------------------------------------------------------------ */
+
+/* Der Entwurfshinweis bekommt einen eigenen, waermeren Rand — er soll
+   auffallen, ohne Rot zu benutzen: Rot ist in dieser Seite dem Live-Signal
+   vorbehalten. */
+.trm-entwurf {
+  border-color: var(--trm-linie-stark);
+  background: var(--trm-panel-tief);
+}
+
+.trm-entwurf .trm-karte__kopf svg {
+  color: var(--trm-gold-hell);
+}
+
+.trm-liste {
+  margin: 12px 0 0;
+  padding: 0 0 0 18px;
+  display: grid;
+  gap: 9px;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--trm-creme-weich);
+}
+
+.trm-liste li::marker {
+  color: var(--trm-gold);
+}
+
+/* ------------------------------------------------------------------ */
+/* Verwaltung (/terminal/admin)                                        */
+/* ------------------------------------------------------------------ */
+
+/* Eine Arbeitsoberflaeche, kein Schaufenster: dieselbe Farbwelt, aber
+   dichter gesetzt und ohne Animation. Sie wird am Schreibtisch benutzt und
+   muss auf dem Handy bedienbar bleiben — daher dieselben 44-px-Ziele wie
+   auf der oeffentlichen Seite. */
+
+.trm-adm__tor {
+  max-width: 420px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.trm-adm__leiste {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-top: 14px;
+}
+
+.trm-adm__leiste .trm-cta {
+  flex: 0 1 auto;
+}
+
+.trm-adm__zeile {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  justify-content: space-between;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--trm-linie);
+  font-size: 14.5px;
+}
+
+.trm-adm__zeile:last-of-type {
+  border-bottom: 0;
+}
+
+.trm-adm__label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--trm-creme-leise);
+}
+
+.trm-adm__wert {
+  color: var(--trm-creme);
+  font-variant-numeric: tabular-nums;
+}
+
+.trm-adm__paar {
+  display: grid;
+  gap: 0;
+}
+
+.trm-adm__schalter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--trm-linie);
+}
+
+.trm-adm__schalter .trm-adm__label {
+  display: block;
+}
+
+.trm-adm__suche {
+  margin-top: 12px;
+}
+
+.trm-adm__liste {
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.trm-adm__liste li {
+  display: grid;
+  gap: 4px;
+  padding: 11px 13px;
+  border: 1px solid var(--trm-linie);
+  border-radius: 10px;
+  background: var(--trm-feld);
+  font-size: 14px;
+}
+
+.trm-adm__liste strong {
+  color: var(--trm-gold-hell);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Der Status steht als Wort da, nicht als Farbfleck — dieselbe Regel wie
+   ueberall auf der Seite. */
+.trm-adm__status {
+  justify-self: start;
+  padding: 2px 9px;
+  border: 1px solid var(--trm-linie);
+  border-radius: 999px;
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--trm-creme-weich);
+}
+
+.trm-adm__klein {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--trm-creme-leise);
+  overflow-wrap: anywhere;
+}
+
+/* Gewinnfall: alle Besitzansprueche auf die gezogene Nummer. */
+.trm-adm__gewinnfall {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--trm-linie-stark);
+  border-radius: 10px;
+}
+
+/* Die Tabelle darf scrollen — aber nur sie, nicht die Seite. */
+.trm-adm__rollen {
+  margin-top: 14px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.trm-adm__tabelle {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.trm-adm__tabelle th,
+.trm-adm__tabelle td {
+  padding: 9px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--trm-linie);
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.trm-adm__tabelle th {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--trm-creme-leise);
+  white-space: nowrap;
+}
+
+.trm-adm__tabelle td:first-child {
+  color: var(--trm-gold-hell);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Das Game-Leaderboard hat zwei Spalten mehr als die Deckelliste. Es darf
+   breiter werden - gescrollt wird ohnehin nur der Tabellenrahmen. */
+.trm-adm__tabelle--scores {
+  min-width: 760px;
+}
+
+.trm-adm__tabelle--stats {
+  min-width: 620px;
+}
+
+.trm-adm__tabelle--stats tbody th {
+  color: var(--trm-creme-weich);
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+
+.trm-adm__gewinne {
+  display: grid;
+  gap: 0 14px;
+}
+
+@media (min-width: 620px) {
+  .trm-adm__gewinne {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.trm-adm__zahl {
+  color: var(--trm-gold-hell);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.trm-adm__status--test {
+  display: inline-block;
+  margin-left: 8px;
+  border-color: var(--trm-gold, #d4a24c);
+  color: var(--trm-gold, #d4a24c);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.trm-adm__zeile--test td {
+  background: rgba(212, 162, 76, 0.08);
+}
+
+.trm-adm__tabelle--scores .trm-adm__status {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.trm-adm__tabelle--scores .trm-adm__klein {
+  display: block;
+  margin-top: 3px;
+}
+
+.trm-adm__tabelle--scores .trm-cta {
+  white-space: nowrap;
+}
+
+@media (min-width: 620px) {
+  .trm-adm__paar {
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+}
+
+/* ================================================================== */
+/* DER ERSTEINSTIEG                                                    */
+/* ================================================================== */
+
+/* Wer den Bierdeckel scannt, kommt hier an. Das soll sich anfuehlen wie ein
+   Raum, den man betritt, und nicht wie eine Seite, die laedt.
+
+   Die Regie in vier Bildern, gesteuert von Terminal.jsx ueber das Attribut
+   data-trm-intro am Dokumentelement:
+
+     1   0 –  480 ms   fast schwarz, ein Hauch Marmoradern, Rauch von unten
+     2 480 – 1000 ms   ein schwacher goldener Punkt weit hinten, metallische
+                       Konturen — die Truhe steht in der Dunkelheit
+     3 1000 – 2200 ms  Lichtadern laufen ueber den Grund, der Rauch teilt
+                       sich, die Truhe kommt nach vorn
+     4 2200 – 2540 ms  Aufschlag: kurzer Stoss, Staub, Goldreflex
+     5 2540 ms         Ueberschrift
+     6 2860 ms         Codefelder und der Rest der Seite
+     9 3560 ms         fertig
+
+   Bewegt wird ausschliesslich mit transform, opacity, filter und Verlaeufen.
+   Keine Bibliothek, kein Video, kein 3D. Die Truhe ist dieselbe wie danach —
+   es wird nichts nachgeladen und nichts ausgetauscht.
+
+   Die Klasse trm-intro-an setzt ein winziges Skript im Dokumentkopf, noch vor
+   dem ersten Bild. Ohne das stuende die fertige Seite schon da, bevor die
+   Sequenz ueberhaupt beginnen koennte — die Seiten werden vorgerendert. */
+
+/* ---- Was zurueckgehalten wird -------------------------------------- */
+
+/* Alles, was erst nach dem Aufschlag kommen darf, traegt diese Klasse. Ohne
+   trm-intro-an bedeutet sie nichts: im Normalbetrieb steht die Seite sofort
+   vollstaendig da. Genau deshalb ist die Klasse allein wirkungslos — das
+   vorgerenderte Markup und der erste Render im Browser sind identisch. */
+.trm-intro-an .trm-auftritt {
+  opacity: 0;
+  transform: translate3d(0, 14px, 0);
+  pointer-events: none;
+  transition:
+    opacity 520ms ease,
+    transform 520ms cubic-bezier(0.22, 0.68, 0.28, 1);
+}
+
+.trm-intro-an .trm-auftritt--da {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+/* Kopf und Fuss gehoeren zum Rahmen und nicht zur Szene. Sie kommen zusammen
+   mit den Codefeldern zurueck. */
+.trm-intro-an .trm-kopf,
+.trm-intro-an .trm-fuss {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 560ms ease;
+}
+
+.trm-intro-an[data-trm-intro='6'] .trm-kopf,
+.trm-intro-an[data-trm-intro='6'] .trm-fuss,
+.trm-intro-an[data-trm-intro='9'] .trm-kopf,
+.trm-intro-an[data-trm-intro='9'] .trm-fuss {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Der Marmorgrund der Seite tritt zurueck. Er verschwindet nicht ganz —
+   sonst waere der Bildschirm schwarz statt dunkel. */
+.trm-intro-an .trm::before {
+  opacity: 0.12;
+  transition: opacity 900ms ease;
+}
+
+.trm-intro-an[data-trm-intro='4'] .trm::before,
+.trm-intro-an[data-trm-intro='5'] .trm::before,
+.trm-intro-an[data-trm-intro='6'] .trm::before,
+.trm-intro-an[data-trm-intro='9'] .trm::before {
+  opacity: 1;
+}
+
+/* ---- Die Truhe materialisiert sich --------------------------------- */
+
+/* Kein Einblenden. Sie steht klein, unscharf und dunkel weit hinten und
+   kommt dann wirklich nach vorne: Massstab, Schaerfe und Helligkeit laufen
+   gemeinsam. Das ist der Unterschied zwischen "war schon da" und "kommt aus
+   der Dunkelheit".
+
+   Die Werte stehen hier und nicht in Keyframes, weil der Takt aus dem
+   Drehbuch in Terminal.jsx kommt. Wer Bewegung abbestellt hat, bekommt
+   dieselben Stufen — die Regel am Dateiende macht aus jedem Uebergang
+   0,001 ms, und das Drehbuch kuerzt sich selbst auf gut eine halbe
+   Sekunde. Die Truhe ist dann sofort da; verloren geht nichts. */
+.trm-intro-an .trm-truhe {
+  opacity: 0;
+  transform: scale(0.3) translate3d(0, 34px, 0);
+  filter: blur(10px) brightness(0.32) saturate(0.55);
+  transition:
+    opacity 820ms ease,
+    transform 1180ms cubic-bezier(0.22, 0.68, 0.28, 1),
+    filter 1060ms ease;
+}
+
+/* Bild 2: ein schwacher Schein auf Metall, mehr nicht. */
+/* Bild 2 beginnt bei 0,3 s; die Truhe taucht erst bei 0,9 s auf — nach den
+   Adern und dem Rauch. */
+.trm-intro-an[data-trm-intro='2'] .trm-truhe {
+  opacity: 0.3;
+  transform: scale(0.34) translate3d(0, 28px, 0);
+  filter: blur(7px) brightness(0.42) saturate(0.7);
+  transition-duration: 600ms, 600ms, 600ms;
+  transition-delay: 600ms, 600ms, 600ms;
+}
+
+/* Bild 3, 1,1–2,4 s: sie kommt auf dich zu. Anfangs langsam, am Ende mit
+   Schwung — damit der Aufschlag bei 2,4 s ein Aufschlag ist. */
+.trm-intro-an[data-trm-intro='3'] .trm-truhe {
+  transition-duration: 700ms, 1300ms, 1200ms;
+  transition-timing-function: ease, cubic-bezier(0.5, 0.02, 0.78, 1), ease;
+}
+
+/* Bild 3 und danach: angekommen. */
+.trm-intro-an[data-trm-intro='3'] .trm-truhe,
+.trm-intro-an[data-trm-intro='4'] .trm-truhe,
+.trm-intro-an[data-trm-intro='5'] .trm-truhe,
+.trm-intro-an[data-trm-intro='6'] .trm-truhe,
+.trm-intro-an[data-trm-intro='9'] .trm-truhe {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+/* Bild 4: der Aufschlag. Ein kurzer, schwerer Stoss — die Truhe setzt auf,
+   federt einmal nach und steht. Auf dem Bild, nicht auf dem Rahmen, damit
+   Rauch und Schein darunter ruhig bleiben. */
+/* Bild 3, kurz vor der Ankunft: die Metallkanten fangen Licht. Ein
+   Goldsaum, der einmal aufzieht und wieder abklingt — nur filter. */
+.trm-intro-an[data-trm-intro='3'] .trm-truhe__bild {
+  animation: trm-kantenlicht 1200ms ease-out both;
+}
+
+@keyframes trm-kantenlicht {
+  0%,
+  45% {
+    filter: none;
+  }
+  72% {
+    filter: brightness(1.14) drop-shadow(0 0 2px rgba(240, 206, 128, 0.85)) drop-shadow(0 0 14px rgba(212, 170, 90, 0.35));
+  }
+  100% {
+    filter: none;
+  }
+}
+
+.trm-intro-an[data-trm-intro='4'] .trm-truhe__bild {
+  animation:
+    trm-aufschlag 460ms cubic-bezier(0.2, 0.8, 0.3, 1) both,
+    trm-nachschwingen 900ms ease-out 380ms both;
+}
+
+/* Nach dem Aufschlag schwingt das Schloss mit: die Truhe kippt kaum
+   sichtbar um die Mitte und kommt zur Ruhe. */
+@keyframes trm-nachschwingen {
+  0% {
+    rotate: 0deg;
+  }
+  22% {
+    rotate: 1.1deg;
+  }
+  48% {
+    rotate: -0.7deg;
+  }
+  72% {
+    rotate: 0.3deg;
+  }
+  100% {
+    rotate: 0deg;
+  }
+}
+
+@keyframes trm-aufschlag {
+  0% {
+    transform: translate3d(0, -14px, 0) scale(1.05);
+  }
+  22% {
+    transform: translate3d(0, 7px, 0) scale(0.97);
+  }
+  48% {
+    transform: translate3d(0, -3px, 0) scale(1.012);
+  }
+  74% {
+    transform: translate3d(0, 1px, 0) scale(0.998);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+/* Und der Goldreflex ueber dem Metall, derselbe wie beim VIDEKO-Zeichen. */
+.trm-intro-an[data-trm-intro='4'] .trm-truhe__glanz {
+  animation: trm-glanz-einmal 0.9s ease-out 60ms both;
+}
+
+/* Das Schloss pendelt aus. */
+.trm-intro-an[data-trm-intro='4'] .trm-truhe__fuge {
+  animation: trm-fuge-pendeln 900ms ease-out 40ms both;
+}
+
+@keyframes trm-fuge-pendeln {
+  0% {
+    opacity: 0.4;
+    transform: scaleY(2.4);
+  }
+  40% {
+    opacity: 0.24;
+    transform: scaleY(1.2) rotate(3deg);
+  }
+  70% {
+    transform: rotate(-1.5deg);
+  }
+  100% {
+    opacity: 0.16;
+    transform: none;
+  }
+}
+
+/* Ein sehr kleiner Stoss auf der Spalte. Mehr als das waere Effekt; so viel
+   ist Gewicht. Die Introschicht liegt ausserhalb der Spalte und bleibt
+   deshalb ruhig stehen, waehrend die Szene einmal zuckt. */
+.trm-intro-an[data-trm-intro='4'] .trm__spalte {
+  animation: trm-stoss 300ms ease-out both;
+}
+
+@keyframes trm-stoss {
+  0% {
+    transform: translate3d(0, -6px, 0);
+  }
+  30% {
+    transform: translate3d(2px, 6px, 0);
+  }
+  60% {
+    transform: translate3d(-2px, -2px, 0);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+/* ---- Die Schicht hinter der Spalte --------------------------------- */
+
+/* Rauch, Lichtadern, der ferne Punkt und der Staub beim Aufschlag. Alles
+   flache Verlaeufe, alles nur verschoben und skaliert. */
+.trm-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Ganz leichte goldene Adern im Grund. Sie stehen von Anfang an da und
+   werden ab Bild 3 kraeftiger — der Raum bekommt Boden. */
+.trm-intro__adern {
+  position: absolute;
+  inset: -10%;
+  background:
+    radial-gradient(38% 22% at 22% 78%, rgba(212, 152, 40, 0.3) 0%, rgba(10, 9, 8, 0) 72%),
+    radial-gradient(30% 18% at 76% 86%, rgba(232, 201, 120, 0.24) 0%, rgba(10, 9, 8, 0) 70%),
+    linear-gradient(104deg, rgba(232, 201, 120, 0) 44%, rgba(232, 201, 120, 0.12) 50%, rgba(232, 201, 120, 0) 56%);
+  opacity: 0.12;
+  transform: scale(1.12);
+  transition:
+    opacity 1000ms ease,
+    transform 1400ms cubic-bezier(0.22, 0.68, 0.28, 1);
+}
+
+/* 0,3 s: die Adern glimmen auf. */
+.trm-intro[data-phase='2'] .trm-intro__adern {
+  opacity: 0.42;
+  transform: scale(1.05);
+  transition-duration: 700ms, 1400ms;
+}
+
+.trm-intro[data-phase='3'] .trm-intro__adern,
+.trm-intro[data-phase='4'] .trm-intro__adern {
+  opacity: 0.7;
+  transform: none;
+}
+
+.trm-intro[data-phase='5'] .trm-intro__adern,
+.trm-intro[data-phase='6'] .trm-intro__adern,
+.trm-intro[data-phase='9'] .trm-intro__adern {
+  opacity: 0;
+  transform: none;
+}
+
+/* Rauch von unten. Zwei Schwaden mit unterschiedlichem Takt, damit es nicht
+   nach einer Textur aussieht. Ab Bild 3 teilen sie sich nach aussen. */
+.trm-intro__rauch {
+  position: absolute;
+  left: -14%;
+  right: -14%;
+  bottom: -24%;
+  height: 78%;
+  background:
+    radial-gradient(52% 60% at 34% 92%, rgba(196, 176, 144, 0.26) 0%, rgba(10, 9, 8, 0) 72%),
+    radial-gradient(44% 54% at 70% 98%, rgba(214, 162, 68, 0.2) 0%, rgba(10, 9, 8, 0) 74%);
+  opacity: 0;
+  transform: translate3d(0, 24%, 0);
+  transition:
+    opacity 900ms ease,
+    transform 1400ms cubic-bezier(0.22, 0.68, 0.28, 1);
+}
+
+/* 0,0 s ist fast schwarz: der Rauch kommt erst bei 0,6 s — Bild 2 beginnt
+   bei 0,3 s, dazu 300 ms Verzoegerung. */
+.trm-intro[data-phase='2'] .trm-intro__rauch {
+  opacity: 0.85;
+  transform: none;
+  transition-delay: 300ms, 300ms;
+}
+
+.trm-intro[data-phase='3'] .trm-intro__rauch,
+.trm-intro[data-phase='4'] .trm-intro__rauch {
+  opacity: 0.5;
+  transform: translate3d(-12%, 6%, 0) scale(1.14);
+}
+
+.trm-intro[data-phase='3'] .trm-intro__rauch--zwei,
+.trm-intro[data-phase='4'] .trm-intro__rauch--zwei {
+  transform: translate3d(12%, 6%, 0) scale(1.14);
+}
+
+.trm-intro[data-phase='5'] .trm-intro__rauch,
+.trm-intro[data-phase='6'] .trm-intro__rauch,
+.trm-intro[data-phase='9'] .trm-intro__rauch {
+  opacity: 0;
+}
+
+/* Der ferne Lichtpunkt aus Bild 2. Er waechst nicht zur Truhe — er ist das,
+   was man von ihr sieht, bevor sie naeher kommt. */
+.trm-intro__funke {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  width: 30vmin;
+  height: 30vmin;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 244, 214, 0.5) 0%,
+    rgba(232, 201, 120, 0.24) 26%,
+    rgba(196, 132, 36, 0.1) 52%,
+    rgba(232, 201, 120, 0) 74%
+  );
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.1);
+  transition:
+    opacity 700ms ease,
+    transform 1200ms cubic-bezier(0.22, 0.68, 0.28, 1);
+}
+
+.trm-intro[data-phase='2'] .trm-intro__funke {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(0.24);
+}
+
+.trm-intro[data-phase='3'] .trm-intro__funke {
+  opacity: 0.7;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.trm-intro[data-phase='4'] .trm-intro__funke {
+  opacity: 0.34;
+  transform: translate(-50%, -50%) scale(1.4);
+}
+
+.trm-intro[data-phase='5'] .trm-intro__funke,
+.trm-intro[data-phase='6'] .trm-intro__funke,
+.trm-intro[data-phase='9'] .trm-intro__funke {
+  opacity: 0;
+}
+
+/* Glut: goldene Partikel, die langsam aufsteigen, solange die Truhe
+   ankommt. Viele Punkte aus einem Element ueber `box-shadow`. */
+.trm-intro__glut {
+  position: absolute;
+  left: 50%;
+  bottom: 8%;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(255, 236, 180, 0.9);
+  box-shadow:
+    -38vw -4vh 0 0 rgba(232, 201, 120, 0.7),
+    -26vw -18vh 0 -1px rgba(255, 226, 150, 0.8),
+    -14vw -9vh 0 0 rgba(214, 162, 68, 0.7),
+    -4vw -26vh 0 -1px rgba(255, 236, 180, 0.8),
+    9vw -14vh 0 0 rgba(232, 201, 120, 0.75),
+    18vw -30vh 0 -1px rgba(255, 226, 150, 0.7),
+    29vw -8vh 0 0 rgba(214, 162, 68, 0.7),
+    40vw -22vh 0 -1px rgba(255, 236, 180, 0.75),
+    -33vw -36vh 0 -1px rgba(232, 201, 120, 0.6),
+    24vw -44vh 0 -1px rgba(255, 226, 150, 0.6);
+  opacity: 0;
+  transition: opacity 800ms ease;
+  animation: trm-glut 3400ms linear infinite;
+}
+
+.trm-intro__glut--zwei {
+  bottom: 2%;
+  scale: -1 1;
+  animation-duration: 4200ms;
+  animation-delay: -1600ms;
+}
+
+.trm-intro[data-phase='2'] .trm-intro__glut {
+  opacity: 0.6;
+  transition-delay: 300ms;
+}
+
+.trm-intro[data-phase='3'] .trm-intro__glut,
+.trm-intro[data-phase='4'] .trm-intro__glut {
+  opacity: 1;
+}
+
+@keyframes trm-glut {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, -34vh, 0);
+  }
+}
+
+/* Der Staubstoss beim Aufschlag. Laeuft genau einmal. */
+.trm-intro__staub {
+  position: absolute;
+  left: 50%;
+  top: 62%;
+  width: 90vmin;
+  height: 30vmin;
+  border-radius: 50%;
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(214, 196, 162, 0.34) 0%,
+    rgba(196, 176, 144, 0.16) 42%,
+    rgba(10, 9, 8, 0) 74%
+  );
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.3);
+}
+
+.trm-intro[data-phase='4'] .trm-intro__staub {
+  animation: trm-staub 760ms ease-out both;
+}
+
+@keyframes trm-staub {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.25);
+  }
+  22% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.5);
+  }
+}
+
+/* Das Zeichen ganz am Anfang. Es steht im ersten Bild und geht wieder, sobald
+   die Truhe zu sehen ist — es soll die Szene ankuendigen, nicht erklaeren. */
+.trm-intro__marke {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: 0;
+  transform: translate(-50%, -50%);
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(15px, 4.4vw, 21px);
+  font-weight: 600;
+  letter-spacing: 0.42em;
+  text-align: center;
+  text-indent: 0.42em;
+  text-transform: uppercase;
+  color: rgba(232, 201, 120, 0.82);
+  opacity: 0;
+  transition:
+    opacity 620ms ease,
+    letter-spacing 900ms ease;
+}
+
+.trm-intro[data-phase='1'] .trm-intro__marke {
+  opacity: 1;
+  letter-spacing: 0.54em;
+}
+
+/* Der Weg daran vorbei. Klein, ruhig, immer erreichbar — eine Sequenz, die
+   man nicht abbrechen kann, ist eine Zumutung.
+
+   Er steht im Markup neben der Introschicht und nicht darin: die Schicht laesst
+   keine Beruehrung durch, und ihre Ebene liegt unter der Spalte. Hier liegt er
+   ueber beidem. */
+.trm-intro__weg {
+  position: fixed;
+  right: max(12px, env(safe-area-inset-right));
+  bottom: max(14px, env(safe-area-inset-bottom));
+  z-index: 3;
+  padding: 9px 14px;
+  border: 1px solid rgba(232, 201, 120, 0.28);
+  border-radius: 999px;
+  background: rgba(10, 9, 8, 0.6);
+  color: rgba(232, 201, 120, 0.78);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.trm-intro__weg:focus-visible {
+  outline: 2px solid var(--trm-gold-hell, #e8c978);
+  outline-offset: 2px;
+}
+
+/* ================================================================== */
+/* DIE TRUHE VOR DEM CODE                                              */
+/* ================================================================== */
+
+/* Sie ist ein Gegenstand, keine Abbildung. Antippen tut etwas — auch ohne
+   Code. Dieselbe Truhe, dieselben Punkte, nur andere Antworten. */
+
+/* Die ganze Truhe antippen: ein kurzer Ruck. Absichtlich kleiner als das
+   Rucken am Schloss — sonst waere jede Stelle gleich viel wert. */
+.trm-truhe--ruck .trm-truhe__bild {
+  animation: trm-ruck-klein 0.34s ease both;
+}
+
+@keyframes trm-ruck-klein {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  22% {
+    transform: translate3d(-2px, 1px, 0) rotate(-0.24deg);
+  }
+  56% {
+    transform: translate3d(2px, 0, 0) rotate(0.2deg);
+  }
+}
+
+/* Der Rauch unter der Truhe wird beim Antippen einmal verdraengt. */
+.trm-truhe--ruck .trm-truhe__rauch,
+.trm-truhe--wackelt .trm-truhe__rauch {
+  animation: trm-rauch-weg 900ms ease-out both;
+}
+
+@keyframes trm-rauch-weg {
+  0% {
+    opacity: 0.5;
+    transform: none;
+  }
+  30% {
+    opacity: 0.82;
+    transform: scale(1.16) translate3d(0, -4%, 0);
+  }
+  100% {
+    opacity: 0.5;
+    transform: none;
+  }
+}
+
+/* Die Flaeche der Truhe selbst. Sie liegt unter den drei genauen Punkten —
+   spaeter im Markup heisst spaeter gezeichnet, und die drei kommen nach ihr. */
+.trm-punkt--truhe {
+  left: 6%;
+  top: 4%;
+  width: 88%;
+  height: 82%;
+  border-radius: 16px;
+}
+
+/* Der Blick wandert zum Schluesselloch — und findet es verschlossen. Die
+   Truhe kommt dabei ein Stueck naeher, mit dem Schluesselloch als Mittelpunkt.
+   Es ist derselbe Ansatz wie beim spaeteren Flug, nur bricht er ab. */
+.trm-truhe--annaehern {
+  transform-origin: 49.6% 69.5%;
+  animation: trm-annaehern 1700ms cubic-bezier(0.3, 0.1, 0.2, 1) both;
+}
+
+@keyframes trm-annaehern {
+  0% {
+    transform: scale(1);
+  }
+  22% {
+    transform: scale(1.2);
+  }
+  74% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ---- Der Flug haengt an der Szene ---------------------------------- */
+
+/* Kein Seitenwechsel: waehrend die Truhe waechst, tritt alles andere in der
+   Spalte zurueck. Uebrig bleibt das Schloss — und dann der Weg hindurch. */
+[data-trm-szene='flug'] .trm__spalte > *:not(.trm-truhe),
+[data-trm-szene='verweigert'] .trm__spalte > *:not(.trm-truhe) {
+  opacity: 0;
+  filter: blur(5px);
+  transition:
+    opacity 320ms ease,
+    filter 320ms ease;
+}
+
+/* ---- Zugang verweigert --------------------------------------------- */
+
+/* Die kurze Abfuhr am Schluesselloch. Sie benutzt die Schichten der grossen
+   Sequenz — Weichzeichner und Wort — aber nur die beiden, und sie fuehrt
+   nirgendwohin. */
+.trm-buehne--verweigert {
+  background: radial-gradient(
+    circle at 50% 58%,
+    rgba(3, 3, 2, 0.34) 0%,
+    rgba(3, 3, 2, 0.72) 52%,
+    rgba(3, 3, 2, 0.92) 100%
+  );
+  animation: trm-verweigert-grund 1700ms ease both;
+}
+
+@keyframes trm-verweigert-grund {
+  0% {
+    opacity: 0;
+  }
+  18% {
+    opacity: 1;
+  }
+  82% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.trm-buehne--verweigert .trm-buehne__weich {
+  animation: trm-verweigert-weich 1700ms ease both;
+}
+
+@keyframes trm-verweigert-weich {
+  0% {
+    opacity: 0;
+  }
+  16% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Das Wort steht in Rot statt in Gold — es ist kein Erfolg. Kleiner als
+   ACCESS GRANTED, damit die Abfuhr nicht groesser wirkt als der Zugang. */
+.trm-buehne--verweigert .trm-buehne__wort {
+  font-size: clamp(19px, 6.4vw, 31px);
+  background: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  color: rgba(226, 170, 150, 0.94);
+  filter: drop-shadow(0 0 16px rgba(3, 3, 2, 0.92));
+  animation: trm-verweigert-wort 1300ms ease 240ms both;
+}
+
+@keyframes trm-verweigert-wort {
+  0% {
+    opacity: 0;
+    letter-spacing: 0.34em;
+  }
+  22% {
+    opacity: 1;
+    letter-spacing: 0.16em;
+  }
+  76% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ================================================================== */
+/* TERMINAL 2.3 — Blick, Vorflug, Mission, Einwilligung, Mobile         */
+/* ================================================================== */
+
+/* ---- Die Truhe reagiert kraeftiger --------------------------------- */
+
+/* Antippen der Truhe oder des Schlosses: ein echter Stoss. Die ganze Truhe
+   sackt kurz ein, schlaegt dreimal hin und her und steht. Bewegt werden die
+   einzelnen Eigenschaften `translate`, `rotate` und `scale` — sie setzen
+   sich mit jedem `transform` zusammen, das sonst gerade auf der Truhe liegt
+   (Intro, Annaehern), statt es zu ueberschreiben.
+
+   Zwei gleiche Keyframes mit verschiedenen Namen: Terminal.jsx wechselt bei
+   jedem Antippen zwischen beiden, und ein neuer Animationsname startet die
+   Bewegung von vorn — auch wenn die Klasse vom letzten Tippen noch steht. */
+.trm-truhe--ruck,
+.trm-truhe--wackelt {
+  animation: trm-truhe-stoss 620ms cubic-bezier(0.25, 0.6, 0.35, 1) both;
+}
+
+.trm-truhe--ruck.trm-truhe--stoss-b,
+.trm-truhe--wackelt.trm-truhe--stoss-b {
+  animation-name: trm-truhe-stoss-b;
+}
+
+@keyframes trm-truhe-stoss {
+  0%,
+  100% {
+    translate: 0 0;
+    rotate: 0deg;
+    scale: 1;
+  }
+  8% {
+    translate: 0 9px;
+    scale: 0.965;
+  }
+  22% {
+    translate: -12px -4px;
+    rotate: -2.6deg;
+    scale: 1.015;
+  }
+  37% {
+    translate: 11px 1px;
+    rotate: 2.2deg;
+    scale: 1;
+  }
+  52% {
+    translate: -7px 0;
+    rotate: -1.4deg;
+  }
+  68% {
+    translate: 4px 0;
+    rotate: 0.7deg;
+  }
+  84% {
+    translate: -1px 0;
+    rotate: -0.2deg;
+  }
+}
+
+@keyframes trm-truhe-stoss-b {
+  0%,
+  100% {
+    translate: 0 0;
+    rotate: 0deg;
+    scale: 1;
+  }
+  8% {
+    translate: 0 9px;
+    scale: 0.965;
+  }
+  22% {
+    translate: 12px -4px;
+    rotate: 2.6deg;
+    scale: 1.015;
+  }
+  37% {
+    translate: -11px 1px;
+    rotate: -2.2deg;
+    scale: 1;
+  }
+  52% {
+    translate: 7px 0;
+    rotate: 1.4deg;
+  }
+  68% {
+    translate: -4px 0;
+    rotate: -0.7deg;
+  }
+  84% {
+    translate: 1px 0;
+    rotate: 0.2deg;
+  }
+}
+
+/* Das Metall blitzt beim Stoss auf. Nur der mittlere Schritt ist gesetzt:
+   davor und danach gilt der Filter, den die Truhe gerade ohnehin hat. */
+.trm-truhe--ruck .trm-truhe__bild,
+.trm-truhe--wackelt .trm-truhe__bild {
+  animation: trm-truhe-metall 620ms ease-out both;
+}
+
+.trm-truhe--stoss-b.trm-truhe--ruck .trm-truhe__bild,
+.trm-truhe--stoss-b.trm-truhe--wackelt .trm-truhe__bild {
+  animation-name: trm-truhe-metall-b;
+}
+
+@keyframes trm-truhe-metall {
+  18% {
+    filter: brightness(1.22) contrast(1.06) drop-shadow(0 0 30px rgba(255, 220, 140, 0.7));
+  }
+}
+
+@keyframes trm-truhe-metall-b {
+  18% {
+    filter: brightness(1.22) contrast(1.06) drop-shadow(0 0 30px rgba(255, 220, 140, 0.7));
+  }
+}
+
+.trm-truhe--ruck .trm-truhe__glanz {
+  animation: trm-glanz-einmal 0.6s ease-out 80ms both;
+}
+
+/* ---- Die Effektschichten: Schloss, Puff, Funken, Blitz ------------- */
+
+/* Sie haengen nur im DOM, solange es etwas zu zeigen gibt, und laufen beim
+   Einhaengen genau einmal. Terminal.jsx haengt sie bei jedem Stoss neu ein. */
+.trm-truhe__effekte {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Die Schlosskopie: dasselbe Bild, auf Schlossplatte und Buegel
+   zugeschnitten. In Ruhe liegt sie deckungsgleich auf dem Original; beim
+   Stoss pendelt sie um den Buegel. Die dunkle Nische darunter ist das, was
+   hinter einem schwingenden Schloss sichtbar wird. */
+.trm-truhe__nische {
+  position: absolute;
+  left: 43.5%;
+  top: 41%;
+  width: 13%;
+  height: 40%;
+  border-radius: 40% 40% 30% 30%;
+  background: radial-gradient(closest-side, rgba(4, 3, 2, 0.94) 0%, rgba(4, 3, 2, 0.7) 70%, rgba(4, 3, 2, 0) 100%);
+  opacity: 0;
+  animation: trm-nische 900ms ease both;
+}
+
+.trm-truhe__schloss {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 41%;
+  filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.55));
+  opacity: 0;
+  animation: trm-schloss-schwingen 900ms cubic-bezier(0.3, 0.6, 0.4, 1) both;
+}
+
+.trm-truhe__schlossbild {
+  display: block;
+  width: 100%;
+  height: auto;
+  clip-path: inset(39% 42% 16% 42% round 6%);
+}
+
+@keyframes trm-schloss-schwingen {
+  0% {
+    opacity: 0;
+    rotate: 0deg;
+  }
+  4% {
+    opacity: 1;
+  }
+  14% {
+    rotate: 11deg;
+  }
+  28% {
+    rotate: -9deg;
+  }
+  42% {
+    rotate: 6deg;
+  }
+  56% {
+    rotate: -3.5deg;
+  }
+  70% {
+    rotate: 1.6deg;
+  }
+  84% {
+    rotate: -0.5deg;
+  }
+  92% {
+    opacity: 1;
+    rotate: 0deg;
+  }
+  100% {
+    opacity: 0;
+    rotate: 0deg;
+  }
+}
+
+@keyframes trm-nische {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  6%,
+  88% {
+    opacity: 1;
+  }
+}
+
+/* Der Rauchpuff: aus der Truhe heraus, nach oben und zu beiden Seiten. */
+.trm-truhe__puff {
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  top: 40%;
+  height: 56%;
+  background:
+    radial-gradient(40% 46% at 50% 60%, rgba(226, 210, 178, 0.55) 0%, rgba(10, 9, 8, 0) 72%),
+    radial-gradient(34% 40% at 30% 70%, rgba(214, 170, 90, 0.4) 0%, rgba(10, 9, 8, 0) 74%),
+    radial-gradient(34% 40% at 70% 70%, rgba(214, 170, 90, 0.4) 0%, rgba(10, 9, 8, 0) 74%);
+  filter: blur(8px);
+  opacity: 0;
+  animation: trm-puff 1000ms ease-out both;
+}
+
+.trm-truhe__puff::before,
+.trm-truhe__puff::after {
+  content: '';
+  position: absolute;
+  top: 30%;
+  width: 55%;
+  height: 60%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(214, 196, 162, 0.5), rgba(10, 9, 8, 0));
+  animation: trm-puff-links 1000ms ease-out both;
+}
+
+.trm-truhe__puff::before {
+  left: 0;
+}
+
+.trm-truhe__puff::after {
+  right: 0;
+  animation-name: trm-puff-rechts;
+}
+
+@keyframes trm-puff {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 12%, 0) scale(0.5);
+  }
+  16% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, -22%, 0) scale(1.7);
+  }
+}
+
+@keyframes trm-puff-links {
+  from {
+    transform: translate3d(0, 0, 0) scale(0.6);
+  }
+  to {
+    transform: translate3d(-70%, -20%, 0) scale(1.5);
+  }
+}
+
+@keyframes trm-puff-rechts {
+  from {
+    transform: translate3d(0, 0, 0) scale(0.6);
+  }
+  to {
+    transform: translate3d(70%, -20%, 0) scale(1.5);
+  }
+}
+
+/* Funken aus dem Schloss. Ein Element, viele Punkte ueber `box-shadow`; das
+   Skalieren traegt die Punkte nach aussen, die Verschiebung laesst sie fallen. */
+.trm-truhe__funkenflug {
+  position: absolute;
+  left: 50%;
+  top: 58%;
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+  border-radius: 50%;
+  background: #fff4d2;
+  box-shadow:
+    26px -30px 0 0 rgba(255, 230, 160, 0.95),
+    -30px -24px 0 0 rgba(255, 220, 140, 0.9),
+    38px 4px 0 -1px rgba(255, 236, 180, 0.9),
+    -40px 8px 0 -1px rgba(255, 214, 120, 0.85),
+    14px 34px 0 -1px rgba(255, 214, 120, 0.8),
+    -18px 30px 0 -1px rgba(255, 226, 150, 0.8),
+    4px -42px 0 0 rgba(255, 244, 210, 0.95),
+    46px -16px 0 -1px rgba(255, 226, 150, 0.75),
+    -48px -12px 0 -1px rgba(255, 226, 150, 0.7),
+    30px 22px 0 -1px rgba(232, 201, 120, 0.8),
+    -28px 18px 0 -1px rgba(232, 201, 120, 0.75),
+    -6px -36px 0 -1px rgba(255, 236, 180, 0.85);
+  opacity: 0;
+  animation: trm-funkenflug 760ms cubic-bezier(0.15, 0.7, 0.4, 1) 40ms both;
+}
+
+@keyframes trm-funkenflug {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(0.15);
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0) scale(2.3);
+  }
+}
+
+/* Der Goldglanz auf dem Schloss: ein Stern aus Licht, einmal. */
+.trm-truhe__blitz {
+  position: absolute;
+  left: 50%;
+  top: 60%;
+  width: 46%;
+  aspect-ratio: 1;
+  max-width: 100%;
+  translate: -50% -50%;
+  background:
+    radial-gradient(circle, rgba(255, 252, 236, 0.95) 0%, rgba(255, 224, 150, 0.6) 8%, rgba(232, 201, 120, 0.18) 24%, rgba(232, 201, 120, 0) 44%),
+    linear-gradient(90deg, rgba(255, 240, 200, 0) 0%, rgba(255, 240, 200, 0.9) 50%, rgba(255, 240, 200, 0) 100%) center / 100% 3px no-repeat,
+    linear-gradient(0deg, rgba(255, 240, 200, 0) 0%, rgba(255, 240, 200, 0.8) 50%, rgba(255, 240, 200, 0) 100%) center / 3px 70% no-repeat;
+  mix-blend-mode: screen;
+  opacity: 0;
+  animation: trm-blitz 620ms ease-out 120ms both;
+}
+
+@keyframes trm-blitz {
+  0% {
+    opacity: 0;
+    scale: 0.2;
+    rotate: 0deg;
+  }
+  28% {
+    opacity: 1;
+    scale: 1;
+  }
+  100% {
+    opacity: 0;
+    scale: 1.25;
+    rotate: 24deg;
+  }
+}
+
+/* Intro: die Schichten folgen dem Aufschlag des Bildes, das Schloss setzt
+   100 ms danach ein (2,5 s), der Glanz 300 ms danach (2,7 s). */
+.trm-truhe__effekte--intro {
+  animation:
+    trm-aufschlag 460ms cubic-bezier(0.2, 0.8, 0.3, 1) both,
+    trm-nachschwingen 900ms ease-out 380ms both;
+}
+
+.trm-truhe__effekte--intro .trm-truhe__schloss,
+.trm-truhe__effekte--intro .trm-truhe__nische {
+  animation-delay: 100ms;
+}
+
+.trm-truhe__effekte--intro .trm-truhe__funkenflug {
+  animation-delay: 80ms;
+}
+
+.trm-truhe__effekte--intro .trm-truhe__blitz {
+  animation-delay: 300ms;
+}
+
+/* ACCESS GRANTED: die Schichten kommen mit der Truhe nach vorn und schlagen
+   bei 1,8 s an — genau im Schnapper. */
+.trm-truhe__effekte--gewaehrt {
+  animation: trm-naeher-form 700ms cubic-bezier(0.25, 0.7, 0.35, 1) 1300ms both;
+}
+
+.trm-truhe__effekte--gewaehrt .trm-truhe__puff {
+  animation-delay: 1720ms;
+}
+
+.trm-truhe__effekte--gewaehrt .trm-truhe__schloss,
+.trm-truhe__effekte--gewaehrt .trm-truhe__nische {
+  animation-delay: 1780ms;
+}
+
+.trm-truhe__effekte--gewaehrt .trm-truhe__funkenflug {
+  animation-delay: 1800ms;
+}
+
+.trm-truhe__effekte--gewaehrt .trm-truhe__blitz {
+  animation-delay: 1840ms;
+}
+
+@keyframes trm-naeher-form {
+  from {
+    transform: scale(1);
+  }
+  62% {
+    transform: scale(1.048);
+  }
+  71% {
+    transform: scale(1.056) translate3d(-4px, 1px, 0);
+  }
+  80% {
+    transform: scale(1.052) translate3d(2px, 0, 0);
+  }
+  to {
+    transform: scale(1.06);
+  }
+}
+
+.trm-truhe--flug .trm-truhe__effekte {
+  opacity: 0;
+}
+
+/* Funke am Schloss: die Fuge blitzt kurz auf, der Glanz laeuft schnell
+   einmal ueber das Metall. */
+.trm-truhe--wackelt .trm-truhe__fuge {
+  animation: trm-funke 0.5s ease-out both;
+}
+
+.trm-truhe--wackelt .trm-truhe__glanz {
+  animation: trm-glanz-einmal 0.55s ease-out both;
+}
+
+@keyframes trm-funke {
+  0% {
+    opacity: 0.16;
+    box-shadow: 0 0 10px rgba(232, 201, 120, 0.45);
+  }
+  22% {
+    opacity: 1;
+    box-shadow:
+      0 0 14px rgba(255, 244, 210, 0.95),
+      0 0 34px rgba(232, 201, 120, 0.7);
+  }
+  100% {
+    opacity: 0.16;
+    box-shadow: 0 0 10px rgba(232, 201, 120, 0.45);
+  }
+}
+
+/* Das Wort unter der Truhe als dunkle Glaspille mit Goldkante: auf dem
+   Marmor bleibt es auf jeder Breite lesbar und steht auf eigener Zeile. */
+.trm-truhe__ruf {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.4em;
+}
+
+.trm-truhe__pille {
+  display: inline-block;
+  max-width: min(100% - 32px, 30em);
+  padding: 6px 16px;
+  border: 1px solid var(--trm-linie-stark);
+  border-radius: 999px;
+  background: rgba(6, 5, 4, 0.72);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 0 18px rgba(232, 201, 120, 0.16);
+  font-size: clamp(14px, 4.2vw, 19px);
+  line-height: 1.25;
+  animation: trm-pille 260ms ease both;
+}
+
+@keyframes trm-pille {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 4px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---- Blick durchs Schluesselloch (vor dem Code) --------------------- */
+
+[data-trm-szene='spaehen'] .trm__spalte > *:not(.trm-truhe) {
+  opacity: 0;
+  filter: blur(5px);
+  transition:
+    opacity 320ms ease,
+    filter 320ms ease;
+}
+
+.trm-buehne--spaehen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(14px, 4vw, 24px);
+  padding-inline: 16px;
+  animation: trm-spaehen-gesamt 3000ms ease both;
+}
+
+@keyframes trm-spaehen-gesamt {
+  0% {
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Schwarz rund um das Loch — nur die Mitte bleibt offen. */
+.trm-spaehen__grund {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(3, 3, 2, 0.2) 0%,
+    rgba(3, 3, 2, 0.9) 34%,
+    #030302 60%
+  );
+}
+
+/* Das Schluesselloch selbst. Eine echte Maske in Lochform, kein Kreis mit
+   Karten darin: man sieht nur, was dahinter liegt — Bilder, Licht, Tiefe.
+   Form und Rand teilen sich denselben Pfad (viewBox 100 x 160). */
+.trm-schlossblick {
+  position: relative;
+  width: min(62vw, 270px);
+  max-width: 100%;
+  aspect-ratio: 100 / 160;
+  flex: 0 0 auto;
+  animation: trm-schlossblick-auf 3000ms cubic-bezier(0.3, 0.1, 0.2, 1) both;
+}
+
+@keyframes trm-schlossblick-auf {
+  0% {
+    transform: scale(0.12);
+    opacity: 0;
+  }
+  15% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.04);
+  }
+  88% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.1);
+    opacity: 0;
+  }
+}
+
+.trm-schlossblick__maske {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #050403;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 160' preserveAspectRatio='none'%3E%3Cpath d='M50 16A34 34 0 0 1 62 81.9L74 150H26L38 81.9A34 34 0 0 1 50 16Z'/%3E%3C/svg%3E")
+    center / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 160' preserveAspectRatio='none'%3E%3Cpath d='M50 16A34 34 0 0 1 62 81.9L74 150H26L38 81.9A34 34 0 0 1 50 16Z'/%3E%3C/svg%3E")
+    center / 100% 100% no-repeat;
+}
+
+/* Alles hinter dem Loch. Nach gut der Haelfte zieht der Tresor den Blick
+   zu: Unschaerfe und Dunkel statt harter Schnitt. */
+.trm-schlossblick__inhalt {
+  position: absolute;
+  inset: 0;
+  animation: trm-schlossblick-zu 3000ms ease both;
+}
+
+@keyframes trm-schlossblick-zu {
+  0%,
+  48% {
+    filter: none;
+  }
+  60%,
+  100% {
+    filter: blur(6px) brightness(0.42) saturate(0.6);
+  }
+}
+
+/* Zwei Baender mit denselben drei Motiven. Das hintere ist groesser,
+   unscharf und langsamer — daraus entsteht die Tiefe. Jedes Motiv ist
+   80 % so breit wie das Loch, die Nachbarn schauen also am Rand herein. */
+.trm-schlossblick__band {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  width: 240%;
+  height: 100%;
+  will-change: transform;
+  animation: trm-schlossblick-zug 3000ms cubic-bezier(0.45, 0.05, 0.4, 1) both;
+}
+
+@keyframes trm-schlossblick-zug {
+  0% {
+    transform: translateX(8%);
+  }
+  50% {
+    transform: translateX(-60%);
+  }
+  100% {
+    transform: translateX(-66%);
+  }
+}
+
+.trm-schlossblick__bild,
+.trm-schlossblick__tiefbild {
+  flex: 0 0 calc(100% / 3);
+  width: calc(100% / 3);
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 45%;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 16%, #000 84%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 16%, #000 84%, transparent 100%);
+}
+
+.trm-schlossblick__band--tief {
+  animation-name: trm-schlossblick-tief;
+  animation-timing-function: linear;
+}
+
+@keyframes trm-schlossblick-tief {
+  from {
+    transform: translateX(-10%) scale(1.3);
+  }
+  to {
+    transform: translateX(-48%) scale(1.3);
+  }
+}
+
+.trm-schlossblick__tiefbild {
+  filter: blur(12px) brightness(0.62) saturate(0.85);
+}
+
+.trm-schlossblick__band:not(.trm-schlossblick__band--tief) .trm-schlossblick__bild {
+  filter: saturate(1.05) contrast(1.04);
+}
+
+/* Goldlicht, das einmal quer durchs Loch streicht, und ein warmer Schein
+   von oben. `screen` hellt nur auf, es verdeckt nichts. */
+.trm-schlossblick__licht {
+  position: absolute;
+  inset: -20% -60%;
+  background:
+    radial-gradient(ellipse at 50% 18%, rgba(255, 214, 130, 0.38), rgba(255, 214, 130, 0) 55%),
+    linear-gradient(112deg, rgba(255, 220, 140, 0) 38%, rgba(255, 226, 160, 0.55) 50%, rgba(255, 220, 140, 0) 62%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  animation: trm-schlossblick-licht 3000ms ease-in-out both;
+}
+
+@keyframes trm-schlossblick-licht {
+  0% {
+    transform: translateX(-30%);
+    opacity: 0.4;
+  }
+  45% {
+    transform: translateX(26%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(30%);
+    opacity: 0.25;
+  }
+}
+
+/* Die Innenkante des Lochs: dunkel, damit es wie eine Oeffnung in Metall
+   wirkt und nicht wie ein ausgeschnittenes Foto. */
+.trm-schlossblick__schatten {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 40% at 50% 32%, rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, 0.7) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.75) 100%);
+  pointer-events: none;
+}
+
+.trm-schlossblick__rand {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 0 6px rgba(232, 201, 120, 0.7)) drop-shadow(0 0 18px rgba(232, 201, 120, 0.35));
+  pointer-events: none;
+}
+
+.trm-schlossblick__rand path {
+  fill: none;
+  stroke: rgba(232, 201, 120, 0.9);
+  stroke-width: 2px;
+  animation: trm-schlossblick-rand 3000ms ease both;
+}
+
+@keyframes trm-schlossblick-rand {
+  0%,
+  48% {
+    stroke: rgba(232, 201, 120, 0.9);
+  }
+  58%,
+  100% {
+    stroke: rgba(214, 104, 80, 0.9);
+  }
+}
+
+/* Die Sperre steht unter dem Loch und kommt nach etwa 1,5 s. */
+.trm-spaehen__sperre {
+  position: relative;
+  width: min(100vw - 32px, 420px);
+  text-align: center;
+  animation: trm-spaehen-sperre 3000ms ease both;
+}
+
+@keyframes trm-spaehen-sperre {
+  0%,
+  50% {
+    opacity: 0;
+    transform: scale(1.18);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.trm-spaehen__sperrwort {
+  margin: 0;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(24px, 8vw, 40px);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: rgba(234, 176, 156, 0.96);
+  text-shadow: 0 0 20px rgba(3, 3, 2, 1);
+}
+
+.trm-spaehen__sperrzeile {
+  margin: 6px 0 0;
+  font-size: clamp(13px, 3.8vw, 16px);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--trm-gold-hell);
+  text-shadow: 0 0 14px rgba(3, 3, 2, 1);
+}
+
+.trm-truhe--annaehern {
+  animation-duration: 3000ms;
+}
+
+/* ---- Vor dem echten Flug: der Satz ---------------------------------- */
+
+.trm-buehne--vorflug {
+  display: grid;
+  place-items: center;
+  background: radial-gradient(
+    circle at 50% 56%,
+    rgba(3, 3, 2, 0.2) 0%,
+    rgba(3, 3, 2, 0.66) 60%,
+    rgba(3, 3, 2, 0.86) 100%
+  );
+  animation: trm-buehne-auf 300ms ease both;
+}
+
+.trm-buehne__satz {
+  width: min(100% - 32px, 520px);
+  margin: 0;
+  padding: 12px 18px;
+  border: 1px solid rgba(201, 160, 80, 0.58);
+  border-radius: 16px;
+  background: rgba(6, 5, 4, 0.8);
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(19px, 5.6vw, 28px);
+  font-weight: 600;
+  line-height: 1.22;
+  text-align: center;
+  color: #f3d791;
+  box-shadow: 0 0 40px rgba(232, 201, 120, 0.25);
+  animation: trm-satz 1500ms ease both;
+}
+
+@keyframes trm-satz {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  20% {
+    opacity: 1;
+    transform: none;
+  }
+  82% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.trm-truhe--vorflug .trm-truhe__bild {
+  filter: drop-shadow(0 0 60px rgba(255, 226, 150, 0.62));
+  transition: filter 600ms ease;
+}
+
+/* ---- Follower-Mission ----------------------------------------------- */
+
+.trm-metriken--eins {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 400px) {
+  .trm-metriken--eins {
+    grid-template-columns: 1fr;
+  }
+}
+
+.trm-mission {
+  border-color: var(--trm-linie-stark);
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(232, 201, 120, 0.1), rgba(0, 0, 0, 0) 60%),
+    var(--trm-panel);
+  text-align: center;
+}
+
+.trm-mission .trm-karte__kopf {
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.trm-mission__trenner {
+  color: var(--trm-gold);
+  opacity: 0.6;
+}
+
+.trm-mission__zahl {
+  margin: 0 0 10px;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(26px, 8vw, 38px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--trm-gold-hell);
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 22px rgba(232, 201, 120, 0.35);
+}
+
+.trm-mission__balken {
+  height: 14px;
+}
+
+.trm-mission__fehlt {
+  margin: 10px 0 0;
+  font-size: clamp(13px, 3.8vw, 15px);
+  font-weight: 600;
+  color: var(--trm-creme);
+}
+
+.trm-mission__stufen {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 600px) {
+  .trm-mission__stufen {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+.trm-mission__stufe {
+  display: grid;
+  align-content: start;
+  gap: 3px;
+  min-width: 0;
+  padding: 9px 6px;
+  border: 1px solid var(--trm-linie);
+  border-radius: 10px;
+  background: rgba(3, 3, 2, 0.5);
+  color: var(--trm-creme-leise);
+}
+
+.trm-mission__stufe[data-naechste='1'] {
+  border-color: var(--trm-linie-stark);
+  color: var(--trm-creme-weich);
+}
+
+.trm-mission__stufe[data-frei='1'] {
+  border-color: rgba(243, 215, 145, 0.8);
+  background: linear-gradient(170deg, rgba(232, 201, 120, 0.2), rgba(9, 8, 7, 0.7));
+  color: var(--trm-creme);
+  box-shadow:
+    0 0 18px rgba(232, 201, 120, 0.35),
+    inset 0 0 12px rgba(232, 201, 120, 0.12);
+}
+
+.trm-mission__ziel {
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(17px, 4.8vw, 20px);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.trm-mission__stufe[data-frei='1'] .trm-mission__ziel {
+  color: var(--trm-gold-hell);
+}
+
+.trm-mission__schloss {
+  font-size: 0.8em;
+}
+
+.trm-mission__wort {
+  min-height: 0;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--trm-gold-hell);
+}
+
+.trm-mission__gewinn {
+  font-size: clamp(9px, 2.6vw, 11px);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+/* ---- Oeffentliches Leaderboard -------------------------------------- */
+
+.trm-einwilligung__noch {
+  margin: 0 0 6px;
+  padding: 12px;
+  border: 1px dashed var(--trm-linie-stark);
+  border-radius: 10px;
+  text-align: center;
+}
+
+.trm-einwilligung__noch .trm-metrik__text {
+  margin: 0;
+}
+
+.trm-einwilligung__haken {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  margin: 12px 0 0;
+  padding: 4px 0;
+  cursor: pointer;
+  font-size: clamp(14px, 4vw, 16px);
+  line-height: 1.35;
+  color: var(--trm-creme);
+}
+
+.trm-einwilligung__haken input {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  accent-color: var(--trm-gold);
+}
+
+.trm-einwilligung__haken input:focus-visible {
+  outline: 2px solid var(--trm-gold-hell);
+  outline-offset: 3px;
+}
+
+.trm-einwilligung__status {
+  margin: 10px 0 0;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--trm-creme-weich);
+}
+
+.trm-einwilligung__status[data-an='1'] {
+  color: var(--trm-gold-hell);
+}
+
+/* ---- Mobile-Fixes ---------------------------------------------------- */
+
+/* B: Textbloecke in der Mitte bekommen immer Luft zu den Raendern. Die
+   Spalte haelt bereits mindestens 16 px Rand; freistehende Ebenen ueber
+   der vollen Breite (Pillen, Buehnen-Satz, Spaehen) rechnen selbst mit
+   min(100% - 32px, …). */
+.trm-sub,
+.trm-hinweis {
+  max-width: min(100%, 36em);
+  margin-inline: auto;
+}
+
+/* C: SO FUNKTIONIERT DIE ZIEHUNG — einspaltig auf dem Telefon, 2 × 2 ab
+   Tablet. Auch ueber der Vierer-Regel fuer breite Schirme. */
+.trm-infos--vier {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 600px) {
+  .trm-infos--vier {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* D: Ueberschriften auf 320–430 px enger gesetzt. */
+@media (max-width: 430px) {
+  .trm-titel {
+    font-size: clamp(25px, 8.4vw, 36px);
+    line-height: 1;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+  }
+
+  .trm-karte__titel {
+    font-size: clamp(16px, 4.8vw, 21px);
+    line-height: 1.12;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* E: Fusszeile mittig. */
+.trm-fuss {
+  justify-content: center;
+  text-align: center;
+}
+
+.trm-fuss__marke {
+  flex-basis: 100%;
+  justify-content: center;
+  margin-right: 0;
+}
+
+/* F: Kein Termin — eine kompakte Karte statt einer grossen leeren. */
+.trm-karte--kompakt {
+  padding-block: clamp(10px, 3vw, 14px);
+  text-align: center;
+}
+
+.trm-karte--kompakt .trm-karte__kopf {
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.trm-karte--kompakt .trm-metrik__text {
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trm-truhe--ruck .trm-truhe__bild,
+  .trm-truhe--wackelt .trm-truhe__bild,
+  .trm-truhe--wackelt .trm-truhe__fuge,
+  .trm-truhe--wackelt .trm-truhe__glanz,
+  .trm-truhe__pille,
+  .trm-buehne__satz {
+    animation: none;
+  }
+
+  .trm-schlossblick,
+  .trm-schlossblick__band,
+  .trm-schlossblick__licht,
+  .trm-schlossblick__rand path {
+    animation: none;
+  }
+
+  .trm-schlossblick__band {
+    transform: translateX(-30%);
+  }
+
+  .trm-schlossblick__band--tief {
+    transform: translateX(-30%) scale(1.3);
+  }
+
+  .trm-schlossblick__inhalt {
+    animation: trm-spaehen-sanft 2000ms ease both;
+  }
+
+  .trm-spaehen__sperre {
+    animation: trm-spaehen-sperre-sanft 2000ms ease both;
+  }
+
+  .trm-buehne--spaehen {
+    animation-duration: 2000ms;
+  }
+
+  .trm-truhe--annaehern {
+    animation: none;
+  }
+
+  .trm-truhe--ruck,
+  .trm-truhe--wackelt,
+  .trm-truhe--ruck .trm-truhe__glanz,
+  .trm-intro__glut,
+  .trm-truhe--wach .trm-punkt--schluessel::before {
+    animation: none;
+  }
+
+  .trm-truhe__effekte,
+  .trm-buehne__blitz,
+  .trm-buehne__funken {
+    display: none;
+  }
+}
+
+@keyframes trm-spaehen-sanft {
+  0%,
+  45% {
+    opacity: 1;
+    filter: none;
+  }
+  55%,
+  100% {
+    opacity: 1;
+    filter: blur(7px);
+  }
+}
+
+@keyframes trm-spaehen-sperre-sanft {
+  0%,
+  45% {
+    opacity: 0;
+  }
+  55%,
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ================================================================== */
+/* DAS TESTLABOR                                                       */
+/* ================================================================== */
+
+/* Sichtbar nur mit gueltiger Testsitzung. Klein genug, um nicht im Weg zu
+   stehen, und deutlich genug, dass man den Testmodus nie mit dem Ernstfall
+   verwechselt. */
+
+.trm-probe {
+  position: fixed;
+  left: 50%;
+  top: max(6px, env(safe-area-inset-top));
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px 4px 11px;
+  transform: translateX(-50%);
+  border: 1px solid rgba(226, 170, 150, 0.42);
+  border-radius: 999px;
+  background: rgba(10, 9, 8, 0.88);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.trm-probe__marke {
+  color: rgba(226, 170, 150, 0.96);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.trm-probe__knopf {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(232, 201, 120, 0.14);
+  color: var(--gold-bright, #e8c978);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.trm-probe__knopf:focus-visible {
+  outline: 2px solid var(--gold-bright, #e8c978);
+  outline-offset: 2px;
+}
+
+.trm-probe__blatt {
+  position: fixed;
+  left: 50%;
+  top: max(42px, calc(env(safe-area-inset-top) + 42px));
+  z-index: 61;
+  width: min(340px, calc(100vw - 24px));
+  max-height: min(74vh, 560px);
+  overflow-y: auto;
+  padding: 14px 14px 16px;
+  transform: translateX(-50%);
+  border: 1px solid rgba(232, 201, 120, 0.3);
+  border-radius: 14px;
+  background: rgba(12, 11, 9, 0.97);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+}
+
+.trm-probe__kopf {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.trm-probe__titel {
+  margin: 0;
+  color: var(--gold-bright, #e8c978);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.trm-probe__zu {
+  display: inline-flex;
+  padding: 4px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: rgba(240, 233, 220, 0.7);
+  cursor: pointer;
+}
+
+.trm-probe__person,
+.trm-probe__hinweis {
+  margin: 0 0 8px;
+  color: rgba(240, 233, 220, 0.62);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.trm-probe__abschnitt {
+  margin: 10px 0 6px;
+  color: rgba(240, 233, 220, 0.5);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.trm-probe__gitter {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+/* Die beiden Knoepfe ganz unten raeumen auf statt zu springen; sie bekommen
+   etwas Luft nach oben, damit man sie nicht versehentlich trifft. */
+.trm-probe__gitter--unten {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--trm-linie);
+}
+
+.trm-probe__tat {
+  padding: 9px 8px;
+  border: 1px solid rgba(232, 201, 120, 0.26);
+  border-radius: 9px;
+  background: rgba(232, 201, 120, 0.06);
+  color: rgba(240, 233, 220, 0.9);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  line-height: 1.3;
+  text-align: left;
+  text-transform: uppercase;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.trm-probe__tat:hover {
+  border-color: rgba(232, 201, 120, 0.5);
+}
+
+.trm-probe__tat--breit {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.trm-probe__tat--warnung {
+  border-color: rgba(226, 170, 150, 0.38);
+  background: rgba(226, 170, 150, 0.07);
+  color: rgba(226, 170, 150, 0.92);
+}
+
+.trm-probe__tat:focus-visible {
+  outline: 2px solid var(--gold-bright, #e8c978);
+  outline-offset: 2px;
+}
+
+/* Der Punkt im Menue, mit dem man dieses Geraet abmeldet. Er sieht bewusst
+   ruhiger aus als die Wege daneben — er fuehrt nirgendwohin, er raeumt auf. */
+.trm-menue-blatt .trm-abmelden {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 4px;
+  border: 0;
+  border-top: 1px solid var(--trm-linie);
+  background: transparent;
+  color: rgba(240, 233, 220, 0.62);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-align: left;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+/* Der Wieder-Login im Menue ist ein Link, sieht aber aus wie seine Nachbarn. */
+.trm-menue-blatt a.trm-abmelden {
+  border-radius: 0;
+}
+
+.trm-menue-blatt a.trm-abmelden:hover,
+.trm-menue-blatt a.trm-abmelden:focus-visible {
+  background: transparent;
+  color: var(--trm-gold-hell);
+}
+
+.trm-menue-blatt .trm-abmelden:focus-visible {
+  outline: 2px solid var(--gold-bright, #e8c978);
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Bewegung auf Wunsch                                                 */
+/* ------------------------------------------------------------------ */
+
+/* Wer Bewegung reduziert, bekommt dieselbe Seite ohne Puls, ohne
+   Einblenden und ohne wandernde Balken. Der Inhalt bleibt vollstaendig. */
+@media (prefers-reduced-motion: reduce) {
+  .trm *,
+  .trm *::before,
+  .trm *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .trm-live__punkt {
+    opacity: 1;
+  }
+
+  /* Die Introschicht liegt innerhalb von .trm und ist damit schon erfasst:
+     jeder Uebergang faellt auf 0,001 ms. Das Drehbuch in Terminal.jsx kuerzt
+     sich parallel auf gut eine halbe Sekunde. Uebrig bleibt die Abfolge —
+     Dunkel, Truhe, Ueberschrift, Codefelder — in Sprungmarken statt in
+     Bewegung. Ausgelassen wird nichts. */
+  .trm-intro__staub,
+  .trm-intro-an .trm__spalte {
+    animation: none !important;
+  }
+}
+
+/* Die Abfuhr am Schluesselloch haengt wie die beiden grossen Sequenzen als
+   Geschwister neben .trm und wird von der Regel darueber nicht erfasst. */
+@media (prefers-reduced-motion: reduce) {
+  .trm-buehne--verweigert,
+  .trm-buehne--verweigert .trm-buehne__weich,
+  .trm-buehne--verweigert .trm-buehne__wort {
+    animation: none;
+  }
+
+  /* Die Regel weiter oben blendet den Weichzeichner in allen Sequenzen aus.
+     Hier bleibt er stehen — ohne ihn waere von der Abfuhr nur ein Wort im
+     Nichts uebrig, und der Blick haette nichts, woran er haengenbleibt. */
+  .trm-buehne--verweigert .trm-buehne__weich {
+    display: block;
+    opacity: 1;
+  }
+
+  .trm-buehne--verweigert .trm-buehne__wort {
+    opacity: 1;
+    letter-spacing: 0.16em;
+  }
+
+  .trm-truhe--annaehern {
+    animation: none;
+  }
+}

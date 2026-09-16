@@ -244,6 +244,23 @@
       }
     ]
   },
+  "src/assets/images/entdecken/gewerke-haus.webp": {
+    "width": 1381,
+    "height": 1001,
+    "bytes": 275304,
+    "source": "src/assets/images/entdecken/gewerke-haus.webp",
+    "sourceBytes": 275304,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/entdecken/gewerke-haus-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/entdecken/gewerke-haus-960w.webp"
+      }
+    ]
+  },
   "src/assets/images/experience/shared/exp-marble.webp": {
     "width": 1672,
     "height": 941,
@@ -1729,6 +1746,14 @@
         "path": "src/assets/images/kuechenwelten/stilfinderresult-zeitlos-elegant-960w.webp"
       }
     ]
+  },
+  "src/assets/images/leistungen/02_referenz_gold_marble_hintergrund-mobile.webp": {
+    "width": 960,
+    "height": 540,
+    "bytes": 14222,
+    "source": "src/assets/images/leistungen/02_referenz_gold_marble_hintergrund-mobile.webp",
+    "sourceBytes": 14222,
+    "variants": []
   },
   "src/assets/images/leistungen/02_referenz_gold_marble_hintergrund.webp": {
     "width": 1672,
@@ -5390,6 +5415,14 @@
       }
     ]
   },
+  "src/assets/images/studio/karte-hertzstrasse-osm.webp": {
+    "width": 880,
+    "height": 640,
+    "bytes": 49746,
+    "source": "src/assets/images/studio/karte-hertzstrasse-osm.webp",
+    "sourceBytes": 49746,
+    "variants": []
+  },
   "src/assets/images/stylefinder-assets/00_goldmarmor_hintergrund_reference.webp": {
     "width": 1672,
     "height": 941,
@@ -5702,6 +5735,88 @@
       {
         "w": 480,
         "path": "src/assets/images/stylefinder-styles/warm-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/terminal/terminal-gewinn-gutschein.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 228460,
+    "source": "src/assets/images/terminal/terminal-gewinn-gutschein.webp",
+    "sourceBytes": 228460,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/terminal/terminal-gewinn-gutschein-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/terminal/terminal-gewinn-schuerze.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 175740,
+    "source": "src/assets/images/terminal/terminal-gewinn-schuerze.webp",
+    "sourceBytes": 283502,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/terminal/terminal-gewinn-schuerze-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/terminal/terminal-gewinn-shirt.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 224620,
+    "source": "src/assets/images/terminal/terminal-gewinn-shirt.webp",
+    "sourceBytes": 224620,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/terminal/terminal-gewinn-shirt-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/terminal/terminal-gewinn-tasche.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 247780,
+    "source": "src/assets/images/terminal/terminal-gewinn-tasche.webp",
+    "sourceBytes": 247780,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/terminal/terminal-gewinn-tasche-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/terminal/terminal-gewinn-wellness.webp": {
+    "width": 1122,
+    "height": 1402,
+    "bytes": 244788,
+    "source": "src/assets/images/terminal/terminal-gewinn-wellness.webp",
+    "sourceBytes": 348728,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/terminal/terminal-gewinn-wellness-480w.webp"
+      }
+    ]
+  },
+  "src/assets/images/terminal/terminal-truhe.webp": {
+    "width": 1448,
+    "height": 1086,
+    "bytes": 483826,
+    "source": "src/assets/images/terminal/terminal-truhe.webp",
+    "sourceBytes": 483826,
+    "variants": [
+      {
+        "w": 480,
+        "path": "src/assets/images/terminal/terminal-truhe-480w.webp"
+      },
+      {
+        "w": 960,
+        "path": "src/assets/images/terminal/terminal-truhe-960w.webp"
       }
     ]
   },

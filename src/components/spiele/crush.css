@@ -1,0 +1,710 @@
+/* ------------------------------------------------------------------ */
+/* Küchen-Crush — drei gleiche in einer Reihe                          */
+/* ------------------------------------------------------------------ */
+
+/* Die Buehne fuellt das Hochformat-Feld: schwarzer Marmor mit feinen
+   goldenen Adern. Die Steine sind DOM-Elemente; ihre Lage setzt ein
+   transform, gewandert wird per CSS-Transition. Effekte (Strahlen,
+   Explosion, Einblendung) sind eigene kurze Elemente ueber dem Gitter. */
+.trm-crush-buehne {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  outline: none;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  background:
+    linear-gradient(118deg, transparent 38%, color-mix(in srgb, var(--trm-gold) 9%, transparent) 40%, transparent 43%),
+    linear-gradient(62deg, transparent 64%, color-mix(in srgb, var(--trm-gold-hell) 6%, transparent) 65.5%, transparent 67%),
+    radial-gradient(120% 70% at 50% 0%, color-mix(in srgb, var(--trm-gold) 12%, transparent) 0%, transparent 70%),
+    var(--trm-feld);
+}
+
+.trm-crush-buehne:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--trm-gold-hell);
+}
+
+/* ---------------- Finale: die letzten 5 Sekunden ------------------ */
+
+/* Der Rahmen pulsiert rot-gold. Eigenes Pseudo-Element, damit der
+   Fokusrahmen erhalten bleibt und nur opacity/box-shadow animiert. */
+.trm-crush-buehne::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  opacity: 0;
+  border-radius: inherit;
+  transition: opacity 160ms ease-out;
+}
+
+.trm-crush-buehne[data-finale='1']::after {
+  opacity: 1;
+  box-shadow:
+    inset 0 0 0 3px var(--trm-gold-hell),
+    inset 0 0 42px color-mix(in srgb, var(--trm-rot) 45%, transparent);
+  animation: trm-crush-finale 520ms ease-in-out infinite alternate;
+}
+
+@keyframes trm-crush-finale {
+  from {
+    box-shadow:
+      inset 0 0 0 3px var(--trm-gold-hell),
+      inset 0 0 30px color-mix(in srgb, var(--trm-gold) 40%, transparent);
+  }
+  to {
+    box-shadow:
+      inset 0 0 0 3px var(--trm-rot),
+      inset 0 0 56px color-mix(in srgb, var(--trm-rot) 55%, transparent);
+  }
+}
+
+/* Die Uhr in der Leiste der SpielKarte — ohne deren Klassen anzufassen. */
+.trm-spiel:has(.trm-crush-buehne[data-finale='1']) .trm-spiel__leiste > span:first-child .trm-spiel__wert {
+  display: inline-block;
+  color: var(--trm-rot);
+  animation: trm-crush-uhr 500ms ease-in-out infinite alternate;
+}
+
+@keyframes trm-crush-uhr {
+  from {
+    color: var(--trm-gold-hell);
+    scale: 1;
+    text-shadow: 0 0 8px color-mix(in srgb, var(--trm-gold) 60%, transparent);
+  }
+  to {
+    color: var(--trm-rot);
+    scale: 1.18;
+    text-shadow: 0 0 14px color-mix(in srgb, var(--trm-rot) 80%, transparent);
+  }
+}
+
+.trm-spiel__combo[data-crush-finale='1'] {
+  color: var(--trm-gold-hell);
+  text-shadow: 0 0 12px color-mix(in srgb, var(--trm-rot) 70%, transparent);
+  animation: trm-crush-uhr 500ms ease-in-out infinite alternate;
+}
+
+/* ---------------------------- Gitter ------------------------------ */
+
+.trm-crush-gitter {
+  position: absolute;
+  overflow: hidden;
+  border: 1px solid var(--trm-linie-stark);
+  border-radius: calc(var(--trm-radius) - 4px);
+  background:
+    repeating-conic-gradient(color-mix(in srgb, var(--trm-gold) 5%, transparent) 0 25%, transparent 0 50%) 0 0 / calc(var(--z) * 2) calc(var(--z) * 2),
+    var(--trm-panel);
+  box-sizing: content-box;
+  pointer-events: none;
+}
+
+/* Schlag: das Feld ruckt kurz. Zwei Takte (a/b), damit ein zweiter Schlag
+   direkt nach dem ersten die Animation neu startet. */
+.trm-crush-gitter[data-schlag='1'][data-takt='a'] { animation: trm-crush-schlag-a 140ms ease-out; }
+.trm-crush-gitter[data-schlag='1'][data-takt='b'] { animation: trm-crush-schlag-b 140ms ease-out; }
+.trm-crush-gitter[data-schlag='2'][data-takt='a'],
+.trm-crush-gitter[data-schlag='3'][data-takt='a'] { animation: trm-crush-wumms-a 220ms ease-out; }
+.trm-crush-gitter[data-schlag='2'][data-takt='b'],
+.trm-crush-gitter[data-schlag='3'][data-takt='b'] { animation: trm-crush-wumms-b 220ms ease-out; }
+
+@keyframes trm-crush-schlag-a {
+  30% { translate: 0 2px; }
+  to { translate: 0 0; }
+}
+
+@keyframes trm-crush-schlag-b {
+  30% { translate: 0 2px; }
+  to { translate: 0 0; }
+}
+
+@keyframes trm-crush-wumms-a {
+  20% { translate: -3px 2px; scale: 1.012; }
+  45% { translate: 3px -1px; }
+  70% { translate: -1px 1px; }
+  to { translate: 0 0; scale: 1; }
+}
+
+@keyframes trm-crush-wumms-b {
+  20% { translate: 3px 2px; scale: 1.012; }
+  45% { translate: -3px -1px; }
+  70% { translate: 1px 1px; }
+  to { translate: 0 0; scale: 1; }
+}
+
+/* ---------------------------- Steine ------------------------------ */
+
+.trm-crush-stein {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--z);
+  height: var(--z);
+  transition: transform 100ms ease-out;
+  will-change: transform;
+}
+
+/* Neue Steine fallen von oben ins Feld, so viele Reihen, wie Platz war. */
+.trm-crush-stein[data-neu] {
+  animation: trm-crush-fall 110ms cubic-bezier(0.5, 0, 0.9, 0.6) both;
+}
+
+@keyframes trm-crush-fall {
+  from {
+    translate: 0 calc(var(--neu) * -100%);
+  }
+  to {
+    translate: 0 0;
+  }
+}
+
+.trm-crush-kachel {
+  position: absolute;
+  inset: 7%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--ton) 42%, transparent);
+  border-radius: 22%;
+  color: var(--ton);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--ton) 16%, transparent) 0%, color-mix(in srgb, var(--ton) 6%, transparent) 100%),
+    var(--trm-panel);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--trm-creme) 10%, transparent);
+}
+
+.trm-crush-kachel svg {
+  width: 64%;
+  height: 64%;
+  overflow: visible;
+}
+
+/* Sechs Gegenstaende, sechs Toene — dazu jeweils eine eigene Form. Zwei
+   Kacheln sind invertiert (heller Grund, dunkle Linie), damit sie auch
+   ohne Farbsehen sofort herausstechen. */
+.trm-crush-stein[data-typ='1'] { --ton: var(--trm-creme); }
+.trm-crush-stein[data-typ='2'] { --ton: var(--trm-rot); }
+.trm-crush-stein[data-typ='3'] { --ton: var(--trm-gold-hell); }
+.trm-crush-stein[data-typ='5'] { --ton: var(--trm-gruen); }
+
+.trm-crush-stein[data-typ='4'] .trm-crush-kachel {
+  --ton: var(--trm-gold);
+  color: var(--trm-nacht);
+  border-color: var(--trm-gold-hell);
+  background: linear-gradient(180deg, var(--trm-gold-hell) 0%, var(--trm-gold) 100%);
+}
+
+.trm-crush-stein[data-typ='6'] .trm-crush-kachel {
+  --ton: var(--trm-creme);
+  color: var(--trm-gold-tief);
+  border-color: var(--trm-creme);
+  background: linear-gradient(180deg, var(--trm-creme) 0%, var(--trm-creme-weich) 100%);
+}
+
+/* --------------------------- Booster ------------------------------ */
+
+/* Booster: dicker Goldrahmen, ein gluehender Streifen quer durch die
+   Kachel in Wirkrichtung, Pfeilspitzen an beiden Enden und ein Schimmer. */
+.trm-crush-stein[data-spezial='reihe'] .trm-crush-kachel,
+.trm-crush-stein[data-spezial='spalte'] .trm-crush-kachel {
+  overflow: hidden;
+  border: 2px solid var(--trm-gold-hell);
+  box-shadow:
+    0 0 12px color-mix(in srgb, var(--trm-gold-hell) 65%, transparent),
+    inset 0 0 10px color-mix(in srgb, var(--trm-gold) 40%, transparent);
+}
+
+.trm-crush-stein[data-spezial='reihe'] .trm-crush-kachel::before,
+.trm-crush-stein[data-spezial='spalte'] .trm-crush-kachel::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, var(--trm-gold-hell) 20%, var(--trm-creme) 50%, var(--trm-gold-hell) 80%, transparent);
+  box-shadow: 0 0 8px var(--trm-gold-hell);
+  opacity: 0.9;
+}
+
+.trm-crush-stein[data-spezial='reihe'] .trm-crush-kachel::before {
+  left: 0;
+  right: 0;
+  top: calc(50% - 2px);
+  height: 4px;
+}
+
+.trm-crush-stein[data-spezial='spalte'] .trm-crush-kachel::before {
+  top: 0;
+  bottom: 0;
+  left: calc(50% - 2px);
+  width: 4px;
+  background: linear-gradient(180deg, transparent, var(--trm-gold-hell) 20%, var(--trm-creme) 50%, var(--trm-gold-hell) 80%, transparent);
+}
+
+/* Schimmer, der ueber den Booster laeuft. */
+.trm-crush-stein[data-spezial='reihe'] .trm-crush-kachel::after,
+.trm-crush-stein[data-spezial='spalte'] .trm-crush-kachel::after {
+  content: '';
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 40%, color-mix(in srgb, var(--trm-creme) 45%, transparent) 50%, transparent 60%);
+  animation: trm-crush-schimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes trm-crush-schimmer {
+  from { translate: -70% 0; }
+  55%, to { translate: 70% 0; }
+}
+
+.trm-crush-kachel > svg:not(.trm-crush-pfeil) {
+  position: relative;
+  z-index: 1;
+}
+
+.trm-crush-pfeil {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100% !important;
+  height: 100% !important;
+  fill: var(--trm-gold-hell);
+  stroke: var(--trm-nacht);
+  stroke-width: 0.6;
+  pointer-events: none;
+}
+
+.trm-crush-stein[data-spezial='spalte'] .trm-crush-pfeil {
+  rotate: 90deg;
+}
+
+/* ---------------------------- Bombe ------------------------------- */
+
+.trm-crush-stein[data-spezial='bombe'] .trm-crush-kachel {
+  color: var(--trm-gold-hell);
+  border: 2px solid var(--trm-gold-hell);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 38%, color-mix(in srgb, var(--trm-gold) 55%, transparent) 0%, transparent 70%),
+    var(--trm-nacht);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--trm-gold) 70%, transparent);
+}
+
+.trm-crush-stein[data-spezial='bombe'] {
+  animation: trm-crush-bombe-puls 900ms ease-in-out infinite;
+}
+
+.trm-crush-stein[data-spezial='bombe'] .trm-crush-kachel svg {
+  animation: trm-crush-bombe-dreh 2.4s linear infinite;
+}
+
+@keyframes trm-crush-bombe-puls {
+  50% {
+    filter: drop-shadow(0 0 6px var(--trm-gold-hell)) brightness(1.2);
+  }
+}
+
+@keyframes trm-crush-bombe-dreh {
+  from { rotate: -8deg; }
+  50% { rotate: 8deg; }
+  to { rotate: -8deg; }
+}
+
+/* Neu entstandenes Sonderteil: kraeftiger Pop. */
+.trm-crush-stein[data-spezial] .trm-crush-kachel {
+  animation: trm-crush-pop 240ms cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+@keyframes trm-crush-pop {
+  from {
+    scale: 0.4;
+    filter: brightness(2);
+  }
+  55% {
+    scale: 1.3;
+  }
+  to {
+    scale: 1;
+    filter: brightness(1);
+  }
+}
+
+/* -------------------------- Zustaende ----------------------------- */
+
+.trm-crush-stein[data-weg] .trm-crush-kachel {
+  animation: trm-crush-weg 80ms ease-in forwards;
+  border-color: var(--trm-gold-hell);
+  box-shadow: 0 0 16px var(--trm-gold-hell);
+}
+
+@keyframes trm-crush-weg {
+  to {
+    scale: 0.3;
+    opacity: 0.15;
+  }
+}
+
+.trm-crush-stein[data-gewaehlt] .trm-crush-kachel {
+  border-color: var(--trm-gold-hell);
+  box-shadow: 0 0 0 2px var(--trm-gold-hell), 0 0 14px color-mix(in srgb, var(--trm-gold-hell) 60%, transparent);
+  scale: 1.06;
+}
+
+.trm-crush-stein[data-fokus]::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border: 2px dashed var(--trm-creme-weich);
+  border-radius: 24%;
+  pointer-events: none;
+}
+
+.trm-crush-stein[data-hinweis] .trm-crush-kachel {
+  animation: trm-crush-hinweis 1s ease-in-out infinite;
+}
+
+@keyframes trm-crush-hinweis {
+  50% {
+    box-shadow: 0 0 0 2px var(--trm-gold), 0 0 16px var(--trm-gold);
+  }
+}
+
+.trm-crush-stein[data-nein] .trm-crush-kachel {
+  border-color: var(--trm-rot);
+  box-shadow: 0 0 0 2px var(--trm-rot);
+}
+
+/* --------------------------- Effekte ------------------------------ */
+
+/* Jeder Effekt sitzt auf seiner Zelle (--x/--y) und lebt ca. 480 ms. */
+.trm-crush-effekt {
+  position: absolute;
+  z-index: 3;
+  left: calc(var(--x) * var(--z));
+  top: calc(var(--y) * var(--z));
+  width: var(--z);
+  height: var(--z);
+  pointer-events: none;
+}
+
+/* Linie: ein Lichtstrahl durch die ganze Reihe bzw. Spalte. */
+.trm-crush-effekt[data-art='reihe'] {
+  left: 0;
+  width: 100%;
+  background:
+    linear-gradient(180deg, transparent 30%, color-mix(in srgb, var(--trm-gold-hell) 70%, transparent) 44%, var(--trm-creme) 50%, color-mix(in srgb, var(--trm-gold-hell) 70%, transparent) 56%, transparent 70%);
+  animation: trm-crush-strahl-h 360ms ease-out forwards;
+  transform-origin: calc((var(--x) + 0.5) * var(--z)) 50%;
+}
+
+.trm-crush-effekt[data-art='spalte'] {
+  top: 0;
+  height: 100%;
+  background:
+    linear-gradient(90deg, transparent 30%, color-mix(in srgb, var(--trm-gold-hell) 70%, transparent) 44%, var(--trm-creme) 50%, color-mix(in srgb, var(--trm-gold-hell) 70%, transparent) 56%, transparent 70%);
+  animation: trm-crush-strahl-v 360ms ease-out forwards;
+  transform-origin: 50% calc((var(--y) + 0.5) * var(--z));
+}
+
+@keyframes trm-crush-strahl-h {
+  from { scale: 0 1.6; opacity: 1; filter: brightness(1.6); }
+  35% { scale: 1 1.2; opacity: 1; }
+  to { scale: 1 0.2; opacity: 0; }
+}
+
+@keyframes trm-crush-strahl-v {
+  from { scale: 1.6 0; opacity: 1; filter: brightness(1.6); }
+  35% { scale: 1.2 1; opacity: 1; }
+  to { scale: 0.2 1; opacity: 0; }
+}
+
+/* Explosion: Ring, der ueber das halbe Feld aufgeht, dazu ein Kern. */
+.trm-crush-effekt[data-art='bombe']::before,
+.trm-crush-effekt[data-art='feld']::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 3px solid var(--trm-gold-hell);
+  box-shadow: 0 0 18px var(--trm-gold-hell), inset 0 0 14px color-mix(in srgb, var(--trm-rot) 60%, transparent);
+  animation: trm-crush-ring 460ms ease-out forwards;
+}
+
+.trm-crush-effekt[data-art='bombe']::after,
+.trm-crush-effekt[data-art='feld']::after {
+  content: '';
+  position: absolute;
+  inset: -40%;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--trm-creme) 0%, var(--trm-gold-hell) 30%, color-mix(in srgb, var(--trm-rot) 50%, transparent) 55%, transparent 72%);
+  animation: trm-crush-kern 320ms ease-out forwards;
+}
+
+@keyframes trm-crush-ring {
+  from { scale: 0.3; opacity: 1; }
+  to { scale: 7; opacity: 0; border-width: 1px; }
+}
+
+@keyframes trm-crush-kern {
+  from { scale: 0.4; opacity: 1; }
+  40% { scale: 1.4; opacity: 0.95; }
+  to { scale: 2; opacity: 0; }
+}
+
+/* Zwei Bomben: das ganze Feld blitzt. */
+.trm-crush-effekt[data-art='feld'] {
+  z-index: 3;
+}
+
+.trm-crush-effekt[data-art='feld']::before {
+  animation-duration: 520ms;
+}
+
+.trm-crush-gitter:has(.trm-crush-effekt[data-art='feld'])::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(circle, var(--trm-creme) 0%, var(--trm-gold-hell) 45%, transparent 100%);
+  animation: trm-crush-blitz 420ms ease-out forwards;
+}
+
+@keyframes trm-crush-blitz {
+  from { opacity: 0.9; }
+  to { opacity: 0; }
+}
+
+/* Glanz auf einem frisch gebauten Sonderteil: Stern und Lichtkranz. */
+.trm-crush-effekt[data-art='glanz4'],
+.trm-crush-effekt[data-art='glanz5'] {
+  z-index: 3;
+  border-radius: 50%;
+  background:
+    conic-gradient(from 0deg, transparent 0 10%, color-mix(in srgb, var(--trm-creme) 80%, transparent) 12%, transparent 14% 35%, color-mix(in srgb, var(--trm-creme) 80%, transparent) 37%, transparent 39% 60%, color-mix(in srgb, var(--trm-creme) 80%, transparent) 62%, transparent 64% 85%, color-mix(in srgb, var(--trm-creme) 80%, transparent) 87%, transparent 89%);
+  -webkit-mask: radial-gradient(circle, #000 25%, transparent 70%);
+  mask: radial-gradient(circle, #000 25%, transparent 70%);
+  animation: trm-crush-glanz 460ms ease-out forwards;
+}
+
+.trm-crush-effekt[data-art='glanz5'] {
+  inset: auto;
+  animation-duration: 480ms;
+  box-shadow: 0 0 24px 6px color-mix(in srgb, var(--trm-gold-hell) 70%, transparent);
+}
+
+@keyframes trm-crush-glanz {
+  from { scale: 0.4; rotate: 0deg; opacity: 1; }
+  50% { scale: 2.2; opacity: 1; }
+  to { scale: 2.8; rotate: 60deg; opacity: 0; }
+}
+
+/* ----------------------- Multiplikator-Chip ----------------------- */
+
+.trm-crush-multi {
+  position: absolute;
+  z-index: 5;
+  right: 12px;
+  margin: 0;
+  padding: 2px 10px;
+  border: 1px solid var(--trm-gold);
+  border-radius: 999px;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--trm-nacht);
+  background: linear-gradient(180deg, var(--trm-gold-hell), var(--trm-gold));
+  box-shadow: 0 0 14px color-mix(in srgb, var(--trm-gold) 60%, transparent);
+  pointer-events: none;
+  opacity: 0;
+  scale: 0.8;
+  transition: opacity 120ms ease-out, scale 120ms ease-out;
+}
+
+.trm-crush-multi[data-an='1'] {
+  opacity: 1;
+  scale: 1;
+}
+
+.trm-crush-multi span {
+  display: inline-block;
+  animation: trm-crush-multi 220ms cubic-bezier(0.3, 1.7, 0.5, 1);
+}
+
+@keyframes trm-crush-multi {
+  from { scale: 1.7; }
+  to { scale: 1; }
+}
+
+.trm-crush-buehne[data-finale='1'] .trm-crush-multi {
+  border-color: var(--trm-rot);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--trm-rot) 70%, transparent);
+}
+
+/* ------------------------- Einblendung ---------------------------- */
+
+.trm-crush-banner {
+  position: absolute;
+  z-index: 6;
+  left: 50%;
+  top: 42%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin: 0;
+  translate: -50% -50%;
+  max-width: calc(100% - 32px);
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: trm-crush-banner 820ms cubic-bezier(0.2, 1.4, 0.4, 1) forwards;
+}
+
+.trm-crush-banner__gross {
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(34px, 13vw, 54px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--trm-gold-hell);
+  -webkit-text-stroke: 1px var(--trm-nacht);
+  text-shadow:
+    0 2px 0 var(--trm-gold-tief),
+    0 0 22px color-mix(in srgb, var(--trm-gold) 80%, transparent);
+  background: linear-gradient(100deg, var(--trm-gold) 20%, var(--trm-creme) 45%, var(--trm-gold-hell) 55%, var(--trm-gold) 80%) 0 0 / 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: trm-crush-glanzlauf 820ms ease-out forwards;
+}
+
+@supports (-webkit-background-clip: text) or (background-clip: text) {
+  .trm-crush-banner__gross {
+    color: transparent;
+  }
+}
+
+.trm-crush-banner__klein {
+  padding: 1px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--trm-nacht);
+  background: var(--trm-gold-hell);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--trm-gold) 60%, transparent);
+}
+
+.trm-crush-banner[data-stufe='5'] .trm-crush-banner__gross {
+  font-size: clamp(40px, 16vw, 64px);
+  text-shadow:
+    0 2px 0 var(--trm-gold-tief),
+    0 0 30px var(--trm-gold-hell);
+}
+
+.trm-crush-banner[data-stufe='finale'] .trm-crush-banner__klein {
+  color: var(--trm-creme);
+  background: var(--trm-rot);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--trm-rot) 70%, transparent);
+}
+
+@keyframes trm-crush-banner {
+  from { scale: 0.3; opacity: 0; }
+  22% { scale: 1.12; opacity: 1; }
+  38% { scale: 1; }
+  75% { scale: 1; opacity: 1; }
+  to { scale: 1.08; opacity: 0; }
+}
+
+@keyframes trm-crush-glanzlauf {
+  from { background-position: 100% 0; }
+  to { background-position: 0 0; }
+}
+
+/* ---------------------- Weniger Bewegung -------------------------- */
+
+/* Nichts faellt, gleitet, pulst oder ruckt. Was sich aendert, steht sofort
+   da; Raeumen, Zuendung und Einblendung bleiben als kurzer Lichtwechsel.
+   Der Takt der Aufloesung ist derselbe. */
+.trm-crush-buehne[data-sanft='1'] .trm-crush-stein,
+.trm-crush-buehne[data-sanft='1'] .trm-crush-stein .trm-crush-kachel,
+.trm-crush-buehne[data-sanft='1'] .trm-crush-stein .trm-crush-kachel::after,
+.trm-crush-buehne[data-sanft='1'] .trm-crush-stein svg,
+.trm-crush-buehne[data-sanft='1'] .trm-crush-gitter {
+  transition: none;
+  animation: none;
+}
+
+.trm-crush-buehne[data-sanft='1'] .trm-crush-stein .trm-crush-kachel::after {
+  display: none;
+}
+
+.trm-crush-buehne[data-sanft='1'] .trm-crush-stein[data-weg] .trm-crush-kachel {
+  opacity: 0.45;
+}
+
+.trm-crush-buehne[data-sanft='1'] .trm-crush-effekt,
+.trm-crush-buehne[data-sanft='1'] .trm-crush-effekt::before,
+.trm-crush-buehne[data-sanft='1'] .trm-crush-effekt::after,
+.trm-crush-buehne[data-sanft='1'] .trm-crush-gitter::after {
+  animation: trm-crush-sanft 240ms linear forwards;
+  scale: 1;
+  rotate: none;
+}
+
+.trm-crush-buehne[data-sanft='1'] .trm-crush-effekt[data-art='bombe']::before,
+.trm-crush-buehne[data-sanft='1'] .trm-crush-effekt[data-art='feld']::before {
+  display: none;
+}
+
+.trm-crush-buehne[data-sanft='1'] .trm-crush-banner,
+.trm-crush-buehne[data-sanft='1'] .trm-crush-banner__gross,
+.trm-crush-buehne[data-sanft='1'] .trm-crush-multi span {
+  animation: none;
+}
+
+.trm-crush-buehne[data-sanft='1'] .trm-crush-banner {
+  animation: trm-crush-sanft 680ms steps(1, end) forwards;
+}
+
+.trm-crush-buehne[data-sanft='1'][data-finale='1']::after {
+  animation: none;
+  box-shadow:
+    inset 0 0 0 3px var(--trm-rot),
+    inset 0 0 36px color-mix(in srgb, var(--trm-rot) 40%, transparent);
+}
+
+@keyframes trm-crush-sanft {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trm-crush-stein,
+  .trm-crush-stein .trm-crush-kachel,
+  .trm-crush-stein .trm-crush-kachel::after,
+  .trm-crush-stein svg,
+  .trm-crush-gitter,
+  .trm-crush-banner__gross,
+  .trm-crush-multi span {
+    transition: none;
+    animation: none;
+  }
+
+  .trm-crush-buehne[data-finale='1']::after,
+  .trm-spiel:has(.trm-crush-buehne[data-finale='1']) .trm-spiel__leiste > span:first-child .trm-spiel__wert,
+  .trm-spiel__combo[data-crush-finale='1'] {
+    animation: none;
+  }
+
+  .trm-spiel:has(.trm-crush-buehne[data-finale='1']) .trm-spiel__leiste > span:first-child .trm-spiel__wert {
+    color: var(--trm-rot);
+  }
+}

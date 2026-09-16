@@ -1,5 +1,5 @@
 import crypto from 'node:crypto'
-import nodemailer from 'nodemailer'
+import { mailAbsender, mailTransport } from './_mail.js'
 
 /**
  * VIDEKO Notify-Endpoint (Vercel Serverless, Node) für den Merch-Bereich.
@@ -30,8 +30,6 @@ import nodemailer from 'nodemailer'
  */
 
 const {
-  SMTP_HOST = 'smtp.strato.de',
-  SMTP_PORT = '465',
   SMTP_USER,
   SMTP_PASS,
   LEAD_NOTIFY_TO = 'info@videko-kuechen.de',
@@ -81,13 +79,9 @@ function readToken(token) {
   return data
 }
 
-function transport() {
-  return nodemailer.createTransport({
-    host: SMTP_HOST, port: Number(SMTP_PORT), secure: Number(SMTP_PORT) === 465,
-    auth: { user: SMTP_USER, pass: SMTP_PASS },
-  })
-}
-const FROM = () => `"VIDEKO Küchen" <${SMTP_USER}>`
+/* Der gemeinsame Mailweg aus api/_mail.js — dieselben Einstellungen wie bisher. */
+const transport = () => mailTransport()
+const FROM = mailAbsender
 
 function baseUrl(req) {
   if (PUBLIC_BASE_URL) return PUBLIC_BASE_URL.replace(/\/$/, '')

@@ -346,6 +346,53 @@ export const STATIC_ROUTES = [
     nofollow: true,
     inSitemap: false,
   },
+
+  /* Bierdeckel-Aktion. Der gedruckte QR-Code zeigt auf /terminal; die vier
+     Unterseiten sind von dort aus verlinkt. Alle fuenf bleiben aus dem Index
+     und aus der Sitemap: die Aktion ist zeitlich begrenzt, und eine
+     Verwaltungsansicht hat in Suchergebnissen nichts zu suchen. Gegen
+     unbefugten Zugriff schuetzt nicht das noindex, sondern der
+     Serverschluessel — das hier ist nur Hygiene. */
+  {
+    path: '/terminal',
+    title: 'Tresor-Terminal | VIDEKO Küchen',
+    description: 'Aktionsseite zur Bierdeckel-Aktion. Nur über den gedruckten Deckel erreichbar.',
+    noindex: true,
+    nofollow: true,
+    inSitemap: false,
+  },
+  {
+    path: '/terminal/ziehung',
+    title: 'Live-Ziehung | VIDEKO Küchen',
+    description: 'Öffentlicher Stand der Ziehung zur Bierdeckel-Aktion.',
+    noindex: true,
+    nofollow: true,
+    inSitemap: false,
+  },
+  {
+    path: '/terminal/admin',
+    title: 'Verwaltung | VIDEKO Küchen',
+    description: 'Interne Verwaltung der Bierdeckel-Aktion.',
+    noindex: true,
+    nofollow: true,
+    inSitemap: false,
+  },
+  {
+    path: '/terminal/teilnahmebedingungen',
+    title: 'Teilnahmebedingungen | VIDEKO Küchen',
+    description: 'Ablauf der Bierdeckel-Aktion: Aktivierung, Ziehung, Meldefrist.',
+    noindex: true,
+    nofollow: true,
+    inSitemap: false,
+  },
+  {
+    path: '/terminal/rangliste',
+    title: 'Leaderboard | VIDEKO Küchen',
+    description: 'Bestenliste der Spiele zur Bierdeckel-Aktion.',
+    noindex: true,
+    nofollow: true,
+    inSitemap: false,
+  },
 ]
 
 /** Schneller Zugriff auf die Metadaten eines Pfads. */

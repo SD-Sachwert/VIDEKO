@@ -31,3 +31,11 @@ src/assets/images/unbenutzt
 
 # Screenshots der Browserpruefung (scripts/pruefe-hydration.mjs)
 pruefung
+
+# Die Sicherungen des Terminal-Umzugs enthalten echte Teilnehmerdaten.
+# Sie liegen bereits ausserhalb von Git (.gitignore) und haben auf dem
+# Build-Server nichts zu suchen.
+backup
+
+# Zustand der lokalen Supabase-CLI (verknuepftes Projekt, Cache).
+supabase/.temp

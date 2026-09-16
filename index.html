@@ -38,6 +38,62 @@
     <meta name="twitter:description" content="VIDEKO Küchen – dein Küchenstudio in Würzburg. Küchenplanung, ehrliche Beratung und maßgeschneiderte Küchen für deinen Alltag." />
     <meta name="twitter:image" content="https://videko-kuechen.de/og-image.jpg" />
     <!--seo:end-->
+
+    <!--
+      Der Ersteinstieg ins Terminal.
+
+      Die Seiten werden vorgerendert. Ohne dieses Stueck Skript stuende die
+      fertige Aktionsseite schon im ersten Bild — und die Sequenz, die
+      danach laeuft, waere eine Wiederholung statt einer Ankunft. Das Skript
+      setzt deshalb noch vor dem ersten Bild eine Klasse auf das
+      Dokumentelement; das Stylesheet blendet daraufhin alles aus, was erst
+      spaeter kommen soll, und stellt die Truhe weit nach hinten.
+
+      Es entscheidet nur, ob die Sequenz ueberhaupt laeuft. Alles Weitere
+      macht die Seite selbst. Bewusst klein gehalten, ohne Abhaengigkeiten
+      und vollstaendig in try/catch: faellt es aus, ist die Seite einfach
+      sofort da.
+
+      Das Sicherheitsnetz am Ende ist wichtiger, als es aussieht: laedt das
+      Bundle nicht, nimmt der Zeitschalter die Klasse nach vier Sekunden
+      wieder weg (5,5 s — die Sequenz selbst endet nach gut 4 s). Eine dauerhaft unsichtbare Seite waere der schlimmste
+      Ausgang. Laeuft die Seite an, stellt sie den Zeitschalter ab und
+      taktet selbst.
+    -->
+    <script>
+      ;(function () {
+        try {
+          if (location.pathname.replace(/\/+$/, '') !== '/terminal') return
+          /* Wer ueber einen Zugangslink kommt, kennt die Seite schon. */
+          if (location.hash.indexOf('#wieder=') === 0) return
+          var s = window.sessionStorage
+          var l = window.localStorage
+          var wunsch = s.getItem('videko.terminal.introWunsch')
+          if (!wunsch) {
+            if (s.getItem('videko.terminal.intro')) return
+            /* Wer schon eingeloggt ist, kommt nicht zum ersten Mal an. Im
+               Testmodus zaehlen dafuer die Testzettel, nicht der echte
+               Login — sonst saehe das Labor nie den Ersteinstieg. */
+            if (s.getItem('videko.terminal.probe')) {
+              if (s.getItem('videko.terminal.probe.videko.terminal.intro')) return
+              if (s.getItem('videko.terminal.probe.videko.terminal.sitzung')) return
+              if (s.getItem('videko.terminal.probe.videko.terminal.zugang')) return
+            } else {
+              /* Der Ersteinstieg laeuft pro Browser einmal, nicht pro Tab. */
+              if (l.getItem('videko.terminal.intro')) return
+              if (l.getItem('videko.terminal.sitzung')) return
+              if (l.getItem('videko.terminal.zugang')) return
+            }
+          }
+          document.documentElement.className += ' trm-intro-an'
+          window.__trmIntroNetz = window.setTimeout(function () {
+            document.documentElement.classList.remove('trm-intro-an')
+          }, 5500)
+        } catch (e) {
+          /* kein Speicher, kein Intro, kein Problem */
+        }
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

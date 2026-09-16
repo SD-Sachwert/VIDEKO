@@ -31,6 +31,13 @@ dist-ssr
 # Vercel
 .vercel
 
+# Datensicherungen (enthalten personenbezogene Daten, nie committen)
+backup/
+
+# Zustand der lokalen Supabase-CLI: verknuepftes Projekt und Versionscache.
+# Rechnergebunden, kein Quellcode — und nennt die Projekt-Referenz.
+supabase/.temp/
+
 # Arbeits-/Quellmaterial, kein Teil des Builds
 *.bak-*
 _asset-source-packages/

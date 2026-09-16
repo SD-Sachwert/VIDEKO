@@ -1,0 +1,1013 @@
+import { useCallback, useEffect, useRef, useState } from 'react'
+
+import SpielKarte from '../SpielKarte.jsx'
+import { useSpielLauf, useTestEnde } from '../spiel-lauf.js'
+import { SPIEL_NACH_KEY } from '../../data/terminal.js'
+import {
+  ABWURF_MS,
+  BREITE,
+  GROSS_AB,
+  HOEHE,
+  KOMBO_MAX,
+  KOMBO_S,
+  LINIE_Y,
+  OBERSTE,
+  SCHRITT_S,
+  SPAWN_Y,
+  STUFEN,
+  UEBER_S,
+  WARN_ABSTAND,
+  abwerfen,
+  basisPunkte,
+  klemmeX,
+  komboFaktor,
+  landeY,
+  neuesSpiel,
+  schritt,
+  vorschau,
+} from './merge-logik.js'
+import './merge.css'
+
+/**
+ * KUECHEN-MERGE — zwei Gleiche werden eins, bis zur Kuecheninsel.
+ *
+ * Physik, Verschmelzen, Wertung und Ueberlauf stehen in merge-logik.js und
+ * sind dort getestet. Hier geht es nur um Zeit, Finger und Bild.
+ *
+ * STEUERUNG
+ * ---------
+ * Das gehaltene Teil folgt dem Finger waagerecht (absolut, nicht relativ:
+ * wo der Finger ist, faellt es). Loslassen wirft ab. Am Rechner zielen die
+ * Pfeiltasten, Leertaste, Enter oder Pfeil runter werfen ab.
+ *
+ * DER SERVER RECHNET MIT
+ * ----------------------
+ * Jeder Abwurf ist eine Runde; der Server verlangt je Runde eine
+ * Mindestdauer ab Ausgabe des Laufscheins. Deshalb faellt kein Teil frueher
+ * als ABWURF_MS nach dem spaeteren Zeitpunkt von letztem Abwurf und
+ * Ticketankunft. Ohne Ticket faellt nichts. Wer zu frueh loslaesst, verliert
+ * nichts: der Abwurf wird vorgemerkt und kommt, sobald er darf — an der
+ * Stelle, auf die dann gezielt ist.
+ *
+ * WIE ES FLUESSIG BLEIBT
+ * ----------------------
+ * Die Physik laeuft in festen Schritten (120 Hz) mit einem Zeitspeicher,
+ * unabhaengig von der Bildrate. Jede Stufe wird einmal je Groesse in ein
+ * kleines Canvas vorgemalt und danach nur noch kopiert. React rendert bei
+ * Abwurf, Verschmelzung, Meldung und Pause — nie pro Frame.
+ */
+
+const SPIEL = SPIEL_NACH_KEY.kuechen_merge
+const GAME = 'kuechen_merge'
+
+const CRASH_MS = 560
+const FLASH_MS = 380
+const FLASH_GROSS_MS = 620 // grosse Verschmelzungen: doppelter Ring, mehr Funken
+const BEBEN_MS = 260 // kurzes Beben nach grossen Verschmelzungen (nicht bei reduzierter Bewegung)
+const TRAUM_FLASH_MS = 520
+const TAST_TEMPO = 70 // Einheiten je Sekunde
+const MAX_SCHRITTE = 12 // je Frame; nach langem Haenger lieber kurz langsamer
+/* Typische mittlere Verschmelzung: ein Backofen (Stufe 6) bringt 210. */
+const HEBEL_PUNKTE = basisPunkte(5)
+
+const TAKT_START = {
+  zielX: BREITE / 2,
+  vorgemerkt: false,
+  letzterAbwurf: 0,
+  crashSeit: 0,
+  blitze: [],
+  tasten: 0,
+  kette: 0, // zuletzt gerenderte Kombo, damit React nur bei Aenderung rendert
+  warn: 0, // zuletzt gerenderte Warnstufe
+  alarmSeit: -Infinity,
+  beben: null,
+  traumSeit: 0,
+}
+
+const TOKEN_RUECKFALL = {
+  '--trm-gold': '#c9a050',
+  '--trm-gold-hell': '#e8c978',
+  '--trm-gold-tief': '#8b6b38',
+  '--trm-nacht': '#0a0908',
+  '--trm-creme': '#f4efe4',
+  '--trm-rot': '#e2453a',
+}
+
+function farbeLesen(text) {
+  const t = String(text || '').trim()
+  let m = t.match(/^#([0-9a-f]{6})$/i)
+  if (m) {
+    const n = parseInt(m[1], 16)
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255]
+  }
+  m = t.match(/^#([0-9a-f]{3})$/i)
+  if (m) return m[1].split('').map((c) => parseInt(c + c, 16))
+  m = t.match(/^rgba?\(\s*(\d+)[ ,]+(\d+)[ ,]+(\d+)/i)
+  if (m) return [Number(m[1]), Number(m[2]), Number(m[3])]
+  return null
+}
+
+function mischen(a, b, anteil) {
+  return a.map((v, i) => Math.round(v + (b[i] - v) * anteil))
+}
+
+const rgb = (c, alpha = 1) => `rgba(${c[0]}, ${c[1]}, ${c[2]}, ${alpha})`
+
+function paletteBauen(el) {
+  const stil = el ? getComputedStyle(el) : null
+  const t = {}
+  for (const [name, rueck] of Object.entries(TOKEN_RUECKFALL)) {
+    t[name] = farbeLesen(stil?.getPropertyValue(name)) || farbeLesen(rueck)
+  }
+  return {
+    nacht: t['--trm-nacht'],
+    gold: t['--trm-gold'],
+    hell: t['--trm-gold-hell'],
+    tief: t['--trm-gold-tief'],
+    creme: t['--trm-creme'],
+    rot: t['--trm-rot'],
+  }
+}
+
+function summen(muster) {
+  try {
+    if (typeof navigator !== 'undefined' && navigator.vibrate) navigator.vibrate(muster)
+  } catch {
+    /* kein Vibrationsmotor, kein Problem */
+  }
+}
+
+/** Behaelter auf der Buehne. Oben bleibt ein Streifen fuer die Vorschau,
+    unten einer fuer Stufenleiste und Kombo. */
+function geometrie(breite, hoehe) {
+  const rand = 8
+  const kopf = 30
+  const fuss = 26
+  const z = Math.max(1, Math.min((breite - 2 * rand) / BREITE, (hoehe - kopf - fuss - rand) / HOEHE))
+  const fb = z * BREITE
+  const fh = z * HOEHE
+  return {
+    z,
+    x0: Math.round((breite - fb) / 2),
+    y0: Math.round(kopf + (hoehe - kopf - fuss - rand - fh) / 2),
+    fb,
+    fh,
+    kopf,
+  }
+}
+
+function rr(ctx, x, y, b, h, r) {
+  ctx.beginPath()
+  if (ctx.roundRect) ctx.roundRect(x, y, b, h, r)
+  else ctx.rect(x, y, b, h)
+}
+
+/**
+ * Das Piktogramm einer Stufe, im Einheitskreis (Radius 1, Mitte 0/0).
+ * Nur goldene Linien — die Groesse und der Ton der Scheibe unterscheiden
+ * die Stufen, das Bild sagt, was es ist.
+ */
+function piktogramm(ctx, stufe) {
+  const linie = (pts) => {
+    ctx.beginPath()
+    pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)))
+    ctx.stroke()
+  }
+  switch (stufe) {
+    case 0: // Kaffeetasse
+      rr(ctx, -0.42, -0.12, 0.66, 0.5, 0.12)
+      ctx.stroke()
+      ctx.beginPath()
+      ctx.arc(0.3, 0.12, 0.15, -Math.PI / 2, Math.PI / 2)
+      ctx.stroke()
+      linie([[-0.55, 0.5], [0.4, 0.5]])
+      linie([[-0.18, -0.26], [-0.12, -0.44]])
+      linie([[0.02, -0.26], [0.08, -0.44]])
+      break
+    case 1: // Toaster
+      rr(ctx, -0.5, -0.2, 1, 0.62, 0.2)
+      ctx.stroke()
+      linie([[-0.3, -0.2], [-0.3, -0.4], [-0.06, -0.4], [-0.06, -0.2]])
+      linie([[0.06, -0.2], [0.06, -0.4], [0.3, -0.4], [0.3, -0.2]])
+      linie([[0.5, 0.02], [0.62, 0.02]])
+      break
+    case 2: // Wasserkocher
+      linie([[-0.3, -0.3], [0.3, -0.3], [0.4, 0.45], [-0.4, 0.45], [-0.3, -0.3]])
+      linie([[-0.3, -0.18], [-0.55, -0.34]])
+      ctx.beginPath()
+      ctx.arc(0.38, 0.06, 0.24, -Math.PI / 2, Math.PI / 2)
+      ctx.stroke()
+      linie([[-0.1, -0.4], [0.1, -0.4]])
+      break
+    case 3: // Mikrowelle
+      rr(ctx, -0.56, -0.34, 1.12, 0.68, 0.08)
+      ctx.stroke()
+      rr(ctx, -0.44, -0.22, 0.62, 0.44, 0.04)
+      ctx.stroke()
+      ctx.beginPath()
+      ctx.arc(0.38, -0.12, 0.07, 0, Math.PI * 2)
+      ctx.stroke()
+      linie([[0.3, 0.12], [0.46, 0.12]])
+      break
+    case 4: // Kaffeemaschine
+      linie([[-0.38, 0.5], [-0.38, -0.5], [0.4, -0.5], [0.4, -0.2], [-0.38, -0.2]])
+      linie([[-0.38, 0.5], [0.4, 0.5]])
+      linie([[0.1, -0.2], [0.1, -0.08]])
+      rr(ctx, -0.04, 0.08, 0.28, 0.28, 0.05)
+      ctx.stroke()
+      break
+    case 5: // Backofen
+      rr(ctx, -0.5, -0.5, 1, 1, 0.08)
+      ctx.stroke()
+      linie([[-0.5, -0.24], [0.5, -0.24]])
+      for (const x of [-0.28, 0, 0.28]) {
+        ctx.beginPath()
+        ctx.arc(x, -0.37, 0.05, 0, Math.PI * 2)
+        ctx.stroke()
+      }
+      linie([[-0.3, -0.1], [0.3, -0.1]])
+      rr(ctx, -0.34, 0.02, 0.68, 0.34, 0.05)
+      ctx.stroke()
+      break
+    case 6: // Spuelmaschine
+      rr(ctx, -0.48, -0.54, 0.96, 1.08, 0.06)
+      ctx.stroke()
+      linie([[-0.48, -0.3], [0.48, -0.3]])
+      linie([[-0.2, -0.42], [0.2, -0.42]])
+      linie([[-0.28, -0.12], [0.28, -0.12]])
+      for (const x of [-0.24, -0.08, 0.08, 0.24]) linie([[x, 0.36], [x, 0.14]])
+      linie([[-0.3, 0.36], [0.3, 0.36]])
+      break
+    case 7: // Kuehlschrank
+      rr(ctx, -0.36, -0.62, 0.72, 1.24, 0.1)
+      ctx.stroke()
+      linie([[-0.36, -0.14], [0.36, -0.14]])
+      linie([[-0.22, -0.46], [-0.22, -0.26]])
+      linie([[-0.22, 0.0], [-0.22, 0.3]])
+      break
+    case 8: // Hochschrank
+      rr(ctx, -0.42, -0.64, 0.84, 1.28, 0.05)
+      ctx.stroke()
+      linie([[0, -0.64], [0, 0.64]])
+      linie([[-0.42, -0.1], [0.42, -0.1]])
+      linie([[-0.1, -0.44], [-0.1, -0.26]])
+      linie([[0.1, -0.44], [0.1, -0.26]])
+      linie([[-0.1, 0.06], [-0.1, 0.26]])
+      linie([[0.1, 0.06], [0.1, 0.26]])
+      break
+    default: // Kuecheninsel
+      linie([[-0.68, -0.2], [0.68, -0.2]])
+      linie([[-0.6, -0.2], [-0.6, 0.4], [0.6, 0.4], [0.6, -0.2]])
+      linie([[-0.2, -0.2], [-0.2, 0.4]])
+      linie([[0.2, -0.2], [0.2, 0.4]])
+      for (const x of [-0.4, 0, 0.4]) linie([[x - 0.08, -0.08], [x + 0.08, -0.08]])
+      linie([[-0.34, -0.5], [-0.34, -0.3]])
+      linie([[-0.34, -0.5], [-0.14, -0.5]])
+      break
+  }
+}
+
+/** Eine Stufe als Emblem: dunkle Scheibe, Goldring, Piktogramm, ab mittlerer Groesse Name. */
+function emblemMalen(ctx, palette, stufe, cx, cy, r, alpha = 1) {
+  const anteil = stufe / OBERSTE
+  const scheibe = mischen(palette.nacht, stufe % 2 ? palette.tief : palette.gold, 0.1 + anteil * 0.34)
+  const ring = mischen(palette.tief, palette.hell, 0.25 + anteil * 0.75)
+  ctx.save()
+  ctx.globalAlpha = alpha
+  ctx.translate(cx, cy)
+  const verlauf = ctx.createRadialGradient(-r * 0.35, -r * 0.4, r * 0.1, 0, 0, r)
+  verlauf.addColorStop(0, rgb(mischen(scheibe, palette.creme, 0.08)))
+  verlauf.addColorStop(1, rgb(mischen(scheibe, palette.nacht, 0.35)))
+  ctx.fillStyle = verlauf
+  ctx.beginPath()
+  ctx.arc(0, 0, r, 0, Math.PI * 2)
+  ctx.fill()
+  ctx.lineWidth = Math.max(1, r * (0.06 + anteil * 0.04))
+  ctx.strokeStyle = rgb(ring, 0.95)
+  ctx.beginPath()
+  ctx.arc(0, 0, r - ctx.lineWidth / 2, 0, Math.PI * 2)
+  ctx.stroke()
+  if (stufe >= 5) {
+    /* Die grossen Teile tragen einen feinen zweiten Ring. */
+    ctx.lineWidth = 1
+    ctx.strokeStyle = rgb(ring, 0.35)
+    ctx.beginPath()
+    ctx.arc(0, 0, r * 0.84, 0, Math.PI * 2)
+    ctx.stroke()
+  }
+  const mitName = r >= 30
+  const s = r * (mitName ? 0.5 : 0.62)
+  ctx.save()
+  ctx.translate(0, mitName ? -r * 0.12 : 0)
+  ctx.scale(s, s)
+  ctx.lineWidth = Math.max(1.1, r * 0.05) / s
+  ctx.lineCap = 'round'
+  ctx.lineJoin = 'round'
+  ctx.strokeStyle = rgb(mischen(palette.hell, palette.creme, anteil * 0.4))
+  piktogramm(ctx, stufe)
+  ctx.restore()
+  if (mitName) {
+    const name = STUFEN[stufe].name
+    let groesse = Math.max(8, Math.min(12, r * 0.2))
+    ctx.font = `700 ${groesse}px system-ui, sans-serif`
+    while (groesse > 7 && ctx.measureText(name).width > r * 1.55) {
+      groesse -= 0.5
+      ctx.font = `700 ${groesse}px system-ui, sans-serif`
+    }
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+    ctx.fillStyle = rgb(palette.creme, 0.78)
+    ctx.fillText(name, 0, r * 0.56)
+  }
+  ctx.restore()
+}
+
+export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
+  const [hoechste, setHoechste] = useState(-1)
+  const [naechstes, setNaechstes] = useState(null)
+  const [meldung, setMeldung] = useState(null)
+  const [pause, setPause] = useState(false)
+  const [crash, setCrash] = useState(false)
+  const [sanft, setSanft] = useState(false)
+  /* kette: laufende Kombo (0 = keine), nr: zaehlt Verschmelzungen, damit der
+     Zeitbalken bei jeder neu startet. */
+  const [kombo, setKombo] = useState({ kette: 0, nr: 0 })
+  /* 0 ruhig, 1 Warnung (nah an der Linie), 2 kritisch (drueber oder fast). */
+  const [warnstufe, setWarnstufe] = useState(0)
+
+  const buehneRef = useRef(null)
+  const canvasRef = useRef(null)
+  const masseRef = useRef({ breite: 320, hoehe: 480, dpr: 1 })
+  const paletteRef = useRef(null)
+  const spriteRef = useRef(new Map())
+  const standRef = useRef(null)
+  const takt = useRef({ ...TAKT_START, blitze: [] })
+  const fingerRef = useRef(null)
+  const nrRef = useRef(0)
+  const pauseRef = useRef(false)
+  const crashRef = useRef(false)
+  const sanftRef = useRef(false)
+  const crashUhrRef = useRef(0)
+
+  const lauf = useSpielLauf({ sitzung, game: GAME, dauerVorgabe: 540000, onErgebnis, sofort: true })
+  const { laeuft, punkteGeben, rundeZaehlen, fertig, starten: laufStarten, ticketSeitRef } = lauf
+
+  useEffect(() => {
+    let wert
+    try {
+      wert = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    } catch {
+      wert = false
+    }
+    sanftRef.current = wert
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSanft(wert)
+  }, [])
+
+  /* Keine Crash-Uhr ueberlebt das Aushaengen. */
+  useEffect(
+    () => () => {
+      clearTimeout(crashUhrRef.current)
+      crashUhrRef.current = 0
+    },
+    [],
+  )
+
+  /* Groesse messen, Canvas auf DPR (hoechstens 2) einstellen, Farben lesen. */
+  useEffect(() => {
+    const el = buehneRef.current
+    if (!el) return undefined
+    paletteRef.current = paletteBauen(el)
+    const messen = () => {
+      const dpr = Math.min(2, window.devicePixelRatio || 1)
+      const breite = el.clientWidth || 320
+      const hoehe = el.clientHeight || 480
+      masseRef.current = { breite, hoehe, dpr }
+      const c = canvasRef.current
+      if (c) {
+        c.width = Math.round(breite * dpr)
+        c.height = Math.round(hoehe * dpr)
+      }
+      spriteRef.current.clear()
+    }
+    messen()
+    try {
+      el.focus({ preventScroll: true })
+    } catch {
+      /* aelterer Browser ohne Optionen */
+    }
+    if (typeof ResizeObserver !== 'function') {
+      window.addEventListener('resize', messen)
+      return () => window.removeEventListener('resize', messen)
+    }
+    const beobachter = new ResizeObserver(messen)
+    beobachter.observe(el)
+    return () => beobachter.disconnect()
+  }, [laeuft])
+
+  /* Wer den Tab wechselt, findet das Spiel angehalten vor. Der Tipp zum
+     Weiterspielen wirft nichts ab. */
+  useEffect(() => {
+    if (!laeuft) return undefined
+    const wechsel = () => {
+      if (document.hidden && !crashRef.current) {
+        pauseRef.current = true
+        fingerRef.current = null
+        takt.current.vorgemerkt = false
+        takt.current.tasten = 0
+        setPause(true)
+      }
+    }
+    document.addEventListener('visibilitychange', wechsel)
+    return () => document.removeEventListener('visibilitychange', wechsel)
+  }, [laeuft])
+
+  const melden = useCallback((art, text) => {
+    nrRef.current += 1
+    setMeldung({ nr: nrRef.current, art, text })
+  }, [])
+
+  useEffect(() => {
+    if (!meldung) return undefined
+    const uhr = setTimeout(() => setMeldung(null), 1100)
+    return () => clearTimeout(uhr)
+  }, [meldung])
+
+  /** Der normale Weg ins Game Over — auch fuer das Testlabor. */
+  const aufgeben = useCallback(() => {
+    if (crashRef.current) return
+    crashRef.current = true
+    pauseRef.current = false
+    fingerRef.current = null
+    takt.current.vorgemerkt = false
+    takt.current.crashSeit = performance.now()
+    takt.current.kette = 0
+    setPause(false)
+    setCrash(true)
+    setKombo((alt) => (alt.kette ? { kette: 0, nr: alt.nr } : alt))
+    melden('verkantet', 'ÜBERGELAUFEN')
+    summen([90, 30, 60, 30, 140])
+    clearTimeout(crashUhrRef.current)
+    crashUhrRef.current = setTimeout(() => {
+      crashUhrRef.current = 0
+      fertig()
+    }, CRASH_MS)
+  }, [fertig, melden])
+
+  useTestEnde(GAME, laeuft, aufgeben)
+
+  const starten = useCallback(async () => {
+    /* Der Stand entsteht vor dem Lauf: mit sofort=true ist die Buehne schon
+       im naechsten Render sichtbar, und sie soll nie das alte Brett zeigen. */
+    clearTimeout(crashUhrRef.current)
+    crashUhrRef.current = 0
+    standRef.current = neuesSpiel()
+    pauseRef.current = false
+    crashRef.current = false
+    fingerRef.current = null
+    Object.assign(takt.current, { ...TAKT_START, blitze: [] })
+    setHoechste(-1)
+    setNaechstes(vorschau(standRef.current).naechstes)
+    setMeldung(null)
+    setPause(false)
+    setCrash(false)
+    setKombo({ kette: 0, nr: 0 })
+    setWarnstufe(0)
+    return laufStarten()
+  }, [laufStarten])
+
+  /** Darf jetzt ein Teil fallen? Siehe DER SERVER RECHNET MIT. */
+  const darfAbwerfen = useCallback(() => {
+    const ticketSeit = ticketSeitRef.current
+    if (!ticketSeit) return false
+    return Date.now() - Math.max(takt.current.letzterAbwurf, ticketSeit) >= ABWURF_MS
+  }, [ticketSeitRef])
+
+  /** Abwerfen jetzt oder vormerken. */
+  const abwurfWunsch = useCallback(() => {
+    const stand = standRef.current
+    if (!stand || stand.vorbei || crashRef.current || pauseRef.current) return
+    if (!darfAbwerfen()) {
+      takt.current.vorgemerkt = true
+      return
+    }
+    takt.current.vorgemerkt = false
+    takt.current.letzterAbwurf = Date.now()
+    abwerfen(stand, takt.current.zielX)
+    rundeZaehlen()
+    summen(6)
+    setNaechstes(vorschau(stand).naechstes)
+    setHoechste(stand.hoechste)
+  }, [darfAbwerfen, rundeZaehlen])
+
+  /** Ereignisse eines Physikschritts in Punkte, Blitze, Beben und Meldungen. */
+  const auswerten = useCallback(
+    (ereignisse) => {
+      const stand = standRef.current
+      const t = takt.current
+      const jetzt = performance.now()
+      let summe = 0
+      let groesstes = null
+      let merges = 0
+      for (const e of ereignisse) {
+        if (e.art === 'vorbei') {
+          aufgeben()
+          continue
+        }
+        merges += 1
+        summe += e.punkte
+        t.blitze.push({ x: e.x, y: e.y, stufe: e.stufe, gross: e.gross, seit: jetzt })
+        if (e.gross && !sanftRef.current) {
+          const staerke = e.art === 'traum' ? 7 : 3 + (e.stufe - GROSS_AB)
+          if (!t.beben || staerke >= t.beben.staerke || jetzt - t.beben.seit > BEBEN_MS / 2) {
+            t.beben = { seit: jetzt, staerke }
+          }
+        }
+        if (e.art === 'traum') t.traumSeit = jetzt
+        if (!groesstes || e.art === 'traum' || e.stufe > groesstes.stufe || e.kette > groesstes.kette) groesstes = e
+      }
+      if (summe) punkteGeben(summe)
+      if (!groesstes) return
+      setHoechste(stand.hoechste)
+      if (stand.kette > 0) {
+        t.kette = stand.kette
+        setKombo((alt) => ({ kette: stand.kette, nr: alt.nr + merges }))
+      }
+      if (groesstes.art === 'traum') {
+        melden('perfekt', groesstes.kette >= 2 ? `TRAUMKÜCHE ×${groesstes.kette}` : 'TRAUMKÜCHE')
+        summen([30, 30, 30, 30, 60])
+      } else if (groesstes.neuHoechste && groesstes.stufe >= 4) {
+        melden('gold', `NEU: ${STUFEN[groesstes.stufe].name}`)
+        summen(groesstes.gross ? [24, 24, 24, 24, 40] : [16, 26, 16])
+      } else if (groesstes.kette >= 2) {
+        melden(groesstes.kette >= 3 ? 'gold' : 'gut', `KOMBO ×${groesstes.kette}`)
+        summen([12, 20, 12])
+      } else if (groesstes.gross) {
+        melden('treffer', STUFEN[groesstes.stufe].name)
+        summen([20, 20, 30])
+      } else {
+        summen(8)
+      }
+    },
+    [aufgeben, melden, punkteGeben],
+  )
+
+  const schrittRef = useRef(null)
+  useEffect(() => {
+    schrittRef.current = { abwurfWunsch, darfAbwerfen, auswerten }
+  }, [abwurfWunsch, darfAbwerfen, auswerten])
+
+  /* ---------------------------------------------------------------- */
+  /* Eingaben                                                          */
+  /* ---------------------------------------------------------------- */
+
+  const weltX = (clientX) => {
+    const el = buehneRef.current
+    if (!el) return BREITE / 2
+    const rect = el.getBoundingClientRect()
+    const { z, x0 } = geometrie(masseRef.current.breite, masseRef.current.hoehe)
+    return (clientX - rect.left - x0) / z
+  }
+
+  const zielen = (clientX) => {
+    const stand = standRef.current
+    if (!stand) return
+    takt.current.zielX = klemmeX(stand.aktuell, weltX(clientX))
+  }
+
+  const weiter = () => {
+    pauseRef.current = false
+    setPause(false)
+  }
+
+  const zeigerRunter = (e) => {
+    e.preventDefault()
+    if (!laeuft || crashRef.current) return
+    try {
+      e.currentTarget.focus({ preventScroll: true })
+    } catch {
+      /* Fokus ist nur Komfort */
+    }
+    try {
+      e.currentTarget.setPointerCapture?.(e.pointerId)
+    } catch {
+      /* Capture ist nur Komfort */
+    }
+    if (pauseRef.current) {
+      weiter()
+      fingerRef.current = { id: e.pointerId, verbraucht: true }
+      return
+    }
+    fingerRef.current = { id: e.pointerId, verbraucht: false }
+    takt.current.vorgemerkt = false
+    zielen(e.clientX)
+  }
+
+  const zeigerZieht = (e) => {
+    const f = fingerRef.current
+    if (pauseRef.current || crashRef.current) return
+    /* Maus ohne gedrueckte Taste zielt auch — am Rechner fuehlt sich das richtig an. */
+    if (f && (f.verbraucht || f.id !== e.pointerId)) return
+    if (!f && e.pointerType !== 'mouse') return
+    zielen(e.clientX)
+  }
+
+  const zeigerHoch = (e) => {
+    const f = fingerRef.current
+    fingerRef.current = null
+    if (!f || f.verbraucht || f.id !== e.pointerId) return
+    e.preventDefault()
+    zielen(e.clientX)
+    abwurfWunsch()
+  }
+
+  const tasteRunter = (e) => {
+    if (!laeuft || crashRef.current) return
+    const k = e.key
+    const bekannt = ['ArrowLeft', 'ArrowRight', 'ArrowDown', ' ', 'Enter', 'a', 'A', 'd', 'D']
+    if (!bekannt.includes(k)) return
+    e.preventDefault()
+    if (pauseRef.current) {
+      if (!e.repeat) weiter()
+      return
+    }
+    if (k === 'ArrowLeft' || k === 'a' || k === 'A') takt.current.tasten = -1
+    else if (k === 'ArrowRight' || k === 'd' || k === 'D') takt.current.tasten = 1
+    else if (!e.repeat) abwurfWunsch()
+  }
+
+  const tasteHoch = (e) => {
+    const k = e.key
+    const t = takt.current
+    if ((k === 'ArrowLeft' || k === 'a' || k === 'A') && t.tasten === -1) t.tasten = 0
+    if ((k === 'ArrowRight' || k === 'd' || k === 'D') && t.tasten === 1) t.tasten = 0
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Schleife: feste Physikschritte, Malen                             */
+  /* ---------------------------------------------------------------- */
+
+  useEffect(() => {
+    if (!laeuft) return undefined
+    let frame = 0
+    let vorher = performance.now()
+    let speicher = 0
+
+    const sprite = (stufe, z, dpr) => {
+      const r = STUFEN[stufe].r * z
+      const schluessel = `${stufe}:${Math.round(r * dpr)}`
+      let bild = spriteRef.current.get(schluessel)
+      if (!bild) {
+        bild = document.createElement('canvas')
+        const seite = Math.ceil((2 * r + 4) * dpr)
+        bild.width = seite
+        bild.height = seite
+        const ctx = bild.getContext('2d')
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+        emblemMalen(ctx, paletteRef.current, stufe, r + 2, r + 2, r)
+        spriteRef.current.set(schluessel, bild)
+      }
+      return bild
+    }
+
+    const zeichneTeil = (ctx, stufe, cx, cy, r, z, dpr, alpha = 1, winkel = 0) => {
+      const rVoll = STUFEN[stufe].r * z
+      const bild = sprite(stufe, z, dpr)
+      const seite = (bild.width / dpr) * (r / rVoll)
+      ctx.globalAlpha = alpha
+      if (winkel) {
+        ctx.save()
+        ctx.translate(cx, cy)
+        ctx.rotate(winkel)
+        ctx.drawImage(bild, -seite / 2, -seite / 2, seite, seite)
+        ctx.restore()
+      } else {
+        ctx.drawImage(bild, cx - seite / 2, cy - seite / 2, seite, seite)
+      }
+      ctx.globalAlpha = 1
+    }
+
+    const malen = (jetzt) => {
+      const c = canvasRef.current
+      const palette = paletteRef.current
+      const stand = standRef.current
+      if (!c || !palette || !stand) return
+      const { breite, hoehe, dpr } = masseRef.current
+      const { z, x0, y0, fb, fh, kopf } = geometrie(breite, hoehe)
+      const t = takt.current
+      const weich = sanftRef.current
+      const ctx = c.getContext('2d')
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      ctx.clearRect(0, 0, breite, hoehe)
+
+      /* Beben nach grossen Verschmelzungen: kurz, klingt schnell ab. */
+      let bx = 0
+      let by = 0
+      if (t.beben && !weich) {
+        const p = (jetzt - t.beben.seit) / BEBEN_MS
+        if (p >= 1) t.beben = null
+        else {
+          const s = t.beben.staerke * (1 - p) * (1 - p)
+          bx = Math.sin(jetzt / 16) * s
+          by = Math.cos(jetzt / 21) * s * 0.6
+        }
+      }
+      ctx.save()
+      ctx.translate(bx, by)
+
+      /* Behaelter: dunkle Rueckwand, goldener Rahmen, oben offen. Bei
+         kritischem Fuellstand wird der obere Bereich rot unterlegt. */
+      ctx.fillStyle = rgb(palette.nacht, 0.5)
+      ctx.fillRect(x0, y0, fb, fh)
+      const ly = y0 + LINIE_Y * z
+      const puls = weich ? 1 : 0.55 + 0.45 * Math.sin(jetzt / 90)
+      if (!crashRef.current && (stand.warnung || stand.gefahr > 0)) {
+        const staerke = stand.kritisch ? 0.16 + 0.16 * puls + stand.gefahr * 0.2 : 0.1 * stand.fuellung
+        const verlauf = ctx.createLinearGradient(0, y0, 0, ly + WARN_ABSTAND * z)
+        verlauf.addColorStop(0, rgb(palette.rot, staerke))
+        verlauf.addColorStop(1, rgb(palette.rot, 0))
+        ctx.fillStyle = verlauf
+        ctx.fillRect(x0, y0, fb, ly - y0 + WARN_ABSTAND * z)
+      }
+      ctx.strokeStyle = stand.kritisch && !crashRef.current ? rgb(palette.rot, 0.55 + 0.35 * puls) : rgb(palette.gold, 0.55)
+      ctx.lineWidth = 1.5
+      ctx.beginPath()
+      ctx.moveTo(x0 - 0.75, y0)
+      ctx.lineTo(x0 - 0.75, y0 + fh + 0.75)
+      ctx.lineTo(x0 + fb + 0.75, y0 + fh + 0.75)
+      ctx.lineTo(x0 + fb + 0.75, y0)
+      ctx.stroke()
+
+      /* Ueberlauflinie: leise gestrichelt, bei Warnung rot, kritisch pulsierend. */
+      if (stand.gefahr > 0 || crashRef.current) {
+        ctx.strokeStyle = rgb(palette.rot, crashRef.current ? 0.9 : (0.55 + stand.gefahr * 0.45) * puls)
+        ctx.lineWidth = 2.5
+      } else if (stand.kritisch) {
+        ctx.strokeStyle = rgb(palette.rot, 0.5 * puls + 0.2)
+        ctx.lineWidth = 2
+      } else if (stand.warnung) {
+        ctx.strokeStyle = rgb(palette.rot, 0.35)
+        ctx.lineWidth = 1.5
+      } else {
+        ctx.strokeStyle = rgb(palette.gold, 0.22)
+        ctx.lineWidth = 1
+      }
+      ctx.setLineDash([6, 5])
+      ctx.beginPath()
+      ctx.moveTo(x0, ly)
+      ctx.lineTo(x0 + fb, ly)
+      ctx.stroke()
+      ctx.setLineDash([])
+
+      /* Gehaltenes Teil mit Lot bis zum ersten Aufprall. */
+      if (!crashRef.current && !stand.vorbei) {
+        const stufe = stand.aktuell
+        const x = klemmeX(stufe, t.zielX)
+        const cx = x0 + x * z
+        const cy = y0 + SPAWN_Y * z
+        const r = STUFEN[stufe].r * z
+        const { y: landung } = landeY(stand, stufe, x)
+        const bereit = schrittRef.current?.darfAbwerfen() ?? false
+        if (landung * z + y0 > cy + r) {
+          ctx.strokeStyle = rgb(palette.hell, bereit ? 0.35 : 0.15)
+          ctx.lineWidth = 1
+          ctx.setLineDash([2, 4])
+          ctx.beginPath()
+          ctx.moveTo(cx, cy + r)
+          ctx.lineTo(cx, y0 + landung * z)
+          ctx.stroke()
+          ctx.setLineDash([])
+        }
+        zeichneTeil(ctx, stufe, cx, cy, r, z, dpr, bereit ? 1 : 0.5)
+      }
+
+      /* Liegende Teile, rollend. */
+      const tot = crashRef.current
+      for (const k of stand.koerper) {
+        zeichneTeil(ctx, k.stufe, x0 + k.x * z, y0 + k.y * z, k.r * z, z, dpr, tot ? 0.55 : 1, k.winkel)
+        if (k.ueber > 0 && !tot) {
+          ctx.strokeStyle = rgb(palette.rot, 0.45 + 0.5 * (k.ueber / UEBER_S) * puls)
+          ctx.lineWidth = 2.5
+          ctx.beginPath()
+          ctx.arc(x0 + k.x * z, y0 + k.y * z, k.r * z + 1.5, 0, Math.PI * 2)
+          ctx.stroke()
+        }
+      }
+
+      /* Blitze an den Verschmelzpunkten. Grosse: doppelter Ring, Schein,
+         doppelt so viele Funken, laenger. */
+      t.blitze = t.blitze.filter((b) => jetzt - b.seit < (b.gross ? FLASH_GROSS_MS : FLASH_MS) * (weich ? 0.6 : 1))
+      for (const b of t.blitze) {
+        const dauer = (b.gross ? FLASH_GROSS_MS : FLASH_MS) * (weich ? 0.6 : 1)
+        const p = Math.min(1, (jetzt - b.seit) / dauer)
+        const rBasis = STUFEN[Math.min(OBERSTE, b.stufe)].r * z
+        const traum = b.stufe > OBERSTE
+        const bxp = x0 + b.x * z
+        const byp = y0 + b.y * z
+        const weite = traum ? 1.8 : b.gross ? 1.1 : 0.7
+        const radius = weich ? rBasis : rBasis * (0.7 + p * weite)
+        if (b.gross) {
+          const schein = ctx.createRadialGradient(bxp, byp, 0, bxp, byp, radius * 1.3)
+          schein.addColorStop(0, rgb(traum ? palette.creme : palette.hell, (1 - p) * 0.35))
+          schein.addColorStop(1, rgb(palette.hell, 0))
+          ctx.fillStyle = schein
+          ctx.beginPath()
+          ctx.arc(bxp, byp, radius * 1.3, 0, Math.PI * 2)
+          ctx.fill()
+        }
+        ctx.strokeStyle = rgb(traum ? palette.creme : palette.hell, (1 - p) * 0.9)
+        ctx.lineWidth = Math.max(1.5, (traum ? 6 : b.gross ? 4.5 : 3) * (1 - p))
+        ctx.beginPath()
+        ctx.arc(bxp, byp, radius, 0, Math.PI * 2)
+        ctx.stroke()
+        if (b.gross && !weich) {
+          ctx.strokeStyle = rgb(palette.gold, (1 - p) * 0.6)
+          ctx.lineWidth = Math.max(1, 2.5 * (1 - p))
+          ctx.beginPath()
+          ctx.arc(bxp, byp, radius * (0.55 + p * 0.9), 0, Math.PI * 2)
+          ctx.stroke()
+        }
+        if (!weich) {
+          const funken = b.gross ? 16 : 8
+          const groesse = b.gross ? 3 : 2
+          ctx.fillStyle = rgb(palette.hell, (1 - p) * 0.9)
+          for (let i = 0; i < funken; i += 1) {
+            const w = (i / funken) * Math.PI * 2 + b.stufe
+            const d = radius * (0.9 + p * (b.gross ? 0.9 : 0.5))
+            ctx.fillRect(bxp + Math.cos(w) * d - groesse / 2, byp + Math.sin(w) * d - groesse / 2, groesse, groesse)
+          }
+        }
+      }
+
+      /* Traumkueche: der ganze Behaelter leuchtet kurz creme auf. */
+      if (t.traumSeit) {
+        const p = (jetzt - t.traumSeit) / TRAUM_FLASH_MS
+        if (p >= 1) t.traumSeit = 0
+        else {
+          ctx.fillStyle = rgb(palette.creme, (weich ? 0.18 : 0.35) * (1 - p))
+          ctx.fillRect(x0, y0, fb, fh)
+        }
+      }
+
+      if (tot) {
+        const p = weich ? 1 : Math.min(1, (jetzt - t.crashSeit) / (CRASH_MS - 80))
+        ctx.fillStyle = rgb(palette.nacht, 0.45 * p)
+        ctx.fillRect(x0, y0, fb, fh)
+        ctx.fillStyle = rgb(palette.rot, 0.18 * p)
+        ctx.fillRect(x0, y0, fb, ly - y0)
+      }
+      ctx.restore()
+
+      /* Vorschau oben rechts: Emblem in einem Goldring, gut lesbar. */
+      const vr = Math.max(6, Math.min(kopf * 0.42, 13))
+      const vx = x0 + fb - vr - 3
+      const vy = Math.max(vr + 3, Math.min(kopf / 2, y0 - vr - 2))
+      ctx.fillStyle = rgb(palette.nacht, 0.8)
+      ctx.beginPath()
+      ctx.arc(vx, vy, vr + 2.5, 0, Math.PI * 2)
+      ctx.fill()
+      ctx.strokeStyle = rgb(palette.gold, 0.7)
+      ctx.lineWidth = 1
+      ctx.stroke()
+      zeichneTeil(ctx, stand.naechstes, vx, vy, vr, vr / STUFEN[stand.naechstes].r, dpr, 1)
+    }
+
+    const tick = (jetzt) => {
+      const dt = Math.min(0.1, (jetzt - vorher) / 1000)
+      vorher = jetzt
+      const stand = standRef.current
+      const h = schrittRef.current
+      const t = takt.current
+      if (stand && h && !pauseRef.current && !crashRef.current) {
+        if (t.tasten) t.zielX = klemmeX(stand.aktuell, t.zielX + t.tasten * TAST_TEMPO * dt)
+        if (t.vorgemerkt && h.darfAbwerfen()) h.abwurfWunsch()
+        speicher += dt
+        let n = 0
+        const gesammelt = []
+        while (speicher >= SCHRITT_S && n < MAX_SCHRITTE && !stand.vorbei) {
+          speicher -= SCHRITT_S
+          n += 1
+          const e = schritt(stand)
+          if (e.length) gesammelt.push(...e)
+        }
+        if (n >= MAX_SCHRITTE) speicher = 0
+        if (gesammelt.length) h.auswerten(gesammelt)
+
+        /* Kombo abgelaufen? Warnstufe gewechselt? Nur bei Aenderung rendern. */
+        if (t.kette && !stand.kette && !crashRef.current) {
+          t.kette = 0
+          setKombo((alt) => ({ kette: 0, nr: alt.nr }))
+        }
+        const w = stand.kritisch ? 2 : stand.warnung ? 1 : 0
+        if (w !== t.warn && !crashRef.current) {
+          if (w === 2 && jetzt - t.alarmSeit > 1500) {
+            t.alarmSeit = jetzt
+            summen([40, 60, 40])
+          }
+          t.warn = w
+          setWarnstufe(w)
+        }
+      } else {
+        speicher = 0
+      }
+      malen(jetzt)
+      frame = requestAnimationFrame(tick)
+    }
+
+    frame = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(frame)
+  }, [laeuft])
+
+  const naechsterName = naechstes != null ? STUFEN[naechstes].name : ''
+  const hoechsterName = hoechste >= 0 ? STUFEN[hoechste].name : ''
+  const komboAn = kombo.kette >= 2 && !crash
+  const komboProzent = Math.round((komboFaktor(kombo.kette) - 1) * 100)
+  const warnung = crash ? 0 : warnstufe
+
+  return (
+    <SpielKarte
+      spiel={{
+        ...SPIEL,
+        leisteLabel: 'HÖCHSTES',
+        leisteWert: hoechste + 1,
+        hebel: { wort: 'VERSCHMELZUNG', punkte: HEBEL_PUNKTE },
+      }}
+      lauf={{ ...lauf, starten }}
+      best={best}
+      leiste={
+        <span className="trm-spiel__combo trm-merge-hoechstes" data-an={hoechste >= 5 ? '1' : '0'}>
+          {hoechsterName}
+        </span>
+      }
+    >
+      {laeuft && (
+        <>
+          <div
+            className="trm-merge-buehne"
+            ref={buehneRef}
+            role="application"
+            tabIndex={0}
+            aria-label="Küchen-Merge Spielfeld. Ziehen zum Zielen, loslassen zum Fallenlassen. Pfeiltasten zielen, Leertaste lässt fallen."
+            style={{ '--trm-merge-kombo-ms': `${Math.round(KOMBO_S * 1000)}ms` }}
+            data-sanft={sanft ? '1' : '0'}
+            data-crash={crash ? '1' : '0'}
+            data-pause={pause ? '1' : '0'}
+            data-warnung={warnung}
+            data-combo={crash ? 0 : kombo.kette}
+            data-hoechste={hoechste}
+            data-naechstes={naechstes ?? undefined}
+            onPointerDown={zeigerRunter}
+            onPointerMove={zeigerZieht}
+            onPointerUp={zeigerHoch}
+            onPointerCancel={() => {
+              fingerRef.current = null
+            }}
+            onKeyDown={tasteRunter}
+            onKeyUp={tasteHoch}
+            onBlur={() => {
+              takt.current.tasten = 0
+            }}
+            onContextMenu={(e) => e.preventDefault()}
+          >
+            <canvas className="trm-merge-canvas" ref={canvasRef} aria-hidden="true" />
+            <span className="trm-merge-naechstes" data-stufe={naechstes ?? undefined} aria-hidden="true">
+              NÄCHSTES: <b>{naechsterName}</b>
+            </span>
+
+            <span className="trm-merge-alarm" data-an={warnung === 2 ? '1' : '0'} role="status">
+              {warnung === 2 ? 'ÜBERLAUF!' : ''}
+            </span>
+
+            <div className="trm-merge-fuss" aria-hidden="true">
+              <span className="trm-merge-stufen">
+                {STUFEN.map((s, i) => (
+                  <span
+                    key={s.name}
+                    className="trm-merge-stufe"
+                    data-stufe={i}
+                    data-erreicht={i <= hoechste ? '1' : '0'}
+                    data-hoechste={i === hoechste ? '1' : undefined}
+                    title={s.name}
+                  />
+                ))}
+              </span>
+              <span className="trm-merge-kombo" data-an={komboAn ? '1' : '0'} data-max={kombo.kette >= KOMBO_MAX ? '1' : '0'}>
+                KOMBO <b>×{Math.max(kombo.kette, 1)}</b>
+                {komboProzent > 0 && <span className="trm-merge-kombo-bonus">+{komboProzent}%</span>}
+                {komboAn && <i key={kombo.nr} className="trm-merge-kombo-zeit" />}
+              </span>
+            </div>
+          </div>
+
+          {pause && <p className="trm-spiel__pause">PAUSE — zum Weiterspielen tippen</p>}
+
+          {meldung && (
+            <p key={meldung.nr} className={`trm-spiel__ruf trm-spiel__ruf--${meldung.art}`}>
+              {meldung.text}
+            </p>
+          )}
+        </>
+      )}
+    </SpielKarte>
+  )
+}

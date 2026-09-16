@@ -18,4 +18,11 @@ export default defineConfig([
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
   },
+
+  // Die Serverfunktionen unter api/ laufen in Node, nicht im Browser: dort
+  // gibt es process und Buffer, aber kein window.
+  {
+    files: ['api/**/*.js'],
+    languageOptions: { globals: globals.node },
+  },
 ])

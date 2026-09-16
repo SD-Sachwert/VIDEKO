@@ -52,6 +52,12 @@ const Team = lazy(() => import('./pages/Team.jsx'))
 const Entdecken = lazy(() => import('./pages/Entdecken.jsx'))
 // Aktionsseite zum Stadtfest. Bewusst ausserhalb von <Layout> — siehe Route unten.
 const Stadtfest = lazy(() => import('./pages/Stadtfest.jsx'))
+// Bierdeckel-Aktion. Vier Seiten, alle ausserhalb von <Layout> — siehe Routen unten.
+const Terminal = lazy(() => import('./pages/Terminal.jsx'))
+const TerminalZiehung = lazy(() => import('./pages/TerminalZiehung.jsx'))
+const TerminalAdmin = lazy(() => import('./pages/TerminalAdmin.jsx'))
+const TerminalTeilnahme = lazy(() => import('./pages/TerminalTeilnahme.jsx'))
+const TerminalRangliste = lazy(() => import('./pages/TerminalRangliste.jsx'))
 
 export default function App() {
   return (
@@ -60,6 +66,16 @@ export default function App() {
           und Footer. Sie liegt deshalb ausserhalb des Layouts und bringt ihr
           eigenes <Seo> mit (noindex, nofollow, nicht in der Sitemap). */}
       <Route path="/stadtfest" element={<Stadtfest />} />
+
+      {/* Bierdeckel-Aktion: Ziel der gedruckten QR-Codes. Eigener schwarzer
+          Rahmen mit eigenem Kopf und Fuss, deshalb ebenfalls ausserhalb des
+          Layouts. Jede der fuenf Seiten bringt ihr eigenes <Seo> mit
+          (noindex, nofollow, nicht in der Sitemap). */}
+      <Route path="/terminal" element={<Terminal />} />
+      <Route path="/terminal/ziehung" element={<TerminalZiehung />} />
+      <Route path="/terminal/admin" element={<TerminalAdmin />} />
+      <Route path="/terminal/teilnahmebedingungen" element={<TerminalTeilnahme />} />
+      <Route path="/terminal/rangliste" element={<TerminalRangliste />} />
 
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />

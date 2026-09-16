@@ -1,0 +1,90 @@
+/* ------------------------------------------------------------------ */
+/* Küchen-Fit — Schränke einpassen, Reihen abräumen                    */
+/* ------------------------------------------------------------------ */
+
+/* Die Buehne fuellt das Hochformat-Feld. Gemalt wird im Canvas; CSS
+   liefert nur Rahmen, Fokus, Beschriftung und das Wackeln beim Ende. */
+.trm-fit-buehne {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  cursor: pointer;
+  outline: none;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  background:
+    radial-gradient(120% 60% at 50% 0%, rgba(201, 150, 60, 0.1) 0%, rgba(3, 3, 2, 0) 70%),
+    linear-gradient(180deg, rgba(3, 3, 2, 0) 60%, rgba(201, 150, 60, 0.06) 100%);
+}
+
+.trm-fit-buehne:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--trm-gold-hell);
+}
+
+.trm-fit-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Name des naechsten Teils, links oben ueber dem Feld. Die kleine
+   Vorschau selbst malt das Canvas rechts daneben. */
+.trm-fit-naechstes {
+  position: absolute;
+  left: 12px;
+  top: 8px;
+  z-index: 2;
+  max-width: 70%;
+  overflow: hidden;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  color: var(--trm-creme-leise);
+  pointer-events: none;
+}
+
+.trm-fit-naechstes b {
+  font-weight: 700;
+  color: var(--trm-gold-hell);
+}
+
+/* Problemteil als naechstes: der Name steht rot da, damit man sich wappnet. */
+.trm-fit-naechstes[data-problem='1'] b {
+  color: var(--trm-rot, #e2453a);
+}
+
+.trm-fit-level {
+  min-width: 5ch;
+}
+
+.trm-fit-buehne[data-crash='1'] .trm-fit-canvas {
+  animation: trm-fit-wackeln 0.42s ease-in-out;
+}
+
+.trm-fit-buehne[data-sanft='1'] .trm-fit-canvas {
+  animation: none;
+}
+
+@keyframes trm-fit-wackeln {
+  25% {
+    translate: -4px 0;
+  }
+  75% {
+    translate: 4px 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trm-fit-buehne[data-crash='1'] .trm-fit-canvas {
+    animation: none;
+  }
+}

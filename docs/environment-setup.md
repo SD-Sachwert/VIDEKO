@@ -58,6 +58,25 @@ Der Service-Role-Key hat volle Rechte auf die Datenbank. Er darf niemals ein
 | `SHIPPING_PROVIDER_API_KEY` | Versandlabels, optional |
 | `VITE_ANALYTICS_ID` | Web-Analyse, optional |
 
+### VIDEKO Terminal (`/terminal`)
+
+| Variable | Wofür |
+|---|---|
+| `TERMINAL_CODE` | die Lösung des Rätsels — **nur serverseitig**, nie im Bundle |
+| `TERMINAL_TOKEN_SECRET` | signiert Zugangsbelege, Sitzungen und Lauftickets (HMAC) |
+| `TERMINAL_IP_SALT` | Salz für den IP-Hash; die IP selbst wird nie gespeichert |
+| `TERMINAL_SCHREIBEN` | Notbremse für Schreibzugriffe — nur ein ausdrückliches `0` hält sie an |
+| `TERMINAL_ADMIN_TOKEN` | Wert der Kopfzeile `x-terminal-admin` für `/api/terminal-admin` |
+
+Die Datenbank des Terminals ist das Core-System `videko-core-pilot`, angebunden
+über ein eigenes Paar: `TERMINAL_SUPABASE_URL` und `TERMINAL_SUPABASE_SERVICE_KEY`.
+Die allgemeinen `SUPABASE_*`-Werte (Projekt `buchhaltung`, Leads/Bestellungen)
+nutzt das Terminal nicht mehr; zeigt `TERMINAL_SUPABASE_URL` auf `buchhaltung`,
+gilt es als nicht konfiguriert (503). Keine dieser
+Variablen darf ein `VITE_`-Prefix bekommen: `TERMINAL_CODE` im Bundle wäre
+die gelöste Aufgabe, `TERMINAL_ADMIN_TOKEN` im Bundle der offene Verwaltungs­zugang.
+Einzelheiten zu Tabellen, API-Aktionen und Betrugsschutz: [terminal-2.0.md](terminal-2.0.md).
+
 ---
 
 ## 3. Was ohne `.env.local` NICHT läuft
@@ -73,6 +92,7 @@ Lokal ohne Umgebungsvariablen:
 | Merch-Shop, Warenkorb & Persistenz | läuft |
 | Merch-Shop, Bestellung per Mail | läuft (öffnet das Mailprogramm) |
 | „Benachrichtige mich“ | läuft (öffnet das Mailprogramm) |
+| Terminal, Code-Eingabe und alles dahinter | **läuft nicht** – `/api/terminal` antwortet nicht |
 | Alle übrigen Seiten | laufen |
 
 Der Shop ist also vollständig ohne Umgebungsvariablen testbar. Nur die drei
