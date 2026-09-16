@@ -410,18 +410,6 @@ export default function Stadtfest() {
 
   /* --- Bausteine --------------------------------------------------- */
 
-  const kopf = texte ? (
-    <header className="stf-kopf">
-      <p className="stf-kopf__marken">VIDEKO × ATLAS WEALTH</p>
-      <h1 className="stf-kopf__titel">{texte.titel}</h1>
-      <p className="stf-kopf__sub">{texte.subline}</p>
-      <p className="stf-kopf__micro" data-wechsel={microWechsel ? '1' : '0'}>
-        {microcopy[microIndex] ?? ''}
-      </p>
-      <div className="stf-trenner" />
-    </header>
-  ) : null
-
   function feld({ name, label, typ = 'text', autoComplete, inputMode, pflicht, platzhalter }) {
     return (
       <div className={`stf-feld${fehler[name] ? ' stf-feld--fehler' : ''}`}>
@@ -700,30 +688,7 @@ export default function Stadtfest() {
      Nachher: der Hinweis, dass das Gewinnspiel vorbei ist.
      Waehrend des Fests braucht es beides nicht — da steht man davor. */
   const phasenBlock =
-    phasenKey === 'vorher' ? (
-      <section className="stf-phase">
-        <dl className="stf-eck">
-          <div className="stf-eck__zeile">
-            <EckIcon art="was" />
-            <dt className="stf-eck__dt">Was</dt>
-            <dd className="stf-eck__dd">{STADTFEST_EVENT.name}</dd>
-          </div>
-          <div className="stf-eck__zeile">
-            <EckIcon art="wann" />
-            <dt className="stf-eck__dt">Wann</dt>
-            <dd className="stf-eck__dd">{eventDatumKurz()}</dd>
-          </div>
-          <div className="stf-eck__zeile">
-            <EckIcon art="wo" />
-            <dt className="stf-eck__dt">Wo</dt>
-            <dd className="stf-eck__dd">{STADTFEST_EVENT.ort}</dd>
-          </div>
-        </dl>
-        {texte?.teilnahmeHinweis ? (
-          <p className="stf-phase__text">{texte.teilnahmeHinweis}</p>
-        ) : null}
-      </section>
-    ) : phasenKey === 'nachher' ? (
+    phasenKey === 'nachher' ? (
       <section className="stf-phase">
         <p className="stf-phase__text">{texte?.hinweis}</p>
       </section>
@@ -782,46 +747,90 @@ export default function Stadtfest() {
           {/* Der Erfolgsschirm ersetzt das Formular vollstaendig — inklusive
               Hero. Stehen bleibt nur die Markenzeile, damit klar ist, wessen
               Bildschirm das Team da vor sich hat. */}
-          {ansicht === 'formular' && kopf ? (
-            <>
-              {kopf}
+          {ansicht === 'formular' && texte ? (
+            /* Der Hero ist eine Flaeche, kein Stapel: Headline links, das
+               echte Gluecksrad rechts, beides bewusst ineinandergeschoben.
+               Vorher stand hier Headline ueber Rad ueber Infos ueber Card —
+               das las sich wie eine Liste und schob das Formular weit nach
+               unten. Jetzt liegt alles in einem Feld, und die Card beginnt
+               schon nach rund 670 px.
 
-              {/* Die Buehne: das echte Gluecksrad vom Stand plus die beiden
-                  dekorativen Schriftzuege aus dem Zielbild. Das Rad traegt
-                  keine Information, die nicht auch im Text steht — deshalb
-                  leeres alt und aria-hidden. Am Handy laeuft es ueber die
-                  volle Displaybreite und ist damit das erste, was man sieht;
-                  ab 900 px steht es gross rechts neben der Headline. */}
-              <div className="stf-buehne">
-                <div className="stf-rad" aria-hidden="true">
-                  <img
-                    className="stf-rad__bild"
-                    src={radGross}
-                    srcSet={`${radKlein} 640w, ${radGross} 1100w`}
-                    sizes="(min-width: 900px) 620px, 100vw"
-                    width="1100"
-                    height="1100"
-                    alt=""
-                    decoding="async"
-                    fetchPriority="high"
-                  />
-                </div>
+               Die Eckdaten stehen mit im Bild statt als eigener Block
+               darunter. Inhaltlich aendert das nichts, nur die Anordnung.
 
-                <p className="stf-buehne__gruss">
-                  Wir sehen uns am Stand!{' '}
-                  <span className="stf-buehne__herz" aria-hidden="true">
-                    &#9825;
-                  </span>
-                </p>
+               Das Rad traegt keine Information, die nicht auch im Text
+               steht — deshalb leeres alt und aria-hidden. */
+            <section className="stf-held">
+              <div className="stf-held__kulisse" aria-hidden="true" />
 
-                <p className="stf-buehne__preise">
-                  Tolle Preise
-                  <br />
-                  am Gl&uuml;cksrad!
-                </p>
+              <p className="stf-held__fahne">
+                <span className="stf-held__fahne-marke">VIDEKO</span>
+                <span className="stf-held__fahne-x" aria-hidden="true">
+                  &times;
+                </span>
+                <span className="stf-held__fahne-marke">ATLAS WEALTH</span>
+              </p>
+
+              <div className="stf-rad" aria-hidden="true">
+                <img
+                  className="stf-rad__bild"
+                  src={radGross}
+                  srcSet={`${radKlein} 640w, ${radGross} 1100w`}
+                  sizes="(min-width: 900px) 600px, 260px"
+                  width="1100"
+                  height="1100"
+                  alt=""
+                  decoding="async"
+                  fetchPriority="high"
+                />
               </div>
-            </>
+
+              <h1 className="stf-held__titel">{texte.titel}</h1>
+              <p className="stf-held__sub">{texte.subline}</p>
+
+              {texte.teilnahmeHinweis ? (
+                <p className="stf-held__fein">{texte.teilnahmeHinweis}</p>
+              ) : null}
+
+              <p className="stf-held__micro" data-wechsel={microWechsel ? '1' : '0'}>
+                {microcopy[microIndex] ?? ''}
+              </p>
+
+              {phasenKey === 'vorher' ? (
+                <dl className="stf-eck">
+                  <div className="stf-eck__zeile">
+                    <EckIcon art="was" />
+                    <dt className="stf-eck__dt">Was</dt>
+                    <dd className="stf-eck__dd">{STADTFEST_EVENT.name}</dd>
+                  </div>
+                  <div className="stf-eck__zeile">
+                    <EckIcon art="wann" />
+                    <dt className="stf-eck__dt">Wann</dt>
+                    <dd className="stf-eck__dd">{eventDatumKurz()}</dd>
+                  </div>
+                  <div className="stf-eck__zeile">
+                    <EckIcon art="wo" />
+                    <dt className="stf-eck__dt">Wo</dt>
+                    <dd className="stf-eck__dd">{STADTFEST_EVENT.ort}</dd>
+                  </div>
+                </dl>
+              ) : null}
+
+              <p className="stf-held__gruss">
+                Wir sehen uns am Stand!{' '}
+                <span className="stf-held__herz" aria-hidden="true">
+                  &#9825;
+                </span>
+              </p>
+
+              <p className="stf-held__preise">
+                Tolle Preise
+                <br />
+                am Gl&uuml;cksrad!
+              </p>
+            </section>
           ) : (
+
             <header className="stf-kopf">
               <p className="stf-kopf__marken">VIDEKO × ATLAS WEALTH</p>
             </header>

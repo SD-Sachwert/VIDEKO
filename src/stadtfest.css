@@ -32,8 +32,16 @@
      ohne Retina, sonst die volle Breite des Masters. Groesser wird es nicht
      — der Master ist 941 px breit, alles darueber waere hochskalierte
      Unschaerfe. */
-  --stf-buehne: url('./assets/images/stadtfest/stadtfest-buehne-560w.webp');
+  --stf-buehne: url('./assets/images/stadtfest/stadtfest-buehne-941w.webp');
   --stf-kachel: url('./assets/images/stadtfest/stadtfest-bokeh-560w.webp');
+
+  /* Der Hero hat einen eigenen, hochformatigen Ausschnitt aus demselben
+     Master. Die Querplatte oben abzuschneiden hat am Handy nur Himmel und
+     Unschaerfe gezeigt; dieser Schnitt bringt Festung, Fahne, Lichterketten
+     und Staende in den sichtbaren Bereich. Seitenverhaeltnis 521:897 — das
+     ist genau die Hero-Box, deshalb sitzt nichts schief. */
+  --stf-held-bild: url('./assets/images/stadtfest/stadtfest-held-391w.webp');
+  --stf-kulisse-bild: url('./assets/images/stadtfest/stadtfest-kulisse-390w.webp');
 
   /* Am Handy laeuft die Platte bewusst ueber die Displaybreite hinaus. Das
      Motiv ist mittig gebaut; 116 % ziehen Markt und Lichter groesser auf und
@@ -55,8 +63,9 @@
    kleine Datei waere dort sichtbar weich. */
 @media (min-width: 480px), (min-resolution: 1.5dppx) {
   .stf {
-    --stf-buehne: url('./assets/images/stadtfest/stadtfest-buehne-941w.webp');
     --stf-kachel: url('./assets/images/stadtfest/stadtfest-bokeh-941w.webp');
+    --stf-held-bild: url('./assets/images/stadtfest/stadtfest-held-521w.webp');
+    --stf-kulisse-bild: url('./assets/images/stadtfest/stadtfest-kulisse-560w.webp');
   }
 }
 
@@ -68,85 +77,38 @@
   }
 }
 
-/* Die Buehne liegt hinter der ganzen Seite, nicht nur hinter dem Hero — kein
-   <img>, weil sie reine Stimmung traegt und keine Information, die jemand
-   vorgelesen bekommen muesste.
-
-   Reihenfolge der Layer, oberster zuerst:
-     1. warmes Goldlicht oben rechts, das die Lichterketten aufnimmt
-     2. die Platte: Markt, Festung, Fahnen, Lichterketten
-     3. der Bokeh-Streifen, der ab dem Ende der Platte weiterkachelt
-     4. Nachtschwarz als letzter Grund
-
-   Die Abdunklung sitzt bewusst NICHT hier, sondern in .stf::after und nur
-   ueber dem Hero. Weiter unten soll das Foto sichtbar bleiben; die
-   Formularcard bringt ihren eigenen dunklen Grund mit. */
+/* Der Grund der ganzen Seite: der kachelnde Bokeh-Streifen und Nachtschwarz.
+   Das Hero-Foto liegt bewusst NICHT mehr hier, sondern in .stf-held. Nur so
+   laesst sich der Ausschnitt oben unabhaengig von der Seitenlaenge fuehren —
+   vorher wurde die Platte ueber die gesamte Seitenhoehe aufgezogen und die
+   Festung war am Handy nur noch ein Streifen. */
 .stf::before {
   content: '';
   position: absolute;
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(76% 30% at 80% 6%, rgba(232, 201, 120, 0.16), transparent 70%),
-    var(--stf-buehne) top center / var(--stf-buehne-breite) auto no-repeat,
     var(--stf-kachel) top center / var(--stf-buehne-breite) auto repeat-y,
     var(--stf-nacht);
 }
 
-/* Der Schleier ueber dem Hero. Er liegt nur oben und ist deutlich duenner als
-   frueher: die Szene soll man sehen. Links zieht er staerker zu, damit die
-   goldene Headline auf ruhigem Grund steht und nicht im Gedraenge verschwimmt.
-   Das Rad bleibt rechts absichtlich hell — es ist der Grund, warum jemand
-   diesen QR-Code ueberhaupt gescannt hat. */
+/* Leichte Abdunklung im oberen Seitendrittel. Unter dem Hero liegt sie
+   verdeckt; sichtbar wird sie nur auf den Ansichten ohne Hero — dem
+   Erfolgsschirm und dem phasenneutralen Stand. */
 .stf::after {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: clamp(560px, 105vh, 1180px);
+  height: clamp(420px, 70vh, 900px);
   pointer-events: none;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(9, 8, 7, 0.5) 0%,
-      rgba(9, 8, 7, 0.22) 30%,
-      rgba(9, 8, 7, 0.12) 62%,
-      rgba(9, 8, 7, 0.4) 100%
-    ),
-    linear-gradient(
-      98deg,
-      rgba(9, 8, 7, 0.66) 0%,
-      rgba(9, 8, 7, 0.34) 30%,
-      rgba(9, 8, 7, 0.06) 54%,
-      transparent 70%
-    );
-}
-
-/* Auf breiten Schirmen bleibt das Foto vollflaechig — genau wie in der
-   Referenz. Nur der Schleier aendert sich: links steht jetzt eine ganze
-   Textspalte, also zieht die Vignette dort weiter nach rechts, waehrend die
-   rechte Haelfte mit dem Rad frei bleibt. */
-@media (min-width: 900px) {
-  .stf::after {
-    height: clamp(760px, 96vh, 1240px);
-    background:
-      linear-gradient(
-        180deg,
-        rgba(9, 8, 7, 0.28) 0%,
-        rgba(9, 8, 7, 0.12) 30%,
-        rgba(9, 8, 7, 0.1) 66%,
-        rgba(9, 8, 7, 0.34) 100%
-      ),
-      linear-gradient(
-        92deg,
-        rgba(9, 8, 7, 0.8) 0%,
-        rgba(9, 8, 7, 0.62) 24%,
-        rgba(9, 8, 7, 0.3) 44%,
-        rgba(9, 8, 7, 0.06) 58%,
-        transparent 70%
-      );
-  }
+  background: linear-gradient(
+    180deg,
+    rgba(9, 8, 7, 0.34) 0%,
+    rgba(9, 8, 7, 0.12) 55%,
+    transparent 100%
+  );
 }
 
 .stf > * {
@@ -154,102 +116,186 @@
   z-index: 1;
 }
 
-/* Eine Spalte. Am Handy randnah, auf dem Desktop deutlich breiter gefasst:
-   mit 560 px sass die Seite auf 1440 und 1920 als schmaler Streifen in sehr
-   viel leerem Schwarz. Zweispaltig wird sie trotzdem nicht — das hier ist
-   eine Eventseite, kein Buerovordruck. */
+/* Eine Spalte. Am Handy randnah: 13 px Polster lassen die Formularcard auf
+   einem 390er Display genau 364 px breit werden. */
 .stf__spalte {
+  --stf-pad: 13px;
   width: min(100%, 860px);
   margin: 0 auto;
-  padding: 0 18px;
+  padding: 0 var(--stf-pad);
 }
 
 @media (min-width: 900px) {
   .stf__spalte {
-    width: min(100%, 1120px);
-    padding: 0 40px;
+    --stf-pad: 40px;
+    width: min(100%, 1220px);
   }
 }
 
 /* ---------------------------------------------------------------- */
-/* Kopf                                                              */
+/* Hero — Plakat statt Stapel                                        */
 /* ---------------------------------------------------------------- */
 
-.stf-kopf {
+/* Der ganze Hero ist eine Flaeche, kein Stapel: Headline links, Glücksrad
+   rechts, beides im selben Feld und bewusst ineinander verzahnt. Genau das
+   macht aus der Seite ein Plakat statt einer Liste aus Bloecken — und haelt
+   den Kopf so kurz, dass das Formular schon nach rund 670 px beginnt.
+
+   Die Kinder sitzen absolut. Das ist hier kein Selbstzweck: nur so lassen
+   sich Ueberlappungen fuehren, ohne dass ein Block den naechsten schiebt.
+   Die Hoehe traegt deshalb der Container, nicht der Inhalt. */
+.stf-held {
+  --held-h: clamp(636px, 171vw, 706px);
+  --held-rand: clamp(20px, 5.6vw, 26px);
+
   position: relative;
   z-index: 2;
-  padding: clamp(26px, 7vw, 56px) 0 clamp(10px, 3vw, 22px);
+  height: var(--held-h);
+  margin: 0 calc(-1 * var(--stf-pad));
+  isolation: isolate;
+  overflow: hidden;
 }
 
-.stf-kopf__marken {
-  margin: 0 0 clamp(18px, 6vw, 28px);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--stf-gold);
+/* Das Eventfoto. Eigener, hochformatiger Ausschnitt aus dem Master:
+   Festung oben, dunkle Fahne am rechten Rand, Lichterketten, beleuchtete
+   Staende, unscharfe Menge, nasser Boden. Der Ausschnitt hat exakt das
+   Seitenverhaeltnis des Heros, deshalb passt er auf 390 px pixelgenau.
+   Nach unten loest er sich per Maske in den Bokeh-Grund auf — kein harter
+   Schnitt, keine schwarze Kante. */
+.stf-held::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--stf-held-bild) top center / 100% auto no-repeat;
+  filter: brightness(1.24) saturate(1.06) contrast(1.03);
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    #000 0%,
+    #000 66%,
+    rgba(0, 0, 0, 0.62) 88%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    180deg,
+    #000 0%,
+    #000 66%,
+    rgba(0, 0, 0, 0.62) 88%,
+    transparent 100%
+  );
 }
 
-.stf-kopf__titel {
+.stf-held__kulisse {
+  position: absolute;
+  z-index: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: clamp(206px, 57vw, 256px);
+  pointer-events: none;
+  opacity: 0.66;
+  background: var(--stf-kulisse-bild) bottom center / cover no-repeat;
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.45) 32%,
+    #000 70%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.45) 32%,
+    #000 70%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+}
+
+/* Der Schleier ist bewusst schief und einseitig: links hinter der Headline
+   fast deckend, rechts beim Rad praktisch offen. Ein gleichmaessiger
+   schwarzer Schleier ueber das ganze Bild wuerde die Kulisse toeten. */
+.stf-held::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      101deg,
+      rgba(7, 6, 5, 0.88) 0%,
+      rgba(7, 6, 5, 0.64) 21%,
+      rgba(7, 6, 5, 0.22) 42%,
+      rgba(7, 6, 5, 0.03) 59%,
+      transparent 73%
+    ),
+    linear-gradient(180deg, rgba(7, 6, 5, 0.32) 0%, rgba(7, 6, 5, 0.05) 22%, transparent 46%),
+    radial-gradient(64% 26% at 78% 8%, rgba(232, 201, 120, 0.15), transparent 72%);
+}
+
+/* Die Fahne. Traegt das Markenpaar, das vorher als Zeile ueber der Headline
+   stand — auf einem Stadtfest haengt so etwas an einer Stange, nicht als
+   Kleingedrucktes. Sie liegt unter dem Rad, damit sie es nie verdeckt. */
+.stf-held__fahne {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  right: clamp(-9px, -1.6vw, -3px);
+  width: clamp(98px, 27vw, 124px);
+  height: clamp(198px, 58vw, 252px);
   margin: 0;
-  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
-  font-size: clamp(46px, 14.6vw, 104px);
-  line-height: 0.9;
-  font-weight: 300;
-  letter-spacing: -0.015em;
-  text-transform: uppercase;
-  background: linear-gradient(104deg, #b9863a 0%, #e8c978 44%, #c9a050 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 2px 14px rgba(6, 5, 4, 0.9));
+  padding: clamp(16px, 4.4vw, 22px) 7px 0;
+  text-align: center;
+  background: linear-gradient(
+    174deg,
+    rgba(16, 13, 10, 0.95) 0%,
+    rgba(28, 22, 16, 0.9) 55%,
+    rgba(12, 10, 8, 0.95) 100%
+  );
+  border-left: 1px solid rgba(201, 160, 80, 0.32);
+  border-right: 1px solid rgba(201, 160, 80, 0.32);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 90%, 0 100%);
+  box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.9);
+  transform: rotate(1.2deg);
+  transform-origin: top right;
+  pointer-events: none;
 }
 
-/* ---------------------------------------------------------------- */
-/* Gluecksrad                                                        */
-/* ---------------------------------------------------------------- */
-
-/* Das echte Rad vom Stand. Es ist kein Dekor, sondern das Verkaufsargument:
-   Kuechengutschein, Gold, Wellnessurlaub, Spanndecke stehen als Segmente
-   darauf. Deshalb liegt es als echtes Bild auf der Seite und nicht als
-   Hintergrundebene — nur so bleibt es auf Retina scharf genug, dass die
-   Segmente erkennbar sind.
-
-   Am Handy steht es im Fluss: ein absolut gesetzter Kreis in dieser Groesse
-   wuerde entweder die Headline zerschneiden oder muesste so klein werden,
-   dass von den Preisen nichts mehr uebrig bleibt. Es laeuft rechts bis an
-   die Displaykante und laesst links den Rand stehen — dieselbe Achse wie
-   im Zielbild, nur untereinander statt nebeneinander. */
-/* Die Buehne traegt das Rad und die beiden handgesetzten Schriftzuege. Sie
-   laeuft am Handy ueber die volle Displaybreite — die Spaltenpolster werden
-   mit negativen Raendern wieder herausgerechnet. Unten haengt ein Streifen
-   an, in dem die Schriftzuege links und rechts neben dem auslaufenden
-   Radbogen stehen; genau dort ist Platz, weil ein Kreis an seinem Fuss nur
-   noch schmal ist. */
-.stf-buehne {
-  position: relative;
-  z-index: 0;
-  margin: clamp(-18px, -4vw, -6px) -18px clamp(6px, 2vw, 18px);
-  padding-bottom: clamp(52px, 15vw, 74px);
+.stf-held__fahne-marke {
+  display: block;
+  font-size: clamp(10.5px, 3vw, 13px);
+  font-weight: 700;
+  line-height: 1.32;
+  letter-spacing: 0.19em;
+  color: var(--stf-gold-hell);
 }
 
+.stf-held__fahne-x {
+  display: block;
+  margin: 5px 0;
+  font-size: 10px;
+  color: rgba(201, 160, 80, 0.7);
+}
+
+/* Das echte Rad. Rechts, gross, leicht aus dem Rahmen laufend — es soll die
+   Headline beruehren, nicht unter ihr warten. */
 .stf-rad {
-  position: relative;
-  z-index: 0;
-  width: min(100%, 540px);
-  margin: 0 auto;
+  position: absolute;
+  z-index: 3;
+  top: clamp(152px, 44vw, 176px);
+  right: clamp(-20px, -5vw, -10px);
+  width: clamp(226px, 59.5vw, 262px);
+  line-height: 0;
 }
 
-/* Warmer Lichthof. Das Rad steht am Stand unter Lichterketten; ohne diesen
-   Schein klebt der freigestellte Kreis flach auf dem Foto. */
 .stf-rad::before {
   content: '';
   position: absolute;
-  inset: -15%;
+  inset: -14%;
   border-radius: 50%;
   background: radial-gradient(
     closest-side,
-    rgba(201, 160, 80, 0.24),
+    rgba(201, 160, 80, 0.26),
     rgba(201, 160, 80, 0.08) 56%,
     transparent 78%
   );
@@ -261,114 +307,251 @@
   display: block;
   width: 100%;
   height: auto;
-  filter: drop-shadow(0 26px 48px rgba(0, 0, 0, 0.7));
+  filter: drop-shadow(0 22px 42px rgba(0, 0, 0, 0.72));
 }
 
-/* Die Schriftzuege aus dem Zielbild. Sie sind Dekor, aber kein Bild — als
-   echter Text bleiben sie scharf, skalieren mit und lassen sich vorlesen. */
-.stf-buehne__gruss,
-.stf-buehne__preise {
+/* Headline. Drei kurze Zeilen, eng gesetzt, bewusst so breit, dass sie ins
+   Rad hineinlaeuft. */
+.stf-held__titel {
   position: absolute;
-  bottom: 0;
+  z-index: 4;
+  left: var(--held-rand);
+  top: clamp(58px, 16.6vw, 76px);
+  width: clamp(205px, 56vw, 246px);
   margin: 0;
-  z-index: 1;
+  font-family: var(--serif);
+  font-size: clamp(50px, 13.7vw, 60px);
+  font-weight: 300;
+  line-height: 0.9;
+  letter-spacing: -0.012em;
+  text-transform: uppercase;
+  background: linear-gradient(104deg, #b9863a 0%, #e8c978 44%, #c9a050 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 2px 16px rgba(6, 5, 4, 0.95));
+}
+
+/* Subline und Kleingedrucktes stehen bewusst schmal: so bleiben sie in der
+   dunklen linken Haelfte und geraten nicht unter das Rad. */
+.stf-held__sub {
+  position: absolute;
+  z-index: 4;
+  left: var(--held-rand);
+  top: clamp(210px, 55vw, 240px);
+  width: clamp(150px, 40vw, 172px);
+  margin: 0;
+  font-size: clamp(15px, 4.1vw, 17px);
+  line-height: 1.38;
+  color: var(--stf-creme);
+  text-shadow: 0 1px 12px rgba(6, 5, 4, 0.95);
+}
+
+.stf-held__fein {
+  position: absolute;
+  z-index: 4;
+  left: var(--held-rand);
+  top: clamp(272px, 71vw, 306px);
+  width: clamp(146px, 39vw, 168px);
+  margin: 0;
+  font-size: clamp(11px, 3vw, 12px);
+  line-height: 1.42;
+  color: var(--stf-creme-weich);
+  text-shadow: 0 1px 10px rgba(6, 5, 4, 0.95);
+}
+
+.stf-held__micro {
+  position: absolute;
+  z-index: 4;
+  left: var(--held-rand);
+  top: clamp(352px, 92vw, 396px);
+  width: clamp(146px, 39vw, 168px);
+  min-height: 2.9em;
+  margin: 0;
+  font-size: clamp(11px, 3vw, 12px);
+  line-height: 1.42;
+  color: rgba(244, 239, 228, 0.52);
+  text-shadow: 0 1px 10px rgba(6, 5, 4, 0.95);
+  transition: opacity 0.45s ease;
+}
+
+.stf-held__micro[data-wechsel='1'] {
+  opacity: 0.15;
+}
+
+/* Die Eckdaten sitzen im Hero, nicht darunter — sie gehoeren zum Plakat. */
+.stf-held .stf-eck {
+  position: absolute;
+  z-index: 4;
+  left: var(--held-rand);
+  top: clamp(430px, 114vw, 482px);
+  width: clamp(300px, 84vw, 336px);
+  margin: 0;
+}
+
+.stf-held__gruss {
+  position: absolute;
+  z-index: 4;
+  left: clamp(22px, 6.6vw, 35px);
+  top: clamp(545px, 143vw, 600px);
+  width: clamp(158px, 44vw, 192px);
+  margin: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(22px, 6.1vw, 27px);
+  text-shadow: 0 2px 14px rgba(5, 4, 3, 0.92);
+  line-height: 1.12;
+  color: var(--stf-creme);
+  text-shadow: 0 2px 16px rgba(6, 5, 4, 0.95);
+  transform: rotate(-4.5deg);
+  transform-origin: left top;
   pointer-events: none;
 }
 
-.stf-buehne__gruss {
-  left: clamp(8px, 3vw, 22px);
-  width: 42%;
-  max-width: 220px;
-  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
-  font-style: italic;
-  font-size: clamp(19px, 5.4vw, 30px);
-  line-height: 1.12;
-  color: var(--stf-creme);
-  transform: rotate(-5deg);
-  transform-origin: left bottom;
-  text-shadow: 0 2px 14px rgba(6, 5, 4, 0.9);
-}
-
-.stf-buehne__herz {
+.stf-held__herz {
   color: var(--stf-gold-hell);
 }
 
-.stf-buehne__preise {
-  right: clamp(8px, 3vw, 22px);
-  width: 40%;
-  max-width: 210px;
-  padding: 7px 0 8px;
-  border-top: 1px solid rgba(201, 160, 80, 0.5);
-  border-bottom: 1px solid rgba(201, 160, 80, 0.5);
-  font-size: clamp(10px, 2.7vw, 13px);
-  font-weight: 600;
-  line-height: 1.35;
-  letter-spacing: 0.17em;
+/* Schild statt Textzeile: dunkles Blech, Goldschrift, leicht schief. */
+.stf-held__preise {
+  position: absolute;
+  z-index: 4;
+  right: clamp(12px, 4.2vw, 20px);
+  top: clamp(535px, 141vw, 595px);
+  width: clamp(115px, 33vw, 145px);
+  margin: 0;
+  padding: 9px 8px 10px;
+  border: 1px solid rgba(201, 160, 80, 0.55);
+  border-radius: 7px;
+  background: linear-gradient(168deg, rgba(14, 12, 9, 0.94), rgba(26, 20, 14, 0.9));
+  box-shadow:
+    0 14px 30px -14px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(232, 201, 120, 0.18);
+  font-size: clamp(10px, 2.8vw, 11.5px);
+  font-weight: 700;
+  line-height: 1.42;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   text-align: center;
   color: var(--stf-gold-hell);
-  transform: rotate(4deg);
-  transform-origin: right bottom;
-  text-shadow: 0 2px 12px rgba(6, 5, 4, 0.9);
+  transform: rotate(3.5deg);
+  transform-origin: right top;
+  pointer-events: none;
 }
 
-/* Ab 900 px steht die Komposition des Zielbilds: Headline links, Rad gross
-   rechts daneben. Die Buehne sitzt absolut in der Spalte und ragt ein Stueck
-   ueber deren Kante hinaus. */
+/* Der schlanke Kopf ohne Hero — Erfolgsschirm und phasenneutraler Stand. */
+.stf-kopf {
+  padding: clamp(26px, 7vw, 56px) 0 clamp(8px, 2.4vw, 16px);
+}
+
+.stf-kopf__marken {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--stf-gold);
+}
+
+/* ---------------------------------------------------------------- */
+/* Hero ab 900 px — dasselbe Plakat, nur grosszuegiger                */
+/* ---------------------------------------------------------------- */
+
 @media (min-width: 900px) {
-  .stf-buehne {
-    position: absolute;
-    top: clamp(10px, 2.4vw, 44px);
-    right: clamp(-80px, -4.5vw, -20px);
-    width: min(54%, 620px);
+  .stf-held {
+    --held-h: clamp(620px, 48vw, 720px);
+    --held-rand: 0px;
     margin: 0;
-    padding-bottom: clamp(46px, 5vw, 66px);
+    overflow: visible;
   }
 
-  /* Headline und Eventdaten bleiben links vom Rad. */
-  .stf-kopf,
-  .stf-phase {
-    max-width: 50%;
+  /* Foto und Schleier laufen ueber die volle Fensterbreite, der Inhalt
+     bleibt in der Spalte. .stf kappt den Ueberhang. */
+  .stf-held::before,
+  .stf-held::after {
+    left: 50%;
+    right: auto;
+    width: 100vw;
+    transform: translateX(-50%);
   }
-}
 
-.stf-kopf__sub {
-  margin: clamp(14px, 4vw, 22px) 0 0;
-  font-size: clamp(15px, 1.5vw, 19px);
-  line-height: 1.5;
-  letter-spacing: 0.01em;
-  color: var(--stf-creme);
-  text-shadow: 0 1px 10px rgba(6, 5, 4, 0.9);
-}
+  .stf-held::before {
+    background: var(--stf-buehne) top center / cover no-repeat;
+  }
 
-.stf-kopf__micro {
-  margin: 8px 0 0;
-  min-height: 2.7em;
-  font-size: 13px;
-  line-height: 1.45;
-  color: var(--stf-creme-weich);
-  text-shadow: 0 1px 10px rgba(6, 5, 4, 0.9);
-  transition: opacity 0.4s ease;
-}
+  .stf-held__kulisse {
+    display: none;
+  }
 
-.stf-kopf__micro[data-wechsel='1'] {
-  opacity: 0.25;
-}
+  .stf-held::after {
+    background:
+      linear-gradient(
+        94deg,
+        rgba(7, 6, 5, 0.9) 0%,
+        rgba(7, 6, 5, 0.72) 26%,
+        rgba(7, 6, 5, 0.3) 46%,
+        rgba(7, 6, 5, 0.05) 62%,
+        transparent 74%
+      ),
+      linear-gradient(180deg, rgba(7, 6, 5, 0.4) 0%, transparent 34%),
+      radial-gradient(52% 30% at 74% 10%, rgba(232, 201, 120, 0.16), transparent 72%);
+  }
 
-/* Die goldene Linie unter dem Hero-Text. Am Handy steht das Rad direkt
-   darunter und schiebt sich ein Stueck darueber — dort wuerde die Linie quer
-   durch den Kreis laufen. Sie erscheint deshalb erst ab 900 px, wo sie links
-   neben dem Rad steht und die Textspalte sauber abschliesst. */
-.stf-trenner {
-  display: none;
-}
+  .stf-held__titel {
+    top: clamp(44px, 5vw, 86px);
+    width: min(52%, 600px);
+    font-size: clamp(66px, 5.6vw, 96px);
+  }
 
-@media (min-width: 900px) {
-  .stf-trenner {
-    display: block;
-    height: 1px;
-    margin: clamp(18px, 2.4vw, 30px) 0 0;
-    background: linear-gradient(90deg, var(--stf-gold), rgba(201, 160, 80, 0.06) 82%, transparent);
+  .stf-held__sub {
+    top: clamp(250px, 24vw, 340px);
+    width: min(46%, 470px);
+    font-size: clamp(17px, 1.4vw, 21px);
+  }
+
+  .stf-held__fein {
+    top: clamp(310px, 30vw, 420px);
+    width: min(44%, 440px);
+    font-size: 13px;
+  }
+
+  .stf-held__micro {
+    top: clamp(356px, 34vw, 470px);
+    width: min(44%, 440px);
+    font-size: 13px;
+  }
+
+  .stf-held .stf-eck {
+    top: clamp(410px, 39vw, 540px);
+    width: min(46%, 470px);
+  }
+
+  .stf-rad {
+    top: clamp(6px, 1.5vw, 40px);
+    right: clamp(-90px, -5vw, -30px);
+    width: clamp(500px, 40vw, 600px);
+  }
+
+  .stf-held__fahne {
+    display: none;
+  }
+
+  .stf-held__gruss {
+    left: auto;
+    right: clamp(300px, 26vw, 400px);
+    top: auto;
+    bottom: clamp(16px, 2.6vw, 48px);
+    width: clamp(190px, 16vw, 240px);
+    font-size: clamp(26px, 2.2vw, 34px);
+  }
+
+  .stf-held__preise {
+    right: clamp(20px, 3vw, 60px);
+    top: auto;
+    bottom: clamp(8px, 1vw, 16px);
+    width: clamp(140px, 12vw, 180px);
+    padding: 11px 10px 12px;
+    font-size: 12px;
   }
 }
 
@@ -386,11 +569,11 @@
 .stf-form {
   display: flex;
   flex-direction: column;
-  gap: clamp(22px, 5.4vw, 28px);
-  margin-top: clamp(22px, 6vw, 32px);
-  padding: clamp(26px, 7vw, 36px) clamp(20px, 5.4vw, 30px) clamp(30px, 8vw, 40px);
+  gap: clamp(23px, 5.9vw, 27px);
+  margin-top: 8px;
+  padding: clamp(24px, 6vw, 26px) clamp(18px, 4.8vw, 20px) clamp(20px, 5.2vw, 22px);
   border: 1px solid rgba(201, 160, 80, 0.5);
-  border-radius: 22px;
+  border-radius: 19px;
   background:
     linear-gradient(168deg, rgba(42, 36, 27, 0.96), rgba(10, 9, 8, 0.98) 60%),
     var(--stf-nacht);
@@ -419,16 +602,15 @@
    Buehne, genau wie im Zielbild. */
 @media (min-width: 900px) {
   .stf-form {
-    gap: 32px;
-    max-width: 920px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 46px 52px 50px;
+    gap: 26px;
+    max-width: 880px;
+    margin: -26px auto 0;
+    padding: 40px 46px 42px;
   }
 }
 
 .stf-gruppe__titel {
-  margin: 0 0 14px;
+  margin: 0 0 10px;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.2em;
@@ -439,15 +621,15 @@
 /* Erklaerzeile unter einem Gruppentitel. Nur dort, wo der Titel allein
    missverstanden werden koennte. */
 .stf-gruppe__text {
-  margin: -6px 0 14px;
-  font-size: 13px;
+  margin: -4px 0 10px;
+  font-size: 12.5px;
   line-height: 1.5;
   color: var(--stf-creme-weich);
 }
 
 .stf-reihe {
   display: grid;
-  gap: 14px;
+  gap: 9px;
 }
 
 /* Vorname/Nachname und Mobilnummer/PLZ stehen schon auf dem Handy
@@ -476,8 +658,8 @@
 
 .stf-feld__input {
   width: 100%;
-  min-height: 54px;
-  padding: 15px 16px;
+  min-height: 52px;
+  padding: 14px 15px;
   border: 1px solid rgba(201, 160, 80, 0.22);
   border-radius: 10px;
   background: var(--stf-feld-bg);
@@ -529,18 +711,18 @@
 .stf-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 9px;
+  gap: 7px;
 }
 
 .stf-chip {
-  min-height: 48px;
-  padding: 12px 18px;
+  min-height: 36px;
+  padding: 8px 13px;
   border: 1px solid rgba(201, 160, 80, 0.3);
   border-radius: 999px;
   background: var(--stf-feld-bg);
   color: var(--stf-creme);
   font-family: inherit;
-  font-size: 14.5px;
+  font-size: 12.5px;
   line-height: 1.2;
   letter-spacing: 0.01em;
   cursor: pointer;
@@ -571,19 +753,18 @@
 .stf-check {
   display: flex;
   align-items: flex-start;
-  gap: 13px;
-  padding: 12px 0;
-  min-height: 48px;
+  gap: 11px;
+  padding: 6px 0;
   cursor: pointer;
 }
 
 .stf-check__box {
   flex: 0 0 auto;
-  width: 28px;
-  height: 28px;
+  width: 25px;
+  height: 25px;
   margin: 0;
   border: 1px solid var(--stf-gold);
-  border-radius: 7px;
+  border-radius: 6px;
   background: var(--stf-feld-bg);
   cursor: pointer;
   display: grid;
@@ -623,15 +804,15 @@
 }
 
 .stf-check__text {
-  font-size: 14.5px;
-  line-height: 1.45;
+  font-size: 12.8px;
+  line-height: 1.42;
   color: var(--stf-creme);
 }
 
 .stf-check__klein {
   display: block;
-  margin-top: 4px;
-  font-size: 12.5px;
+  margin-top: 3px;
+  font-size: 11.5px;
   line-height: 1.45;
   color: var(--stf-creme-weich);
 }
@@ -641,7 +822,7 @@
 /* ---------------------------------------------------------------- */
 
 .stf-karte {
-  padding: clamp(16px, 4.5vw, 22px);
+  padding: clamp(13px, 3.4vw, 16px);
   border: 1px solid rgba(244, 239, 228, 0.1);
   border-radius: 12px;
   background: rgba(244, 239, 228, 0.035);
@@ -656,8 +837,8 @@
 }
 
 .stf-marketing__frei {
-  margin: 6px 0 0 39px;
-  font-size: 12.5px;
+  margin: 4px 0 0 36px;
+  font-size: 11.5px;
   line-height: 1.45;
   color: var(--stf-creme-weich);
 }
@@ -688,17 +869,17 @@
 
 .stf-cta {
   width: 100%;
-  min-height: 62px;
-  margin-top: 4px;
-  padding: 19px 22px;
+  min-height: 56px;
+  margin-top: 2px;
+  padding: 17px 20px;
   border: 0;
   border-radius: 12px;
   background: linear-gradient(104deg, #b9863a 0%, #e8c978 46%, #c9a050 100%);
   color: #14110c;
   font-family: inherit;
-  font-size: 15px;
+  font-size: 13.5px;
   font-weight: 800;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   cursor: pointer;
   box-shadow: 0 16px 34px -16px rgba(201, 160, 80, 0.75);
@@ -956,12 +1137,12 @@
    waere an der Stelle Inhalt verloren gegangen. */
 .stf-eck {
   margin: clamp(18px, 4.5vw, 24px) 0 0;
-  padding: clamp(14px, 3.6vw, 18px) clamp(14px, 3.6vw, 18px) clamp(15px, 3.8vw, 19px);
+  padding: clamp(12px, 3.2vw, 15px) clamp(13px, 3.4vw, 16px) clamp(13px, 3.4vw, 16px);
   display: flex;
   flex-direction: column;
-  gap: 11px;
-  border: 1px solid rgba(201, 160, 80, 0.2);
-  border-radius: 14px;
+  gap: 9px;
+  border: 1px solid rgba(201, 160, 80, 0.26);
+  border-radius: 12px;
   background: rgba(10, 9, 8, 0.5);
 }
 
@@ -978,16 +1159,16 @@
    — genau das macht die Liste im Vorbeigehen scanbar. */
 .stf-eck__zeile {
   display: grid;
-  grid-template-columns: 18px 62px 1fr;
-  gap: 11px;
+  grid-template-columns: 17px 54px 1fr;
+  gap: 9px;
   align-items: center;
 }
 
 /* Rein dekorativ, also bewusst zurueckgenommen: das Zeichen soll die Zeile
    auffindbar machen, nicht mit dem Wert um Aufmerksamkeit streiten. */
 .stf-eck__icon {
-  width: 18px;
-  height: 18px;
+  width: 17px;
+  height: 17px;
   color: var(--stf-gold);
   opacity: 0.85;
 }
@@ -1006,7 +1187,7 @@
 
 .stf-eck__dt {
   margin: 0;
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -1015,7 +1196,7 @@
 
 .stf-eck__dd {
   margin: 0;
-  font-size: 15px;
+  font-size: 13.5px;
   line-height: 1.4;
   color: var(--stf-creme);
 }
@@ -1031,9 +1212,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
-  margin: clamp(34px, 8vw, 48px) 0 0;
-  padding-bottom: 4px;
+  gap: 10px;
+  margin: clamp(28px, 6.5vw, 40px) 0 0;
+  padding-bottom: 2px;
 }
 
 .stf-fuss__strich {
@@ -1063,7 +1244,7 @@
 }
 
 .stf-fuss__name {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.26em;
   text-transform: uppercase;
@@ -1071,7 +1252,7 @@
 }
 
 .stf-fuss__claim {
-  font-size: 11px;
+  font-size: 10.5px;
   letter-spacing: 0.06em;
   color: var(--stf-creme-weich);
 }
@@ -1087,7 +1268,7 @@
 @media (max-width: 559px) {
   .stf-fuss__marken {
     flex-direction: column;
-    gap: 11px;
+    gap: 8px;
   }
 
   .stf-fuss__teiler {
