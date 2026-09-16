@@ -97,6 +97,19 @@ export default function SpielKarte({ spiel, lauf, best, leiste = null, children 
       ? motivation({ neuerBest, rang, punkte, eigenBest, hebel: spiel.hebel })
       : null
 
+  /* Der Vergleich nach dem Probelauf. Die Seite, die das Probespiel zeigt,
+     reicht ueber den Kontext zwei Dinge herein: `onEnde` holt die
+     oeffentliche Rangliste — erst nach einer wirklich gespielten Runde, nie
+     beim Laden der Seite — und `rangSatz` rechnet daraus den Satz. Fehlt
+     beides, bleibt der Practice Mode genau so, wie er vorher war. Gelesen
+     wird dabei nur; das Probespiel schreibt nichts. */
+  const practiceEnde = practice && phase === 'vorbei'
+  const practiceEndeMelden = practiceWeg?.onEnde
+  useEffect(() => {
+    if (practiceEnde) practiceEndeMelden?.()
+  }, [practiceEnde, practiceEndeMelden])
+  const probeRang = practiceEnde ? (practiceWeg?.rangSatz?.(punkte) ?? null) : null
+
   /* NOCHMAL im Ergebnis: bei den Endlosspielen schon waehrend des Speicherns,
      bei den Zeitspielen erst, wenn das Ergebnis da ist. */
   const nochmalMoeglich = phase === 'vorbei' || (phase === 'sendet' && lauf.sofort)
@@ -228,14 +241,19 @@ export default function SpielKarte({ spiel, lauf, best, leiste = null, children 
                 stattdessen zaehlt — und die beiden Wege dahin. */}
             {practice && phase === 'vorbei' && (
               <>
-                <p className="trm-spiel__jagd">{T.practiceFrage}</p>
+                {probeRang && (
+                  <p className="trm-spiel__probe-rang" data-art={probeRang.art} role="status">
+                    {probeRang.text}
+                  </p>
+                )}
+                <p className="trm-spiel__jagd">{practiceWeg?.frageText ?? T.practiceFrage}</p>
                 <button
                   type="button"
                   className="trm-cta trm-cta--umriss"
                   data-practice-cta
                   onClick={() => practiceWeg?.onCta?.()}
                 >
-                  {T.practiceCta}
+                  {practiceWeg?.ctaText ?? T.practiceCta}
                 </button>
               </>
             )}

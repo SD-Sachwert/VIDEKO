@@ -1,4 +1,4 @@
-import { Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react'
+import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Check, CheckCircle2, ChevronRight, Circle, KeyRound, Radio } from 'lucide-react'
 
@@ -33,6 +33,7 @@ import {
   merkeLesen,
   merkeSchreiben,
   probeAktiv,
+  ranglisteHolen,
   sitzungLesen,
   sitzungSchreiben,
   teamHolen,
@@ -57,6 +58,7 @@ import {
   fuelle,
   instagramNormalisieren,
   missionStand,
+  probeRangSatz,
   terminText,
   zahl,
 } from '../data/terminal.js'
@@ -127,15 +129,18 @@ const HANDLE = TERMINAL_KAMPAGNE.instagramHandle
 
         0 –  300 ms  die Seite reagiert, der Hintergrund wird dunkler
       300 –  900 ms  ACCESS GRANTED kommt mit Goldlicht
-      600 – 1500 ms  Licht wandert durch die Adern der Truhe
+      600 – 2000 ms  goldene Adern wandern von unten durch die Buehne
       900 – 1800 ms  der Rauch verstaerkt sich
      1300 – 2000 ms  die Truhe kommt leicht nach vorn
+     1400 – 1900 ms  das Schloss vibriert
           ~1800 ms  das Schloss schnappt sichtbar
      1800 – 2500 ms  der goldene Lichtspalt steht
      2400 – 3400 ms  DU HAST ZUGANG.
+     3400 – 3900 ms  Pause. Der Satz bleibt stehen.
+     3900 – 4900 ms  DAS SCHLOSS IST OFFEN.
 
    Die Truhe geht dabei nicht auf. */
-const BUEHNE_MS = { gewaehrt: 3400, schluessel: 1300, verweigert: 1700, spaehen: 3000, vorflug: 1500 }
+const BUEHNE_MS = { gewaehrt: 4900, schluessel: 1300, verweigert: 1700, spaehen: 3000, vorflug: 1500 }
 const BUEHNE_SANFT_MS = { gewaehrt: 900, schluessel: 320, verweigert: 900, spaehen: 2000, vorflug: 1100 }
 
 /* Rueckmeldung der Punkte, die nicht weiterfuehren. */
@@ -442,8 +447,17 @@ function Buehne({ art, wort = null }) {
     return (
       <div className="trm-buehne trm-buehne--gewaehrt">
         <span className="trm-buehne__rauch" aria-hidden="true" />
+        {/* Zwei goldene Adern laufen von unten durch die Buehne, waehrend das
+            Wort steht. Sie nehmen das Muster der Truhe auf und fuehren den
+            Blick auf das Schloss zu. */}
+        <span className="trm-buehne__adern" aria-hidden="true" />
+        <span className="trm-buehne__adern trm-buehne__adern--zwei" aria-hidden="true" />
         <span className="trm-buehne__strich" aria-hidden="true" />
         <span className="trm-buehne__strich trm-buehne__strich--zwei" aria-hidden="true" />
+        {/* Kurz bevor es schnappt, vibriert das Schloss. Es ist eine reine
+            Form ueber der Buehne — die echte Truhe darunter bleibt, wo sie
+            ist, und geht auch nicht auf. */}
+        <span className="trm-buehne__schloss" aria-hidden="true" />
         {/* Der Schlag: ein kurzer Goldblitz und Funken, die ueber die ganze
             Buehne fliegen — genau dann, wenn an der Truhe das Schloss
             anschlaegt. */}
@@ -460,6 +474,11 @@ function Buehne({ art, wort = null }) {
             Ueberschrift denselben Satz gleich noch einmal traegt. */}
         <p className="trm-buehne__wort trm-buehne__wort--zwei" aria-hidden="true">
           {TEXTE.z.titel}
+        </p>
+        {/* Und nach einer halben Sekunde Stille der dritte. Die Pause ist der
+            Punkt: erst steht der Satz allein, dann kommt der Nachsatz. */}
+        <p className="trm-buehne__wort trm-buehne__wort--drei" aria-hidden="true">
+          {TEXTE.z.offen}
         </p>
       </div>
     )
@@ -490,17 +509,26 @@ function Buehne({ art, wort = null }) {
 /* ------------------------------------------------------------------ */
 
 /**
- * Die Follower-Mission. Die Zahl traegt die Verwaltung von Hand ein — eine
- * Instagram-Schnittstelle gibt es nicht. Jede Stufe zeigt ihren Gewinn, wenn
- * einer eingetragen ist, sonst den Platzhalter. Werte erfindet die Seite nicht.
+ * Die Follower-Mission. Die Zahl kommt aus den Einstellungen; getragen wird
+ * sie entweder von Hand aus der Verwaltung oder vom stuendlichen Abgleich in
+ * api/terminal-instagram.js. Jede Stufe zeigt ihren Gewinn, wenn einer
+ * eingetragen ist, sonst den Platzhalter. Werte erfindet die Seite nicht.
+ *
+ * Die Karte steht in zwei Ansichten: hinter dem Code als Stand der Dinge und
+ * davor als Grund, ueberhaupt hereinzukommen. Deshalb der `className` — die
+ * verschlossene Seite blendet ihre Bloecke gestaffelt ein.
  */
-function Mission({ follower, gewinne }) {
+function Mission({ follower, gewinne, className = '' }) {
   const M = TEXTE.c.mission
   const stand = missionStand(follower, gewinne)
   const prozent = Math.round(stand.anteil * 100)
 
   return (
-    <section className="trm-karte trm-mission" id="mission" aria-labelledby="trm-mission-titel">
+    <section
+      className={`trm-karte trm-mission ${className}`.trim()}
+      id="mission"
+      aria-labelledby="trm-mission-titel"
+    >
       <div className="trm-karte__kopf">
         <Ikon name="instagram" size={22} className="trm-ikon" />
         <h2 className="trm-karte__titel" id="trm-mission-titel">
@@ -1320,6 +1348,81 @@ export default function Terminal() {
        bzw. sollen bewusst den Stand der Ankunft sehen. */
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  /* ---------------------------------------------------------------- */
+  /* Das Probespiel auf der verschlossenen Seite                       */
+  /* ---------------------------------------------------------------- */
+
+  /**
+   * Auf der Landing Page steht ein Game zum Reinspielen. Es laeuft im
+   * Practice Mode: kein Laufticket, kein offizieller Score, keine
+   * Teilnahme, kein Los. Der Lauf schickt nichts an den Server — das
+   * entscheidet `PracticeKontext` in spiel-lauf.js, nicht diese Seite.
+   *
+   * Nach der Runde darf die Seite trotzdem einordnen, was der Score wert
+   * waere. Dafuer liest sie genau einmal die oeffentliche Rangliste. Die
+   * braucht keine Sitzung und antwortet jedem; gelesen wird nur, an der
+   * Liste selbst aendert sich dabei nichts.
+   */
+  const [probeOffen, setProbeOffen] = useState(false)
+  const [probeRang, setProbeRang] = useState({ stand: 'ruht', liste: [] })
+  const probeGeholtRef = useRef(false)
+  const probeKey = kennzahlen?.guestPracticeGame ?? PRACTICE_STANDARD
+
+  const probeRangHolen = useCallback(() => {
+    /* Einmal pro Seitenbesuch, und erst nach einer wirklich gespielten
+       Runde — nicht beim Laden der Seite. */
+    if (probeGeholtRef.current) return
+    probeGeholtRef.current = true
+    setProbeRang({ stand: 'laedt', liste: [] })
+    ranglisteHolen(null)
+      .then((antwort) => {
+        const roh = antwort?.ok ? antwort.listen?.[probeKey] : null
+        if (!Array.isArray(roh)) {
+          setProbeRang({ stand: 'leer', liste: [] })
+          return
+        }
+        /* Nur die Punktzahlen, absteigend. Namen braucht der Vergleich
+           nicht, und was die Seite nicht haelt, kann sie nicht zeigen. */
+        const liste = roh
+          .map((eintrag) => Number(eintrag?.punkte))
+          .filter((p) => Number.isFinite(p) && p > 0)
+          .sort((a, b) => b - a)
+        setProbeRang({ stand: liste.length ? 'da' : 'leer', liste })
+      })
+      .catch(() => setProbeRang({ stand: 'fehler', liste: [] }))
+  }, [probeKey])
+
+  /**
+   * Der Satz nach der Probrunde.
+   *
+   * Gerechnet wird er in src/data/terminal.js — rein, ohne React, damit die
+   * eine Regel, auf die es hier ankommt, wirklich getestet werden kann:
+   * genannt wird ein Platz nur, wenn er aus der veroeffentlichten Liste
+   * exakt abzaehlbar ist. Hier bleibt nur das Reichen des Zustands.
+   */
+  const rangSatzRechnen = useCallback(
+    (punkte) => probeRangSatz(probeRang.stand, probeRang.liste, punkte),
+    [probeRang],
+  )
+
+  /* Der Weg aus dem Probespiel heraus: zum Codefeld, das ist der einzige
+     Eingang, den diese Ansicht kennt. */
+  const probeWeg = useMemo(
+    () => ({
+      frageText: TEXTE.g.practiceFrage,
+      ctaText: TEXTE.g.practiceEchtCta,
+      onEnde: probeRangHolen,
+      rangSatz: rangSatzRechnen,
+      onCta: () => {
+        document
+          .getElementById('trm-code-label')
+          ?.scrollIntoView({ block: 'center', behavior: 'smooth' })
+        document.querySelector('.trm-code__feld')?.focus({ preventScroll: true })
+      },
+    }),
+    [probeRangHolen, rangSatzRechnen],
+  )
 
   /* ---------------------------------------------------------------- */
   /* Zustand A — Code pruefen                                         */
@@ -2888,6 +2991,18 @@ export default function Terminal() {
 
   const gesperrt = codePruefung || buehne === 'gewaehrt'
 
+  /* Das Probespiel auf der verschlossenen Seite. Es ist dasselbe Game, das
+     auch ein Gast ohne Deckel hinter dem Code bekommt — welches das ist,
+     entscheidet die Verwaltung, nicht diese Datei. Ist es abgeschaltet,
+     faellt der ganze Block weg. */
+  const probeSpiel =
+    aktiveSpiele(kennzahlen?.spieleAktiv, kennzahlen?.spieleReihenfolge).find(
+      (s) => s.key === probeKey,
+    ) ?? null
+  const ProbeBauteil = probeSpiel
+    ? (SPIEL_BAUTEILE[probeSpiel.key] ?? SPIEL_NACHLADEN[probeSpiel.key] ?? null)
+    : null
+
   /* Waehrend der Inszenierung kommt die Truhe optisch naeher, das Schloss
      schnappt einmal, und zwischen Deckel und Korpus steht ein sehr schmaler
      goldener Lichtspalt. Offen ist sie danach nicht.
@@ -3029,6 +3144,35 @@ export default function Terminal() {
 
         {wiederBlock(stufe(6))}
 
+        {/* Das Probespiel. Es steht bewusst hinter dem Codefeld: wer den
+            Code hat, soll ihn zuerst eingeben. Wer keinen hat, findet hier
+            trotzdem etwas zum Anfassen. Der Lauf ist ein Probelauf — das
+            steht darunter, bevor jemand spielt, und nicht erst danach. */}
+        {probeSpiel && ProbeBauteil ? (
+          <section className={`trm-probespiel ${stufe(6)}`} data-probe={probeSpiel.key}>
+            <h2 className="trm-probespiel__titel">{TEXTE.a.probeTitel}</h2>
+            <p className="trm-probespiel__sub">{TEXTE.a.probeSub}</p>
+
+            {!probeOffen && !SPIEL_BAUTEILE[probeSpiel.key] ? (
+              <SpielWahl spiel={probeSpiel} best={null} oeffnen={() => setProbeOffen(true)} />
+            ) : (
+              <PracticeKontext.Provider value={probeWeg}>
+                <Suspense
+                  fallback={
+                    <div className="trm-karte trm-spielwahl trm-spielwahl--laedt">
+                      {TEXTE.g.laedt}
+                    </div>
+                  }
+                >
+                  <ProbeBauteil sitzung={null} best={null} onErgebnis={null} />
+                </Suspense>
+              </PracticeKontext.Provider>
+            )}
+
+            <p className="trm-probespiel__notiz">{TEXTE.a.probeNotiz}</p>
+          </section>
+        ) : null}
+
         <ol className={`trm-ablauf ${stufe(6)}`}>
           {ABLAUF.map((schritt, index) => (
             <li className="trm-ablauf__schritt" key={schritt.key}>
@@ -3042,6 +3186,30 @@ export default function Terminal() {
         </ol>
 
         <Gewinne className={stufe(6)} />
+
+        {/* Warum die Preise so aussehen, wie sie aussehen: sie haengen an
+            der Followerzahl. Dieselbe Karte wie im Tresor, dieselbe Zahl —
+            hier steht sie als Grund, nicht als Stand. */}
+        <Mission
+          className={stufe(6)}
+          follower={kennzahlen?.followerZahl ?? TERMINAL_KAMPAGNE.followerStart}
+          gewinne={kennzahlen?.meilensteinGewinne}
+        />
+
+        {/* Die zwei Wege hinein, nebeneinander. Mehr als ein Anriss ist das
+            nicht: ausgespielt wird beides erst hinter dem Code. */}
+        <div className={`trm-wege ${stufe(6)}`}>
+          <section className="trm-karte trm-weg">
+            <Ikon name="nummer" size={20} className="trm-ikon" />
+            <h2 className="trm-karte__titel">{TEXTE.a.deckelTitel}</h2>
+            <p className="trm-weg__text">{fuelle(TEXTE.a.deckelText, { gesamt: GESAMT })}</p>
+          </section>
+          <section className="trm-karte trm-weg">
+            <Ikon name="schluessel" size={20} className="trm-ikon" />
+            <h2 className="trm-karte__titel">{TEXTE.a.einladungTitel}</h2>
+            <p className="trm-weg__text">{TEXTE.a.einladungText}</p>
+          </section>
+        </div>
 
         {ziehungZeile(stufe(6))}
       </TerminalRahmen>

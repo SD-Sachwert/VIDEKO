@@ -120,8 +120,11 @@ async function codeEingeben() {
   await warte(90)
 }
 
-/* Erste Szene. Die Marken sind die des Drehbuchs plus zwei Uebergaenge. */
-for (const ms of [150, 450, 900, 1200, 1650, 1850, 2100, 2600, 3200]) {
+/* Erste Szene. Die Marken sind die des Drehbuchs plus zwei Uebergaenge:
+   Rauch, die goldenen Adern ab 600, das zitternde Schloss ab 1400, der Schlag
+   ab 1780, „DU HAST ZUGANG." ab 2400, die halbe Sekunde Stille ab 3400 und
+   „DAS SCHLOSS IST OFFEN." ab 3900. Die Sequenz endet bei 4900. */
+for (const ms of [150, 450, 900, 1200, 1650, 1850, 2100, 2600, 3200, 3700, 4100, 4500, 4880]) {
   await codeEingeben()
   const steht = await seite.evaluate(() => document.querySelector('.trm-buehne')?.className || 'FEHLT')
   if (steht === 'FEHLT') {
@@ -132,9 +135,10 @@ for (const ms of [150, 450, 900, 1200, 1650, 1850, 2100, 2600, 3200]) {
   await seite.screenshot({ path: `${ZIEL}/gewaehrt-${String(ms).padStart(4, '0')}.png` })
 }
 
-/* Danach: der Zustand Z, wie er stehen bleibt. */
+/* Danach: der Zustand Z, wie er stehen bleibt. Gewartet wird bis nach dem
+   Ende der Sequenz (4900 ms) — vorher steht noch die Buehne im Bild. */
 await codeEingeben()
-await warte(3600)
+await warte(5200)
 await seite.screenshot({ path: `${ZIEL}/gewaehrt-ende.png` })
 
 /* Zweite Szene: der Weg durch das Schluesselloch. Sie laeuft aus dem Zustand
@@ -142,7 +146,7 @@ await seite.screenshot({ path: `${ZIEL}/gewaehrt-ende.png` })
 for (const ms of [120, 320, 600, 850, 1050, 1250]) {
   if (ms !== 120) {
     await codeEingeben()
-    await warte(3600)
+    await warte(5200)
   }
   await seite.click('.trm-punkt--schluessel')
   await warte(60)

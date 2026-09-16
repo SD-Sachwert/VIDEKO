@@ -114,6 +114,21 @@ export const TEXTE = {
     cta: 'ZUGANG PRÜFEN',
     hinweis: 'Rätsel lösen. Code eingeben. Deckel aktivieren.',
     fehler: 'Code noch nicht geknackt.',
+    /* Das Probespiel direkt auf der Landing Page. Es laeuft ohne Konto,
+       ohne Ticket und ohne Score — der Text sagt das vorher, damit
+       niemand glaubt, hier sei schon etwas gewertet worden. */
+    probeTitel: 'SPIEL EINE RUNDE. OHNE ANMELDUNG.',
+    probeSub: 'Ein Game zum Reinspielen — direkt hier, direkt jetzt.',
+    probeNotiz:
+      'Diese Runde ist ein Probespiel: kein offizieller Score, keine Teilnahme, kein Los. Die Ziehung hängt allein an deiner Deckelnummer.',
+    /* Die zwei Wege hinein, angerissen — ausgespielt wird beides erst
+       hinter dem Code. */
+    deckelTitel: '5.000 NUMMERIERTE DECKEL.',
+    deckelText:
+      'Jeder Deckel trägt eine handschriftliche Nummer von 1 bis {gesamt}. Genau eine davon wird gezogen. Dein Deckel ist dein Los.',
+    einladungTitel: 'ODER DU WIRST EINGELADEN.',
+    einladungText:
+      'Wer schon dabei ist, kann Einladungen weitergeben. Eine Einladung öffnet dieselbe Tür wie ein Code — mit Deckel bleibt sie trotzdem nötig, um zu gewinnen.',
   },
 
   /* Zustand B — Code akzeptiert, Aktivierung */
@@ -166,6 +181,9 @@ export const TEXTE = {
   z: {
     gewaehrt: 'ACCESS GRANTED',
     titel: 'DU HAST ZUGANG.',
+    /* Der dritte Schlag der Sequenz. Er kommt nach einer Pause, damit der
+       zweite Satz vorher stehen bleiben darf. */
+    offen: 'DAS SCHLOSS IST OFFEN.',
     sub: 'Tippe die Truhe an.',
     hinweis: 'Das Schloss hat sich gelöst. Der Weg hinein ist es noch nicht.',
     /* Die drei Punkte auf der Truhe. Zwei reagieren, einer führt hinein. */
@@ -263,6 +281,16 @@ export const TEXTE = {
     practiceScore: 'DEIN PRACTICE-SCORE',
     practiceFrage: 'WILLST DU AUF DIE RANGLISTE?',
     practiceCta: 'HOL DIR EINE EINLADUNG ODER AKTIVIERE DEINEN DECKEL',
+    practiceEchtCta: 'JETZT RICHTIG MITSPIELEN',
+    /* Der Vergleich nach dem Probespiel. Er liest die oeffentliche
+       Rangliste und rechnet nur nach, wie viele Eintraege darueber liegen.
+       Reicht der Score nicht in die veroeffentlichte Liste, wird keine Zahl
+       erfunden — dann sagt practiceRangKnapp genau das. */
+    practiceRang: 'MIT {punkte} PUNKTEN WÄRST DU AKTUELL PLATZ {platz}.',
+    practiceRangKnapp: 'MIT {punkte} PUNKTEN REICHT ES NOCH NICHT IN DIE TOP {top}.',
+    practiceRangLeer: 'Für dieses Game steht noch keine öffentliche Rangliste.',
+    practiceRangLaedt: 'Rangliste wird geprüft …',
+    practiceRangFehler: 'Die Rangliste ist gerade nicht erreichbar.',
     gesperrt: 'ERST ANMELDEN',
     /* Rückmeldungen im Spiel */
     perfekt: 'PERFECT',
@@ -690,6 +718,45 @@ export function fuelle(vorlage, werte = {}) {
 
 /** Zahl in deutscher Schreibweise: 5000 -> "5.000". */
 export const zahl = (n) => Number(n ?? 0).toLocaleString('de-DE')
+
+/**
+ * Der Satz nach einem Probespiel: "MIT 12.430 PUNKTEN WAERST DU AKTUELL
+ * PLATZ 7."
+ *
+ * Rein gerechnet, damit er pruefbar ist. Hineingereicht wird der Stand des
+ * Abrufs und die oeffentliche Rangliste — nur die Punktwerte, absteigend.
+ * Die Liste ist immer die veroeffentlichte Liste, also hoechstens die ersten
+ * zwanzig Eintraege; mehr gibt der Server ohne Sitzung nicht heraus, und mehr
+ * wird hier auch nicht behauptet:
+ *
+ *   - liegt der Wert ueber mindestens einem Eintrag, ist der Platz exakt
+ *     abzaehlbar — er wird genannt;
+ *   - liegt er unter allen, ist der echte Platz unbekannt. Dann wird keine
+ *     Zahl erfunden, sondern gesagt, dass es noch nicht in die Top N reicht,
+ *     wobei N die Laenge der Liste ist, die wirklich da war;
+ *   - laedt der Abruf noch, schlug er fehl oder gibt es fuer dieses Spiel
+ *     keine veroeffentlichte Liste, sagt der Satz genau das.
+ *
+ * Gibt `null` zurueck, wenn es nichts zu sagen gibt.
+ */
+export function probeRangSatz(stand, liste, punkte) {
+  if (stand === 'laedt') return { art: 'laedt', text: TEXTE.g.practiceRangLaedt }
+  if (stand === 'fehler') return { art: 'fehler', text: TEXTE.g.practiceRangFehler }
+  if (stand === 'leer') return { art: 'leer', text: TEXTE.g.practiceRangLeer }
+  if (stand !== 'da' || !Array.isArray(liste) || !liste.length) return null
+  const wert = Number(punkte) || 0
+  const besser = liste.filter((p) => p > wert).length
+  if (besser >= liste.length) {
+    return {
+      art: 'knapp',
+      text: fuelle(TEXTE.g.practiceRangKnapp, { punkte: zahl(wert), top: liste.length }),
+    }
+  }
+  return {
+    art: 'platz',
+    text: fuelle(TEXTE.g.practiceRang, { punkte: zahl(wert), platz: besser + 1 }),
+  }
+}
 
 /** Die drei Stufen des Fortschrittsanzeigers in Zustand B. */
 export const SCHRITTE = ['Rätsel lösen', 'Code knacken', 'Deckel aktivieren']

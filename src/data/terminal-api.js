@@ -196,21 +196,25 @@ export function probeVerlassen() {
 /* ------------------------------------------------------------------ */
 
 /**
- * Lief die Sequenz in diesem Browser schon?
+ * Lief die Sequenz in dieser Sitzung schon?
  *
- * Seit 2.3 dauerhaft: der Ersteinstieg ist fuer den ersten Scan gedacht, nicht
- * fuer jedes Neuladen. Der Zettel steht deshalb in localStorage (ueber
- * merkeSchreiben — im Testmodus also unter dem Testpraefix und damit mit dem
- * Labor zuruecksetzbar) und zusaetzlich wie bisher im Tab.
+ * Eine Sitzung ist ein Tab, solange er offen ist. Der Ersteinstieg gehoert
+ * damit zum Besuch und nicht zum Geraet: wer die Seite neu laedt, sieht sie
+ * nicht noch einmal; wer spaeter wiederkommt, schon. Der Zettel steht deshalb
+ * nur in sessionStorage.
+ *
+ * Bis 2.3 lag zusaetzlich einer in localStorage. Der wird hier bewusst nicht
+ * mehr gelesen — sonst haette ein einziger frueherer Besuch die Sequenz fuer
+ * immer abgeschaltet. Geschrieben wird er auch nicht mehr; ein alter Eintrag
+ * schadet nicht, weil ihn niemand mehr ansieht.
  */
 export function introGesehen() {
-  return Boolean(sitzungLesen(SPEICHER_INTRO) || merkeLesen(SPEICHER_INTRO))
+  return Boolean(sitzungLesen(SPEICHER_INTRO))
 }
 
-/** Merken, dass sie gelaufen ist. */
+/** Merken, dass sie in dieser Sitzung gelaufen ist. */
 export function introMerken() {
   sitzungSchreiben(SPEICHER_INTRO, '1')
-  merkeSchreiben(SPEICHER_INTRO, '1')
 }
 
 /**

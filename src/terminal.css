@@ -908,7 +908,7 @@
    ihre eigene Verzoegerung. Die Zeiten stehen als Drehbuch in Terminal.jsx.
    Bewegt werden fast nur `transform` und `opacity` — beides geht ohne neues
    Layout durch, und nur so laeuft das auf einem Telefon rund.
-   Die Szenen dauern 3,4 s und 1,3 s; laenger hiesse warten. */
+   Die Szenen dauern 4,9 s und 1,3 s; laenger hiesse warten. */
 .trm-buehne {
   /* Die Buehne haengt als Geschwister neben .trm im Baum und nicht darin —
      sonst laege sie unter den beiden fixen Grundschichten der Seite. Damit
@@ -958,6 +958,58 @@
   }
 }
 
+/* 600–2000 ms: die goldenen Adern. Zwei sehr schmale Lichtbaender laufen von
+   unten nach oben durch die Buehne und nehmen das Adernmuster der Truhe auf,
+   nur ueber die ganze Hoehe. Sie laufen leicht versetzt los — gleichzeitig
+   saehe es nach zwei Balken aus, versetzt nach einem Strom.
+
+   Bewegt werden nur `transform` und `opacity`. Ein Element, das seine Hoehe
+   animiert, zwingt den Browser in jedem Bild zu neuem Layout; das faellt auf
+   einem Telefon sofort auf. */
+.trm-buehne__adern {
+  position: absolute;
+  left: 34%;
+  bottom: 0;
+  width: 2px;
+  height: 78%;
+  transform-origin: 50% 100%;
+  background: linear-gradient(
+    0deg,
+    rgba(232, 201, 120, 0) 0%,
+    rgba(232, 201, 120, 0.85) 38%,
+    rgba(255, 244, 214, 0.95) 62%,
+    rgba(232, 201, 120, 0) 100%
+  );
+  filter: drop-shadow(0 0 10px rgba(232, 201, 120, 0.7));
+  opacity: 0;
+  animation: trm-buehne-adern 1400ms ease-out 600ms both;
+}
+
+.trm-buehne__adern--zwei {
+  left: auto;
+  right: 33%;
+  height: 64%;
+  animation-duration: 1250ms;
+  animation-delay: 780ms;
+}
+
+@keyframes trm-buehne-adern {
+  0% {
+    transform: translateY(40%) scaleY(0.2);
+    opacity: 0;
+  }
+  35% {
+    opacity: 0.9;
+  }
+  75% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(-46%) scaleY(1);
+    opacity: 0;
+  }
+}
+
 /* 900–2300 ms: Rauch von unten — derselbe Gedanke wie unter der Truhe, nur
    kraeftiger und ueber die ganze Breite. Er setzt gleichzeitig mit dem Rauch
    an der Truhe ein, damit das eine Bewegung ist und nicht zwei. */
@@ -986,6 +1038,56 @@
   to {
     transform: translate3d(0, -14%, 0) scale(1.18);
     opacity: 0.55;
+  }
+}
+
+/* 1400–1900 ms: das Schloss vibriert. Ein goldener Ring ueber der Mitte, der
+   fuenfmal kurz zuckt und dann aufgeht — genau in dem Moment, in dem der
+   Blitz einsetzt. Die Truhe darunter bleibt, wo sie ist: hier vibriert eine
+   Form auf der Buehne, nicht das Motiv. */
+.trm-buehne__schloss {
+  --trm-schloss: clamp(26px, 7vw, 38px);
+  position: absolute;
+  left: calc(50% - var(--trm-schloss) / 2);
+  top: 54%;
+  width: var(--trm-schloss);
+  height: var(--trm-schloss);
+  border: 2px solid rgba(232, 201, 120, 0.8);
+  border-radius: 50%;
+  box-shadow:
+    0 0 14px rgba(232, 201, 120, 0.55),
+    inset 0 0 10px rgba(232, 201, 120, 0.35);
+  opacity: 0;
+  animation: trm-buehne-schloss 500ms linear 1400ms both;
+}
+
+@keyframes trm-buehne-schloss {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.9;
+  }
+  20% {
+    transform: translateX(-2px) rotate(-2deg);
+  }
+  35% {
+    transform: translateX(2px) rotate(2deg);
+  }
+  50% {
+    transform: translateX(-2px) rotate(-2deg);
+  }
+  65% {
+    transform: translateX(2px) rotate(2deg);
+  }
+  80% {
+    transform: translateX(-1px);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.35);
+    opacity: 0;
   }
 }
 
@@ -1194,6 +1296,31 @@
   }
 }
 
+/* 3900–4900 ms: DAS SCHLOSS IST OFFEN. Nach einer halben Sekunde Stille,
+   unter dem zweiten Satz und kleiner als er — der Nachsatz, nicht der
+   Hauptsatz. Der zweite bleibt dabei stehen, damit der Wechsel in den
+   Zustand Z weiter wie Stehenbleiben aussieht. */
+.trm-buehne__wort--drei {
+  top: calc(46% + clamp(42px, 13vw, 70px));
+  font-size: clamp(15px, 4.6vw, 24px);
+  letter-spacing: 0.26em;
+  animation: trm-wort-drei 1000ms ease 3900ms both;
+}
+
+@keyframes trm-wort-drei {
+  from {
+    opacity: 0;
+    letter-spacing: 0.4em;
+  }
+  60% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    letter-spacing: 0.26em;
+  }
+}
+
 /* ---- Der Weg durch das Schluesselloch ------------------------------ */
 
 /* Eine Kamera, die auf das Schloss zufaehrt und hindurchgeht. Kein 3D, keine
@@ -1332,8 +1459,11 @@
    Sequenzen dann ohnehin auf 900 und 320 ms. */
 @media (prefers-reduced-motion: reduce) {
   .trm-buehne__rauch,
+  .trm-buehne__adern,
+  .trm-buehne__schloss,
   .trm-buehne__strich,
   .trm-buehne__wort--zwei,
+  .trm-buehne__wort--drei,
   .trm-buehne__weich,
   .trm-buehne__strahl,
   .trm-buehne__maske {
@@ -1729,6 +1859,25 @@
   flex: none;
   color: var(--trm-gold);
   opacity: 0.7;
+}
+
+/* Auf einem 390 px breiten Schirm passen die drei Schritte nicht in eine
+   Zeile: die Woerter stehen auf `nowrap`, also schob `space-between` den
+   letzten Schritt ueber den rechten Rand hinaus — „DECKEL AKTIVIER" war
+   abgeschnitten. Statt die Schrift kleiner zu machen, bis es gerade so
+   passt, darf der Streifen hier umbrechen und mittig stehen. Auf breiteren
+   Schirmen bleibt die Zeile, wie sie war. */
+@media (max-width: 459px) {
+  .trm-ablauf {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px 12px;
+  }
+
+  .trm-ablauf__schritt:last-child .trm-ablauf__wort {
+    /* Der letzte Schritt steht nach dem Umbruch allein in seiner Zeile. */
+    text-align: center;
+  }
 }
 
 /* ------------------------------------------------------------------ */
@@ -3098,6 +3247,43 @@ textarea.trm-eingabe {
   letter-spacing: 0.1em;
   color: var(--trm-gold-hell);
   font-variant-numeric: tabular-nums;
+}
+
+/* Der Vergleich nach dem Probespiel: „MIT 12.430 PUNKTEN WAERST DU AKTUELL
+   PLATZ 7." Der Satz ist die lauteste Zeile im Ergebnis eines Probelaufs —
+   er ist der Grund, warum jemand weiterliest. Die Varianten darunter sind
+   leiser, weil sie keinen Platz nennen koennen: `knapp` heisst, der Wert
+   reicht noch nicht in die veroeffentlichte Liste, `leer`/`laedt`/`fehler`
+   heissen, dass gerade nichts zu vergleichen ist. Erfunden wird nie etwas. */
+.trm-spiel__probe-rang {
+  margin: 0;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(15px, 4.4vw, 19px);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--trm-gold-hell);
+  text-shadow: 0 0 16px rgba(232, 201, 120, 0.4);
+  font-variant-numeric: tabular-nums;
+  animation: trm-auftauchen 0.45s ease both;
+}
+
+.trm-spiel__probe-rang[data-art='knapp'] {
+  color: var(--trm-creme);
+  text-shadow: none;
+}
+
+.trm-spiel__probe-rang[data-art='leer'],
+.trm-spiel__probe-rang[data-art='laedt'],
+.trm-spiel__probe-rang[data-art='fehler'] {
+  font-family: inherit;
+  font-size: clamp(12px, 3.4vw, 13px);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: none;
+  color: var(--trm-creme-leise);
+  text-shadow: none;
 }
 
 /* Der Abstand nach oben. Leiser als der eigene Platz — es ist eine
@@ -6329,6 +6515,88 @@ textarea.trm-eingabe {
   line-height: 1.2;
   text-transform: uppercase;
   overflow-wrap: anywhere;
+}
+
+/* ---- Probespiel auf der Landing Page -------------------------------- */
+
+/* Der Abschnitt, in dem jemand ohne Konto eine Runde spielt. Er traegt
+   bewusst keinen eigenen Rahmen: die Spielkarte darin bringt ihren eigenen
+   mit, und zwei Rahmen ineinander sahen nach Formular aus statt nach
+   Spielzeug. Der Abstand nach oben ist etwas groesser als bei einer Karte,
+   damit der Block als eigene Station liest.
+
+   Der Name ist `trm-probespiel`, nicht `trm-probe`: `trm-probe` gehoert seit
+   je der Testmodus-Leiste (TerminalLabor.jsx), deren Regeln weiter unten in
+   dieser Datei stehen. Unter dem kuerzeren Namen erbte dieser Abschnitt
+   `display: flex` von dort und legte Titel, Spiel und Hinweis nebeneinander
+   statt untereinander — 769 px breit auf einem 390 px breiten Schirm. */
+.trm-probespiel {
+  margin: clamp(26px, 7vw, 40px) 0 0;
+}
+
+.trm-probespiel__titel {
+  margin: 0;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(19px, 5.6vw, 26px);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: 0.04em;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--trm-gold-hell);
+}
+
+.trm-probespiel__sub {
+  margin: 6px 0 0;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(14px, 4vw, 17px);
+  line-height: 1.35;
+  text-align: center;
+  color: var(--trm-creme-weich);
+}
+
+/* Der ehrliche Nachsatz: kein Score, keine Teilnahme, kein Los. Er steht
+   unter dem Spiel, nicht darueber — gelesen wird er spaetestens dann, wenn
+   jemand wissen will, ob die Runde gezaehlt hat. Leise, aber immer da. */
+.trm-probespiel__notiz {
+  margin: clamp(10px, 3vw, 14px) 0 0;
+  font-size: clamp(11px, 3.2vw, 12px);
+  line-height: 1.45;
+  text-align: center;
+  color: var(--trm-creme-leise);
+}
+
+/* ---- Die zwei Wege hinein ------------------------------------------- */
+
+/* Deckelnummer und Einladung stehen nebeneinander, weil sie gleichwertig
+   sind. Auf dem Telefon untereinander — bei 390 px Breite waeren zwei
+   Spalten nur noch zwei schmale Streifen. */
+.trm-wege {
+  display: grid;
+  gap: clamp(10px, 3vw, 14px);
+  margin: clamp(16px, 4.4vw, 26px) 0 0;
+}
+
+@media (min-width: 620px) {
+  .trm-wege {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.trm-weg {
+  margin: 0;
+}
+
+.trm-weg .trm-karte__titel {
+  margin: 8px 0 0;
+  font-size: clamp(16px, 4.6vw, 20px);
+}
+
+.trm-weg__text {
+  margin: 8px 0 0;
+  font-size: clamp(12px, 3.6vw, 14px);
+  line-height: 1.5;
+  color: var(--trm-creme-weich);
 }
 
 /* ---- Oeffentliches Leaderboard -------------------------------------- */

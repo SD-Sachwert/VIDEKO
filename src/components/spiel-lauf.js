@@ -105,8 +105,16 @@ export function startWunschNehmen(game) {
  * Ohne aktivierten Deckel ist genau ein Game spielbar. Die Seite legt es in
  * `PracticeKontext.Provider` — das Spiel selbst bleibt unveraendert. Innerhalb
  * dieses Kontexts meldet der Lauf nichts beim Server an und gibt nichts ab:
- * kein Laufticket, kein Score, kein Ranking, kein Tresorkoenig. Der Wert des
- * Kontexts traegt `onCta` fuer den Weg zur Aktivierung.
+ * kein Laufticket, kein Score, kein Ranking, kein Tresorkoenig.
+ *
+ * Der Wert des Kontexts traegt `onCta` fuer den Weg zur Aktivierung und darf
+ * vier weitere Felder mitbringen, alle freiwillig:
+ *   `frageText`, `ctaText` — eigener Wortlaut statt der Standardtexte,
+ *   `onEnde()`            — wird einmal gerufen, wenn eine Probrunde vorbei
+ *                           ist; die Seite holt dann die oeffentliche
+ *                           Rangliste (nur lesend),
+ *   `rangSatz(punkte)`    — gibt `{ art, text }` fuer den Vergleichssatz
+ *                           zurueck oder null.
  */
 export const PracticeKontext = createContext(null)
 
