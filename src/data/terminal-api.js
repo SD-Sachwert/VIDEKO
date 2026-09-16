@@ -298,12 +298,12 @@ export async function wiederEinloesen(token, signal) {
 /* ------------------------------------------------------------------ */
 
 /**
- * Die eigenen Einladungsslots („DEIN TEAM").
+ * Die eigenen Einladungsslots („DEINE 3 EINLADUNGEN").
  *
  * Kommt im `zustand` bereits mit; dieser Ruf ist fuer die Faelle, in denen
- * nur das Team neu geladen werden soll. Der Server entscheidet, ob es
- * ueberhaupt Slots gibt — ein Gast bekommt hier 403, egal was der Browser
- * schickt.
+ * nur das Team neu geladen werden soll. Jeder registrierte Account hat eigene
+ * Slots — ob ueber einen Deckel oder ueber eine Einladung hereingekommen,
+ * macht keinen Unterschied. Entschieden wird das auf dem Server, nicht hier.
  */
 export async function teamHolen(sitzung, signal) {
   return terminalRuf({ aktion: 'einladungen', sitzung }, signal)
@@ -328,15 +328,36 @@ export async function einladungPruefen(token, signal) {
 }
 
 /**
- * Die Einladung einloesen und als Gast mitspielen.
+ * Die Einladung einloesen und mitspielen.
  *
- * Die Antwort enthaelt denselben Sitzungsbeleg wie eine Aktivierung — aber
- * keinen Deckel. Ein Gast spielt alle Hauptgames, seine Punkte werden
- * gespeichert, und er steht in keiner Verlosung und in keinem offiziellen
- * Gesamtranking. Das entscheidet der Server, nicht diese Datei.
+ * Die Antwort enthaelt denselben Sitzungsbeleg wie eine Aktivierung — nur
+ * ohne Deckel. Dieser Account ist ein vollwertiger Spieler: alle Hauptgames,
+ * gespeicherte Punkte, Platz in allen Ranglisten und im Gesamtranking, drei
+ * eigene Einladungen.
+ *
+ * Zwei Dinge, die auseinandergehen:
+ *   `folgt` — die Bestaetigung „Ich folge @videko.kuechen". Sie ist Pflicht;
+ *             ohne sie zaehlt kein Score. Der Server weist die Anmeldung ohne
+ *             sie ab.
+ *   Deckel  — nur ein echter physischer Deckel bringt ein Los in die grosse
+ *             Ziehung. Eine Einladung tut das nicht.
+ *
+ * `leaderboard` ist die freiwillige Einwilligung, mit dem Instagram-Namen
+ * oeffentlich in der Bestenliste zu stehen.
  */
-export async function gastAnlegen({ token, instagram, email, bedingungen }, signal) {
-  return terminalRuf({ aktion: 'gast-anlegen', token, instagram, email, bedingungen }, signal)
+export async function gastAnlegen(
+  { token, instagram, email, folgt, leaderboard, bedingungen },
+  signal,
+) {
+  return terminalRuf({
+    aktion: 'gast-anlegen',
+    token,
+    instagram,
+    email,
+    folgt: folgt === true,
+    leaderboard: leaderboard === true,
+    bedingungen,
+  }, signal)
 }
 
 /* ------------------------------------------------------------------ */

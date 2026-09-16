@@ -28,31 +28,57 @@ import {
  * Hier kommt jemand an, der von der Aktion vermutlich noch nie gehoert hat,
  * und zwar fast immer auf dem Handy, weil der Link aus WhatsApp oder einer
  * Story kommt. Die Seite hat deshalb genau eine Aufgabe: ehrlich sagen, was
- * die Einladung ist und was sie nicht ist — und dann den Weg hinein.
+ * die Einladung ist — und dann den Weg hinein.
  *
  * WAS HIER BEWUSST GANZ OBEN STEHT
  * --------------------------------
- * „Du spielst als Gast." Eine Einladung bringt kein Los. Ein Los bringt
- * ausschliesslich ein eigener der 5.000 nummerierten Deckel. Dieser Satz
- * gehoert nicht ins Kleingedruckte, sondern in die Mitte des Bildschirms,
- * bevor irgendjemand seine Daten eintraegt — sonst waere die Einladung ein
- * Versprechen, das wir nicht halten.
+ * „Du bist eingeladen." Wer hier hereinkommt, ist ein vollwertiger Spieler:
+ * alle Games, gewertete Scores, alle Ranglisten, das Gesamtranking, die
+ * Preise in den Games und drei eigene Einladungen. Nichts davon haengt an
+ * einem Deckel.
+ *
+ * Getrennt davon steht genau eine Sache, und die steht ebenfalls oben und
+ * nicht im Kleingedruckten: die grosse Verlosung der 5.000 nummerierten
+ * Deckel. Dort kommt nur hinein, wer einen echten physischen Deckel hat.
+ * Eine Einladung erzeugt kein Los — das zu behaupten waere ein Versprechen,
+ * das wir nicht halten koennten.
+ *
+ * INSTAGRAM IST PFLICHT, UND ZWAR IN BEIDEN WEGEN
+ * -----------------------------------------------
+ * Ein Instagram-Name und die Bestaetigung „Ich folge @videko.kuechen" sind
+ * Bedingung fuer gewertete Scores — hier genauso wie bei der Aktivierung
+ * eines Deckels. Der Haken ist eine Selbstauskunft; automatisch verifizieren
+ * laesst sich ein Follow nicht. Vor einer Preisausgabe schaut jemand von
+ * Hand nach. Die Einwilligung fuer die oeffentliche Bestenliste daneben ist
+ * ausdruecklich freiwillig und aendert an der Teilnahme nichts.
  *
  * WAS HIER NICHT ENTSCHIEDEN WIRD
  * -------------------------------
  * Ob der Link gueltig ist, ob er schon eingeloest wurde, wer eingeladen hat
- * und ob daraus ein Gast werden darf — das entscheidet ausschliesslich der
- * Server. Diese Seite zeigt nur an, was zurueckkommt. Der Token steht in der
- * Adresse und geht an /api/terminal; im Bundle steht nichts, womit sich
+ * und ob daraus ein Account werden darf — das entscheidet ausschliesslich
+ * der Server. Diese Seite zeigt nur an, was zurueckkommt. Der Token steht in
+ * der Adresse und geht an /api/terminal; im Bundle steht nichts, womit sich
  * einer erraten liesse.
  *
- * Ein Gast bekommt am Ende denselben Sitzungsbeleg wie jeder andere und
- * landet auf /terminal. Was ihn von einem Deckelbesitzer unterscheidet,
- * steht in der Datenbank (`teilnahme_status`), nicht in diesem Beleg.
+ * Am Ende steht derselbe Sitzungsbeleg wie nach einer Aktivierung, und der
+ * Weg fuehrt auf /terminal. Ob jemand zusaetzlich in der Deckel-Ziehung
+ * steht, entscheidet allein sein Deckel und steht in der Datenbank, nicht in
+ * diesem Beleg.
  */
 
 const GESAMT = zahl(TERMINAL_KAMPAGNE.deckelGesamt)
-const LEER = { instagram: '', email: '', bedingungen: false }
+const HANDLE = TERMINAL_KAMPAGNE.instagramHandle
+
+/* Gruende, bei denen der ganze Bildschirm nicht mehr gilt. Alles andere ist
+   ein Feldfehler und bleibt im Formular stehen. */
+const SEITE_ENDE = ['link', 'widerrufen', 'verbraucht', 'abgelaufen']
+const LEER = {
+  instagram: '',
+  email: '',
+  folgt: false,
+  leaderboard: false,
+  bedingungen: false,
+}
 
 export default function TerminalEinladung() {
   const { token = '' } = useParams()
@@ -111,26 +137,43 @@ export default function TerminalEinladung() {
     const fehler = {}
     if (!instagram) fehler.instagram = T.fehler.instagram
     if (!EMAIL_MUSTER.test(email)) fehler.email = T.fehler.email
+    /* Ohne diesen Haken werden Scores nicht gewertet. Der Server lehnt die
+       Anmeldung ohne ihn ab — hier steht er nur, damit niemand erst nach dem
+       Absenden erfaehrt, woran es lag. */
+    if (!formular.folgt) fehler.folgt = fuelle(T.fehler.folgt, { handle: HANDLE })
     if (!formular.bedingungen) fehler.bedingungen = T.fehler.bedingungen
     setFeldFehler(fehler)
     if (Object.keys(fehler).length > 0) return
 
     setSendet(true)
-    const antwort = await gastAnlegen({ token, instagram, email, bedingungen: true })
+    const antwort = await gastAnlegen({
+      token,
+      instagram,
+      email,
+      folgt: true,
+      leaderboard: formular.leaderboard,
+      bedingungen: true,
+    })
     setSendet(false)
 
     if (antwort.ok && antwort.sitzung) {
       /* Derselbe Speicherplatz wie nach einer Aktivierung: von hier an ist
-         der Gast ganz normal angemeldet. Kein Zugangsbeleg — den Raetselcode
-         hat er nie gesehen und braucht ihn auch nicht. */
+         der Spieler ganz normal angemeldet. Kein Zugangsbeleg — den
+         Raetselcode hat er nie gesehen und braucht ihn auch nicht. */
       merkeSchreiben(SPEICHER_SITZUNG, antwort.sitzung)
       merkeSchreiben(SPEICHER_TRESOR, '1')
       navigate('/terminal')
       return
     }
 
+    /* Der Server sagt mit, welche Felder er beanstandet. Sie direkt am Feld
+       zu zeigen erspart das Suchen — die Sammelmeldung bleibt daneben. */
     if (antwort.grund === 'felder') {
-      setFeldFehler({ allgemein: T.fehler.felder })
+      const markiert = { allgemein: T.fehler.felder }
+      for (const feld of Array.isArray(antwort.felder) ? antwort.felder : []) {
+        if (T.fehler[feld]) markiert[feld] = fuelle(T.fehler[feld], { handle: HANDLE })
+      }
+      setFeldFehler(markiert)
       return
     }
     if (antwort.status === 429 || antwort.grund === 'bremse') {
@@ -138,8 +181,10 @@ export default function TerminalEinladung() {
       return
     }
     /* Der Link ist zwischen Aufschlagen und Absenden verbraucht oder
-       zurueckgezogen worden: dann gilt der ganze Bildschirm nicht mehr. */
-    if (T.fehler[antwort.grund] && antwort.grund !== 'instagram' && antwort.grund !== 'email') {
+       zurueckgezogen worden: dann gilt der ganze Bildschirm nicht mehr.
+       Ausdrueckliche Liste statt „steht in T.fehler": Feldfehler wie `folgt`
+       duerfen die Seite nicht abraeumen, sie gehoeren ans Feld. */
+    if (SEITE_ENDE.includes(antwort.grund)) {
       setStand(antwort.grund)
       return
     }
@@ -225,7 +270,8 @@ export default function TerminalEinladung() {
 
         {/* Der wichtigste Bildschirm der Seite. Er steht ueber dem Formular
             und nicht darunter: wer seine Daten eintraegt, hat vorher gelesen,
-            dass eine Einladung kein Los ist. */}
+            was er bekommt — und dass die Deckel-Verlosung davon getrennt
+            laeuft. */}
         <section className="trm-karte trm-klartext" aria-labelledby="trm-klartext-titel">
           <div className="trm-karte__kopf">
             <Ikon name="schloss" size={22} className="trm-ikon" />
@@ -337,6 +383,51 @@ export default function TerminalEinladung() {
                 </p>
               ) : null}
             </div>
+
+            {/* Pflichthaken. Wortgleich mit der Deckel-Aktivierung, damit
+                beide Wege dieselbe Bedingung stellen — und derselbe Satz
+                steht in beiden Formularen. */}
+            <label className="trm-haken" htmlFor="trm-gast-folgt">
+              <input
+                id="trm-gast-folgt"
+                type="checkbox"
+                checked={formular.folgt}
+                onChange={(e) => aendern('folgt', e.target.checked)}
+                aria-describedby={
+                  ['trm-gast-folgt-hilfe', feldFehler.folgt ? 'trm-gast-folgt-fehler' : '']
+                    .filter(Boolean)
+                    .join(' ')
+                }
+                aria-invalid={feldFehler.folgt ? 'true' : undefined}
+                required
+              />
+              <span>{fuelle(T.felder.haken, { handle: HANDLE })}</span>
+            </label>
+            <p className="trm-feld__hilfe" id="trm-gast-folgt-hilfe">
+              {T.felder.hakenHilfe}
+            </p>
+            {feldFehler.folgt ? (
+              <p className="trm-feld__fehler" id="trm-gast-folgt-fehler" role="alert">
+                {feldFehler.folgt}
+              </p>
+            ) : null}
+
+            {/* Freiwillig und ausdruecklich getrennt vom Pflichthaken: ohne
+                sie spielt man genauso mit, der Name steht dann nur auf
+                keiner oeffentlichen Liste. */}
+            <label className="trm-haken" htmlFor="trm-gast-leaderboard">
+              <input
+                id="trm-gast-leaderboard"
+                type="checkbox"
+                checked={formular.leaderboard}
+                onChange={(e) => aendern('leaderboard', e.target.checked)}
+                aria-describedby="trm-gast-leaderboard-hilfe"
+              />
+              <span>{T.felder.leaderboard}</span>
+            </label>
+            <p className="trm-feld__hilfe" id="trm-gast-leaderboard-hilfe">
+              {T.felder.leaderboardHilfe}
+            </p>
 
             <label className="trm-haken" htmlFor="trm-gast-bedingungen">
               <input

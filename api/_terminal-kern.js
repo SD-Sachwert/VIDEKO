@@ -63,24 +63,55 @@ export const KAMPAGNE = TERMINAL_KAMPAGNE.id
 
 /**
  * Der Teilnahmestatus. Steht als Spalte `teilnahme_status` an jeder
- * Teilnehmerzeile und entscheidet ueber Los und Ranking:
+ * Teilnehmerzeile und beantwortet ab jetzt genau EINE Frage: hat dieser
+ * Mensch einen echten physischen Deckel aktiviert?
  *
- *   'offiziell' — ein echter Deckel wurde aktiviert. Ein Los, ein Platz im
- *                 Gesamtranking, eigene Einladungsslots.
- *   'gast'      — ueber eine Einladung angelegt. Spielt alle Hauptgames,
- *                 Scores werden gespeichert, aber: kein Los, kein Eintrag
- *                 im offiziellen Gesamtranking, keine eigenen Einladungen.
+ *   'offiziell' — ja. Ein Los in der grossen Deckelziehung.
+ *   'gast'      — nein. Kein Los.
  *
- * Ein Gast wird ausschliesslich dadurch offiziell, dass er selbst einen
- * Deckel aktiviert. Die Datenbank erzwingt das zusaetzlich ueber
- * `videko_terminal_offiziell_deckel_chk`: offiziell ohne Deckelnummer
- * kann gar nicht erst gespeichert werden.
+ * Mehr steht da nicht drin. Wer spielen, ranken und einladen darf, haengt
+ * NICHT daran — siehe rankingBerechtigt() weiter unten.
+ *
+ * Der Status wird ausschliesslich dadurch 'offiziell', dass die Person selbst
+ * einen echten Deckel aktiviert. Die Datenbank erzwingt das zusaetzlich ueber
+ * `videko_terminal_offiziell_deckel_chk`: offiziell ohne Deckelnummer kann
+ * gar nicht erst gespeichert werden.
  */
 export const STATUS_OFFIZIELL = 'offiziell'
 export const STATUS_GAST = 'gast'
 
-/** Filterstueck fuer jede Abfrage, die nur offizielle Teilnehmer meint. */
+/**
+ * Filterstueck fuer jede Abfrage, die nur Ziehungsberechtigte meint.
+ *
+ * NUR fuer die Ziehung und ihre Zaehler. In einer Rangliste hat dieser Filter
+ * nichts mehr verloren — ein eingeladener Mensch spielt in denselben Listen
+ * wie jeder andere.
+ */
 export const NUR_OFFIZIELLE = `&teilnahme_status=eq.${STATUS_OFFIZIELL}`
+
+/**
+ * Die zweite, davon voellig unabhaengige Berechtigung: darf dieser Lauf
+ * gewertet werden?
+ *
+ * Bedingung ist Instagram, nicht der Deckel. Wer einen Handle hinterlegt und
+ * bestaetigt hat, dass er @videko.kuechen folgt, spielt alle Hauptgames, steht
+ * in allen Ranglisten, kann Platz 1 bis 3 gewinnen und im Gesamtranking ganz
+ * oben stehen — unabhaengig davon, ob er ueber einen Deckel oder ueber eine
+ * Einladung hereingekommen ist.
+ *
+ * `folgt_bestaetigt_von_nutzer` ist und bleibt eine Selbstauskunft. Wir
+ * behaupten nirgends, den Follow automatisch geprueft zu haben; vor einer
+ * Preisausgabe schaut ein Mensch nach (`folgt_pruefstatus`).
+ */
+export const rankingBerechtigt = (zeile) =>
+  Boolean(zeile) && zeile.folgt_bestaetigt_von_nutzer === true && Boolean(clean(zeile.instagram_handle, 40))
+
+/** Nur, wer einen echten Deckel aktiviert hat, ist in der Ziehung. */
+export const ziehungBerechtigt = (zeile) =>
+  Boolean(zeile) && zeile.deckel_nummer != null && zeile.teilnahme_status !== STATUS_GAST
+
+/** Filterstueck fuer jede Abfrage, die nur rankingberechtigte Menschen meint. */
+export const NUR_RANKING = '&folgt_bestaetigt_von_nutzer=is.true'
 
 /* ------------------------------------------------------------------ */
 /* Kleinkram                                                           */
@@ -308,8 +339,14 @@ export function einladungenSaeubern(roh) {
   return n
 }
 
-/** Das Game, das ohne aktivierten Deckel im Practice Mode spielbar ist. */
-export const PRACTICE_STANDARD = 'leitungsfinder'
+/**
+ * Das Game, das ohne Registrierung als Teaser spielbar ist.
+ *
+ * Kuechen-Merge: in zehn Sekunden verstanden, mit einem Daumen zu spielen und
+ * ohne Erklaerung. Der Probelauf wird nicht gewertet und steht in keiner
+ * Liste — danach steht die Frage im Raum, ob man auf die Rangliste will.
+ */
+export const PRACTICE_STANDARD = 'kuechen_merge'
 
 export function practiceSaeubern(roh) {
   const key = clean(roh, 32)
@@ -699,33 +736,38 @@ export async function gemerkt(schluessel, hole) {
   return wert
 }
 
-/* --- Gaeste aus den Wertungen heraushalten ------------------------- */
+/* --- Ungewertete Laeufe aus den Wertungen heraushalten -------------- */
 
 /**
- * Die ids aller Gastspieler dieser Kampagne.
+ * Die ids aller Menschen dieser Kampagne, deren Laeufe NICHT gewertet werden.
+ *
+ * Das sind ausschliesslich die, die keinen Instagram-Follow bestaetigt haben.
+ * Frueher stand hier die Gastliste — dieser Filter ist ersatzlos gefallen:
+ * ob jemand einen Deckel hat, entscheidet ueber die Ziehung und sonst nichts.
  *
  * Es gibt bewusst keinen Fremdschluessel zwischen Laeufen und Teilnehmern,
- * deshalb laesst sich der Status nicht in der Score-Abfrage mitfiltern. Die
- * Gastliste wird stattdessen einmal geholt und die Laeufe werden danach
- * durchgesiebt. Gaeste sind naturgemaess die kleinere Gruppe.
+ * deshalb laesst sich die Bedingung nicht in der Score-Abfrage mitfiltern.
+ * Die Liste wird stattdessen einmal geholt und die Laeufe werden danach
+ * durchgesiebt. Sie ist naturgemaess die kleinere Gruppe: beide
+ * Registrierungswege verlangen die Follow-Bestaetigung.
  *
  * Gibt `null` zurueck, wenn die Liste nicht gelesen werden konnte. Wer damit
- * eine Wertung baut, aus der Gaeste herausbleiben MUESSEN, darf dann keine
- * Wertung ausliefern — siehe _terminal-gesamtranking.js.
+ * eine Wertung baut, aus der diese Laeufe herausbleiben MUESSEN, darf dann
+ * keine Wertung ausliefern — siehe _terminal-gesamtranking.js.
  */
-const GAST_SEITE = 1000
-const GAST_MAX_SEITEN = 50
-const GAST_SCHLUESSEL = 'gast:ids'
+const SPERR_SEITE = 1000
+const SPERR_MAX_SEITEN = 50
+const SPERR_SCHLUESSEL = 'ranking:gesperrt'
 
-export async function gastIdsLesen() {
+export async function ohneRankingIdsLesen() {
   const menge = new Set()
-  for (let seite = 0; seite < GAST_MAX_SEITEN; seite += 1) {
+  for (let seite = 0; seite < SPERR_MAX_SEITEN; seite += 1) {
     const antwort = await fetch(
       restUrl(
         `${TABELLE_TEILNEHMER}?select=id`
         + `&kampagne=eq.${encodeURIComponent(KAMPAGNE)}`
-        + `&teilnahme_status=eq.${STATUS_GAST}`
-        + `&order=id.asc&limit=${GAST_SEITE}&offset=${seite * GAST_SEITE}`,
+        + '&folgt_bestaetigt_von_nutzer=is.false'
+        + `&order=id.asc&limit=${SPERR_SEITE}&offset=${seite * SPERR_SEITE}`,
       ),
       { headers: kopfzeilen() },
     )
@@ -733,24 +775,27 @@ export async function gastIdsLesen() {
     const zeilen = await antwort.json().catch(() => null)
     if (!Array.isArray(zeilen)) return null
     for (const z of zeilen) if (z.id) menge.add(z.id)
-    if (zeilen.length < GAST_SEITE) break
+    if (zeilen.length < SPERR_SEITE) break
   }
   return menge
 }
 
 /** Dasselbe, kurz gemerkt. Ein Fehlschlag wird ausdruecklich nicht gemerkt. */
-export async function gastIds() {
-  const wert = await gemerkt(GAST_SCHLUESSEL, gastIdsLesen)
-  if (wert == null) rangSpeicher.delete(GAST_SCHLUESSEL)
+export async function ohneRankingIds() {
+  const wert = await gemerkt(SPERR_SCHLUESSEL, ohneRankingIdsLesen)
+  if (wert == null) rangSpeicher.delete(SPERR_SCHLUESSEL)
   return wert
 }
 
-/** Laeufe von Gaesten entfernen. Ohne Gastliste bleibt die Liste, wie sie ist. */
-export const ohneGaeste = (zeilen, gaeste) =>
-  gaeste && gaeste.size ? zeilen.filter((z) => !gaeste.has(z.teilnehmer_id)) : zeilen
+/**
+ * Ungewertete Laeufe entfernen. Ohne Sperrliste bleibt die Liste, wie sie
+ * ist — ein Lesefehler darf niemanden aus einer Rangliste werfen.
+ */
+export const nurGewertete = (zeilen, gesperrt) =>
+  gesperrt && gesperrt.size ? zeilen.filter((z) => !gesperrt.has(z.teilnehmer_id)) : zeilen
 
 async function laeufeLesen(game) {
-  const [zeilen, gaeste] = await Promise.all([
+  const [zeilen, gesperrt] = await Promise.all([
     lesen(
       `${TABELLE_SCORES}?select=teilnehmer_id,score,created_at`
       + `&kampagne=eq.${encodeURIComponent(KAMPAGNE)}`
@@ -758,9 +803,9 @@ async function laeufeLesen(game) {
       + '&status=eq.gueltig'
       + `&order=score.desc,created_at.asc&limit=${RANG_ROHGRENZE}`,
     ),
-    gastIds(),
+    ohneRankingIds(),
   ])
-  return ohneGaeste(zeilen, gaeste)
+  return nurGewertete(zeilen, gesperrt)
 }
 
 /**
@@ -793,11 +838,18 @@ export const nachRang = (a, b) => (b.punkte - a.punkte) || String(a.wann).locale
  * Ausgewaehlt werden nur id und instagram_handle. Deckelnummer und E-Mail
  * verlassen die Datenbank fuer diesen Zweck nicht.
  *
- * Gaeste stehen hier grundsaetzlich nicht drin. Diese Funktion ist das Tor
- * zu jeder oeffentlichen Liste des Terminals — wer hier nicht durchkommt,
- * erscheint nirgends oeffentlich. Ein Gast sieht seine eigenen Bestwerte,
- * aber er taucht in keiner offiziellen Rangliste auf, weil das aussehen
- * wuerde, als sei er fuer die Hauptpreise qualifiziert. Ist er nicht.
+ * Diese Funktion ist das Tor zu jeder oeffentlichen Liste des Terminals — wer
+ * hier nicht durchkommt, erscheint nirgends oeffentlich. Zwei Bedingungen
+ * stehen davor, und der Deckel ist keine davon:
+ *
+ *   leaderboard_ok              — ausdrueckliche Zustimmung zur Liste.
+ *   folgt_bestaetigt_von_nutzer — Instagram ist die Eintrittskarte ins
+ *                                 Ranking, fuer alle gleich.
+ *
+ * Ein ueber eine Einladung registrierter Mensch steht damit in denselben
+ * Listen wie ein Deckelbesitzer und kann dort Platz 1 belegen. Was er ohne
+ * Deckel nicht bekommt, ist ein Los — das entscheidet die Ziehung, nicht
+ * diese Liste.
  */
 export async function namenLesen(ids) {
   const sauber = ids.filter((i) => UUID_MUSTER.test(String(i)))
@@ -808,7 +860,7 @@ export async function namenLesen(ids) {
       `${TABELLE_TEILNEHMER}?select=id,instagram_handle`
       + `&kampagne=eq.${encodeURIComponent(KAMPAGNE)}`
       + '&leaderboard_ok=is.true'
-      + NUR_OFFIZIELLE
+      + NUR_RANKING
       + `&id=in.(${teil.join(',')})`,
     )
     for (const z of zeilen) {
@@ -928,9 +980,9 @@ function tagesbeginnBerlin(jetzt = new Date()) {
 export async function bestesHeute(game) {
   return gemerkt(`h:${game}`, async () => {
     const ab = tagesbeginnBerlin().toISOString()
-    /* Mehr als eine Zeile, damit nach dem Aussieben der Gaeste noch der beste
-       offizielle Lauf des Tages uebrig bleibt. */
-    const [zeilen, gaeste] = await Promise.all([
+    /* Mehr als eine Zeile, damit nach dem Aussieben der ungewerteten Laeufe
+       noch der beste gewertete Lauf des Tages uebrig bleibt. */
+    const [zeilen, gesperrt] = await Promise.all([
       lesen(
         `${TABELLE_SCORES}?select=teilnehmer_id,score`
         + `&kampagne=eq.${encodeURIComponent(KAMPAGNE)}`
@@ -939,9 +991,9 @@ export async function bestesHeute(game) {
         + `&created_at=gte.${encodeURIComponent(ab)}`
         + '&order=score.desc,created_at.asc&limit=50',
       ),
-      gastIds(),
+      ohneRankingIds(),
     ])
-    const top = ohneGaeste(zeilen, gaeste)[0]
+    const top = nurGewertete(zeilen, gesperrt)[0]
     const punkte = Number(top?.score)
     if (!top || !Number.isFinite(punkte)) return null
     const namen = await namenLesen([top.teilnehmer_id])

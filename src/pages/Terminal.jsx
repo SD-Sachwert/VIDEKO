@@ -45,6 +45,7 @@ import {
   AKTIVIER_KARTEN,
   EMAIL_MUSTER,
   FELD_GRENZEN,
+  PRACTICE_STANDARD,
   SCHRITTE,
   TERMINAL_KAMPAGNE,
   SPIEL_NACH_KEY,
@@ -710,18 +711,27 @@ async function inZwischenablage(text) {
 }
 
 /**
- * „DEIN TEAM" — die Einladungsplaetze eines offiziellen Teilnehmers.
+ * „DEINE 3 EINLADUNGEN" — die Einladungsplaetze eines Spielers.
+ *
+ * Jeder Account hat welche, ob er ueber einen Deckel oder ueber eine
+ * Einladung hereingekommen ist. Genau daraus entsteht die Kette.
  *
  * Drei Plaetze, jeder in genau einem von drei Zustaenden. Was hier NICHT
  * steht, ist so wichtig wie der Rest: kein Wort ueber zusaetzliche Lose,
  * keine Zahl, die nach Gewinnchance aussieht, und nie die E-Mail-Adresse
- * eines Gastes. Ein Deckel ist ein Los; drei Einladungen sind null Lose.
- * Dieser Satz steht offen unter den Plaetzen und nicht im Kleingedruckten.
+ * einer eingeladenen Person. Ein echter Deckel ist ein Los; drei
+ * Einladungen sind null Lose. Dieser Satz steht offen unter den Plaetzen
+ * und nicht im Kleingedruckten.
+ *
+ * Daneben steht, was Einladen tatsaechlich bringt: die Follower-Mission
+ * rueckt mit jedem Menschen, der hereinkommt, ein Stueck naeher an den
+ * naechsten Unlock. `fehlt` kommt aus derselben Rechnung wie die
+ * Missionskarte — die Seite erfindet dort keine Zahl.
  *
  * Welcher Platz als naechstes vergeben wird und ob ueberhaupt einer frei
  * ist, entscheidet der Server. Die Karte schickt nur „mach den naechsten".
  */
-function TeamKarte({ team, sendet, fehler, onErzeugen, onWiderrufen }) {
+function TeamKarte({ team, sendet, fehler, fehlt, onErzeugen, onWiderrufen }) {
   const T = TEXTE.team
   const [qrSlot, setQrSlot] = useState(null)
   const [kopiert, setKopiert] = useState(null)
@@ -735,8 +745,13 @@ function TeamKarte({ team, sendet, fehler, onErzeugen, onWiderrufen }) {
   const ersterFreier = slots.find((s) => s.status === 'frei')?.slot ?? null
   const qrOffen = qrSlot != null ? slots.find((s) => s.slot === qrSlot) ?? null : null
 
+  /* Ein Text fuer beide Wege — geteilt wird immer dieselbe Zusage: ein
+     freier Platz, @videko.kuechen folgen, Score schlagen. Kein Wort ueber
+     die Deckel-Verlosung. */
+  const einladungsText = fuelle(T.teilenText, { handle: HANDLE })
+
   async function kopieren(slot) {
-    const gelungen = await inZwischenablage(`${T.teilenText} ${slot.link}`)
+    const gelungen = await inZwischenablage(`${einladungsText} ${slot.link}`)
     if (!gelungen) {
       /* Kein Zugriff auf die Zwischenablage: dann eben das Fenster mit
          QR-Code und lesbarem Link. */
@@ -749,7 +764,7 @@ function TeamKarte({ team, sendet, fehler, onErzeugen, onWiderrufen }) {
   }
 
   async function teilen(slot) {
-    const daten = { title: T.teilenTitel, text: T.teilenText, url: slot.link }
+    const daten = { title: T.teilenTitel, text: einladungsText, url: slot.link }
     if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
       try {
         await navigator.share(daten)
@@ -767,10 +782,17 @@ function TeamKarte({ team, sendet, fehler, onErzeugen, onWiderrufen }) {
       <div className="trm-karte__kopf">
         <Ikon name="krone" size={22} className="trm-ikon" />
         <h2 className="trm-karte__titel" id="trm-team-titel">
-          {T.label}
+          {fuelle(T.label, { anzahl: slots.length })}
         </h2>
       </div>
       <p className="trm-karte__sub">{fuelle(T.sub, { anzahl: slots.length })}</p>
+
+      {/* Die Verbindung zur Follower-Mission: jeder, den du reinholst,
+          bringt sie ein Stueck weiter. Nur anzeigen, wenn die Rechnung
+          wirklich eine naechste Stufe kennt. */}
+      <p className="trm-team__unlock">
+        {fehlt != null ? fuelle(T.unlock, { fehlt: zahl(fehlt) }) : T.unlockAlle}
+      </p>
 
       <ol className="trm-team__slots">
         {slots.map((s) => (
@@ -833,13 +855,16 @@ function TeamKarte({ team, sendet, fehler, onErzeugen, onWiderrufen }) {
               </>
             ) : null}
 
+            {/* Der Platz ist eingeloest. Sichtbar ist nur der
+                Instagram-Name und ob die Person zusaetzlich einen eigenen
+                Deckel hat — nie eine E-Mail-Adresse, nie ein Score. */}
             {s.status === 'beigetreten' ? (
               <p className="trm-team__gast">
                 <span className="trm-team__gastname">
                   {s.gast?.instagram ? `@${s.gast.instagram}` : TEXTE.r.grAnonym}
                 </span>
                 <span className="trm-team__gaststand">
-                  {s.gast?.offiziell ? T.gastOffiziell : T.gastGast}
+                  {s.gast?.deckel ? T.standDeckel : T.standSpieler}
                 </span>
               </p>
             ) : null}
@@ -933,13 +958,17 @@ export default function Terminal() {
   const [laborSpiel, setLaborSpiel] = useState(null)
 
   /* Die eigenen Einladungsplaetze. Sie kommen fertig vom Server und stehen
-     nur offiziellen Teilnehmern zu — ein Gast bekommt dort immer null und
+     jedem aktiven Spieler zu — egal ob er ueber einen Deckel oder ueber
+     eine Einladung hereingekommen ist. Wer keine bekommt, bekommt null und
      damit gar keine Oberflaeche dafuer. */
   const [team, setTeam] = useState(null)
   const [teamSendet, setTeamSendet] = useState(false)
   const [teamFehler, setTeamFehler] = useState(null)
-  /* Ein Gast, der gerade seinen eigenen Deckel aktiviert hat. */
+  /* Ein Spieler, der gerade seinen Deckel nachgetragen hat. */
   const [konvertiert, setKonvertiert] = useState(false)
+  /* Kurze Rueckmeldung, nachdem der Score-Teiltext in der Zwischenablage
+     gelandet ist. */
+  const [scoreKopiert, setScoreKopiert] = useState(false)
 
   /* Die Einwilligung ins oeffentliche Leaderboard, jederzeit aenderbar.
      null heisst: der Haken folgt dem gespeicherten Stand. */
@@ -1474,16 +1503,18 @@ export default function Terminal() {
     const handle = instagramNormalisieren(formular.instagram)
     const email = formular.email.trim()
 
-    /* Ein Gast hat Name und Adresse schon bei der Einladung hinterlegt. Das
-       Formular fragt beides deshalb nicht noch einmal, und der Server nimmt
-       es auch nicht entgegen — sonst liesse sich darueber ein fremder
-       Account umschreiben. */
-    const gast = teilnehmer?.gast === true
+    /* Wer schon ein Konto hat, traegt hier nur die Nummer nach: Name und
+       Adresse stehen laengst in seiner Zeile. Das Formular fragt beides
+       deshalb nicht noch einmal, und der Server nimmt es auch nicht
+       entgegen — sonst liesse sich darueber ein fremder Account
+       umschreiben. Zustand B dagegen legt das Konto erst an und braucht
+       beide Felder. */
+    const hatKonto = Boolean(teilnehmer)
 
     const fehler = {}
     if (nummer == null) fehler.deckel = fuelle(TEXTE.b.fehler.nummer, { gesamt: GESAMT })
-    if (!gast && !handle) fehler.instagram = TEXTE.b.fehler.instagram
-    if (!gast && !EMAIL_MUSTER.test(email)) fehler.email = TEXTE.b.fehler.email
+    if (!hatKonto && !handle) fehler.instagram = TEXTE.b.fehler.instagram
+    if (!hatKonto && !EMAIL_MUSTER.test(email)) fehler.email = TEXTE.b.fehler.email
     if (!formular.folgt) fehler.folgt = fuelle(TEXTE.b.fehler.folgt, { handle: HANDLE })
     /* Die Leaderboard-Einwilligung wird hier bewusst nicht geprueft: sie ist
        freiwillig. Ohne sie gilt die Teilnahme genauso. */
@@ -1524,10 +1555,11 @@ export default function Terminal() {
     const antwort = await terminalRuf({
       aktion: 'aktivieren',
       zugang: merkeLesen(SPEICHER_ZUGANG),
-      /* Der Sitzungsbeleg entscheidet nichts ueber den Status — er sagt dem
-         Server nur, WER da aktiviert. Ist es ein Gast, wird seine vorhandene
-         Zeile fortgeschrieben statt eine zweite anzulegen. Alles andere
-         steht in der Datenbank. */
+      /* Der Sitzungsbeleg entscheidet nichts ueber die Berechtigungen — er
+         sagt dem Server nur, WER da aktiviert. Gibt es die Zeile schon, wird
+         sie fortgeschrieben statt eine zweite anzulegen; die
+         Registrierungsquelle bleibt dabei unveraendert. Alles andere steht
+         in der Datenbank. */
       sitzung: merkeLesen(SPEICHER_SITZUNG),
       deckel: nummer,
       instagram: handle,
@@ -1556,10 +1588,10 @@ export default function Terminal() {
       setFeldFehler({})
       setAnsicht('c')
 
-      /* Aus einem Gast ist gerade ein offizieller Teilnehmer geworden: die
-         Scores liegen unveraendert an derselben id, und ab jetzt gibt es
-         eigene Einladungsplaetze. Die holt die Seite frisch — die Antwort
-         auf die Aktivierung kennt sie noch nicht. */
+      /* Ein Spieler hat gerade seinen Deckel nachgetragen: die Scores liegen
+         unveraendert an derselben id, die Einladungsplaetze auch. Das Team
+         holt die Seite trotzdem frisch — die Antwort auf die Aktivierung
+         kennt es noch nicht. */
       if (antwort.konvertiert) {
         setKonvertiert(true)
         const frisch = await teamHolen(antwort.sitzung ?? sitzung)
@@ -1602,7 +1634,8 @@ export default function Terminal() {
    * Beide Aufrufe schicken nur den Sitzungsbeleg — und im zweiten Fall die
    * Platznummer. Ob die Person ueberhaupt einladen darf, wie viele Plaetze
    * sie hat und welcher als naechstes drankommt, entscheidet allein der
-   * Server. Ein Gast bekommt hier eine Absage, egal was der Browser sagt.
+   * Server. Jeder aktive Spieler hat Plaetze; gesperrt ist hoechstens ein
+   * Konto, das der Server ablehnt — egal was der Browser sagt.
    *
    * Zurueck kommt jedes Mal das vollstaendige Team, damit die Karte nie aus
    * einzelnen Antworten zusammengestueckelt werden muss.
@@ -1635,6 +1668,35 @@ export default function Terminal() {
       return
     }
     setTeamFehler(TEXTE.team.fehler[antwort.grund] ?? TEXTE.team.fehler.allgemein)
+  }
+
+  /**
+   * Den eigenen Score teilen.
+   *
+   * Bewusst ohne Zahl und ohne persoenlichen Link: geteilt wird die
+   * Einladung zum Duell, nicht ein Einladungsplatz. Wer darueber
+   * hereinkommt, landet auf dem Terminal und braucht dort weiterhin eine
+   * Einladung oder einen Deckel. Kein Wort ueber die Deckel-Verlosung.
+   */
+  async function scoreTeilen() {
+    const T = TEXTE.team
+    const ziel =
+      typeof window !== 'undefined' ? `${window.location.origin}/terminal` : '/terminal'
+
+    if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
+      try {
+        await navigator.share({ title: T.teilenTitel, text: T.scoreTeilenText, url: ziel })
+        return
+      } catch (grund) {
+        /* Abgebrochen ist kein Fehler: dann passiert einfach nichts. */
+        if (grund?.name === 'AbortError') return
+      }
+    }
+
+    if (await inZwischenablage(`${T.scoreTeilenText} ${ziel}`)) {
+      setScoreKopiert(true)
+      window.setTimeout(() => setScoreKopiert(false), 2200)
+    }
   }
 
   /* ---------------------------------------------------------------- */
@@ -1847,10 +1909,11 @@ export default function Terminal() {
   /**
    * Die Games mit gespeicherten Scores.
    *
-   * Offizielle Teilnehmer und Gaeste spielen genau dieselben Spiele, in
-   * derselben Reihenfolge, mit denselben gespeicherten Bestwerten. Der
-   * Unterschied zwischen beiden steht ueber der Liste und in den Wertungen —
-   * nie in der Liste selbst. Deshalb eine Funktion fuer beide Ansichten.
+   * Alle Spieler spielen genau dieselben Spiele, in derselben Reihenfolge,
+   * mit denselben gespeicherten Bestwerten — ob mit oder ohne eigenen
+   * Deckel. Der Deckel entscheidet allein ueber die Verlosung, und das
+   * steht ueber der Liste, nie in der Liste selbst. Deshalb eine Funktion
+   * fuer beide Ansichten.
    *
    * Ausgeblendete Spiele fehlen hier nur; ihre Scores bleiben bestehen.
    */
@@ -1867,6 +1930,15 @@ export default function Terminal() {
             {titel}
           </h2>
         </div>
+
+        {/* Der zweite Teiltext der Aktion: nicht der Einladungsplatz,
+            sondern der eigene Score. Er verspricht keinen Gewinn bei der
+            Deckel-Verlosung, sondern genau das, was jeder bekommt — einen
+            Platz im Ranking. */}
+        <button type="button" className="trm-cta trm-cta--umriss trm-cta--klein" onClick={scoreTeilen}>
+          <Ikon name="schluessel" size={16} />
+          {scoreKopiert ? TEXTE.team.scoreKopiert : TEXTE.team.scoreTeilen}
+        </button>
 
         {sichtbar.map((s) => {
           const best = spiele?.beste?.[s.key] ?? null
@@ -1905,180 +1977,185 @@ export default function Terminal() {
     )
   }
 
-  /* ================================================================ */
-  /* Zustand C, Gastfassung — eingeladen, noch ohne eigenen Deckel     */
-  /* ================================================================ */
-
-  /*
-   * Ein Gast sieht sein eigenes Terminal: alle fuenf Hauptgames, alle
-   * eigenen Bestwerte, und den Weg zum eigenen Deckel.
+  /**
+   * Der Deckel wird nachgetragen — vom Spieler ohne eigenen Deckel.
    *
-   * Was er NICHT sieht, ist Absicht und nicht Sparsamkeit: keine Uhr zur
-   * Ziehung, keinen Lostopf, keinen Tresorkoenig, kein Gesamtranking, keine
-   * Einwilligung in eine oeffentliche Liste, in der er gar nicht steht, und
-   * keine Einladungsplaetze. Es gibt auf dieser Seite keinen Satz, der
-   * andeutet, ein Gast sei fuer die Hauptpreise qualifiziert — er ist es
-   * nicht, und er erfaehrt das im ersten Absatz und nicht im Kleingedruckten.
+   * Kein zweiter Account, keine neue Anmeldung: dieselbe Zeile bekommt eine
+   * Nummer. Scores, Rangliste, Herkunft und die drei eigenen Einladungen
+   * bleiben unveraendert; dazu kommt allein die Deckel-Ziehung.
    *
-   * Der Weg nach oben steht als Formular mitten auf der Seite: eine echte
-   * Deckelnummer, sonst nichts. Name und Adresse hat er schon hinterlegt.
+   * Name und Adresse stehen schon in der Zeile, deshalb fragt dieses
+   * Formular nur nach der Nummer. Der Follow-Haken steht trotzdem noch
+   * einmal da: er ist Bedingung fuer gewertete Scores, und wer ueber einen
+   * Einladungslink hereinkam, hat ihn dort gesetzt — nicht hier.
    */
-  if (ansicht === 'c' && teilnehmer?.gast) {
+  function deckelFormular() {
     const G = TEXTE.einladung
-    const B = TEXTE.b.belegt
-
     return (
-      <>
-        {seo}
-        <Buehne art={buehne} wort={buehneWort} />
-        <TerminalRahmen>
-          <div className="trm-abzeichen trm-abzeichen--gast">
-            <Ikon name="schluessel" size={28} className="trm-abzeichen__haken" />
-            <span className="trm-abzeichen__wort">{G.gastLabel}</span>
-          </div>
+      <form className="trm-karte trm-gast-weg" id="trm-aktivieren" onSubmit={aktivieren} noValidate>
+        <div className="trm-karte__kopf">
+          <Ikon name="deckel" size={22} className="trm-ikon" />
+          <h2 className="trm-karte__titel">{G.gastCta}</h2>
+        </div>
 
-          <h1 className="trm-titel trm-gold">{G.gastTitel}</h1>
-          <p className="trm-sub">{G.gastText}</p>
-
-          {teilnehmer.einladerInstagram ? (
-            <p className="trm-frei">
-              <Ikon name="schluessel" size={17} className="trm-ikon" />
-              <span className="trm-frei__text">
-                {fuelle(G.gastVon, { name: teilnehmer.einladerInstagram })}
-              </span>
-            </p>
-          ) : null}
-
-          <Raute />
-
-          {/* Der Weg zum eigenen Los. Kein zweiter Account, keine neue
-              Anmeldung — dieselbe Zeile bekommt eine Nummer. */}
-          <form className="trm-karte trm-gast-weg" id="trm-aktivieren" onSubmit={aktivieren} noValidate>
-            <div className="trm-karte__kopf">
-              <Ikon name="deckel" size={22} className="trm-ikon" />
-              <h2 className="trm-karte__titel">{G.gastCta}</h2>
-            </div>
-
-            <Feld
+        <Feld
+          id="trm-deckel"
+          label={TEXTE.b.felder.nummer}
+          hilfe={fuelle(TEXTE.b.felder.nummerHilfe, { gesamt: GESAMT })}
+          fehler={feldFehler.deckel}
+          nach={`/ ${TERMINAL_KAMPAGNE.deckelGesamt}`}
+        >
+          {({ hilfeId, fehlerId }) => (
+            <input
               id="trm-deckel"
-              label={TEXTE.b.felder.nummer}
-              hilfe={fuelle(TEXTE.b.felder.nummerHilfe, { gesamt: GESAMT })}
-              fehler={feldFehler.deckel}
-              nach={`/ ${TERMINAL_KAMPAGNE.deckelGesamt}`}
-            >
-              {({ hilfeId, fehlerId }) => (
-                <input
-                  id="trm-deckel"
-                  className="trm-eingabe"
-                  type="text"
-                  inputMode="numeric"
-                  autoComplete="off"
-                  value={formular.deckel}
-                  onChange={(e) => aendern('deckel', e.target.value.replace(/\D/g, '').slice(0, 7))}
-                  placeholder={TEXTE.b.felder.nummerPlatz}
-                  aria-describedby={[hilfeId, fehlerId].filter(Boolean).join(' ') || undefined}
-                  aria-invalid={feldFehler.deckel ? 'true' : undefined}
-                  required
-                />
-              )}
-            </Feld>
+              className="trm-eingabe"
+              type="text"
+              inputMode="numeric"
+              autoComplete="off"
+              value={formular.deckel}
+              onChange={(e) => aendern('deckel', e.target.value.replace(/\D/g, '').slice(0, 7))}
+              placeholder={TEXTE.b.felder.nummerPlatz}
+              aria-describedby={[hilfeId, fehlerId].filter(Boolean).join(' ') || undefined}
+              aria-invalid={feldFehler.deckel ? 'true' : undefined}
+              required
+            />
+          )}
+        </Feld>
 
-            <label className="trm-haken" htmlFor="trm-folgt">
-              <input
-                id="trm-folgt"
-                type="checkbox"
-                checked={formular.folgt}
-                onChange={(e) => aendern('folgt', e.target.checked)}
-                aria-describedby={feldFehler.folgt ? 'trm-folgt-fehler' : undefined}
-                aria-invalid={feldFehler.folgt ? 'true' : undefined}
-                required
-              />
-              <span>{fuelle(TEXTE.b.felder.haken, { handle: HANDLE })}</span>
-            </label>
-            {feldFehler.folgt ? (
-              <p className="trm-feld__fehler" id="trm-folgt-fehler" role="alert">
-                {feldFehler.folgt}
-              </p>
-            ) : null}
+        <label className="trm-haken" htmlFor="trm-folgt">
+          <input
+            id="trm-folgt"
+            type="checkbox"
+            checked={formular.folgt}
+            onChange={(e) => aendern('folgt', e.target.checked)}
+            aria-describedby={feldFehler.folgt ? 'trm-folgt-fehler' : undefined}
+            aria-invalid={feldFehler.folgt ? 'true' : undefined}
+            required
+          />
+          <span>{fuelle(TEXTE.b.felder.haken, { handle: HANDLE })}</span>
+        </label>
+        {feldFehler.folgt ? (
+          <p className="trm-feld__fehler" id="trm-folgt-fehler" role="alert">
+            {feldFehler.folgt}
+          </p>
+        ) : null}
 
-            <label className="trm-haken trm-haken--frei" htmlFor="trm-leaderboard">
-              <input
-                id="trm-leaderboard"
-                type="checkbox"
-                checked={formular.leaderboard}
-                onChange={(e) => aendern('leaderboard', e.target.checked)}
-                aria-describedby="trm-leaderboard-hilfe"
-              />
-              <span>{TEXTE.b.felder.leaderboard}</span>
-            </label>
-            <p className="trm-feld__hilfe" id="trm-leaderboard-hilfe">
-              {TEXTE.b.felder.leaderboardHilfe}
-            </p>
+        <label className="trm-haken trm-haken--frei" htmlFor="trm-leaderboard">
+          <input
+            id="trm-leaderboard"
+            type="checkbox"
+            checked={formular.leaderboard}
+            onChange={(e) => aendern('leaderboard', e.target.checked)}
+            aria-describedby="trm-leaderboard-hilfe"
+          />
+          <span>{TEXTE.b.felder.leaderboard}</span>
+        </label>
+        <p className="trm-feld__hilfe" id="trm-leaderboard-hilfe">
+          {TEXTE.b.felder.leaderboardHilfe}
+        </p>
 
-            <button type="submit" className="trm-cta" disabled={sendet}>
-              {sendet ? 'Wird aktiviert …' : G.gastCta}
-            </button>
+        <button type="submit" className="trm-cta" disabled={sendet}>
+          {sendet ? 'Wird aktiviert …' : G.gastCta}
+        </button>
 
-            {feldFehler.allgemein ? (
-              <p className="trm-meldung trm-meldung--fehler" role="alert">
-                {feldFehler.allgemein}
-              </p>
-            ) : null}
+        {feldFehler.allgemein ? (
+          <p className="trm-meldung trm-meldung--fehler" role="alert">
+            {feldFehler.allgemein}
+          </p>
+        ) : null}
 
-            <p className="trm-fuss-notiz">{G.gastKeinRanking}</p>
-          </form>
-
-          {spieleBlock(G.gastBestleistungen)}
-        </TerminalRahmen>
-
-        {/* Auch fuer einen Gast gilt der gewoehnliche Mehrfachanspruch: ist
-            die Nummer schon aktiviert, entscheidet dieselbe Frage. */}
-        {belegtFrage && (
-          <div
-            className="trm-belegt"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="trm-belegt-titel"
-            aria-describedby="trm-belegt-frage"
-            data-belegt
-            onKeyDown={(e) => {
-              if (e.key === 'Escape') belegtNein()
-            }}
-          >
-            <div className="trm-karte trm-belegt__blatt">
-              <h2 className="trm-karte__titel" id="trm-belegt-titel">
-                {B.titel}
-              </h2>
-              <p className="trm-karte__sub" id="trm-belegt-frage">
-                {B.frage}
-              </p>
-              <p className="trm-fuss-notiz">{B.hinweis}</p>
-              <div className="trm-belegt__tasten">
-                <button type="button" className="trm-cta" data-belegt-ja disabled={sendet} onClick={belegtJa}>
-                  {sendet ? 'Wird aktiviert …' : B.ja}
-                </button>
-                <button
-                  type="button"
-                  ref={belegtNeinRef}
-                  className="trm-cta trm-cta--umriss"
-                  data-belegt-nein
-                  disabled={sendet}
-                  onClick={belegtNein}
-                >
-                  {B.nein}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-      </>
+        <p className="trm-fuss-notiz">{G.gastKeinRanking}</p>
+      </form>
     )
   }
 
+  /**
+   * Die Nummer ist schon aktiviert: JA/NEIN, und NEIN hat den Fokus.
+   *
+   * Ein weiterer Besitzanspruch ist erlaubt, erzeugt aber kein zusaetzliches
+   * Los. Dieselbe Frage gilt fuer jeden, der einen Deckel eintraegt.
+   */
+  function belegtFenster() {
+    if (!belegtFrage) return null
+    const B = TEXTE.b.belegt
+    return (
+      <div
+        className="trm-belegt"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="trm-belegt-titel"
+        aria-describedby="trm-belegt-frage"
+        data-belegt
+        onKeyDown={(e) => {
+          if (e.key === 'Escape') belegtNein()
+        }}
+      >
+        <div className="trm-karte trm-belegt__blatt">
+          <h2 className="trm-karte__titel" id="trm-belegt-titel">
+            {B.titel}
+          </h2>
+          <p className="trm-karte__sub" id="trm-belegt-frage">
+            {B.frage}
+          </p>
+          <p className="trm-fuss-notiz">{B.hinweis}</p>
+          <div className="trm-belegt__tasten">
+            <button type="button" className="trm-cta" data-belegt-ja disabled={sendet} onClick={belegtJa}>
+              {sendet ? 'Wird aktiviert …' : B.ja}
+            </button>
+            <button
+              type="button"
+              ref={belegtNeinRef}
+              className="trm-cta trm-cta--umriss"
+              data-belegt-nein
+              disabled={sendet}
+              onClick={belegtNein}
+            >
+              {B.nein}
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  /* ================================================================ */
+  /* Zustand C — angemeldet im Tresor                                  */
+  /* ================================================================ */
+
+  /*
+   * EIN DASHBOARD FUER ALLE SPIELER
+   * -------------------------------
+   * Wer hier ankommt, spielt voll mit: alle fuenf Hauptgames, gewertete
+   * Scores, jede Rangliste, das Gesamtranking, die Preise in den Games und
+   * drei eigene Einladungen. Ob jemand ueber einen Deckel oder ueber eine
+   * Einladung hereingekommen ist, aendert daran nichts — deshalb gibt es
+   * hier auch keine zwei Fassungen dieser Seite mehr.
+   *
+   * `hatDeckel` schaltet genau eine Sache frei, und zwar die einzige, an der
+   * ein echter physischer Deckel wirklich haengt: die grosse Deckel-Ziehung
+   * mit Countdown, Statusliste und Lostopf. Wer noch keinen hat, sieht an
+   * derselben Stelle das Formular, mit dem er einen nachtraegt.
+   *
+   * Was hier bewusst NICHT passiert: aus einem fehlenden Deckel wird kein
+   * eingeschraenkter Account gemacht. Kein Satz auf dieser Seite deutet an,
+   * ein Spieler ohne Deckel spiele nur zum Schein — und kein Satz deutet an,
+   * eine Einladung brachte ein Los.
+   */
   if (ansicht === 'c' && teilnehmer) {
-    const nummer = deckelText(teilnehmer.deckel)
+    const G = TEXTE.einladung
+    const hatDeckel = teilnehmer.deckel != null
+    const nummer = hatDeckel ? deckelText(teilnehmer.deckel) : null
     const termin = terminText(kennzahlen?.naechsteZiehung)
     const uhr = <Uhr zielIso={kennzahlen?.naechsteZiehung} />
+
+    /* Dieselbe Rechnung wie in der Missionskarte, damit die Einladungskarte
+       keine zweite Zahl in Umlauf bringt: wie viele Follower noch bis zur
+       naechsten Stufe fehlen. `null`, wenn alle Stufen frei sind. */
+    const mission = missionStand(
+      kennzahlen?.followerZahl ?? TERMINAL_KAMPAGNE.followerStart,
+      kennzahlen?.meilensteinGewinne,
+    )
+    const missionFehlt = mission.naechste ? mission.fehlt : null
 
     /* Spitze und eigener Stand kommen aus dem Gesamtranking ueber die fuenf
        Hauptgames (maximal 5.000). Die alte Summe aus Truhenknacker und
@@ -2099,13 +2176,34 @@ export default function Terminal() {
         {seo}
         <Buehne art={buehne} wort={buehneWort} />
         <TerminalRahmen>
-          <div className="trm-abzeichen">
-            <CheckCircle2 size={30} className="trm-abzeichen__haken" aria-hidden="true" />
-            <span className="trm-abzeichen__wort">{TEXTE.c.status}</span>
-          </div>
+          {hatDeckel ? (
+            <div className="trm-abzeichen">
+              <CheckCircle2 size={30} className="trm-abzeichen__haken" aria-hidden="true" />
+              <span className="trm-abzeichen__wort">{TEXTE.c.status}</span>
+            </div>
+          ) : (
+            <div className="trm-abzeichen trm-abzeichen--gast">
+              <Ikon name="schluessel" size={28} className="trm-abzeichen__haken" />
+              <span className="trm-abzeichen__wort">{G.gastLabel}</span>
+            </div>
+          )}
 
-          <h1 className="trm-titel trm-gold">{TEXTE.c.titel}</h1>
-          <p className="trm-sub">{fuelle(TEXTE.c.sub, { deckel: nummer })}</p>
+          <h1 className="trm-titel trm-gold">{hatDeckel ? TEXTE.c.titel : G.gastTitel}</h1>
+          <p className="trm-sub">
+            {hatDeckel ? fuelle(TEXTE.c.sub, { deckel: nummer }) : G.gastText}
+          </p>
+
+          {/* Wer eingeladen wurde, sieht, wer ihn hereingeholt hat. Das bleibt
+              auch dann stehen, wenn er inzwischen selbst einen Deckel hat:
+              die Herkunft ist nichts, was verschwindet. */}
+          {teilnehmer.einladerInstagram ? (
+            <p className="trm-frei">
+              <Ikon name="schluessel" size={17} className="trm-ikon" />
+              <span className="trm-frei__text">
+                {fuelle(G.gastVon, { name: teilnehmer.einladerInstagram })}
+              </span>
+            </p>
+          ) : null}
 
           {/* Der Tresor ist offen. Steht absichtlich ueber der Raute: es ist
               die Antwort auf den Flug durch das Schloss, nicht eine Karte
@@ -2116,7 +2214,7 @@ export default function Terminal() {
             <span className="trm-frei__text">{TEXTE.t.freiText}</span>
           </p>
 
-          {/* Nur unmittelbar nach dem Wechsel vom Gast zum Deckelbesitzer.
+          {/* Nur unmittelbar nachdem jemand seinen Deckel nachgetragen hat.
               Der Satz beantwortet die eine Frage, die in diesem Moment
               zaehlt: sind meine Scores noch da. */}
           {konvertiert ? (
@@ -2137,81 +2235,93 @@ export default function Terminal() {
             </p>
           </Truhe>
 
-          <section
-            className={uhr ? 'trm-karte' : 'trm-karte trm-karte--kompakt'}
-            aria-labelledby="trm-uhr-titel"
-          >
-            <div className="trm-karte__kopf">
-              <Ikon name="uhr" size={22} className="trm-ikon" />
-              <h2 className="trm-karte__titel" id="trm-uhr-titel">
-                {uhr ? TEXTE.c.countdownLabel : TEXTE.d.naechsteLabel}
-              </h2>
-            </div>
-            {uhr ? (
-              <>
-                {uhr}
-                <p className="trm-fuss-notiz">
-                  {termin ? `${termin} Uhr. ` : ''}
-                  {TEXTE.c.countdownNotiz}
-                </p>
-              </>
-            ) : (
-              <p className="trm-metrik__text">{TEXTE.c.countdownOffen}</p>
-            )}
-          </section>
+          {/* Ziehungsteil. Countdown, Statusliste und Lostopf haengen an
+              einem echten physischen Deckel — sie stehen deshalb nur da,
+              wenn einer aktiviert ist. Wer keinen hat, sieht an derselben
+              Stelle den Weg zu einem. */}
+          {hatDeckel ? (
+            <>
+              <section
+                className={uhr ? 'trm-karte' : 'trm-karte trm-karte--kompakt'}
+                aria-labelledby="trm-uhr-titel"
+              >
+                <div className="trm-karte__kopf">
+                  <Ikon name="uhr" size={22} className="trm-ikon" />
+                  <h2 className="trm-karte__titel" id="trm-uhr-titel">
+                    {uhr ? TEXTE.c.countdownLabel : TEXTE.d.naechsteLabel}
+                  </h2>
+                </div>
+                {uhr ? (
+                  <>
+                    {uhr}
+                    <p className="trm-fuss-notiz">
+                      {termin ? `${termin} Uhr. ` : ''}
+                      {TEXTE.c.countdownNotiz}
+                    </p>
+                  </>
+                ) : (
+                  <p className="trm-metrik__text">{TEXTE.c.countdownOffen}</p>
+                )}
+              </section>
 
-          <section className="trm-karte" aria-labelledby="trm-status-titel">
-            <div className="trm-karte__kopf">
-              <Ikon name="schluessel" size={22} className="trm-ikon" />
-              <h2 className="trm-karte__titel" id="trm-status-titel">
-                {TEXTE.c.statusLabel}
-              </h2>
-            </div>
+              <section className="trm-karte" aria-labelledby="trm-status-titel">
+                <div className="trm-karte__kopf">
+                  <Ikon name="schluessel" size={22} className="trm-ikon" />
+                  <h2 className="trm-karte__titel" id="trm-status-titel">
+                    {TEXTE.c.statusLabel}
+                  </h2>
+                </div>
 
-            {/* Die letzte Zeile ist eine Aufgabe, keine Bestaetigung — sie
-                bekommt deshalb ein offenes Symbol und data-offen. Die
-                Unterscheidung steht im Wortlaut, nicht nur in der Farbe. */}
-            <ul className="trm-status">
-              {TEXTE.c.statusZeilen.map((zeile, index) => {
-                const offen = index === TEXTE.c.statusZeilen.length - 1
-                return (
-                  <li key={zeile} data-offen={offen ? '1' : '0'}>
-                    {offen ? (
-                      <Circle size={17} aria-hidden="true" />
-                    ) : (
-                      <Check size={17} aria-hidden="true" />
-                    )}
-                    <span>{fuelle(zeile, { deckel: nummer })}</span>
-                  </li>
-                )
-              })}
-            </ul>
-            <p className="trm-feld__hilfe">{TEXTE.c.statusNotiz}</p>
-          </section>
+                {/* Die letzte Zeile ist eine Aufgabe, keine Bestaetigung — sie
+                    bekommt deshalb ein offenes Symbol und data-offen. Die
+                    Unterscheidung steht im Wortlaut, nicht nur in der Farbe. */}
+                <ul className="trm-status">
+                  {TEXTE.c.statusZeilen.map((zeile, index) => {
+                    const offen = index === TEXTE.c.statusZeilen.length - 1
+                    return (
+                      <li key={zeile} data-offen={offen ? '1' : '0'}>
+                        {offen ? (
+                          <Circle size={17} aria-hidden="true" />
+                        ) : (
+                          <Check size={17} aria-hidden="true" />
+                        )}
+                        <span>{fuelle(zeile, { deckel: nummer })}</span>
+                      </li>
+                    )
+                  })}
+                </ul>
+                <p className="trm-feld__hilfe">{TEXTE.c.statusNotiz}</p>
+              </section>
 
-          <div className="trm-metriken trm-metriken--eins">
-            <Metrik
-              ikon="deckel"
-              label={TEXTE.c.deckelLabel}
-              wert={kennzahlen?.aktiviert ?? null}
-              von={TERMINAL_KAMPAGNE.deckelGesamt}
-              notiz={TEXTE.c.deckelNotiz}
-            />
-          </div>
+              <div className="trm-metriken trm-metriken--eins">
+                <Metrik
+                  ikon="deckel"
+                  label={TEXTE.c.deckelLabel}
+                  wert={kennzahlen?.aktiviert ?? null}
+                  von={TERMINAL_KAMPAGNE.deckelGesamt}
+                  notiz={TEXTE.c.deckelNotiz}
+                />
+              </div>
+            </>
+          ) : (
+            deckelFormular()
+          )}
 
           <Mission
             follower={kennzahlen?.followerZahl ?? TERMINAL_KAMPAGNE.followerStart}
             gewinne={kennzahlen?.meilensteinGewinne}
           />
 
-          {/* Einladungen. Nur fuer offizielle Teilnehmer, und nur wenn der
-              Server tatsaechlich Plaetze mitgeschickt hat — die Entscheidung
-              darueber faellt dort, nicht hier. */}
+          {/* Einladungen. Jeder aktive Account hat eigene Plaetze, ob ueber
+              einen Deckel oder ueber eine Einladung hereingekommen — genau
+              daraus entsteht die Kette. Ob welche da sind, entscheidet der
+              Server, nicht diese Seite. */}
           {team ? (
             <TeamKarte
               team={team}
               sendet={teamSendet}
               fehler={teamFehler}
+              fehlt={missionFehlt}
               onErzeugen={teamErzeugen}
               onWiderrufen={teamWiderrufen}
             />
@@ -2335,12 +2445,18 @@ export default function Terminal() {
             <p className="trm-feld__hilfe">{E.hinweis}</p>
           </section>
 
-          {spieleBlock(TEXTE.t.gamesLabel)}
+          {spieleBlock(hatDeckel ? TEXTE.t.gamesLabel : G.gastBestleistungen)}
 
-          {ziehungZeile()}
+          {/* Die Ziehungszeile nur fuer Deckelbesitzer: „gezogen wird
+              oeffentlich und live" waere fuer alle anderen eine Ziehung, in
+              der sie gar nicht stehen. Die Preise stehen trotzdem fuer alle
+              da — sie sind der Grund, einen Deckel nachzutragen. */}
+          {hatDeckel ? ziehungZeile() : null}
 
           <Gewinne />
         </TerminalRahmen>
+
+        {belegtFenster()}
       </>
     )
   }
@@ -2353,7 +2469,7 @@ export default function Terminal() {
     /* Ohne Deckel: genau ein Game im Practice Mode, die anderen aktiven
        Games sichtbar, aber gesperrt. Gespeichert wird hier nichts. */
     const spieleOhneDeckel = aktiveSpiele(kennzahlen?.spieleAktiv, kennzahlen?.spieleReihenfolge)
-    const practiceKey = kennzahlen?.guestPracticeGame ?? 'leitungsfinder'
+    const practiceKey = kennzahlen?.guestPracticeGame ?? PRACTICE_STANDARD
     const practiceSpiel = spieleOhneDeckel.find((s) => s.key === practiceKey) ?? null
     const gesperrteSpiele = spieleOhneDeckel.filter((s) => s.key !== practiceKey)
     const PracticeBauteil = practiceSpiel

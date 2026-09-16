@@ -252,14 +252,19 @@ rufe = []
   pruefe('Ohne eigene id kein eigen', r.eigen === null && r.eintraege.every((e) => e.ich === false))
   pruefe('Preise leer, nicht erfunden', r.preise[1] === null && r.preise[2] === null && r.preise[3] === null)
   pruefe('Offen', r.abgeschlossen === false)
-  /* Nur die Namensabfragen sind gemeint. Seit den Einladungen liest das
-     Modul zusaetzlich die Gast-ids (select=id, ohne Namen) — die duerfen
+  /* Nur die Namensabfragen sind gemeint. Das Modul liest zusaetzlich die
+     ids ohne Ranglistenberechtigung (select=id, ohne Namen) — die duerfen
      naturgemaess keine Ranglistenfreigabe verlangen. */
   const namensrufe = rufe.filter((x) => x.pfad.endsWith('_teilnehmer') && x.suche.includes('instagram_handle'))
   pruefe('Namen nur mit leaderboard_ok',
     namensrufe.length > 0 && namensrufe.every((x) => x.suche.includes('leaderboard_ok=is.true') && !x.suche.includes('email')))
-  pruefe('Namen nur von offiziellen Teilnehmern',
-    namensrufe.every((x) => x.suche.includes('teilnahme_status=eq.offiziell')))
+  /* Die Rangliste kennt nur eine Bedingung: bestaetigter Instagram-Follow.
+     Woher jemand kam — Deckel oder Einladung — spielt hier keine Rolle
+     mehr. Genau deshalb darf hier KEIN Filter auf teilnahme_status stehen. */
+  pruefe('Namen nur von Instagram-bestaetigten Konten',
+    namensrufe.every((x) => x.suche.includes('folgt_bestaetigt_von_nutzer=is.true')))
+  pruefe('Die Rangliste filtert nicht nach Deckelbesitz',
+    namensrufe.every((x) => !x.suche.includes('teilnahme_status=eq.offiziell')))
   pruefe('Keine E-Mail in irgendeiner Teilnehmerabfrage',
     rufe.filter((x) => x.pfad.endsWith('_teilnehmer')).every((x) => !x.suche.includes('email')))
   pruefe('Nur gueltige Laeufe gelesen', rufe.filter((x) => x.pfad.endsWith('_scores')).every((x) => x.suche.includes('status=eq.gueltig')))

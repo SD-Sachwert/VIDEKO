@@ -7,7 +7,6 @@ import {
   KAMPAGNE,
   NUR_OFFIZIELLE,
   SPIEL_SCHLUESSEL,
-  STATUS_GAST,
   STATUS_OFFIZIELL,
   TABELLE_ADMIN_VERSUCHE,
   TABELLE_EINLADUNGEN,
@@ -31,11 +30,13 @@ import {
   lesen,
   meilensteineSaeubern,
   rangSpeicherLeeren,
+  rankingBerechtigt,
   readBody,
   reihenfolgeSaeubern,
   restUrl,
   schreibenErlaubt,
   zaehlen,
+  ziehungBerechtigt,
 } from './_terminal-kern.js'
 import { instagramStandLesen, instagramSynchronisieren } from './_terminal-instagram.js'
 import {
@@ -84,6 +85,25 @@ import { probeErzeugen } from './_terminal-probe.js'
  * Die Ziehung wird in videko_terminal_ziehungen protokolliert (Zeitpunkt,
  * Meldefrist, Status) und zusaetzlich in die Einstellungen gespiegelt, weil
  * die oeffentliche Seite genau diese eine Zeile liest.
+ *
+ * ZWEI GETRENNTE BERECHTIGUNGEN — UEBERALL IN DIESER DATEI
+ * -------------------------------------------------------
+ * RANKING   Instagram-Handle vorhanden und Follow selbst bestaetigt. Wer das
+ *           erfuellt, spielt alle Hauptgames, steht in den Ranglisten und im
+ *           Gesamtranking und kann Gamepreise gewinnen — mit oder ohne
+ *           Deckel. Gelesen ueber `rankingBerechtigt` aus dem Kern.
+ *
+ * ZIEHUNG   Ein echter physischer Deckel ist aktiviert. Nur das ergibt ein Los
+ *           in der grossen Ziehung. Eine Einladung erzeugt keines. Gelesen
+ *           ueber `ziehungBerechtigt`, und in `topfBilden`/`ziehen` weiterhin
+ *           ueber `teilnahme_status = offiziell`.
+ *
+ * Die beiden werden nirgends vermischt und nirgends voneinander abgeleitet.
+ *
+ * Der Instagram-Follow laesst sich nicht automatisch verifizieren — die Graph
+ * API gibt die Followerliste nicht heraus. Vor einer Preisausgabe schaut ein
+ * Mensch nach und traegt das ueber `folgt-pruefen` ein. Ein Ausfall
+ * irgendeines Dienstes disqualifiziert dabei niemanden.
  */
 
 const { TERMINAL_ADMIN_TOKEN = '' } = process.env
@@ -178,9 +198,20 @@ const GESPERRT = { ok: false, grund: 'bremse', meldung: 'Zu viele Versuche. Bitt
 /* Lesen                                                               */
 /* ------------------------------------------------------------------ */
 
+/**
+ * Was die Verwaltung zu einem Teilnehmer sieht.
+ *
+ * Die hinteren Felder tragen die drei getrennten Berechtigungen:
+ *   registrierungsquelle / eingeladen_von / eingeladen_am — woher kam er?
+ *   teilnahme_status / deckel_nummer / deckel_aktiviert_am — Los ja/nein?
+ *   folgt_bestaetigt_von_nutzer / folgt_pruefstatus / folgt_geprueft_am —
+ *     gewertete Scores, und ob schon jemand von Hand nachgesehen hat.
+ */
 const TEILNEHMER_SPALTEN =
   'id,deckel_nummer,instagram_handle,email,folgt_bestaetigt_von_nutzer,aktiviert_am,status,'
-  + 'anspruch_art,besitz_status,besitz_geprueft_am'
+  + 'anspruch_art,besitz_status,besitz_geprueft_am,'
+  + 'registrierungsquelle,eingeladen_von,eingeladen_am,teilnahme_status,deckel_aktiviert_am,'
+  + 'folgt_pruefstatus,folgt_geprueft_am,leaderboard_ok'
 
 /** Seitengroesse beim Lesen — PostgREST liefert je Anfrage hoechstens so viele Zeilen. */
 const SEITE = 1000
@@ -198,6 +229,173 @@ async function alleLesen(pfad) {
   return zeilen
 }
 
+/* ------------------------------------------------------------------ */
+/* Herkunft: Einlader, Generation, belegte Slots                       */
+/* ------------------------------------------------------------------ */
+
+/** Hoechstzahl an Ids in einer PostgREST-`in.()`-Liste. */
+const IN_STUECK = 200
+/** Ab so vielen Zeilen ist ein Durchgang ueber die ganze Tabelle billiger als viele Buendel. */
+const IN_SCHWELLE = 400
+/** Runden beim Nachladen fehlender Einlader. */
+const VORFAHREN_RUNDEN = 12
+/** Sicherung gegen eine im Kreis zeigende Kette. */
+const TIEFE_MAX = 40
+
+/** Nur was wie eine Id aussieht, darf in eine `in.()`-Liste. */
+const idSicher = (roh) => (/^[A-Za-z0-9_-]{1,64}$/.test(String(roh ?? '')) ? String(roh) : null)
+
+function stuecke(werte, groesse = IN_STUECK) {
+  const raus = []
+  for (let i = 0; i < werte.length; i += groesse) raus.push(werte.slice(i, i + groesse))
+  return raus
+}
+
+/**
+ * Fehlende Einlader nachladen, bis die Kette bis zur Wurzel steht.
+ *
+ * Bei einer Suche kommt nur ein Ausschnitt der Teilnehmer zurueck — der
+ * Einlader eines Treffers fehlt dann meist. Geholt wird gebuendelt und nur,
+ * was wirklich fehlt. `VORFAHREN_RUNDEN` begrenzt das: eine ungewoehnlich
+ * lange Kette wird lieber unvollstaendig gezeigt als mit beliebig vielen
+ * Abfragen aufgeloest.
+ */
+async function vorfahrenNachladen(nachId) {
+  const kampagne = `kampagne=eq.${encodeURIComponent(KAMPAGNE)}`
+  const versucht = new Set()
+
+  for (let runde = 0; runde < VORFAHREN_RUNDEN; runde += 1) {
+    const fehlend = new Set()
+    for (const z of nachId.values()) {
+      const eltern = idSicher(z.eingeladen_von)
+      if (eltern && !nachId.has(eltern) && !versucht.has(eltern)) fehlend.add(eltern)
+    }
+    if (!fehlend.size) return
+
+    for (const teil of stuecke([...fehlend])) {
+      teil.forEach((id) => versucht.add(id))
+      const zeilen = await alleLesen(
+        `${TABELLE_TEILNEHMER}?select=id,deckel_nummer,instagram_handle,eingeladen_von`
+        + `&id=in.(${teil.join(',')})&${kampagne}&order=id.asc`,
+      )
+      for (const z of zeilen) if (!nachId.has(z.id)) nachId.set(z.id, z)
+    }
+  }
+}
+
+/**
+ * Generation im Einladungsbaum.
+ *
+ * 0 = selbst hereingekommen, 1 = von einem solchen eingeladen, und so weiter.
+ * `null`, wenn die Kette nicht aufloesbar ist — geraten wird nichts. Der Baum
+ * ist allein `eingeladen_von`; es gibt keine zweite Baumtabelle.
+ */
+function generationRechnen(start, nachId, gemerkt) {
+  const kette = []
+  const gesehen = new Set()
+  let laufend = idSicher(start)
+  let tiefe = null
+
+  while (laufend) {
+    if (gemerkt.has(laufend)) {
+      tiefe = gemerkt.get(laufend)
+      break
+    }
+    if (gesehen.has(laufend) || kette.length >= TIEFE_MAX) break
+    gesehen.add(laufend)
+
+    const z = nachId.get(laufend)
+    if (!z) break
+    const eltern = idSicher(z.eingeladen_von)
+    if (!eltern) {
+      gemerkt.set(laufend, 0)
+      tiefe = 0
+      break
+    }
+    kette.push(laufend)
+    laufend = eltern
+  }
+
+  if (tiefe == null) return null
+  for (let i = kette.length - 1; i >= 0; i -= 1) {
+    tiefe += 1
+    gemerkt.set(kette[i], tiefe)
+  }
+  return tiefe
+}
+
+/**
+ * Belegte und eingeloeste Einladungsslots je Account.
+ *
+ * Gezaehlt werden nur nicht widerrufene Zeilen: ein widerrufener, nie
+ * verwendeter Slot ist wieder frei. Genau diese Regel setzt in der Datenbank
+ * der Teilindex ueber (kampagne, einlader_teilnehmer_id, slot_nummer) mit
+ * `where widerrufen_am is null` durch — hier wird sie nur gelesen.
+ */
+async function slotsZaehlen(ids) {
+  const kampagne = `kampagne=eq.${encodeURIComponent(KAMPAGNE)}`
+  const spalten = 'einlader_teilnehmer_id,verwendet_am'
+  const zeilen = []
+
+  if (ids.length > IN_SCHWELLE) {
+    zeilen.push(...await alleLesen(
+      `${TABELLE_EINLADUNGEN}?select=${spalten}&${kampagne}&widerrufen_am=is.null&order=id.asc`,
+    ))
+  } else {
+    for (const teil of stuecke(ids)) {
+      zeilen.push(...await alleLesen(
+        `${TABELLE_EINLADUNGEN}?select=${spalten}&${kampagne}&widerrufen_am=is.null`
+        + `&einlader_teilnehmer_id=in.(${teil.join(',')})&order=id.asc`,
+      ))
+    }
+  }
+
+  const je = new Map()
+  for (const e of zeilen) {
+    const eintrag = je.get(e.einlader_teilnehmer_id) || { belegt: 0, eingeloest: 0 }
+    eintrag.belegt += 1
+    if (e.verwendet_am) eintrag.eingeloest += 1
+    je.set(e.einlader_teilnehmer_id, eintrag)
+  }
+  return je
+}
+
+/**
+ * Jede Teilnehmerzeile um das ergaenzen, was nicht in der Zeile steht:
+ * Einlader, Generation, belegte Slots und die drei getrennten
+ * Berechtigungen.
+ *
+ * Die Berechtigungen kommen aus denselben Funktionen, die auch das Terminal
+ * benutzt — `rankingBerechtigt` und `ziehungBerechtigt` aus dem Kern. Die
+ * Verwaltung soll keine zweite Auslegung derselben Regel bekommen.
+ */
+async function herkunftErgaenzen(zeilen, slotsGesamt) {
+  if (!zeilen.length) return zeilen
+
+  const nachId = new Map(zeilen.map((z) => [z.id, z]))
+  await vorfahrenNachladen(nachId)
+
+  const ids = zeilen.map((z) => idSicher(z.id)).filter(Boolean)
+  const slots = await slotsZaehlen(ids)
+  const gemerkt = new Map()
+
+  for (const z of zeilen) {
+    const einlader = z.eingeladen_von ? nachId.get(z.eingeladen_von) ?? null : null
+    const s = slots.get(z.id) || { belegt: 0, eingeloest: 0 }
+
+    z.quelle = z.registrierungsquelle ?? (z.eingeladen_von ? 'einladung' : 'deckel')
+    z.einladerInstagram = einlader?.instagram_handle ?? null
+    z.einladerDeckel = einlader?.deckel_nummer ?? null
+    z.generation = generationRechnen(z.id, nachId, gemerkt)
+    z.einladungenBelegt = s.belegt
+    z.einladungenEingeloest = s.eingeloest
+    z.einladungenGesamt = slotsGesamt
+    z.rankingOk = rankingBerechtigt(z)
+    z.ziehungOk = ziehungBerechtigt(z)
+  }
+  return zeilen
+}
+
 /**
  * Aktivierungen lesen, optional gefiltert.
  *
@@ -206,7 +404,7 @@ async function alleLesen(pfad) {
  * Endpoint ein Werkzeug, mit dem man pruefen kann, ob eine fremde Adresse
  * teilgenommen hat.
  */
-async function liste(b) {
+async function liste(b, slotsGesamt = null) {
   const suche = clean(b.suche, 60)
   let filter = `kampagne=eq.${encodeURIComponent(KAMPAGNE)}`
 
@@ -221,10 +419,15 @@ async function liste(b) {
 
   /* Nicht mehr durch die Deckelzahl begrenzt: auf eine Nummer koennen
      mehrere Besitzansprueche kommen. */
-  return alleLesen(
+  const zeilen = await alleLesen(
     `${TABELLE_TEILNEHMER}?select=${TEILNEHMER_SPALTEN}&${filter}`
     + '&order=aktiviert_am.desc,id.asc',
   )
+
+  /* Die Slotzahl steht in den Einstellungen. `stand()` hat sie ohnehin schon
+     geholt und reicht sie durch — sonst wird sie hier nachgelesen. */
+  const gesamt = slotsGesamt ?? (await einstellungenLesen()).einladungenProTeilnehmer
+  return herkunftErgaenzen(zeilen, gesamt)
 }
 
 async function ziehungen() {
@@ -244,10 +447,12 @@ async function meldungen() {
 
 /** Der gesamte Stand in einem Rutsch — die Admin-Seite holt nichts einzeln. */
 async function stand() {
-  const [einstellungen, aktiviert, eintraege, lose, gemeldet, instagramSync] = await Promise.all([
-    einstellungenLesen(),
+  /* Die Einstellungen zuerst: die Teilnehmerliste braucht die Slotzahl, und
+     zweimal dieselbe kleine Zeile zu lesen waere Verschwendung. */
+  const einstellungen = await einstellungenLesen()
+  const [aktiviert, eintraege, lose, gemeldet, instagramSync] = await Promise.all([
     aktivierteZaehlen(),
-    liste({}),
+    liste({}, einstellungen.einladungenProTeilnehmer),
     ziehungen(),
     meldungen(),
     /* Wirft nie: fehlen die Sync-Spalten, kommen Nullwerte. */
@@ -287,20 +492,42 @@ function csvBauen(zeilen) {
     'Instagram',
     'E-Mail',
     'Follow laut Eigenangabe',
+    'Follow von Hand geprueft',
+    'Geprueft am',
     'Aktiviert am',
     'Status',
     'Anspruch',
     'Besitz',
+    'Quelle',
+    'Eingeladen von',
+    'Generation',
+    'Deckel aktiviert am',
+    'Einladungen belegt',
+    'Einladungen eingeloest',
+    'Einladungen gesamt',
+    'Rankingberechtigt',
+    'Ziehungsberechtigt',
   ]
   const inhalt = zeilen.map((z) => [
     z.deckel_nummer,
     z.instagram_handle ? `@${z.instagram_handle}` : '',
     z.email ?? '',
     z.folgt_bestaetigt_von_nutzer ? 'ja' : 'nein',
+    z.folgt_pruefstatus ?? 'offen',
+    z.folgt_geprueft_am ?? '',
     z.aktiviert_am ?? '',
     z.status ?? '',
     z.anspruch_art ?? ANSPRUCH_ERST,
     z.besitz_status ?? '',
+    z.quelle ?? z.registrierungsquelle ?? '',
+    z.einladerInstagram ? `@${z.einladerInstagram}` : '',
+    z.generation ?? '',
+    z.deckel_aktiviert_am ?? '',
+    z.einladungenBelegt ?? '',
+    z.einladungenEingeloest ?? '',
+    z.einladungenGesamt ?? '',
+    z.rankingOk ? 'ja' : 'nein',
+    z.ziehungOk ? 'ja' : 'nein',
   ])
 
   /* Semikolon als Trenner und ein BOM voran: so oeffnet Excel unter Windows
@@ -607,6 +834,69 @@ async function besitzBestaetigen(b) {
   return stand()
 }
 
+/** Erlaubte Staende der Instagram-Pruefung von Hand. */
+const PRUEFSTAENDE = ['offen', 'bestaetigt', 'abgelehnt']
+
+/**
+ * Vor der Preisausgabe: den Instagram-Follow von Hand pruefen und das Ergebnis
+ * vermerken.
+ *
+ * WARUM VON HAND
+ * Wir behaupten an keiner Stelle, einen Follow automatisch verifizieren zu
+ * koennen. Die Graph API gibt die Followerliste einer Seite nicht heraus. Ein
+ * Mensch schaut auf das Profil und traegt hier ein, was er gesehen hat.
+ *
+ * KEINE AUTOMATISCHE DISQUALIFIKATION
+ * `folgt_pruefstatus` aendert sich ausschliesslich durch diesen Aufruf, also
+ * durch eine ausdrueckliche Eingabe in der Verwaltung. Kein Ausfall eines
+ * Dienstes, kein fehlgeschlagener Sync und kein Zeitablauf setzt jemanden auf
+ * 'abgelehnt'. Wer noch nicht angesehen wurde, bleibt 'offen'.
+ *
+ * `folgt_bestaetigt_von_nutzer` — die Selbstauskunft — wird hier NICHT
+ * ueberschrieben. Ein 'abgelehnt' ist der Vermerk fuer die Preisentscheidung,
+ * nicht der Loeschknopf fuer bereits gespielte Scores. Ueber gespeicherte
+ * Laeufe entscheidet weiterhin allein die Score-Pruefung.
+ */
+async function folgtPruefen(b) {
+  const id = clean(b.id, 60)
+  const neu = clean(b.status, 20)
+  if (!id || !PRUEFSTAENDE.includes(neu)) return { ok: false, grund: 'felder' }
+
+  const jetzt = new Date().toISOString()
+  const antwort = await fetch(
+    restUrl(`${TABELLE_TEILNEHMER}?id=eq.${encodeURIComponent(id)}`
+      + `&kampagne=eq.${encodeURIComponent(KAMPAGNE)}`),
+    {
+      method: 'PATCH',
+      headers: kopfzeilen({ Prefer: 'return=representation' }),
+      body: JSON.stringify({
+        folgt_pruefstatus: neu,
+        /* Zurueck auf 'offen' heisst: es gilt als nicht angesehen. Dann darf
+           auch kein Pruefzeitpunkt stehenbleiben. */
+        folgt_geprueft_am: neu === 'offen' ? null : jetzt,
+      }),
+    },
+  )
+  if (!antwort.ok) return { ok: false, grund: 'server' }
+
+  const zeilen = await antwort.json().catch(() => [])
+  const zeile = Array.isArray(zeilen) ? zeilen[0] : null
+  if (!zeile) return { ok: false, grund: 'felder' }
+
+  return {
+    ok: true,
+    teilnehmer: {
+      id: zeile.id,
+      instagram: zeile.instagram_handle,
+      folgtBestaetigt: zeile.folgt_bestaetigt_von_nutzer === true,
+      folgtPruefstatus: zeile.folgt_pruefstatus ?? 'offen',
+      folgtGeprueftAm: zeile.folgt_geprueft_am ?? null,
+      rankingOk: rankingBerechtigt(zeile),
+      ziehungOk: ziehungBerechtigt(zeile),
+    },
+  }
+}
+
 /** Eine Gewinnmeldung abhaken. Geprueft wird von Hand, hier wird notiert. */
 async function meldungStatus(b) {
   const id = clean(b.id, 60)
@@ -892,16 +1182,29 @@ async function statistik() {
  *    nur seinen Hash, und auch der verlaesst diese Funktion nicht. Den Link
  *    sieht ausschliesslich der Einlader in seinem eigenen Dashboard. Wer
  *    einen verlorenen Link braucht, widerruft den Slot und erzeugt ihn neu.
- * 2. Ein Knopf „offiziell machen". Aus einem Gast wird ein offizieller
- *    Teilnehmer nur dadurch, dass er selbst einen echten Deckel aktiviert.
- *    Gaebe es hier eine Abkuerzung, waere die Deckelpruefung eine Bitte und
- *    keine Regel mehr.
+ * 2. Ein Knopf „ziehungsberechtigt machen". Ein Los entsteht nur dadurch,
+ *    dass jemand einen echten physischen Deckel aktiviert. Gaebe es hier eine
+ *    Abkuerzung, waere die Deckelpruefung eine Bitte und keine Regel mehr.
  *
  * Gezaehlt wird aus den vorhandenen Spalten. Es gibt keine eigene
  * Analysetabelle und keine personenbezogenen Ereignisprotokolle:
  * `invite_created` ist erstellt_am, `invite_opened` sind oeffnungen und
  * geoeffnet_am, `invite_registered` ist verwendet_am,
- * `guest_converted_to_coaster` ist gast_konvertiert_am.
+ * `guest_converted_to_coaster` ist deckel_aktiviert_am.
+ *
+ * KEINE ZAHL WIRD SCHOENER GEMACHT, ALS SIE IST
+ * Jede Kennzahl kommt mit ihrer Formel heraus (`formeln`), damit in der
+ * Verwaltung nachlesbar ist, was genau gezaehlt wurde. Insbesondere:
+ *
+ *   - „Spieler via Einladung" ist die Zahl der Accounts mit
+ *     registrierungsquelle = 'einladung'. Das ist NICHT die Zahl neuer
+ *     Instagram-Follower: ob jemand wirklich folgt, sagt nur die
+ *     Selbstauskunft und die Pruefung von Hand.
+ *   - Der K-Faktor ist hier eingeloeste Einladungen je Account, nicht mehr.
+ *     Er misst die Ausbreitung der Kette, nicht Reichweite.
+ *   - Rankingberechtigt und ziehungsberechtigt werden getrennt gezaehlt und
+ *     nie vermischt: das eine ist Instagram-Handle plus Follow-Bestaetigung,
+ *     das andere ein physischer Deckel.
  */
 async function einladungenAuswertung(b) {
   const suche = clean(b.suche, 60)
@@ -909,7 +1212,8 @@ async function einladungenAuswertung(b) {
   const [teilnehmer, einladungen, einstellungen] = await Promise.all([
     alleLesen(
       `${TABELLE_TEILNEHMER}?select=id,deckel_nummer,instagram_handle,aktiviert_am,`
-      + 'teilnahme_status,eingeladen_von,eingeladen_am,gast_konvertiert_am,anspruch_art'
+      + 'teilnahme_status,eingeladen_von,eingeladen_am,gast_konvertiert_am,anspruch_art,'
+      + 'registrierungsquelle,deckel_aktiviert_am,folgt_bestaetigt_von_nutzer,folgt_pruefstatus'
       + `&kampagne=eq.${encodeURIComponent(KAMPAGNE)}&order=aktiviert_am.desc,id.asc`,
     ),
     alleLesen(
@@ -921,8 +1225,14 @@ async function einladungenAuswertung(b) {
   ])
 
   const nachId = new Map(teilnehmer.map((z) => [z.id, z]))
-  const gaeste = teilnehmer.filter((z) => z.teilnahme_status === STATUS_GAST)
-  const konvertiert = teilnehmer.filter((z) => z.gast_konvertiert_am)
+  const quelleVon = (z) => z.registrierungsquelle ?? (z.eingeladen_von ? 'einladung' : 'deckel')
+
+  const viaEinladung = teilnehmer.filter((z) => quelleVon(z) === 'einladung')
+  const viaDeckel = teilnehmer.filter((z) => quelleVon(z) === 'deckel')
+  /* Eingeladen hereingekommen und spaeter einen eigenen Deckel aktiviert. Die
+     Quelle bleibt dabei 'einladung' — sonst waere genau das nicht mehr
+     messbar. */
+  const eingeladenDannDeckel = viaEinladung.filter((z) => z.deckel_nummer != null)
   const offizielleErst = teilnehmer.filter(
     (z) => z.teilnahme_status === STATUS_OFFIZIELL && z.anspruch_art === ANSPRUCH_ERST,
   )
@@ -931,21 +1241,89 @@ async function einladungenAuswertung(b) {
   const verwendet = offen.filter((e) => e.verwendet_am)
   const geoeffnet = offen.filter((e) => e.geoeffnet_am)
 
-  /* Conversion: wie viele der eingeloesten Einladungen inzwischen zu einem
-     eigenen Deckel gefuehrt haben. Nenner sind die eingeloesten Einladungen,
-     nicht die erzeugten — ein nie geoeffneter Link sagt nichts ueber die
-     Ueberzeugungskraft des Gastbereichs. */
+  /* Kette: wie tief reicht der Baum, und wie viele Accounts haben ueberhaupt
+     schon jemanden hereingeholt. Der Baum ist allein `eingeladen_von`. */
+  const gemerkt = new Map()
+  let tiefeMax = 0
+  for (const z of teilnehmer) {
+    const g = generationRechnen(z.id, nachId, gemerkt)
+    if (g != null && g > tiefeMax) tiefeMax = g
+  }
+  const aktiveKetten = new Set(verwendet.map((e) => e.einlader_teilnehmer_id)).size
+
+  const rankingTeilnehmer = teilnehmer.filter((z) => rankingBerechtigt(z)).length
+  const ziehungsberechtigte = teilnehmer.filter((z) => ziehungBerechtigt(z)).length
+  const folgtBestaetigt = teilnehmer.filter((z) => z.folgt_bestaetigt_von_nutzer === true).length
+  const pruefstand = (wert) => teilnehmer.filter((z) => (z.folgt_pruefstatus ?? 'offen') === wert).length
+
   const zahlen = {
-    offizielleTeilnehmer: offizielleErst.length,
+    spielerGesamt: teilnehmer.length,
+    spielerViaDeckel: viaDeckel.length,
+    spielerViaEinladung: viaEinladung.length,
+    anteilViaEinladung: anteil(viaEinladung.length, teilnehmer.length),
+
     einladungenErzeugt: offen.length,
     einladungenWiderrufen: einladungen.length - offen.length,
     einladungenGeoeffnet: geoeffnet.length,
     einladungenVerwendet: verwendet.length,
-    gaesteAktiv: gaeste.length,
-    gaesteKonvertiert: konvertiert.length,
-    conversionRate: anteil(konvertiert.length, verwendet.length),
     oeffnungenGesamt: offen.reduce((s, e) => s + (Number(e.oeffnungen) || 0), 0),
     slotsProTeilnehmer: einstellungen.einladungenProTeilnehmer,
+
+    aktiveKetten,
+    einladungenJeSpieler: teilnehmer.length
+      ? Math.round((offen.length / teilnehmer.length) * 100) / 100
+      : null,
+    tiefeMax,
+    kFaktor: teilnehmer.length
+      ? Math.round((verwendet.length / teilnehmer.length) * 100) / 100
+      : null,
+
+    eingeladenDannDeckel: eingeladenDannDeckel.length,
+    conversionRate: anteil(eingeladenDannDeckel.length, viaEinladung.length),
+
+    folgtBestaetigt,
+    folgtGeprueft: pruefstand('bestaetigt'),
+    folgtAbgelehnt: pruefstand('abgelehnt'),
+    folgtZuPruefen: pruefstand('offen'),
+
+    rankingTeilnehmer,
+    ziehungsberechtigte,
+    /* Lose in der grossen Ziehung: Erstaktivierungen mit Deckel. Eine
+       Einladung erzeugt davon keines. */
+    offizielleTeilnehmer: offizielleErst.length,
+  }
+
+  /* Damit in der Verwaltung niemand raten muss, was eine Zahl bedeutet. */
+  const formeln = {
+    spielerGesamt: 'Alle Accounts dieser Kampagne, unabhaengig von Quelle und Deckel.',
+    spielerViaEinladung: 'Accounts mit registrierungsquelle = einladung. Das ist nicht die Zahl'
+      + ' neuer Instagram-Follower — ob jemand folgt, sagt nur die Selbstauskunft und die'
+      + ' Pruefung von Hand.',
+    anteilViaEinladung: 'Spieler via Einladung geteilt durch Spieler gesamt.',
+    einladungenErzeugt: 'Nicht widerrufene Einladungszeilen. Ein widerrufener, nie verwendeter'
+      + ' Slot gibt seinen Platz wieder frei und zaehlt hier nicht mehr mit.',
+    einladungenVerwendet: 'Nicht widerrufene Einladungen mit verwendet_am, also tatsaechlich'
+      + ' eingeloest.',
+    aktiveKetten: 'Accounts, ueber deren Link mindestens ein Mensch hereingekommen ist.',
+    einladungenJeSpieler: 'Erzeugte Einladungen geteilt durch Spieler gesamt.',
+    tiefeMax: 'Tiefste Generation im Einladungsbaum. 0 = selbst hereingekommen, 1 = direkt'
+      + ' eingeladen, 2 = von einem Eingeladenen eingeladen, und so weiter.',
+    kFaktor: 'Eingeloeste Einladungen geteilt durch Spieler gesamt. Misst die Ausbreitung der'
+      + ' Kette — nicht Reichweite und nicht Followerzuwachs. Ueber 1 waechst die Kette von'
+      + ' allein, darunter laeuft sie aus.',
+    eingeladenDannDeckel: 'Eingeladene Spieler, die spaeter einen eigenen physischen Deckel'
+      + ' aktiviert haben. Ihre Quelle bleibt einladung.',
+    conversionRate: 'Eingeladene mit Deckel geteilt durch eingeladene Spieler.',
+    folgtBestaetigt: 'Hat den Follow selbst bestaetigt. Eine automatische Verifikation ueber'
+      + ' Instagram gibt es nicht — die Graph API gibt die Followerliste nicht heraus.',
+    folgtZuPruefen: 'Noch von niemandem von Hand nachgesehen. Vor einer Preisausgabe ist das'
+      + ' der Stapel, der abzuarbeiten ist.',
+    rankingTeilnehmer: 'Instagram-Handle vorhanden UND Follow selbst bestaetigt. Diese Spieler'
+      + ' erscheinen in den Ranglisten, im Gesamtranking und koennen Gamepreise gewinnen —'
+      + ' unabhaengig davon, ob sie einen Deckel haben.',
+    ziehungsberechtigte: 'Ein physischer Deckel ist aktiviert. Nur diese Accounts sind in der'
+      + ' grossen Deckel-Ziehung. Einladungen erzeugen kein Los.',
+    offizielleTeilnehmer: 'Erstaktivierungen mit Deckel — die Zahl der Lose in der Ziehung.',
   }
 
   /* Pro Einlader: die Slots und wer dahinter steht. Nur Instagram-Namen,
@@ -959,24 +1337,28 @@ async function einladungenAuswertung(b) {
 
   const jeEinlader = new Map()
   for (const e of offen) {
-    const liste = jeEinlader.get(e.einlader_teilnehmer_id) || []
-    liste.push(e)
-    jeEinlader.set(e.einlader_teilnehmer_id, liste)
+    const eintraege = jeEinlader.get(e.einlader_teilnehmer_id) || []
+    eintraege.push(e)
+    jeEinlader.set(e.einlader_teilnehmer_id, eintraege)
   }
 
   const einlader = []
-  for (const [id, liste] of jeEinlader) {
+  for (const [id, eintraege] of jeEinlader) {
     const z = nachId.get(id)
     if (!z || !passt(z)) continue
     einlader.push({
       id,
       deckel: z.deckel_nummer,
       instagram: z.instagram_handle,
-      slots: liste
+      quelle: quelleVon(z),
+      generation: generationRechnen(id, nachId, gemerkt),
+      rankingOk: rankingBerechtigt(z),
+      ziehungOk: ziehungBerechtigt(z),
+      slots: eintraege
         .slice()
         .sort((a, c) => Number(a.slot_nummer) - Number(c.slot_nummer))
         .map((e) => {
-          const gast = e.gast_teilnehmer_id ? nachId.get(e.gast_teilnehmer_id) : null
+          const wer = e.gast_teilnehmer_id ? nachId.get(e.gast_teilnehmer_id) : null
           return {
             slot: Number(e.slot_nummer),
             status: e.gast_teilnehmer_id ? 'beigetreten' : 'eingeladen',
@@ -984,12 +1366,13 @@ async function einladungenAuswertung(b) {
             geoeffnetAm: e.geoeffnet_am ?? null,
             oeffnungen: Number(e.oeffnungen) || 0,
             verwendetAm: e.verwendet_am ?? null,
-            gast: gast
+            spieler: wer
               ? {
-                instagram: gast.instagram_handle,
-                gast: gast.teilnahme_status === STATUS_GAST,
-                deckel: gast.deckel_nummer,
-                konvertiertAm: gast.gast_konvertiert_am ?? null,
+                instagram: wer.instagram_handle,
+                deckel: wer.deckel_nummer,
+                ziehungOk: ziehungBerechtigt(wer),
+                rankingOk: rankingBerechtigt(wer),
+                deckelAktiviertAm: wer.deckel_aktiviert_am ?? wer.gast_konvertiert_am ?? null,
               }
               : null,
           }
@@ -998,21 +1381,25 @@ async function einladungenAuswertung(b) {
   }
   einlader.sort((a, c) => (a.deckel ?? 0) - (c.deckel ?? 0))
 
-  /* Die Gastliste getrennt: auch Gaeste, deren Einladungszeile nicht mehr
-     verknuepft werden konnte, sollen auffindbar sein. */
-  const gastliste = teilnehmer
-    .filter((z) => (z.teilnahme_status === STATUS_GAST || z.gast_konvertiert_am) && passt(z))
+  /* Die eingeladenen Spieler getrennt: auch wer eingeladen hereinkam, dessen
+     Einladungszeile sich aber nicht mehr verknuepfen liess, soll auffindbar
+     sein. Das sind vollwertige Spieler — nur ohne eigenes Los, solange kein
+     Deckel dazugekommen ist. */
+  const eingeladene = teilnehmer
+    .filter((z) => quelleVon(z) === 'einladung' && passt(z))
     .map((z) => ({
       id: z.id,
       instagram: z.instagram_handle,
-      gast: z.teilnahme_status === STATUS_GAST,
       deckel: z.deckel_nummer,
+      generation: generationRechnen(z.id, nachId, gemerkt),
+      rankingOk: rankingBerechtigt(z),
+      ziehungOk: ziehungBerechtigt(z),
       eingeladenAm: z.eingeladen_am ?? null,
-      konvertiertAm: z.gast_konvertiert_am ?? null,
+      deckelAktiviertAm: z.deckel_aktiviert_am ?? z.gast_konvertiert_am ?? null,
       einladerInstagram: z.eingeladen_von ? nachId.get(z.eingeladen_von)?.instagram_handle ?? null : null,
     }))
 
-  return { ok: true, zahlen, einlader, gaeste: gastliste }
+  return { ok: true, zahlen, formeln, einlader, eingeladene }
 }
 
 /* ------------------------------------------------------------------ */
@@ -1105,6 +1492,16 @@ export default async function handler(req, res) {
         return
       }
       const ergebnis = await besitzBestaetigen(b)
+      res.status(ergebnis.ok ? 200 : 400).json(ergebnis)
+      return
+    }
+
+    if (aktion === 'folgt-pruefen') {
+      if (!schreibenErlaubt()) {
+        res.status(503).json({ ok: false, grund: 'pause' })
+        return
+      }
+      const ergebnis = await folgtPruefen(b)
       res.status(ergebnis.ok ? 200 : 400).json(ergebnis)
       return
     }

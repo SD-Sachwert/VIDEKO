@@ -50,13 +50,13 @@ import {
 } from './_terminal-kern.js'
 import { gesamtranking } from './_terminal-gesamtranking.js'
 import {
+  einladenBerechtigt,
   einladungErzeugen,
   einladungOeffnen,
   einladungWiderrufen,
   gastAnlegen,
   gastKonvertieren,
-  istGast,
-  istOffiziell,
+  ohneDeckel,
   teamLesen,
   teilnehmerLesen,
   teilnehmerSicht,
@@ -84,22 +84,29 @@ import { probeBehandeln, probeLesen } from './_terminal-probe.js'
  *                 Deckel. Antwortet immer gleich, ob die Adresse bekannt ist
  *                 oder nicht.
  *   wieder-einloesen — Zugangslink gegen einen Sitzungsbeleg tauschen.
- *   einladungen  — die eigenen Einladungsslots („DEIN TEAM"). Nur fuer
- *                 offizielle Teilnehmer, nur gegen Sitzungsbeleg.
+ *   einladungen  — die eigenen Einladungsslots („DEINE 3 EINLADUNGEN"). Fuer
+ *                 jeden registrierten Account, nur gegen Sitzungsbeleg.
  *   einladung-erzeugen / einladung-widerrufen — einen Slot belegen oder
  *                 einen noch nicht eingeloesten Link zurueckziehen.
  *   einladung-pruefen — oeffentlich: steht hinter einem Einladungslink noch
  *                 eine offene Einladung, und von wem?
- *   gast-anlegen — eine Einladung einloesen und als Gast mitspielen.
+ *   gast-anlegen — eine Einladung einloesen und mitspielen.
  *
- * EINE EINLADUNG IST KEIN LOS
- * ---------------------------
- * Ein physischer Deckel ist genau ein Los. Ein Gast spielt alle Hauptgames,
- * seine Punkte werden gespeichert und er sieht sie — aber er ist in keiner
- * Ziehung, in keiner oeffentlichen Liste und in keinem offiziellen
- * Gesamtranking. Wer eingeladen hat, bekommt dadurch keine zusaetzliche
- * Chance. Offiziell wird ein Gast ausschliesslich dadurch, dass er selbst
- * einen echten Deckel aktiviert — siehe `aktivieren` weiter unten.
+ * ZWEI DINGE, DIE STRIKT GETRENNT SIND
+ * ------------------------------------
+ * A) SPIELTEILNAHME. Jeder vollstaendig registrierte Mensch spielt alle
+ *    Hauptgames, seine Punkte werden gewertet, er steht in den Ranglisten und
+ *    im Gesamtranking, kann Platz 1-3 und die Preise in den Games gewinnen und
+ *    hat drei eigene Einladungen. Voraussetzung ist der Instagram-Handle mit
+ *    bestaetigtem Follow — nicht der Deckel. Ueber welchen Weg jemand
+ *    hereingekommen ist, spielt dafuer keine Rolle.
+ *
+ * B) DECKEL-ZIEHUNG. Daran nimmt nur teil, wer einen echten physischen Deckel
+ *    aktiviert hat. Ein Deckel ist genau ein Los. Eine Einladung erzeugt
+ *    weiterhin KEIN Los — weder fuer den Einlader noch fuer den Eingeladenen.
+ *    Wer eingeladen wurde, kann jederzeit einen eigenen Deckel nachruesten;
+ *    dann bekommt derselbe Account zusaetzlich sein Los, behaelt aber Scores,
+ *    Rangplaetze, Einladungen und die Herkunft `registrierungsquelle`.
  *
  * Dazu kommt ein Sonderweg: liegt ein gueltiger Testbeleg an (`probe`, nur
  * ueber die Admin-Anmeldung zu bekommen), beantwortet _terminal-probe.js die
@@ -193,10 +200,10 @@ async function zustand(b, res) {
   let team = null
   const beleg = belegPruefen(b.sitzung, 's')
   if (beleg?.id) {
-    /* Die Zeile kommt aus der Datenbank, nicht aus dem Beleg. Damit steht
-       auch `teilnahme_status` immer fest — ob jemand Gast ist, entscheidet
-       nie der Browser. Kein `email` in der Auswahl: die Adresse gehoert der
-       Meldung im Gewinnfall, nicht dem Dashboard. */
+    /* Die Zeile kommt aus der Datenbank, nicht aus dem Beleg. Damit stehen
+       auch Ranking-, Ziehungs- und Einladungsberechtigung immer fest — daran
+       aendert kein Browser etwas. Kein `email` in der Auswahl: die Adresse
+       gehoert der Meldung im Gewinnfall, nicht dem Dashboard. */
     const [z, beste, gesamt, rangGesamt] = await Promise.all([
       teilnehmerLesen(beleg.id),
       eigeneBestwerte(beleg.id),
@@ -205,21 +212,25 @@ async function zustand(b, res) {
     ])
     teilnehmer = teilnehmerSicht(z)
 
-    if (istGast(z) && z.eingeladen_von) {
-      /* Der Gast soll sehen, wer ihn hereingeholt hat — Name, nie mehr. */
+    /* Wer eingeladen wurde, soll sehen, wer ihn hereingeholt hat — Name, nie
+       mehr. Das gilt unabhaengig davon, ob er inzwischen selbst einen Deckel
+       aktiviert hat: die Herkunft bleibt sichtbar. */
+    if (z?.eingeladen_von) {
       const einlader = await teilnehmerLesen(z.eingeladen_von)
       if (einlader) teilnehmer.einladerInstagram = einlader.instagram_handle
-    } else if (istOffiziell(z)) {
-      /* Einladungsslots gibt es nur fuer offizielle Teilnehmer. Ein Gast
-         bekommt hier `null` und damit gar keine Oberflaeche dafuer. */
+    }
+
+    /* Einladungsslots bekommt jeder aktive Account — mit und ohne Deckel.
+       Genau daraus entsteht die Kette 1 -> 3 -> 9 -> 27. */
+    if (einladenBerechtigt(z)) {
       team = await teamLesen(z.id, einstellungen.einladungenProTeilnehmer, terminalBasis())
     }
 
     /* Die eigenen Werte bekommt nur, wer den Beleg hat. `platz` ist der Platz
        in der oeffentlichen Gesamtliste — ohne Einwilligung gibt es keinen,
-       dann steht hier null und im Dashboard der Hinweis darauf. Ein Gast
-       steht in keiner der beiden oeffentlichen Wertungen; seine eigenen
-       Bestwerte sieht er trotzdem. */
+       dann steht hier null und im Dashboard der Hinweis darauf. Wer den
+       Instagram-Follow nicht bestaetigt hat, steht in keiner oeffentlichen
+       Wertung; seine eigenen Bestwerte sieht er trotzdem. */
     spiele = {
       beste,
       gesamt: gesamt.eigenePunkte,
@@ -277,25 +288,26 @@ function code(b, res, ip) {
  *
  *   1. Der gewoehnliche: Raetselcode geloest, Zugangsbeleg vorhanden, es
  *      entsteht eine neue Teilnehmerzeile.
- *   2. Der Gast: jemand ist ueber eine Einladung im Terminal, hat gespielt
- *      und hat jetzt einen eigenen Deckel in der Hand. Dann wird KEINE
- *      zweite Zeile angelegt — die vorhandene wird fortgeschrieben. Der
- *      Account behaelt id, Anmeldung, Scores und Herkunft; er bekommt eine
- *      Deckelnummer und damit ab sofort ein Los, Ranking und eigene
- *      Einladungsslots.
+ *   2. Das Nachruesten: jemand ist ueber eine Einladung im Terminal, spielt
+ *      und rankt dort laengst und hat jetzt einen eigenen Deckel in der Hand.
+ *      Dann wird KEINE zweite Zeile angelegt — die vorhandene wird
+ *      fortgeschrieben. Der Account behaelt id, Anmeldung, Scores,
+ *      Rangplaetze, seine eigenen Einladungen und die Herkunft
+ *      `registrierungsquelle` = 'einladung'. Neu ist allein das Los.
  *
- * Dass jemand Gast ist, steht ausschliesslich in der Datenbank. Der Client
- * schickt keinen Status, und es gibt keinen Parameter, mit dem sich einer
- * setzen liesse. Ohne echte Deckelnummer kommt hier niemand durch — die
- * Datenbank laesst offiziell ohne Nummer gar nicht zu.
+ * Ob an einem Account ein Deckel haengt, steht ausschliesslich in der
+ * Datenbank. Der Client schickt keinen Status, und es gibt keinen Parameter,
+ * mit dem sich einer setzen liesse. Ohne echte Deckelnummer kommt hier
+ * niemand durch — die Datenbank laesst einen Ziehungsstatus ohne Nummer gar
+ * nicht zu.
  */
 async function aktivieren(b, res, ip) {
-  /* Wer eine gueltige Gastsitzung hat, ist schon im Terminal und braucht
-     den Raetselcode nicht noch einmal. Fuer alle anderen bleibt der
-     Zugangsbeleg Pflicht. */
+  /* Wer schon angemeldet ist und noch keinen Deckel hat, ist bereits im
+     Terminal und braucht den Raetselcode nicht noch einmal. Fuer alle anderen
+     bleibt der Zugangsbeleg Pflicht. */
   const sitzung = belegPruefen(b.sitzung, 's')
   const vorhanden = sitzung?.id ? await teilnehmerLesen(sitzung.id) : null
-  const gast = istGast(vorhanden) ? vorhanden : null
+  const gast = ohneDeckel(vorhanden) ? vorhanden : null
 
   if (!gast && !belegPruefen(b.zugang, 'z')) {
     /* Abgelaufen oder gefaelscht. Die Seite schickt die Person zurueck zum
@@ -310,9 +322,10 @@ async function aktivieren(b, res, ip) {
     return
   }
 
-  /* Der Gast hat Name und Adresse bei der Einladung schon hinterlegt. Sie
-     werden nicht noch einmal erfragt und nicht ueberschrieben — sonst liesse
-     sich ueber diesen Weg ein fremder Account umschreiben. */
+  /* Wer schon registriert ist, hat Name und Adresse bei der Anmeldung
+     hinterlegt. Sie werden nicht noch einmal erfragt und nicht
+     ueberschrieben — sonst liesse sich ueber diesen Weg ein fremder Account
+     umschreiben. */
   const instagram = gast ? gast.instagram_handle : instagramNormalisieren(b.instagram)
   const email = gast ? null : clean(b.email, FELD_GRENZEN.email)
   const folgt = b.folgt === true
@@ -365,17 +378,21 @@ async function aktivieren(b, res, ip) {
   }
   const anspruchArt = belegt ? ANSPRUCH_WEITERER : ANSPRUCH_ERST
 
-  /* Der Gastweg: dieselbe Zeile, jetzt mit Nummer. Kein zweiter Account,
-     keine kopierten Scores, keine neue id — die Punkte haengen an genau
-     dieser id und bleiben deshalb einfach liegen, wo sie sind. */
+  /* Deckel nachruesten: dieselbe Zeile, jetzt mit Nummer. Kein zweiter
+     Account, keine kopierten Scores, keine neue id — die Punkte haengen an
+     genau dieser id und bleiben deshalb einfach liegen, wo sie sind. Ebenso
+     die Rangplaetze, die eigenen Einladungsslots und die Herkunft: aus
+     `registrierungsquelle` = 'einladung' wird hier ausdruecklich kein
+     'deckel'. Was dazukommt, ist allein das Los. */
   if (gast) {
     const umgestellt = await gastKonvertieren(gast.id, nummer, anspruchArt)
     if (!umgestellt.ok) {
       res.status(umgestellt.status).json({ ok: false, grund: umgestellt.grund })
       return
     }
-    /* Ab jetzt zaehlen die Laeufe dieser Person in den offiziellen Wertungen
-       mit. Der Zwischenspeicher kennt sie noch als Gast — also verwerfen. */
+    /* Der Lostopf und die Zaehler haben sich geaendert, die Wertungen nicht.
+       Der Zwischenspeicher wird trotzdem verworfen: er haelt auch den
+       Follow-Stand, und der ist jetzt bestaetigt. */
     rangSpeicherLeeren()
     if (leaderboardOk) await einwilligungSetzen(gast.id, true)
 
@@ -404,6 +421,10 @@ async function aktivieren(b, res, ip) {
       email,
       folgt_bestaetigt_von_nutzer: true,
       aktiviert_am: jetztIso,
+      deckel_aktiviert_am: jetztIso,
+      /* Dieser Mensch ist ueber einen Deckelcode hereingekommen. Der Wert
+         aendert sich danach nie wieder. */
+      registrierungsquelle: 'deckel',
       status: 'aktiv',
       ip_hash: hash,
       leaderboard_ok: leaderboardOk,
@@ -434,12 +455,9 @@ async function aktivieren(b, res, ip) {
   res.status(200).json({
     ok: true,
     sitzung: belegErzeugen('s', { id: zeile.id }),
-    teilnehmer: {
-      deckel: zeile.deckel_nummer,
-      instagram: zeile.instagram_handle,
-      aktiviertAm: zeile.aktiviert_am,
-      leaderboardOk: zeile.leaderboard_ok === true,
-    },
+    /* Dieselbe Sicht wie ueberall sonst: mit Ranking-, Ziehungs- und
+       Einladungsberechtigung, damit die Seite sofort das Richtige zeigt. */
+    teilnehmer: teilnehmerSicht(zeile),
     aktiviert: (await aktivierteZaehlen()) ?? undefined,
   })
 }
@@ -504,9 +522,16 @@ async function melden(b, res, ip) {
 /**
  * Laufticket fuer eine Runde ausgeben.
  *
- * Spielen darf nur, wer einen Deckel aktiviert hat — der Sitzungsbeleg ist
- * der Nachweis. Im Ticket steht, wer spielt, welches Spiel und wann es
- * losging; es ist signiert und damit im Browser nicht aenderbar.
+ * Spielen darf jeder registrierte Account — der Sitzungsbeleg ist der
+ * Nachweis, ein Deckel ist dafuer ausdruecklich nicht noetig. Im Ticket
+ * steht, wer spielt, welches Spiel und wann es losging; es ist signiert und
+ * damit im Browser nicht aenderbar.
+ *
+ * Ob ein Lauf am Ende GEWERTET wird, entscheidet nicht diese Stelle, sondern
+ * die Rankingberechtigung (Instagram-Handle plus bestaetigter Follow). Ein
+ * Lauf wird deshalb immer gespeichert; die Ranglisten filtern anschliessend.
+ * Der anonyme Probelauf laeuft ohnehin ueber _terminal-probe.js und beruehrt
+ * keine Tabelle.
  */
 async function spielStart(b, res, ip) {
   const beleg = belegPruefen(b.sitzung, 's')
@@ -991,18 +1016,23 @@ async function wiederEinloesen(b, res, ip) {
 /* ------------------------------------------------------------------ */
 
 /**
- * „DEIN TEAM" und die Slots dahinter.
+ * „DEINE 3 EINLADUNGEN" und die Slots dahinter.
  *
- * Alles hier haengt an einer einzigen Frage, die nur die Datenbank
- * beantwortet: ist der Absender ein offizieller Teilnehmer? Ein Gast bekommt
- * 403 — nicht, weil die Oberflaeche ihm den Knopf nicht zeigt, sondern weil
- * der Server ihn nicht bedient. Einladungsketten gibt es damit nicht.
+ * Jeder registrierte, aktive Account bekommt sie — mit Deckel und ohne. Wer
+ * selbst ueber eine Einladung hereingekommen ist, laedt genauso weiter ein:
+ * 1 -> 3 -> 9 -> 27. Die Kettentiefe ist nicht begrenzt.
+ *
+ * Wie viele Slots es sind, entscheidet allein der Server
+ * (`einladungen_pro_teilnehmer`, Vorgabe 3). Mehr als diese Zahl gleichzeitig
+ * gueltiger Plaetze kann niemand bekommen — auch nicht durch erstellen,
+ * widerrufen, neu erstellen: widerrufbar ist nur ein noch unbenutzter Slot.
  */
 const MAX_EINLADUNG_SCHREIBEN = 20
 const MAX_EINLADUNG_OEFFNEN = 60
 const MAX_GAST = 5
 const GAST_FENSTER_MS = 60 * 60 * 1000
-const NUR_OFFIZIELL = { ok: false, grund: 'gast', meldung: 'Einladungen gibt es nur mit eigenem Deckel.' }
+/* Kein Account, oder von der Verwaltung abgeschaltet. Nicht „kein Deckel". */
+const KEIN_KONTO = { ok: false, grund: 'konto', meldung: 'Dieses Konto kann gerade keine Einladungen vergeben.' }
 
 /** Die eigene Zeile hinter einem Sitzungsbeleg — oder null. */
 async function eigeneZeile(b) {
@@ -1016,8 +1046,8 @@ async function einladungen(b, res) {
     res.status(401).json({ ok: false, grund: 'sitzung' })
     return
   }
-  if (!istOffiziell(ich)) {
-    res.status(403).json(NUR_OFFIZIELL)
+  if (!einladenBerechtigt(ich)) {
+    res.status(403).json(KEIN_KONTO)
     return
   }
   const einstellungen = await einstellungenLesen()
@@ -1035,8 +1065,8 @@ async function einladungNeu(b, res, ip) {
     res.status(401).json({ ok: false, grund: 'sitzung' })
     return
   }
-  if (!istOffiziell(ich)) {
-    res.status(403).json(NUR_OFFIZIELL)
+  if (!einladenBerechtigt(ich)) {
+    res.status(403).json(KEIN_KONTO)
     return
   }
 
@@ -1063,8 +1093,8 @@ async function einladungZurueck(b, res, ip) {
     res.status(401).json({ ok: false, grund: 'sitzung' })
     return
   }
-  if (!istOffiziell(ich)) {
-    res.status(403).json(NUR_OFFIZIELL)
+  if (!einladenBerechtigt(ich)) {
+    res.status(403).json(KEIN_KONTO)
     return
   }
 
@@ -1100,18 +1130,26 @@ async function einladungPruefen(b, res, ip) {
 }
 
 /**
- * Einladung einloesen: Gastaccount anlegen.
+ * Einladung einloesen: den Spieleraccount anlegen.
  *
- * Der Gast bekommt einen ganz normalen Sitzungsbeleg — dieselbe Anmeldung
- * wie jeder andere. Was er NICHT bekommt: eine Deckelnummer, ein Los, einen
- * Platz im offiziellen Gesamtranking oder eigene Einladungsslots. Das
- * entscheidet nicht dieser Beleg, sondern `teilnahme_status` in der
- * Datenbank, und die laesst zu einem Gast gar keine Nummer zu.
+ * Er bekommt einen ganz normalen Sitzungsbeleg und ab da alles, was ein
+ * Deckelaccount auch hat: alle Hauptgames, gewertete Scores, die Ranglisten,
+ * das Gesamtranking und drei eigene Einladungen.
+ *
+ * Was er NICHT bekommt, ist das Los: dafuer braucht es eine echte
+ * Deckelnummer. Das entscheidet nicht dieser Beleg, sondern die Datenbank —
+ * sie laesst ohne Nummer gar keinen Ziehungsstatus zu.
+ *
+ * Der Instagram-Handle und die Follow-Bestaetigung sind hier genauso Pflicht
+ * wie beim Deckelweg: ohne sie gibt es keine gewerteten Scores, also waere
+ * ein Account ohne sie sinnlos. Behauptet wird damit nichts — es ist die
+ * Selbstauskunft der Person, und vor einer Preisausgabe schaut ein Mensch
+ * nach.
  *
  * Die E-Mail-Adresse wird erhoben, weil das Terminal genau einen Weg zurueck
  * in einen Account kennt: den Zugangslink per Mail. Ohne sie waeren die
- * Punkte eines Gastes beim naechsten geloeschten Browserspeicher weg — und
- * „DEINE SCORES SIND SICHER." waere eine Luege.
+ * Punkte beim naechsten geloeschten Browserspeicher weg — und „DEINE SCORES
+ * SIND SICHER." waere eine Luege.
  */
 async function gastAnmelden(b, res, ip) {
   if (zuSchnell(ip, 'gast', MAX_GAST)) {
@@ -1121,12 +1159,20 @@ async function gastAnmelden(b, res, ip) {
 
   const instagram = instagramNormalisieren(b.instagram)
   const email = clean(b.email, FELD_GRENZEN.email)
+  /* Der Haken „Ich folge @videko.kuechen". Er belegt eine Selbstauskunft,
+     keine Pruefung — und er entscheidet darueber, ob die Scores dieses
+     Accounts gewertet werden. Deshalb steht er hier in der
+     Pflichtfeldpruefung, genau wie beim Deckelweg. */
+  const folgt = b.folgt === true
+  /* Die Einwilligung in die oeffentliche Bestenliste bleibt freiwillig: ohne
+     sie wird gespielt und gewertet wie sonst auch, der Instagram-Name
+     erscheint nur auf keiner oeffentlichen Liste. Also keine Pflicht. */
+  const leaderboard = b.leaderboard === true
   const felder = []
   if (!instagram) felder.push('instagram')
   if (!email || !EMAIL_MUSTER.test(email)) felder.push('email')
-  /* Zustimmung zu Teilnahmebedingungen und Datenschutz. Die Freigabe fuer
-     die oeffentliche Rangliste wird hier ausdruecklich NICHT verlangt — ein
-     Gast steht ohnehin auf keiner. */
+  if (!folgt) felder.push('folgt')
+  /* Zustimmung zu Teilnahmebedingungen und Datenschutz. */
   if (b.bedingungen !== true) felder.push('bedingungen')
   if (felder.length) {
     res.status(400).json({ ok: false, grund: 'felder', felder })
@@ -1144,15 +1190,17 @@ async function gastAnmelden(b, res, ip) {
     return
   }
 
-  const ergebnis = await gastAnlegen({ token: b.token, instagram, email, ipH: hash })
+  const ergebnis = await gastAnlegen({
+    token: b.token, instagram, email, folgt, leaderboard, ipH: hash,
+  })
   if (!ergebnis.ok) {
     res.status(ergebnis.status).json({ ok: false, grund: ergebnis.grund })
     return
   }
 
-  /* Ein frischer Gast hat noch keinen Lauf, aber der Zwischenspeicher soll
-     ihn trotzdem sofort kennen — sonst zaehlte sein erster Lauf womoeglich
-     zwanzig Sekunden lang in einer offiziellen Wertung mit. */
+  /* Ein frischer Account hat noch keinen Lauf, aber der Zwischenspeicher haelt
+     die Liste der nicht rankingberechtigten ids — und die hat sich gerade
+     geaendert. Also verwerfen, damit der erste Lauf sofort richtig zaehlt. */
   rangSpeicherLeeren()
 
   res.status(200).json({

@@ -135,15 +135,20 @@ export default function SpielKarte({ spiel, lauf, best, leiste = null, children 
               {zahl(punkte)}
             </p>
 
+            {/* Der Probelauf ist vorbei und zaehlt nicht. Hier steht, was
+                stattdessen zaehlt — und die beiden Wege dahin. */}
             {practice && phase === 'vorbei' && (
-              <button
-                type="button"
-                className="trm-cta trm-cta--umriss"
-                data-practice-cta
-                onClick={() => practiceWeg?.onCta?.()}
-              >
-                {T.practiceCta}
-              </button>
+              <>
+                <p className="trm-spiel__jagd">{T.practiceFrage}</p>
+                <button
+                  type="button"
+                  className="trm-cta trm-cta--umriss"
+                  data-practice-cta
+                  onClick={() => practiceWeg?.onCta?.()}
+                >
+                  {T.practiceCta}
+                </button>
+              </>
             )}
             {neuerBest && <p className="trm-spiel__neu">{T.neuerBest}</p>}
 

@@ -8,15 +8,17 @@ import {
   besteJePerson,
   clean,
   einstellungenSchreiben,
-  gastIds,
   gemerkt,
   gesamtrankingEinstellungenLesen,
   kopfzeilen,
   lesen,
   namenLesen,
-  ohneGaeste,
+  nurGewertete,
+  ohneRankingIds,
   rangSpeicherLeeren,
+  rankingBerechtigt,
   restUrl,
+  ziehungBerechtigt,
 } from './_terminal-kern.js'
 
 /**
@@ -146,26 +148,28 @@ export function gesamtrankingRechnen(hauptgames, bestJeSpiel) {
 /**
  * Live aus den Laeufen rechnen. `streng`: bei einem Lesefehler null statt Luecke.
  *
- * Gastlaeufe werden vor der Rechnung entfernt — und zwar VOR dem Zaehlen von
- * N. Das ist der entscheidende Punkt: N ist die Zahl der Personen mit einem
- * Lauf in diesem Game, und aus N ergeben sich die Rangpunkte jedes einzelnen
- * offiziellen Teilnehmers. Wuerden Gaeste mitgezaehlt, verschoebe jeder
- * Gastlauf die Punkte aller offiziellen Teilnehmer. Ein Gast darf das
- * offizielle Ranking nicht um einen einzigen Punkt bewegen.
+ * N ist die Zahl ALLER rankingberechtigten Personen mit einem Lauf in diesem
+ * Game — egal, ob sie ueber einen Deckel oder ueber eine Einladung
+ * hereingekommen sind. Ein eingeladener Mensch verschiebt die Rangpunkte
+ * aller anderen genauso wie jeder Deckelbesitzer und kann selbst Platz 1
+ * belegen. Das ist so gewollt: es gibt genau ein Ranking.
  *
- * Laesst sich die Gastliste nicht lesen, wird gar nicht gerechnet. Lieber
- * kein Ranking als ein Ranking, in dem moeglicherweise Gaeste stecken.
+ * Herausgenommen wird vor dem Zaehlen von N nur, wessen Laeufe ueberhaupt
+ * nicht gewertet werden — also wer keinen Instagram-Follow bestaetigt hat.
+ *
+ * Laesst sich diese Liste nicht lesen, wird gar nicht gerechnet. Lieber kein
+ * Ranking als eines, in dem ungewertete Laeufe stecken.
  */
 async function liveRechnen(hauptgames, streng = false) {
-  const [gaeste, ...teile] = await Promise.all([
-    gastIds(),
+  const [gesperrt, ...teile] = await Promise.all([
+    ohneRankingIds(),
     ...hauptgames.map((g) => laeufeAlleLesen(g)),
   ])
-  if (gaeste == null) return null
+  if (gesperrt == null) return null
   if (streng && teile.some((t) => t == null)) return null
   const bestJeSpiel = {}
   hauptgames.forEach((g, i) => {
-    bestJeSpiel[g] = besteJePerson(ohneGaeste(teile[i] ?? [], gaeste))
+    bestJeSpiel[g] = besteJePerson(nurGewertete(teile[i] ?? [], gesperrt))
   })
   return gesamtrankingRechnen(hauptgames, bestJeSpiel)
 }
@@ -448,7 +452,9 @@ export async function gesamtrankingAdmin() {
   if (ids.length) {
     ;[personen, laeufe] = await Promise.all([
       lesen(
-        `${TABELLE_TEILNEHMER}?select=id,instagram_handle,leaderboard_ok,email,deckel_nummer,anspruch_art,besitz_status`
+        `${TABELLE_TEILNEHMER}?select=id,instagram_handle,leaderboard_ok,email,deckel_nummer,`
+        + 'anspruch_art,besitz_status,registrierungsquelle,folgt_bestaetigt_von_nutzer,'
+        + 'folgt_pruefstatus,folgt_geprueft_am'
         + `&kampagne=eq.${encodeURIComponent(KAMPAGNE)}&id=in.(${ids.join(',')})`,
       ),
       lesen(
@@ -498,7 +504,12 @@ export async function gesamtrankingAdmin() {
 
   /* Pruefblatt fuer Platz 1 bis 3 vor der Preisvergabe. Nur hier, hinter der
      Admin-Anmeldung, steht die Deckelnummer — oeffentlich nie. Es wird nichts
-     automatisch disqualifiziert; das Blatt sammelt nur, was zu pruefen ist. */
+     automatisch disqualifiziert; das Blatt sammelt nur, was zu pruefen ist.
+
+     Zwei Berechtigungen stehen nebeneinander und werden nicht vermischt:
+     `spielpreis` haengt allein am Instagram-Follow, `ziehung` allein am
+     Deckel. Ein eingeladener Mensch kann hier auf Platz 1 stehen und den
+     Spielpreis bekommen, ohne je in der Deckelziehung zu sein. */
   const pruefung = top.slice(0, 3).map((t, i) => {
     const p = nachId.get(t.id)
     const platz = i + 1
@@ -522,6 +533,18 @@ export async function gesamtrankingAdmin() {
       deckel: p?.deckel_nummer ?? null,
       anspruchArt: p?.anspruch_art ?? null,
       besitzStatus: p?.besitz_status ?? null,
+      /* Woher der Mensch kam — aendert an der Preisberechtigung nichts,
+         beantwortet aber die erste Rueckfrage jeder Pruefung. */
+      quelle: p?.registrierungsquelle ?? 'deckel',
+      /* Selbstauskunft. Nie als Pruefung ausgegeben. */
+      folgtBestaetigt: p?.folgt_bestaetigt_von_nutzer === true,
+      /* Stand der Pruefung von Hand: 'offen' | 'bestaetigt' | 'abgelehnt'. */
+      folgtPruefstatus: p?.folgt_pruefstatus ?? 'offen',
+      folgtGeprueftAm: p?.folgt_geprueft_am ?? null,
+      /* Preis aus dem Spiel: haengt am Instagram-Follow, nicht am Deckel. */
+      spielpreisBerechtigt: rankingBerechtigt(p),
+      /* Grosse Deckelziehung: haengt allein am Deckel. */
+      ziehungBerechtigt: ziehungBerechtigt(p),
     }
   })
 

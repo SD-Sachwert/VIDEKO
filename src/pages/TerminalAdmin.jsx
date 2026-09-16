@@ -26,6 +26,7 @@ import {
 import {
   MEILENSTEINE,
   MEILENSTEIN_LEER,
+  PRACTICE_STANDARD,
   SPIELE_LISTE,
   SPIEL_NACH_KEY,
   STANDARD_HAUPTGAMES,
@@ -123,6 +124,17 @@ const BESITZ_WORT = {
 }
 
 /**
+ * Der Follow-Pruefstand, wie ihn ein Mensch setzt. „offen" heisst: noch
+ * niemand hat nachgesehen — nicht „abgelehnt". Automatisch aendert sich
+ * hier nichts.
+ */
+const PRUEFSTAND_WORT = [
+  ['offen', 'offen'],
+  ['bestaetigt', 'geprüft: folgt'],
+  ['abgelehnt', 'geprüft: folgt nicht'],
+]
+
+/**
  * Gewinnfall: alle Besitzansprueche auf die gezogene Nummer.
  *
  * Der Server ordnet keinen Anspruch zu. Wer den Originaldeckel vorlegt, wird
@@ -174,11 +186,17 @@ function Gewinnfall({ nummer, teilnehmer, laeuft, bestaetigen }) {
   )
 }
 
-function Zeile({ label, children }) {
+/**
+ * Eine Kennzahlzeile. `hilfe` ist die Formel dahinter — der Server schickt
+ * sie mit, damit in der Verwaltung niemand raten muss, was genau gezaehlt
+ * wurde. Fehlt sie, steht dort auch nichts.
+ */
+function Zeile({ label, hilfe, children }) {
   return (
     <div className="trm-adm__zeile">
       <span className="trm-adm__label">{label}</span>
       <span className="trm-adm__wert">{children}</span>
+      {hilfe ? <span className="trm-adm__formel">{hilfe}</span> : null}
     </div>
   )
 }
@@ -483,12 +501,12 @@ function SpielSchalter({ einstellungen, speichern, laeuft }) {
       </p>
       <div className="trm-feld">
         <label className="trm-feld__label" htmlFor="adm-practice">
-          Practice-Game ohne Deckel
+          Practice-Game ohne Konto
         </label>
         <select
           id="adm-practice"
           className="trm-eingabe"
-          value={einstellungen?.guestPracticeGame ?? 'leitungsfinder'}
+          value={einstellungen?.guestPracticeGame ?? PRACTICE_STANDARD}
           disabled={laeuft}
           onChange={(ereignis) =>
             speichern({ guestPracticeGame: ereignis.target.value }, 'Practice-Game gespeichert.')
@@ -499,8 +517,8 @@ function SpielSchalter({ einstellungen, speichern, laeuft }) {
           ))}
         </select>
         <p className="trm-feld__hilfe">
-          Genau dieses Game ist ohne aktivierten Deckel spielbar — ohne Wertung,
-          Ranking, Gewinnchance oder Tresorkönig. Es muss dafür aktiv sein.
+          Genau dieses Game ist ohne Konto spielbar — ohne Wertung, Ranking,
+          Gewinnchance oder Tresorkönig. Es muss dafür aktiv sein.
         </p>
       </div>
       {sortiert.map((spiel, i) => {
@@ -956,23 +974,54 @@ function SpielStatistik({ stats, laden, laeuft }) {
 /* Einladungen                                                         */
 /* ------------------------------------------------------------------ */
 
-/** Die Kennzahlen in der Reihenfolge, in der sie hier gelesen werden. */
+/**
+ * Die Kennzahlen in der Reihenfolge, in der sie hier gelesen werden — in
+ * vier Blöcken: wer ist da, was macht die Kette, wie steht es mit Instagram,
+ * und wer ist wofür berechtigt.
+ *
+ * Die dritte Spalte ist das Format, die Formel dazu kommt vom Server
+ * (`daten.formeln`). Steht dort nichts, bleibt die Zeile ohne Erklärung —
+ * hier wird keine erfunden.
+ */
 const EINLADUNG_ZEILEN = [
-  ['offizielleTeilnehmer', 'Offizielle Teilnehmer (Erstaktivierung)', (w) => zahl(w)],
-  ['slotsProTeilnehmer', 'Einladungen pro Teilnehmer', (w) => zahl(w)],
+  ['spielerGesamt', 'Spieler gesamt', (w) => zahl(w)],
+  ['spielerViaDeckel', 'davon über einen Deckel-Code', (w) => zahl(w)],
+  ['spielerViaEinladung', 'davon über eine Einladung', (w) => zahl(w)],
+  ['anteilViaEinladung', 'Anteil über Einladung', prozent],
+
+  ['slotsProTeilnehmer', 'Einladungen pro Spieler', (w) => zahl(w)],
   ['einladungenErzeugt', 'Einladungen erzeugt', (w) => zahl(w)],
   ['einladungenWiderrufen', 'davon zurückgezogen', (w) => zahl(w)],
   ['einladungenGeoeffnet', 'Links geöffnet', (w) => zahl(w)],
   ['oeffnungenGesamt', 'Öffnungen gesamt', (w) => zahl(w)],
   ['einladungenVerwendet', 'Eingelöst', (w) => zahl(w)],
-  ['gaesteAktiv', 'Gäste ohne eigenen Deckel', (w) => zahl(w)],
-  ['gaesteKonvertiert', 'Gäste mit eigenem Deckel', (w) => zahl(w)],
-  ['conversionRate', 'Conversion (eingelöst → Deckel)', prozent],
+  ['aktiveKetten', 'Aktive Ketten', (w) => zahl(w)],
+  ['einladungenJeSpieler', 'Ø Einladungen je Spieler', (w) => (w == null ? '—' : String(w))],
+  ['tiefeMax', 'Tiefste Generation', (w) => zahl(w)],
+  ['kFaktor', 'K-Faktor', (w) => (w == null ? '—' : String(w))],
+
+  ['eingeladenDannDeckel', 'Eingeladene, die später einen Deckel aktiviert haben', (w) => zahl(w)],
+  ['conversionRate', 'Conversion (Einladung → eigener Deckel)', prozent],
+
+  ['folgtBestaetigt', 'Follow selbst bestätigt', (w) => zahl(w)],
+  ['folgtGeprueft', 'Follow von Hand bestätigt', (w) => zahl(w)],
+  ['folgtAbgelehnt', 'Follow von Hand abgelehnt', (w) => zahl(w)],
+  ['folgtZuPruefen', 'Follow noch zu prüfen', (w) => zahl(w)],
+
+  ['rankingTeilnehmer', 'Rankingberechtigt', (w) => zahl(w)],
+  ['ziehungsberechtigte', 'Ziehungsberechtigt (Deckel vorhanden)', (w) => zahl(w)],
+  ['offizielleTeilnehmer', 'Lose in der Deckel-Ziehung (Erstaktivierungen)', (w) => zahl(w)],
 ]
 
 const EINLADUNG_STATUS = {
   eingeladen: 'offen',
   beigetreten: 'eingelöst',
+}
+
+/** Wie ein Konto entstanden ist — Deckel-Code oder Einladung. */
+const QUELLE_TEXT = {
+  deckel: 'DECKEL-CODE',
+  einladung: 'EINLADUNG',
 }
 
 /**
@@ -981,13 +1030,16 @@ const EINLADUNG_STATUS = {
  * WAS HIER BEWUSST FEHLT
  * ----------------------
  * Der Einladungstoken. Er steht auch in der Datenbank nur als Hash, und der
- * Server schickt ihn hier nicht mit — eine Verwaltung, die fremde Gastplaetze
+ * Server schickt ihn hier nicht mit — eine Verwaltung, die fremde Plaetze
  * selbst einloesen kann, waere kein Auswertungswerkzeug mehr.
  *
- * Und es gibt keinen Knopf „offiziell machen". Aus einem Gast wird ein
- * Teilnehmer ausschliesslich ueber einen echten, aktivierten Deckel. Ein
- * Umweg an dieser Pruefung vorbei wuerde genau das aushebeln, worauf die
- * ganze Aktion steht: 1 Deckel = 1 Teilnehmer = 1 Los.
+ * Und es gibt keinen Knopf „ziehungsberechtigt machen". Ein Los in der
+ * Deckel-Ziehung entsteht ausschliesslich ueber einen echten, aktivierten
+ * Deckel. Ein Umweg an dieser Pruefung vorbei wuerde genau das aushebeln,
+ * worauf die Verlosung steht: 1 physischer Deckel = 1 Gewinnchance.
+ *
+ * Spielen, Scores und Ranking haengen daran ausdruecklich NICHT: wer ueber
+ * eine Einladung hereinkommt, spielt voll mit und laedt selbst weiter ein.
  *
  * Angezeigt werden Instagram-Namen und Deckelnummern — dieselben Angaben wie
  * in jeder anderen Ansicht. Keine Adressen.
@@ -996,8 +1048,9 @@ function EinladungenAuswertung({ daten, laden, laeuft, einstellungen, speichern,
   const [suche, setSuche] = useState('')
   const [slots, setSlots] = useState('')
   const zahlen = daten?.zahlen ?? null
+  const formeln = daten?.formeln ?? {}
   const einlader = daten?.einlader ?? []
-  const gaeste = daten?.gaeste ?? []
+  const eingeladene = daten?.eingeladene ?? []
 
   /* Der gespeicherte Wert kommt mit dem Stand, nicht mit dieser Auswertung. */
   const gespeichert = String(einstellungen?.einladungenProTeilnehmer ?? '')
@@ -1013,9 +1066,10 @@ function EinladungenAuswertung({ daten, laden, laeuft, einstellungen, speichern,
         <h2 className="trm-karte__titel">EINLADUNGEN</h2>
       </div>
       <p className="trm-karte__sub">
-        Ein Gast spielt alle Games, seine Scores werden gespeichert — er steht in keiner
-        Verlosung und in keinem offiziellen Gesamtranking. Offiziell wird er erst mit
-        einem eigenen aktivierten Deckel. Der Einladungstoken wird hier nicht angezeigt.
+        Jeder Spieler bekommt dieselben Einladungen — egal, ob er über einen Deckel-Code
+        oder über eine Einladung hereingekommen ist. Eingeladene spielen alle Games, ihre
+        Scores zählen in den Ranglisten und im Gesamtranking. Nur die Deckel-Ziehung bleibt
+        den Deckelbesitzern vorbehalten. Der Einladungstoken wird hier nicht angezeigt.
       </p>
 
       {/* Die Zahl steht in der Datenbank, nicht im Code. 0 schliesst das
@@ -1030,7 +1084,7 @@ function EinladungenAuswertung({ daten, laden, laeuft, einstellungen, speichern,
       >
         <div className="trm-feld">
           <label className="trm-feld__label" htmlFor="adm-einladung-slots">
-            Einladungen pro offiziellem Teilnehmer
+            Einladungen pro Spieler
           </label>
           <input
             id="adm-einladung-slots"
@@ -1102,7 +1156,9 @@ function EinladungenAuswertung({ daten, laden, laeuft, einstellungen, speichern,
           {/* Die Kennzahlen ignorieren die Suche: sie beschreiben immer die
               ganze Aktion, nicht den gerade gefilterten Ausschnitt. */}
           {EINLADUNG_ZEILEN.map(([feld, titel, format]) => (
-            <Zeile key={feld} label={titel}>{format(zahlen[feld] ?? null)}</Zeile>
+            <Zeile key={feld} label={titel} hilfe={formeln[feld]}>
+              {format(zahlen[feld] ?? null)}
+            </Zeile>
           ))}
 
           <h3 className="trm-adm__untertitel">EINLADER</h3>
@@ -1112,13 +1168,24 @@ function EinladungenAuswertung({ daten, laden, laeuft, einstellungen, speichern,
             <ol className="trm-adm__liste">
               {einlader.map((e) => (
                 <li key={e.id}>
-                  <strong>{deckelText(e.deckel)}</strong>
-                  <span className="trm-adm__status">{instagramAnzeige(e.instagram)}</span>
+                  <strong>{e.deckel != null ? deckelText(e.deckel) : instagramAnzeige(e.instagram)}</strong>
+                  <span className="trm-adm__status">
+                    {e.deckel != null ? instagramAnzeige(e.instagram) : 'ohne Deckel'}
+                    {' · '}
+                    {QUELLE_TEXT[e.quelle] ?? e.quelle}
+                    {' · Gen. '}
+                    {zahl(e.generation ?? 0)}
+                  </span>
                   <span className="trm-adm__klein">
                     {e.slots
                       .map((s) => {
-                        const wer = s.gast
-                          ? `${instagramAnzeige(s.gast.instagram)}${s.gast.gast ? '' : ` · ${deckelText(s.gast.deckel)}`}`
+                        /* Ein belegter Platz zeigt, wer drinsitzt — mit
+                           Deckelnummer nur dann, wenn diese Person auch
+                           wirklich einen Deckel aktiviert hat. */
+                        const wer = s.spieler
+                          ? `${instagramAnzeige(s.spieler.instagram)}${
+                              s.spieler.deckel != null ? ` · ${deckelText(s.spieler.deckel)}` : ''
+                            }`
                           : `${zahl(s.oeffnungen)}× geöffnet`
                         return `#${s.slot} ${EINLADUNG_STATUS[s.status] ?? s.status} · ${wer}`
                       })
@@ -1129,21 +1196,28 @@ function EinladungenAuswertung({ daten, laden, laeuft, einstellungen, speichern,
             </ol>
           )}
 
-          <h3 className="trm-adm__untertitel">GÄSTE</h3>
-          {gaeste.length === 0 ? (
-            <p className="trm-feld__hilfe">Noch keine Gäste.</p>
+          <h3 className="trm-adm__untertitel">EINGELADENE SPIELER</h3>
+          {eingeladene.length === 0 ? (
+            <p className="trm-feld__hilfe">Noch niemand über eine Einladung dabei.</p>
           ) : (
             <ol className="trm-adm__liste">
-              {gaeste.map((g) => (
+              {eingeladene.map((g) => (
                 <li key={g.id}>
                   <strong>{instagramAnzeige(g.instagram)}</strong>
+                  {/* Ranking und Ziehung sind zwei verschiedene Dinge: das
+                      erste haengt an Instagram, das zweite am Deckel. */}
                   <span className="trm-adm__status">
-                    {g.gast ? 'Gast' : `offiziell · ${deckelText(g.deckel)}`}
+                    {g.deckel != null ? `Deckel ${deckelText(g.deckel)}` : 'ohne Deckel'}
+                    {' · Ranking '}
+                    {g.rankingOk ? 'ja' : 'nein'}
+                    {' · Ziehung '}
+                    {g.ziehungOk ? 'ja' : 'nein'}
                   </span>
                   <span className="trm-adm__klein">
                     {g.einladerInstagram ? `von ${instagramAnzeige(g.einladerInstagram)} · ` : ''}
+                    {`Gen. ${zahl(g.generation ?? 0)} · `}
                     {terminText(g.eingeladenAm) ?? '—'}
-                    {g.konvertiertAm ? ` · Deckel ${terminText(g.konvertiertAm)}` : ''}
+                    {g.deckelAktiviertAm ? ` · Deckel ${terminText(g.deckelAktiviertAm)}` : ''}
                   </span>
                 </li>
               ))}
@@ -1754,7 +1828,7 @@ export default function TerminalAdmin() {
           <p className="trm-feld__hilfe">
             {teilnehmer.length === 0
               ? 'Keine Einträge.'
-              : `${zahl(teilnehmer.length)} Einträge. Diese Liste enthält personenbezogene Daten — nicht weitergeben.`}
+              : `${zahl(teilnehmer.length)} Einträge. E-Mail-Adressen stehen hier bewusst nicht — sie sind im CSV-Export und beim Gewinnfall. Diese Liste enthält personenbezogene Daten, nicht weitergeben.`}
           </p>
 
           {teilnehmer.length > 0 && (
@@ -1762,10 +1836,14 @@ export default function TerminalAdmin() {
               <table className="trm-adm__tabelle">
                 <thead>
                   <tr>
-                    <th scope="col">Nr.</th>
+                    <th scope="col">Deckel</th>
                     <th scope="col">Instagram</th>
-                    <th scope="col">E-Mail</th>
+                    <th scope="col">Quelle</th>
                     <th scope="col">Follow</th>
+                    <th scope="col">Ranking</th>
+                    <th scope="col">Ziehung</th>
+                    <th scope="col">Einladungen</th>
+                    <th scope="col">Gen.</th>
                     <th scope="col">Aktiviert</th>
                     <th scope="col">Anspruch</th>
                   </tr>
@@ -1773,13 +1851,56 @@ export default function TerminalAdmin() {
                 <tbody>
                   {teilnehmer.map((t) => (
                     <tr key={t.id} className={istTestdeckel(t) ? 'trm-adm__zeile--test' : undefined}>
+                      {/* Ein Konto ohne Deckelnummer ist kein Fehler: es ist
+                          jemand, der ueber eine Einladung hereinkam. */}
                       <td>
-                        {deckelText(t.deckel_nummer)}
+                        {t.deckel_nummer != null ? deckelText(t.deckel_nummer) : 'kein Deckel'}
                         {istTestdeckel(t) && <TestdeckelMarke />}
                       </td>
                       <td>{instagramAnzeige(t.instagram_handle)}</td>
-                      <td>{t.email}</td>
-                      <td>{t.folgt_bestaetigt_von_nutzer ? 'Eigenangabe' : '—'}</td>
+                      <td>
+                        {t.quelle === 'einladung'
+                          ? `EINLADUNG${
+                              t.einladerInstagram ? ` VON ${instagramAnzeige(t.einladerInstagram)}` : ''
+                            }`
+                          : 'DECKEL-CODE'}
+                      </td>
+                      {/* §19: Vor einer Preisausgabe schaut ein Mensch auf das
+                          Profil und traegt hier ein, was er gesehen hat. Ein
+                          Dienstausfall setzt niemanden auf „abgelehnt". */}
+                      <td>
+                        <span className="trm-adm__klein">
+                          {t.folgt_bestaetigt_von_nutzer ? 'Eigenangabe' : 'keine Angabe'}
+                          {t.folgt_geprueft_am ? ` · ${terminText(t.folgt_geprueft_am)}` : ''}
+                        </span>
+                        <select
+                          className="trm-eingabe trm-eingabe--klein"
+                          aria-label={`Follow-Prüfstand von @${t.instagram_handle ?? ''}`}
+                          value={t.folgt_pruefstatus ?? 'offen'}
+                          disabled={laeuft}
+                          onChange={(ereignis) =>
+                            handeln(
+                              { aktion: 'folgt-pruefen', id: t.id, status: ereignis.target.value },
+                              'Follow-Prüfstand gespeichert.',
+                            )
+                          }
+                        >
+                          {PRUEFSTAND_WORT.map(([wert, wort]) => (
+                            <option key={wert} value={wert}>{wort}</option>
+                          ))}
+                        </select>
+                      </td>
+                      <td>{t.rankingOk ? 'berechtigt' : 'nicht'}</td>
+                      <td>{t.ziehungOk ? 'berechtigt' : 'nicht'}</td>
+                      <td>
+                        {zahl(t.einladungenBelegt ?? 0)}/{zahl(t.einladungenGesamt ?? 0)}
+                        {t.einladungenEingeloest != null && (
+                          <span className="trm-adm__klein">
+                            {zahl(t.einladungenEingeloest)} eingelöst
+                          </span>
+                        )}
+                      </td>
+                      <td>{zahl(t.generation ?? 0)}</td>
                       <td>{terminText(t.aktiviert_am) ?? '—'}</td>
                       <td>
                         {ANSPRUCH_WORT[t.anspruch_art] ?? ANSPRUCH_WORT.erstaktivierung}

@@ -245,13 +245,16 @@ export const TEXTE = {
       'Dieser Lauf wurde gespeichert, aber nicht gewertet. Bei Fragen dazu gerne kurz melden.',
     fehler: 'Das Ergebnis konnte nicht gespeichert werden. Die Runde zählt dann leider nicht.',
     ticketFehler: 'Die Runde ließ sich nicht starten. Bitte noch einmal versuchen.',
-    /* Practice Mode: ein Game ohne aktivierten Deckel. Keine Wertung,
-       keine Platzierung, kein Tresorkoenig. */
+    /* Practice Mode: ein Game zum Reinspielen, ohne Konto. Der Lauf wird
+       nicht gewertet, taucht in keiner Rangliste auf und zaehlt auch nicht
+       im Gesamtranking. Danach gibt es genau zwei Wege ins Ranking: eine
+       Einladung oder ein eigener Deckel. Beide fuehren zum selben Konto. */
     practiceLabel: 'PRACTICE MODE',
-    practiceSub: 'Ein Game zum Reinspielen. Ohne Wertung, ohne Ranking, ohne Gewinnchance.',
+    practiceSub: 'Ein Game zum Reinspielen. Dieser Lauf wird nicht gewertet und steht in keiner Rangliste.',
     practiceScore: 'DEIN PRACTICE-SCORE',
-    practiceCta: 'DECKEL AKTIVIEREN UND INS RANKING',
-    gesperrt: 'NUR MIT AKTIVIERTEM DECKEL',
+    practiceFrage: 'WILLST DU AUF DIE RANGLISTE?',
+    practiceCta: 'HOL DIR EINE EINLADUNG ODER AKTIVIERE DEINEN DECKEL',
+    gesperrt: 'ERST ANMELDEN',
     /* Rückmeldungen im Spiel */
     perfekt: 'PERFECT',
     gut: 'GUT',
@@ -517,15 +520,20 @@ export const TEXTE = {
     testLink: 'TESTLINK ÖFFNEN',
   },
 
-  /* Einladungen im Dashboard eines offiziellen Teilnehmers.
+  /* Einladungen im Dashboard — jeder Spieler hat welche, egal ob er über
+     einen Deckel oder über eine Einladung hereingekommen ist.
      Der Wortlaut hier hat eine Aufgabe, die wichtiger ist als der Ton: er
-     darf nie den Eindruck erwecken, Einladen bringe Gewinnchancen. Ein
-     Deckel ist ein Los. Drei Einladungen sind null Lose. */
+     darf nie den Eindruck erwecken, Einladen bringe Gewinnchancen bei der
+     Deckel-Verlosung. Ein echter Deckel ist ein Los. Drei Einladungen sind
+     null Lose. Was Einladen bringt, steht daneben: Follower, Reichweite und
+     drei Leute, die den eigenen Score jagen. */
   team: {
-    label: 'DEIN TEAM',
-    sub: 'Hol {anzahl} Leute mit in den Tresor.',
+    label: 'DEINE {anzahl} EINLADUNGEN',
+    sub: 'Hol deine {anzahl} Leute rein. Jeder von ihnen spielt voll mit und bekommt selbst wieder {anzahl} Einladungen.',
+    unlock: 'Noch {fehlt} Follower bis zum nächsten Unlock.',
+    unlockAlle: 'Alle Follower-Meilensteine sind frei.',
     keinLos:
-      'Einladen bringt dir keine zusätzliche Gewinnchance. Ein Deckel ist ein Los — daran ändert kein Team etwas. Was du bekommst: Leute, die deinen Score jagen.',
+      'Einladen bringt dir keine zusätzliche Chance in der Deckel-Verlosung. Ein echter Deckel ist ein Los — daran ändert kein Team etwas. Was du bekommst: Leute, die voll mitspielen und deinen Score jagen.',
     slotFrei: 'FREIER PLATZ',
     slotOffen: 'EINGELADEN',
     slotBesetzt: 'IM TRESOR',
@@ -540,15 +548,19 @@ export const TEXTE = {
     qrTitel: 'ZUM SCANNEN',
     qrText: 'Handy davorhalten. Der Link öffnet den Tresoreingang.',
     schliessen: 'SCHLIESSEN',
-    gastOffiziell: 'HAT EINEN EIGENEN DECKEL',
-    gastGast: 'Spielt als Gast',
+    standDeckel: 'SPIELT MIT · HAT EINEN EIGENEN DECKEL',
+    standSpieler: 'SPIELT MIT',
     geoeffnet: '{n}× geöffnet',
     nochNicht: 'Noch nicht geöffnet.',
     leer: 'Noch niemand eingeladen.',
-    teilenText: 'Ich bin im VIDEKO Tresor. Komm mit rein und schlag meinen Score.',
+    teilenText:
+      'Ich hab noch einen Platz für dich im VIDEKO Tresor. Reinkommen, @{handle} folgen und meinen Score schlagen.',
     teilenTitel: 'VIDEKO Tresor',
+    scoreTeilen: 'SCORE TEILEN',
+    scoreKopiert: 'KOPIERT',
+    scoreTeilenText: 'Ich bin im VIDEKO Tresor. 🔐 Schlag meinen Score und hol dir deinen Platz im Ranking.',
     fehler: {
-      gast: 'Einladungen gibt es nur mit eigenem Deckel.',
+      konto: 'Dieses Konto kann gerade keine Einladungen vergeben.',
       'keine-slots': 'Alle Plätze sind vergeben.',
       geschlossen: 'Einladungen sind gerade geschlossen.',
       'nicht-offen': 'Dieser Platz lässt sich nicht mehr zurückziehen.',
@@ -556,25 +568,36 @@ export const TEXTE = {
     },
   },
 
-  /* Die Landingpage hinter einem Einladungslink und alles, was ein Gast
-     danach sieht. Der wichtigste Satz steht ganz oben und nicht im
-     Kleingedruckten: ein Gast spielt mit, aber er spielt nicht um die
-     Hauptpreise. */
+  /* Die Landingpage hinter einem Einladungslink und alles, was ein
+     eingeladener Spieler danach sieht.
+
+     Der wichtigste Satz steht ganz oben und nicht im Kleingedruckten: wer
+     ueber eine Einladung hereinkommt, ist ein vollwertiger Spieler. Alle
+     Games, gewertete Scores, alle Ranglisten, Preise in den Games und drei
+     eigene Einladungen. Der einzige Unterschied zu einem Deckelbesitzer ist
+     die grosse Deckel-Ziehung — dafuer braucht es einen echten physischen
+     Deckel, und das ist auch das einzige, was hier darueber steht.
+
+     Bedingung fuer gewertete Scores ist in beiden Wegen dieselbe: ein
+     Instagram-Name und die Bestaetigung, dass man @{handle} folgt. Die
+     Feldtexte dafuer sind bewusst dieselben wie in Zustand B. */
   einladung: {
     marke: 'EINLADUNG',
     pruefen: 'Einladung wird geprüft …',
     titel: 'DU BIST EINGELADEN.',
     vonLabel: 'EINGELADEN VON',
-    sub: 'Spiel mit im VIDEKO Tresor.',
-    klartextTitel: 'DU SPIELST ALS GAST.',
+    sub: 'Sichere dir deinen Spielernamen und jag die Bestenliste.',
+    klartextTitel: 'DU SPIELST VOLL MIT.',
     klartext:
-      'Für die Hauptverlosung brauchst du einen eigenen der {gesamt} nummerierten Deckel. Als Gast spielst du alle Games, deine Scores werden gespeichert — aber du bist in keiner Verlosung und stehst in keiner offiziellen Rangliste.',
+      'Alle Games, gewertete Scores, dein Platz in jeder Rangliste und drei eigene Einladungen — genau wie jeder andere Spieler. Nur die große Verlosung der {gesamt} nummerierten Deckel läuft getrennt: dort kommt rein, wer einen echten Deckel in der Hand hat.',
     was: [
       'Alle Games, voller Zugang.',
-      'Deine Scores werden gespeichert.',
-      'Keine Verlosung, kein offizielles Ranking — dafür braucht es einen Deckel.',
+      'Deine Scores zählen in den Ranglisten und im Gesamtranking.',
+      'Du spielst um die Plätze 1 bis 3 und die Game-Preise mit.',
+      'Du bekommst selbst drei Einladungen.',
+      'Für die Deckel-Verlosung brauchst du einen echten Deckel.',
     ],
-    cta: 'ALS GAST MITSPIELEN',
+    cta: 'SPIELERNAMEN SICHERN',
     laeuft: 'Wird eingerichtet …',
     felder: {
       instagram: 'Instagram-Name',
@@ -583,11 +606,21 @@ export const TEXTE = {
       emailPlatz: 'z. B. name@beispiel.de',
       emailHilfe:
         'Nur damit du deine Scores auf einem anderen Gerät wiederfindest. Nie öffentlich sichtbar.',
+      /* Wortgleich mit Zustand B. Derselbe Haken, dieselbe Pflicht, egal ob
+         jemand ueber einen Deckel oder ueber eine Einladung hereinkommt. */
+      haken: 'Ich folge @{handle}',
+      hakenHilfe:
+        'Pflicht. Ohne Instagram-Name und diese Bestätigung werden deine Scores nicht gewertet.',
+      leaderboard:
+        'Ich bin damit einverstanden, dass mein Instagram-Name zusammen mit meinen Game-Scores im öffentlichen VIDEKO Game-Leaderboard angezeigt wird.',
+      leaderboardHilfe:
+        'Freiwillig. Ohne diese Einwilligung spielst du genauso mit — dein Instagram-Name erscheint dann nur auf keiner öffentlichen Liste.',
       bedingungen: 'Ich akzeptiere die Teilnahmebedingungen und die Datenschutzerklärung.',
     },
     fehler: {
       instagram: 'Bitte deinen Instagram-Namen eintragen.',
       email: 'Bitte eine gültige E-Mail-Adresse eintragen.',
+      folgt: 'Bitte bestätige, dass du @{handle} folgst.',
       bedingungen: 'Bitte Teilnahmebedingungen und Datenschutzerklärung akzeptieren.',
       link: 'Diese Einladung ist ungültig oder gehört zu keinem Platz mehr.',
       felder: 'Bitte die markierten Felder prüfen.',
@@ -603,23 +636,25 @@ export const TEXTE = {
     fehlerTitel: 'DIESER LINK FÜHRT NICHT WEITER.',
     fehlerText: 'Frag die Person, die dich eingeladen hat, nach einem neuen Link. Mit einem eigenen VIDEKO-Deckel kommst du auch ohne Einladung hinein.',
     zurueck: 'ZUM TERMINAL',
-    /* Auf dem Gerät liegt schon ein Zugang. Dann ist Einlösen fast immer ein
-       Versehen — und es würde den Platz der einladenden Person verbrauchen. */
-    schonDa: 'Auf diesem Gerät ist schon ein Zugang gespeichert. Wenn du das bist, brauchst du diese Einladung nicht — dein Deckel ist mehr wert als ein Gastplatz.',
+    /* Auf dem Geraet liegt schon ein Zugang. Dann ist Einloesen fast immer ein
+       Versehen — und es wuerde einen der drei Plaetze der einladenden Person
+       verbrauchen, ohne dass jemand Neues dazukommt. */
+    schonDa: 'Auf diesem Gerät ist schon ein Zugang gespeichert. Wenn du das bist, brauchst du diese Einladung nicht — du spielst längst mit, und der Platz bleibt für jemand Neues frei.',
     schonDaCta: 'ZU MEINEM TRESOR',
-    trotzdem: 'Ich bin jemand anderes — als Gast mitspielen',
-    /* Das Gastdashboard. Erst die Beruhigung, dann der Weg nach oben. */
-    gastLabel: 'GAST',
+    trotzdem: 'Ich bin jemand anderes — Einladung einlösen',
+    /* Das Dashboard nach dem Einloesen. Erst die Beruhigung, dann der
+       einzige echte Unterschied: die Deckel-Ziehung. */
+    gastLabel: 'SPIELER',
     gastTitel: 'DEINE SCORES SIND SICHER.',
     gastText:
-      'Alles, was du spielst, wird gespeichert. Mit einem echten Deckel wirst du offizieller Teilnehmer — deine Scores bleiben, und du kommst in Verlosung und Gesamtranking.',
+      'Alles, was du spielst, wird gespeichert und gewertet. Mit einem echten Deckel kommst du zusätzlich in die große Deckel-Verlosung — deine Scores, dein Ranking und deine Einladungen bleiben dabei unverändert.',
     gastCta: 'DECKEL AKTIVIEREN',
     gastBestleistungen: 'DEINE BESTLEISTUNGEN',
     gastKeinRanking:
-      'Als Gast stehst du in keiner offiziellen Rangliste und in keiner Verlosung.',
+      'Du stehst in allen Ranglisten. Für die Verlosung der nummerierten Deckel brauchst du einen echten Deckel.',
     gastVon: 'Eingeladen von @{name}',
-    konvertiertTitel: 'DU BIST JETZT OFFIZIELL DABEI.',
-    konvertiertText: 'Dein Deckel ist aktiviert. Deine Scores sind alle da.',
+    konvertiertTitel: 'DEIN DECKEL IST AKTIVIERT.',
+    konvertiertText: 'Du bist jetzt zusätzlich in der Deckel-Verlosung. Deine Scores sind alle da.',
   },
 
   gewinneTitel: 'DAS KÖNNTE IN DER TRUHE AUF DICH WARTEN',
@@ -839,6 +874,16 @@ export const STANDARD_HAUPTGAMES = ['leitungsfinder', 'kuechen_merge', 'kuechen_
 export const HAUPTGAMES_ANZAHL = 5
 /** Rangpunkte fuer Platz 1 eines Games. Maximum gesamt: 5 × 1.000. */
 export const RANGPUNKTE_MAX = 1000
+
+/**
+ * Das eine Game, das jemand ohne Konto zur Probe spielen darf — der
+ * anonyme Koeder vor der Anmeldung. Der Probelauf wird nicht gewertet und
+ * taucht in keiner Rangliste auf. Die Verwaltung kann einen anderen Slot
+ * eintragen; ohne Eintrag gilt dieser. Kuechen-Tinder ist hier bewusst
+ * nicht vorgesehen: der bleibt reiner Testslot.
+ * Muss mit PRACTICE_STANDARD in api/_terminal-kern.js uebereinstimmen.
+ */
+export const PRACTICE_STANDARD = 'kuechen_merge'
 
 /**
  * Ohne Eintrag ausgeblendet. Der Server schickt die Schalter ohnehin

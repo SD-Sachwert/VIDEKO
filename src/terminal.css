@@ -1871,6 +1871,14 @@
   border-color: rgba(226, 69, 58, 0.6);
 }
 
+/* Ein Auswahlfeld, das in eine Tabellenzelle passt — gleiche Optik, nur
+   flacher. Die 16px bleiben: sonst zoomt iOS Safari beim Fokus. */
+.trm-eingabe--klein {
+  min-height: 34px;
+  padding: 0 8px;
+  border-radius: 6px;
+}
+
 textarea.trm-eingabe {
   min-height: 110px;
   padding: 12px 14px;
@@ -2336,8 +2344,20 @@ textarea.trm-eingabe {
 }
 
 /* ------------------------------------------------------------------ */
-/* Einladungen — „DEIN TEAM" und die Gastansicht                       */
+/* Einladungen — „DEINE 3 EINLADUNGEN"                                 */
 /* ------------------------------------------------------------------ */
+
+/* Die Verbindung zur Follower-Mission, direkt unter der Unterzeile: eine
+   Zeile in Gold, damit sie als Belohnung gelesen wird und nicht als
+   Kleingedrucktes. Die Zahl kommt aus derselben Rechnung wie die
+   Missionskarte. */
+.trm-team__unlock {
+  margin: clamp(6px, 1.8vw, 9px) 0 0;
+  font-size: clamp(0.78rem, 2.5vw, 0.86rem);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--trm-gold);
+}
 
 /* Drei Plaetze in einem Tresorfach: dieselbe Karte wie alles andere, nur
    innen in Faecher geteilt. Kein Fortschrittsbalken, keine Punktestaende,
@@ -4308,6 +4328,17 @@ textarea.trm-eingabe {
 .trm-adm__wert {
   color: var(--trm-creme);
   font-variant-numeric: tabular-nums;
+}
+
+/* Die Formel hinter einer Kennzahl. Steht unter der Zeile, nicht daneben:
+   sie ist ein ganzer Satz, kein Wert. Kommt vom Server — fehlt sie, wird
+   das Element gar nicht erst gerendert. */
+.trm-adm__formel {
+  flex-basis: 100%;
+  margin-top: 2px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--trm-creme-leise);
 }
 
 .trm-adm__paar {

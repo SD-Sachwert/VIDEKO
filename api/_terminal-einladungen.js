@@ -11,33 +11,55 @@ import {
   clean,
   kopfzeilen,
   lesen,
+  rankingBerechtigt,
   restUrl,
   sha256Hex,
+  ziehungBerechtigt,
 } from './_terminal-kern.js'
 
 /**
- * Einladungen und Gastspieler.
+ * Einladungen und eingeladene Spieler.
  *
- * DIE EINE REGEL, DIE ALLES ANDERE BESTIMMT
- * -----------------------------------------
- * Ein physischer Deckel ist genau ein Los. Eine Einladung bringt keinen
- * Deckel, kein Los, keinen Platz im offiziellen Gesamtranking und keine
- * eigenen Einladungsslots. Sie bringt genau eines: einen weiteren Menschen
- * ins Terminal. Erst ein eigener echter Deckel macht aus einem Gast einen
- * offiziellen Teilnehmer.
+ * DIE ZWEI REGELN, DIE ALLES ANDERE BESTIMMEN
+ * -------------------------------------------
+ * 1. SPIELEN UND RANKEN darf jeder vollstaendig registrierte Mensch. Ganz
+ *    gleich, ob er ueber einen Deckelcode oder ueber einen Einladungslink
+ *    hereingekommen ist: alle Hauptgames, alle Ranglisten, Platz 1-3, das
+ *    Gesamtranking — und drei eigene Einladungsslots. Voraussetzung dafuer
+ *    ist der Instagram-Handle samt Follow-Bestaetigung, nicht der Deckel.
+ *
+ * 2. AN DER DECKELZIEHUNG nimmt nur teil, wer einen echten physischen Deckel
+ *    aktiviert hat. Ein Deckel ist genau ein Los. Eine Einladung erzeugt
+ *    weiterhin KEIN Los — weder fuer den Einlader noch fuer den Eingeladenen.
  *
  * Daraus folgt alles Weitere in dieser Datei:
- *   - Einladungen erzeugen darf nur, wer teilnahme_status = 'offiziell' ist.
- *     Ein Gast bekommt hier keine Slots — es gibt keine Einladungsketten.
- *   - Ein Gast wird mit deckel_nummer = NULL angelegt. Die Datenbank laesst
- *     gar nichts anderes zu (videko_terminal_gast_ohne_deckel_chk), und sie
- *     laesst umgekehrt keinen offiziellen Teilnehmer ohne Nummer zu
- *     (videko_terminal_offiziell_deckel_chk). Ein Statuswechsel ohne echten
- *     Deckel ist damit nicht nur verboten, sondern unmoeglich.
- *   - Aus einem Gast wird ein offizieller Teilnehmer ausschliesslich durch
- *     `gastKonvertieren` — und das schreibt dieselbe Zeile fort. Es entsteht
- *     nie ein zweiter Account, und die gespielten Scores haengen unveraendert
- *     an derselben id.
+ *   - Einladungen erzeugen darf jeder aktive Account. Es gibt ausdruecklich
+ *     Einladungsketten: 1 -> 3 -> 9 -> 27. Die Tiefe ist nicht begrenzt.
+ *   - Jeder Account hat gleich viele Slots (Einstellung
+ *     `einladungen_pro_teilnehmer`, Vorgabe 3). Mehr als diese Zahl
+ *     gleichzeitig gueltiger Slots kann niemand haben: dafuer sorgt der
+ *     partielle UNIQUE-Index ueber (kampagne, einlader_teilnehmer_id,
+ *     slot_nummer) where widerrufen_am is null zusammen mit der Bedingung
+ *     `verwendet_am is null` beim Widerruf. Erstellen, widerrufen, neu
+ *     erstellen gibt also keinen vierten Gast her.
+ *   - Ein ueber eine Einladung registrierter Mensch wird mit
+ *     deckel_nummer = NULL angelegt. Die Datenbank laesst gar nichts anderes
+ *     zu (videko_terminal_gast_ohne_deckel_chk), und sie laesst umgekehrt
+ *     keinen Ziehungsteilnehmer ohne Nummer zu
+ *     (videko_terminal_offiziell_deckel_chk). Ziehungsberechtigt ohne echten
+ *     Deckel zu werden ist damit nicht nur verboten, sondern unmoeglich.
+ *   - Ruestet er spaeter einen Deckel nach, geschieht das ausschliesslich
+ *     durch `gastKonvertieren` — und das schreibt dieselbe Zeile fort. Es
+ *     entsteht nie ein zweiter Account, die Scores haengen unveraendert an
+ *     derselben id, die drei Slots bleiben, und `registrierungsquelle` bleibt
+ *     'einladung': woher jemand kam, aendert sich nie rueckwirkend.
+ *
+ * WARUM `teilnahme_status` TROTZDEM BLEIBT
+ * ---------------------------------------
+ * Das Feld beantwortet ab jetzt genau eine Frage: haengt an diesem Account
+ * ein physischer Deckel, also ein Los? Es ist die Grundlage der Ziehung und
+ * durch zwei CHECKs in der Datenbank abgesichert. Fuer Ranglisten, fuer die
+ * Spielberechtigung und fuer Einladungen wird es nicht mehr herangezogen.
  *
  * DER TOKEN
  * ---------
@@ -67,8 +89,9 @@ const kampagneFilter = `kampagne=eq.${encodeURIComponent(KAMPAGNE)}`
 
 /** Nur die Felder, die ausserhalb dieser Datei gebraucht werden. */
 const TEILNEHMER_SPALTEN =
-  'id,deckel_nummer,instagram_handle,aktiviert_am,leaderboard_ok,'
-  + 'teilnahme_status,eingeladen_von,eingeladen_am,gast_konvertiert_am,anspruch_art'
+  'id,deckel_nummer,instagram_handle,aktiviert_am,leaderboard_ok,status,'
+  + 'teilnahme_status,eingeladen_von,eingeladen_am,gast_konvertiert_am,anspruch_art,'
+  + 'registrierungsquelle,deckel_aktiviert_am,folgt_bestaetigt_von_nutzer,folgt_pruefstatus'
 
 /* ------------------------------------------------------------------ */
 /* Teilnehmer nachschlagen                                             */
@@ -88,24 +111,47 @@ export async function teilnehmerLesen(id) {
 }
 
 /**
- * Ist diese Zeile ein Gast?
+ * Haengt an dieser Zeile kein physischer Deckel?
+ *
+ * Das ist ab jetzt die einzige Bedeutung von `teilnahme_status`: eine reine
+ * Aussage ueber das Los, nicht ueber die Spielberechtigung. Der Name bleibt,
+ * weil die Spalte und die beiden CHECKs in der Datenbank so heissen.
  *
  * Alte Zeilen aus der Zeit vor der Migration haben den Standardwert
  * 'offiziell'; fehlt das Feld (weil eine Abfrage es nicht mitgelesen hat),
- * gilt ebenfalls nicht-Gast. Gast ist man nur, wenn es ausdruecklich
- * dasteht — im Zweifel also nie versehentlich.
+ * gilt ebenfalls nicht-Gast. Im Zweifel wird also niemand versehentlich aus
+ * der Ziehung genommen.
  */
-export const istGast = (zeile) => zeile?.teilnahme_status === STATUS_GAST
+export const ohneDeckel = (zeile) => zeile?.teilnahme_status === STATUS_GAST
 
-/** Und umgekehrt: offiziell ist, wer nicht ausdruecklich Gast ist. */
-export const istOffiziell = (zeile) => Boolean(zeile) && !istGast(zeile)
+/**
+ * Darf dieser Account einladen?
+ *
+ * Jeder registrierte, aktive Account — unabhaengig davon, ob ein Deckel
+ * dranhaengt und ueber welchen Weg er entstanden ist. Genau das ist der
+ * Unterschied zum alten Modell: Ketten sind gewollt.
+ *
+ * Der einzige Riegel ist `status`: ein Account, den die Verwaltung
+ * abgeschaltet hat, erzeugt keine neuen Links mehr. Geschrieben wird dieses
+ * Feld heute nur mit 'aktiv'; die Pruefung steht hier, damit ein spaeteres
+ * Abschalten sofort greift.
+ */
+export const einladenBerechtigt = (zeile) =>
+  Boolean(zeile?.id) && (zeile.status == null || zeile.status === 'aktiv')
 
 /**
  * Die oeffentlich zeigbare Sicht auf einen Account.
  *
- * `gast` ist das Feld, an dem die Seite ihr gesamtes Verhalten aufhaengt —
- * es kommt immer vom Server und steht in keinem Beleg, den jemand im Browser
- * umschreiben koennte.
+ * Alle drei Berechtigungen stehen hier nebeneinander und getrennt, weil die
+ * Seite sie getrennt braucht:
+ *
+ *   rankingOk  Instagram-Handle da und Follow bestaetigt -> gewertete Scores,
+ *              Ranglisten, Gesamtranking, Preise in den Games.
+ *   ziehungOk  echter Deckel aktiviert -> Los in der grossen Verlosung.
+ *   einladenOk aktiver Account -> drei eigene Einladungsslots.
+ *
+ * Alle drei kommen immer vom Server und stehen in keinem Beleg, den jemand im
+ * Browser umschreiben koennte.
  */
 export function teilnehmerSicht(zeile) {
   if (!zeile) return null
@@ -114,8 +160,14 @@ export function teilnehmerSicht(zeile) {
     instagram: zeile.instagram_handle,
     aktiviertAm: zeile.aktiviert_am,
     leaderboardOk: zeile.leaderboard_ok === true,
-    gast: istGast(zeile),
+    quelle: zeile.registrierungsquelle ?? (zeile.eingeladen_von ? 'einladung' : 'deckel'),
+    rankingOk: rankingBerechtigt(zeile),
+    ziehungOk: ziehungBerechtigt(zeile),
+    einladenOk: einladenBerechtigt(zeile),
+    folgtBestaetigt: zeile.folgt_bestaetigt_von_nutzer === true,
     eingeladenVon: zeile.eingeladen_von ?? null,
+    eingeladenAm: zeile.eingeladen_am ?? null,
+    deckelAktiviertAm: zeile.deckel_aktiviert_am ?? zeile.gast_konvertiert_am ?? null,
     konvertiertAm: zeile.gast_konvertiert_am ?? null,
   }
 }
@@ -136,12 +188,15 @@ async function einladungenLesen(einladerId) {
 }
 
 /**
- * Das Team eines offiziellen Teilnehmers: `max` Slots, jeder in genau einem
- * von drei Zustaenden.
+ * Das Team eines Spielers: `max` Slots, jeder in genau einem von drei
+ * Zustaenden.
  *
  *   'frei'       noch keine Einladung erzeugt
  *   'eingeladen' Link existiert, noch niemand hat ihn eingeloest
- *   'beigetreten' ein Gast ist ueber diesen Link im Terminal
+ *   'beigetreten' jemand ist ueber diesen Link im Terminal
+ *
+ * Das gilt fuer jeden Account gleich — auch fuer einen, der selbst ueber eine
+ * Einladung hereingekommen ist. Genau daraus entsteht die Kette.
  *
  * Der Klartext-Token steht nur hier, in der Antwort an den Einlader selbst.
  * Er wird nicht gespeichert und taucht in keiner Verwaltungsansicht auf.
@@ -199,19 +254,20 @@ export async function teamLesen(einladerId, max, basis) {
   }
 }
 
-/** Instagram-Namen der eigenen Gaeste. Keine E-Mail, nie. */
+/** Instagram-Namen der selbst eingeladenen Spieler. Keine E-Mail, nie. */
 async function gastNamen(ids) {
   const liste = ids.filter((id) => UUID_MUSTER.test(String(id ?? '')))
   if (!liste.length) return new Map()
   const zeilen = await lesen(
-    `${TABELLE_TEILNEHMER}?select=id,instagram_handle,teilnahme_status`
+    `${TABELLE_TEILNEHMER}?select=id,instagram_handle,teilnahme_status,deckel_nummer`
     + `&id=in.(${liste.map((id) => encodeURIComponent(id)).join(',')})&limit=${liste.length}`,
   )
   return new Map(zeilen.map((z) => [z.id, {
     instagram: z.instagram_handle,
-    /* Ein Gast, der inzwischen selbst einen Deckel hat, darf das zeigen —
-       es ist genau der Erfolg, den das Team sichtbar machen soll. */
-    offiziell: z.teilnahme_status !== STATUS_GAST,
+    /* Wer inzwischen selbst einen Deckel aktiviert hat, darf das zeigen — es
+       ist genau der Erfolg, den das Team sichtbar machen soll. Auf die
+       Spielberechtigung hat es keinen Einfluss; die hat ohnehin jeder. */
+    deckel: ziehungBerechtigt(z),
   }]))
 }
 
@@ -222,9 +278,14 @@ async function gastNamen(ids) {
 /**
  * Den naechsten freien Slot belegen.
  *
- * Nur fuer offizielle Teilnehmer. Der Aufrufer hat das schon geprueft; hier
- * steht es trotzdem noch einmal, weil diese Funktion die einzige Stelle ist,
- * an der ein Einladungsslot entsteht.
+ * Fuer jeden aktiven Account, ganz gleich ob mit oder ohne Deckel. Der
+ * Aufrufer hat das schon geprueft; hier steht es trotzdem noch einmal, weil
+ * diese Funktion die einzige Stelle ist, an der ein Einladungsslot entsteht.
+ *
+ * Mehr als `max` gleichzeitig gueltige Slots kann dabei niemand bekommen:
+ * gelesen werden nur die nicht widerrufenen Zeilen, und widerrufen laesst
+ * sich nur ein noch unbenutzter Slot. Erstellen, widerrufen, neu erstellen
+ * gibt also keinen zusaetzlichen Gast her, sondern immer nur denselben Platz.
  *
  * Laufen zwei Anfragen gleichzeitig, koennen beide denselben freien Slot
  * finden — schreiben kann ihn nur eine. Den Ausschlag gibt der partielle
@@ -232,7 +293,7 @@ async function gastNamen(ids) {
  * widerrufen_am is null, nicht diese Funktion.
  */
 export async function einladungErzeugen(einlader, max, basis, ipH = null) {
-  if (!istOffiziell(einlader)) return { ok: false, grund: 'gast' }
+  if (!einladenBerechtigt(einlader)) return { ok: false, grund: 'konto' }
   if (!(max > 0)) return { ok: false, grund: 'geschlossen' }
 
   const vorhanden = await einladungenLesen(einlader.id)
@@ -314,7 +375,7 @@ export async function einladungErzeugen(einlader, max, basis, ipH = null) {
  * Bedingungen, es gibt also kein Zeitfenster dazwischen.
  */
 export async function einladungWiderrufen(einlader, slotNummer) {
-  if (!istOffiziell(einlader)) return { ok: false, grund: 'gast' }
+  if (!einladenBerechtigt(einlader)) return { ok: false, grund: 'konto' }
   const nr = Number(slotNummer)
   if (!Number.isInteger(nr) || nr < 1) return { ok: false, grund: 'felder' }
 
@@ -367,9 +428,11 @@ export async function einladungOeffnen(roh) {
   }
 
   const einlader = await teilnehmerLesen(z.einlader_teilnehmer_id)
-  /* Eingeladen haben darf nur, wer offiziell ist. Waere das nicht mehr so,
-     ist der Link wertlos — dann lieber gar nichts anbieten. */
-  if (!istOffiziell(einlader)) return { ok: false, grund: 'link' }
+  /* Der Einlader muss ein aktiver Account sein. Einen Deckel braucht er
+     nicht — auch ein selbst eingeladener Spieler laedt weiter ein. Ist sein
+     Konto abgeschaltet, ist der Link wertlos: dann lieber gar nichts
+     anbieten. */
+  if (!einladenBerechtigt(einlader)) return { ok: false, grund: 'link' }
 
   /* Zaehlen, nicht protokollieren: nur eine Zahl und der erste Zeitpunkt.
      Ein Fehlschlag darf die Seite nicht aufhalten. */
@@ -411,7 +474,7 @@ export const selbstVerdacht = (einladerIpH, gastIpH) =>
   Boolean(einladerIpH) && Boolean(gastIpH) && einladerIpH === gastIpH
 
 /**
- * Eine Einladung einloesen und den Gastaccount anlegen.
+ * Eine Einladung einloesen und den Spieleraccount anlegen.
  *
  * Der Ablauf in drei Schritten, und nur der erste entscheidet:
  *
@@ -420,13 +483,21 @@ export const selbstVerdacht = (einladerIpH, gastIpH) =>
  *      abgelaufen. Kommen zwei Anfragen mit demselben Link gleichzeitig an,
  *      kann nur eine die Zeile aendern. Genau hier wird der Token
  *      einmalig — nicht in einer Pruefung davor.
- *   2. Der Gastaccount entsteht: deckel_nummer NULL, teilnahme_status 'gast'.
- *   3. Die Einladung bekommt die Gast-id nachgetragen.
+ *   2. Der Account entsteht: deckel_nummer NULL, teilnahme_status 'gast'
+ *      (= noch kein Los), registrierungsquelle 'einladung'.
+ *   3. Die Einladung bekommt die neue id nachgetragen.
  *
  * Scheitert Schritt 2, wird Schritt 1 zurueckgenommen — der Link bleibt dann
  * benutzbar, statt durch einen Serverfehler verloren zu gehen.
+ *
+ * `folgt` ist die Selbstauskunft „ich folge @videko.kuechen". Sie ist hier
+ * genauso Pflicht wie beim Deckelweg und entscheidet ueber die gewerteten
+ * Scores. Der Aufrufer prueft sie; uebernommen wird hier ausschliesslich der
+ * uebergebene Wert, nie ein stillschweigendes true.
  */
-export async function gastAnlegen({ token: roh, instagram, email, ipH }) {
+export async function gastAnlegen({
+  token: roh, instagram, email, folgt, leaderboard, ipH,
+}) {
   const token = clean(roh, 64)
   if (!EINLADUNG_MUSTER.test(token)) return { ok: false, grund: 'link', status: 401 }
 
@@ -461,10 +532,10 @@ export async function gastAnlegen({ token: roh, instagram, email, ipH }) {
     return { ok: false, grund, status }
   }
 
-  /* Wer eingeladen hat, muss offiziell sein — sonst waere das eine
-     Einladungskette, und die soll es nicht geben. */
+  /* Wer eingeladen hat, muss ein aktiver Account sein — einen Deckel braucht
+     er nicht. Einladungsketten sind ausdruecklich gewollt. */
   const einlader = await teilnehmerLesen(einladung.einlader_teilnehmer_id)
-  if (!istOffiziell(einlader)) return zurueck('link', 401)
+  if (!einladenBerechtigt(einlader)) return zurueck('link', 401)
 
   /* Vermerken, nicht sperren. Siehe `selbstVerdacht` am Ende der Datei. Im
      Protokoll steht nur die Einladungs-id — keine Adresse, kein Hash. */
@@ -472,24 +543,32 @@ export async function gastAnlegen({ token: roh, instagram, email, ipH }) {
     console.warn('[terminal] einladung: gleiche herkunft wie einlader', einladung.id)
   }
 
+  const folgtOk = folgt === true
+  const listeOk = leaderboard === true
   const neu = await fetch(restUrl(TABELLE_TEILNEHMER), {
     method: 'POST',
     headers: kopfzeilen({ Prefer: 'return=representation' }),
     body: JSON.stringify({
       kampagne: KAMPAGNE,
-      /* Ein Gast hat keine Nummer. Die Datenbank laesst auch keine zu. */
+      /* Ohne eigenen Deckel gibt es keine Nummer. Die Datenbank laesst auch
+         keine zu — und ohne Nummer kein Los. */
       deckel_nummer: null,
       instagram_handle: instagram,
       email,
-      /* Der Instagram-Haken gehoert zur Verlosung. Ein Gast nimmt an ihr
-         nicht teil, also wird hier auch nichts behauptet. */
-      folgt_bestaetigt_von_nutzer: false,
+      /* Die Selbstauskunft zum Follow. Sie entscheidet ueber die gewerteten
+         Scores und gilt hier genau wie beim Deckelweg. Geprueft wird sie vor
+         einer Preisausgabe von Hand — behauptet wird nichts. */
+      folgt_bestaetigt_von_nutzer: folgtOk,
       aktiviert_am: jetztIso,
       status: 'aktiv',
       ip_hash: ipH,
-      leaderboard_ok: false,
-      leaderboard_ok_am: null,
+      leaderboard_ok: listeOk,
+      leaderboard_ok_am: listeOk ? jetztIso : null,
+      /* 'gast' heisst ab jetzt nur noch: an diesem Account haengt kein
+         physischer Deckel, also kein Los. Spielen, ranken und einladen darf
+         er trotzdem uneingeschraenkt. */
       teilnahme_status: STATUS_GAST,
+      registrierungsquelle: 'einladung',
       eingeladen_von: einlader.id,
       eingeladen_am: jetztIso,
     }),
@@ -523,21 +602,31 @@ export async function gastAnlegen({ token: roh, instagram, email, ipH }) {
 /* ------------------------------------------------------------------ */
 
 /**
- * Aus einem Gast einen offiziellen Teilnehmer machen.
+ * Einen Deckel an einem bestehenden Account nachruesten.
  *
- * Das passiert nur an einer einzigen Stelle im ganzen System: wenn jemand
- * mit Gastsitzung einen echten Deckel aktiviert. Es gibt keinen Schalter in
+ * Das passiert nur an einer einzigen Stelle im ganzen System: wenn jemand mit
+ * laufender Sitzung einen echten Deckel aktiviert. Es gibt keinen Schalter in
  * der Verwaltung, keinen API-Parameter und keinen anderen Weg.
  *
  * Fortgeschrieben wird DIESELBE Zeile. Deshalb:
  *   - bleiben alle Scores, wo sie sind (sie haengen an teilnehmer_id),
+ *   - bleiben die bisherigen Rangplaetze unveraendert,
  *   - bleibt die Anmeldung dieselbe (der Sitzungsbeleg traegt dieselbe id),
+ *   - bleiben die eigenen Einladungsslots samt Team bestehen,
  *   - bleibt `eingeladen_von` stehen, die Herkunft also nachvollziehbar,
  *   - entsteht kein zweiter Account, nicht einmal kurzzeitig.
  *
+ * `registrierungsquelle` wird ausdruecklich NICHT auf 'deckel' gesetzt. Wer
+ * ueber eine Einladung kam, kam ueber eine Einladung — sonst liesse sich
+ * hinterher nicht mehr messen, wie viele Deckel die Kette gebracht hat. Was
+ * dazukommt, ist `deckel_aktiviert_am`.
+ *
+ * Neu ist ab hier nur eines: das Los. Gespielt und gerankt hat diese Person
+ * vorher schon genauso.
+ *
  * Der Filter traegt `teilnahme_status=eq.gast`: zwei gleichzeitige Versuche
- * koennen nicht beide durchkommen, und eine bereits offizielle Zeile wird
- * hier nie angefasst.
+ * koennen nicht beide durchkommen, und eine Zeile, an der schon ein Deckel
+ * haengt, wird hier nie angefasst.
  */
 export async function gastKonvertieren(gastId, nummer, anspruchArt) {
   const jetztIso = jetzt()
@@ -555,7 +644,12 @@ export async function gastKonvertieren(gastId, nummer, anspruchArt) {
         teilnahme_status: STATUS_OFFIZIELL,
         anspruch_art: anspruchArt,
         gast_konvertiert_am: jetztIso,
+        deckel_aktiviert_am: jetztIso,
         aktiviert_am: jetztIso,
+        /* Die Follow-Bestaetigung hat diese Person bei der Registrierung
+           bereits gegeben; der Deckelweg verlangt sie ebenfalls. Sie wird
+           hier bestaetigt, nicht erfunden — ohne sie kaeme man gar nicht bis
+           hierher. `registrierungsquelle` bleibt unberuehrt. */
         folgt_bestaetigt_von_nutzer: true,
       }),
     },
