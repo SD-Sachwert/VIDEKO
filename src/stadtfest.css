@@ -708,6 +708,40 @@
 /* Interessen-Chips                                                  */
 /* ---------------------------------------------------------------- */
 
+/* Pflichtmeldung der Interessenauswahl. Dieselbe Sprache wie die
+   Feldfehler — warmes Rot, klein, aber klar lesbar. Sie haengt dauerhaft
+   im DOM (Live-Region) und wird leer ausgeblendet, damit sie im Normalfall
+   keinen Platz kostet. */
+.stf-gruppe__fehler {
+  margin: -4px 0 9px;
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: var(--stf-rot);
+}
+
+.stf-gruppe__fehler:empty {
+  display: none;
+}
+
+/* Dezente Markierung des ganzen Bereichs: ein warmer Strich links, kein
+   roter Kasten. Der negative Aussenabstand haelt die Chips dabei in der
+   Flucht der uebrigen Formularzeilen. */
+.stf-gruppe--fehler {
+  margin-left: -13px;
+  padding-left: 11px;
+  border-left: 2px solid var(--stf-rot);
+}
+
+.stf-gruppe--fehler .stf-gruppe__titel {
+  color: var(--stf-rot);
+}
+
+/* Nur die noch nicht gewaehlten Chips bekommen den warmen Rand — ein
+   gewaehlter Chip kann hier ohnehin nicht existieren. */
+.stf-gruppe--fehler .stf-chip[aria-pressed='false'] {
+  border-color: rgba(217, 138, 106, 0.55);
+}
+
 .stf-chips {
   display: flex;
   flex-wrap: wrap;

@@ -210,6 +210,14 @@ function pruefen(b, phaseWert) {
     ? [...new Set(b.interessen.map((k) => clean(k, 40)).filter((k) => INTERESSEN_KEYS.has(k)))]
     : []
 
+  /* Mindestens ein Interesse ist Pflicht — und geprueft wird NACH der
+     Whitelist, nicht davor. Sonst wuerde ein Request mit erfundenen
+     Schluesseln ("raumschiff") die Pflicht formal erfuellen und trotzdem
+     mit leerer Auswahl in der Datenbank landen. Hier bleibt nach dem Filter
+     nichts uebrig, also faellt er in denselben 400 wie eine Anmeldung ganz
+     ohne Auswahl. "nur_gewinn" ist dabei eine vollwertige Antwort. */
+  if (interessen.length < 1) fehler.push('interessen')
+
   /* Einwilligungen: nur bekannte Firmen, nur bekannte Kanaele, und ein
      Telefonkanal nur dann, wenn ueberhaupt eine Nummer vorliegt. Eine
      Telefonwerbe-Einwilligung ohne Nummer waere wertlos und irrefuehrend.
@@ -318,12 +326,16 @@ export default async function handler(req, res) {
 
   const daten = pruefen(b, phaseWert)
   if (daten.fehler.length) {
+    /* Fehlt ausschliesslich die Interessenauswahl, sagt die Meldung genau
+       das — sonst bleibt es beim allgemeinen Satz. Beides ist bewusst
+       nicht-technisch formuliert: was intern fehlt, steht in "felder". */
+    const nurInteressen = daten.fehler.length === 1 && daten.fehler[0] === 'interessen'
     res.status(400).json({
       ok: false,
       gespeichert: false,
       phase: phaseWert,
       felder: daten.fehler,
-      meldung: 'Da fehlt noch etwas.',
+      meldung: nurInteressen ? 'Bitte mindestens ein Interesse auswählen.' : 'Da fehlt noch etwas.',
     })
     return
   }

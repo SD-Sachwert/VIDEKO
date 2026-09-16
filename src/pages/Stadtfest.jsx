@@ -218,6 +218,9 @@ export default function Stadtfest() {
   const [jetzt, setJetzt] = useState(null)
 
   const laeuftRef = useRef(false)
+  /* Zum Scrollen bei fehlender Interessenauswahl: der Block liegt weit
+     unten im Formular und waere sonst beim Absenden nicht im Bild. */
+  const interessenRef = useRef(null)
 
   /* Die Texte der aktuellen Phase. Vor der Hydration steht hier null; dann
      rendert die Seite den phasenneutralen Block. */
@@ -296,11 +299,19 @@ export default function Stadtfest() {
     setFehler((f) => (f[feld] ? { ...f, [feld]: undefined } : f))
   }, [])
 
-  const chipUmschalten = useCallback((key) => {
-    setInteressen((liste) =>
-      liste.includes(key) ? liste.filter((k) => k !== key) : [...liste, key],
-    )
-  }, [])
+  const chipUmschalten = useCallback(
+    (key) => {
+      const neu = interessen.includes(key)
+        ? interessen.filter((k) => k !== key)
+        : [...interessen, key]
+      setInteressen(neu)
+      /* Die Pflichtmeldung verschwindet, sobald wieder etwas ausgewaehlt ist
+         — und sie bleibt stehen, wenn gerade der letzte Chip abgewaehlt
+         wurde. Genau wie bei den Textfeldern: korrigieren raeumt auf. */
+      setFehler((f) => (f.interessen && neu.length > 0 ? { ...f, interessen: undefined } : f))
+    },
+    [interessen],
+  )
 
   /* --- Pruefung ---------------------------------------------------- */
   function pruefen() {
@@ -337,9 +348,26 @@ export default function Stadtfest() {
         f.alter = `Die Teilnahme ist erst ab ${STADTFEST_EVENT.minimumAge} möglich.`
       }
     }
+    /* Mindestens ein Interesse ist Pflicht. Jede der angebotenen Optionen
+       zaehlt, ausdruecklich auch "Nur wegen dem Gewinn hier" — das ist eine
+       ehrliche Antwort und keine Verweigerung. Mehrfachauswahl bleibt
+       erlaubt. Serverseitig wird dieselbe Regel noch einmal erzwungen. */
+    if (interessen.length < 1) f.interessen = 'Wähl bitte mindestens eine Sache aus.'
     /* Der Marketinghaken wird bewusst NICHT geprueft: er ist freiwillig, und
        ob er gesetzt ist oder nicht, darf das Absenden nie verhindern. */
     return f
+  }
+
+  /* Holt den Interessenblock ins Bild, wenn er ausserhalb liegt. Kein
+     alert(), kein Sprung mitten im Formular: steht der Block bereits
+     sichtbar, passiert nichts. */
+  function zeigeInteressen() {
+    const el = interessenRef.current
+    if (!el || typeof window === 'undefined') return
+    const kasten = el.getBoundingClientRect()
+    if (kasten.top >= 0 && kasten.bottom <= window.innerHeight) return
+    const sanft = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches
+    el.scrollIntoView({ behavior: sanft ? 'auto' : 'smooth', block: 'center' })
   }
 
   async function absenden(e) {
@@ -351,6 +379,11 @@ export default function Stadtfest() {
     setFehler(f)
     if (Object.keys(f).length > 0) {
       setSammelfehler('Da fehlt noch etwas. Die betroffenen Felder sind markiert.')
+      /* Die Textfelder stehen oben und markieren sich selbst sichtbar. Der
+         Interessenblock liegt weiter unten — fehlt er, waere das Antippen
+         des Buttons sonst ein toter Klick ohne erkennbaren Grund. Gescrollt
+         wird nur dann, und nur wenn er wirklich nicht im Bild ist. */
+      if (f.interessen) zeigeInteressen()
       return
     }
     setSammelfehler('')
@@ -507,9 +540,25 @@ export default function Stadtfest() {
         />
       </div>
 
-      <div>
-        <p className="stf-gruppe__titel">Was interessiert dich?</p>
-        <div className="stf-chips">
+      <div
+        ref={interessenRef}
+        className={`stf-gruppe${fehler.interessen ? ' stf-gruppe--fehler' : ''}`}
+      >
+        <p className="stf-gruppe__titel" id="stf-interessen-titel">
+          Was interessiert dich?
+        </p>
+        {/* Die Fehlerzeile haengt dauerhaft im DOM und wechselt nur ihren
+            Text — eine Live-Region, die erst im Fehlerfall eingehaengt wird,
+            verschlucken Screenreader haeufig. Leer blendet das CSS sie aus. */}
+        <p className="stf-gruppe__fehler" id="stf-interessen-fehler" aria-live="polite">
+          {fehler.interessen || ''}
+        </p>
+        <div
+          className="stf-chips"
+          role="group"
+          aria-labelledby="stf-interessen-titel"
+          aria-describedby={fehler.interessen ? 'stf-interessen-fehler' : undefined}
+        >
           {interessenFuer(gewinnspiel).map((interesse) => (
             <button
               key={interesse.key}
