@@ -25,6 +25,11 @@ import {
   vorschau,
   zufallsStufe,
 } from '../../src/components/spiele/merge-logik.js'
+/* Die Servergrenzen werden gelesen, nicht abgeschrieben: so kann der Test
+   nicht stillschweigend an der echten Pruefung vorbeilaufen. */
+import { SPIELE } from '../../api/_terminal-kern.js'
+
+const SERVER = SPIELE.kuechen_merge
 
 let ok = 0
 let fehler = 0
@@ -65,7 +70,8 @@ pruefe('Stufen: 10, oberste = 9', STUFEN.length === 10 && OBERSTE === 9)
 pruefe('Radien steigen streng', STUFEN.every((s, i) => i === 0 || s.r > STUFEN[i - 1].r))
 pruefe('Oberste Stufe passt in den Behaelter', STUFEN[OBERSTE].r * 2 < BREITE)
 pruefe('basisPunkte: Dreieckszahl × 10', basisPunkte(0) === 10 && basisPunkte(1) === 30 && basisPunkte(9) === 550)
-pruefe('ABWURF_MS >= 400 (Server msJeRunde)', ABWURF_MS >= 400, `ABWURF_MS=${ABWURF_MS}`)
+pruefe(`ABWURF_MS >= ${SERVER.msJeRunde} (Server msJeRunde)`, ABWURF_MS >= SERVER.msJeRunde, `ABWURF_MS=${ABWURF_MS}`)
+pruefe(`ABWURF_MAX ${ABWURF_MAX} passt in drei Runden Server-Decke`, ABWURF_MAX <= SERVER.maxJeRunde * 3, `${SERVER.maxJeRunde * 3}`)
 pruefe('komboFaktor: 1, +25 %, gedeckelt', komboFaktor(0) === 1 && komboFaktor(1) === 1 && komboFaktor(2) === 1.25 && komboFaktor(KOMBO_MAX) === komboFaktor(KOMBO_MAX + 7))
 pruefe('komboWeiter: im Fenster +1, danach 1', komboWeiter(2, 1, 1 + KOMBO_S - 0.01) === 3 && komboWeiter(2, 1, 1 + KOMBO_S + 0.01) === 1 && komboWeiter(0, null, 5) === 1)
 {
@@ -288,19 +294,45 @@ console.log('\n— Bot-Laeufe (Deckel, Summen, Hochrechnung)')
 
   let deckelOk = true
   let summenOk = true
-  const zeilen = []
+  const laeufe = []
   for (const [seed, takt] of [[11, 0.45], [12, 0.45], [13, 0.8], [14, 1.2], [15, 1.2], [16, 2]]) {
     const { stand, maxJeAbwurf, summeEv } = botLauf(seed, takt)
     if (maxJeAbwurf > ABWURF_MAX) deckelOk = false
     if (stand.punkte !== summeEv) summenOk = false
     const jeAbwurf = stand.abwuerfe ? stand.punkte / stand.abwuerfe : 0
-    zeilen.push(`takt ${takt}s: ${stand.abwuerfe} Abwuerfe, ${stand.punkte} Punkte, ${jeAbwurf.toFixed(0)}/Abwurf, max ${maxJeAbwurf}, ${stand.zeit.toFixed(0)} s, vorbei=${stand.vorbei}`)
+    laeufe.push({ takt, punkte: stand.punkte, abwuerfe: stand.abwuerfe, jeAbwurf, zeit: stand.zeit })
+    console.log(
+      `       takt ${takt}s: ${stand.abwuerfe} Abwuerfe, ${stand.punkte} Punkte, ${jeAbwurf.toFixed(0)}/Abwurf, ` +
+        `max ${maxJeAbwurf}, ${stand.zeit.toFixed(0)} s, vorbei=${stand.vorbei}`,
+    )
   }
-  zeilen.forEach((z) => console.log(`       ${z}`))
   pruefe('Bot: kein Abwurf bringt mehr als ABWURF_MAX', deckelOk)
   pruefe('Bot: stand.punkte = Summe der Ereignisse', summenOk)
-  const schnitt = zeilen.map((z) => Number(z.match(/, (\d+)\/Abwurf/)[1]))
-  pruefe('Bot: Schnitt je Abwurf unter Server-maxJeRunde 450', schnitt.every((s) => s < 450), schnitt.join(','))
+
+  /* Die drei Serverpruefungen aus laufVerdacht, hier gegen den pausenlosen
+     Bot gefahren: er ist der beste Lauf, den die Logik ueberhaupt zulaesst.
+     Faellt eine davon, wuerde ein ehrlicher Ausnahmelauf als Verdachtsfall
+     aus der Rangliste fliegen. */
+  const bester = laeufe.reduce((a, b) => (b.punkte > a.punkte ? b : a))
+  pruefe(
+    `Server: Schnitt je Abwurf unter maxJeRunde ${SERVER.maxJeRunde}`,
+    laeufe.every((l) => l.jeAbwurf < SERVER.maxJeRunde),
+    laeufe.map((l) => l.jeAbwurf.toFixed(0)).join(','),
+  )
+  pruefe(
+    `Server: Abwuerfe brauchen mindestens msJeRunde ${SERVER.msJeRunde}`,
+    laeufe.every((l) => (l.zeit * 1000) / Math.max(1, l.abwuerfe) >= SERVER.msJeRunde),
+    laeufe.map((l) => Math.round((l.zeit * 1000) / Math.max(1, l.abwuerfe))).join(','),
+  )
+  pruefe(
+    `Server: bester Bot-Lauf unter plausibel ${SERVER.plausibel}`,
+    bester.punkte <= SERVER.plausibel,
+    `${bester.punkte}`,
+  )
+  pruefe(
+    `Server: hart ${SERVER.hart} liegt deutlich ueber plausibel`,
+    SERVER.hart >= SERVER.plausibel * 1.5,
+  )
 }
 
 console.log(`\n${ok} OK, ${fehler} Fehler`)

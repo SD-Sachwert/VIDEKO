@@ -1,4 +1,5 @@
 import { useContext, useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
 
 import { Ikon } from './TerminalRahmen.jsx'
 import { PracticeKontext, START_EREIGNIS, startWunschNehmen } from './spiel-lauf.js'
@@ -176,15 +177,25 @@ export default function SpielKarte({ spiel, lauf, best, leiste = null, children 
               </dl>
             )}
 
+            {/* Zwei Wege aus dem Ergebnis: sofort nochmal — oder nachsehen,
+                wo der Lauf gelandet ist. Im Probelauf zaehlt nichts davon,
+                dort steht stattdessen der Weg zur Aktivierung. */}
             {nochmalMoeglich && (
-              <button
-                type="button"
-                ref={nochmalRef}
-                className="trm-cta trm-spiel__nochmal"
-                onClick={lauf.starten}
-              >
-                {T.nochmalKurz}
-              </button>
+              <p className="trm-spiel__wege">
+                <button
+                  type="button"
+                  ref={nochmalRef}
+                  className="trm-cta trm-spiel__nochmal"
+                  onClick={lauf.starten}
+                >
+                  {T.nochmalKurz}
+                </button>
+                {!practice && (
+                  <Link className="trm-cta trm-cta--umriss trm-cta--klein" to="/terminal/rangliste">
+                    {T.zurRangliste}
+                  </Link>
+                )}
+              </p>
             )}
 
             <p className="trm-metrik__text trm-spiel__status" aria-live="polite" hidden={practice}>

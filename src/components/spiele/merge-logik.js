@@ -52,6 +52,35 @@
  * Merge schaffe ich noch". Damit schnelles Draufloswerfen nicht explodiert,
  * ist der Faktor klein (+25 % je Stufe, hoechstens ×2) und die Punkte je
  * Abwurf haben eine Decke (ABWURF_MAX).
+ *
+ * CHAIN — die Kettenreaktion in sich
+ * ----------------------------------
+ * Die Kombo zaehlt ueber Abwuerfe hinweg (Fenster KOMBO_S). Die Chain ist
+ * enger: nur Verschmelzungen, die binnen CHAIN_S aufeinander folgen, also
+ * echte Kettenreaktionen aus einem einzigen Abwurf. Drei Stufen tiefer
+ * durchgerutscht ist etwas anderes als dreimal gut gezielt, und nur die
+ * Chain darf richtig eskalieren.
+ *
+ * SPEZIALTEILE
+ * ------------
+ * Ein guter Merge macht das ENTSTEHENDE Teil zum Spezialteil — es kommt kein
+ * zusaetzlicher Koerper dazu, der Stapel bleibt also berechenbar. Das
+ * Spezialteil zuendet erst, wenn es selbst wieder verschmilzt:
+ *   bombe  — raeumt alles im Umkreis ab
+ *   blitz  — raeumt eine ganze waagerechte Zeile ab
+ *   ofen   — raeumt ein Rechteck ab (breiter als hoch)
+ *   gold   — Punkte-Multiplikator fuer GOLD_S Sekunden
+ *   frost  — bremst den Fall fuer FROST_S Sekunden
+ * Zuendet eine Bombe ins Leere, gibt es nichts: Abraeumen wird bezahlt,
+ * nicht der Knall.
+ *
+ * FIEBER
+ * ------
+ * Ein Abwurf, der mindestens eine Verschmelzung bringt, ist eine gelandete
+ * Kombo. FIEBER_COMBOS davon hintereinander ohne Fehlwurf zuenden das
+ * Fieber: FIEBER_S Sekunden mehr Punkte und mehr Spezialteile. Ein Fehlwurf
+ * (ein Abwurf ohne jede Verschmelzung) setzt die Ladung zurueck. Das Fieber
+ * endet allein ueber die Uhr und raeumt sich dabei selbst auf.
  */
 
 export const BREITE = 100
@@ -96,11 +125,83 @@ export const ABWURF_MS = 450
 export const KOMBO_S = 1.6
 export const KOMBO_MAX = 5
 export const KOMBO_ANTEIL = 0.25
-export const TRAUM_PUNKTE = 1000
+export const TRAUM_PUNKTE = 1400
 /* Mehr bringt ein einzelner Abwurf samt aller Folgeverschmelzungen nie. */
-export const ABWURF_MAX = 2400
+export const ABWURF_MAX = 3000
 /* Ab dieser Stufe (0-basiert) gilt eine Verschmelzung als gross. */
 export const GROSS_AB = 6
+
+/* ------------------------------------------------------------------ *
+ * Chain, Fieber, Gold, Frost
+ * ------------------------------------------------------------------ */
+
+/* Fenster einer Kettenreaktion. Deutlich enger als KOMBO_S: was laenger
+   braucht, ist ein neuer Abwurf und keine Kette mehr. */
+export const CHAIN_S = 0.22
+export const CHAIN_MAX = 6
+export const CHAIN_ANTEIL = 0.3
+/* Ab dieser Chain ist es keine Kette mehr, sondern ein Unfall. Nur fuer den Text. */
+export const CHAIN_ESKALIERT = 4
+
+export const FIEBER_COMBOS = 5
+export const FIEBER_S = 8
+export const FIEBER_MULT = 1.5
+/* Im Fieber sind Spezialteile wahrscheinlicher. */
+export const FIEBER_CHANCE = 1.7
+export const SPEZIAL_CHANCE_MAX = 0.85
+
+export const GOLD_S = 6
+export const GOLD_MULT = 2
+export const FROST_S = 2.6
+export const FROST_ANTEIL = 0.34
+
+/* Alle Faktoren zusammen sind gedeckelt, sonst entscheidet ein einziger
+   Glueckslauf das Ranking (und der Server haelt es fuer Betrug). */
+export const FAKTOR_MAX = 6
+
+/* ------------------------------------------------------------------ *
+ * Spezialteile
+ * ------------------------------------------------------------------ */
+
+export const SPEZIAL = {
+  bombe: { wort: 'BOMBE', ruf: 'BOOM', grund: 70, form: 'kreis', r: 26 },
+  blitz: { wort: 'ZEILENBLITZ', ruf: 'ZEILE WEG', grund: 90, form: 'zeile', h: 26 },
+  ofen: { wort: 'GROSSOFEN', ruf: 'DURCHGEGART', grund: 130, form: 'feld', b: 46, h: 34 },
+  gold: { wort: 'GOLDSTÜCK', ruf: `GOLD ×${GOLD_MULT}`, grund: 160, form: 'gold' },
+  frost: { wort: 'FROSTER', ruf: 'EINGEFROREN', grund: 70, form: 'frost' },
+}
+export const SPEZIAL_NAMEN = Object.keys(SPEZIAL)
+/* Anteil der Basispunkte, den ein abgeraeumtes Teil einbringt. */
+export const SPEZIAL_ANTEIL = 0.45
+
+/*
+ * Wer wird was? Von selten nach haeufig geprueft, der erste Treffer gewinnt.
+ * `abStufe` ist die Stufe des NEUEN Teils; `abKette`/`abChain` sind zwei
+ * Wege zum selben Ziel — eine lange Kombo oder eine echte Kettenreaktion.
+ */
+export const SPEZIAL_REGELN = [
+  { key: 'ofen', abStufe: 6, abKette: 5, abChain: 3, chance: 0.22 },
+  { key: 'blitz', abStufe: 4, abKette: 4, abChain: 2, chance: 0.24 },
+  { key: 'gold', abStufe: 3, abKette: 4, abChain: 3, chance: 0.18 },
+  { key: 'frost', abStufe: 5, abKette: 1, abChain: 1, chance: 0.16 },
+  { key: 'bombe', abStufe: 3, abKette: 2, abChain: 1, chance: 0.22 },
+]
+
+/* ------------------------------------------------------------------ *
+ * Trockener Humor
+ * ------------------------------------------------------------------ *
+ *
+ * Sparsam: nur zu einem echten Anlass und hoechstens alle SPRUCH_PAUSE
+ * Sekunden. Ein Witz, den man jeden Zug hoert, ist eine Statusleiste.
+ */
+export const SPRUCH_PAUSE = 16
+
+export const SPRUECHE = {
+  chain: ['ORDNUNG WAR GESTERN.', "JETZT RÄUMT'S AUF.", 'KÜCHENCHAOS.', 'DAS WAR NICHT GEPLANT.'],
+  spezial: ['DIE KÜCHE REGELT DAS.', 'GEHT DOCH.', 'EINBAU LÄUFT.'],
+  fieber: ['ALLES BRENNT. GUT SO.', 'JETZT WIRD GEKOCHT.'],
+  traum: ['FERTIG GEPLANT.', 'DAS NENNT MAN KÜCHE.'],
+}
 
 /* Zehn Stufen, klein nach gross. Die Radien wachsen erst schnell (die
    kleinen Teile sollen sich deutlich unterscheiden), dann langsamer (sonst
@@ -140,6 +241,93 @@ export function komboWeiter(kette, letzterMerge, zeit) {
   return kette + 1
 }
 
+/** Faktor einer Kettenreaktion: je Glied +30 %, gedeckelt bei CHAIN_MAX. */
+export function chainFaktor(chain) {
+  return 1 + CHAIN_ANTEIL * (Math.min(Math.max(1, chain), CHAIN_MAX) - 1)
+}
+
+/** Die Chain nach einer Verschmelzung zur Zeit `zeit` (Sekunden). */
+export function chainWeiter(chain, letzterMerge, zeit) {
+  if (!(chain > 0) || letzterMerge == null || zeit - letzterMerge > CHAIN_S) return 1
+  return chain + 1
+}
+
+/** Laeuft das Fieber gerade? */
+export function fieberAktiv(stand) {
+  return !!stand.fieber && stand.zeit < stand.fieberBis
+}
+
+/** Laeuft der Gold-Multiplikator gerade? */
+export function goldAktiv(stand) {
+  return stand.goldBis > stand.zeit
+}
+
+/** Faellt gerade alles in Zeitlupe? */
+export function frostAktiv(stand) {
+  return stand.frostBis > stand.zeit
+}
+
+/**
+ * Der Faktor, mit dem ALLE Punkte dieses Augenblicks multipliziert werden:
+ * Kombo × Chain × Fieber × Gold, hart bei FAKTOR_MAX gedeckelt.
+ * Ohne alles ist er exakt 1 — daran haengt die Wertung der schlichten
+ * Verschmelzung, und die soll berechenbar bleiben.
+ */
+export function gesamtFaktor(stand, kette, chain) {
+  let f = komboFaktor(kette) * chainFaktor(chain)
+  if (fieberAktiv(stand)) f *= FIEBER_MULT
+  if (goldAktiv(stand)) f *= GOLD_MULT
+  return Math.min(FAKTOR_MAX, f)
+}
+
+/**
+ * Welches Spezialteil wird aus diesem Merge? `null`, wenn keines.
+ * Rein: alles, was entscheidet, kommt als Argument herein, der Zufall auch.
+ */
+export function spezialWaehlen(stufe, kette, chain, fieber, zufall = Math.random) {
+  for (const regel of SPEZIAL_REGELN) {
+    if (stufe < regel.abStufe) continue
+    if (kette < regel.abKette && chain < regel.abChain) continue
+    const chance = Math.min(SPEZIAL_CHANCE_MAX, regel.chance * (fieber ? FIEBER_CHANCE : 1))
+    if (zufall() < chance) return regel.key
+  }
+  return null
+}
+
+/**
+ * Welche liegenden Teile raeumt ein Spezialteil ab? Rein und ohne
+ * Seitenwirkung, damit der Test das Feld selbst stellen kann.
+ * `gold` und `frost` raeumen nichts ab — die wirken ueber die Uhr.
+ */
+export function spezialTreffer(key, x, y, koerper) {
+  const satz = SPEZIAL[key]
+  if (!satz) return []
+  if (satz.form === 'kreis') {
+    return koerper.filter((k) => (k.x - x) * (k.x - x) + (k.y - y) * (k.y - y) <= satz.r * satz.r)
+  }
+  if (satz.form === 'zeile') {
+    return koerper.filter((k) => Math.abs(k.y - y) <= satz.h / 2)
+  }
+  if (satz.form === 'feld') {
+    return koerper.filter((k) => Math.abs(k.x - x) <= satz.b / 2 && Math.abs(k.y - y) <= satz.h / 2)
+  }
+  return []
+}
+
+/**
+ * Ein Spruch zum Anlass — oder null. Sparsam ueber SPRUCH_PAUSE gedrosselt,
+ * damit der Humor trocken bleibt und nicht zur Dauerbeschallung wird.
+ * Merkt sich die Sperre im Stand, ruft sich also nur einmal je Anlass auf.
+ */
+export function spruchHolen(stand, anlass) {
+  const liste = SPRUECHE[anlass]
+  if (!liste || !liste.length) return null
+  if (stand.zeit < stand.spruchBis) return null
+  stand.spruchBis = stand.zeit + SPRUCH_PAUSE
+  const w = stand.zufall ? stand.zufall() : Math.random()
+  return liste[Math.min(liste.length - 1, Math.floor(w * liste.length))]
+}
+
 export function zufallsStufe(zufall = Math.random) {
   const summe = SPAWN_GEWICHTE.reduce((a, b) => a + b, 0)
   let wurf = zufall() * summe
@@ -158,10 +346,20 @@ export function neuesSpiel(zufall = Math.random) {
     zeit: 0,
     nr: 0,
     kette: 0,
+    chain: 0,
+    chainMax: 0,
     letzterMerge: null,
     komboBis: 0,
     hoechste: -1,
     abwuerfe: 0,
+    abwurfMerges: 0,
+    fieber: false,
+    fieberBis: 0,
+    fieberLadung: 0,
+    fieberZahl: 0,
+    goldBis: 0,
+    frostBis: 0,
+    spruchBis: 0,
     punkte: 0,
     abwurfPunkte: 0,
     gefahr: 0,
@@ -203,6 +401,7 @@ function koerperBauen(stand, stufe, x, y, r0) {
     stuetze: false,
     geboren: stand.zeit,
     ueber: 0,
+    spezial: null,
   }
 }
 
@@ -214,6 +413,10 @@ function koerperBauen(stand, stufe, x, y, r0) {
 export function abwerfen(stand, x) {
   if (stand.vorbei) return null
   const stufe = stand.aktuell
+  /* Fehlwurf: der vorige Abwurf hat nichts verschmolzen — die Fieberladung
+     faellt zurueck auf null. Genau das meint "fuenf Kombos ohne Fehler". */
+  if (stand.abwuerfe > 0 && stand.abwurfMerges === 0) stand.fieberLadung = 0
+  stand.abwurfMerges = 0
   const k = koerperBauen(stand, stufe, klemmeX(stufe, x), SPAWN_Y)
   stand.koerper.push(k)
   stand.aktuell = stand.naechstes
@@ -313,6 +516,82 @@ function gutschreiben(stand, roh) {
   return punkte
 }
 
+/** Eine gelandete Kombo mehr — und vielleicht zuendet dabei das Fieber. */
+function fieberLaden(stand, ereignisse) {
+  if (fieberAktiv(stand)) return
+  stand.fieberLadung += 1
+  if (stand.fieberLadung < FIEBER_COMBOS) return
+  stand.fieberLadung = 0
+  stand.fieber = true
+  stand.fieberBis = stand.zeit + FIEBER_S
+  stand.fieberZahl += 1
+  ereignisse.push({ art: 'fieber', bis: stand.fieberBis, dauer: FIEBER_S, spruch: spruchHolen(stand, 'fieber') })
+}
+
+/* Mehr Zuendungen in einem einzigen Schritt gibt es nicht — eine harte
+   Bremse gegen Kettenreaktionen, die sich selbst aufschaukeln. */
+const ZUENDUNGEN_MAX = 8
+
+/**
+ * Spezialteile zuenden. Raeumt liegende Teile ab (nie die eben erst
+ * entstandenen), zahlt nur fuer das, was wirklich weg ist, und laesst
+ * abgeraeumte Spezialteile ihrerseits zuenden.
+ */
+function spezialZuenden(stand, keys, x, y, liste, weg, neu, faktor, kette, chain, ereignisse) {
+  const schlange = keys.map((key) => ({ key, x, y }))
+  let zahl = 0
+  while (schlange.length && zahl < ZUENDUNGEN_MAX) {
+    const { key, x: zx, y: zy } = schlange.shift()
+    zahl += 1
+    const satz = SPEZIAL[key]
+    if (!satz) continue
+    if (satz.form === 'gold') {
+      stand.goldBis = Math.max(stand.goldBis, stand.zeit + GOLD_S)
+    } else if (satz.form === 'frost') {
+      stand.frostBis = Math.max(stand.frostBis, stand.zeit + FROST_S)
+    }
+    let roh = 0
+    let getroffen = []
+    if (satz.form === 'kreis' || satz.form === 'zeile' || satz.form === 'feld') {
+      const offen = liste.filter((k) => !weg.has(k.id))
+      getroffen = spezialTreffer(key, zx, zy, offen)
+      if (getroffen.length) {
+        let summe = satz.grund
+        for (const k of getroffen) {
+          weg.add(k.id)
+          summe += basisPunkte(k.stufe) * SPEZIAL_ANTEIL
+          if (k.spezial) schlange.push({ key: k.spezial, x: k.x, y: k.y })
+        }
+        roh = summe * faktor
+      }
+      /* Zuendet die Bombe ins Leere, gibt es nichts. Abraeumen wird bezahlt. */
+    } else {
+      roh = satz.grund * faktor
+    }
+    const punkte = gutschreiben(stand, roh)
+    ereignisse.push({
+      art: 'spezial',
+      spezial: key,
+      wort: satz.wort,
+      ruf: satz.ruf,
+      form: satz.form,
+      x: zx,
+      y: zy,
+      r: satz.r ?? 0,
+      b: satz.b ?? 0,
+      h: satz.h ?? 0,
+      weite: satz.form === 'zeile' ? BREITE : 0,
+      abgeraeumt: getroffen.length,
+      punkte,
+      kette,
+      chain,
+      faktor,
+      gross: getroffen.length >= 3 || satz.form === 'gold',
+      spruch: getroffen.length >= 4 ? spruchHolen(stand, 'spezial') : null,
+    })
+  }
+}
+
 /**
  * Ein fester Schritt: Schwerkraft, Stoesse, Verschmelzen, Ueberlauf.
  * Gibt die Ereignisse dieses Schritts zurueck (meist keine).
@@ -325,12 +604,25 @@ export function schritt(stand) {
   const n = liste.length
   stand.zeit += h
 
+  /* Uhren zuerst: abgelaufene Zustaende raeumen sich hier selbst auf, damit
+     kein Fieber und kein Gold haengen bleibt, wenn niemand hinschaut. */
+  if (stand.fieber && stand.zeit >= stand.fieberBis) {
+    stand.fieber = false
+    stand.fieberBis = 0
+    ereignisse.push({ art: 'fieber-ende' })
+  }
+  if (stand.goldBis && stand.zeit >= stand.goldBis) stand.goldBis = 0
+  if (stand.frostBis && stand.zeit >= stand.frostBis) stand.frostBis = 0
+
+  /* Frost bremst nur den Fall, nicht die Loesung — die Physik bleibt stabil. */
+  const g = stand.frostBis > stand.zeit ? SCHWERKRAFT * FROST_ANTEIL : SCHWERKRAFT
+
   for (let i = 0; i < n; i += 1) {
     const k = liste[i]
     k.px = k.x
     k.py = k.y
     k.stuetze = false
-    k.vy += SCHWERKRAFT * h
+    k.vy += g * h
     k.x += k.vx * h
     k.y += k.vy * h
     if (k.r < k.rZiel) {
@@ -370,6 +662,8 @@ export function schritt(stand) {
 
   /* Kombo abgelaufen? */
   if (stand.kette > 0 && stand.zeit > stand.komboBis) stand.kette = 0
+  /* Die Chain ist enger und faellt frueher zurueck. */
+  if (stand.chain > 0 && (stand.letzterMerge == null || stand.zeit - stand.letzterMerge > CHAIN_S)) stand.chain = 0
 
   /* Verschmelzen: jedes Teil hoechstens einmal je Schritt. */
   const weg = new Set()
@@ -391,13 +685,22 @@ export function schritt(stand) {
       const x = a.x + dx * anteil
       const y = a.y + dy * anteil
       const kette = komboWeiter(stand.kette, stand.letzterMerge, stand.zeit)
+      const chain = chainWeiter(stand.chain, stand.letzterMerge, stand.zeit)
       stand.kette = kette
+      stand.chain = chain
+      if (chain > stand.chainMax) stand.chainMax = chain
       stand.letzterMerge = stand.zeit
       stand.komboBis = stand.zeit + KOMBO_S
-      const faktor = komboFaktor(kette)
+      /* Erste Verschmelzung dieses Abwurfs: eine gelandete Kombo. */
+      stand.abwurfMerges += 1
+      if (stand.abwurfMerges === 1 && stand.abwuerfe > 0) fieberLaden(stand, ereignisse)
+      const faktor = gesamtFaktor(stand, kette, chain)
       if (a.stufe === OBERSTE) {
         const punkte = gutschreiben(stand, TRAUM_PUNKTE * faktor)
-        ereignisse.push({ art: 'traum', stufe: OBERSTE + 1, x, y, punkte, kette, faktor, gross: true, neuHoechste: false })
+        ereignisse.push({
+          art: 'traum', stufe: OBERSTE + 1, x, y, punkte, kette, chain, faktor,
+          gross: true, neuHoechste: false, spruch: spruchHolen(stand, 'traum'),
+        })
       } else {
         const stufe = a.stufe + 1
         const k = koerperBauen(stand, stufe, x, y, Math.max(a.r, b.r))
@@ -410,7 +713,26 @@ export function schritt(stand) {
         const punkte = gutschreiben(stand, basisPunkte(stufe) * faktor)
         const neuHoechste = stufe > stand.hoechste
         if (neuHoechste) stand.hoechste = stufe
-        ereignisse.push({ art: 'merge', stufe, x, y, punkte, kette, faktor, gross: stufe >= GROSS_AB, neuHoechste })
+        ereignisse.push({
+          art: 'merge', stufe, x, y, punkte, kette, chain, faktor,
+          gross: stufe >= GROSS_AB, neuHoechste,
+          eskaliert: chain >= CHAIN_ESKALIERT,
+          spruch: chain >= CHAIN_ESKALIERT ? spruchHolen(stand, 'chain') : null,
+        })
+        /* Aus einem guten Merge wird ein Spezialteil — kein zusaetzlicher
+           Koerper, nur eine Eigenschaft des eben entstandenen. */
+        const key = spezialWaehlen(stufe, kette, chain, fieberAktiv(stand), stand.zufall || Math.random)
+        if (key) {
+          k.spezial = key
+          ereignisse.push({ art: 'spezial-geboren', spezial: key, wort: SPEZIAL[key].wort, stufe, x, y, kette, chain, faktor })
+        }
+      }
+      /* Zuendet hier ein Spezialteil? Erst jetzt, wo es selbst verschmilzt. */
+      if (a.spezial || b.spezial) {
+        const zuender = []
+        if (a.spezial) zuender.push(a.spezial)
+        if (b.spezial) zuender.push(b.spezial)
+        spezialZuenden(stand, zuender, x, y, liste, weg, neu, faktor, kette, chain, ereignisse)
       }
       break
     }

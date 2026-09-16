@@ -95,6 +95,20 @@
 
 /* Der Markier-Schalter. Mindestens 32 px hoch, eindeutig an oder aus:
    an ist er gold gefuellt, aus nur umrandet. */
+/* Ton und MARKIEREN teilen sich die rechte Seite des Kopfes. Der Tonschalter
+   kommt aus spielgefuehl.css und liegt dort absolut — hier reiht er sich ein. */
+.trm-leitung-schalter {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.trm-leitung-schalter .sg-ton {
+  position: static;
+  width: 32px;
+  height: 32px;
+}
+
 .trm-leitung-modus {
   display: inline-flex;
   align-items: center;

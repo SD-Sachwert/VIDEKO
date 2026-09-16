@@ -2887,13 +2887,30 @@ textarea.trm-eingabe {
   text-wrap: balance;
 }
 
-/* NOCHMAL mitten im Ergebnis — dort, wo der Daumen gerade ist. */
+/* NOCHMAL mitten im Ergebnis — dort, wo der Daumen gerade ist. Die Rangliste
+   steht daneben und bleibt sichtbar zweite Wahl. Auf schmalen Karten rutscht
+   sie darunter, statt NOCHMAL schmal zu druecken. */
+.trm-spiel__wege {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin: 0;
+}
+
 .trm-spiel__mitte .trm-spiel__nochmal {
   min-width: min(220px, 80%);
   min-height: 46px;
   margin-top: 6px;
   font-size: clamp(14px, 4vw, 16px);
   letter-spacing: 0.16em;
+}
+
+.trm-spiel__wege .trm-cta--umriss {
+  min-height: 36px;
+  margin-top: 6px;
 }
 
 .trm-spiel__status {

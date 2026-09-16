@@ -544,6 +544,21 @@ export const ANSPRUCH_WEITERER = 'weiterer_besitzanspruch'
  *
  * Die Zahlen sind bewusst grosszuegig: ein ehrlicher Ausnahmelauf soll nicht
  * am Server scheitern, ein `score: 999999999` aber auch nicht durchkommen.
+ *
+ * WOHER DIE ZAHLEN DER FUENF HAUPTSPIELE KOMMEN
+ * ---------------------------------------------
+ * Nicht geschaetzt, sondern gemessen: die Tests unter scripts/spiele lassen
+ * Bots gegen die echte Spiellogik laufen und drucken Punkte, Runden und Dauer
+ * mit. `maxJeRunde` leitet sich aus der Punktdecke je Aktion ab, die die Logik
+ * selbst erzwingt (Crush ZUG_PUNKTE_MAX 4000, Merge ABWURF_MAX 3000, Jump
+ * MAX_JE_LANDUNG 1100, Fit bester Zug 13114), `msJeRunde` aus der kuerzesten
+ * Zeit, die zwischen zwei Aktionen ueberhaupt vergehen kann, `plausibel` aus
+ * dem besten Lauf eines pausenlosen Bots, `hart` mit Abstand darueber.
+ *
+ * Der Umbau auf Zeitboni und Combo-Multiplikatoren hat diese Fenster
+ * verschoben — die Grenzen sind deshalb dort nachgezogen, wo ein ehrlicher
+ * Lauf sonst als Verdachtsfall gelandet waere, und dort enger gezogen, wo die
+ * Logik inzwischen selbst hart deckelt.
  */
 export const SPIELE = {
   /* Oeffentlich sichtbar sind standardmaessig nur die fuenf Hauptgames und —
@@ -567,11 +582,46 @@ export const SPIELE = {
      die Aktion, die Punkte bringt (Absetzen, Drehen/Setzen, Plattform, Wurf,
      Bohrung, Tausch, Karte) — daraus Mindestdauer und Punktdecke je Aktion. */
   kuechen_balance: { titel: 'Küchen-Balance', dauerMs: 540000, endlos: true, plausibel: 30000, hart: 100000, msJeRunde: 500, maxJeRunde: 700, standardAktiv: false },
-  kuechen_fit: { titel: 'Küchen-Fit', dauerMs: 540000, endlos: true, plausibel: 250000, hart: 450000, msJeRunde: 150, maxJeRunde: 1200 },
-  videko_jump: { titel: 'VIDEKO Jump', dauerMs: 540000, endlos: true, plausibel: 35000, hart: 80000, msJeRunde: 150, maxJeRunde: 400 },
-  kuechen_merge: { titel: 'Küchen-Merge', dauerMs: 540000, endlos: true, plausibel: 120000, hart: 250000, msJeRunde: 400, maxJeRunde: 450 },
+  /* Fit: bester Bot-Lauf 24085 Punkte aus 136 Teilen (82 s), hoechster Schnitt
+     186 je Teil — plausibel und hart decken damit auch eine volle Neun-Minuten-
+     Runde ab und bleiben, wie sie waren. `maxJeRunde` muss dagegen steigen: ein
+     einzelner Zug kann rechnerisch 13114 bringen (Reihen 12000 + Platzierung
+     1080 + Fall), und in einem kurzen Lauf gaebe es dafuer bei 1200 je Teil
+     keinen Platz. 2500 traegt so einen Ausreisser nach sechs Teilen mit und
+     liegt trotzdem beim Dreizehnfachen des besten gemessenen Schnitts. */
+  kuechen_fit: { titel: 'Küchen-Fit', dauerMs: 540000, endlos: true, plausibel: 250000, hart: 450000, msJeRunde: 150, maxJeRunde: 2500 },
+  /* Jump: die Logik deckelt eine Landung bei MAX_JE_LANDUNG 1100 (Combo x2,5 ×
+     goldene Kochmuetze ×2 auf einen knappen Sprung). Die alten 400 stammen aus
+     der Zeit vor Combo und Power-Ups und haetten jede lange Comboserie zum
+     Verdachtsfall gemacht. Die besten Bot-Laeufe bleiben bei 7755 Punkten, so
+     dass plausibel 35000 weiter mit reichlich Luft darueber liegt. */
+  videko_jump: { titel: 'VIDEKO Jump', dauerMs: 540000, endlos: true, plausibel: 35000, hart: 80000, msJeRunde: 150, maxJeRunde: 1200 },
+  /* Merge: der pausenlose Bot kommt auf 230142 Punkte aus 687 Abwuerfen (309 s)
+     — das lag ueber dem alten plausibel 120000 UND ueber dem alten hart 250000,
+     ein perfekter ehrlicher Lauf waere also abgelehnt worden. Der hoechste
+     Schnitt je Abwurf war 373 und damit schon gefaehrlich nah an den alten 450.
+     Neu: maxJeRunde 1000 (traegt einen Abwurf am Deckel ABWURF_MAX 3000 nach
+     drei Abwuerfen), plausibel 280000 knapp ueber dem Bot, hart bei gut dem
+     Doppelten. */
+  kuechen_merge: { titel: 'Küchen-Merge', dauerMs: 540000, endlos: true, plausibel: 280000, hart: 600000, msJeRunde: 400, maxJeRunde: 1000 },
+  /* Leitungsfinder: unveraendert. Die Logik hat sich nicht geaendert, und die
+     Messung passt weiter — sehr guter Mensch 128755, extrem flink 277115 (beide
+     unter plausibel), Takt-Bot 1278355 (von hart abgewiesen). */
   leitungsfinder: { titel: 'Leitungsfinder', dauerMs: 540000, endlos: true, plausibel: 450000, hart: 600000, msJeRunde: 90, maxJeRunde: 1200 },
-  kuechen_crush: { titel: 'Küchen-Crush', dauerMs: 40000, plausibel: 80000, hart: 140000, msJeRunde: 300, maxJeRunde: 5000 },
+  /* Crush ist das einzige Spiel mit fester Rundenzeit — und das einzige, in dem
+     Treffer Zeit zurueckgeben. `dauerMs` ist der Startwert, den der Browser
+     bekommt (START_MS in crush-logik.js); die Zeitboni tragen eine starke Runde
+     von dort bis zur absoluten Decke DECKEL_MS 110 s, die im Client sitzt und
+     die niemand verschieben kann. Darum 45 s statt 40 s: sonst waere START_MS
+     in der Produktion wirkungslos.
+     Gemessen: schwacher Spieler bleibt bei 50–73 s und 5850 Punkten, ein sehr
+     guter kommt auf 96220, der pausenlose Bot auf 198828 in 110,6 s aus 262
+     Zuegen. Die alten 80000/140000 haetten also jeden wirklich guten Lauf
+     einkassiert. Neu: plausibel 220000 knapp ueber dem Bot, hart 400000.
+     `maxJeRunde` geht dagegen RUNTER: zugPunkte deckelt jeden Zug hart bei
+     ZUG_PUNKTE_MAX 4000, 4200 laesst genau die erlaubte Spanne und nicht mehr.
+     `msJeRunde` 300 bleibt unter dem gemessenen Minimum von 422 ms je Zug. */
+  kuechen_crush: { titel: 'Küchen-Crush', dauerMs: 45000, plausibel: 220000, hart: 400000, msJeRunde: 300, maxJeRunde: 4200 },
   kuechen_tinder: { titel: 'Küchen-Tinder', dauerMs: 30000, plausibel: 10000, hart: 16000, msJeRunde: 450, maxJeRunde: 330 },
 }
 

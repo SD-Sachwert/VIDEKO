@@ -5,12 +5,16 @@ import { useSpielLauf, useTestEnde } from '../spiel-lauf.js'
 import { SPIEL_NACH_KEY } from '../../data/terminal.js'
 import {
   BREITE,
+  DECKEL_MS,
   FALL_MS,
   FINALE_FAKTOR,
   FREI_FRUEH_MS,
+  FROST_MS,
   HOEHE,
   MISCHEN_MS,
   SERIE_MS,
+  SPANNUNG_MS,
+  START_MS,
   TAUSCH_MS,
   aufloesungMs,
   benachbart,
@@ -24,11 +28,25 @@ import {
   tempoFaktor,
   vertauscht,
   zugPunkte,
+  zugZeit,
 } from './crush-logik.js'
+import {
+  HAPTIK,
+  comboStufe,
+  domRuetteln,
+  domSchicht,
+  klang,
+  klangSchliessen,
+  sanftHoeren,
+  tonStatus,
+  tonUmschalten,
+  vibrieren,
+} from './spielgefuehl.js'
+import './spielgefuehl.css'
 import './crush.css'
 
 /**
- * KUECHEN-CRUSH — drei gleiche in einer Reihe, 40 Sekunden.
+ * KUECHEN-CRUSH — drei gleiche in einer Reihe.
  *
  * Die Regeln stehen in crush-logik.js und sind dort getestet. Ein Tausch
  * wird dort vollstaendig aufgeloest; hier wird das Ergebnis Schritt fuer
@@ -56,10 +74,25 @@ import './crush.css'
  * data-combo an der Buehne. In den letzten 5 Sekunden zaehlt alles doppelt:
  * data-finale="1", roter-goldener Rahmen, pulsierende Uhr, "FINALE ×2".
  *
- * DIE UHR
- * -------
- * Wie beim Goldrausch: die Runde laeuft nach der Uhr des Hooks und endet
- * dort. Ein Tabwechsel haelt sie nicht an; eine Pause gibt es deshalb nicht.
+ * DIE UHR LAEUFT ZURUECK — UND WIEDER VOR
+ * ---------------------------------------
+ * Die Runde startet mit START_MS (45 s). Jeder Treffer gibt Zeit zurueck,
+ * ein Vierer mehr als ein Dreier, eine Kaskade mehr als beides, ein
+ * geraeumter Kuehlschrank FROST_MS am Stueck. Wer traege spielt, kommt
+ * damit nicht gegen den Verbrauch an und bleibt bei rund einer Minute; wer
+ * schnell und in Ketten spielt, haelt die Runde offen — bis zur harten
+ * Decke DECKEL_MS. Die letzte Kaskade laeuft immer zu Ende: solange eine
+ * Aufloesung laeuft, steht nachspielSetzen(true), und wenn dabei noch
+ * Zeitbonus entsteht, geht die Runde ganz regulaer weiter. Ein Tabwechsel
+ * haelt die Uhr nicht an; eine Pause gibt es deshalb nicht.
+ *
+ * GEMEINSAMES GAME FEEL
+ * ---------------------
+ * Ruetteln, Funken, schwebende Zahlen, Haptik und Klang kommen aus
+ * spielgefuehl.js, damit alle fuenf Spiele dieselbe Sprache sprechen. Die
+ * eigenen CSS-Effekte des Gitters (Strahlen, Explosionen, Einblendungen)
+ * bleiben daneben bestehen — sie sind Crush-eigen und zeigen, welche Zelle
+ * genau gezuendet hat.
  *
  * WIE ES FLUESSIG BLEIBT
  * ----------------------
@@ -86,56 +119,100 @@ const SANFT_EFFEKT_LEBEN_MS = 260
 const BANNER_MS = 820
 const SANFT_BANNER_MS = 700
 
+/* Wie lange die Uhr nach einem Kuehlschrank eingefroren aussieht. */
+const FROST_ZEIGE_MS = FROST_MS
+
 const LEER = {}
 const KEINE = []
-
-function summen(muster) {
-  try {
-    if (typeof navigator !== 'undefined' && navigator.vibrate) navigator.vibrate(muster)
-  } catch {
-    /* kein Vibrationsmotor, kein Problem */
-  }
-}
 
 const jetzt = () => (typeof performance !== 'undefined' ? performance.now() : Date.now())
 
 /** ×2,4 statt ×2.4 */
 const malText = (m) => `×${String(m).replace('.', ',')}`
 
+/** 2000 → "+2,0 SEK." */
+const sekText = (ms) => `+${(Math.round(ms / 100) / 10).toFixed(1).replace('.', ',')} SEK.`
+
 /**
  * Was ein Kaskadenschritt zu sehen gibt: Strahlen und Explosionen, Glanz an
  * neuen Sonderteilen, die Einblendung fuer 4er/5er und wie stark das Feld
  * schlaegt (0 nichts, 1 Booster, 2 Bombe gebaut/Kreuz, 3 Bombe gezuendet).
  */
+const GLANZ = { bombe: 'glanz5', ofen: 'glanz5', frost: 'glanzFrost' }
+
 function schrittBild(schritt) {
-  const effekte = schritt.effekte.map((f) => ({ art: f.art, x: f.x, y: f.y }))
+  const effekte = schritt.effekte.map((f) => ({ art: f.art, x: f.x, y: f.y, stark: !!f.stark }))
   for (const n of schritt.neuSpezial) {
-    if (n.platz) effekte.push({ art: n.art === 'bombe' ? 'glanz5' : 'glanz4', x: n.platz[0], y: n.platz[1] })
+    if (n.platz) effekte.push({ art: GLANZ[n.art] || 'glanz4', x: n.platz[0], y: n.platz[1] })
   }
   const arten = new Set(schritt.effekte.map((f) => f.art))
+  const wuchtig = schritt.effekte.some((f) => f.stark)
   const neuBombe = schritt.neuSpezial.find((n) => n.art === 'bombe')
-  const neuBooster = schritt.neuSpezial.find((n) => n.art !== 'bombe')
+  const neuOfen = schritt.neuSpezial.find((n) => n.art === 'ofen')
+  const neuBooster = schritt.neuSpezial.find((n) => n.art === 'reihe' || n.art === 'spalte')
   let banner = null
   let schlag = 0
-  if (arten.has('feld')) {
-    banner = { stufe: '5', gross: 'DOPPEL-BOMBE', klein: 'FELD LEER' }
+  if (arten.has('mega')) {
+    banner = { stufe: '5', gross: 'MEGA-KOMBO', klein: wuchtig ? 'DAS WAR NICHT NORMAL.' : 'BEIDE ZUENDEN' }
+    schlag = 3
+  } else if (arten.has('feld')) {
+    banner = { stufe: '5', gross: 'DOPPEL-SYMBOL', klein: 'FELD LEER' }
     schlag = 3
   } else if (neuBombe) {
-    banner = { stufe: '5', gross: neuBombe.form === 'kreuz' ? 'L-FORM' : `${neuBombe.form}ER`, klein: 'VIDEKO-BOMBE' }
+    banner = { stufe: '5', gross: `${neuBombe.form}ER`, klein: 'VIDEKO-SYMBOL' }
+    schlag = 2
+  } else if (neuOfen) {
+    banner = { stufe: '5', gross: 'L-FORM', klein: 'BACKOFEN' }
     schlag = 2
   } else if (arten.has('bombe')) {
-    banner = { stufe: '5', gross: 'BOMBE', klein: 'VIDEKO-BOMBE' }
+    banner = { stufe: '5', gross: 'SYMBOL', klein: 'ALLE DES TYPS' }
     schlag = 3
+  } else if (arten.has('ofen')) {
+    banner = { stufe: '5', gross: 'BACKOFEN', klein: wuchtig ? '5 × 5' : '3 × 3' }
+    schlag = 2
   } else if (neuBooster) {
-    banner = { stufe: '4', gross: '4ER', klein: neuBooster.art === 'reihe' ? 'BOOSTER ↔' : 'BOOSTER ↕' }
+    banner = { stufe: '4', gross: '4ER', klein: neuBooster.art === 'reihe' ? 'BLASTER ↔' : 'BLASTER ↕' }
     schlag = 1
   } else if (arten.has('reihe') && arten.has('spalte')) {
     banner = { stufe: '4', gross: 'KREUZ', klein: 'REIHE + SPALTE' }
     schlag = 2
+  } else if (arten.has('frost')) {
+    banner = { stufe: '4', gross: 'KUEHLSCHRANK', klein: 'UHR EINGEFROREN' }
+    schlag = 1
   }
-  if (arten.has('bombe') || arten.has('feld')) schlag = 3
-  else if (!schlag && (arten.has('reihe') || arten.has('spalte'))) schlag = 1
-  return { effekte, banner, schlag, booster: arten.has('reihe') || arten.has('spalte') }
+  if (arten.has('bombe') || arten.has('feld') || arten.has('mega')) schlag = 3
+  else if (!schlag && (arten.has('reihe') || arten.has('spalte') || arten.has('ofen'))) schlag = 1
+  return {
+    effekte,
+    banner,
+    schlag,
+    wuchtig,
+    frost: schritt.frost || 0,
+    booster: arten.has('reihe') || arten.has('spalte') || arten.has('ofen'),
+  }
+}
+
+/**
+ * Mitte der geraeumten Steine, als Zellkoordinate. Dort schweben Punkte,
+ * Zeit und Combo auf. 56 Felder durchzaehlen ist billiger als die Liste
+ * durch die halbe Logik mitzuschleifen.
+ */
+function schwerpunkt(schritt, rueck) {
+  const weg = new Set(schritt.weg)
+  let sx = 0
+  let sy = 0
+  let n = 0
+  for (let y = 0; y < HOEHE; y += 1) {
+    for (let x = 0; x < BREITE; x += 1) {
+      const s = schritt.vorher[y][x]
+      if (s && weg.has(s.id)) {
+        sx += x
+        sy += y
+        n += 1
+      }
+    }
+  }
+  return n ? [sx / n, sy / n] : rueck
 }
 
 /** Die sechs Gegenstaende als Linienzeichnung, dazu die VIDEKO-BOMBE. */
@@ -229,6 +306,33 @@ function Pfeile() {
   )
 }
 
+/**
+ * Backofen und Kuehlschrank bekommen ein Abzeichen statt eines eigenen
+ * Bildes: beide bleiben ganz normale Steine ihres Typs und muessen deshalb
+ * weiter erkennbar sein, mit wem sie zusammenpassen.
+ */
+function Flamme() {
+  return (
+    <svg className="trm-crush-marke" data-art="ofen" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 2.4c3.6 3.2 5.4 5.9 5.4 8.6a5.4 5.4 0 0 1-10.8 0c0-1.6.6-3 1.9-4.5.3 1.6 1 2.4 2.1 2.4 1 0 1.5-1 1.4-2.8z" />
+    </svg>
+  )
+}
+
+function Kristall() {
+  return (
+    <svg className="trm-crush-marke" data-art="frost" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M12 2.4v19.2M3.7 7.2l16.6 9.6M20.3 7.2 3.7 16.8"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.6"
+        strokeLinecap="round"
+      />
+    </svg>
+  )
+}
+
 /** Ein Stein. Memo: je Schritt rendern nur die, die sich bewegt oder geaendert haben. */
 const Stein = memo(function Stein({ stein, x, y, weg, neu, gewaehlt, fokus, hinweis, nein }) {
   const booster = stein.spezial === 'reihe' || stein.spezial === 'spalte'
@@ -249,6 +353,8 @@ const Stein = memo(function Stein({ stein, x, y, weg, neu, gewaehlt, fokus, hinw
       <span className="trm-crush-kachel" key={stein.spezial || 'n'}>
         <Zeichen typ={stein.typ} spezial={stein.spezial} />
         {booster && <Pfeile />}
+        {stein.spezial === 'ofen' && <Flamme />}
+        {stein.spezial === 'frost' && <Kristall />}
       </span>
     </div>
   )
@@ -273,9 +379,13 @@ export default function KuechenCrush({ sitzung, best = null, onErgebnis }) {
   const [meldung, setMeldung] = useState(null)
   const [masse, setMasse] = useState({ breite: 320, hoehe: 480 })
   const [sanft, setSanft] = useState(false)
+  const [frost, setFrost] = useState(false)
+  const [ton, setTon] = useState(tonStatus)
 
   const buehneRef = useRef(null)
   const gitterRef = useRef(null)
+  const schichtElRef = useRef(null)
+  const schichtRef = useRef(null)
   const standRef = useRef(null)
   const sanftRef = useRef(false)
   const sperreRef = useRef(false)
@@ -283,14 +393,37 @@ export default function KuechenCrush({ sitzung, best = null, onErgebnis }) {
   const uhrenRef = useRef([])
   const fingerRef = useRef(null)
   const nrRef = useRef(0)
-  const restRef = useRef(40000)
+  const restRef = useRef(START_MS)
   const serieRef = useRef(0)
   const freiSeitRef = useRef(0)
   const zugNrRef = useRef(0)
+  const tickRef = useRef(0)
+  /* domRuetteln haengt einen Timer an die Buehne und gibt die Aufraeumfunktion
+     zurueck. Sie wird hier festgehalten, damit ein Unmount mitten im Beben den
+     Timer loest, statt 420 ms spaeter auf ein abgehaengtes Element zu greifen. */
+  const bebenLoesenRef = useRef(null)
 
-  const lauf = useSpielLauf({ sitzung, game: 'kuechen_crush', dauerVorgabe: 40000, onErgebnis })
-  const { laeuft, punkteGeben, rundeZaehlen, fertig, starten: laufStarten, restMs } = lauf
+  /* dauerMaxVorgabe ist die harte Decke: alle Zeitboni zusammen koennen die
+     Runde nie ueber DECKEL_MS hinaus tragen. */
+  const lauf = useSpielLauf({
+    sitzung,
+    game: 'kuechen_crush',
+    dauerVorgabe: START_MS,
+    dauerMaxVorgabe: DECKEL_MS,
+    onErgebnis,
+  })
+  const {
+    laeuft,
+    punkteGeben,
+    rundeZaehlen,
+    fertig,
+    starten: laufStarten,
+    restMs,
+    zeitBonus,
+    nachspielSetzen,
+  } = lauf
   const finale = laeuft && istFinale(restMs)
+  const spannung = laeuft && restMs <= SPANNUNG_MS
   /* Die Buehne erscheint erst, wenn das Feld liegt — erst dann messen. */
   const buehneDa = laeuft && !!bild
 
@@ -298,16 +431,57 @@ export default function KuechenCrush({ sitzung, best = null, onErgebnis }) {
     restRef.current = restMs
   }, [restMs])
 
+  /* Die letzten drei Sekunden ticken hoerbar, einmal je Sekunde. */
   useEffect(() => {
-    let wert
-    try {
-      wert = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    } catch {
-      wert = false
+    if (!laeuft || restMs > 3000) return
+    const s = Math.ceil(restMs / 1000)
+    if (s <= 0 || tickRef.current === s) return
+    tickRef.current = s
+    klang('tick')
+  }, [laeuft, restMs])
+
+  /* Reduced Motion wird mitgehoert, nicht nur einmal gelesen: wer die
+     Einstellung mitten in der Runde umlegt, merkt es sofort. Die Quelle ist
+     fuer alle Spiele dieselbe — spielgefuehl.js. */
+  useEffect(() => {
+    const setzen = (wert) => {
+      sanftRef.current = wert
+      setSanft(wert)
     }
-    sanftRef.current = wert
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSanft(wert)
+    return sanftHoeren(setzen)
+  }, [])
+
+  /* Der Klang haengt am AudioContext. Beim Verlassen wird er geschlossen,
+     damit kein Ton im Hintergrund weiterlebt. */
+  useEffect(() => () => klangSchliessen(), [])
+
+  /* Die gemeinsame Effektschicht liegt UEBER dem Gitter, nicht darin: das
+     Gitter schneidet ab (overflow:hidden), die Zahlen sollen aber ueber den
+     Rand hinaus aufsteigen duerfen. */
+  useEffect(() => {
+    const el = schichtElRef.current
+    if (!el) return undefined
+    const schicht = domSchicht(el)
+    schichtRef.current = schicht
+    return () => {
+      schichtRef.current = null
+      schicht.schliessen()
+    }
+  }, [buehneDa])
+
+  /** Zellmitte als Prozentwert der Buehne — so rechnet die Schicht. */
+  const zellePunkt = useCallback((zx, zy) => {
+    const g = gitterRef.current
+    const b = buehneRef.current
+    if (!g || !b) return { x: 50, y: 50 }
+    const rg = g.getBoundingClientRect()
+    const rb = b.getBoundingClientRect()
+    if (!rb.width || !rb.height) return { x: 50, y: 50 }
+    const kante = rg.width / BREITE
+    return {
+      x: ((rg.left - rb.left + (zx + 0.5) * kante) / rb.width) * 100,
+      y: ((rg.top - rb.top + (zy + 0.5) * kante) / rb.height) * 100,
+    }
   }, [])
 
   /* Buehne messen. Rendert nur bei echter Groessenaenderung. */
@@ -333,6 +507,10 @@ export default function KuechenCrush({ sitzung, best = null, onErgebnis }) {
   const alleStoppen = useCallback(() => {
     for (const uhr of uhrenRef.current) clearTimeout(uhr)
     uhrenRef.current = []
+    if (bebenLoesenRef.current) {
+      bebenLoesenRef.current()
+      bebenLoesenRef.current = null
+    }
   }, [])
 
   const planen = useCallback((ms, fn) => {
@@ -377,7 +555,8 @@ export default function KuechenCrush({ sitzung, best = null, onErgebnis }) {
     if (!finale) return undefined
     const uhr = setTimeout(() => {
       einblenden({ stufe: 'finale', gross: 'FINALE', klein: `${malText(FINALE_FAKTOR)} PUNKTE` })
-      summen([30, 40, 30])
+      vibrieren(HAPTIK.fieber)
+      klang('kraft')
     }, 0)
     return () => clearTimeout(uhr)
   }, [finale, einblenden])
@@ -415,6 +594,10 @@ export default function KuechenCrush({ sitzung, best = null, onErgebnis }) {
     serieRef.current = 0
     freiSeitRef.current = 0
     zugNrRef.current = 0
+    tickRef.current = 0
+    restRef.current = START_MS
+    schichtRef.current?.leeren()
+    setFrost(false)
     setBild({ feld: standRef.current.feld, weg: null, neuVon: LEER, nein: null })
     setFrei(true)
     setAuswahl(null)
@@ -477,12 +660,17 @@ export default function KuechenCrush({ sitzung, best = null, onErgebnis }) {
         planen(NEIN_MS + (leise ? 0 : TAUSCH_MS), () =>
           setBild((b2) => (b2 && b2.nein ? { ...b2, nein: null } : b2)),
         )
-        summen(8)
+        vibrieren(HAPTIK.fehler)
+        klang('fehler')
         return false
       }
 
       rundeZaehlen()
       sperreRef.current = true
+      /* Ab hier laeuft eine Aufloesung. Faellt die Uhr waehrenddessen auf
+         null, wird die Kette trotzdem zu Ende gerechnet — und wenn dabei
+         Zeit zurueckkommt, geht die Runde ganz regulaer weiter. */
+      nachspielSetzen(true)
       zugNrRef.current += 1
       const zugNr = zugNrRef.current
 
@@ -490,6 +678,7 @@ export default function KuechenCrush({ sitzung, best = null, onErgebnis }) {
       const stufe = freiSeitRef.current ? serieWeiter(serieRef.current, jetzt() - freiSeitRef.current) : 0
       serieRef.current = stufe
       const wertung = zugPunkte(ergebnis.schritte, { tempoStufe: stufe, finale: istFinale(restRef.current) })
+      const zeit = zugZeit(ergebnis.schritte, { tempoStufe: stufe })
       const sperrMs = aufloesungMs(ergebnis)
 
       setFrei(false)
@@ -506,6 +695,9 @@ export default function KuechenCrush({ sitzung, best = null, onErgebnis }) {
         planen(t, () => {
           setBild({ feld: schritt.vorher, weg: new Set(schritt.weg), neuVon: vorherNeu, nein: null })
           punkteGeben(wertung.jeSchritt[i])
+          /* Zeit kommt Schritt fuer Schritt zurueck, nicht als Klumpen am
+             Ende — so sieht man in der Kaskade, was sie wert war. */
+          const gabe = zeit.jeSchritt[i] ? zeitBonus(zeit.jeSchritt[i]) : 0
           setCombo(wertung.multi[i])
           const zu = schrittBild(schritt)
           effekteZeigen(zu.effekte)
@@ -514,13 +706,51 @@ export default function KuechenCrush({ sitzung, best = null, onErgebnis }) {
             nrRef.current += 1
             setSchlag({ nr: nrRef.current, stufe: zu.schlag })
           }
-          if (schritt.kombo >= 2) melden(schritt.kombo >= 3 ? 'gold' : 'gut', `KOMBO ${malText(wertung.multi[i])}`)
+
+          const schicht = schichtRef.current
+          const [mx, my] = schwerpunkt(schritt, b)
+          const p = zellePunkt(mx, my)
+          schicht?.popup({ x: p.x, y: p.y, text: `+${wertung.jeSchritt[i]}`, art: 'punkte' })
+          if (gabe > 0) {
+            schicht?.popup({ x: p.x, y: Math.max(6, p.y - 9), text: sekText(gabe), art: 'zeit' })
+          }
+          const stufeWort = comboStufe(schritt.kombo)
+          if (stufeWort) schicht?.popup({ x: p.x, y: Math.max(4, p.y - 18), text: stufeWort.wort, art: 'combo' })
+          if (!leise) {
+            schicht?.funken({
+              x: p.x,
+              y: p.y,
+              anzahl: zu.schlag >= 3 ? 16 : zu.schlag === 2 ? 12 : 8,
+              art: zu.frost ? 'creme' : 'gold',
+              weite: zu.schlag >= 3 ? 66 : 46,
+            })
+            /* Das Gitter ruettelt ohnehin bei jedem Schlag. Die ganze Buehne
+               bewegt sich nur bei den grossen Momenten. */
+            if (zu.schlag >= 3) {
+              schicht?.blitz('gold')
+              bebenLoesenRef.current?.()
+              bebenLoesenRef.current = domRuetteln(buehneRef.current, 2)
+            }
+          }
+          if (zu.frost > 0) {
+            setFrost(true)
+            planen(FROST_ZEIGE_MS, () => setFrost(false))
+          }
+
+          if (stufeWort) melden('gold', stufeWort.wort)
+          else if (schritt.kombo >= 2) melden(schritt.kombo >= 3 ? 'gold' : 'gut', `KOMBO ${malText(wertung.multi[i])}`)
           else if (zu.booster && !zu.banner) melden('gut', 'BOOSTER')
-          if (zu.schlag >= 3) summen([20, 30, 40])
-          else if (zu.schlag === 2) summen([16, 24, 16])
-          else if (schritt.kombo >= 3) summen([14, 24, 14])
-          else if (zu.schlag === 1 || schritt.kombo === 2) summen(14)
-          else summen(6)
+
+          if (zu.schlag >= 3) vibrieren(HAPTIK.explosion)
+          else if (zu.schlag === 2 || schritt.kombo >= 3) vibrieren(HAPTIK.gut)
+          else if (zu.schlag === 1 || schritt.kombo === 2) vibrieren(HAPTIK.treffer)
+          else vibrieren(HAPTIK.tipp)
+
+          if (zu.schlag >= 3) klang('explosion')
+          else if (zu.schlag === 2) klang('kraft')
+          else if (schritt.kombo >= 3) klang('combo', 1 + 0.06 * Math.min(8, schritt.kombo))
+          else if (zu.frost > 0) klang('zeit')
+          else klang('pop', 1 + 0.05 * (schritt.kombo - 1))
         })
         t += dauer - fall
         planen(t, () => setBild({ feld: schritt.nachher, weg: null, neuVon: schritt.neuVon, nein: null }))
@@ -539,6 +769,7 @@ export default function KuechenCrush({ sitzung, best = null, onErgebnis }) {
       /* Freigabe: sobald der letzte Fall fast liegt, nie vor SPERRE_MS. */
       planen(Math.max(sperrMs, ergebnis.gemischt ? t + MISCHEN_MS : 0), () => {
         sperreRef.current = false
+        nachspielSetzen(false)
         freiSeitRef.current = jetzt()
         setFrei(true)
         setCombo(tempoFaktor(stufe))
@@ -553,7 +784,7 @@ export default function KuechenCrush({ sitzung, best = null, onErgebnis }) {
       })
       return true
     },
-    [einblenden, effekteZeigen, melden, planen, punkteGeben, rundeZaehlen],
+    [einblenden, effekteZeigen, melden, nachspielSetzen, planen, punkteGeben, rundeZaehlen, zeitBonus, zellePunkt],
   )
 
   /* ---------------------------------------------------------------- */
@@ -697,6 +928,8 @@ export default function KuechenCrush({ sitzung, best = null, onErgebnis }) {
             data-frei={frei ? '1' : '0'}
             data-endspurt={finale ? '1' : '0'}
             data-finale={finale ? '1' : '0'}
+            data-spannung={spannung ? '1' : '0'}
+            data-frost={frost ? '1' : '0'}
             data-combo={String(combo)}
             data-hinweis={zugText}
             onPointerDown={zeigerRunter}
@@ -734,6 +967,7 @@ export default function KuechenCrush({ sitzung, best = null, onErgebnis }) {
                   key={f.nr}
                   className="trm-crush-effekt"
                   data-art={f.art}
+                  data-stark={f.stark ? '1' : undefined}
                   style={{ '--x': f.x, '--y': f.y }}
                 />
               ))}
@@ -749,11 +983,43 @@ export default function KuechenCrush({ sitzung, best = null, onErgebnis }) {
             </p>
 
             {banner && (
-              <p key={banner.nr} className="trm-crush-banner" data-stufe={banner.stufe} aria-hidden="true">
+              <p
+                key={banner.nr}
+                className="trm-crush-banner"
+                data-stufe={banner.stufe}
+                /* Zeichenzahl und gemessene Buehnenbreite gehen ins CSS:
+                   DOPPEL-SYMBOL darf nicht dieselbe Schriftgroesse bekommen
+                   wie 4ER, sonst laeuft es aus der Buehne. Die Breite kommt
+                   aus der Messung, nicht aus vw — die Buehne ist am Desktop
+                   schmaler als das Fenster. */
+                style={{ '--lang': banner.gross.length, '--buehne-w': `${masse.breite}px` }}
+                aria-hidden="true"
+              >
                 <span className="trm-crush-banner__gross">{banner.gross}</span>
                 <span className="trm-crush-banner__klein">{banner.klein}</span>
               </p>
             )}
+
+            {/* Randpuls der letzten Sekunden. */}
+            <span className="trm-crush-rand" aria-hidden="true" />
+
+            {/* Gemeinsame Effektschicht: Zahlen, Funken, Blitz. */}
+            <div className="sg-schicht" ref={schichtElRef} aria-hidden="true" />
+
+            {/* Ton: stumm startbar, Zustand bleibt ueber Runden hinweg. */}
+            <button
+              type="button"
+              className="sg-ton"
+              aria-pressed={ton}
+              aria-label={ton ? 'Ton aus' : 'Ton an'}
+              onPointerDown={(e) => e.stopPropagation()}
+              onKeyDown={(e) => {
+                if (e.key === ' ' || e.key === 'Enter') e.stopPropagation()
+              }}
+              onClick={() => setTon(tonUmschalten())}
+            >
+              {ton ? '♪' : '✕'}
+            </button>
           </div>
 
           {meldung && (

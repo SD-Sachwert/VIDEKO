@@ -33,6 +33,11 @@ import {
   spawnen,
   wertung,
 } from '../../src/components/spiele/fit-logik.js'
+/* Die Servergrenzen werden gelesen, nicht abgeschrieben: so kann der Test
+   nicht stillschweigend an der echten Pruefung vorbeilaufen. */
+import { SPIELE } from '../../api/_terminal-kern.js'
+
+const SERVER = SPIELE.kuechen_fit
 
 let gut = 0
 let schlecht = 0
@@ -276,7 +281,10 @@ function botLauf(seed, sekJeTeil, maxSek = 540) {
   return { punkte: stand.punkte + fall, runden: stand.stuecke, sek, reihen: stand.reihen, perfekte: stand.perfekte, maxTeil, stufe: stand.stufe, vorbei: stand.vorbei }
 }
 
-console.log('\nBot (Info fuer Servergrenzen: 150 ms/Runde, 1200/Runde, plausibel 250000)')
+console.log(
+  `\nBot (gegen die Servergrenzen: ${SERVER.msJeRunde} ms/Runde, ${SERVER.maxJeRunde}/Runde, ` +
+    `plausibel ${SERVER.plausibel}, hart ${SERVER.hart})`,
+)
 const laeufe = []
 for (const sekJeTeil of [0.6, 1.0, 1.5]) {
   for (const seed of [1, 2, 3, 4, 5]) {
@@ -290,6 +298,33 @@ for (const sekJeTeil of [0.6, 1.0, 1.5]) {
 const schnitt = Math.max(...laeufe.map((r) => r.punkte / Math.max(1, r.runden)))
 console.log(`        hoechster Schnitt je Teil: ${schnitt.toFixed(0)}, hoechster Lauf: ${Math.max(...laeufe.map((r) => r.punkte))}`)
 pruefe('Bot kommt ueber die ersten 20 Teile hinaus (Anfang bleibt spielbar)', laeufe.every((r) => r.runden > 20))
+
+/* Die Serverpruefungen aus laufVerdacht gegen den besten Bot-Lauf. Faellt eine
+   davon, wuerde ein ehrlicher Ausnahmelauf als Verdachtsfall aus der Rangliste
+   fliegen — und das waere schlimmer als ein durchgerutschter Betrueger. */
+const besterLauf = laeufe.reduce((a, b) => (b.punkte > a.punkte ? b : a))
+pruefe(
+  `Server: Schnitt je Teil unter maxJeRunde ${SERVER.maxJeRunde}`,
+  laeufe.every((r) => r.punkte / Math.max(1, r.runden) < SERVER.maxJeRunde),
+  schnitt.toFixed(0),
+)
+pruefe(
+  `Server: Teile brauchen mindestens msJeRunde ${SERVER.msJeRunde}`,
+  laeufe.every((r) => (r.sek * 1000) / Math.max(1, r.runden) >= SERVER.msJeRunde),
+  laeufe.map((r) => Math.round((r.sek * 1000) / Math.max(1, r.runden))).join(','),
+)
+pruefe(
+  `Server: bester Bot-Lauf unter plausibel ${SERVER.plausibel}`,
+  besterLauf.punkte <= SERVER.plausibel,
+  `${besterLauf.punkte}`,
+)
+/* Der teuerste denkbare Einzelzug muss in wenige Runden passen — sonst steht
+   ein kurzer Lauf mit einem grossen Abraeumer sofort unter Verdacht. */
+pruefe(
+  `Server: bestes Teil ${Math.max(...laeufe.map((r) => r.maxTeil))} passt in drei Runden Decke`,
+  Math.max(...laeufe.map((r) => r.maxTeil)) <= SERVER.maxJeRunde * 3,
+  `${SERVER.maxJeRunde * 3}`,
+)
 
 console.log(`\n${gut} ok, ${schlecht} fehlgeschlagen`)
 process.exit(schlecht ? 1 : 0)

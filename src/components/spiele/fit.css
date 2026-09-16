@@ -62,8 +62,55 @@
   color: var(--trm-rot, #e2453a);
 }
 
+/* Stufe und Combo teilen sich den einen Platz in der Leiste. Beide Chips
+   sind schmal gehalten, damit die Zeile auf 390 px nicht umbricht. */
+.trm-fit-stand {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  overflow: hidden;
+}
+
 .trm-fit-level {
   min-width: 5ch;
+}
+
+/* Der Combo-Zaehler steht nur da, wenn er etwas zu sagen hat. Im Fieber
+   wird er heller und etwas groesser — mehr Signal braucht es nicht. */
+.trm-fit-combo {
+  min-width: 4ch;
+  transition:
+    opacity 0.18s ease,
+    color 0.18s ease,
+    scale 0.18s ease;
+}
+
+.trm-fit-combo[data-fieber='1'],
+.trm-fit-combo[data-fieber='2'] {
+  opacity: 1;
+  color: var(--trm-creme);
+  scale: 1.12;
+  text-shadow: 0 0 16px rgba(232, 201, 120, 0.8);
+}
+
+.trm-fit-combo[data-fieber='2'] {
+  scale: 1.2;
+}
+
+/* Fieber: die Buehne bekommt einen warmen Saum. Kein Blinken, kein Farbwechsel
+   — nur ein Rand, der zeigt, dass die Kueche gerade laeuft. */
+.trm-fit-buehne[data-fieber='1'] {
+  box-shadow: inset 0 0 24px rgba(201, 150, 60, 0.28);
+}
+
+.trm-fit-buehne[data-fieber='2'] {
+  box-shadow: inset 0 0 34px rgba(232, 201, 120, 0.4);
+}
+
+.trm-fit-buehne[data-fieber='1']:focus-visible,
+.trm-fit-buehne[data-fieber='2']:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--trm-gold-hell);
 }
 
 .trm-fit-buehne[data-crash='1'] .trm-fit-canvas {
@@ -86,5 +133,16 @@
 @media (prefers-reduced-motion: reduce) {
   .trm-fit-buehne[data-crash='1'] .trm-fit-canvas {
     animation: none;
+  }
+
+  /* Der Combo-Chip bleibt lesbar, wechselt seine Groesse aber ohne Weg. */
+  .trm-fit-combo {
+    transition: none;
+    scale: 1;
+  }
+
+  .trm-fit-combo[data-fieber='1'],
+  .trm-fit-combo[data-fieber='2'] {
+    scale: 1;
   }
 }

@@ -39,6 +39,26 @@
   pointer-events: none;
 }
 
+/* FIEBER: pulsierender Goldrahmen um die ganze Buehne. Er liegt unter der
+   Warnung (::after wird spaeter gemalt) — ein drohender Ueberlauf gewinnt
+   immer. Die Information steht auch in der Pille unten rechts, der Rahmen
+   darf bei reduzierter Bewegung also einfach ruhig stehen. */
+.trm-merge-buehne::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  box-shadow: inset 0 0 0 2px rgba(201, 160, 80, 0.85), inset 0 0 40px rgba(201, 160, 80, 0.38);
+  transition: opacity 0.25s ease;
+}
+
+.trm-merge-buehne[data-fieber='1']::before {
+  opacity: 1;
+  animation: trm-merge-fieber 0.9s ease-in-out infinite;
+}
+
 /* Warnung: roter Rand, bei kritischem Fuellstand pulsierend. */
 .trm-merge-buehne::after {
   content: '';
@@ -107,6 +127,47 @@
   opacity: 1;
   translate: -50% 0;
   animation: trm-merge-alarm-pill 0.7s ease-in-out infinite;
+}
+
+/* FIEBER-Pille ueber der Kombo. Traegt den Zeitbalken, damit man sieht,
+   wie lange es noch brennt. */
+.trm-merge-fieber {
+  position: absolute;
+  right: 10px;
+  bottom: 30px;
+  z-index: 4;
+  overflow: hidden;
+  padding: 2px 9px 4px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  white-space: nowrap;
+  color: var(--trm-nacht);
+  background: var(--trm-gold-hell);
+  box-shadow: 0 0 14px rgba(201, 160, 80, 0.5);
+  pointer-events: none;
+  opacity: 0;
+  translate: 0 5px;
+  transition: opacity 0.18s ease, translate 0.18s ease;
+}
+
+.trm-merge-fieber[data-an='1'] {
+  opacity: 1;
+  translate: 0 0;
+  animation: trm-merge-fieber-pille 0.9s ease-in-out infinite;
+}
+
+/* Laeuft in FIEBER_S ab — die Dauer kommt als CSS-Variable aus der JSX. */
+.trm-merge-fieber-zeit {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: rgba(10, 9, 8, 0.7);
+  transform-origin: left center;
+  animation: trm-merge-ablauf var(--trm-merge-fieber-ms, 8000ms) linear forwards;
 }
 
 /* Unterer Streifen: Stufenleiste links, Kombo rechts. */
@@ -225,9 +286,18 @@
   animation: none;
 }
 
+/* Im Ueberlauf brennt nichts mehr. */
+.trm-merge-buehne[data-crash='1']::before,
+.trm-merge-buehne[data-crash='1'] .trm-merge-fieber {
+  opacity: 0;
+  animation: none;
+}
+
 .trm-merge-buehne[data-sanft='1'] .trm-merge-canvas,
+.trm-merge-buehne[data-sanft='1']::before,
 .trm-merge-buehne[data-sanft='1']::after,
 .trm-merge-buehne[data-sanft='1'] .trm-merge-alarm,
+.trm-merge-buehne[data-sanft='1'] .trm-merge-fieber,
 .trm-merge-buehne[data-sanft='1'] .trm-merge-kombo {
   animation: none;
   transition: none;
@@ -251,6 +321,18 @@
 @keyframes trm-merge-alarm-pill {
   50% {
     scale: 1.08;
+  }
+}
+
+@keyframes trm-merge-fieber {
+  50% {
+    box-shadow: inset 0 0 0 3px rgba(232, 201, 120, 0.95), inset 0 0 52px rgba(201, 160, 80, 0.6);
+  }
+}
+
+@keyframes trm-merge-fieber-pille {
+  50% {
+    scale: 1.07;
   }
 }
 
@@ -281,14 +363,21 @@
     padding: 2px 6px 4px;
     letter-spacing: 0.06em;
   }
+  .trm-merge-fieber {
+    padding: 2px 7px 4px;
+    letter-spacing: 0.1em;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .trm-merge-buehne[data-crash='1'] .trm-merge-canvas,
+  .trm-merge-buehne::before,
   .trm-merge-buehne::after,
   .trm-merge-alarm,
+  .trm-merge-fieber,
   .trm-merge-kombo {
     animation: none !important;
     transition: none;
   }
+  /* Die beiden Zeitbalken bleiben: sie sind Information, keine Zierde. */
 }

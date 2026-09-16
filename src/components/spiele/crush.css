@@ -263,9 +263,31 @@
   55%, to { translate: 70% 0; }
 }
 
-.trm-crush-kachel > svg:not(.trm-crush-pfeil) {
+.trm-crush-kachel > svg:not(.trm-crush-pfeil):not(.trm-crush-marke) {
   position: relative;
   z-index: 1;
+}
+
+/* Abzeichen fuer Backofen und Kuehlschrank: klein in der Ecke, damit das
+   Zeichen des Typs darunter lesbar bleibt. */
+.trm-crush-marke {
+  position: absolute;
+  z-index: 2;
+  right: -2%;
+  bottom: -2%;
+  width: 42% !important;
+  height: 42% !important;
+  pointer-events: none;
+  filter: drop-shadow(0 0 3px var(--trm-nacht));
+}
+
+.trm-crush-marke[data-art='ofen'] {
+  fill: var(--trm-gold-hell);
+  stroke: none;
+}
+
+.trm-crush-marke[data-art='frost'] {
+  color: var(--trm-creme);
 }
 
 .trm-crush-pfeil {
@@ -314,6 +336,34 @@
   from { rotate: -8deg; }
   50% { rotate: 8deg; }
   to { rotate: -8deg; }
+}
+
+/* --------------------- Backofen und Kuehlschrank ------------------- */
+
+/* Der Backofen glueht von innen. Er bleibt ein normaler Stein seines Typs —
+   der Rahmen sagt nur, dass beim Raeumen 3×3 mitgehen. */
+.trm-crush-stein[data-spezial='ofen'] .trm-crush-kachel {
+  border: 2px solid var(--trm-gold-hell);
+  background:
+    radial-gradient(circle at 50% 78%, color-mix(in srgb, var(--trm-rot) 55%, transparent) 0%, transparent 68%),
+    var(--trm-nacht);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--trm-rot) 55%, transparent);
+  animation: trm-crush-ofen-glut 1.4s ease-in-out infinite;
+}
+
+@keyframes trm-crush-ofen-glut {
+  50% {
+    box-shadow: 0 0 20px color-mix(in srgb, var(--trm-gold-hell) 65%, transparent);
+  }
+}
+
+/* Der Kuehlschrank ist kalt und ruhig — kein Glimmen, nur ein heller Rand. */
+.trm-crush-stein[data-spezial='frost'] .trm-crush-kachel {
+  border: 2px solid color-mix(in srgb, var(--trm-creme) 80%, transparent);
+  background:
+    linear-gradient(160deg, color-mix(in srgb, var(--trm-creme) 16%, transparent), transparent 60%),
+    var(--trm-nacht);
+  box-shadow: inset 0 0 12px color-mix(in srgb, var(--trm-creme) 22%, transparent);
 }
 
 /* Neu entstandenes Sonderteil: kraeftiger Pop. */
@@ -505,6 +555,122 @@
   to { scale: 2.8; rotate: 60deg; opacity: 0; }
 }
 
+/* Backofen: eine heisse Druckwelle ueber 3×3 — mit Wucht ueber 5×5. */
+.trm-crush-effekt[data-art='ofen'] {
+  z-index: 3;
+  border-radius: 24%;
+  background: radial-gradient(circle, var(--trm-creme) 0%, var(--trm-gold-hell) 26%, color-mix(in srgb, var(--trm-rot) 60%, transparent) 52%, transparent 72%);
+  animation: trm-crush-ofen 420ms ease-out forwards;
+}
+
+.trm-crush-effekt[data-art='ofen'][data-stark='1'] {
+  animation-name: trm-crush-ofen-wucht;
+  animation-duration: 500ms;
+}
+
+@keyframes trm-crush-ofen {
+  from { scale: 0.5; opacity: 1; }
+  45% { scale: 3; opacity: 0.9; }
+  to { scale: 3.6; opacity: 0; }
+}
+
+@keyframes trm-crush-ofen-wucht {
+  from { scale: 0.5; opacity: 1; }
+  45% { scale: 5; opacity: 0.9; }
+  to { scale: 6; opacity: 0; }
+}
+
+/* Mega-Kombo: zwei Sonderteile zuenden zusammen. Ein Doppelring, der weit
+   aufgeht — den Rest zeichnen die Teile selbst. */
+.trm-crush-effekt[data-art='mega']::before,
+.trm-crush-effekt[data-art='mega']::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 3px solid var(--trm-gold-hell);
+  box-shadow: 0 0 22px var(--trm-gold-hell);
+  animation: trm-crush-ring 560ms ease-out forwards;
+}
+
+.trm-crush-effekt[data-art='mega']::after {
+  border-color: var(--trm-creme);
+  animation-delay: 90ms;
+}
+
+.trm-crush-effekt[data-art='mega'][data-stark='1']::before,
+.trm-crush-effekt[data-art='mega'][data-stark='1']::after {
+  animation-duration: 700ms;
+}
+
+/* Kuehlschrank geraeumt: ein kalter Ring statt einer Explosion. */
+.trm-crush-effekt[data-art='frost'] {
+  z-index: 3;
+  border-radius: 50%;
+  border: 2px solid color-mix(in srgb, var(--trm-creme) 85%, transparent);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--trm-creme) 55%, transparent);
+  animation: trm-crush-frost 520ms ease-out forwards;
+}
+
+@keyframes trm-crush-frost {
+  from { scale: 0.4; opacity: 1; }
+  to { scale: 4.5; opacity: 0; border-width: 1px; }
+}
+
+.trm-crush-effekt[data-art='glanzFrost'] {
+  z-index: 3;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--trm-creme) 0%, color-mix(in srgb, var(--trm-creme) 40%, transparent) 40%, transparent 70%);
+  animation: trm-crush-glanz 420ms ease-out forwards;
+}
+
+/* ------------------- Spannung, Frost, letzte Sekunden -------------- */
+
+/* Ab zehn Sekunden atmet der Rand ruhig mit — noch kein Alarm, nur ein
+   Hinweis. Der Alarm kommt im Finale, das seinen eigenen Rahmen setzt.
+   Bewusst ein eigenes Element: auf der Buehne laeuft das Beben, auf dem
+   Gitter der Schlag, und zwei Animationen auf einem Element schliessen
+   sich gegenseitig aus. */
+.trm-crush-rand {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.trm-crush-buehne[data-spannung='1'] .trm-crush-rand {
+  animation: trm-crush-spannung 1s ease-in-out infinite;
+}
+
+.trm-crush-buehne[data-finale='1'] .trm-crush-rand {
+  animation-duration: 520ms;
+}
+
+@keyframes trm-crush-spannung {
+  50% {
+    box-shadow: inset 0 0 26px color-mix(in srgb, var(--trm-gold) 26%, transparent);
+  }
+}
+
+/* Kuehlschrank: ein kurzer kalter Hauch ueber der ganzen Buehne. */
+.trm-crush-buehne[data-frost='1']::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow: inset 0 0 40px color-mix(in srgb, var(--trm-creme) 30%, transparent);
+  animation: trm-crush-hauch 300ms ease-out;
+}
+
+@keyframes trm-crush-hauch {
+  from { opacity: 0; }
+  40% { opacity: 1; }
+  to { opacity: 0.55; }
+}
+
 /* ----------------------- Multiplikator-Chip ----------------------- */
 
 .trm-crush-multi {
@@ -568,9 +734,17 @@
   animation: trm-crush-banner 820ms cubic-bezier(0.2, 1.4, 0.4, 1) forwards;
 }
 
+/* Die Schriftgroesse hat zwei Deckel: den gewohnten clamp fuer den Auftritt —
+   und eine Breitenbremse, die aus der Zeichenzahl (--lang) und der gemessenen
+   Buehnenbreite (--buehne-w, beides im JSX gesetzt) rechnet, wieviel Platz ein
+   Zeichen ueberhaupt hat. Ohne sie ragen die langen Woerter (DOPPEL-SYMBOL,
+   KUEHLSCHRANK) aus der Buehne und werden dort abgeschnitten. Kurze Woerter
+   wie 4ER erreichen die Bremse nie und bleiben so gross wie bisher.
+   0.68em ist die Durchschnittsbreite eines Grossbuchstabens der Serifenschrift
+   samt Laufweite, mit etwas Reserve fuer den Rueckfall auf Georgia. */
 .trm-crush-banner__gross {
   font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
-  font-size: clamp(34px, 13vw, 54px);
+  font-size: min(clamp(34px, 13vw, 54px), calc((var(--buehne-w, 320px) - 32px) / (var(--lang, 8) * 0.68)));
   font-weight: 700;
   line-height: 1;
   letter-spacing: 0.04em;
@@ -603,7 +777,7 @@
 }
 
 .trm-crush-banner[data-stufe='5'] .trm-crush-banner__gross {
-  font-size: clamp(40px, 16vw, 64px);
+  font-size: min(clamp(40px, 16vw, 64px), calc((var(--buehne-w, 320px) - 32px) / (var(--lang, 8) * 0.68)));
   text-shadow:
     0 2px 0 var(--trm-gold-tief),
     0 0 30px var(--trm-gold-hell);
@@ -681,6 +855,24 @@
     inset 0 0 36px color-mix(in srgb, var(--trm-rot) 40%, transparent);
 }
 
+/* Spannung und Frost bleiben sichtbar, hoeren aber auf zu pulsen: der Rand
+   steht ruhig da, der Kaeltehauch liegt still ueber dem Feld. Die Doppelringe
+   der Mega-Kombo entfallen wie bei Bombe und Vollfeld. */
+.trm-crush-buehne[data-sanft='1'][data-spannung='1'] .trm-crush-rand {
+  animation: none;
+  box-shadow: inset 0 0 22px color-mix(in srgb, var(--trm-gold) 20%, transparent);
+}
+
+.trm-crush-buehne[data-sanft='1'][data-frost='1']::before {
+  animation: none;
+  opacity: 0.55;
+}
+
+.trm-crush-buehne[data-sanft='1'] .trm-crush-effekt[data-art='mega']::before,
+.trm-crush-buehne[data-sanft='1'] .trm-crush-effekt[data-art='mega']::after {
+  display: none;
+}
+
 @keyframes trm-crush-sanft {
   from { opacity: 1; }
   to { opacity: 0; }
@@ -698,7 +890,14 @@
     animation: none;
   }
 
+  .trm-crush-buehne[data-frost='1']::before {
+    animation: none;
+    opacity: 0.55;
+  }
+
   .trm-crush-buehne[data-finale='1']::after,
+  .trm-crush-buehne[data-spannung='1'] .trm-crush-rand,
+  .trm-crush-stein[data-spezial='ofen'] .trm-crush-kachel,
   .trm-spiel:has(.trm-crush-buehne[data-finale='1']) .trm-spiel__leiste > span:first-child .trm-spiel__wert,
   .trm-spiel__combo[data-crush-finale='1'] {
     animation: none;

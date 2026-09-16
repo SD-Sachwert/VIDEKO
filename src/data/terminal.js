@@ -225,6 +225,7 @@ export const TEXTE = {
     bisPlatz: 'NOCH {punkte} PUNKTE BIS PLATZ {ziel}',
     spitze: 'PLATZ 1 — NIEMAND ÜBER DIR.',
     nochmalKurz: 'NOCHMAL',
+    zurRangliste: 'RANGLISTE',
     /* Die eine Zeile, die den naechsten Lauf begruendet (spiel-motivation.js). */
     motivRekord: 'NEUER REKORD. DA GEHT NOCH WAS.',
     motivHebel: '1 {wort} MEHR HÄTTE FÜR PLATZ {ziel} GEREICHT',

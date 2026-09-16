@@ -6,6 +6,8 @@ import { SPIEL_NACH_KEY } from '../../data/terminal.js'
 import {
   ABWURF_MS,
   BREITE,
+  CHAIN_ESKALIERT,
+  FIEBER_S,
   GROSS_AB,
   HOEHE,
   KOMBO_MAX,
@@ -26,6 +28,20 @@ import {
   schritt,
   vorschau,
 } from './merge-logik.js'
+import {
+  HAPTIK,
+  farbenLesen,
+  funkenwerk,
+  klang,
+  klangSchliessen,
+  rufwerk,
+  ruettler,
+  sanftHoeren,
+  tonStatus,
+  tonUmschalten,
+  vibrieren,
+} from './spielgefuehl.js'
+import './spielgefuehl.css'
 import './merge.css'
 
 /**
@@ -55,6 +71,14 @@ import './merge.css'
  * unabhaengig von der Bildrate. Jede Stufe wird einmal je Groesse in ein
  * kleines Canvas vorgemalt und danach nur noch kopiert. React rendert bei
  * Abwurf, Verschmelzung, Meldung und Pause — nie pro Frame.
+ *
+ * DAS GEFUEHL KOMMT AUS EINEM MODUL
+ * ---------------------------------
+ * Funken, schwebende Zahlen, Ruetteln, Haptik und Klang stehen in
+ * spielgefuehl.js — dieselben Werkzeuge wie in Jump und Fit. Hier wird nur
+ * entschieden, WANN etwas passiert. Alle drei Werke haben einen festen
+ * Vorrat, leben nur im laufenden Spiel und werden im Cleanup geleert; es
+ * bleibt also nichts stehen, wenn die Karte verschwindet.
  */
 
 const SPIEL = SPIEL_NACH_KEY.kuechen_merge
@@ -63,8 +87,12 @@ const GAME = 'kuechen_merge'
 const CRASH_MS = 560
 const FLASH_MS = 380
 const FLASH_GROSS_MS = 620 // grosse Verschmelzungen: doppelter Ring, mehr Funken
-const BEBEN_MS = 260 // kurzes Beben nach grossen Verschmelzungen (nicht bei reduzierter Bewegung)
+const KNALL_MS = 520 // Standzeit der Spezial-Druckwelle
 const TRAUM_FLASH_MS = 520
+const GOLD_FLASH_MS = 420 // goldener Schleier bei CHAIN 3+
+/* Kuerzel auf einem geladenen Teil. Bewusst Buchstaben statt Symbolen:
+   jede Schrift kann sie, und sie stehen im gleichen Gold wie alles andere. */
+const SPEZIAL_ZEICHEN = { bombe: 'B', blitz: 'Z', ofen: 'O', gold: 'G', frost: 'F' }
 const TAST_TEMPO = 70 // Einheiten je Sekunde
 const MAX_SCHRITTE = 12 // je Frame; nach langem Haenger lieber kurz langsamer
 /* Typische mittlere Verschmelzung: ein Backofen (Stufe 6) bringt 210. */
@@ -76,21 +104,14 @@ const TAKT_START = {
   letzterAbwurf: 0,
   crashSeit: 0,
   blitze: [],
+  knalle: [],
   tasten: 0,
   kette: 0, // zuletzt gerenderte Kombo, damit React nur bei Aenderung rendert
   warn: 0, // zuletzt gerenderte Warnstufe
   alarmSeit: -Infinity,
-  beben: null,
   traumSeit: 0,
-}
-
-const TOKEN_RUECKFALL = {
-  '--trm-gold': '#c9a050',
-  '--trm-gold-hell': '#e8c978',
-  '--trm-gold-tief': '#8b6b38',
-  '--trm-nacht': '#0a0908',
-  '--trm-creme': '#f4efe4',
-  '--trm-rot': '#e2453a',
+  goldSeit: 0,
+  fieberBis: 0, // in performance.now()-Zeit, nur fuer das Bild
 }
 
 function farbeLesen(text) {
@@ -113,27 +134,23 @@ function mischen(a, b, anteil) {
 
 const rgb = (c, alpha = 1) => `rgba(${c[0]}, ${c[1]}, ${c[2]}, ${alpha})`
 
+/**
+ * Die Tokens kommen aus spielgefuehl.js (ein Leser fuer alle Spiele); hier
+ * werden sie nur noch in Zahlentripel zerlegt, weil die Verlaeufe der Embleme
+ * damit rechnen. `farben` bleibt als Strings erhalten — genau die Form, die
+ * rufwerk.malen() erwartet.
+ */
 function paletteBauen(el) {
-  const stil = el ? getComputedStyle(el) : null
-  const t = {}
-  for (const [name, rueck] of Object.entries(TOKEN_RUECKFALL)) {
-    t[name] = farbeLesen(stil?.getPropertyValue(name)) || farbeLesen(rueck)
-  }
+  const farben = farbenLesen(el)
+  const p = (wert, rueck) => farbeLesen(wert) || farbeLesen(rueck)
   return {
-    nacht: t['--trm-nacht'],
-    gold: t['--trm-gold'],
-    hell: t['--trm-gold-hell'],
-    tief: t['--trm-gold-tief'],
-    creme: t['--trm-creme'],
-    rot: t['--trm-rot'],
-  }
-}
-
-function summen(muster) {
-  try {
-    if (typeof navigator !== 'undefined' && navigator.vibrate) navigator.vibrate(muster)
-  } catch {
-    /* kein Vibrationsmotor, kein Problem */
+    farben,
+    nacht: p(farben.nacht, '#0a0908'),
+    gold: p(farben.gold, '#c9a050'),
+    hell: p(farben.goldHell, '#e8c978'),
+    tief: p(farben.goldTief, '#8b6b38'),
+    creme: p(farben.creme, '#f4efe4'),
+    rot: p(farben.rot, '#e2453a'),
   }
 }
 
@@ -329,11 +346,15 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
   const [pause, setPause] = useState(false)
   const [crash, setCrash] = useState(false)
   const [sanft, setSanft] = useState(false)
+  const [ton, setTon] = useState(tonStatus)
   /* kette: laufende Kombo (0 = keine), nr: zaehlt Verschmelzungen, damit der
      Zeitbalken bei jeder neu startet. */
   const [kombo, setKombo] = useState({ kette: 0, nr: 0 })
   /* 0 ruhig, 1 Warnung (nah an der Linie), 2 kritisch (drueber oder fast). */
   const [warnstufe, setWarnstufe] = useState(0)
+  /* an: laeuft das Fieber gerade, nr: zaehlt Fieberphasen, damit der
+     Zeitbalken bei jeder neuen Phase von vorn startet. */
+  const [fieber, setFieber] = useState({ an: false, nr: 0 })
 
   const buehneRef = useRef(null)
   const canvasRef = useRef(null)
@@ -341,7 +362,12 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
   const paletteRef = useRef(null)
   const spriteRef = useRef(new Map())
   const standRef = useRef(null)
-  const takt = useRef({ ...TAKT_START, blitze: [] })
+  const takt = useRef({ ...TAKT_START, blitze: [], knalle: [] })
+  /* Die drei Werke aus spielgefuehl.js. Sie entstehen mit der Schleife und
+     werden in deren Cleanup geleert — nichts davon ueberlebt die Karte. */
+  const funkenRef = useRef(null)
+  const rufRef = useRef(null)
+  const bebenRef = useRef(null)
   const fingerRef = useRef(null)
   const nrRef = useRef(0)
   const pauseRef = useRef(false)
@@ -352,23 +378,22 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
   const lauf = useSpielLauf({ sitzung, game: GAME, dauerVorgabe: 540000, onErgebnis, sofort: true })
   const { laeuft, punkteGeben, rundeZaehlen, fertig, starten: laufStarten, ticketSeitRef } = lauf
 
+  /* Eine Quelle fuer alle Spiele — spielgefuehl.js entscheidet, was sanft ist,
+     und meldet sich auch, wenn der Wunsch mitten in der Runde umgelegt wird. */
   useEffect(() => {
-    let wert
-    try {
-      wert = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    } catch {
-      wert = false
+    const setzen = (wert) => {
+      sanftRef.current = wert
+      setSanft(wert)
     }
-    sanftRef.current = wert
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSanft(wert)
+    return sanftHoeren(setzen)
   }, [])
 
-  /* Keine Crash-Uhr ueberlebt das Aushaengen. */
+  /* Keine Crash-Uhr und kein Audiokontext ueberleben das Aushaengen. */
   useEffect(
     () => () => {
       clearTimeout(crashUhrRef.current)
       crashUhrRef.current = 0
+      klangSchliessen()
     },
     [],
   )
@@ -442,11 +467,18 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
     takt.current.vorgemerkt = false
     takt.current.crashSeit = performance.now()
     takt.current.kette = 0
+    takt.current.fieberBis = 0
+    /* Beim Ueberlauf wird es still: keine Funken, kein Ruetteln, kein Fieber. */
+    funkenRef.current?.leeren()
+    rufRef.current?.leeren()
+    bebenRef.current?.leeren()
     setPause(false)
     setCrash(true)
     setKombo((alt) => (alt.kette ? { kette: 0, nr: alt.nr } : alt))
+    setFieber((alt) => (alt.an ? { an: false, nr: alt.nr } : alt))
     melden('verkantet', 'ÜBERGELAUFEN')
-    summen([90, 30, 60, 30, 140])
+    klang('fehler')
+    vibrieren(HAPTIK.fehler)
     clearTimeout(crashUhrRef.current)
     crashUhrRef.current = setTimeout(() => {
       crashUhrRef.current = 0
@@ -465,13 +497,17 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
     pauseRef.current = false
     crashRef.current = false
     fingerRef.current = null
-    Object.assign(takt.current, { ...TAKT_START, blitze: [] })
+    Object.assign(takt.current, { ...TAKT_START, blitze: [], knalle: [] })
+    funkenRef.current?.leeren()
+    rufRef.current?.leeren()
+    bebenRef.current?.leeren()
     setHoechste(-1)
     setNaechstes(vorschau(standRef.current).naechstes)
     setMeldung(null)
     setPause(false)
     setCrash(false)
     setKombo({ kette: 0, nr: 0 })
+    setFieber({ an: false, nr: 0 })
     setWarnstufe(0)
     return laufStarten()
   }, [laufStarten])
@@ -495,59 +531,177 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
     takt.current.letzterAbwurf = Date.now()
     abwerfen(stand, takt.current.zielX)
     rundeZaehlen()
-    summen(6)
+    klang('landung', 1.15)
+    vibrieren(HAPTIK.tipp)
     setNaechstes(vorschau(stand).naechstes)
     setHoechste(stand.hoechste)
   }, [darfAbwerfen, rundeZaehlen])
 
-  /** Ereignisse eines Physikschritts in Punkte, Blitze, Beben und Meldungen. */
+  /**
+   * Ereignisse eines Physikschritts in Punkte, Bild, Klang und Meldungen.
+   *
+   * Hier wird nur entschieden, WANN etwas passiert — das WIE steht in
+   * spielgefuehl.js. Pro Schritt geht hoechstens eine Meldung raus, sonst
+   * ueberschreibt eine Kettenreaktion sich selbst.
+   */
   const auswerten = useCallback(
     (ereignisse) => {
       const stand = standRef.current
       const t = takt.current
       const jetzt = performance.now()
+      const palette = paletteRef.current
+      const { breite, hoehe } = masseRef.current
+      const { z, x0, y0 } = geometrie(breite, hoehe)
+      const px = (x) => x0 + x * z
+      const py = (y) => y0 + y * z
+      const funken = funkenRef.current
+      const rufe = rufRef.current
+      const beben = bebenRef.current
+      const gold = palette ? palette.farben.gold : '#c9a050'
+      const hell = palette ? palette.farben.goldHell : '#e8c978'
+      const creme = palette ? palette.farben.creme : '#f4efe4'
+
       let summe = 0
       let groesstes = null
       let merges = 0
+      let spruch = null
+      let vorbei = false
+      let chainMax = 0
+
       for (const e of ereignisse) {
         if (e.art === 'vorbei') {
-          aufgeben()
+          vorbei = true
           continue
         }
-        merges += 1
-        summe += e.punkte
-        t.blitze.push({ x: e.x, y: e.y, stufe: e.stufe, gross: e.gross, seit: jetzt })
-        if (e.gross && !sanftRef.current) {
-          const staerke = e.art === 'traum' ? 7 : 3 + (e.stufe - GROSS_AB)
-          if (!t.beben || staerke >= t.beben.staerke || jetzt - t.beben.seit > BEBEN_MS / 2) {
-            t.beben = { seit: jetzt, staerke }
-          }
+        if (e.spruch) spruch = e.spruch
+        if (e.chain > chainMax) chainMax = e.chain
+
+        if (e.art === 'fieber') {
+          /* FIEBER: ab jetzt goldener Rand, mehr Punkte, mehr Spezialteile. */
+          t.fieberBis = jetzt + e.dauer * 1000
+          setFieber((alt) => ({ an: true, nr: alt.nr + 1 }))
+          klang('kraft')
+          vibrieren(HAPTIK.fieber)
+          beben?.stoss(7)
+          funken?.schuss({
+            x: px(BREITE / 2), y: py(LINIE_Y), anzahl: 22, farbe: [gold, hell, creme],
+            tempo: 300, streuung: Math.PI * 2, schwere: 420, leben: 900, gr: 3.4, art: 'stern',
+          })
+          rufe?.zeigen({ x: px(BREITE / 2), y: py(LINIE_Y + 14), text: 'FIEBER', art: 'combo', gr: 30, farbe: hell })
+          continue
         }
-        if (e.art === 'traum') t.traumSeit = jetzt
-        if (!groesstes || e.art === 'traum' || e.stufe > groesstes.stufe || e.kette > groesstes.kette) groesstes = e
+        if (e.art === 'fieber-ende') {
+          /* Sauber zurueck: der Rand geht aus, egal was gerade passiert. */
+          t.fieberBis = 0
+          setFieber((alt) => (alt.an ? { an: false, nr: alt.nr } : alt))
+          klang('tick', 0.55)
+          continue
+        }
+        if (e.art === 'spezial-geboren') {
+          /* Noch keine Punkte — das Teil traegt jetzt nur eine Ladung. */
+          rufe?.zeigen({ x: px(e.x), y: py(e.y) - 8, text: e.wort, art: 'ruf', gr: 15, farbe: hell })
+          klang('zeit', 1.2)
+          funken?.schuss({
+            x: px(e.x), y: py(e.y), anzahl: 8, farbe: hell,
+            tempo: 150, streuung: Math.PI * 2, schwere: 260, leben: 620, gr: 2.6, art: 'stern',
+          })
+          continue
+        }
+
+        summe += e.punkte
+
+        if (e.art === 'spezial') {
+          t.knalle.push({
+            seit: jetzt, form: e.form, x: e.x, y: e.y,
+            r: e.r, b: e.b, h: e.h, weite: e.weite, spezial: e.spezial,
+          })
+          const stark = e.abgeraeumt >= 3 || e.form === 'gold'
+          klang('explosion', e.form === 'zeile' ? 1.25 : 1)
+          vibrieren(stark ? HAPTIK.explosion : HAPTIK.treffer)
+          beben?.stoss(stark ? 12 : 7)
+          funken?.schuss({
+            x: px(e.x), y: py(e.y),
+            anzahl: Math.min(30, 12 + e.abgeraeumt * 4),
+            farbe: e.form === 'frost' ? [creme, hell] : [gold, hell, creme],
+            tempo: e.form === 'zeile' ? 420 : 300,
+            streuung: e.form === 'zeile' ? 0.9 : Math.PI * 2,
+            richtung: e.form === 'zeile' ? 0 : -Math.PI / 2,
+            schwere: 620, leben: 700, gr: 3.2, art: 'krume',
+          })
+          if (e.form === 'zeile') {
+            funken?.schuss({
+              x: px(e.x), y: py(e.y), anzahl: 12, farbe: hell,
+              tempo: 420, streuung: 0.9, richtung: Math.PI, schwere: 620, leben: 700, gr: 3.2, art: 'krume',
+            })
+          }
+          rufe?.zeigen({ x: px(e.x), y: py(e.y) - 14, text: e.ruf, art: 'ruf', gr: stark ? 20 : 16, farbe: hell })
+          if (e.punkte) rufe?.zeigen({ x: px(e.x), y: py(e.y) + 12, text: `+${e.punkte}`, art: 'punkte', gr: 19 })
+          if (!groesstes || stark) groesstes = e
+          continue
+        }
+
+        /* Bleibt: 'merge' und 'traum'. */
+        merges += 1
+        t.blitze.push({ x: e.x, y: e.y, stufe: e.stufe, gross: e.gross, seit: jetzt })
+        const chain = Math.max(1, e.chain || 1)
+        const wucht = e.art === 'traum' ? 3 : e.gross ? 1.7 : 1
+        funken?.schuss({
+          x: px(e.x), y: py(e.y),
+          anzahl: Math.min(34, Math.round((e.gross ? 12 : 6) * wucht * (0.7 + chain * 0.45))),
+          farbe: chain >= 3 ? [hell, creme] : [gold, hell],
+          tempo: 180 * wucht + chain * 30,
+          streuung: Math.PI * 2, schwere: 800, leben: 560 + chain * 60,
+          gr: 2 + wucht * 0.9, art: chain >= 3 ? 'stern' : 'punkt',
+        })
+        if (e.punkte) {
+          rufe?.zeigen({
+            x: px(e.x), y: py(e.y), text: `+${e.punkte}`,
+            art: 'punkte', gr: e.art === 'traum' ? 28 : e.gross ? 22 : 17,
+          })
+        }
+        beben?.stoss(e.art === 'traum' ? 14 : (e.gross ? 3 + (e.stufe - GROSS_AB) : 1.6) + chain * 1.2)
+        klang('pop', Math.min(2.2, 0.8 + e.stufe * 0.09 + (e.kette - 1) * 0.12 + (chain - 1) * 0.1))
+        if (e.art === 'traum') {
+          t.traumSeit = jetzt
+          klang('perfekt', 1)
+          vibrieren(HAPTIK.perfekt)
+        } else if (e.gross) {
+          vibrieren(HAPTIK.gut)
+        } else {
+          vibrieren(HAPTIK.tipp)
+        }
+        if (chain >= 3) t.goldSeit = jetzt
+        if (e.eskaliert) {
+          rufe?.zeigen({ x: px(e.x), y: py(e.y) - 26, text: 'KÜCHE ESKALIERT', art: 'combo', gr: 20, farbe: hell })
+          klang('combo', 1.4)
+        } else if (chain >= 2) {
+          rufe?.zeigen({ x: px(e.x), y: py(e.y) - 22, text: `CHAIN ×${chain}`, art: 'combo', gr: 16, farbe: hell })
+        }
+        if (!groesstes || e.art === 'traum' || e.stufe > groesstes.stufe || e.kette > (groesstes.kette || 0)) groesstes = e
       }
+
       if (summe) punkteGeben(summe)
-      if (!groesstes) return
-      setHoechste(stand.hoechste)
-      if (stand.kette > 0) {
-        t.kette = stand.kette
-        setKombo((alt) => ({ kette: stand.kette, nr: alt.nr + merges }))
+      if (chainMax >= 2) klang('combo', Math.min(1.8, 1 + chainMax * 0.12))
+
+      if (groesstes) {
+        setHoechste(stand.hoechste)
+        if (stand.kette > 0 && merges) {
+          t.kette = stand.kette
+          setKombo((alt) => ({ kette: stand.kette, nr: alt.nr + merges }))
+        }
+        /* Genau eine Meldung. Ein Spruch schlaegt alles — er kommt selten. */
+        if (spruch) melden('gold', spruch)
+        else if (groesstes.art === 'traum') melden('perfekt', groesstes.kette >= 2 ? `TRAUMKÜCHE ×${groesstes.kette}` : 'TRAUMKÜCHE')
+        else if (groesstes.art === 'spezial') melden(groesstes.abgeraeumt >= 3 ? 'gold' : 'treffer', groesstes.wort)
+        else if (chainMax >= CHAIN_ESKALIERT) melden('gold', `CHAIN ×${chainMax}`)
+        else if (groesstes.neuHoechste && groesstes.stufe >= 4) melden('gold', `NEU: ${STUFEN[groesstes.stufe].name}`)
+        else if (groesstes.kette >= 2) melden(groesstes.kette >= 3 ? 'gold' : 'gut', `KOMBO ×${groesstes.kette}`)
+        else if (groesstes.gross) melden('treffer', STUFEN[groesstes.stufe].name)
+      } else if (spruch) {
+        melden('gold', spruch)
       }
-      if (groesstes.art === 'traum') {
-        melden('perfekt', groesstes.kette >= 2 ? `TRAUMKÜCHE ×${groesstes.kette}` : 'TRAUMKÜCHE')
-        summen([30, 30, 30, 30, 60])
-      } else if (groesstes.neuHoechste && groesstes.stufe >= 4) {
-        melden('gold', `NEU: ${STUFEN[groesstes.stufe].name}`)
-        summen(groesstes.gross ? [24, 24, 24, 24, 40] : [16, 26, 16])
-      } else if (groesstes.kette >= 2) {
-        melden(groesstes.kette >= 3 ? 'gold' : 'gut', `KOMBO ×${groesstes.kette}`)
-        summen([12, 20, 12])
-      } else if (groesstes.gross) {
-        melden('treffer', STUFEN[groesstes.stufe].name)
-        summen([20, 20, 30])
-      } else {
-        summen(8)
-      }
+      /* Zum Schluss, damit der Ueberlauf alles wieder abraeumt. */
+      if (vorbei) aufgeben()
     },
     [aufgeben, melden, punkteGeben],
   )
@@ -653,6 +807,12 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
     let vorher = performance.now()
     let speicher = 0
 
+    /* Feste Vorraete: 150 Funken und 12 Rufe reichen fuer die dickste
+       Kettenreaktion und kosten auf dem Handy nichts. */
+    funkenRef.current = funkenwerk(150)
+    rufRef.current = rufwerk(12)
+    bebenRef.current = ruettler({ abfall: 0.85, max: 16 })
+
     const sprite = (stufe, z, dpr) => {
       const r = STUFEN[stufe].r * z
       const schluessel = `${stufe}:${Math.round(r * dpr)}`
@@ -687,7 +847,7 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
       ctx.globalAlpha = 1
     }
 
-    const malen = (jetzt) => {
+    const malen = (jetzt, dtMs) => {
       const c = canvasRef.current
       const palette = paletteRef.current
       const stand = standRef.current
@@ -700,20 +860,11 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
       ctx.clearRect(0, 0, breite, hoehe)
 
-      /* Beben nach grossen Verschmelzungen: kurz, klingt schnell ab. */
-      let bx = 0
-      let by = 0
-      if (t.beben && !weich) {
-        const p = (jetzt - t.beben.seit) / BEBEN_MS
-        if (p >= 1) t.beben = null
-        else {
-          const s = t.beben.staerke * (1 - p) * (1 - p)
-          bx = Math.sin(jetzt / 16) * s
-          by = Math.cos(jetzt / 21) * s * 0.6
-        }
-      }
+      /* Beben: der Ruettler aus spielgefuehl.js klingt von selbst ab und
+         liefert ohne Stoss exakt null. */
+      const ruck = bebenRef.current ? bebenRef.current.versatz(dtMs) : { x: 0, y: 0 }
       ctx.save()
-      ctx.translate(bx, by)
+      ctx.translate(ruck.x, ruck.y)
 
       /* Behaelter: dunkle Rueckwand, goldener Rahmen, oben offen. Bei
          kritischem Fuellstand wird der obere Bereich rot unterlegt. */
@@ -785,6 +936,30 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
       const tot = crashRef.current
       for (const k of stand.koerper) {
         zeichneTeil(ctx, k.stufe, x0 + k.x * z, y0 + k.y * z, k.r * z, z, dpr, tot ? 0.55 : 1, k.winkel)
+        /* Geladenes Teil: pulsierender Ring plus Kuerzel, damit man sieht,
+           was beim naechsten Verschmelzen losgeht. */
+        if (k.spezial && !tot) {
+          const kx = x0 + k.x * z
+          const ky = y0 + k.y * z
+          const kr = k.r * z
+          const pp = weich ? 0.8 : 0.6 + 0.4 * Math.sin(jetzt / 110 + k.id)
+          ctx.strokeStyle = rgb(palette.hell, 0.35 + 0.5 * pp)
+          ctx.lineWidth = 2
+          ctx.setLineDash([4, 3])
+          ctx.beginPath()
+          ctx.arc(kx, ky, kr + 3, 0, Math.PI * 2)
+          ctx.stroke()
+          ctx.setLineDash([])
+          const kuerzel = SPEZIAL_ZEICHEN[k.spezial] || '*'
+          ctx.font = `800 ${Math.max(9, Math.min(15, kr * 0.5))}px system-ui, sans-serif`
+          ctx.textAlign = 'center'
+          ctx.textBaseline = 'middle'
+          ctx.lineWidth = 3
+          ctx.strokeStyle = rgb(palette.nacht, 0.8)
+          ctx.strokeText(kuerzel, kx, ky - kr * 0.52)
+          ctx.fillStyle = rgb(palette.hell, 0.6 + 0.4 * pp)
+          ctx.fillText(kuerzel, kx, ky - kr * 0.52)
+        }
         if (k.ueber > 0 && !tot) {
           ctx.strokeStyle = rgb(palette.rot, 0.45 + 0.5 * (k.ueber / UEBER_S) * puls)
           ctx.lineWidth = 2.5
@@ -839,6 +1014,60 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
         }
       }
 
+      /* Druckwellen der Spezialteile: die Form, die wirklich abgeraeumt hat. */
+      t.knalle = t.knalle.filter((n) => jetzt - n.seit < KNALL_MS)
+      for (const n of t.knalle) {
+        const p = Math.min(1, (jetzt - n.seit) / KNALL_MS)
+        const a = (1 - p) * (weich ? 0.45 : 0.85)
+        const nx = x0 + n.x * z
+        const ny = y0 + n.y * z
+        ctx.lineWidth = Math.max(1.5, 5 * (1 - p))
+        if (n.form === 'kreis') {
+          ctx.strokeStyle = rgb(palette.hell, a)
+          ctx.beginPath()
+          ctx.arc(nx, ny, n.r * z * (0.35 + p * 0.85), 0, Math.PI * 2)
+          ctx.stroke()
+        } else if (n.form === 'zeile') {
+          const hh = n.h * z * (0.5 + p * 0.5)
+          const schleier = ctx.createLinearGradient(x0, ny - hh, x0, ny + hh)
+          schleier.addColorStop(0, rgb(palette.hell, 0))
+          schleier.addColorStop(0.5, rgb(palette.hell, a * 0.5))
+          schleier.addColorStop(1, rgb(palette.hell, 0))
+          ctx.fillStyle = schleier
+          ctx.fillRect(x0, ny - hh, fb, hh * 2)
+          ctx.strokeStyle = rgb(palette.creme, a)
+          ctx.beginPath()
+          ctx.moveTo(x0, ny)
+          ctx.lineTo(x0 + fb, ny)
+          ctx.stroke()
+        } else if (n.form === 'feld') {
+          const bb = n.b * z * (0.5 + p * 0.6)
+          const hh = n.h * z * (0.5 + p * 0.6)
+          ctx.strokeStyle = rgb(palette.hell, a)
+          rr(ctx, nx - bb, ny - hh, bb * 2, hh * 2, 6)
+          ctx.stroke()
+        } else if (n.form === 'gold') {
+          ctx.strokeStyle = rgb(palette.gold, a)
+          ctx.beginPath()
+          ctx.arc(nx, ny, 12 * (1 + p * 2.4), 0, Math.PI * 2)
+          ctx.stroke()
+        } else {
+          /* Frost: kalter Schleier ueber dem ganzen Behaelter. */
+          ctx.fillStyle = rgb(palette.creme, a * 0.18)
+          ctx.fillRect(x0, y0, fb, fh)
+        }
+      }
+
+      /* CHAIN 3+: goldener Schleier ueber dem Feld. */
+      if (t.goldSeit) {
+        const p = (jetzt - t.goldSeit) / GOLD_FLASH_MS
+        if (p >= 1) t.goldSeit = 0
+        else {
+          ctx.fillStyle = rgb(palette.gold, (weich ? 0.12 : 0.26) * (1 - p))
+          ctx.fillRect(x0, y0, fb, fh)
+        }
+      }
+
       /* Traumkueche: der ganze Behaelter leuchtet kurz creme auf. */
       if (t.traumSeit) {
         const p = (jetzt - t.traumSeit) / TRAUM_FLASH_MS
@@ -848,6 +1077,30 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
           ctx.fillRect(x0, y0, fb, fh)
         }
       }
+
+      /* Solange der Froster laeuft, liegt ein kalter Hauch ueber dem Feld. */
+      if (stand.frostBis > stand.zeit && !tot) {
+        ctx.fillStyle = rgb(palette.creme, 0.07)
+        ctx.fillRect(x0, y0, fb, fh)
+      }
+
+      /* FIEBER: pulsierender Goldrahmen direkt am Behaelter. */
+      if (t.fieberBis > jetzt && !tot) {
+        const rest = Math.min(1, (t.fieberBis - jetzt) / 800)
+        const fp = weich ? 0.75 : 0.5 + 0.5 * Math.sin(jetzt / 130)
+        ctx.strokeStyle = rgb(palette.hell, (0.35 + 0.55 * fp) * rest)
+        ctx.lineWidth = 3
+        ctx.strokeRect(x0 + 1.5, y0 + 1.5, fb - 3, fh - 3)
+        const schein = ctx.createLinearGradient(0, y0 + fh, 0, y0 + fh - 60)
+        schein.addColorStop(0, rgb(palette.gold, 0.2 * fp * rest))
+        schein.addColorStop(1, rgb(palette.gold, 0))
+        ctx.fillStyle = schein
+        ctx.fillRect(x0, y0 + fh - 60, fb, 60)
+      }
+
+      /* Funken und schwebende Zahlen ganz oben, aber noch im Beben. */
+      funkenRef.current?.malen(ctx)
+      rufRef.current?.malen(ctx, palette.farben)
 
       if (tot) {
         const p = weich ? 1 : Math.min(1, (jetzt - t.crashSeit) / (CRASH_MS - 80))
@@ -873,7 +1126,8 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
     }
 
     const tick = (jetzt) => {
-      const dt = Math.min(0.1, (jetzt - vorher) / 1000)
+      const dtMs = Math.min(100, jetzt - vorher)
+      const dt = dtMs / 1000
       vorher = jetzt
       const stand = standRef.current
       const h = schrittRef.current
@@ -902,7 +1156,8 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
         if (w !== t.warn && !crashRef.current) {
           if (w === 2 && jetzt - t.alarmSeit > 1500) {
             t.alarmSeit = jetzt
-            summen([40, 60, 40])
+            klang('fehler', 1.3)
+            vibrieren(HAPTIK.treffer)
           }
           t.warn = w
           setWarnstufe(w)
@@ -910,12 +1165,25 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
       } else {
         speicher = 0
       }
-      malen(jetzt)
+      /* Die Effekte laufen auch in der Pause aus — sie hoeren nur auf, neue
+         zu bekommen. Das sieht ruhiger aus als ein eingefrorener Funke. */
+      funkenRef.current?.schritt(dtMs)
+      rufRef.current?.schritt(dtMs)
+      malen(jetzt, dtMs)
       frame = requestAnimationFrame(tick)
     }
 
     frame = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(frame)
+    return () => {
+      cancelAnimationFrame(frame)
+      /* Nichts lebt laenger als die Schleife: kein Funke, kein Ruf, kein Beben. */
+      funkenRef.current?.leeren()
+      rufRef.current?.leeren()
+      bebenRef.current?.leeren()
+      funkenRef.current = null
+      rufRef.current = null
+      bebenRef.current = null
+    }
   }, [laeuft])
 
   const naechsterName = naechstes != null ? STUFEN[naechstes].name : ''
@@ -923,6 +1191,7 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
   const komboAn = kombo.kette >= 2 && !crash
   const komboProzent = Math.round((komboFaktor(kombo.kette) - 1) * 100)
   const warnung = crash ? 0 : warnstufe
+  const fieberAn = fieber.an && !crash
 
   return (
     <SpielKarte
@@ -948,10 +1217,14 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
             role="application"
             tabIndex={0}
             aria-label="Küchen-Merge Spielfeld. Ziehen zum Zielen, loslassen zum Fallenlassen. Pfeiltasten zielen, Leertaste lässt fallen."
-            style={{ '--trm-merge-kombo-ms': `${Math.round(KOMBO_S * 1000)}ms` }}
+            style={{
+              '--trm-merge-kombo-ms': `${Math.round(KOMBO_S * 1000)}ms`,
+              '--trm-merge-fieber-ms': `${Math.round(FIEBER_S * 1000)}ms`,
+            }}
             data-sanft={sanft ? '1' : '0'}
             data-crash={crash ? '1' : '0'}
             data-pause={pause ? '1' : '0'}
+            data-fieber={fieberAn ? '1' : '0'}
             data-warnung={warnung}
             data-combo={crash ? 0 : kombo.kette}
             data-hoechste={hoechste}
@@ -976,6 +1249,32 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
 
             <span className="trm-merge-alarm" data-an={warnung === 2 ? '1' : '0'} role="status">
               {warnung === 2 ? 'ÜBERLAUF!' : ''}
+            </span>
+
+            {/* Ton: stumm startbar, Zustand bleibt ueber Runden hinweg. Der
+                Schalter darf den Wurf nicht ausloesen — darum stoppt er
+                Zeiger und Leertaste, bevor die Buehne sie sieht. */}
+            <button
+              type="button"
+              className="sg-ton"
+              aria-pressed={ton}
+              aria-label={ton ? 'Ton aus' : 'Ton an'}
+              onPointerDown={(e) => e.stopPropagation()}
+              onPointerUp={(e) => e.stopPropagation()}
+              onKeyDown={(e) => {
+                if (e.key === ' ' || e.key === 'Enter') e.stopPropagation()
+              }}
+              onKeyUp={(e) => {
+                if (e.key === ' ' || e.key === 'Enter') e.stopPropagation()
+              }}
+              onClick={() => setTon(tonUmschalten())}
+            >
+              {ton ? '♪' : '✕'}
+            </button>
+
+            <span className="trm-merge-fieber" data-an={fieberAn ? '1' : '0'} aria-hidden="true">
+              FIEBER
+              {fieberAn && <i key={fieber.nr} className="trm-merge-fieber-zeit" />}
             </span>
 
             <div className="trm-merge-fuss" aria-hidden="true">

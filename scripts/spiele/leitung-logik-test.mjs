@@ -33,9 +33,12 @@ import {
   wandErzeugen,
   wandParameter,
 } from '../../src/components/spiele/leitung-logik.js'
+import { SPIELE } from '../../api/_terminal-kern.js'
 
-/* Servergrenzen fuer leitungsfinder, abgeschrieben aus api/_terminal-kern.js. */
-const SERVER = { msJeRunde: 90, maxJeRunde: 1200, plausibel: 450000, hart: 600000 }
+/* Servergrenzen fuer leitungsfinder. Gelesen statt abgeschrieben: eine Kopie
+   veraltet still, und dann prueft der Test gegen eine Grenze, die es nicht
+   mehr gibt. */
+const SERVER = SPIELE.leitungsfinder
 
 let gut = 0
 let schlecht = 0

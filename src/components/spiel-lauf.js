@@ -30,9 +30,28 @@ import { spielBeenden, spielStarten } from '../data/terminal-api.js'
  * Strafe. Die Summe aller Strafen ist aber begrenzt: der Server haelt einen
  * Lauf, der deutlich kuerzer ist als die Spielzeit, fuer verdaechtig. Eine
  * schwache Runde mit vielen Fehlern darf nicht in dieser Pruefung landen.
+ *
+ * ZEITBONUS UND DIE HARTE RUNDENDECKE
+ * -----------------------------------
+ * Das Gegenstueck: gute Zuege geben Sekunden zurueck (Crush). Damit eine
+ * starke Runde spuerbar laenger wird, ohne dass sie unendlich wird, kennt der
+ * Lauf eine absolute Rundendecke. `zeitBonus` gibt zurueck, wie viele
+ * Millisekunden davon wirklich angekommen sind — das Spiel zeigt nur an, was
+ * es auch bekommen hat, sonst luegt die Anzeige an der Decke.
+ *
+ * NACHSPIEL
+ * ---------
+ * Bei Sekunde null mitten in einer Kettenreaktion abzubrechen fuehlt sich an
+ * wie Betrug. `nachspielSetzen(true)` haelt den Abpfiff so lange zurueck, wie
+ * das Spiel noch rechnet. Faellt in dieser Zeit weiterer Zeitbonus an, laeuft
+ * die Runde regulaer weiter. Die Rundendecke gilt trotzdem: sie ist die
+ * einzige Grenze, die niemand verschieben kann.
  */
 
 const STRAFE_MAX_MS = 10000
+
+/** Wie lange das Nachspiel eine Kettenreaktion hoechstens zu Ende rechnen darf. */
+const NACHSPIEL_MAX_MS = 8000
 
 /**
  * TESTLABOR: GAME OVER ERZWINGEN
@@ -105,7 +124,15 @@ const UHR_MS = 200
  * Wer im Spielfeld eine Mindestzeit braucht, liest `ticketSeitRef`: 0, bis
  * das Ticket da ist, danach der Zeitpunkt seiner Ankunft.
  */
-export function useSpielLauf({ sitzung, game, dauerVorgabe = 30000, onErgebnis, sofort = false }) {
+export function useSpielLauf({
+  sitzung,
+  game,
+  dauerVorgabe = 30000,
+  onErgebnis,
+  sofort = false,
+  /* Absolute Rundendecke inklusive aller Zeitboni. Ohne Angabe: kein Bonus. */
+  dauerMaxVorgabe = 0,
+}) {
   /* 'ruht' → 'startet' → 'laeuft' → 'sendet' → 'vorbei' */
   const [phase, setPhase] = useState('ruht')
   const [restMs, setRestMs] = useState(dauerVorgabe)
@@ -116,6 +143,11 @@ export function useSpielLauf({ sitzung, game, dauerVorgabe = 30000, onErgebnis, 
 
   const ticketRef = useRef(null)
   const endeRef = useRef(0)
+  /* Zeitstempel, ueber den kein Bonus die Runde hinaus verlaengern darf. */
+  const deckelRef = useRef(0)
+  const bonusRef = useRef(0)
+  const nachspielRef = useRef(false)
+  const abpfiffRef = useRef(0)
   const strafeRef = useRef(0)
   const punkteRef = useRef(0)
   const rundenRef = useRef(0)
@@ -154,6 +186,33 @@ export function useSpielLauf({ sitzung, game, dauerVorgabe = 30000, onErgebnis, 
   }, [])
 
   /**
+   * Zeit gutschreiben. Gibt zurueck, wie viel davon wirklich angekommen ist:
+   * an der Rundendecke sind das null Millisekunden, und dann darf die Anzeige
+   * auch kein "+2,0 SEK." behaupten.
+   */
+  const zeitBonus = useCallback((ms) => {
+    if (!(ms > 0) || deckelRef.current <= 0) return 0
+    const moeglich = Math.max(0, deckelRef.current - Math.max(endeRef.current, Date.now()))
+    const wirkt = Math.min(ms, moeglich)
+    if (wirkt <= 0) return 0
+    /* Steht die Uhr im Nachspiel schon auf null, laeuft sie ab jetzt weiter. */
+    endeRef.current = Math.max(endeRef.current, Date.now()) + wirkt
+    bonusRef.current += wirkt
+    setRestMs(Math.max(0, endeRef.current - Date.now()))
+    return wirkt
+  }, [])
+
+  /**
+   * Abpfiff zurueckhalten, solange das Spiel noch eine Kettenreaktion rechnet.
+   * Das Spiel ist dafuer verantwortlich, den Halt wieder zu loesen; laeuft es
+   * sich fest, greift nach `NACHSPIEL_MAX_MS` die Notbremse in der Uhr.
+   */
+  const nachspielSetzen = useCallback((an) => {
+    if (an && !nachspielRef.current) abpfiffRef.current = Date.now()
+    nachspielRef.current = !!an
+  }, [])
+
+  /**
    * Runde abschliessen und abgeben. Der Punktestand kommt aus dem Ref, nicht
    * aus dem State: der letzte Treffer kurz vor dem Ablauf soll zaehlen, auch
    * wenn React noch nicht neu gerendert hat.
@@ -161,6 +220,7 @@ export function useSpielLauf({ sitzung, game, dauerVorgabe = 30000, onErgebnis, 
   const fertig = useCallback(async () => {
     if (abgegebenRef.current) return
     abgegebenRef.current = true
+    nachspielRef.current = false
 
     const erreicht = punkteRef.current
 
@@ -221,7 +281,13 @@ export function useSpielLauf({ sitzung, game, dauerVorgabe = 30000, onErgebnis, 
     const uhr = setInterval(() => {
       const rest = Math.max(0, endeRef.current - Date.now())
       setRestMs(rest)
-      if (rest <= 0) fertig()
+      if (rest > 0) return
+      /* Nachspiel: die laufende Kettenreaktion darf zu Ende rechnen — aber
+         nicht ewig, und nie ueber die Rundendecke hinaus. */
+      if (nachspielRef.current
+        && Date.now() - abpfiffRef.current < NACHSPIEL_MAX_MS
+        && (deckelRef.current <= 0 || Date.now() < deckelRef.current)) return
+      fertig()
     }, UHR_MS)
 
     return () => clearInterval(uhr)
@@ -241,6 +307,9 @@ export function useSpielLauf({ sitzung, game, dauerVorgabe = 30000, onErgebnis, 
       ticketRef.current = null
       ticketSeitRef.current = 0
       endeRef.current = Date.now() + dauerVorgabe
+      deckelRef.current = dauerMaxVorgabe > dauerVorgabe ? Date.now() + dauerMaxVorgabe : 0
+      bonusRef.current = 0
+      nachspielRef.current = false
       strafeRef.current = 0
       punkteRef.current = 0
       rundenRef.current = 0
@@ -293,6 +362,12 @@ export function useSpielLauf({ sitzung, game, dauerVorgabe = 30000, onErgebnis, 
       ticketRef.current = daten.ticket
     }
     endeRef.current = Date.now() + dauer
+    /* Die Decke folgt der Serverdauer, falls die je groesser gesetzt wird als
+       die Vorgabe hier — sonst haetten Client und Server zwei Wahrheiten. */
+    const decke = Math.max(dauer, dauerMaxVorgabe)
+    deckelRef.current = decke > dauer ? Date.now() + decke : 0
+    bonusRef.current = 0
+    nachspielRef.current = false
     strafeRef.current = 0
     punkteRef.current = 0
     rundenRef.current = 0
@@ -301,7 +376,7 @@ export function useSpielLauf({ sitzung, game, dauerVorgabe = 30000, onErgebnis, 
     setRestMs(dauer)
     setPhase('laeuft')
     return true
-  }, [sitzung, game, dauerVorgabe, sofort, practice])
+  }, [sitzung, game, dauerVorgabe, dauerMaxVorgabe, sofort, practice])
 
   return {
     sofort,
@@ -320,5 +395,8 @@ export function useSpielLauf({ sitzung, game, dauerVorgabe = 30000, onErgebnis, 
     punkteGeben,
     rundeZaehlen,
     zeitStrafe,
+    zeitBonus,
+    bonusRef,
+    nachspielSetzen,
   }
 }

@@ -24,6 +24,17 @@ import {
   serieStufe,
   serieWeiter,
 } from './leitung-logik.js'
+import {
+  HAPTIK,
+  domSchicht,
+  klang,
+  klangSchliessen,
+  sanftHoeren,
+  tonStatus,
+  tonUmschalten,
+  vibrieren,
+} from './spielgefuehl.js'
+import './spielgefuehl.css'
 import './leitung.css'
 
 /**
@@ -56,6 +67,14 @@ import './leitung.css'
  * (bohrFreigabe). Kommt ein Tipp zu frueh, wird er nicht verworfen: die
  * Fliese zeigt kurz den Bohrer und oeffnet sich, sobald sie darf.
  *
+ * DER LEISE GEGENPOL
+ * ------------------
+ * Die gemeinsamen Game-Feel-Werkzeuge aus spielgefuehl.js werden hier
+ * bewusst sparsam benutzt: Haptik und kurze Quittungstoene fuer jede
+ * Aktion, schwebende Punkte nur, wenn sich ein groesseres Stueck Wand
+ * oeffnet, Funken einzig bei WAND GESCHAFFT. Kein Beben, kein Blitz, keine
+ * Dauerpartikel — zwischen vier lauten Spielen soll dieses ruhig bleiben.
+ *
  * WARUM KEIN CANVAS
  * -----------------
  * 80 Fliesen, die sich nur bei einem Tipp aendern: das ist ein Raster aus
@@ -74,19 +93,14 @@ const KOPF = 40
 const FUSS = 40
 const FUGE = 2
 const KNAPP_AB = 3
+/* Ab so vielen neu geoeffneten Fliesen lohnt sich eine Rueckmeldung: eine
+   einzelne Fliese ist Alltag, ein aufgerissenes Feld ist ein Treffer. */
+const FUNKEN_AB = 4
 /* Typischer Wert einer freien Wand um Wand 3: 67 Fliesen × 30 plus 1200 Bonus. */
 const HEBEL_PUNKTE = 3200
 
 const ART_NAME = { wasser: 'WASSERROHR', strom: 'STROMKABEL', abwasser: 'ABWASSER' }
 const ART_LABEL = { wasser: 'Wasser', strom: 'Strom', abwasser: 'Abwasser' }
-
-function summen(muster) {
-  try {
-    if (typeof navigator !== 'undefined' && navigator.vibrate) navigator.vibrate(muster)
-  } catch {
-    /* kein Vibrationsmotor, kein Problem */
-  }
-}
 
 /** Fliesengroesse fuer die Buehne. Nie kleiner als 24 px, auch wenn es eng wird. */
 function fliesenMass(breite, hoehe) {
@@ -142,8 +156,11 @@ export default function Leitungsfinder({ sitzung, best = null, onErgebnis }) {
   const [sanft, setSanft] = useState(false)
   const [serie, setSerie] = useState({ n: 0, stufe: 0, nr: 0 })
   const [geschafft, setGeschafft] = useState(null)
+  const [ton, setTon] = useState(tonStatus)
 
   const buehneRef = useRef(null)
+  const schichtElRef = useRef(null)
+  const schichtRef = useRef(null)
   const wandRef = useRef(wand)
   const modusRef = useRef('bohren')
   const rundenRef = useRef(0)
@@ -193,18 +210,31 @@ export default function Leitungsfinder({ sitzung, best = null, onErgebnis }) {
     fingerRef.current = null
   }, [])
 
-  useEffect(() => () => uhrenStoppen(), [uhrenStoppen])
+  useEffect(() => () => {
+    uhrenStoppen()
+    klangSchliessen()
+  }, [uhrenStoppen])
 
+  /* Reduced Motion kommt aus der gemeinsamen Quelle und wird mitgehoert, nicht
+     nur einmal gelesen: wer die Einstellung mitten im Lauf umlegt, merkt es
+     sofort — auch an der kuerzeren Pause zwischen zwei Waenden. */
   useEffect(() => {
-    let wert
-    try {
-      wert = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    } catch {
-      wert = false
-    }
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSanft(wert)
+    const setzen = (wert) => setSanft(wert)
+    return sanftHoeren(setzen)
   }, [])
+
+  /* Die Effektschicht liegt UEBER der Wand, nicht darin: das Raster schneidet
+     ab, die Zahlen sollen aber ueber den Rand hinaus aufsteigen duerfen. */
+  useEffect(() => {
+    const el = schichtElRef.current
+    if (!el) return undefined
+    const schicht = domSchicht(el)
+    schichtRef.current = schicht
+    return () => {
+      schichtRef.current = null
+      schicht.schliessen()
+    }
+  }, [laeuft])
 
   /* Groesse messen, Fliesenmass daraus. */
   useEffect(() => {
@@ -232,6 +262,26 @@ export default function Leitungsfinder({ sitzung, best = null, onErgebnis }) {
     const uhr = setTimeout(() => setMeldung(null), 1100)
     return () => clearTimeout(uhr)
   }, [meldung])
+
+  /**
+   * Mitte einer Fliese in Prozent der Buehne — so rechnet die Effektschicht.
+   * Gemessen statt nachgerechnet: das Layout kennt nur das CSS, und gemessen
+   * wird ohnehin nur bei den wenigen Ereignissen, die etwas anzeigen.
+   */
+  const zellePunkt = useCallback((i) => {
+    const buehne = buehneRef.current
+    if (!buehne) return null
+    const [x, y] = lage(i)
+    const zelle = buehne.querySelector(`[data-zelle="${x},${y}"]`)
+    if (!zelle) return null
+    const b = buehne.getBoundingClientRect()
+    if (!b.width || !b.height) return null
+    const z = zelle.getBoundingClientRect()
+    return {
+      x: ((z.left + z.width / 2 - b.left) / b.width) * 100,
+      y: ((z.top + z.height / 2 - b.top) / b.height) * 100,
+    }
+  }, [])
 
   /* ---------------------------------------------------------------- */
   /* Serie                                                             */
@@ -293,7 +343,8 @@ export default function Leitungsfinder({ sitzung, best = null, onErgebnis }) {
       setCrash(true)
       setCrashArt(typeof art === 'string' && ART_NAME[art] ? art : '')
       melden('verkantet', typeof art === 'string' && ART_NAME[art] ? `${ART_NAME[art]} GETROFFEN` : 'LEITUNG GETROFFEN')
-      summen([90, 30, 140])
+      vibrieren(HAPTIK.fehler)
+      klang('fehler')
       spaeter(() => fertig(), CRASH_MS)
     },
     [fertig, melden, serieAbbrechen, spaeter, wartendeVerwerfen],
@@ -305,6 +356,7 @@ export default function Leitungsfinder({ sitzung, best = null, onErgebnis }) {
     const begonnen = await laufStarten()
     if (!begonnen) return false
     uhrenStoppen()
+    schichtRef.current?.leeren()
     wandSetzen(neueWand(1))
     rundenRef.current = 0
     pauseRef.current = false
@@ -348,13 +400,29 @@ export default function Leitungsfinder({ sitzung, best = null, onErgebnis }) {
     const stufeVorher = serieStufe(naechste - 1)
     setSerie({ n: naechste, stufe: ereignis.serieStufe, nr: rundenRef.current })
 
+    const punkt = zellePunkt(i)
+    /* Punkte schweben nur auf, wenn sich wirklich ein Stueck Wand geoeffnet
+       hat. Nach jedem einzelnen Tipp waere es Geflacker, kein Feedback. */
+    if (punkt && ereignis.neu >= FUNKEN_AB) {
+      schichtRef.current?.popup({ x: punkt.x, y: punkt.y, text: `+${ereignis.punkte}`, art: 'punkte' })
+    }
+
     if (!ereignis.frei) {
       serieUhrStellen()
       if (ereignis.serieStufe > stufeVorher) {
         melden('gut', `SERIE ${naechste} · +${Math.round(ereignis.serieStufe * SERIE_ANTEIL * 100)}%`)
-        summen([10, 24, 10])
+        vibrieren(HAPTIK.gut)
+        /* Die Serie klettert hoerbar mit: je Stufe ein Stueck hoeher. Gezeigt
+           wird sie schon zweifach (Ruf unter der Karte, Abzeichen im Fuss) —
+           ein dritter schwebender Text waere genau das Chaos, das hier nicht
+           hingehoert. */
+        klang('combo', 1 + Math.min(3, ereignis.serieStufe) * 0.12)
+      } else if (ereignis.neu >= FUNKEN_AB) {
+        vibrieren(HAPTIK.treffer)
+        klang('pop', 1.12)
       } else {
-        summen(ereignis.neu > 8 ? [8, 30, 8] : 6)
+        vibrieren(HAPTIK.tipp)
+        klang('pop', 0.9)
       }
       return
     }
@@ -365,7 +433,11 @@ export default function Leitungsfinder({ sitzung, best = null, onErgebnis }) {
     s.uhr = 0
     wechselRef.current = true
     setGeschafft({ nr: neu.nr, bonus: ereignis.bonus })
-    summen([14, 24, 14, 24, 30])
+    vibrieren(HAPTIK.perfekt)
+    klang('kraft')
+    /* Der einzige groessere Effekt im Spiel: eine freie Wand darf funkeln.
+       Kein Beben, kein Blitz — das bleibt den lauten Spielen vorbehalten. */
+    if (punkt) schichtRef.current?.funken({ x: punkt.x, y: punkt.y, anzahl: 10, art: 'gold', weite: 52 })
     spaeter(
       () => {
         if (crashRef.current) return
@@ -414,7 +486,8 @@ export default function Leitungsfinder({ sitzung, best = null, onErgebnis }) {
     const erg = markieren(wandRef.current, i)
     if (!erg) return
     wandSetzen(erg.wand)
-    summen(erg.gesetzt ? [12, 40, 12] : 8)
+    vibrieren(erg.gesetzt ? HAPTIK.treffer : HAPTIK.tipp)
+    klang('tick', erg.gesetzt ? 1 : 0.78)
   }
 
   const tippen = (i) => {
@@ -428,7 +501,8 @@ export default function Leitungsfinder({ sitzung, best = null, onErgebnis }) {
     const neu = modusRef.current === 'markieren' ? 'bohren' : 'markieren'
     modusRef.current = neu
     setModus(neu)
-    summen(8)
+    vibrieren(HAPTIK.tipp)
+    klang('tick', neu === 'markieren' ? 1.15 : 0.85)
   }
 
   const weiter = () => {
@@ -641,16 +715,34 @@ export default function Leitungsfinder({ sitzung, best = null, onErgebnis }) {
                   NOCH <b>{noch}</b>
                 </span>
               </span>
-              <button
-                type="button"
-                className="trm-leitung-modus"
-                data-modus
-                aria-pressed={modus === 'markieren'}
-                onClick={modusWechseln}
-              >
-                <Marker />
-                MARKIEREN
-              </button>
+              <span className="trm-leitung-schalter">
+                {/* Ton: stumm startbar, die Wahl haelt ueber Runden hinweg.
+                    Der Schalter darf keine Fliese anfassen — darum stoppt er
+                    Zeiger und Tasten, bevor die Buehne sie sieht. */}
+                <button
+                  type="button"
+                  className="sg-ton"
+                  data-modus
+                  aria-pressed={ton}
+                  aria-label={ton ? 'Ton aus' : 'Ton an'}
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onPointerUp={(e) => e.stopPropagation()}
+                  onKeyDown={(e) => { if (e.key === ' ' || e.key === 'Enter') e.stopPropagation() }}
+                  onClick={() => setTon(tonUmschalten())}
+                >
+                  {ton ? '♪' : '✕'}
+                </button>
+                <button
+                  type="button"
+                  className="trm-leitung-modus"
+                  data-modus
+                  aria-pressed={modus === 'markieren'}
+                  onClick={modusWechseln}
+                >
+                  <Marker />
+                  MARKIEREN
+                </button>
+              </span>
             </div>
 
             <div className="trm-leitung-wand" key={wand.nr}>
@@ -690,6 +782,9 @@ export default function Leitungsfinder({ sitzung, best = null, onErgebnis }) {
             )}
 
             {crash && <div className="trm-leitung-blitz" data-art={crashArt || undefined} aria-hidden="true" />}
+
+            {/* Gemeinsame Effektschicht: nur schwebende Zahlen und Funken. */}
+            <div className="sg-schicht" ref={schichtElRef} aria-hidden="true" />
           </div>
 
           {pause && <p className="trm-spiel__pause">PAUSE — zum Weiterspielen tippen</p>}

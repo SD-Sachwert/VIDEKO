@@ -4,8 +4,11 @@ import SpielKarte from '../SpielKarte.jsx'
 import { useSpielLauf, useTestEnde } from '../spiel-lauf.js'
 import { SPIEL_NACH_KEY } from '../../data/terminal.js'
 import {
+  COMBO_AB,
   FIGUR_B,
   FIGUR_H,
+  GABE_R,
+  GEGNER_H,
   GOLD_BONUS,
   HOEHE_JE_EINHEIT,
   MEILENSTEIN,
@@ -23,6 +26,19 @@ import {
   schritt,
   seiteVon,
 } from './jump-logik.js'
+import {
+  HAPTIK,
+  funkenwerk,
+  klang,
+  klangSchliessen,
+  rufwerk,
+  ruettler,
+  sanftHoeren,
+  tonStatus,
+  tonUmschalten,
+  vibrieren,
+} from './spielgefuehl.js'
+import './spielgefuehl.css'
 import './jump.css'
 
 /**
@@ -147,13 +163,67 @@ function paletteBauen(el) {
   }
 }
 
-function summen(muster) {
-  try {
-    if (typeof navigator !== 'undefined' && navigator.vibrate) navigator.vibrate(muster)
-  } catch {
-    /* kein Vibrationsmotor, kein Problem */
+/* Haptik kommt aus spielgefuehl.js — ein Ort fuer alle Spiele. */
+const summen = vibrieren
+
+/* Das Rufwerk malt mit fertigen CSS-Farben, die Palette haelt rgb-Tripel.
+   Ein kleiner Uebersetzer, damit beide Seiten unveraendert bleiben. */
+function rufFarben(palette) {
+  return {
+    gruen: rgb(palette.gruen),
+    goldHell: rgb(palette.hell),
+    creme: rgb(palette.creme),
+    nacht: rgb(palette.nacht),
   }
 }
+
+/* ------------------------------------------------------------------ */
+/* Das echte VIDEKO-Symbol                                             */
+/* ------------------------------------------------------------------ */
+/*
+ * Die Figur ist nicht irgendein gemaltes V, sondern das Markenzeichen
+ * selbst: dieselbe Datei, die auch als Favicon ausgeliefert wird
+ * (public/favicon-512.png, reines V/D-Emblem ohne Schriftzug, mit
+ * Transparenz). Sie wird ausschliesslich gleichmaessig skaliert und
+ * gedreht — nie gestaucht, nie gespiegelt, nie eingefaerbt.
+ *
+ * Das Federn beim Landen (Squash/Stretch) sitzt deshalb nicht im Logo,
+ * sondern in der Kochmuetze, die als eigenes Spielelement darueber liegt,
+ * und im Schatten darunter. So bleibt das Logo unveraendert und die Figur
+ * trotzdem lebendig.
+ */
+const LOGO_QUELLE = '/favicon-512.png'
+let logoBild = null
+function logoHolen() {
+  if (logoBild) return logoBild
+  if (typeof Image === 'undefined') return null
+  const img = new Image()
+  img.decoding = 'async'
+  img.src = LOGO_QUELLE
+  logoBild = img
+  return img
+}
+const logoDa = (img) => !!(img && img.complete && img.naturalWidth > 0)
+
+/* ------------------------------------------------------------------ */
+/* Trockene Kommentare (sparsam eingesetzt)                            */
+/* ------------------------------------------------------------------ */
+
+const SPRUCH_TREFFER = {
+  backofen: 'DER BACKOFEN WAR SCHNELLER.',
+  kuehlschrank: 'DER KÜHLSCHRANK HATTE ANDERE PLÄNE.',
+  spuelmaschine: 'SPÜLGANG BEENDET.',
+  topf: 'TOPF TRIFFT KOPF.',
+  pfanne: 'DIE PFANNE WAR ZUERST DA.',
+  karton: 'NUR EIN KARTON. TROTZDEM BLÖD.',
+  haube: 'ABZUG. NACH UNTEN.',
+  spuelbecken: 'BECKEN VERSENKT.',
+}
+const SPRUCH_KNAPP = ['KNAPP.', 'DAS WAR SPORTLICH.', 'MIT DER FUSSSPITZE.', 'KOCHMÜTZE SITZT.']
+/* An die Leiter der Logik gebunden, damit Wort und Zahl nicht auseinanderlaufen. */
+const STUFEN_WORT = ['HEISS', 'KÜCHENCHEF', 'KÜCHE ESKALIERT', 'KOMPLETT GESTÖRT']
+const SPRUCH_STUFE = Object.fromEntries(COMBO_AB.map((n, i) => [n, STUFEN_WORT[i] || 'KOMPLETT GESTÖRT']))
+const SPRUCH_GABE = { muetze: 'GOLDENE KOCHMÜTZE', schuerze: 'SCHUTZSCHÜRZE', turbo: 'TURBO' }
 
 function rundesRechteck(ctx, x, y, b, h, r) {
   ctx.beginPath()
@@ -217,6 +287,9 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
   const [crash, setCrash] = useState(false)
   const [sanft, setSanft] = useState(false)
   const [gelenkt, setGelenkt] = useState(false)
+  const [ton, setTon] = useState(tonStatus)
+  /* Was gerade wirkt: fuer die kleine Leiste ueber dem Spielfeld. */
+  const [kraefte, setKraefte] = useState({ combo: 0, muetze: 0, schutz: false, turbo: 0 })
   /* aus | fragt | aktiv | verweigert | nicht-unterstuetzt */
   const [neigung, setNeigung] = useState('aus')
 
@@ -236,7 +309,14 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
   /* Eingabe: gehaltene Tasten und Finger (pointerId -> -1, 0, 1). 0 heisst:
      dieser Finger hat die Pause beendet und lenkt nicht. */
   const eingabeRef = useRef({ links: false, rechts: false, sperre: false, finger: new Map() })
-  const bildRef = useRef({ gelandet: 0, crashSeit: 0 })
+  const bildRef = useRef({ gelandet: 0, crashSeit: 0, getroffen: 0, gabe: 0, muetzeWackel: 0 })
+  /* Effektwerke (§7). Einmal angelegt, ueber die ganze Runde wiederverwendet:
+     fester Vorrat, keine neuen Objekte pro Funke. */
+  const fxRef = useRef(null)
+  if (fxRef.current == null) {
+    fxRef.current = { funken: funkenwerk(140), rufe: rufwerk(10), beben: ruettler({ max: 10 }) }
+  }
+  const logoRef = useRef(null)
   /* Neigung: Hoerer, Uhren und die zuletzt erkannte Richtung. `token` macht
      spaete Antworten einer abgebrochenen Anfrage wirkungslos. */
   const neigungRef = useRef({ aktiv: false, fragt: false, richtung: 0, token: 0, hoerer: null, uhr: 0, zurueck: 0 })
@@ -244,22 +324,29 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
   const lauf = useSpielLauf({ sitzung, game: 'videko_jump', dauerVorgabe: 540000, onErgebnis, sofort: true })
   const { laeuft, punkteGeben, rundeZaehlen, fertig, starten: laufStarten, ticketSeitRef } = lauf
 
+  /* Eine Quelle fuer alle Spiele — spielgefuehl.js entscheidet, was sanft ist,
+     und meldet sich auch, wenn der Wunsch mitten in der Runde umgelegt wird. */
   useEffect(() => {
-    let wert
-    try {
-      wert = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    } catch {
-      wert = false
+    const setzen = (wert) => {
+      sanftRef.current = wert
+      setSanft(wert)
     }
-    sanftRef.current = wert
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSanft(wert)
+    return sanftHoeren(setzen)
   }, [])
 
   useEffect(() => {
     const uhr = uhrRef
     return () => clearTimeout(uhr.current)
   }, [])
+
+  /* Das Markenzeichen einmal holen. Es liegt im Modul, nicht in der
+     Komponente — jedes weitere Spiel bekommt dieselbe geladene Datei. */
+  useEffect(() => {
+    logoRef.current = logoHolen()
+  }, [])
+
+  /* Ton beim Verlassen sauber schliessen (§15). */
+  useEffect(() => () => klangSchliessen(), [])
 
   /* Groesse messen, Canvas auf DPR (hoechstens 2), Farben lesen, Marmor malen. */
   useEffect(() => {
@@ -371,11 +458,16 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
     clearTimeout(uhrRef.current)
     standRef.current = neuesSpiel(Math.floor(Math.random() * 2147483646) + 1)
     kasseRef.current = { offen: [], letzte: 0 }
-    bildRef.current = { gelandet: 0, crashSeit: 0 }
+    bildRef.current = { gelandet: 0, crashSeit: 0, getroffen: 0, gabe: 0, muetzeWackel: 0 }
+    /* Nichts aus der letzten Runde darf in die neue hineinragen. */
+    fxRef.current.funken.leeren()
+    fxRef.current.rufe.leeren()
+    fxRef.current.beben.leeren()
     pauseRef.current = false
     crashRef.current = false
     eingabeLoslassen()
     setHoehe(0)
+    setKraefte({ combo: 0, muetze: 0, schutz: false, turbo: 0 })
     setMeldung(null)
     setPause(false)
     setCrash(false)
@@ -398,34 +490,116 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
     if (punkte) punkteGeben(punkte)
   }, [punkteGeben, rundeZaehlen, ticketSeitRef])
 
+  /** Weltkoordinaten in Bildkoordinaten — fuer Funken und schwebende Zahlen. */
+  const weltZuBild = useCallback((wx, wy) => {
+    const { breite, hoehe: h } = masseRef.current
+    const { s, x0 } = geometrie(breite, h)
+    const stand = standRef.current
+    return { x: x0 + wx * s, y: h - (wy - (stand ? stand.kamera : 0)) * s, s }
+  }, [])
+
   /** Was die Logik in einem Schritt gemeldet hat. */
   const verarbeiten = useCallback(
     (ereignisse) => {
+      const fx = fxRef.current
+      const pal = paletteRef.current
+      const gold = pal ? rgb(pal.hell) : '#e8c978'
+      const creme = pal ? rgb(pal.creme) : '#f4efe4'
+      const rot = pal ? rgb(pal.rot) : '#e2453a'
+      const gruen = pal ? rgb(pal.gruen) : '#57c47c'
+
       for (const e of ereignisse) {
-        if (e.art === 'landung') {
-          bildRef.current.gelandet = performance.now()
-          if (e.zerbrochen) summen(20)
+        if (e.art === 'landung' || e.art === 'durchflug') {
+          const landung = e.art === 'landung'
+          if (landung) bildRef.current.gelandet = performance.now()
+          if (landung) {
+            const b = weltZuBild(e.platte.x, e.platte.y)
+            /* Aufsetzimpuls: ein bisschen Staub unter den Fuessen. */
+            fx.funken.schuss({
+              x: b.x, y: b.y, anzahl: e.knapp ? 8 : 4, farbe: e.knapp ? gold : creme,
+              tempo: b.s * 0.5, streuung: 1.5, richtung: -Math.PI / 2, gr: 2.2, leben: 380,
+            })
+          }
+          if (e.zerbrochen) {
+            const b = weltZuBild(e.platte.x, e.platte.y)
+            fx.funken.schuss({ x: b.x, y: b.y, anzahl: 10, farbe: creme, tempo: b.s * 0.7, gr: 2.4, art: 'krume' })
+            summen(HAPTIK.tipp)
+            klang('fehler', 1.4)
+          }
           if (!e.neu) continue
           kasseRef.current.offen.push(e.punkte)
           if (e.punkte) setHoehe(e.hoehe)
+
+          const b = weltZuBild(e.platte.x, e.platte.y)
+          if (e.punkte && (e.knapp || e.gold || e.mult > 1 || !landung)) {
+            fx.rufe.zeigen({ x: b.x, y: b.y - 14, text: `+${e.punkte}`, art: 'punkte', gr: 16 })
+          }
+          if (e.knapp) {
+            /* KNAPP: Goldfunken an der Fussspitze, und die Kombo zaehlt hoch. */
+            fx.funken.schuss({ x: b.x, y: b.y - 6, anzahl: 9, farbe: gold, tempo: b.s * 0.8, gr: 2.6, art: 'stern' })
+            klang('combo', 1 + Math.min(6, e.combo) * 0.07)
+            summen(HAPTIK.gut)
+            if (e.comboStufe) {
+              fx.rufe.zeigen({ x: b.x, y: b.y - 40, text: SPRUCH_STUFE[e.comboStufe], art: 'combo', gr: 20 })
+              fx.beben.stoss(e.comboStufe >= 8 ? 9 : 5)
+              melden('gold', `KOMBO ×${e.combo}`)
+              summen(HAPTIK.fieber)
+            } else if (e.combo % 2 === 1) {
+              /* Sparsam: nicht nach jedem Sprung ein Spruch. */
+              fx.rufe.zeigen({ x: b.x, y: b.y - 34, text: SPRUCH_KNAPP[e.combo % SPRUCH_KNAPP.length], art: 'ruf', gr: 13 })
+            }
+          }
           if (e.meilenstein) {
             melden('perfekt', `${e.meilenstein} M`)
-            summen([18, 30, 18])
+            summen(HAPTIK.perfekt)
+            klang('perfekt')
+            fx.beben.stoss(6)
           } else if (e.gold) {
             melden('gold', `GOLDPLATTE +${GOLD_BONUS}`)
-            summen([14, 24, 14])
-          } else {
-            summen(6)
+            summen(HAPTIK.gut)
+            klang('kraft')
+            fx.funken.schuss({ x: b.x, y: b.y, anzahl: 14, farbe: gold, tempo: b.s * 0.9, gr: 3, art: 'stern' })
+          } else if (landung) {
+            summen(HAPTIK.tipp)
+            klang('sprung', 1 + Math.min(8, e.combo) * 0.05)
           }
+        } else if (e.art === 'gabe') {
+          const b = weltZuBild(e.gabe.x, e.gabe.y)
+          bildRef.current.gabe = performance.now()
+          fx.funken.schuss({
+            x: b.x, y: b.y, anzahl: 16,
+            farbe: e.gart === 'schuerze' ? gruen : gold,
+            tempo: b.s * 0.9, gr: 3, art: 'stern',
+          })
+          fx.rufe.zeigen({ x: b.x, y: b.y - 18, text: SPRUCH_GABE[e.gart], art: 'combo', gr: 15 })
+          fx.beben.stoss(4)
+          klang('kraft', e.gart === 'turbo' ? 1.3 : 1)
+          summen(HAPTIK.gut)
+        } else if (e.art === 'schutz') {
+          const b = weltZuBild(e.gegner.x, e.gegner.y)
+          fx.funken.schuss({ x: b.x, y: b.y, anzahl: 12, farbe: gruen, tempo: b.s * 0.8, gr: 2.8 })
+          fx.rufe.zeigen({ x: b.x, y: b.y - 16, text: 'SCHÜRZE HÄLT', art: 'combo', gr: 14 })
+          fx.beben.stoss(6)
+          klang('treffer', 0.8)
+          summen(HAPTIK.treffer)
+        } else if (e.art === 'treffer') {
+          const b = weltZuBild(e.gegner.x, e.gegner.y)
+          bildRef.current.getroffen = performance.now()
+          fx.funken.schuss({ x: b.x, y: b.y, anzahl: 18, farbe: [rot, creme], tempo: b.s * 1.1, gr: 3, art: 'krume' })
+          melden('verkantet', SPRUCH_TREFFER[e.gegner.art] || 'DAS WAR KEIN SPRUNGBRETT.')
+          fx.beben.stoss(10)
+          klang('explosion')
+          summen(HAPTIK.explosion)
         } else if (e.art === 'heiss') {
           melden('verkantet', 'HEISS!')
-          summen(30)
+          summen(HAPTIK.fehler)
+          klang('fehler')
         } else if (e.art === 'absturz') {
           aufgeben()
         }
       }
     },
-    [aufgeben, melden],
+    [aufgeben, melden, weltZuBild],
   )
 
   /* ---------------------------------------------------------------- */
@@ -595,7 +769,11 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
     if (!laeuft) return undefined
     let frame = 0
     let vorher = performance.now()
+    let bebenUhr = vorher
     let speicher = 0
+    /* Der Kraefte-Streifen ist React; er soll nur bei echter Aenderung neu
+       rendern, nicht sechzigmal pro Sekunde. */
+    let kraefteMerk = ''
 
     /* Einmal je Bild: wirksame Richtung bestimmen und fuer Tests an die
        Buehne schreiben — nur bei Aenderung, ohne React. */
@@ -820,6 +998,201 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
       }
     }
 
+    /**
+     * Ein fliegendes Kuechenteil. Acht Sorten, alle aus demselben Bauplan:
+     * Korpus in Stein, eine Front in Gold. Das reicht, um sie im Flug
+     * auseinanderzuhalten, und kostet pro Bild nur ein paar Rechtecke.
+     */
+    const gegnerMalen = (ctx, palette, cx, cy, s, g, jetzt) => {
+      const b = g.b * s
+      const h = GEGNER_H * s
+      /* Getroffenes bleibt einen Wimpernschlag liegen und verblasst. */
+      const alpha = g.weg ? Math.max(0, (g.wegBis - standRef.current.zeit) / 0.5) : 1
+      if (alpha <= 0) return
+      const dreh = sanftRef.current ? 0 : g.dreh
+      ctx.save()
+      ctx.globalAlpha = alpha
+      ctx.translate(cx, cy)
+      /* Nur die runden Sachen rollen wirklich; der Rest schaukelt bloss. */
+      if (g.art === 'topf' || g.art === 'pfanne') ctx.rotate(dreh)
+      else ctx.rotate(Math.sin(jetzt / 260 + g.id) * 0.06)
+      const korpus = mischen(palette.nacht, palette.creme, 0.24)
+      ctx.fillStyle = rgb(korpus)
+      ctx.strokeStyle = rgb(palette.nacht, 0.85)
+      ctx.lineWidth = 1
+
+      if (g.art === 'backofen') {
+        rundesRechteck(ctx, -b / 2, -h / 2, b, h, 3)
+        ctx.fill()
+        ctx.stroke()
+        /* Die Tuer klappt im Flug auf und zu — das macht ihn erkennbar. */
+        const auf = (Math.sin(jetzt / 220 + g.id) * 0.5 + 0.5) * 0.9
+        ctx.save()
+        ctx.translate(-b / 2, h / 2)
+        ctx.rotate(auf)
+        ctx.fillStyle = rgb(palette.rot, 0.65)
+        ctx.fillRect(0, -h * 0.12, b * 0.8, h * 0.12)
+        ctx.restore()
+        ctx.fillStyle = rgb(palette.rot, 0.5 + 0.4 * auf)
+        ctx.fillRect(-b * 0.34, -h * 0.18, b * 0.68, h * 0.34)
+      } else if (g.art === 'kuehlschrank') {
+        rundesRechteck(ctx, -b / 2, -h / 2, b, h, 3)
+        ctx.fill()
+        ctx.stroke()
+        ctx.fillStyle = rgb(palette.creme, 0.5)
+        ctx.fillRect(-b / 2 + 2, -h * 0.06, b - 4, 1.4)
+        ctx.fillStyle = rgb(palette.hell, 0.85)
+        ctx.fillRect(b * 0.28, -h * 0.34, 2, h * 0.26)
+      } else if (g.art === 'spuelmaschine') {
+        rundesRechteck(ctx, -b / 2, -h / 2, b, h, 3)
+        ctx.fill()
+        ctx.stroke()
+        ctx.fillStyle = rgb(palette.creme, 0.22)
+        ctx.beginPath()
+        ctx.arc(0, 0, Math.min(b, h) * 0.3, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.fillStyle = rgb(palette.hell, 0.8)
+        ctx.fillRect(-b / 2 + 2, -h / 2 + 2, b - 4, 1.6)
+      } else if (g.art === 'topf') {
+        ctx.beginPath()
+        ctx.arc(0, 0, h * 0.5, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.stroke()
+        ctx.strokeStyle = rgb(palette.hell, 0.9)
+        ctx.lineWidth = 1.6
+        ctx.beginPath()
+        ctx.moveTo(-h * 0.62, 0)
+        ctx.lineTo(-h * 0.42, 0)
+        ctx.moveTo(h * 0.42, 0)
+        ctx.lineTo(h * 0.62, 0)
+        ctx.stroke()
+      } else if (g.art === 'pfanne') {
+        ctx.beginPath()
+        ctx.ellipse(0, 0, h * 0.52, h * 0.34, 0, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.stroke()
+        ctx.fillStyle = rgb(palette.hell, 0.85)
+        ctx.fillRect(h * 0.45, -1.2, b * 0.45, 2.4)
+      } else if (g.art === 'karton') {
+        ctx.fillStyle = rgb(mischen(palette.tief, palette.creme, 0.35))
+        ctx.fillRect(-b / 2, -h / 2, b, h)
+        ctx.stroke()
+        ctx.strokeStyle = rgb(palette.nacht, 0.5)
+        ctx.beginPath()
+        ctx.moveTo(0, -h / 2)
+        ctx.lineTo(0, h / 2)
+        ctx.stroke()
+      } else if (g.art === 'haube') {
+        /* Trapez: unten breit, oben schmal — die Dunstabzugshaube. */
+        ctx.beginPath()
+        ctx.moveTo(-b / 2, h / 2)
+        ctx.lineTo(b / 2, h / 2)
+        ctx.lineTo(b * 0.22, -h / 2)
+        ctx.lineTo(-b * 0.22, -h / 2)
+        ctx.closePath()
+        ctx.fill()
+        ctx.stroke()
+        ctx.fillStyle = rgb(palette.hell, 0.7)
+        ctx.fillRect(-b / 2 + 2, h / 2 - 2, b - 4, 1.6)
+      } else {
+        /* Spuelbecken: Wanne mit Hahn. */
+        rundesRechteck(ctx, -b / 2, -h * 0.3, b, h * 0.8, 3)
+        ctx.fill()
+        ctx.stroke()
+        ctx.strokeStyle = rgb(palette.hell, 0.9)
+        ctx.lineWidth = 1.6
+        ctx.beginPath()
+        ctx.moveTo(-b * 0.22, -h * 0.3)
+        ctx.quadraticCurveTo(-b * 0.22, -h * 0.75, b * 0.08, -h * 0.7)
+        ctx.stroke()
+      }
+      ctx.restore()
+      ctx.globalAlpha = 1
+    }
+
+    /** Eine Kraft, frei in der Luft: Muetze, Schuerze oder Turbo. */
+    const gabeMalen = (ctx, palette, cx, cy, s, gb, jetzt) => {
+      const alpha = gb.weg ? Math.max(0, (gb.wegBis - standRef.current.zeit) / 0.5) : 1
+      if (alpha <= 0) return
+      const r = GABE_R * s
+      const schweben = sanftRef.current ? 0 : Math.sin(jetzt / 300 + gb.id) * r * 0.22
+      ctx.save()
+      ctx.globalAlpha = alpha
+      ctx.translate(cx, cy + schweben)
+      const farbe = gb.art === 'schuerze' ? palette.gruen : palette.hell
+      /* Heller Hof, damit man sie von weitem sieht. */
+      const hof = ctx.createRadialGradient(0, 0, 0, 0, 0, r * 2.1)
+      hof.addColorStop(0, rgb(farbe, 0.4))
+      hof.addColorStop(1, rgb(farbe, 0))
+      ctx.fillStyle = hof
+      ctx.beginPath()
+      ctx.arc(0, 0, r * 2.1, 0, Math.PI * 2)
+      ctx.fill()
+
+      if (gb.art === 'muetze') {
+        muetzeMalen(ctx, r * 1.9, rgb(palette.hell), rgb(palette.tief))
+      } else if (gb.art === 'schuerze') {
+        ctx.fillStyle = rgb(palette.gruen)
+        ctx.beginPath()
+        ctx.moveTo(-r * 0.55, -r * 0.7)
+        ctx.lineTo(r * 0.55, -r * 0.7)
+        ctx.lineTo(r * 0.7, r * 0.8)
+        ctx.lineTo(-r * 0.7, r * 0.8)
+        ctx.closePath()
+        ctx.fill()
+        ctx.strokeStyle = rgb(palette.nacht, 0.7)
+        ctx.lineWidth = 1
+        ctx.stroke()
+        ctx.strokeStyle = rgb(palette.creme, 0.8)
+        ctx.beginPath()
+        ctx.moveTo(-r * 0.55, -r * 0.7)
+        ctx.lineTo(-r * 0.95, -r * 0.95)
+        ctx.moveTo(r * 0.55, -r * 0.7)
+        ctx.lineTo(r * 0.95, -r * 0.95)
+        ctx.stroke()
+      } else {
+        /* Turbo: Flammenpfeil nach oben. */
+        ctx.fillStyle = rgb(palette.hell)
+        ctx.beginPath()
+        ctx.moveTo(0, -r)
+        ctx.lineTo(r * 0.75, r * 0.15)
+        ctx.lineTo(r * 0.28, r * 0.15)
+        ctx.lineTo(r * 0.28, r)
+        ctx.lineTo(-r * 0.28, r)
+        ctx.lineTo(-r * 0.28, r * 0.15)
+        ctx.lineTo(-r * 0.75, r * 0.15)
+        ctx.closePath()
+        ctx.fill()
+        ctx.strokeStyle = rgb(palette.nacht, 0.7)
+        ctx.lineWidth = 1
+        ctx.stroke()
+      }
+      ctx.restore()
+      ctx.globalAlpha = 1
+    }
+
+    /**
+     * Die Kochmuetze. Eigenes Spielelement, nie Teil des Logos: sie wird
+     * separat gezeichnet, damit sie federn und wackeln darf, waehrend das
+     * Markenzeichen darunter unangetastet bleibt. Gezeichnet um (0,0) mit
+     * `br` als Gesamtbreite, Unterkante auf y = 0.
+     */
+    function muetzeMalen(ctx, br, fuellung, kante) {
+      const hb = br / 2
+      const bandH = br * 0.26
+      ctx.fillStyle = fuellung
+      ctx.strokeStyle = kante
+      ctx.lineWidth = 1
+      ctx.beginPath()
+      ctx.arc(-hb * 0.62, -bandH - hb * 0.42, hb * 0.48, 0, Math.PI * 2)
+      ctx.arc(hb * 0.62, -bandH - hb * 0.42, hb * 0.48, 0, Math.PI * 2)
+      ctx.arc(0, -bandH - hb * 0.66, hb * 0.55, 0, Math.PI * 2)
+      ctx.fill()
+      rundesRechteck(ctx, -hb, -bandH, br, bandH, bandH * 0.35)
+      ctx.fill()
+      ctx.stroke()
+    }
+
     const figurMalen = (ctx, palette, cx, fuss, s, jetzt) => {
       const w = FIGUR_B * s
       const h = FIGUR_H * s
@@ -827,44 +1200,96 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
       const bild = bildRef.current
       const sanftAn = sanftRef.current
       const seit = jetzt - bild.gelandet
+      /* Das Federn: 1 = ruhig, kleiner = gestaucht. Es wirkt NUR auf Muetze
+         und Schatten — das Logo selbst wird nie verzogen. */
       const stauch = !sanftAn && seit < STAUCHEN_MS ? 1 - 0.18 * (1 - seit / STAUCHEN_MS) : 1
       const neigung = sanftAn ? 0 : (stand.spieler.vx / VX_MAX) * 0.16
+      const muetzeAn = stand.muetzeBis > stand.zeit
+      const turboAn = stand.turboBis > stand.zeit
+      const blinkt = stand.unverwundbarBis > stand.zeit
+      /* Getroffen: die Figur flackert, solange sie unverwundbar ist. */
+      const sicht = blinkt && !sanftAn ? (Math.sin(jetzt / 45) > 0 ? 0.35 : 1) : 1
+
       ctx.save()
       ctx.translate(cx, fuss)
+
+      /* Schatten: federt mit, liegt aber flach auf der Platte. */
+      ctx.globalAlpha = 0.3 * sicht
+      ctx.fillStyle = rgb(palette.nacht)
+      ctx.beginPath()
+      ctx.ellipse(0, 0, (w * 0.46) / stauch, w * 0.12 * stauch, 0, 0, Math.PI * 2)
+      ctx.fill()
+      ctx.globalAlpha = 1
+
       ctx.rotate(neigung)
-      ctx.scale(2 - stauch, stauch)
 
-      /* Das goldene V, der Rumpf. */
-      const verlauf = ctx.createLinearGradient(0, -h, 0, 0)
-      verlauf.addColorStop(0, rgb(palette.hell))
-      verlauf.addColorStop(1, rgb(palette.tief))
-      ctx.beginPath()
-      ctx.moveTo(-w / 2, -h * 0.74)
-      ctx.lineTo(-w * 0.2, -h * 0.74)
-      ctx.lineTo(0, -h * 0.3)
-      ctx.lineTo(w * 0.2, -h * 0.74)
-      ctx.lineTo(w / 2, -h * 0.74)
-      ctx.lineTo(w * 0.06, 0)
-      ctx.lineTo(-w * 0.06, 0)
-      ctx.closePath()
-      ctx.fillStyle = verlauf
-      ctx.fill()
-      ctx.strokeStyle = rgb(palette.nacht, 0.8)
-      ctx.lineWidth = 1
-      ctx.stroke()
+      if (turboAn) {
+        /* Turbo: eine Flamme unter den Fuessen. */
+        const lang = h * (0.7 + 0.3 * Math.sin(jetzt / 40))
+        const flamme = ctx.createLinearGradient(0, 0, 0, lang)
+        flamme.addColorStop(0, rgb(palette.hell, 0.85))
+        flamme.addColorStop(1, rgb(palette.rot, 0))
+        ctx.fillStyle = flamme
+        ctx.beginPath()
+        ctx.moveTo(-w * 0.26, 0)
+        ctx.lineTo(w * 0.26, 0)
+        ctx.lineTo(0, lang)
+        ctx.closePath()
+        ctx.fill()
+      }
 
-      /* Kopf und Kochmuetze. */
-      ctx.beginPath()
-      ctx.arc(0, -h * 0.72, w * 0.13, 0, Math.PI * 2)
-      ctx.fillStyle = rgb(palette.hell)
-      ctx.fill()
-      ctx.fillStyle = rgb(palette.creme)
-      ctx.fillRect(-w * 0.14, -h * 0.94, w * 0.28, h * 0.12)
-      ctx.beginPath()
-      ctx.arc(-w * 0.09, -h * 0.98, w * 0.1, 0, Math.PI * 2)
-      ctx.arc(w * 0.09, -h * 0.98, w * 0.1, 0, Math.PI * 2)
-      ctx.arc(0, -h * 1.04, w * 0.11, 0, Math.PI * 2)
-      ctx.fill()
+      const koerper = h * 0.8
+      if (muetzeAn) {
+        /* Goldene Kochmuetze aktiv: ein warmer Hof um die ganze Figur. */
+        const hof = ctx.createRadialGradient(0, -koerper * 0.5, 0, 0, -koerper * 0.5, koerper)
+        hof.addColorStop(0, rgb(palette.hell, 0.45))
+        hof.addColorStop(1, rgb(palette.hell, 0))
+        ctx.fillStyle = hof
+        ctx.beginPath()
+        ctx.arc(0, -koerper * 0.5, koerper, 0, Math.PI * 2)
+        ctx.fill()
+      }
+      if (stand.schutz) {
+        /* Schutzschuerze: ein gruener Ring, der einen Treffer schluckt. */
+        ctx.strokeStyle = rgb(palette.gruen, 0.75)
+        ctx.lineWidth = 2
+        ctx.beginPath()
+        ctx.arc(0, -koerper * 0.5, koerper * 0.72, 0, Math.PI * 2)
+        ctx.stroke()
+      }
+
+      ctx.globalAlpha = sicht
+      /* DAS LOGO. Quadratisch aus der Datei, quadratisch aufs Feld:
+         gleichmaessig skaliert, sonst nichts. */
+      const logo = logoRef.current
+      if (logoDa(logo)) {
+        ctx.drawImage(logo, -koerper / 2, -koerper, koerper, koerper)
+      } else {
+        /* Solange die Datei laedt: eine neutrale goldene Scheibe. Bewusst
+           kein selbstgemaltes V — falsche Marke ist schlimmer als keine. */
+        ctx.fillStyle = rgb(palette.gold, 0.8)
+        ctx.beginPath()
+        ctx.arc(0, -koerper * 0.5, koerper * 0.38, 0, Math.PI * 2)
+        ctx.fill()
+      }
+
+      /* Die Muetze obenauf: sie federt und wackelt beim Landen nach. */
+      const wackel = !sanftAn && seit < STAUCHEN_MS * 3
+        ? Math.sin((seit / STAUCHEN_MS) * 4) * 0.22 * (1 - seit / (STAUCHEN_MS * 3))
+        : 0
+      ctx.save()
+      ctx.translate(0, -koerper * 0.94)
+      ctx.rotate(wackel)
+      ctx.scale(1 / stauch, stauch)
+      muetzeMalen(
+        ctx,
+        w * 0.72,
+        rgb(muetzeAn ? palette.hell : palette.creme),
+        rgb(palette.nacht, 0.7),
+      )
+      ctx.restore()
+
+      ctx.globalAlpha = 1
       ctx.restore()
     }
 
@@ -881,6 +1306,10 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
       const ctx = c.getContext('2d')
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
       ctx.clearRect(0, 0, breite, hoehe)
+      /* Screenshake (§7): verschiebt das ganze Bild, nie einzelne Teile. */
+      const stoss = fxRef.current.beben.versatz(jetzt - bebenUhr)
+      bebenUhr = jetzt
+      if (stoss.kraft) ctx.translate(stoss.x, stoss.y)
 
       /* Marmor laeuft langsamer mit als die Platten: Tiefe ohne Aufwand. */
       const marmor = marmorRef.current
@@ -928,6 +1357,12 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
         plattenMalen(ctx, p, palette, g, yBild, jetzt)
       }
 
+      /* Kraefte liegen hinter der Figur, die Kuechenteile davor. */
+      for (const gb of stand.gaben) {
+        if (gb.y > obenWelt || gb.y < kamera - 0.2) continue
+        gabeMalen(ctx, palette, x0 + gb.x * s, yBild(gb.y), s, gb, jetzt)
+      }
+
       /* Die Figur, am Rand zweimal, damit der Uebergang nahtlos ist. */
       const sp = stand.spieler
       const fuss = yBild(sp.y)
@@ -935,6 +1370,19 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
       figurMalen(ctx, palette, x0 + sp.x * s, fuss, s, jetzt)
       if (sp.x < halb) figurMalen(ctx, palette, x0 + (sp.x + 1) * s, fuss, s, jetzt)
       if (sp.x > 1 - halb) figurMalen(ctx, palette, x0 + (sp.x - 1) * s, fuss, s, jetzt)
+
+      for (const gg of stand.gegner) {
+        if (gg.y > obenWelt || gg.y < kamera - 0.3) continue
+        const gy = yBild(gg.y)
+        const ghalb = gg.b * 0.6
+        gegnerMalen(ctx, palette, x0 + gg.x * s, gy, s, gg, jetzt)
+        if (gg.x < ghalb) gegnerMalen(ctx, palette, x0 + (gg.x + 1) * s, gy, s, gg, jetzt)
+        if (gg.x > 1 - ghalb) gegnerMalen(ctx, palette, x0 + (gg.x - 1) * s, gy, s, gg, jetzt)
+      }
+
+      /* Funken und schwebende Zahlen ganz oben, aber noch im Spielfeld. */
+      fxRef.current.funken.malen(ctx)
+      fxRef.current.rufe.malen(ctx, rufFarben(palette))
       ctx.restore()
 
       /* Ist die Buehne zu flach, bleiben links und rechts dunkle Raender. */
@@ -984,7 +1432,25 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
           if (n >= SCHRITTE_MAX) speicher = 0
         }
         helfer.buchen()
+
+        /* Was gerade wirkt, oben anzeigen — als Text, nicht als Zahlenkolonne. */
+        const rest = (bis) => Math.max(0, Math.ceil(bis - stand.zeit))
+        const jetztKraefte = {
+          combo: stand.combo,
+          muetze: rest(stand.muetzeBis),
+          schutz: !!stand.schutz,
+          turbo: stand.turboBis > stand.zeit ? 1 : 0,
+        }
+        const schluessel = `${jetztKraefte.combo}|${jetztKraefte.muetze}|${jetztKraefte.schutz}|${jetztKraefte.turbo}`
+        if (schluessel !== kraefteMerk) {
+          kraefteMerk = schluessel
+          setKraefte(jetztKraefte)
+        }
       }
+      /* Effekte laufen auch in der Pause und nach dem Absturz aus. */
+      const dtMs = Math.min(250, Math.max(0, dt * 1000))
+      fxRef.current.funken.schritt(dtMs)
+      fxRef.current.rufe.schritt(dtMs)
       malen(jetzt)
       frame = requestAnimationFrame(schleife)
     }
@@ -1024,10 +1490,35 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
             onContextMenu={(e) => e.preventDefault()}
           >
             <canvas className="trm-jump-canvas" ref={canvasRef} aria-hidden="true" />
+            {/* Was gerade wirkt. Nur was wirklich an ist — sonst leer. */}
+            <span className="trm-jump-kraefte" aria-hidden="true">
+              {kraefte.combo >= COMBO_AB[0] && (
+                <span className="trm-jump-kraft" data-art="combo">×{kraefte.combo}</span>
+              )}
+              {kraefte.muetze > 0 && (
+                <span className="trm-jump-kraft" data-art="muetze">MÜTZE {kraefte.muetze}</span>
+              )}
+              {kraefte.schutz && <span className="trm-jump-kraft" data-art="schutz">SCHÜRZE</span>}
+              {kraefte.turbo > 0 && <span className="trm-jump-kraft" data-art="turbo">TURBO</span>}
+            </span>
             <span className="trm-jump-hinweis" aria-hidden="true">
               <span>‹ HALTEN</span>
               <span>HALTEN ›</span>
             </span>
+            {/* Ton: stumm startbar, Zustand bleibt ueber Runden hinweg. */}
+            <button
+              type="button"
+              className="sg-ton"
+              aria-pressed={ton}
+              aria-label={ton ? 'Ton aus' : 'Ton an'}
+              onPointerDown={(e) => e.stopPropagation()}
+              onKeyDown={(e) => {
+                if (e.key === ' ' || e.key === 'Enter') e.stopPropagation()
+              }}
+              onClick={() => setTon(tonUmschalten())}
+            >
+              {ton ? '♪' : '✕'}
+            </button>
             {/* Eigene Taste in der Buehne: ihr Tipp lenkt nicht und beendet
                 keine Pause. Pfeiltasten laufen weiter zur Buehne durch. */}
             <button

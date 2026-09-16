@@ -31,6 +31,11 @@ import {
   zerbrechlich,
   zufallMit,
 } from '../../src/components/spiele/jump-logik.js'
+import { SPIELE } from '../../api/_terminal-kern.js'
+
+/* Die Servergrenze wird nicht abgeschrieben, sondern gelesen: so kann der
+   Test nicht stillschweigend an der echten Pruefung vorbeilaufen. */
+const SERVER_MAX = SPIELE.videko_jump.maxJeRunde
 
 let gut = 0
 let schlecht = 0
@@ -119,10 +124,10 @@ pruefe(
 )
 for (const [i, r] of botErgebnisse.entries()) {
   console.log(`        Seed ${SEEDS[i]}: HOEHE ${r.hoehe}, ${r.runden} Runden, ${r.punkte} Punkte, ${r.zeit.toFixed(0)} s`)
-  pruefe(`Seed ${SEEDS[i]}: Punkte je Runde <= 400 (Server maxJeRunde)`, r.runden === 0 || r.punkte / r.runden <= 400, `${(r.punkte / Math.max(1, r.runden)).toFixed(0)}`)
+  pruefe(`Seed ${SEEDS[i]}: Punkte je Runde <= ${SERVER_MAX} (Server maxJeRunde)`, r.runden === 0 || r.punkte / r.runden <= SERVER_MAX, `${(r.punkte / Math.max(1, r.runden)).toFixed(0)}`)
   pruefe(`Seed ${SEEDS[i]}: keine Landung ueber MAX_JE_LANDUNG`, r.punkteMax <= MAX_JE_LANDUNG, `${r.punkteMax}`)
 }
-pruefe(`MAX_JE_LANDUNG ${MAX_JE_LANDUNG} <= 400`, MAX_JE_LANDUNG <= 400)
+pruefe(`MAX_JE_LANDUNG ${MAX_JE_LANDUNG} <= ${SERVER_MAX} (Server maxJeRunde)`, MAX_JE_LANDUNG <= SERVER_MAX)
 
 /* ------------------------------------------------------------------ */
 console.log('\nAbwechslung')

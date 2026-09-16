@@ -97,6 +97,70 @@ export const BREITE_MIN = 0.075
 /* Ab dieser HOEHE ist die volle Schwierigkeit erreicht. */
 export const VOLL_BEI = 600
 
+/* ------------------------------------------------------------------ */
+/* Kombo, Kraefte und fliegende Kuechenteile                            */
+/* ------------------------------------------------------------------ */
+
+/**
+ * KNAPP. Wer mit der aeussersten Fussspitze aufkommt, hat es knapp
+ * geschafft — und bekommt dafuer die Kombo. Gemessen wird der Abstand der
+ * Figurmitte zur Plattenmitte im Verhaeltnis zur groesstmoeglichen Auflage.
+ */
+export const KNAPP_ANTEIL = 0.62
+
+/**
+ * Dieselbe Kombo-Leiter wie in spielgefuehl.js (HEISS, KUECHENCHEF,
+ * KUECHE ESKALIERT, KOMPLETT GESTOERT). Hier stehen nur die Zahlen: die
+ * Logik kennt kein DOM und darf die Anzeige nicht importieren.
+ */
+export const COMBO_AB = [3, 5, 8, 10]
+export const COMBO_MULT = [1.5, 1.8, 2.2, 2.5]
+
+/** Der Kombo-Multiplikator fuer einen Stand. 1, solange keine Stufe erreicht ist. */
+export function comboFaktor(combo) {
+  let f = 1
+  for (let i = 0; i < COMBO_AB.length; i += 1) if (combo >= COMBO_AB[i]) f = COMBO_MULT[i]
+  return f
+}
+
+/* Kraefte. Die goldene Kochmuetze verdoppelt, Kombo und Muetze zusammen
+   sind bei MULT_MAX gedeckelt — sonst waere keine Obergrenze mehr zu
+   rechnen und der Server muesste jede Zahl glauben. */
+export const MUETZE_MULT = 2
+export const MUETZE_DAUER = 5
+export const MULT_MAX = 4
+
+/** Wie lange der Turbo traegt und wie schnell er steigt. */
+export const TURBO_DAUER = 1.6
+export const TURBO_V = 1.5
+
+/** Nach einem Treffer kurz unverwundbar, sonst schlaegt dasselbe Teil zweimal. */
+export const UNVERWUNDBAR = 0.9
+/** Ein Treffer wirft nach unten — er toetet nicht. Sterben kann man nur durch Fallen. */
+export const TREFFER_V = -0.55
+
+export const GABE_ARTEN = ['muetze', 'schuerze', 'turbo']
+export const GABE_R = 0.05
+export const GABE_AB_HOEHE = 40
+/* So viele Weltbreiten liegen mindestens zwischen zwei Kraeften. */
+export const GABE_ABSTAND = 2.2
+
+/** Was durch die Kueche fliegt. Alles Kuecheninventar, nichts Gefaehrliches. */
+export const GEGNER_ARTEN = ['backofen', 'kuehlschrank', 'spuelmaschine', 'topf', 'pfanne', 'karton', 'haube', 'spuelbecken']
+export const GEGNER_BREITE = {
+  backofen: 0.16,
+  kuehlschrank: 0.13,
+  spuelmaschine: 0.15,
+  topf: 0.1,
+  pfanne: 0.12,
+  karton: 0.12,
+  haube: 0.16,
+  spuelbecken: 0.14,
+}
+export const GEGNER_AB_HOEHE = 60
+export const GEGNER_H = 0.075
+export const GEGNER_ABSTAND = 1.1
+
 /* Neigung: ab NEIGUNG_EIN Grad lenkt es, unter NEIGUNG_AUS nicht mehr. */
 export const NEIGUNG_EIN = 7
 export const NEIGUNG_AUS = 3.5
@@ -213,6 +277,12 @@ export function regeln(hoehe) {
     gold: hoehe < 20 ? 0 : 0.07,
     herd: hoehe < 80 ? 0 : 0.06 + 0.16 * s,
     extra: 0.45 - 0.35 * s,
+    /* Kraefte werden nach oben hin seltener: oben sind sie mehr wert. */
+    gabe: hoehe < GABE_AB_HOEHE ? 0 : 0.17 - 0.06 * s,
+    /* Fliegende Kuechenteile: langsam mehr, aber nie so viele, dass der Weg
+       zu ist. Das Tempo waechst mit, die Dichte nur wenig. */
+    gegner: hoehe < GEGNER_AB_HOEHE ? 0 : 0.1 + 0.16 * s,
+    gegnerTempo: 0.2 + 0.34 * s,
   }
 }
 
@@ -401,6 +471,52 @@ export function kettenGlied(stand) {
     zusatz(r.glas && w < r.glas ? 'glas' : r.broeckel && w < r.glas + r.broeckel ? 'broeckel' : 'normal')
   }
   if (r.herd && z() < r.herd * (ab.art === 'zickzack' ? 1.4 : 1)) zusatz('herd')
+
+  gabeVielleicht(stand, basis, dy, hoehe, r)
+  gegnerVielleicht(stand, basis, dy, hoehe, r)
+}
+
+/**
+ * Eine Kraft in die Luecke zwischen zwei Kettengliedern. Sie haengt frei,
+ * man holt sie im Vorbeifliegen — nie ein Umweg, der nach unten fuehrt.
+ */
+function gabeVielleicht(stand, basis, dy, hoehe, r) {
+  if (!r.gabe || dy < 0.12) return
+  const z = stand.zufall
+  if (z() >= r.gabe) return
+  const y = basis + dy * 0.5
+  if (y - stand.letzteGabe < GABE_ABSTAND) return
+  const w = z()
+  const art = w < 0.42 ? 'muetze' : w < 0.78 ? 'schuerze' : 'turbo'
+  stand.naechsteId += 1
+  stand.gaben.push({ id: stand.naechsteId, art, x: klemmen(z(), GABE_R, 1 - GABE_R), y, weg: false })
+  stand.letzteGabe = y
+}
+
+/**
+ * Ein fliegendes Kuechenteil zwischen zwei Gliedern. Es zieht waagerecht
+ * durch den Ring, ist schmal und immer sichtbar unterwegs: ausweichen geht
+ * seitlich, und wer getroffen wird, faellt — er stirbt nicht.
+ */
+function gegnerVielleicht(stand, basis, dy, hoehe, r) {
+  if (!r.gegner || dy < 0.14) return
+  const z = stand.zufall
+  if (z() >= r.gegner) return
+  const y = basis + dy * (0.35 + 0.3 * z())
+  if (y - stand.letzterGegner < GEGNER_ABSTAND) return
+  const art = GEGNER_ARTEN[Math.floor(z() * GEGNER_ARTEN.length) % GEGNER_ARTEN.length]
+  stand.naechsteId += 1
+  stand.gegner.push({
+    id: stand.naechsteId,
+    art,
+    x: z(),
+    y,
+    b: GEGNER_BREITE[art] || 0.13,
+    v: r.gegnerTempo * (0.7 + 0.6 * z()) * (z() < 0.5 ? -1 : 1),
+    dreh: 0,
+    weg: false,
+  })
+  stand.letzterGegner = y
 }
 
 /** Platten bis ueber den Bildrand nachlegen, alte unter dem Rand vergessen. */
@@ -410,6 +526,9 @@ export function nachfuellen(stand) {
   if (stand.platten.length && stand.platten[0].y < grenze) {
     stand.platten = stand.platten.filter((p) => p.y >= grenze || (p.weg && p.y > grenze - 2))
   }
+  /* Eingesammeltes und Weggeflogenes darf nicht im Speicher liegen bleiben. */
+  if (stand.gaben.length && stand.gaben[0].y < grenze) stand.gaben = stand.gaben.filter((g) => g.y >= grenze && !g.weg)
+  if (stand.gegner.length && stand.gegner[0].y < grenze) stand.gegner = stand.gegner.filter((g) => g.y >= grenze && !g.weg)
 }
 
 function standNeu(startwert) {
@@ -421,12 +540,26 @@ function standNeu(startwert) {
     anker: null,
     abschnitt: null,
     letztesGold: -10,
+    gaben: [],
+    gegner: [],
+    letzteGabe: -10,
+    letzterGegner: -10,
     spieler: { x: 0.5, y: 0, vx: 0, vy: ABSPRUNG },
     kamera: -0.2,
     hoehe: 0,
     punkte: 0,
     runden: 0,
     zeit: 0,
+    /* Kombo und Kraefte. `muetzeBis`/`turboBis`/`unverwundbarBis` zaehlen in
+       stand.zeit, nicht in echter Uhrzeit — die Logik kennt keine Uhr. */
+    combo: 0,
+    comboBest: 0,
+    knapp: 0,
+    muetzeBis: 0,
+    turboBis: 0,
+    unverwundbarBis: 0,
+    schutz: false,
+    treffer: 0,
     vorbei: false,
     erzeugen: true,
   }
@@ -492,9 +625,17 @@ export function erreichbar(von, nach) {
   return reichweite(t) >= Math.max(0, noetig)
 }
 
+/** Trifft ein fliegendes Kuechenteil die Figur? Auf dem Ring gemessen. */
+export function trifft(g, s) {
+  if (Math.abs(ringAbstand(g.x, s.x)) > g.b / 2 + FIGUR_B / 2) return false
+  const oben = s.y + FIGUR_H
+  return !(oben < g.y - GEGNER_H / 2 || s.y > g.y + GEGNER_H / 2)
+}
+
 /**
  * Ein fester Schritt. `richtung` ist -1, 0 oder 1. Gibt die Ereignisse
- * dieses Schritts zurueck: landung, heiss, absturz.
+ * dieses Schritts zurueck: landung, durchflug, heiss, gabe, schutz,
+ * treffer, absturz.
  */
 export function schritt(stand, richtung = 0) {
   const ereignisse = []
@@ -528,6 +669,23 @@ export function schritt(stand, richtung = 0) {
     }
   }
 
+  /* Fliegende Kuechenteile ziehen waagerecht durch den Ring. Getroffenes
+     bleibt kurz zum Ansehen liegen und wird dann weggeraeumt (§15). */
+  let aufraeumen = false
+  for (const g of stand.gegner) {
+    if (g.weg) {
+      if (stand.zeit > g.wegBis) aufraeumen = true
+      continue
+    }
+    g.x = umbrechen(g.x + g.v * dt)
+    g.dreh += g.v * dt * 6
+  }
+  for (const gb of stand.gaben) if (gb.weg && stand.zeit > gb.wegBis) aufraeumen = true
+  if (aufraeumen) {
+    stand.gegner = stand.gegner.filter((g) => !g.weg || stand.zeit <= g.wegBis)
+    stand.gaben = stand.gaben.filter((g) => !g.weg || stand.zeit <= g.wegBis)
+  }
+
   const s = stand.spieler
   const ziel = richtung * VX_MAX
   if (richtung !== 0) {
@@ -540,10 +698,29 @@ export function schritt(stand, richtung = 0) {
   s.x = umbrechen(s.x + s.vx * dt)
 
   const vorher = s.y
-  s.vy -= SCHWERE * dt
-  s.y += s.vy * dt
+  const turbo = stand.turboBis > stand.zeit
+  if (turbo) {
+    /* Turbo traegt mit fester Geschwindigkeit nach oben — keine Schwerkraft,
+       aber auch kein Sprung ins Nichts: danach faellt die Figur normal. */
+    s.vy = TURBO_V
+    s.y += s.vy * dt
+  } else {
+    s.vy -= SCHWERE * dt
+    s.y += s.vy * dt
+  }
 
-  if (s.vy <= 0) {
+  if (turbo) {
+    /* Was auf dem Weg nach oben durchflogen wird, zaehlt einzeln. So bleibt
+       die Punktzahl je Runde genauso gedeckelt wie bei einer Landung. */
+    const durch = stand.platten
+      .filter((p) => p.kette && !p.weg && !p.beruehrt && p.art !== 'herd' && p.y > vorher && p.y <= s.y)
+      .sort((a, b) => a.y - b.y)
+    for (const p of durch) {
+      const e = { art: 'durchflug', platte: p, neu: false, punkte: 0, gold: false, meilenstein: 0, hoehe: stand.hoehe }
+      werten(stand, p, e, false)
+      ereignisse.push(e)
+    }
+  } else if (s.vy <= 0) {
     let treffer = null
     for (const p of stand.platten) {
       if (p.weg || p.art === 'herd') continue
@@ -559,6 +736,42 @@ export function schritt(stand, richtung = 0) {
       }
     }
     if (treffer) ereignisse.push(landen(stand, treffer))
+  }
+
+  /* Kraefte einsammeln. Sie liegen frei in der Luft, man nimmt sie im
+     Vorbeifliegen mit — auch waehrend des Turbos. */
+  for (const gb of stand.gaben) {
+    if (gb.weg) continue
+    if (Math.abs(ringAbstand(gb.x, s.x)) > GABE_R + FIGUR_B / 2) continue
+    if (Math.abs(gb.y - (s.y + FIGUR_H / 2)) > GABE_R + FIGUR_H / 2) continue
+    gb.weg = true
+    gb.wegBis = stand.zeit + 0.5
+    if (gb.art === 'muetze') stand.muetzeBis = stand.zeit + MUETZE_DAUER
+    else if (gb.art === 'schuerze') stand.schutz = true
+    else stand.turboBis = stand.zeit + TURBO_DAUER
+    ereignisse.push({ art: 'gabe', gabe: gb, gart: gb.art })
+  }
+
+  /* Treffer. Im Turbo raeumt die Figur alles beiseite, und nach einem
+     Treffer ist sie kurz unverwundbar — sonst schlaegt dasselbe Teil
+     zweimal. Ein Treffer toetet nie: er wirft nur nach unten. */
+  if (!turbo && stand.unverwundbarBis <= stand.zeit) {
+    for (const g of stand.gegner) {
+      if (g.weg || !trifft(g, s)) continue
+      g.weg = true
+      g.wegBis = stand.zeit + 0.5
+      stand.unverwundbarBis = stand.zeit + UNVERWUNDBAR
+      if (stand.schutz) {
+        stand.schutz = false
+        ereignisse.push({ art: 'schutz', gegner: g })
+      } else {
+        stand.combo = 0
+        stand.treffer += 1
+        s.vy = Math.min(s.vy, TREFFER_V)
+        ereignisse.push({ art: 'treffer', gegner: g })
+      }
+      break
+    }
   }
 
   if (stand.erzeugen) {
@@ -592,17 +805,54 @@ function landen(stand, p) {
     }
   }
   if (p.beruehrt) return ereignis
+  werten(stand, p, ereignis, true)
+  return ereignis
+}
 
+/**
+ * Eine neue Platte werten. Wird von der Landung und vom Turbo-Durchflug
+ * benutzt, damit beide Wege dieselbe Punktobergrenze haben.
+ * `knappPruefen` ist im Turbo aus: dort steuert niemand, also gibt es dort
+ * auch keine Kombo zu verdienen.
+ */
+function werten(stand, p, ereignis, knappPruefen) {
+  const s = stand.spieler
   p.beruehrt = true
   ereignis.neu = true
   stand.runden += 1
+
+  /* KNAPP: mit der aeussersten Fussspitze aufgekommen. Der Boden zaehlt
+     nicht — auf ihm kann man gar nicht danebentreten. */
+  if (knappPruefen) {
+    const rand = Math.abs(ringAbstand(p.x, s.x))
+    if (p.art !== 'boden' && rand >= (p.b / 2 + FUSS) * KNAPP_ANTEIL) {
+      stand.combo += 1
+      stand.knapp += 1
+      if (stand.combo > stand.comboBest) stand.comboBest = stand.combo
+      ereignis.knapp = true
+      if (COMBO_AB.includes(stand.combo)) ereignis.comboStufe = stand.combo
+    } else {
+      stand.combo = 0
+    }
+  }
+  ereignis.combo = stand.combo
+
+  const muetze = stand.muetzeBis > stand.zeit
+  const mult = Math.min(MULT_MAX, comboFaktor(stand.combo) * (muetze ? MUETZE_MULT : 1))
+  ereignis.mult = mult
+  ereignis.muetze = muetze
+
   const hoehe = hoeheVon(p.y)
+  /* Was der Multiplikator hebt, und was nicht: der Meilenstein ist eine
+     feste Wegmarke und bleibt fest — sonst waere keine Obergrenze mehr
+     zu rechnen. */
   let punkte = 0
+  let fest = 0
   if (hoehe > stand.hoehe) {
     punkte += (hoehe - stand.hoehe) * PUNKTE_JE_HOEHE
     const stufen = Math.floor(hoehe / MEILENSTEIN) - Math.floor(stand.hoehe / MEILENSTEIN)
     if (stufen > 0) {
-      punkte += stufen * MEILENSTEIN_BONUS
+      fest += stufen * MEILENSTEIN_BONUS
       ereignis.meilenstein = Math.floor(hoehe / MEILENSTEIN) * MEILENSTEIN
     }
     stand.hoehe = hoehe
@@ -611,14 +861,19 @@ function landen(stand, p) {
     punkte += GOLD_BONUS
     ereignis.gold = true
   }
-  stand.punkte += punkte
-  ereignis.punkte = punkte
+  const gesamt = Math.round(punkte * mult) + fest
+  stand.punkte += gesamt
+  ereignis.punkte = gesamt
   ereignis.hoehe = stand.hoehe
-  return ereignis
 }
 
-/** Die hoechste denkbare Punktzahl einer einzigen Landung — fuer Tests und Server. */
+/**
+ * Die hoechste denkbare Punktzahl einer einzigen Landung — fuer Tests und
+ * fuer die Plausibilitaetsgrenze des Servers. Hoehenpunkte und Goldbonus
+ * gehen mal dem groesstmoeglichen Multiplikator, der feste Meilenstein
+ * kommt unveraendert obendrauf.
+ */
 export const MAX_JE_LANDUNG =
-  (Math.ceil(SPRUNG_HOEHE * GOLD_FAKTOR * GOLD_FAKTOR * HOEHE_JE_EINHEIT) + 1) * PUNKTE_JE_HOEHE +
-  GOLD_BONUS +
+  ((Math.ceil(SPRUNG_HOEHE * GOLD_FAKTOR * GOLD_FAKTOR * HOEHE_JE_EINHEIT) + 1) * PUNKTE_JE_HOEHE + GOLD_BONUS) *
+    MULT_MAX +
   MEILENSTEIN_BONUS

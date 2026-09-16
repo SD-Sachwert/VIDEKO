@@ -53,6 +53,48 @@
   opacity: 0;
 }
 
+/* Kraefte-Leiste: liegt unter den beiden Ecktasten, mittig, und ist leer,
+   solange nichts wirkt. Sie umbricht statt aus dem Bild zu laufen. */
+.trm-jump-kraefte {
+  position: absolute;
+  top: 54px;
+  left: 8px;
+  right: 8px;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+  pointer-events: none;
+}
+
+.trm-jump-kraft {
+  padding: 3px 7px;
+  border: 1px solid var(--trm-gold-tief);
+  border-radius: 2px;
+  background: rgba(3, 3, 2, 0.62);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--trm-gold-hell);
+  white-space: nowrap;
+}
+
+.trm-jump-kraft[data-art='schutz'] {
+  border-color: var(--trm-gruen, #57c47c);
+  color: var(--trm-gruen, #57c47c);
+}
+
+.trm-jump-kraft[data-art='turbo'],
+.trm-jump-kraft[data-art='muetze'] {
+  border-color: var(--trm-gold-hell);
+  background: rgba(201, 150, 60, 0.2);
+}
+
+.trm-jump-kraft[data-art='combo'] {
+  font-size: 11px;
+}
+
 /* Optionale Neigungssteuerung: kleine Goldkante oben links, 44 px Tippflaeche.
    Fragt erst beim Tipp nach dem Sensor, nie beim Laden. */
 .trm-jump-neigung {

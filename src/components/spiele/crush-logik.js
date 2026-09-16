@@ -17,25 +17,49 @@
  *
  * SONDERTEILE
  * -----------
- * Vier in einer Linie: BOOSTER. Er behaelt seinen Typ und raeumt beim
- * Abraeumen seine Reihe (aus einer waagerechten Vier) oder Spalte (aus einer
- * senkrechten). Fuenf in einer Linie oder eine L/T-Form: VIDEKO-BOMBE. Sie
- * wird mit einem beliebigen Nachbarn getauscht und raeumt alle Steine von
- * dessen Typ; zwei Bomben raeumen das ganze Feld.
+ * Fuenf davon, und jedes entsteht anders:
+ *
+ *   REIHEN-BLASTER   'reihe'   waagerechte Vier. Raeumt seine Reihe.
+ *   SPALTEN-BLASTER  'spalte'  senkrechte Vier. Raeumt seine Spalte.
+ *   BACKOFEN-BOMBE   'ofen'    L- oder T-Form. Raeumt 3×3 um sich herum.
+ *   VIDEKO-SYMBOL    'bombe'   fuenf in einer Linie. Typ 0, passt zu nichts.
+ *                              Getauscht raeumt es alle Steine vom Typ des
+ *                              Nachbarn; zwei davon raeumen das ganze Feld.
+ *   KUEHLSCHRANK     'frost'   faellt ab der dritten Kaskadenstufe von selbst
+ *                              nach. Ein ganz normaler Stein — wer ihn
+ *                              wegraeumt, friert die Uhr fuer FROST_MS ein.
+ *
+ * MEGA-KOMBO
+ * ----------
+ * Zwei wirksame Sonderteile lassen sich direkt miteinander tauschen, auch
+ * ohne Linie. Beide zuenden dann gemeinsam: Reihe + Spalte ergibt das Kreuz,
+ * Symbol + Symbol das leere Feld. Sind beide vom selben Schlag, zuenden sie
+ * mit WUCHT — drei Reihen statt einer, drei Spalten statt einer, 5×5 statt
+ * 3×3. Das ist der groesste Moment, den das Spiel kennt.
  *
  * WERTUNG
  * -------
  * Je Schritt: geraeumte Steine × 30 × Kaskadenfaktor (1, 2, 3, 5, 8, 12 —
- * danach bleibt es bei 12), dazu 150 je entstandenem Booster und 400 je
- * entstandener Bombe. Dann zwei Faktoren fuer den ganzen Zug:
+ * danach bleibt es bei 12), dazu 150 je entstandenem Blaster oder Backofen
+ * und 400 je entstandenem Symbol. Dann zwei Faktoren fuer den ganzen Zug:
  *
  *   TEMPO   Wer innerhalb von SERIE_MS nach dem Freiwerden wieder tauscht,
  *           steigt eine Tempostufe: ×1 → ×1,2 → ×1,4 → ×1,6.
  *           Langsamer Zug oder Fehltausch: zurueck auf ×1.
  *   FINALE  Die letzten 5 Sekunden zaehlen doppelt (FINALE ×2).
  *
- * Ein Zug bringt hoechstens ZUG_PUNKTE_MAX — auch zwei Bomben im Finale mit
+ * Ein Zug bringt hoechstens ZUG_PUNKTE_MAX — auch zwei Symbole im Finale mit
  * voller Tempostufe nicht mehr. Die Servergrenze maxJeRunde liegt darueber.
+ *
+ * DIE UHR LAEUFT RUECKWAERTS, ABER NICHT NUR
+ * ------------------------------------------
+ * Die Runde startet mit START_MS. Jeder Treffer gibt Zeit zurueck: ein
+ * normaler Dreier wenig, eine Vier mehr, eine Fuenf am meisten, jede weitere
+ * Kaskadenstufe legt drauf. Wer schlecht spielt, verbraucht mehr Zeit als er
+ * zurueckbekommt und bleibt bei rund einer Minute. Wer gut spielt, haelt die
+ * Runde offen — bis DECKEL_MS. Diese Decke ist die einzige Grenze, die
+ * niemand verschieben kann, und sie ist der Grund, warum die Servergrenzen
+ * trotz Zeitbonus rechenbar bleiben.
  */
 
 export const BREITE = 7
@@ -56,6 +80,55 @@ export const ZUG_PUNKTE_MAX = 4000
 /* Alte Namen, damit nichts bricht, das noch darauf zeigt. */
 export const ENDSPURT_MS = FINALE_MS
 export const ENDSPURT_FAKTOR = FINALE_FAKTOR
+
+/* ---- Die Uhr -------------------------------------------------------
+   START_MS ist die Rundenlaenge, die der Server ausgibt; der Wert hier
+   ist nur die Kopie fuer Tests und Simulation. DECKEL_MS ist die harte
+   Obergrenze inklusive aller Zeitboni — laenger wird eine Runde nie,
+   egal wie gut jemand spielt. Aus dieser Decke leitet sich spaeter die
+   Servergrenze ab. SPANNUNG_MS markiert, ab wann es eng aussieht,
+   FINALE_MS (5 s) bleibt der Punkt, ab dem doppelt gezaehlt wird. */
+export const START_MS = 45000
+export const DECKEL_MS = 110000
+export const SPANNUNG_MS = 10000
+
+/* ---- Zeit zurueck ---------------------------------------------------
+   Je geraeumtem Schritt. Ein Dreier deckt nicht einmal die halbe
+   Sekunde, die ein ruhiger Zug kostet — wer traeg spielt, verliert
+   also weiter Zeit. Erst Vierer, Fuenfer und Kaskaden drehen die
+   Bilanz. Die Tempostufe legt bis zu 45 Prozent drauf. */
+export const ZEIT_DREI = 500
+export const ZEIT_VIER = 1500
+export const ZEIT_FUENF = 2000
+export const ZEIT_JE_KOMBO = 300
+export const ZEIT_KOMBO_MAX = 1500
+export const ZEIT_TEMPO_ANTEIL = 0.15
+/* Auch die beste Doppelbombe verlaengert die Runde nur um diese Spanne. */
+export const ZUG_ZEIT_MAX = 6000
+
+/* ---- Kuehlschrank ---------------------------------------------------
+   Faellt ab dieser Kaskadenstufe von selbst ins Feld nach und friert
+   beim Abraeumen die Uhr ein. */
+export const FROST_MS = 2500
+export const FROST_AB_KOMBO = 3
+
+/* ---- Backofen -------------------------------------------------------
+   Radius um das Teil herum: 1 ergibt 3×3, mit Wucht aus einer
+   Mega-Kombo 2 und damit 5×5. */
+export const OFEN_RADIUS = 1
+export const OFEN_RADIUS_WUCHT = 2
+
+/* Sonderteile, die beim Zuenden wirklich etwas abraeumen. Nur zwei
+   solche Teile lassen sich direkt miteinander tauschen — der
+   Kuehlschrank ist bewusst nicht dabei, sonst waere ein Frost-Paar
+   geschenkte Zeit. */
+export const WIRKSAM = ['reihe', 'spalte', 'ofen', 'bombe']
+const WIRKSAM_SATZ = new Set(WIRKSAM)
+
+/** Zuendet dieses Teil beim Abraeumen? */
+export function istWirksam(stein) {
+  return !!stein && WIRKSAM_SATZ.has(stein.spezial)
+}
 
 /* Taktung. Die Komponente haelt die Eingabe waehrend der Aufloesung
    gesperrt und gibt sie frei, sobald der letzte Fall fast liegt
@@ -225,13 +298,18 @@ export function hatTreffer(feld) {
   return false
 }
 
-/** Ist dieser Tausch gueltig? Bombe dabei oder mindestens eine Linie danach. */
+/**
+ * Ist dieser Tausch gueltig? Drei Wege fuehren hin: eine Bombe ist dabei,
+ * zwei wirksame Sonderteile treffen aufeinander (Mega-Kombo), oder es
+ * entsteht schlicht eine Linie.
+ */
 export function tauschGueltig(feld, a, b) {
   if (!benachbart(a, b) || !imFeld(...a) || !imFeld(...b)) return false
   const sa = feld[a[1]][a[0]]
   const sb = feld[b[1]][b[0]]
   if (!sa || !sb) return false
   if (sa.spezial === 'bombe' || sb.spezial === 'bombe') return true
+  if (istWirksam(sa) && istWirksam(sb)) return true
   if (sa.typ === sb.typ) return false
   feld[a[1]][a[0]] = sb
   feld[b[1]][b[0]] = sa
@@ -339,45 +417,79 @@ function haeufigsterTyp(feld, ausser) {
 }
 
 /**
- * Die Raeumung ausweiten: Booster im Raeumbereich zuenden ihre Reihe oder
- * Spalte, eine getroffene Bombe den haeufigsten Typ. Frisch entstandene
+ * Die Raeumung ausweiten: Blaster im Raeumbereich zuenden ihre Reihe oder
+ * Spalte, der Backofen sein Quadrat, eine getroffene Bombe den haeufigsten
+ * Typ. Kuehlschraenke zuenden nichts — sie werden nur gezaehlt, weil jeder
+ * geraeumte Kuehlschrank spaeter die Uhr einfriert. Frisch entstandene
  * Sonderteile (`geschuetzt`) bleiben stehen.
+ *
+ * `wucht` ist der Satz der Zellen, die aus einer Mega-Kombo kommen. Was
+ * dort zuendet, zuendet breiter: drei Reihen statt einer, drei Spalten
+ * statt einer, 5×5 statt 3×3.
  */
-function ausweiten(feld, raeumen, geschuetzt, schonGezuendet = null) {
+function ausweiten(feld, raeumen, geschuetzt, schonGezuendet = null, wucht = null) {
   const offen = [...raeumen.values()]
   let booster = 0
   let bomben = 0
+  let frost = 0
   const effekte = []
   const dazu = (x, y) => {
+    if (!imFeld(x, y)) return
     const k = schluessel(x, y)
     if (raeumen.has(k) || geschuetzt.has(k) || !feld[y][x]) return
     raeumen.set(k, [x, y])
     offen.push([x, y])
   }
+  const mitWucht = (x, y) => !!wucht && wucht.has(schluessel(x, y))
   while (offen.length) {
     const [x, y] = offen.pop()
     const s = feld[y][x]
     if (!s || !s.spezial) continue
+    if (s.spezial === 'frost') {
+      frost += 1
+      effekte.push({ art: 'frost', x, y })
+      continue
+    }
     /* Die getauschte Bombe hat schon gewirkt, sie zuendet nicht ein zweites Mal. */
     if (schonGezuendet && schonGezuendet.has(schluessel(x, y))) continue
+    const stark = mitWucht(x, y)
     if (s.spezial === 'reihe') {
       booster += 1
-      effekte.push({ art: 'reihe', x, y })
-      for (let i = 0; i < BREITE; i += 1) dazu(i, y)
+      effekte.push({ art: 'reihe', x, y, stark })
+      const von = stark ? y - 1 : y
+      const bis = stark ? y + 1 : y
+      for (let yy = von; yy <= bis; yy += 1) {
+        if (yy < 0 || yy >= HOEHE) continue
+        for (let i = 0; i < BREITE; i += 1) dazu(i, yy)
+      }
     } else if (s.spezial === 'spalte') {
       booster += 1
-      effekte.push({ art: 'spalte', x, y })
-      for (let i = 0; i < HOEHE; i += 1) dazu(x, i)
+      effekte.push({ art: 'spalte', x, y, stark })
+      const von = stark ? x - 1 : x
+      const bis = stark ? x + 1 : x
+      for (let xx = von; xx <= bis; xx += 1) {
+        if (xx < 0 || xx >= BREITE) continue
+        for (let i = 0; i < HOEHE; i += 1) dazu(xx, i)
+      }
+    } else if (s.spezial === 'ofen') {
+      /* Der Backofen zaehlt als Booster: 3×3 raeumt neun Felder, eine
+         Reihe sieben — nah genug beieinander, um gleich zu werten. */
+      booster += 1
+      const r = stark ? OFEN_RADIUS_WUCHT : OFEN_RADIUS
+      effekte.push({ art: 'ofen', x, y, r, stark })
+      for (let yy = y - r; yy <= y + r; yy += 1) {
+        for (let xx = x - r; xx <= x + r; xx += 1) dazu(xx, yy)
+      }
     } else if (s.spezial === 'bombe') {
       bomben += 1
       const typ = haeufigsterTyp(feld, raeumen)
-      effekte.push({ art: 'bombe', x, y, typ })
+      effekte.push({ art: 'bombe', x, y, typ, stark })
       for (let yy = 0; yy < HOEHE; yy += 1) {
         for (let xx = 0; xx < BREITE; xx += 1) if (feld[yy][xx]?.typ === typ) dazu(xx, yy)
       }
     }
   }
-  return { booster, bomben, effekte }
+  return { booster, bomben, frost, effekte }
 }
 
 /** Schwerkraft und Nachschub. Liefert, wie weit neue Steine von oben fallen. */
@@ -447,7 +559,11 @@ function schrittPlanen(feld, bewegt, bombenRaeumung) {
       const laengste = Math.max(...gruppe.laeufe.map((l) => l.zellen.length))
       const kreuz = gruppe.laeufe.some((l) => l.richtung === 'h') && gruppe.laeufe.some((l) => l.richtung === 'v')
       let art = null
-      if (laengste >= 5 || kreuz) art = 'bombe'
+      /* Fuenf in einer Linie bleibt das VIDEKO-Symbol. Die L- und T-Form
+         gibt jetzt den Backofen — 3×3 mitten im Feld statt einer zweiten
+         Wildcard. Das trennt die beiden Treffer sauber voneinander. */
+      if (laengste >= 5) art = 'bombe'
+      else if (kreuz) art = 'ofen'
       else if (laengste === 4) art = gruppe.laeufe[0].richtung === 'h' ? 'reihe' : 'spalte'
       const platz = art ? sonderPlatz(feld, gruppe, bewegt, kreuz) : null
       for (const [k, p] of gruppe.zellen) {
@@ -470,7 +586,13 @@ function schrittPlanen(feld, bewegt, bombenRaeumung) {
     }
   }
   if (!raeumen.size && !neuSpezial.length) return null
-  const zuendung = ausweiten(feld, raeumen, geschuetzt, bombenRaeumung ? bombenRaeumung.gezuendet : null)
+  const zuendung = ausweiten(
+    feld,
+    raeumen,
+    geschuetzt,
+    bombenRaeumung ? bombenRaeumung.gezuendet : null,
+    bombenRaeumung ? bombenRaeumung.wucht : null,
+  )
   effekte.push(...zuendung.effekte)
   return {
     raeumen,
@@ -478,6 +600,7 @@ function schrittPlanen(feld, bewegt, bombenRaeumung) {
     effekte,
     gezuendetBooster: zuendung.booster,
     gezuendetBomben: gezuendetBomben + zuendung.bomben,
+    gezuendetFrost: zuendung.frost,
   }
 }
 
@@ -549,6 +672,72 @@ export function zugPunkte(schritte, { tempoStufe = 0, finale = false } = {}) {
   return { jeSchritt, multi, summe, gedeckelt }
 }
 
+/**
+ * Wie viel Zeit ein Zug zurueckgibt — die zweite Waehrung neben den
+ * Punkten. Ein Zug zahlt EINMAL den Treffer-Bonus (Dreier, Vierer,
+ * Fuenfer), und zwar fuer seinen besten Treffer, plus je Kaskadenstufe
+ * einen Zuschlag. Dazu FROST_MS je geraeumtem Kuehlschrank. Alles mal
+ * Tempostufe, die Summe auf ZUG_ZEIT_MAX gedeckelt.
+ *
+ * Wichtig ist das "einmal": zahlte jeder Kaskadenschritt den vollen
+ * Treffer-Bonus erneut, liefe auch ein blind gespielter Zug auf mehrere
+ * Sekunden hinaus und selbst ein schwacher Spieler haette die Runde
+ * dauerhaft am Deckel. So bleibt der Grundbonus klein und planbar, und
+ * der Unterschied kommt aus der Kaskade — genau da, wo das Koennen sitzt.
+ *
+ * `jeSchritt` summiert sich genau zu `summe`, damit die Komponente die
+ * Sekunden schrittweise gutschreiben und anzeigen kann. `jeFrost` haelt
+ * getrennt fest, welcher Anteil aus Kuehlschraenken kam — nur dafuer
+ * zeigt die Anzeige den Frost-Effekt.
+ */
+export function zugZeit(schritte, { tempoStufe = 0 } = {}) {
+  const tempo = 1 + ZEIT_TEMPO_ANTEIL * Math.max(0, Math.min(TEMPO_STUFE_MAX, Math.floor(tempoStufe) || 0))
+  const liste = schritte || []
+  /* Ein frisch entstandenes Sonderteil bleibt stehen und faellt damit aus
+     `anzahl` heraus: ein Vierer raeumt drei Steine, ein Fuenfer vier. Fuer
+     den Zeitbonus zaehlt aber die Laenge des Treffers, nicht der Abtrag —
+     sonst gaebe der Vierer nur den Dreier-Bonus. */
+  const laengen = liste.map((s) => (s.anzahl || 0) + (s.booster || 0) + (s.bomben || 0))
+  const trefferWert = (n) => (n >= 5 ? ZEIT_FUENF : n === 4 ? ZEIT_VIER : n >= 3 ? ZEIT_DREI : 0)
+
+  /* Der beste Treffer des Zuges — und der Schritt, an dem er sichtbar wird. */
+  let besterWert = 0
+  let besterSchritt = -1
+  for (let i = 0; i < liste.length; i += 1) {
+    const w = trefferWert(laengen[i])
+    if (w > besterWert) {
+      besterWert = w
+      besterSchritt = i
+    }
+  }
+
+  const jeSchritt = []
+  const jeFrost = []
+  let summe = 0
+  let gedeckelt = false
+  const rest = () => Math.max(0, ZUG_ZEIT_MAX - summe)
+  for (let i = 0; i < liste.length; i += 1) {
+    const s = liste[i]
+    let basis = i === besterSchritt ? besterWert : 0
+    if (laengen[i] >= 3) basis += Math.min(ZEIT_KOMBO_MAX, Math.max(0, (s.kombo || 1) - 1) * ZEIT_JE_KOMBO)
+    let wert = Math.round((basis * tempo) / 10) * 10
+    if (wert > rest()) {
+      wert = rest()
+      gedeckelt = true
+    }
+    summe += wert
+    let frost = (s.frost || 0) * FROST_MS
+    if (frost > rest()) {
+      frost = rest()
+      gedeckelt = true
+    }
+    summe += frost
+    jeSchritt.push(wert + frost)
+    jeFrost.push(frost)
+  }
+  return { jeSchritt, jeFrost, summe, gedeckelt }
+}
+
 /** Wie lange ein Kaskadenschritt steht (Markieren + Fallen). */
 export function schrittDauerMs(schritt) {
   const effekt = schritt && (schritt.effekte?.length || schritt.bomben) ? EFFEKT_MS : 0
@@ -562,8 +751,8 @@ export function schrittDauerMs(schritt) {
  *   getauscht    Feld direkt nach dem Tausch
  *   schritte[]   je Kaskadenschritt: vorher (Feld), weg (Ids), neuSpezial,
  *                nachher (Feld nach Fallen), neuVon (Id → Reihen), kombo,
- *                anzahl, booster, bomben (entstanden), gezuendetBooster,
- *                gezuendetBomben, punkte
+ *                anzahl, booster, bomben (entstanden), frost (geraeumte
+ *                Kuehlschraenke), gezuendetBooster, gezuendetBomben, punkte
  *   gemischt     Feld nach dem Mischen oder null
  *   punkte       Summe ohne Endspurt
  */
@@ -598,6 +787,18 @@ export function tauschen(stand, a, b) {
       bombenRaeumung.bomben = 1
       bombenRaeumung.effekte = [{ art: 'bombe', x: bombePlatz[0], y: bombePlatz[1], typ: partner.typ }]
     }
+  } else if (istWirksam(sa) && istWirksam(sb)) {
+    /* MEGA-KOMBO. Beide Teile liegen im Raeumbereich und zuenden dort
+       ganz normal weiter — Reihe + Spalte ergibt so von allein das
+       Kreuz. Gleiches auf Gleiches zuendet zusaetzlich mit Wucht. */
+    bombenRaeumung = new Map()
+    bombenRaeumung.gezuendet = null
+    bombenRaeumung.bomben = 0
+    bombenRaeumung.set(schluessel(...a), a)
+    bombenRaeumung.set(schluessel(...b), b)
+    const gleich = sa.spezial === sb.spezial
+    bombenRaeumung.wucht = gleich ? new Set([schluessel(...a), schluessel(...b)]) : null
+    bombenRaeumung.effekte = [{ art: 'mega', x: b[0], y: b[1], stark: gleich }]
   }
 
   const schritte = []
@@ -622,19 +823,41 @@ export function tauschen(stand, a, b) {
       else booster += 1
     }
     const neuVon = fallenLassen(stand, nachher)
+    /* KUEHLSCHRANK. Er entsteht nicht aus einem Treffer, sondern rutscht
+       ab der dritten Kaskadenstufe mit nach — die Belohnung dafuer, dass
+       eine Kette ueberhaupt so weit kommt. Gezogen wird aus stand.zufall,
+       damit jede Simulation reproduzierbar bleibt. */
+    let frostNeu = null
+    if (kombo >= FROST_AB_KOMBO) {
+      const frei = []
+      for (let y = 0; y < HOEHE; y += 1) {
+        for (let x = 0; x < BREITE; x += 1) {
+          const s = nachher[y][x]
+          if (s && !s.spezial && neuVon[s.id] !== undefined) frei.push([x, y])
+        }
+      }
+      if (frei.length) {
+        const [fx, fy] = frei[Math.min(frei.length - 1, Math.floor(stand.zufall() * frei.length))]
+        nachher[fy][fx] = { ...nachher[fy][fx], spezial: 'frost' }
+        frostNeu = { id: nachher[fy][fx].id, art: 'frost', form: 'kaskade', platz: [fx, fy] }
+      }
+    }
     const wert = schrittPunkte(weg.length, kombo, booster, bomben)
     punkte += wert
+    const neuListe = plan.neuSpezial.map((n) => ({ id: n.id, art: n.art, form: n.form, platz: n.platz }))
+    if (frostNeu) neuListe.push(frostNeu)
     schritte.push({
       kombo,
       vorher,
       weg,
-      neuSpezial: plan.neuSpezial.map((n) => ({ id: n.id, art: n.art, form: n.form, platz: n.platz })),
+      neuSpezial: neuListe,
       effekte: plan.effekte,
       nachher,
       neuVon,
       anzahl: weg.length,
       booster,
       bomben,
+      frost: plan.gezuendetFrost || 0,
       gezuendetBooster: plan.gezuendetBooster,
       gezuendetBomben: plan.gezuendetBomben,
       punkte: wert,

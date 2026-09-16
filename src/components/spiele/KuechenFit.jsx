@@ -6,6 +6,7 @@ import { SPIEL_NACH_KEY } from '../../data/terminal.js'
 import {
   BREITE,
   FORMEN,
+  GEDULD_MAX_MS,
   HOEHE,
   LOCK_RESETS,
   SPERRE_MS,
@@ -14,12 +15,32 @@ import {
   fallPunkte,
   fallTiefe,
   festsetzen,
+  gefuehlPlatzierung,
+  gefuehlStart,
+  gefuehlTakt,
   geist,
   neuesSpiel,
   schwierigkeit,
   verschieben,
   zellenVon,
+  zoneAnteil,
+  zoneSpalten,
 } from './fit-logik.js'
+import {
+  HAPTIK,
+  comboStufe,
+  farbenLesen,
+  funkenwerk,
+  klang,
+  klangSchliessen,
+  rufwerk,
+  ruettler,
+  sanftHoeren,
+  tonStatus,
+  tonUmschalten,
+  vibrieren,
+} from './spielgefuehl.js'
+import './spielgefuehl.css'
 import './fit.css'
 
 /**
@@ -51,12 +72,28 @@ import './fit.css'
  * nur von dort; die Stufe steigt nie wieder ab. Fuer Tests stehen Stufe und
  * Fallzeit als data-stufe und data-fall-ms an der Buehne.
  *
+ * DAS SPIELGEFUEHL
+ * ----------------
+ * Jede Platzierung bekommt eine Note (PERFECT FIT / GOOD / KNAPP DANEBEN),
+ * gerechnet in fit-logik.js, gemalt hier. Dazu die Einbau-Zone (der goldene
+ * Streifen, in den das Teil soll), Combo, Fieber und der Geduldsbalken unter
+ * dem Feld. Der Balken ist der spielinterne Druck: er sinkt stetig und wird
+ * von guten Zuegen aufgefuellt. Laeuft er leer, ist die Runde vorbei — die
+ * globale Rundenuhr aus useSpielLauf bleibt davon unberuehrt, Kuechen-Fit ist
+ * und bleibt ein Endlosspiel.
+ *
+ * Funken, Rufe, Ruetteln, Klang und Vibration kommen alle aus
+ * spielgefuehl.js, damit sich ein Treffer hier genauso anfuehlt wie in den
+ * anderen Spielen — und damit reduzierte Bewegung an einer Stelle greift.
+ *
  * WIE ES FLUESSIG BLEIBT
  * ----------------------
  * Ein Canvas zeichnet das Feld. Die liegenden Schraenke stehen in einem
  * zweiten, unsichtbaren Canvas und werden nur neu gemalt, wenn sich das Feld
- * aendert. Die Schleife malt nur, wenn etwas passiert ist. React rendert
- * bei Einrasten, Meldung und Pause — nie pro Frame.
+ * aendert. Die Schleife malt nur, wenn etwas passiert ist: solange nichts
+ * lebt (keine Funken, kein Fieber, stehende Zone, unveraenderter Balken)
+ * bleibt das Bild stehen. React rendert bei Einrasten, Meldung und Pause —
+ * nie pro Frame.
  */
 
 const SPIEL = SPIEL_NACH_KEY.kuechen_fit
@@ -68,8 +105,21 @@ const TIPP_PX = 10
 const TIPP_MS = 500
 const WISCH_MS = 260
 const WISCH_ZELLEN = 2.2
-/* Typischer Wert eines PERFECT FIT am Anfang: 500 Bonus plus die Reihe. */
-const HEBEL_PUNKTE = 600
+/* Typischer Wert eines PERFECT FIT am Anfang: 500 Bonus, die Reihe mit 100
+   und 120 fuer die saubere Platzierung. */
+const HEBEL_PUNKTE = 720
+/* Funkenvorrat. Klein genug fuers Handy, gross genug fuer vier Reihen. */
+const FUNKEN_VORRAT = 120
+const RUF_VORRAT = 10
+/* Wie lange ein Ruf hoechstens lebt — danach darf das Bild wieder stehen. */
+const RUF_MS = 1000
+
+/* Die drei Noten in Worten, Farbe und Wucht. */
+const NOTEN = {
+  perfekt: { wort: 'PERFECT FIT', ton: 'perfekt', funken: 16, stoss: 7 },
+  gut: { wort: 'GOOD', ton: 'pop', funken: 6, stoss: 3 },
+  daneben: { wort: 'KNAPP DANEBEN', ton: 'fehler', funken: 0, stoss: 0 },
+}
 
 /* Farben fuer das Canvas. Gelesen aus den CSS-Tokens, mit denselben Werten
    als Rueckfall, falls die Tokens (noch) fehlen. */
@@ -149,14 +199,6 @@ function paletteBauen(el) {
   }
 }
 
-function summen(muster) {
-  try {
-    if (typeof navigator !== 'undefined' && navigator.vibrate) navigator.vibrate(muster)
-  } catch {
-    /* kein Vibrationsmotor, kein Problem */
-  }
-}
-
 function rundesRechteck(ctx, x, y, b, h, r) {
   ctx.beginPath()
   if (ctx.roundRect) ctx.roundRect(x, y, b, h, r)
@@ -226,14 +268,19 @@ function frontMalen(ctx, palette, code, px, py, z, alpha = 1) {
   ctx.globalAlpha = 1
 }
 
-/** Wo das Feld auf der Buehne liegt. Oben bleibt ein Streifen fuer die Vorschau. */
+/**
+ * Wo das Feld auf der Buehne liegt. Oben bleibt ein Streifen fuer die
+ * Vorschau, unten einer fuer den Geduldsbalken.
+ */
+const FUSS = 14
+
 function geometrie(breite, hoehe) {
   const rand = 8
   const kopf = 30
-  const z = Math.max(8, Math.floor(Math.min((breite - 2 * rand) / BREITE, (hoehe - kopf - rand) / HOEHE)))
+  const z = Math.max(8, Math.floor(Math.min((breite - 2 * rand) / BREITE, (hoehe - kopf - FUSS) / HOEHE)))
   const fb = z * BREITE
   const fh = z * HOEHE
-  return { z, x0: Math.round((breite - fb) / 2), y0: Math.round(kopf + (hoehe - kopf - rand - fh) / 2), fb, fh, kopf }
+  return { z, x0: Math.round((breite - fb) / 2), y0: Math.round(kopf + (hoehe - kopf - FUSS - fh) / 2), fb, fh, kopf }
 }
 
 export default function KuechenFit({ sitzung, best = null, onErgebnis }) {
@@ -247,13 +294,28 @@ export default function KuechenFit({ sitzung, best = null, onErgebnis }) {
   const [pause, setPause] = useState(false)
   const [crash, setCrash] = useState(false)
   const [sanft, setSanft] = useState(false)
+  const [ton, setTon] = useState(tonStatus)
+  /* Nur was die Leiste und die Buehne brauchen — nie pro Frame gesetzt. */
+  const [anzeige, setAnzeige] = useState({ combo: 0, fieber: 0 })
 
   const buehneRef = useRef(null)
   const canvasRef = useRef(null)
   const lagerRef = useRef(null)
   const masseRef = useRef({ breite: 300, hoehe: 480, dpr: 1 })
   const paletteRef = useRef(null)
+  const tokenRef = useRef(null)
   const standRef = useRef(null)
+  /* Das Spielgefuehl: Zustand aus fit-logik.js, Effekte aus spielgefuehl.js.
+     Die Werke entstehen einmal und werden beim Aufraeumen geleert. */
+  const gefuehlRef = useRef(null)
+  const funkenRef = useRef(null)
+  const rufeRef = useRef(null)
+  const ruettelRef = useRef(null)
+  if (funkenRef.current == null) funkenRef.current = funkenwerk(FUNKEN_VORRAT)
+  if (rufeRef.current == null) rufeRef.current = rufwerk(RUF_VORRAT)
+  if (ruettelRef.current == null) ruettelRef.current = ruettler({ abfall: 0.84, max: 12 })
+  if (tokenRef.current == null) tokenRef.current = farbenLesen(null)
+  const anzeigeRef = useRef({ combo: 0, fieber: 0 })
   /* Alles, was die Schleife pro Teil braucht, in einem Ref. */
   const takt = useRef({
     fallSeit: 0,
@@ -273,6 +335,10 @@ export default function KuechenFit({ sitzung, best = null, onErgebnis }) {
     stufe: 1,
     fallMs: schwierigkeit(0).fallMs,
     lockMs: schwierigkeit(0).lockMs,
+    /* Was das Bild lebendig haelt: Beben, laufende Rufe, Balkenstand. */
+    beben: { x: 0, y: 0 },
+    rufeBis: 0,
+    geduldStrich: -1,
   })
   const crashUhrRef = useRef(0)
   const fingerRef = useRef(null)
@@ -284,16 +350,14 @@ export default function KuechenFit({ sitzung, best = null, onErgebnis }) {
   const lauf = useSpielLauf({ sitzung, game: 'kuechen_fit', dauerVorgabe: 540000, onErgebnis, sofort: true })
   const { laeuft, punkteGeben, rundeZaehlen, fertig, starten: laufStarten, ticketSeitRef } = lauf
 
+  /* Eine Quelle fuer alle Spiele — spielgefuehl.js entscheidet, was sanft ist,
+     und meldet sich auch, wenn der Wunsch mitten in der Runde umgelegt wird. */
   useEffect(() => {
-    let wert
-    try {
-      wert = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    } catch {
-      wert = false
+    const setzen = (wert) => {
+      sanftRef.current = wert
+      setSanft(wert)
     }
-    sanftRef.current = wert
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSanft(wert)
+    return sanftHoeren(setzen)
   }, [])
 
   /* Groesse messen, Canvas auf DPR (hoechstens 2) einstellen, Farben lesen. */
@@ -301,6 +365,9 @@ export default function KuechenFit({ sitzung, best = null, onErgebnis }) {
     const el = buehneRef.current
     if (!el) return undefined
     paletteRef.current = paletteBauen(el)
+    /* Dieselben Tokens noch einmal als fertige Farbstrings — so will es das
+       Rufwerk aus spielgefuehl.js. */
+    tokenRef.current = farbenLesen(el)
     const messen = () => {
       const dpr = Math.min(2, window.devicePixelRatio || 1)
       const breite = el.clientWidth || 300
@@ -351,18 +418,27 @@ export default function KuechenFit({ sitzung, best = null, onErgebnis }) {
     return () => clearTimeout(uhr)
   }, [meldung])
 
-  /** Der normale Weg ins Game Over — auch fuer das Testlabor. */
-  const aufgeben = useCallback(() => {
+  /**
+   * Der normale Weg ins Game Over — auch fuer das Testlabor.
+   * `grund` ist 'geduld', wenn der Balken leergelaufen ist; sonst ist die
+   * Kueche voll. Das Testlabor ruft ohne Grund, das ist Absicht.
+   */
+  const aufgeben = useCallback((grund) => {
     if (crashRef.current) return
     crashRef.current = true
     pauseRef.current = false
     fingerRef.current = null
     takt.current.crashSeit = performance.now()
     takt.current.malen = true
+    funkenRef.current.leeren()
+    ruettelRef.current.leeren()
     setPause(false)
     setCrash(true)
-    melden('verkantet', 'KÜCHE VOLL')
-    summen([60, 40, 90])
+    anzeigeRef.current = { combo: 0, fieber: 0 }
+    setAnzeige({ combo: 0, fieber: 0 })
+    melden('verkantet', grund === 'geduld' ? 'ZEIT ABGELAUFEN' : 'KÜCHE VOLL')
+    vibrieren(HAPTIK.fehler)
+    klang('explosion')
     clearTimeout(crashUhrRef.current)
     crashUhrRef.current = setTimeout(() => fertig(), CRASH_MS)
   }, [fertig, melden])
@@ -371,7 +447,17 @@ export default function KuechenFit({ sitzung, best = null, onErgebnis }) {
 
   useEffect(() => {
     const uhr = crashUhrRef
-    return () => clearTimeout(uhr.current)
+    const funken = funkenRef.current
+    const rufe = rufeRef.current
+    const ruettel = ruettelRef.current
+    return () => {
+      clearTimeout(uhr.current)
+      /* Nichts lebt laenger als die Komponente: kein Partikel, kein Ton. */
+      funken.leeren()
+      rufe.leeren()
+      ruettel.leeren()
+      klangSchliessen()
+    }
   }, [])
 
   /** Neues Teil ist sichtbar: Uhren fuer Fall, Sperre und Einrasten neu. */
@@ -405,7 +491,8 @@ export default function KuechenFit({ sitzung, best = null, onErgebnis }) {
     const stufe = tempoHeben(schwierigkeit(takt.current.spielMs / 1000, stand.reihen))
     if (stufe) {
       melden('treffer', `LEVEL ${stufe}`)
-      summen(12)
+      vibrieren(HAPTIK.tipp)
+      klang('tick', 1 + stufe * 0.02)
     }
   }, [melden, tempoHeben])
 
@@ -414,6 +501,10 @@ export default function KuechenFit({ sitzung, best = null, onErgebnis }) {
     if (!begonnen) return false
     clearTimeout(crashUhrRef.current)
     standRef.current = neuesSpiel()
+    gefuehlRef.current = gefuehlStart()
+    funkenRef.current.leeren()
+    rufeRef.current.leeren()
+    ruettelRef.current.leeren()
     pauseRef.current = false
     crashRef.current = false
     fingerRef.current = null
@@ -429,9 +520,14 @@ export default function KuechenFit({ sitzung, best = null, onErgebnis }) {
       stufe: start.stufe,
       fallMs: start.fallMs,
       lockMs: start.lockMs,
+      beben: { x: 0, y: 0 },
+      rufeBis: 0,
+      geduldStrich: -1,
     })
     teilBeginnt()
     setReihen(0)
+    anzeigeRef.current = { combo: 0, fieber: 0 }
+    setAnzeige({ combo: 0, fieber: 0 })
     setTempo({ stufe: start.stufe, fallMs: start.fallMs })
     setNaechstes(standRef.current.naechstes)
     setMeldung(null)
@@ -447,17 +543,62 @@ export default function KuechenFit({ sitzung, best = null, onErgebnis }) {
     return Date.now() - Math.max(takt.current.erschienen, ticketSeit) >= SPERRE_MS
   }, [ticketSeitRef])
 
+  /** Bildpunkt in der Mitte einer Zellenliste — fuer Funken und Rufe. */
+  const mitteVon = useCallback((zellen) => {
+    const { breite, hoehe } = masseRef.current
+    const { z, x0, y0 } = geometrie(breite, hoehe)
+    let sx = 0
+    let sy = 0
+    for (const [x, y] of zellen) {
+      sx += x
+      sy += y
+    }
+    const n = Math.max(1, zellen.length)
+    return { x: x0 + (sx / n + 0.5) * z, y: y0 + (sy / n + 0.5) * z, z }
+  }, [])
+
+  /** Combo und Fieber nach aussen geben — nur, wenn sich wirklich etwas aendert. */
+  const anzeigeSetzen = useCallback((combo, fieber) => {
+    const a = anzeigeRef.current
+    if (a.combo === combo && a.fieber === fieber) return
+    anzeigeRef.current = { combo, fieber }
+    setAnzeige({ combo, fieber })
+  }, [])
+
   /** Einrasten, werten, melden, naechstes Teil vorbereiten. */
   const einrastenJetzt = useCallback(() => {
     const stand = standRef.current
     if (!stand?.aktuell || crashRef.current) return
-    const sek = takt.current.spielMs / 1000
-    const { stand: neu, ereignis } = festsetzen(stand, sek)
+    const t = takt.current
+    const g = gefuehlRef.current
+    const sek = t.spielMs / 1000
+    const ort = mitteVon(zellenVon(stand.aktuell))
+    /* Wie viel vom Teil in der Einbau-Zone liegt, muss VOR dem Einrasten
+       gemessen werden — danach gibt es das Teil nicht mehr. */
+    const anteil = g ? zoneAnteil(g.zone, stand.aktuell) : 0
+
+    const { stand: neu, ereignis } = festsetzen(stand, sek, anteil)
     standRef.current = neu
     rundeZaehlen()
-    if (ereignis.punkte) punkteGeben(ereignis.punkte)
 
-    const t = takt.current
+    /* Note, Combo, Fieber, Zeitgutschrift: alles rein gerechnet in
+       fit-logik.js, hier wird es nur noch sichtbar und hoerbar. */
+    const gp = g
+      ? gefuehlPlatzierung(g, {
+          art: ereignis.art,
+          reihen: ereignis.anzahl,
+          zonenTreffer: ereignis.zonenTreffer,
+          stufe: Math.max(t.stufe, ereignis.stufe),
+          stufeAuf: ereignis.stufeAuf,
+        })
+      : null
+    if (gp) gefuehlRef.current = gp.zustand
+    const gm = gp?.ereignis || null
+
+    /* Ein einziger Aufruf je Teil — der Vertrag mit useSpielLauf bleibt. */
+    const punkte = ereignis.punkte + (gm?.punkte || 0)
+    if (punkte) punkteGeben(punkte)
+
     t.lagerAlt = true
     t.malen = true
     /* Viele Reihen heben die Stufe auch vor der Uhr. */
@@ -470,26 +611,97 @@ export default function KuechenFit({ sitzung, best = null, onErgebnis }) {
       setReihen(neu.reihen)
     }
 
-    if (ereignis.perfekt) {
-      melden('perfekt', ereignis.kette >= 2 ? `PERFECT FIT ×${ereignis.kette}` : 'PERFECT FIT')
-      summen([18, 30, 18])
-    } else if (ereignis.kette >= 2) {
-      melden('gold', `KOMBO ×${ereignis.kette}`)
-      summen([14, 24, 14])
-    } else if (ereignis.anzahl >= 2) {
-      melden(ereignis.anzahl >= 4 ? 'gold' : 'gut', `${ereignis.anzahl} REIHEN`)
-      summen(16)
-    } else if (stufeHoch) {
-      melden('treffer', `LEVEL ${stufeHoch}`)
-      summen(12)
-    } else if (ereignis.nachschub) {
-      melden('verkantet', 'NACHSCHUB')
-      summen([20, 30, 20])
-    } else {
-      summen(ereignis.anzahl ? 12 : 6)
+    /* ---- Anzeige: die Note steht immer da, gross und an Ort und Stelle. */
+    const note = NOTEN[ereignis.art] || NOTEN.daneben
+    const farben = tokenRef.current
+    const funken = funkenRef.current
+    const rufe = rufeRef.current
+    const jetzt = performance.now()
+    const notenFarbe = ereignis.art === 'perfekt' ? farben.goldHell : ereignis.art === 'gut' ? farben.creme : farben.rot
+
+    rufe.zeigen({
+      x: ort.x,
+      y: ort.y,
+      text: ereignis.zonenTreffer && ereignis.art !== 'daneben' ? `${note.wort} · ZONE` : note.wort,
+      art: 'ruf',
+      gr: ereignis.art === 'perfekt' ? 20 : 15,
+      farbe: notenFarbe,
+    })
+    if (punkte) {
+      rufe.zeigen({ x: ort.x, y: ort.y + 22, text: `+${punkte}`, art: 'punkte', gr: 15, farbe: farben.creme })
     }
-    /* Faellt ein Levelaufstieg mit einer groesseren Meldung zusammen, geht
-       er nicht verloren: er steht in der Leiste. */
+    if (gm?.zeitBonus > 0) {
+      const sekunden = (gm.zeitBonus / 1000).toFixed(1).replace('.', ',')
+      rufe.zeigen({ x: ort.x, y: ort.y + 40, text: `+${sekunden} s`, art: 'zeit', gr: 13 })
+    }
+    if (gm?.fieberStart) {
+      rufe.zeigen({ x: ort.x, y: ort.y - 30, text: gm.fieberStart >= 2 ? 'FIEBER ×2' : 'FIEBER', art: 'combo', gr: 22, farbe: farben.gold })
+    } else {
+      const stufeWort = gm ? comboStufe(gm.combo) : null
+      if (stufeWort) {
+        rufe.zeigen({ x: ort.x, y: ort.y - 26, text: `${stufeWort.wort} ×${gm.combo}`, art: 'combo', gr: 15 })
+      }
+    }
+    t.rufeBis = jetzt + RUF_MS
+
+    /* ---- Funken, Beben, Ton. Alles aus spielgefuehl.js, alles gedeckelt. */
+    if (note.funken) {
+      const stark = gm?.fieberStufe || 0
+      funken.schuss({
+        x: ort.x,
+        y: ort.y,
+        anzahl: note.funken + stark * 4,
+        farbe: ereignis.art === 'perfekt' ? [farben.gold, farben.goldHell, farben.creme] : [farben.gold, farben.goldTief],
+        art: ereignis.art === 'perfekt' ? 'stern' : 'punkt',
+        tempo: 150 + stark * 40,
+        gr: ereignis.art === 'perfekt' ? 3 : 2,
+        leben: 560,
+      })
+    }
+    if (ereignis.anzahl) {
+      /* Abgeraeumte Reihen sprayen ueber die ganze Breite. */
+      const { breite, hoehe } = masseRef.current
+      const geo = geometrie(breite, hoehe)
+      for (const y of ereignis.reihen) {
+        funken.schuss({
+          x: geo.x0 + geo.fb / 2,
+          y: geo.y0 + (y + 0.5) * geo.z,
+          anzahl: 10,
+          farbe: [farben.gold, farben.goldHell],
+          art: 'krume',
+          tempo: 240,
+          streuung: Math.PI * 0.7,
+          richtung: 0,
+          gr: 2.5,
+          leben: 520,
+        })
+      }
+    }
+    if (note.stoss) ruettelRef.current.stoss(note.stoss + (ereignis.anzahl || 0) * 2)
+
+    if (ereignis.art === 'perfekt') {
+      vibrieren(gm?.fieberStart ? HAPTIK.fieber : HAPTIK.perfekt)
+      klang('perfekt', 1 + Math.min(8, gm?.combo || 0) * 0.04)
+      if (gm?.fieberStart) klang('kraft', 1 + gm.fieberStart * 0.1)
+    } else if (ereignis.art === 'gut') {
+      vibrieren(HAPTIK.gut)
+      klang('pop', 1 + Math.min(8, gm?.combo || 0) * 0.03)
+    } else {
+      vibrieren(HAPTIK.treffer)
+      klang('landung')
+    }
+    if (ereignis.anzahl) klang('combo', 1 + ereignis.anzahl * 0.06)
+
+    anzeigeSetzen(gm?.combo || 0, gm?.fieberStufe || 0)
+
+    /* ---- Der DOM-Ruf bleibt dem Seltenen vorbehalten: Spruch, Level,
+       Nachschub. So steht nicht nach jedem Zug ein Satz auf dem Feld. */
+    if (gm?.spruch) melden('gut', gm.spruch)
+    else if (stufeHoch) melden('treffer', `LEVEL ${stufeHoch}`)
+    else if (ereignis.nachschub) {
+      melden('verkantet', 'NACHSCHUB')
+      vibrieren(HAPTIK.explosion)
+    }
 
     if (ereignis.vorbei) {
       aufgeben()
@@ -497,7 +709,7 @@ export default function KuechenFit({ sitzung, best = null, onErgebnis }) {
     }
     setNaechstes(neu.naechstes)
     if (!t.raeumen) teilBeginnt()
-  }, [aufgeben, melden, punkteGeben, rundeZaehlen, teilBeginnt, tempoHeben])
+  }, [anzeigeSetzen, aufgeben, melden, mitteVon, punkteGeben, rundeZaehlen, teilBeginnt, tempoHeben])
 
   /* ---------------------------------------------------------------- */
   /* Eingaben                                                          */
@@ -558,7 +770,9 @@ export default function KuechenFit({ sitzung, best = null, onErgebnis }) {
     if (tiefe) punkteGeben(fallPunkte(tiefe, true))
     takt.current.hartGesetzt = true
     takt.current.malen = true
-    summen(10)
+    if (tiefe) ruettelRef.current.stoss(3)
+    vibrieren(HAPTIK.tipp)
+    klang('treffer', 1.1)
     if (darfEinrasten()) einrastenJetzt()
   }
 
@@ -671,8 +885,8 @@ export default function KuechenFit({ sitzung, best = null, onErgebnis }) {
 
   const schrittRef = useRef(null)
   useEffect(() => {
-    schrittRef.current = { einrastenJetzt, darfEinrasten, teilBeginnt, tempoPruefen }
-  }, [einrastenJetzt, darfEinrasten, teilBeginnt, tempoPruefen])
+    schrittRef.current = { einrastenJetzt, darfEinrasten, teilBeginnt, tempoPruefen, aufgeben, anzeigeSetzen }
+  }, [einrastenJetzt, darfEinrasten, teilBeginnt, tempoPruefen, aufgeben, anzeigeSetzen])
 
   useEffect(() => {
     if (!laeuft) return undefined
@@ -707,9 +921,14 @@ export default function KuechenFit({ sitzung, best = null, onErgebnis }) {
       const g = geometrie(breite, hoehe)
       const { z, x0, y0, fb, fh } = g
       const t = takt.current
+      const gf = gefuehlRef.current
       const ctx = c.getContext('2d')
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
       ctx.clearRect(0, 0, breite, hoehe)
+
+      /* Das Beben verschiebt nur das Feld, nicht Balken und Vorschau. */
+      ctx.save()
+      if (t.beben.x || t.beben.y) ctx.translate(t.beben.x, t.beben.y)
 
       /* Rueckwand: feine Fugen wie Wandfliesen, goldener Rahmen. */
       ctx.fillStyle = rgb(palette.nacht, 0.55)
@@ -728,6 +947,26 @@ export default function KuechenFit({ sitzung, best = null, onErgebnis }) {
       ctx.stroke()
       ctx.strokeStyle = rgb(palette.gold, 0.5)
       ctx.strokeRect(x0 - 0.5, y0 - 0.5, fb + 1, fh + 1)
+
+      /* Die Einbau-Zone liegt als Bodenmarkierung unter den Schraenken.
+         Trifft das Teil sie ganz, wird sie deutlich heller. */
+      if (gf?.zone && !t.raeumen && !crashRef.current) {
+        const { von, bis } = zoneSpalten(gf.zone)
+        const zx = x0 + von * z
+        const zb = (bis - von) * z
+        const treffer = stand.aktuell ? zoneAnteil(gf.zone, stand.aktuell) >= 1 : false
+        const band = ctx.createLinearGradient(0, y0, 0, y0 + fh)
+        band.addColorStop(0, rgb(palette.gold, treffer ? 0.06 : 0.02))
+        band.addColorStop(1, rgb(palette.gold, treffer ? 0.26 : 0.12))
+        ctx.fillStyle = band
+        ctx.fillRect(zx, y0, zb, fh)
+        ctx.strokeStyle = rgb(treffer ? palette.hell : palette.gold, treffer ? 0.85 : 0.38)
+        ctx.lineWidth = treffer ? 2 : 1
+        ctx.setLineDash([5, 4])
+        ctx.strokeRect(zx + 1, y0 + 1, zb - 2, fh - 2)
+        ctx.setLineDash([])
+        ctx.lineWidth = 1
+      }
 
       const r = t.raeumen
       if (r) {
@@ -772,6 +1011,41 @@ export default function KuechenFit({ sitzung, best = null, onErgebnis }) {
         }
       }
 
+      /* Fieber: der Rahmen glueht, oben zeigt ein Streifen die Restzeit. */
+      if (gf?.fieber && !crashRef.current) {
+        const rest = Math.max(0, Math.min(1, gf.fieber.restMs / gf.fieber.gesamtMs))
+        const puls = sanftRef.current ? 0.8 : 0.72 + 0.28 * Math.sin(jetzt / 130)
+        ctx.strokeStyle = rgb(palette.hell, (0.3 + 0.5 * rest) * puls)
+        ctx.lineWidth = 1 + gf.fieber.stufe
+        ctx.strokeRect(x0 - 2, y0 - 2, fb + 4, fh + 4)
+        ctx.lineWidth = 1
+        ctx.fillStyle = rgb(palette.hell, 0.85)
+        ctx.fillRect(x0 + 1, y0 + 1, (fb - 2) * rest, 2)
+      }
+
+      ctx.restore()
+
+      /* Der Geduldsbalken unter dem Feld. Er ist der ganze Zeitdruck des
+         Spiels — die Runde endet, wenn er leer ist. */
+      const anteilGeduld = gf ? Math.max(0, Math.min(1, gf.geduldMs / GEDULD_MAX_MS)) : 1
+      const by = Math.min(hoehe - 6, y0 + fh + 5)
+      ctx.fillStyle = rgb(palette.nacht, 0.72)
+      rundesRechteck(ctx, x0, by, fb, 5, 2.5)
+      ctx.fill()
+      ctx.strokeStyle = rgb(palette.gold, 0.22)
+      ctx.stroke()
+      const voll = fb * anteilGeduld
+      if (voll > 1) {
+        const knapp = anteilGeduld < 0.25
+        const puls = knapp && !sanftRef.current ? 0.65 + 0.35 * Math.sin(jetzt / 110) : 1
+        const balken = ctx.createLinearGradient(x0, 0, x0 + fb, 0)
+        balken.addColorStop(0, rgb(knapp ? palette.rot : palette.tief, puls))
+        balken.addColorStop(1, rgb(knapp ? palette.rot : gf?.fieber ? palette.creme : palette.hell, puls))
+        ctx.fillStyle = balken
+        rundesRechteck(ctx, x0, by, voll, 5, 2.5)
+        ctx.fill()
+      }
+
       /* Vorschau oben rechts, klein. */
       const typ = stand.naechstes
       if (typ) {
@@ -787,6 +1061,10 @@ export default function KuechenFit({ sitzung, best = null, onErgebnis }) {
           frontMalen(ctx, palette, TEILE[typ].code, vx + (x - Math.min(...xs)) * m, vy + (y - Math.min(...ys)) * m, m, 0.9)
         }
       }
+
+      /* Funken und Rufe liegen ueber allem — sie sind die Quittung. */
+      funkenRef.current.malen(ctx)
+      rufeRef.current.malen(ctx, tokenRef.current)
 
       /* Game Over: die Kueche laeuft von unten voll. */
       if (crashRef.current) {
@@ -814,6 +1092,30 @@ export default function KuechenFit({ sitzung, best = null, onErgebnis }) {
           t.sek = sek
           h.tempoPruefen()
         }
+
+        /* Geduld sinkt, Fieber laeuft ab, die Zone wandert. Alles gerechnet
+           in fit-logik.js — hier wird nur weitergereicht. */
+        const gf = gefuehlRef.current
+        if (gf) {
+          const schub = gefuehlTakt(gf, dt, t.stufe)
+          gefuehlRef.current = schub.zustand
+          if (schub.ereignis.fieberEnde) {
+            h.anzeigeSetzen(schub.zustand.combo, 0)
+            t.malen = true
+          }
+          /* Nur bei sichtbarer Aenderung neu malen: der Balken hat 200
+             Striche, mehr sieht ohnehin niemand. */
+          const strich = Math.round(schub.ereignis.geduldAnteil * 200)
+          if (strich !== t.geduldStrich) {
+            t.geduldStrich = strich
+            t.malen = true
+          }
+          if (schub.zustand.fieber || schub.zustand.zone?.tempo) t.malen = true
+          if (schub.ereignis.leer) h.aufgeben('geduld')
+        }
+      }
+
+      if (stand && h && !pauseRef.current && !crashRef.current) {
         if (t.raeumen) {
           t.malen = true
           if (jetzt >= t.wartenBis) {
@@ -838,6 +1140,25 @@ export default function KuechenFit({ sitzung, best = null, onErgebnis }) {
           }
         }
       }
+      /* Funken, Rufe und Beben laufen weiter — aber nur, solange wirklich
+         etwas lebt. Im Leerlauf bleibt das Bild stehen. */
+      if (stand && !pauseRef.current) {
+        const funken = funkenRef.current
+        if (funken.aktiv()) {
+          funken.schritt(dt)
+          t.malen = true
+        }
+        if (jetzt < t.rufeBis) {
+          rufeRef.current.schritt(dt)
+          t.malen = true
+        }
+        const v = ruettelRef.current.versatz(dt)
+        if (v.kraft || t.beben.x || t.beben.y) {
+          t.beben = v
+          t.malen = true
+        }
+      }
+
       if (crashRef.current && jetzt - t.crashSeit < CRASH_MS) t.malen = true
       if (t.malen) {
         t.malen = false
@@ -859,8 +1180,17 @@ export default function KuechenFit({ sitzung, best = null, onErgebnis }) {
       lauf={{ ...lauf, starten }}
       best={best}
       leiste={
-        <span className="trm-spiel__combo trm-fit-level" data-an="1">
-          LV {tempo.stufe}
+        <span className="trm-fit-stand">
+          <span className="trm-spiel__combo trm-fit-level" data-an="1">
+            LV {tempo.stufe}
+          </span>
+          <span
+            className="trm-spiel__combo trm-fit-combo"
+            data-an={anzeige.combo >= 2 ? '1' : '0'}
+            data-fieber={anzeige.fieber || 0}
+          >
+            ×{Math.max(1, anzeige.combo)}
+          </span>
         </span>
       }
     >
@@ -877,6 +1207,8 @@ export default function KuechenFit({ sitzung, best = null, onErgebnis }) {
             data-pause={pause ? '1' : '0'}
             data-stufe={tempo.stufe}
             data-fall-ms={tempo.fallMs}
+            data-fieber={anzeige.fieber || 0}
+            data-combo={anzeige.combo}
             onPointerDown={zeigerRunter}
             onPointerMove={zeigerZieht}
             onPointerUp={zeigerHoch}
@@ -893,6 +1225,24 @@ export default function KuechenFit({ sitzung, best = null, onErgebnis }) {
             >
               NÄCHSTES: <b>{naechsterName}</b>
             </span>
+
+            {/* Ton: stumm startbar, Zustand bleibt ueber Runden hinweg. Der
+                Schalter darf kein Absetzen ausloesen — darum stoppt er Zeiger
+                und Leertaste, bevor die Buehne sie sieht. */}
+            <button
+              type="button"
+              className="sg-ton"
+              aria-pressed={ton}
+              aria-label={ton ? 'Ton aus' : 'Ton an'}
+              onPointerDown={(e) => e.stopPropagation()}
+              onPointerUp={(e) => e.stopPropagation()}
+              onKeyDown={(e) => {
+                if (e.key === ' ' || e.key === 'Enter') e.stopPropagation()
+              }}
+              onClick={() => setTon(tonUmschalten())}
+            >
+              {ton ? '♪' : '✕'}
+            </button>
           </div>
 
           {pause && <p className="trm-spiel__pause">PAUSE — zum Weiterspielen tippen</p>}

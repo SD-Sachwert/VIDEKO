@@ -4,9 +4,9 @@
  *   node scripts/spiele/crush-logik-test.mjs
  *
  * Prueft Sonderteile (4er Booster, 5er/L Bombe), Zuendungen, Kaskaden- und
- * Tempo-Multiplikator, das Finale, die Punktdecke je Zug und simuliert
- * ganze 40-s-Laeufe per Bot gegen die Servergrenzen (api/_terminal-kern.js,
- * nur gelesen).
+ * Tempo-Multiplikator, das Finale, die Punktdecke je Zug und simuliert ganze
+ * Laeufe ueber die Startzeit per Bot gegen die Servergrenzen
+ * (api/_terminal-kern.js, nur gelesen).
  */
 
 import {
@@ -38,12 +38,18 @@ import {
   zufallMitSaat,
   zugPunkte,
 } from '../../src/components/spiele/crush-logik.js'
+import { SPIELE } from '../../api/_terminal-kern.js'
 
-/* Servergrenzen fuer kuechen_crush, abgeschrieben aus api/_terminal-kern.js
-   (Stand heute). VORSCHLAG sind die Werte, die nach dem Tuning gelten sollen:
-   Tempo-Serie, staerkere Kaskade und FINALE ×2 heben gute Laeufe an. */
-const SERVER_HEUTE = { dauerMs: 40000, msJeRunde: 300, maxJeRunde: 5000, plausibel: 55000, hart: 90000 }
-const SERVER = { ...SERVER_HEUTE, plausibel: 80000, hart: 140000 }
+/* Servergrenzen fuer kuechen_crush. Nicht abgeschrieben, sondern gelesen: eine
+   abgetippte Kopie veraltet still, und dann prueft der Test gegen eine Grenze,
+   die es gar nicht mehr gibt.
+
+   Die Simulation weiter unten laeuft bewusst mit FESTER Rundenlaenge und ohne
+   Zeitbonus. Sie prueft die Punktmechanik, nicht die Uhr, und liefert damit
+   die Untergrenze des erreichbaren Fensters. Das volle Fenster — Startzeit,
+   Zeitboni, Deckel, Nachspiel — misst scripts/spiele/crush-gefuehl-test.mjs;
+   daraus leiten sich die Servergrenzen ab. */
+const SERVER = SPIELE.kuechen_crush
 
 let gut = 0
 let schlecht = 0
@@ -139,7 +145,9 @@ const enthaeltAlle = (liste, ids) => ids.every((id) => liste.includes(id))
   pruefe('L-Form: Vorbedingung ohne Linie', !hatTreffer(st.feld))
   const e = tauschen(st, [2, 2], [3, 2])
   const neu = e.schritte[0]?.neuSpezial[0]
-  pruefe('L-Form erzeugt Bombe (form kreuz)', e.gueltig && neu?.art === 'bombe' && neu?.form === 'kreuz', JSON.stringify(neu))
+  /* Seit Game Feel 2.0 gibt die L-/T-Form den Backofen (3×3) statt einer
+     zweiten Wildcard. Fuenf in einer Linie bleibt das VIDEKO-Symbol. */
+  pruefe('L-Form erzeugt Backofen (form kreuz)', e.gueltig && neu?.art === 'ofen' && neu?.form === 'kreuz', JSON.stringify(neu))
 }
 
 /* ------------------------------------------------------------------ */
@@ -394,12 +402,13 @@ function profil(name, pause, laeufe) {
   pruefe('Simulation: sehr guter Lauf nie ueber msJeRunde', SERVER.dauerMs / sehrGut.maxRunden >= SERVER.msJeRunde)
   pruefe('Simulation: Bot ohne Pause nie ueber msJeRunde', SERVER.dauerMs / bot.maxRunden >= SERVER.msJeRunde, `${bot.maxRunden} Runden`)
   pruefe('Simulation: kein Zug ueber maxJeRunde', bot.maxZug <= SERVER.maxJeRunde && sehrGut.maxZug <= SERVER.maxJeRunde)
-  pruefe(`Simulation: sehr guter Mensch unter plausibel-Vorschlag (${SERVER.plausibel})`, sehrGut.max <= SERVER.plausibel, `${sehrGut.max}`)
-  pruefe(`Simulation: Bot ohne Pause unter hart-Vorschlag (${SERVER.hart})`, bot.max <= SERVER.hart, `${bot.max}`)
-  pruefe('Simulation: normaler Lauf unter heutigem plausibel', normal.max <= SERVER_HEUTE.plausibel, `${normal.max}`)
+  pruefe(`Simulation: sehr guter Mensch unter heutigem plausibel (${SERVER.plausibel})`, sehrGut.max <= SERVER.plausibel, `${sehrGut.max}`)
+  pruefe(`Simulation: Bot ohne Pause unter heutigem hart (${SERVER.hart})`, bot.max <= SERVER.hart, `${bot.max}`)
+  /* Ein gewoehnlicher Lauf muss mit deutlichem Abstand unter plausibel
+     bleiben — sonst stuende der halbe Alltag unter Manipulationsverdacht. */
+  pruefe('Simulation: normaler Lauf weit unter plausibel', normal.max <= SERVER.plausibel / 2, `${normal.max} von ${SERVER.plausibel / 2}`)
   console.log(
-    `     Info heute: sehr gut Max ${sehrGut.max} ${sehrGut.max > SERVER_HEUTE.plausibel ? '>' : '<='} plausibel ${SERVER_HEUTE.plausibel}, ` +
-      `Bot Max ${bot.max} ${bot.max > SERVER_HEUTE.hart ? '>' : '<='} hart ${SERVER_HEUTE.hart}`,
+    '     Info: feste Runde ohne Zeitbonus — die obere Kante misst crush-gefuehl-test.mjs.',
   )
 }
 
