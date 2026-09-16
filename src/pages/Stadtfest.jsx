@@ -12,6 +12,8 @@ import {
   uhrzeitText,
 } from '../data/stadtfest.js'
 import { DATENSCHUTZ_EVENT, TEILNAHMEBEDINGUNGEN } from '../data/stadtfest-recht.js'
+import radKlein from '../assets/images/stadtfest/stadtfest-rad-640w.webp'
+import radGross from '../assets/images/stadtfest/stadtfest-rad-1100w.webp'
 
 /**
  * /stadtfest — die Registrierungsseite zum Aktionsstand.
@@ -60,6 +62,43 @@ const LEERE_MICROCOPY = []
 function kurzName(vorname, nachname) {
   const initial = (nachname || '').trim().slice(0, 1)
   return `${(vorname || '').trim()} ${initial ? `${initial}.` : ''}`.trim()
+}
+
+/* ------------------------------------------------------------------ */
+/* Eckdaten-Icons                                                      */
+/* ------------------------------------------------------------------ */
+
+/* Drei Strichzeichnungen fuer Was/Wann/Wo. Bewusst inline und bewusst
+   winzig: ein Icon-Paket waere fuer drei Pfade eine ganze Abhaengigkeit,
+   und Emojis sehen auf jedem Geraet anders aus. Sie erben die Farbe aus
+   dem CSS und sind rein dekorativ — die Bedeutung steht im dt daneben. */
+const ECK_PFADE = {
+  was: <path d="M4 9.4V7a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2.4a2.6 2.6 0 0 0 0 5.2V17a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-2.4a2.6 2.6 0 0 0 0-5.2ZM14 6v12" />,
+  wann: <path d="M5 6h14a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1ZM4 10.5h16M8 3.5V6M16 3.5V6" />,
+  wo: (
+    <>
+      <path d="M12 21s6.8-5.6 6.8-11.1A6.8 6.8 0 0 0 5.2 9.9C5.2 15.4 12 21 12 21Z" />
+      <circle cx="12" cy="9.9" r="2.5" />
+    </>
+  ),
+}
+
+function EckIcon({ art }) {
+  return (
+    <svg
+      className="stf-eck__icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      focusable="false"
+    >
+      {ECK_PFADE[art]}
+    </svg>
+  )
 }
 
 /* ------------------------------------------------------------------ */
@@ -419,8 +458,20 @@ export default function Stadtfest() {
         <p className="stf-gruppe__titel">{texte.formularTitel}</p>
         <p className="stf-gruppe__text">{texte.formularText}</p>
         <div className="stf-reihe stf-reihe--zwei">
-          {feld({ name: 'vorname', label: 'Vorname', autoComplete: 'given-name', pflicht: true })}
-          {feld({ name: 'nachname', label: 'Nachname', autoComplete: 'family-name', pflicht: true })}
+          {feld({
+            name: 'vorname',
+            label: 'Vorname',
+            autoComplete: 'given-name',
+            pflicht: true,
+            platzhalter: 'Vorname',
+          })}
+          {feld({
+            name: 'nachname',
+            label: 'Nachname',
+            autoComplete: 'family-name',
+            pflicht: true,
+            platzhalter: 'Nachname',
+          })}
         </div>
         <div className="stf-reihe" style={{ marginTop: 14 }}>
           {feld({
@@ -441,6 +492,7 @@ export default function Stadtfest() {
             autoComplete: 'tel',
             inputMode: 'tel',
             pflicht: true,
+            platzhalter: 'Mobilnummer',
           })}
           {feld({
             name: 'plz',
@@ -448,6 +500,7 @@ export default function Stadtfest() {
             autoComplete: 'postal-code',
             inputMode: 'numeric',
             pflicht: true,
+            platzhalter: 'PLZ',
           })}
         </div>
       </div>
@@ -570,6 +623,11 @@ export default function Stadtfest() {
 
       <button type="submit" className="stf-cta" disabled={sendet}>
         {sendet ? texte.ctaLaeuft : texte.cta}
+        {!sendet && (
+          <span className="stf-cta__pfeil" aria-hidden="true">
+            &rarr;
+          </span>
+        )}
       </button>
 
       <p className="stf-hinweis">
@@ -646,14 +704,17 @@ export default function Stadtfest() {
       <section className="stf-phase">
         <dl className="stf-eck">
           <div className="stf-eck__zeile">
+            <EckIcon art="was" />
             <dt className="stf-eck__dt">Was</dt>
             <dd className="stf-eck__dd">{STADTFEST_EVENT.name}</dd>
           </div>
           <div className="stf-eck__zeile">
+            <EckIcon art="wann" />
             <dt className="stf-eck__dt">Wann</dt>
             <dd className="stf-eck__dd">{eventDatumKurz()}</dd>
           </div>
           <div className="stf-eck__zeile">
+            <EckIcon art="wo" />
             <dt className="stf-eck__dt">Wo</dt>
             <dd className="stf-eck__dd">{STADTFEST_EVENT.ort}</dd>
           </div>
@@ -722,13 +783,69 @@ export default function Stadtfest() {
               Hero. Stehen bleibt nur die Markenzeile, damit klar ist, wessen
               Bildschirm das Team da vor sich hat. */}
           {ansicht === 'formular' && kopf ? (
-            kopf
+            <>
+              {kopf}
+
+              {/* Die Buehne: das echte Gluecksrad vom Stand plus die beiden
+                  dekorativen Schriftzuege aus dem Zielbild. Das Rad traegt
+                  keine Information, die nicht auch im Text steht — deshalb
+                  leeres alt und aria-hidden. Am Handy laeuft es ueber die
+                  volle Displaybreite und ist damit das erste, was man sieht;
+                  ab 900 px steht es gross rechts neben der Headline. */}
+              <div className="stf-buehne">
+                <div className="stf-rad" aria-hidden="true">
+                  <img
+                    className="stf-rad__bild"
+                    src={radGross}
+                    srcSet={`${radKlein} 640w, ${radGross} 1100w`}
+                    sizes="(min-width: 900px) 620px, 100vw"
+                    width="1100"
+                    height="1100"
+                    alt=""
+                    decoding="async"
+                    fetchPriority="high"
+                  />
+                </div>
+
+                <p className="stf-buehne__gruss">
+                  Wir sehen uns am Stand!{' '}
+                  <span className="stf-buehne__herz" aria-hidden="true">
+                    &#9825;
+                  </span>
+                </p>
+
+                <p className="stf-buehne__preise">
+                  Tolle Preise
+                  <br />
+                  am Gl&uuml;cksrad!
+                </p>
+              </div>
+            </>
           ) : (
             <header className="stf-kopf">
               <p className="stf-kopf__marken">VIDEKO × ATLAS WEALTH</p>
             </header>
           )}
           {inhalt}
+
+          {/* Markenabschluss. Kein globaler Footer — die Seite liegt bewusst
+              ausserhalb des Layouts. Nur die beiden Absender, damit am Ende
+              des Flows klar ist, wessen Stand gemeint ist. Keine Claims,
+              keine Navigation, kein zweiter Ausgang. */}
+          <footer className="stf-fuss">
+            <span className="stf-fuss__strich" aria-hidden="true" />
+            <div className="stf-fuss__marken">
+              <p className="stf-fuss__marke">
+                <span className="stf-fuss__name">VIDEKO</span>
+                <span className="stf-fuss__claim">K&uuml;chen. R&auml;ume. Leben.</span>
+              </p>
+              <span className="stf-fuss__teiler" aria-hidden="true" />
+              <p className="stf-fuss__marke">
+                <span className="stf-fuss__name">ATLAS WEALTH</span>
+                <span className="stf-fuss__claim">Mehr aus morgen.</span>
+              </p>
+            </div>
+          </footer>
         </div>
 
         {sheet && (
