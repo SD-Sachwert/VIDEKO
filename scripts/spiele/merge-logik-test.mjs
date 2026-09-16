@@ -86,7 +86,12 @@ pruefe('komboWeiter: im Fenster +1, danach 1', komboWeiter(2, 1, 1 + KOMBO_S - 0
   const z = saat(7)
   const zaehler = [0, 0, 0, 0, 0, 0]
   for (let i = 0; i < 5000; i += 1) zaehler[zufallsStufe(z)] += 1
-  pruefe('Abwurfstufen nur 0..4, kleine haeufiger', zaehler[5] === 0 && zaehler[0] > zaehler[2] && zaehler[2] > zaehler[4], zaehler.join('/'))
+  /* Welche der fuenf Stufen am haeufigsten kommt, ist Balance und darf sich
+     verschieben. Fest steht: nie etwas oberhalb Stufe 4, und die gezogene
+     Haeufigkeit folgt SPAWN_GEWICHTE. */
+  const summe = SPAWN_GEWICHTE.reduce((a, b) => a + b, 0)
+  const passt = zaehler.slice(0, 5).every((n, i) => Math.abs(n / 5000 - SPAWN_GEWICHTE[i] / summe) < 0.025)
+  pruefe('Abwurfstufen nur 0..4 und nach SPAWN_GEWICHTE verteilt', zaehler[5] === 0 && passt, zaehler.join('/'))
 }
 
 /* ---------------------------------------------------------------- */
@@ -304,10 +309,22 @@ console.log('\n— Druckkurve (Hitze)')
   pruefe('Am Ende ist es deutlich haerter als am Anfang', ende.fall >= 1.8 && ende.linieY >= LINIE_Y * 2 && ende.ueberS <= UEBER_S * 0.4, `fall ${ende.fall}, linieY ${ende.linieY}, ueberS ${ende.ueberS}`)
   pruefe('Ueber HITZE_STOP_S hinaus bleibt die Kurve stehen', hitze(HITZE_STOP_S + 60).linieY === ende.linieY)
 
-  /* Abwurfgewichte: kalt meist klein, heiss meist gross. */
-  pruefe('spawnGewichte(0) ist unveraendert die alte Verteilung', spawnGewichte(0).every((w, i) => w === SPAWN_GEWICHTE[i]))
+  /* Abwurfgewichte: die kalte Verteilung bringt weniger Flaeche je Abwurf als
+     die heisse — daran haengt der ganze `gross`-Hebel der Druckkurve. Die
+     Gewichte selbst sind Balance und duerfen sich verschieben; die Ordnung
+     zwischen kalt und heiss darf es nicht. */
+  pruefe('spawnGewichte(0) ist die kalte Verteilung', spawnGewichte(0).every((w, i) => w === SPAWN_GEWICHTE[i]))
   pruefe('spawnGewichte(1) ist die heisse Verteilung', spawnGewichte(1).every((w, i) => w === SPAWN_GEWICHTE_HEISS[i]))
-  pruefe('Kalt kommen kleine Teile haeufiger, heiss grosse', SPAWN_GEWICHTE[0] > SPAWN_GEWICHTE[4] && SPAWN_GEWICHTE_HEISS[4] > SPAWN_GEWICHTE_HEISS[0])
+  {
+    const mittel = (g) => {
+      const summe = g.reduce((a, b) => a + b, 0)
+      return g.reduce((a, w, i) => a + w * Math.PI * STUFEN[i].r * STUFEN[i].r, 0) / summe
+    }
+    const kalt = mittel(SPAWN_GEWICHTE)
+    const heiss = mittel(SPAWN_GEWICHTE_HEISS)
+    pruefe('Heiss kommt mehr Flaeche je Abwurf als kalt', heiss > kalt, `kalt ${kalt.toFixed(0)}, heiss ${heiss.toFixed(0)}`)
+    pruefe('Kalt ist der Behaelter nicht geschenkt', kalt > 240, `kalt ${kalt.toFixed(0)} Flaeche je Abwurf`)
+  }
   {
     const z = saat(31)
     const zaehl = [0, 0, 0, 0, 0]

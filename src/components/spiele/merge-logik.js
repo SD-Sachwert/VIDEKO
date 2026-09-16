@@ -9,7 +9,7 @@
  *
  * DIE WELT
  * --------
- * Ein Behaelter 100 × 140 Einheiten, y waechst nach unten, 0 ist die
+ * Ein Behaelter 86 × 140 Einheiten, y waechst nach unten, 0 ist die
  * Oberkante. Die Komponente skaliert das nur auf Pixel. Alle Koerper sind
  * Kreise: Kreise stapeln sich ohne Kanten stabil, und bei runden Emblemen
  * sieht man den Unterschied zur echten Form nicht.
@@ -83,7 +83,10 @@
  * endet allein ueber die Uhr und raeumt sich dabei selbst auf.
  */
 
-export const BREITE = 100
+/* Der Behaelter ist bewusst schmal. Flaeche ist die Waehrung dieses Spiels:
+   Nur wer verschmilzt, gewinnt Platz zurueck. Bei 100 Breite waren die
+   ersten 60 Sekunden praktisch geschenkt — man konnte einfach ablegen. */
+export const BREITE = 86
 export const HOEHE = 140
 
 /* Oberhalb dieser Linie darf nichts dauerhaft liegen. Das groesste
@@ -221,8 +224,12 @@ export const STUFEN = [
 export const STUFEN_ANZAHL = STUFEN.length
 export const OBERSTE = STUFEN_ANZAHL - 1
 
-/* Abgeworfen werden nur die fuenf kleinsten Teile, meist die kleinen. */
-export const SPAWN_GEWICHTE = [34, 27, 20, 12, 7]
+/* Abgeworfen werden nur die fuenf kleinsten Teile. Frueher lag das Gewicht
+   klar auf den kleinsten; damit kostete ein Abwurf im Schnitt 167 Flaeche und
+   die erste Minute war fast umsonst. Jetzt liegt die Mitte der Verteilung bei
+   Mikrowelle/Kaffeemaschine — rund 273 Flaeche je Abwurf. Der Behaelter fuellt
+   sich von Anfang an sichtbar, ohne dass irgendetwas schneller wird. */
+export const SPAWN_GEWICHTE = [10, 16, 22, 25, 27]
 /* Dieselben fuenf Teile, aber am Ende der Druckkurve: jetzt kommen vor allem
    die grossen. Groessere Startteile fuellen den Behaelter schneller — das ist
    der staerkste Hebel gegen "weniger sichere Situationen". */
