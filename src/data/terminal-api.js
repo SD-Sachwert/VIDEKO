@@ -294,6 +294,52 @@ export async function wiederEinloesen(token, signal) {
 }
 
 /* ------------------------------------------------------------------ */
+/* Einladungen                                                         */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Die eigenen Einladungsslots („DEIN TEAM").
+ *
+ * Kommt im `zustand` bereits mit; dieser Ruf ist fuer die Faelle, in denen
+ * nur das Team neu geladen werden soll. Der Server entscheidet, ob es
+ * ueberhaupt Slots gibt — ein Gast bekommt hier 403, egal was der Browser
+ * schickt.
+ */
+export async function teamHolen(sitzung, signal) {
+  return terminalRuf({ aktion: 'einladungen', sitzung }, signal)
+}
+
+/** Den naechsten freien Slot belegen. Antwort enthaelt Slot und Link. */
+export async function einladungErzeugen(sitzung, signal) {
+  return terminalRuf({ aktion: 'einladung-erzeugen', sitzung }, signal)
+}
+
+/** Einen noch nicht eingeloesten Slot zurueckziehen. */
+export async function einladungWiderrufen(sitzung, slot, signal) {
+  return terminalRuf({ aktion: 'einladung-widerrufen', sitzung, slot }, signal)
+}
+
+/**
+ * Steht hinter diesem Link noch eine offene Einladung? Verbraucht nichts —
+ * eingeloest wird erst mit `gastAnlegen`.
+ */
+export async function einladungPruefen(token, signal) {
+  return terminalRuf({ aktion: 'einladung-pruefen', token }, signal)
+}
+
+/**
+ * Die Einladung einloesen und als Gast mitspielen.
+ *
+ * Die Antwort enthaelt denselben Sitzungsbeleg wie eine Aktivierung — aber
+ * keinen Deckel. Ein Gast spielt alle Hauptgames, seine Punkte werden
+ * gespeichert, und er steht in keiner Verlosung und in keinem offiziellen
+ * Gesamtranking. Das entscheidet der Server, nicht diese Datei.
+ */
+export async function gastAnlegen({ token, instagram, email, bedingungen }, signal) {
+  return terminalRuf({ aktion: 'gast-anlegen', token, instagram, email, bedingungen }, signal)
+}
+
+/* ------------------------------------------------------------------ */
 /* Verwaltung                                                          */
 /* ------------------------------------------------------------------ */
 

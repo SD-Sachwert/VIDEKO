@@ -49,6 +49,18 @@ import {
   zaehlen,
 } from './_terminal-kern.js'
 import { gesamtranking } from './_terminal-gesamtranking.js'
+import {
+  einladungErzeugen,
+  einladungOeffnen,
+  einladungWiderrufen,
+  gastAnlegen,
+  gastKonvertieren,
+  istGast,
+  istOffiziell,
+  teamLesen,
+  teilnehmerLesen,
+  teilnehmerSicht,
+} from './_terminal-einladungen.js'
 import { probeBehandeln, probeLesen } from './_terminal-probe.js'
 
 /**
@@ -72,6 +84,22 @@ import { probeBehandeln, probeLesen } from './_terminal-probe.js'
  *                 Deckel. Antwortet immer gleich, ob die Adresse bekannt ist
  *                 oder nicht.
  *   wieder-einloesen — Zugangslink gegen einen Sitzungsbeleg tauschen.
+ *   einladungen  — die eigenen Einladungsslots („DEIN TEAM"). Nur fuer
+ *                 offizielle Teilnehmer, nur gegen Sitzungsbeleg.
+ *   einladung-erzeugen / einladung-widerrufen — einen Slot belegen oder
+ *                 einen noch nicht eingeloesten Link zurueckziehen.
+ *   einladung-pruefen — oeffentlich: steht hinter einem Einladungslink noch
+ *                 eine offene Einladung, und von wem?
+ *   gast-anlegen — eine Einladung einloesen und als Gast mitspielen.
+ *
+ * EINE EINLADUNG IST KEIN LOS
+ * ---------------------------
+ * Ein physischer Deckel ist genau ein Los. Ein Gast spielt alle Hauptgames,
+ * seine Punkte werden gespeichert und er sieht sie — aber er ist in keiner
+ * Ziehung, in keiner oeffentlichen Liste und in keinem offiziellen
+ * Gesamtranking. Wer eingeladen hat, bekommt dadurch keine zusaetzliche
+ * Chance. Offiziell wird ein Gast ausschliesslich dadurch, dass er selbst
+ * einen echten Deckel aktiviert — siehe `aktivieren` weiter unten.
  *
  * Dazu kommt ein Sonderweg: liegt ein gueltiger Testbeleg an (`probe`, nur
  * ueber die Admin-Anmeldung zu bekommen), beantwortet _terminal-probe.js die
@@ -162,31 +190,36 @@ async function zustand(b, res) {
 
   let teilnehmer = null
   let spiele = null
+  let team = null
   const beleg = belegPruefen(b.sitzung, 's')
   if (beleg?.id) {
-    const [zeilen, beste, gesamt, rangGesamt] = await Promise.all([
-      lesen(
-        `${TABELLE_TEILNEHMER}?select=deckel_nummer,instagram_handle,aktiviert_am,leaderboard_ok`
-        + `&id=eq.${encodeURIComponent(beleg.id)}&limit=1`,
-      ),
+    /* Die Zeile kommt aus der Datenbank, nicht aus dem Beleg. Damit steht
+       auch `teilnahme_status` immer fest — ob jemand Gast ist, entscheidet
+       nie der Browser. Kein `email` in der Auswahl: die Adresse gehoert der
+       Meldung im Gewinnfall, nicht dem Dashboard. */
+    const [z, beste, gesamt, rangGesamt] = await Promise.all([
+      teilnehmerLesen(beleg.id),
       eigeneBestwerte(beleg.id),
       gesamtrangliste(beleg.id),
       gesamtranking(beleg.id),
     ])
-    const z = zeilen[0]
-    /* Kein `email` in der Auswahl oben, und auch hier nicht. Die Adresse
-       gehoert der Meldung im Gewinnfall, nicht dem Dashboard. */
-    if (z) {
-      teilnehmer = {
-        deckel: z.deckel_nummer,
-        instagram: z.instagram_handle,
-        aktiviertAm: z.aktiviert_am,
-        leaderboardOk: z.leaderboard_ok === true,
-      }
+    teilnehmer = teilnehmerSicht(z)
+
+    if (istGast(z) && z.eingeladen_von) {
+      /* Der Gast soll sehen, wer ihn hereingeholt hat — Name, nie mehr. */
+      const einlader = await teilnehmerLesen(z.eingeladen_von)
+      if (einlader) teilnehmer.einladerInstagram = einlader.instagram_handle
+    } else if (istOffiziell(z)) {
+      /* Einladungsslots gibt es nur fuer offizielle Teilnehmer. Ein Gast
+         bekommt hier `null` und damit gar keine Oberflaeche dafuer. */
+      team = await teamLesen(z.id, einstellungen.einladungenProTeilnehmer, terminalBasis())
     }
+
     /* Die eigenen Werte bekommt nur, wer den Beleg hat. `platz` ist der Platz
        in der oeffentlichen Gesamtliste — ohne Einwilligung gibt es keinen,
-       dann steht hier null und im Dashboard der Hinweis darauf. */
+       dann steht hier null und im Dashboard der Hinweis darauf. Ein Gast
+       steht in keiner der beiden oeffentlichen Wertungen; seine eigenen
+       Bestwerte sieht er trotzdem. */
     spiele = {
       beste,
       gesamt: gesamt.eigenePunkte,
@@ -197,7 +230,7 @@ async function zustand(b, res) {
     }
   }
 
-  res.status(200).json({ ok: true, aktiviert: aktiviert ?? 0, einstellungen, teilnehmer, spiele, koenig })
+  res.status(200).json({ ok: true, aktiviert: aktiviert ?? 0, einstellungen, teilnehmer, spiele, team, koenig })
 }
 
 /* ------------------------------------------------------------------ */
@@ -237,8 +270,34 @@ function code(b, res, ip) {
 /* aktivieren                                                          */
 /* ------------------------------------------------------------------ */
 
+/**
+ * Deckel aktivieren — der einzige Weg zu einem Los.
+ *
+ * Zwei Wege fuehren hierher, und sie enden in derselben Regel:
+ *
+ *   1. Der gewoehnliche: Raetselcode geloest, Zugangsbeleg vorhanden, es
+ *      entsteht eine neue Teilnehmerzeile.
+ *   2. Der Gast: jemand ist ueber eine Einladung im Terminal, hat gespielt
+ *      und hat jetzt einen eigenen Deckel in der Hand. Dann wird KEINE
+ *      zweite Zeile angelegt — die vorhandene wird fortgeschrieben. Der
+ *      Account behaelt id, Anmeldung, Scores und Herkunft; er bekommt eine
+ *      Deckelnummer und damit ab sofort ein Los, Ranking und eigene
+ *      Einladungsslots.
+ *
+ * Dass jemand Gast ist, steht ausschliesslich in der Datenbank. Der Client
+ * schickt keinen Status, und es gibt keinen Parameter, mit dem sich einer
+ * setzen liesse. Ohne echte Deckelnummer kommt hier niemand durch — die
+ * Datenbank laesst offiziell ohne Nummer gar nicht zu.
+ */
 async function aktivieren(b, res, ip) {
-  if (!belegPruefen(b.zugang, 'z')) {
+  /* Wer eine gueltige Gastsitzung hat, ist schon im Terminal und braucht
+     den Raetselcode nicht noch einmal. Fuer alle anderen bleibt der
+     Zugangsbeleg Pflicht. */
+  const sitzung = belegPruefen(b.sitzung, 's')
+  const vorhanden = sitzung?.id ? await teilnehmerLesen(sitzung.id) : null
+  const gast = istGast(vorhanden) ? vorhanden : null
+
+  if (!gast && !belegPruefen(b.zugang, 'z')) {
     /* Abgelaufen oder gefaelscht. Die Seite schickt die Person zurueck zum
        Codefeld — ohne den Code zu nennen. */
     res.status(401).json({ ok: false, grund: 'zugang' })
@@ -251,8 +310,11 @@ async function aktivieren(b, res, ip) {
     return
   }
 
-  const instagram = instagramNormalisieren(b.instagram)
-  const email = clean(b.email, FELD_GRENZEN.email)
+  /* Der Gast hat Name und Adresse bei der Einladung schon hinterlegt. Sie
+     werden nicht noch einmal erfragt und nicht ueberschrieben — sonst liesse
+     sich ueber diesen Weg ein fremder Account umschreiben. */
+  const instagram = gast ? gast.instagram_handle : instagramNormalisieren(b.instagram)
+  const email = gast ? null : clean(b.email, FELD_GRENZEN.email)
   const folgt = b.folgt === true
   /* Die Einwilligung in die oeffentliche Bestenliste ist freiwillig und hat
      mit der Teilnahme nichts zu tun: ohne sie wird der Deckel genauso
@@ -263,7 +325,7 @@ async function aktivieren(b, res, ip) {
 
   const felder = []
   if (!instagram) felder.push('instagram')
-  if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) felder.push('email')
+  if (!gast && (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))) felder.push('email')
   /* Der Haken ist Pflicht. Er belegt eine Selbstauskunft, keine Pruefung —
      geprueft wird im Gewinnfall von Hand. */
   if (!folgt) felder.push('folgt')
@@ -302,6 +364,34 @@ async function aktivieren(b, res, ip) {
     return
   }
   const anspruchArt = belegt ? ANSPRUCH_WEITERER : ANSPRUCH_ERST
+
+  /* Der Gastweg: dieselbe Zeile, jetzt mit Nummer. Kein zweiter Account,
+     keine kopierten Scores, keine neue id — die Punkte haengen an genau
+     dieser id und bleiben deshalb einfach liegen, wo sie sind. */
+  if (gast) {
+    const umgestellt = await gastKonvertieren(gast.id, nummer, anspruchArt)
+    if (!umgestellt.ok) {
+      res.status(umgestellt.status).json({ ok: false, grund: umgestellt.grund })
+      return
+    }
+    /* Ab jetzt zaehlen die Laeufe dieser Person in den offiziellen Wertungen
+       mit. Der Zwischenspeicher kennt sie noch als Gast — also verwerfen. */
+    rangSpeicherLeeren()
+    if (leaderboardOk) await einwilligungSetzen(gast.id, true)
+
+    res.status(200).json({
+      ok: true,
+      /* Derselbe Beleg fuer dieselbe id: die Anmeldung bleibt bestehen. */
+      sitzung: belegErzeugen('s', { id: gast.id }),
+      teilnehmer: {
+        ...teilnehmerSicht(umgestellt.zeile),
+        leaderboardOk: leaderboardOk || umgestellt.zeile.leaderboard_ok === true,
+      },
+      konvertiert: true,
+      aktiviert: (await aktivierteZaehlen()) ?? undefined,
+    })
+    return
+  }
 
   const jetztIso = new Date().toISOString()
   const antwort = await fetch(restUrl(TABELLE_TEILNEHMER), {
@@ -897,6 +987,185 @@ async function wiederEinloesen(b, res, ip) {
 }
 
 /* ------------------------------------------------------------------ */
+/* Einladungen                                                         */
+/* ------------------------------------------------------------------ */
+
+/**
+ * „DEIN TEAM" und die Slots dahinter.
+ *
+ * Alles hier haengt an einer einzigen Frage, die nur die Datenbank
+ * beantwortet: ist der Absender ein offizieller Teilnehmer? Ein Gast bekommt
+ * 403 — nicht, weil die Oberflaeche ihm den Knopf nicht zeigt, sondern weil
+ * der Server ihn nicht bedient. Einladungsketten gibt es damit nicht.
+ */
+const MAX_EINLADUNG_SCHREIBEN = 20
+const MAX_EINLADUNG_OEFFNEN = 60
+const MAX_GAST = 5
+const GAST_FENSTER_MS = 60 * 60 * 1000
+const NUR_OFFIZIELL = { ok: false, grund: 'gast', meldung: 'Einladungen gibt es nur mit eigenem Deckel.' }
+
+/** Die eigene Zeile hinter einem Sitzungsbeleg — oder null. */
+async function eigeneZeile(b) {
+  const beleg = belegPruefen(b.sitzung, 's')
+  return beleg?.id ? teilnehmerLesen(beleg.id) : null
+}
+
+async function einladungen(b, res) {
+  const ich = await eigeneZeile(b)
+  if (!ich) {
+    res.status(401).json({ ok: false, grund: 'sitzung' })
+    return
+  }
+  if (!istOffiziell(ich)) {
+    res.status(403).json(NUR_OFFIZIELL)
+    return
+  }
+  const einstellungen = await einstellungenLesen()
+  const team = await teamLesen(ich.id, einstellungen.einladungenProTeilnehmer, terminalBasis())
+  res.status(200).json({ ok: true, team })
+}
+
+async function einladungNeu(b, res, ip) {
+  if (zuSchnell(ip, 'einladung', MAX_EINLADUNG_SCHREIBEN)) {
+    res.status(429).json(BREMSE)
+    return
+  }
+  const ich = await eigeneZeile(b)
+  if (!ich) {
+    res.status(401).json({ ok: false, grund: 'sitzung' })
+    return
+  }
+  if (!istOffiziell(ich)) {
+    res.status(403).json(NUR_OFFIZIELL)
+    return
+  }
+
+  const einstellungen = await einstellungenLesen()
+  const basis = terminalBasis()
+  const ergebnis = await einladungErzeugen(ich, einstellungen.einladungenProTeilnehmer, basis, ipHash(ip))
+  if (!ergebnis.ok) {
+    const status = ergebnis.grund === 'server' ? 500 : 409
+    res.status(status).json({ ok: false, grund: ergebnis.grund })
+    return
+  }
+
+  const team = await teamLesen(ich.id, einstellungen.einladungenProTeilnehmer, basis)
+  res.status(200).json({ ok: true, slot: ergebnis.slot, team })
+}
+
+async function einladungZurueck(b, res, ip) {
+  if (zuSchnell(ip, 'einladung', MAX_EINLADUNG_SCHREIBEN)) {
+    res.status(429).json(BREMSE)
+    return
+  }
+  const ich = await eigeneZeile(b)
+  if (!ich) {
+    res.status(401).json({ ok: false, grund: 'sitzung' })
+    return
+  }
+  if (!istOffiziell(ich)) {
+    res.status(403).json(NUR_OFFIZIELL)
+    return
+  }
+
+  const ergebnis = await einladungWiderrufen(ich, b.slot)
+  if (!ergebnis.ok) {
+    res.status(ergebnis.grund === 'server' ? 500 : 409).json({ ok: false, grund: ergebnis.grund })
+    return
+  }
+  const einstellungen = await einstellungenLesen()
+  const team = await teamLesen(ich.id, einstellungen.einladungenProTeilnehmer, terminalBasis())
+  res.status(200).json({ ok: true, team })
+}
+
+/**
+ * Die Landingpage hinter einem Einladungslink.
+ *
+ * Verbraucht nichts. Sie sagt nur, ob der Link noch offen ist und wer
+ * eingeladen hat — damit die Seite „Eingeladen von @xyz" schreiben kann und
+ * daneben in voller Groesse, was eine Einladung nicht ist.
+ */
+async function einladungPruefen(b, res, ip) {
+  if (zuSchnell(ip, 'einladung-pruefen', MAX_EINLADUNG_OEFFNEN)) {
+    res.status(429).json(BREMSE)
+    return
+  }
+  const ergebnis = await einladungOeffnen(b.token)
+  if (!ergebnis.ok) {
+    res.status(200).json({ ok: false, grund: ergebnis.grund })
+    return
+  }
+  const einstellungen = await einstellungenLesen()
+  res.status(200).json({ ok: true, einladung: ergebnis.einladung, einstellungen })
+}
+
+/**
+ * Einladung einloesen: Gastaccount anlegen.
+ *
+ * Der Gast bekommt einen ganz normalen Sitzungsbeleg — dieselbe Anmeldung
+ * wie jeder andere. Was er NICHT bekommt: eine Deckelnummer, ein Los, einen
+ * Platz im offiziellen Gesamtranking oder eigene Einladungsslots. Das
+ * entscheidet nicht dieser Beleg, sondern `teilnahme_status` in der
+ * Datenbank, und die laesst zu einem Gast gar keine Nummer zu.
+ *
+ * Die E-Mail-Adresse wird erhoben, weil das Terminal genau einen Weg zurueck
+ * in einen Account kennt: den Zugangslink per Mail. Ohne sie waeren die
+ * Punkte eines Gastes beim naechsten geloeschten Browserspeicher weg — und
+ * „DEINE SCORES SIND SICHER." waere eine Luege.
+ */
+async function gastAnmelden(b, res, ip) {
+  if (zuSchnell(ip, 'gast', MAX_GAST)) {
+    res.status(429).json(BREMSE)
+    return
+  }
+
+  const instagram = instagramNormalisieren(b.instagram)
+  const email = clean(b.email, FELD_GRENZEN.email)
+  const felder = []
+  if (!instagram) felder.push('instagram')
+  if (!email || !EMAIL_MUSTER.test(email)) felder.push('email')
+  /* Zustimmung zu Teilnahmebedingungen und Datenschutz. Die Freigabe fuer
+     die oeffentliche Rangliste wird hier ausdruecklich NICHT verlangt — ein
+     Gast steht ohnehin auf keiner. */
+  if (b.bedingungen !== true) felder.push('bedingungen')
+  if (felder.length) {
+    res.status(400).json({ ok: false, grund: 'felder', felder })
+    return
+  }
+
+  const hash = ipHash(ip)
+  const seit = new Date(Date.now() - GAST_FENSTER_MS).toISOString()
+  const wiederholt = await zaehlen(
+    `${TABELLE_TEILNEHMER}?ip_hash=eq.${hash}&teilnahme_status=eq.gast`
+    + `&aktiviert_am=gte.${encodeURIComponent(seit)}`,
+  )
+  if (wiederholt != null && wiederholt >= MAX_GAST) {
+    res.status(429).json(BREMSE)
+    return
+  }
+
+  const ergebnis = await gastAnlegen({ token: b.token, instagram, email, ipH: hash })
+  if (!ergebnis.ok) {
+    res.status(ergebnis.status).json({ ok: false, grund: ergebnis.grund })
+    return
+  }
+
+  /* Ein frischer Gast hat noch keinen Lauf, aber der Zwischenspeicher soll
+     ihn trotzdem sofort kennen — sonst zaehlte sein erster Lauf womoeglich
+     zwanzig Sekunden lang in einer offiziellen Wertung mit. */
+  rangSpeicherLeeren()
+
+  res.status(200).json({
+    ok: true,
+    sitzung: belegErzeugen('s', { id: ergebnis.gast.id }),
+    teilnehmer: {
+      ...teilnehmerSicht(ergebnis.gast),
+      einladerInstagram: ergebnis.einlader.instagram_handle,
+    },
+  })
+}
+
+/* ------------------------------------------------------------------ */
 /* Handler                                                             */
 /* ------------------------------------------------------------------ */
 
@@ -944,6 +1213,8 @@ export default async function handler(req, res) {
      der nicht gespeichert werden kann, soll nicht erst gespielt werden. */
   const schreibend = aktion === 'aktivieren' || aktion === 'melden'
     || aktion === 'spiel-start' || aktion === 'spiel-ende' || aktion === 'leaderboard'
+    || aktion === 'einladung-erzeugen' || aktion === 'einladung-widerrufen'
+    || aktion === 'gast-anlegen'
   if (schreibend && !schreibenErlaubt()) {
     res.status(503).json(PAUSE)
     return
@@ -960,6 +1231,11 @@ export default async function handler(req, res) {
     if (aktion === 'leaderboard') return await einwilligung(b, res, ip)
     if (aktion === 'wieder-anfordern') return await wiederAnfordern(b, res, ip)
     if (aktion === 'wieder-einloesen') return await wiederEinloesen(b, res, ip)
+    if (aktion === 'einladungen') return await einladungen(b, res)
+    if (aktion === 'einladung-erzeugen') return await einladungNeu(b, res, ip)
+    if (aktion === 'einladung-widerrufen') return await einladungZurueck(b, res, ip)
+    if (aktion === 'einladung-pruefen') return await einladungPruefen(b, res, ip)
+    if (aktion === 'gast-anlegen') return await gastAnmelden(b, res, ip)
   } catch {
     res.status(500).json({ ok: false, grund: 'server' })
     return

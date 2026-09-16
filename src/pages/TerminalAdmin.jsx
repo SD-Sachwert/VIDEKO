@@ -953,6 +953,209 @@ function SpielStatistik({ stats, laden, laeuft }) {
 }
 
 /* ------------------------------------------------------------------ */
+/* Einladungen                                                         */
+/* ------------------------------------------------------------------ */
+
+/** Die Kennzahlen in der Reihenfolge, in der sie hier gelesen werden. */
+const EINLADUNG_ZEILEN = [
+  ['offizielleTeilnehmer', 'Offizielle Teilnehmer (Erstaktivierung)', (w) => zahl(w)],
+  ['slotsProTeilnehmer', 'Einladungen pro Teilnehmer', (w) => zahl(w)],
+  ['einladungenErzeugt', 'Einladungen erzeugt', (w) => zahl(w)],
+  ['einladungenWiderrufen', 'davon zurückgezogen', (w) => zahl(w)],
+  ['einladungenGeoeffnet', 'Links geöffnet', (w) => zahl(w)],
+  ['oeffnungenGesamt', 'Öffnungen gesamt', (w) => zahl(w)],
+  ['einladungenVerwendet', 'Eingelöst', (w) => zahl(w)],
+  ['gaesteAktiv', 'Gäste ohne eigenen Deckel', (w) => zahl(w)],
+  ['gaesteKonvertiert', 'Gäste mit eigenem Deckel', (w) => zahl(w)],
+  ['conversionRate', 'Conversion (eingelöst → Deckel)', prozent],
+]
+
+const EINLADUNG_STATUS = {
+  eingeladen: 'offen',
+  beigetreten: 'eingelöst',
+}
+
+/**
+ * Der Bereich EINLADUNGEN.
+ *
+ * WAS HIER BEWUSST FEHLT
+ * ----------------------
+ * Der Einladungstoken. Er steht auch in der Datenbank nur als Hash, und der
+ * Server schickt ihn hier nicht mit — eine Verwaltung, die fremde Gastplaetze
+ * selbst einloesen kann, waere kein Auswertungswerkzeug mehr.
+ *
+ * Und es gibt keinen Knopf „offiziell machen". Aus einem Gast wird ein
+ * Teilnehmer ausschliesslich ueber einen echten, aktivierten Deckel. Ein
+ * Umweg an dieser Pruefung vorbei wuerde genau das aushebeln, worauf die
+ * ganze Aktion steht: 1 Deckel = 1 Teilnehmer = 1 Los.
+ *
+ * Angezeigt werden Instagram-Namen und Deckelnummern — dieselben Angaben wie
+ * in jeder anderen Ansicht. Keine Adressen.
+ */
+function EinladungenAuswertung({ daten, laden, laeuft, einstellungen, speichern, standLaeuft }) {
+  const [suche, setSuche] = useState('')
+  const [slots, setSlots] = useState('')
+  const zahlen = daten?.zahlen ?? null
+  const einlader = daten?.einlader ?? []
+  const gaeste = daten?.gaeste ?? []
+
+  /* Der gespeicherte Wert kommt mit dem Stand, nicht mit dieser Auswertung. */
+  const gespeichert = String(einstellungen?.einladungenProTeilnehmer ?? '')
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSlots(gespeichert)
+  }, [gespeichert])
+
+  return (
+    <section className="trm-karte" id="adm-einladungen">
+      <div className="trm-karte__kopf">
+        <Ikon name="verbinden" size={18} />
+        <h2 className="trm-karte__titel">EINLADUNGEN</h2>
+      </div>
+      <p className="trm-karte__sub">
+        Ein Gast spielt alle Games, seine Scores werden gespeichert — er steht in keiner
+        Verlosung und in keinem offiziellen Gesamtranking. Offiziell wird er erst mit
+        einem eigenen aktivierten Deckel. Der Einladungstoken wird hier nicht angezeigt.
+      </p>
+
+      {/* Die Zahl steht in der Datenbank, nicht im Code. 0 schliesst das
+          Programm fuer neue Slots — bereits erzeugte Einladungen bleiben
+          gueltig und werden dadurch nicht entwertet. */}
+      <form
+        className="trm-adm__paar"
+        onSubmit={(ereignis) => {
+          ereignis.preventDefault()
+          speichern({ einladungenProTeilnehmer: slots })
+        }}
+      >
+        <div className="trm-feld">
+          <label className="trm-feld__label" htmlFor="adm-einladung-slots">
+            Einladungen pro offiziellem Teilnehmer
+          </label>
+          <input
+            id="adm-einladung-slots"
+            className="trm-eingabe"
+            type="number"
+            inputMode="numeric"
+            min="0"
+            max="20"
+            value={slots}
+            onChange={(ereignis) => setSlots(ereignis.target.value)}
+          />
+          <p className="trm-feld__hilfe">
+            Gilt nur für neue Slots. Der Server begrenzt den Wert zusätzlich.
+          </p>
+        </div>
+        <div className="trm-adm__leiste">
+          <button
+            type="submit"
+            className="trm-cta trm-cta--klein"
+            disabled={standLaeuft || slots === gespeichert}
+          >
+            {standLaeuft ? 'Wird gespeichert …' : 'Speichern'}
+          </button>
+        </div>
+      </form>
+
+      <form
+        className="trm-adm__suche"
+        onSubmit={(ereignis) => {
+          ereignis.preventDefault()
+          laden(suche.trim())
+        }}
+      >
+        <div className="trm-feld">
+          <label className="trm-feld__label" htmlFor="adm-einladung-suche">
+            Deckelnummer oder Instagram-Name
+          </label>
+          <input
+            id="adm-einladung-suche"
+            className="trm-eingabe"
+            type="search"
+            value={suche}
+            onChange={(ereignis) => setSuche(ereignis.target.value)}
+          />
+        </div>
+        <div className="trm-adm__leiste">
+          <button type="submit" className="trm-cta trm-cta--klein" disabled={laeuft}>
+            <Search size={15} aria-hidden="true" /> Suchen
+          </button>
+          <button
+            type="button"
+            className="trm-cta trm-cta--klein trm-cta--umriss"
+            disabled={laeuft}
+            onClick={() => {
+              setSuche('')
+              laden('')
+            }}
+          >
+            <RefreshCw size={15} aria-hidden="true" />
+            {laeuft ? 'Lädt …' : 'Neu laden'}
+          </button>
+        </div>
+      </form>
+
+      {zahlen == null ? (
+        <p className="trm-feld__hilfe">{laeuft ? 'Lädt …' : 'Keine Daten.'}</p>
+      ) : (
+        <>
+          {/* Die Kennzahlen ignorieren die Suche: sie beschreiben immer die
+              ganze Aktion, nicht den gerade gefilterten Ausschnitt. */}
+          {EINLADUNG_ZEILEN.map(([feld, titel, format]) => (
+            <Zeile key={feld} label={titel}>{format(zahlen[feld] ?? null)}</Zeile>
+          ))}
+
+          <h3 className="trm-adm__untertitel">EINLADER</h3>
+          {einlader.length === 0 ? (
+            <p className="trm-feld__hilfe">Noch keine Einladungen erzeugt.</p>
+          ) : (
+            <ol className="trm-adm__liste">
+              {einlader.map((e) => (
+                <li key={e.id}>
+                  <strong>{deckelText(e.deckel)}</strong>
+                  <span className="trm-adm__status">{instagramAnzeige(e.instagram)}</span>
+                  <span className="trm-adm__klein">
+                    {e.slots
+                      .map((s) => {
+                        const wer = s.gast
+                          ? `${instagramAnzeige(s.gast.instagram)}${s.gast.gast ? '' : ` · ${deckelText(s.gast.deckel)}`}`
+                          : `${zahl(s.oeffnungen)}× geöffnet`
+                        return `#${s.slot} ${EINLADUNG_STATUS[s.status] ?? s.status} · ${wer}`
+                      })
+                      .join(' | ')}
+                  </span>
+                </li>
+              ))}
+            </ol>
+          )}
+
+          <h3 className="trm-adm__untertitel">GÄSTE</h3>
+          {gaeste.length === 0 ? (
+            <p className="trm-feld__hilfe">Noch keine Gäste.</p>
+          ) : (
+            <ol className="trm-adm__liste">
+              {gaeste.map((g) => (
+                <li key={g.id}>
+                  <strong>{instagramAnzeige(g.instagram)}</strong>
+                  <span className="trm-adm__status">
+                    {g.gast ? 'Gast' : `offiziell · ${deckelText(g.deckel)}`}
+                  </span>
+                  <span className="trm-adm__klein">
+                    {g.einladerInstagram ? `von ${instagramAnzeige(g.einladerInstagram)} · ` : ''}
+                    {terminText(g.eingeladenAm) ?? '—'}
+                    {g.konvertiertAm ? ` · Deckel ${terminText(g.konvertiertAm)}` : ''}
+                  </span>
+                </li>
+              ))}
+            </ol>
+          )}
+        </>
+      )}
+    </section>
+  )
+}
+
+/* ------------------------------------------------------------------ */
 /* Game-Leaderboard                                                    */
 /* ------------------------------------------------------------------ */
 
@@ -1018,6 +1221,11 @@ export default function TerminalAdmin() {
   const [stats, setStats] = useState(null)
   const [statsLaeuft, setStatsLaeuft] = useState(false)
 
+  /* Die Einladungsauswertung laedt ebenfalls getrennt: sie hat eine eigene
+     Suche und liest zwei komplette Tabellen. */
+  const [einladungen, setEinladungen] = useState(null)
+  const [einladungenLaeuft, setEinladungenLaeuft] = useState(false)
+
   /* Der gemerkte Schluessel wird erst im Effekt gelesen: waehrend des
      Vorrenderns gibt es kein window, und der erste Klientenlauf muss
      dieselbe Ausgabe erzeugen wie der Server. */
@@ -1078,6 +1286,17 @@ export default function TerminalAdmin() {
     if (antwort.ok) setScores(antwort.scores ?? [])
   }, [schluessel, scoreFilter, scoreAbfrage, scoreSpiel])
 
+  const einladungenLaden = useCallback(
+    async (begriff = '') => {
+      if (!schluessel) return
+      setEinladungenLaeuft(true)
+      const antwort = await terminalAdminRuf(schluessel, { aktion: 'einladungen', suche: begriff })
+      setEinladungenLaeuft(false)
+      if (antwort.ok) setEinladungen(antwort)
+    },
+    [schluessel],
+  )
+
   const statsLaden = useCallback(async () => {
     if (!schluessel) return
     setStatsLaeuft(true)
@@ -1099,6 +1318,12 @@ export default function TerminalAdmin() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     statsLaden()
   }, [angemeldet, statsLaden])
+
+  useEffect(() => {
+    if (!angemeldet) return
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    einladungenLaden()
+  }, [angemeldet, einladungenLaden])
 
   if (!angemeldet) {
     return (
@@ -1468,6 +1693,17 @@ export default function TerminalAdmin() {
         />
 
         <SpielStatistik stats={stats} laden={statsLaden} laeuft={statsLaeuft} />
+
+        <EinladungenAuswertung
+          daten={einladungen}
+          laden={einladungenLaden}
+          laeuft={einladungenLaeuft}
+          einstellungen={einstellungen}
+          standLaeuft={laeuft}
+          speichern={(felder) =>
+            handeln({ aktion: 'einstellungen', ...felder }, 'Einladungsslots gespeichert.')
+          }
+        />
 
         {/* ---------------- Teilnehmer ---------------- */}
         <section className="trm-karte">

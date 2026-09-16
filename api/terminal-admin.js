@@ -3,9 +3,14 @@ import crypto from 'node:crypto'
 import { TERMINAL_KAMPAGNE, deckelNummer } from '../src/data/terminal.js'
 import {
   ANSPRUCH_ERST,
+  EINLADUNGEN_MAX,
   KAMPAGNE,
+  NUR_OFFIZIELLE,
   SPIEL_SCHLUESSEL,
+  STATUS_GAST,
+  STATUS_OFFIZIELL,
   TABELLE_ADMIN_VERSUCHE,
+  TABELLE_EINLADUNGEN,
   TABELLE_MELDUNGEN,
   TABELLE_SCORES,
   TABELLE_SPIELSTARTS,
@@ -371,6 +376,14 @@ async function einstellungen(b) {
     if (!SPIEL_SCHLUESSEL.includes(key)) return { ok: false, grund: 'felder' }
     felder.guest_practice_game = key
   }
+  if ('einladungenProTeilnehmer' in b) {
+    /* Wie viele Gaeste ein offizieller Teilnehmer einladen darf. 0 schliesst
+       das Programm. Bereits erzeugte Einladungen bleiben in jedem Fall
+       gueltig — die Zahl begrenzt nur neue Slots. */
+    const n = ganzzahl(b.einladungenProTeilnehmer, EINLADUNGEN_MAX)
+    if (n == null) return { ok: false, grund: 'felder' }
+    felder.einladungen_pro_teilnehmer = n
+  }
 
   /* Gesamtranking. Die Warnung „Dieses Game ist Bestandteil des
      Gesamtrankings" zeigt die Oberflaeche; hier wird nur geprueft. */
@@ -452,11 +465,20 @@ async function einstellungen(b) {
  * Aus Teilnehmerzeilen wird eine Menge eindeutiger Nummern. Wie viele
  * Besitzansprueche auf einer Nummer liegen, spielt fuer die Chance keine
  * Rolle — 1, 2, 5 oder 20 Ansprueche sind immer genau ein Los.
+ *
+ * Gaeste kommen hier nie an: sie haben keine Deckelnummer, und alles ohne
+ * ganzzahlige Nummer faellt heraus. Die Abfrage filtert zusaetzlich auf
+ * `teilnahme_status = 'offiziell'`, und die Datenbank selbst verbietet den
+ * Status 'offiziell' ohne Deckelnummer. Drei Schloesser vor derselben Tuer —
+ * ein Einladungsgast darf unter keinen Umstaenden ein Los bekommen.
  */
 export function topfBilden(teilnehmer, lose = []) {
   const schonGezogen = new Set(lose.map((z) => z.deckel_nummer))
-  return [...new Set(teilnehmer.map((t) => t.deckel_nummer))]
-    .filter((n) => Number.isInteger(n) && !schonGezogen.has(n))
+  return [...new Set(
+    teilnehmer
+      .filter((t) => t.teilnahme_status == null || t.teilnahme_status === STATUS_OFFIZIELL)
+      .map((t) => t.deckel_nummer),
+  )].filter((n) => Number.isInteger(n) && !schonGezogen.has(n))
 }
 
 /**
@@ -472,8 +494,8 @@ async function ziehen() {
   if (offen) return { ok: false, grund: 'offen', ziehung: offen }
 
   const teilnehmer = await alleLesen(
-    `${TABELLE_TEILNEHMER}?select=deckel_nummer`
-    + `&kampagne=eq.${encodeURIComponent(KAMPAGNE)}&order=id.asc`,
+    `${TABELLE_TEILNEHMER}?select=deckel_nummer,teilnahme_status`
+    + `&kampagne=eq.${encodeURIComponent(KAMPAGNE)}${NUR_OFFIZIELLE}&order=id.asc`,
   )
   const topf = topfBilden(teilnehmer, lose)
 
@@ -858,6 +880,142 @@ async function statistik() {
 }
 
 /* ------------------------------------------------------------------ */
+/* Einladungen                                                         */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Auswertung des Einladungsprogramms.
+ *
+ * Zwei Dinge fehlen hier mit Absicht:
+ *
+ * 1. Der Einladungstoken. Er steht nirgends im Klartext — die Datenbank kennt
+ *    nur seinen Hash, und auch der verlaesst diese Funktion nicht. Den Link
+ *    sieht ausschliesslich der Einlader in seinem eigenen Dashboard. Wer
+ *    einen verlorenen Link braucht, widerruft den Slot und erzeugt ihn neu.
+ * 2. Ein Knopf „offiziell machen". Aus einem Gast wird ein offizieller
+ *    Teilnehmer nur dadurch, dass er selbst einen echten Deckel aktiviert.
+ *    Gaebe es hier eine Abkuerzung, waere die Deckelpruefung eine Bitte und
+ *    keine Regel mehr.
+ *
+ * Gezaehlt wird aus den vorhandenen Spalten. Es gibt keine eigene
+ * Analysetabelle und keine personenbezogenen Ereignisprotokolle:
+ * `invite_created` ist erstellt_am, `invite_opened` sind oeffnungen und
+ * geoeffnet_am, `invite_registered` ist verwendet_am,
+ * `guest_converted_to_coaster` ist gast_konvertiert_am.
+ */
+async function einladungenAuswertung(b) {
+  const suche = clean(b.suche, 60)
+
+  const [teilnehmer, einladungen, einstellungen] = await Promise.all([
+    alleLesen(
+      `${TABELLE_TEILNEHMER}?select=id,deckel_nummer,instagram_handle,aktiviert_am,`
+      + 'teilnahme_status,eingeladen_von,eingeladen_am,gast_konvertiert_am,anspruch_art'
+      + `&kampagne=eq.${encodeURIComponent(KAMPAGNE)}&order=aktiviert_am.desc,id.asc`,
+    ),
+    alleLesen(
+      `${TABELLE_EINLADUNGEN}?select=id,einlader_teilnehmer_id,slot_nummer,erstellt_am,`
+      + 'geoeffnet_am,oeffnungen,verwendet_am,gast_teilnehmer_id,widerrufen_am'
+      + `&kampagne=eq.${encodeURIComponent(KAMPAGNE)}&order=erstellt_am.asc`,
+    ),
+    einstellungenLesen(),
+  ])
+
+  const nachId = new Map(teilnehmer.map((z) => [z.id, z]))
+  const gaeste = teilnehmer.filter((z) => z.teilnahme_status === STATUS_GAST)
+  const konvertiert = teilnehmer.filter((z) => z.gast_konvertiert_am)
+  const offizielleErst = teilnehmer.filter(
+    (z) => z.teilnahme_status === STATUS_OFFIZIELL && z.anspruch_art === ANSPRUCH_ERST,
+  )
+
+  const offen = einladungen.filter((e) => !e.widerrufen_am)
+  const verwendet = offen.filter((e) => e.verwendet_am)
+  const geoeffnet = offen.filter((e) => e.geoeffnet_am)
+
+  /* Conversion: wie viele der eingeloesten Einladungen inzwischen zu einem
+     eigenen Deckel gefuehrt haben. Nenner sind die eingeloesten Einladungen,
+     nicht die erzeugten — ein nie geoeffneter Link sagt nichts ueber die
+     Ueberzeugungskraft des Gastbereichs. */
+  const zahlen = {
+    offizielleTeilnehmer: offizielleErst.length,
+    einladungenErzeugt: offen.length,
+    einladungenWiderrufen: einladungen.length - offen.length,
+    einladungenGeoeffnet: geoeffnet.length,
+    einladungenVerwendet: verwendet.length,
+    gaesteAktiv: gaeste.length,
+    gaesteKonvertiert: konvertiert.length,
+    conversionRate: anteil(konvertiert.length, verwendet.length),
+    oeffnungenGesamt: offen.reduce((s, e) => s + (Number(e.oeffnungen) || 0), 0),
+    slotsProTeilnehmer: einstellungen.einladungenProTeilnehmer,
+  }
+
+  /* Pro Einlader: die Slots und wer dahinter steht. Nur Instagram-Namen,
+     keine Adressen — wie in jeder anderen Ansicht auch. */
+  const nummer = deckelNummer(suche)
+  const passt = (z) => {
+    if (!suche) return true
+    if (nummer != null) return z.deckel_nummer === nummer
+    return String(z.instagram_handle || '').toLowerCase().includes(suche.toLowerCase())
+  }
+
+  const jeEinlader = new Map()
+  for (const e of offen) {
+    const liste = jeEinlader.get(e.einlader_teilnehmer_id) || []
+    liste.push(e)
+    jeEinlader.set(e.einlader_teilnehmer_id, liste)
+  }
+
+  const einlader = []
+  for (const [id, liste] of jeEinlader) {
+    const z = nachId.get(id)
+    if (!z || !passt(z)) continue
+    einlader.push({
+      id,
+      deckel: z.deckel_nummer,
+      instagram: z.instagram_handle,
+      slots: liste
+        .slice()
+        .sort((a, c) => Number(a.slot_nummer) - Number(c.slot_nummer))
+        .map((e) => {
+          const gast = e.gast_teilnehmer_id ? nachId.get(e.gast_teilnehmer_id) : null
+          return {
+            slot: Number(e.slot_nummer),
+            status: e.gast_teilnehmer_id ? 'beigetreten' : 'eingeladen',
+            erstelltAm: e.erstellt_am,
+            geoeffnetAm: e.geoeffnet_am ?? null,
+            oeffnungen: Number(e.oeffnungen) || 0,
+            verwendetAm: e.verwendet_am ?? null,
+            gast: gast
+              ? {
+                instagram: gast.instagram_handle,
+                gast: gast.teilnahme_status === STATUS_GAST,
+                deckel: gast.deckel_nummer,
+                konvertiertAm: gast.gast_konvertiert_am ?? null,
+              }
+              : null,
+          }
+        }),
+    })
+  }
+  einlader.sort((a, c) => (a.deckel ?? 0) - (c.deckel ?? 0))
+
+  /* Die Gastliste getrennt: auch Gaeste, deren Einladungszeile nicht mehr
+     verknuepft werden konnte, sollen auffindbar sein. */
+  const gastliste = teilnehmer
+    .filter((z) => (z.teilnahme_status === STATUS_GAST || z.gast_konvertiert_am) && passt(z))
+    .map((z) => ({
+      id: z.id,
+      instagram: z.instagram_handle,
+      gast: z.teilnahme_status === STATUS_GAST,
+      deckel: z.deckel_nummer,
+      eingeladenAm: z.eingeladen_am ?? null,
+      konvertiertAm: z.gast_konvertiert_am ?? null,
+      einladerInstagram: z.eingeladen_von ? nachId.get(z.eingeladen_von)?.instagram_handle ?? null : null,
+    }))
+
+  return { ok: true, zahlen, einlader, gaeste: gastliste }
+}
+
+/* ------------------------------------------------------------------ */
 /* Handler                                                             */
 /* ------------------------------------------------------------------ */
 
@@ -911,6 +1069,11 @@ export default async function handler(req, res) {
 
     if (aktion === 'csv') {
       res.status(200).json({ ok: true, csv: csvBauen(await liste({})) })
+      return
+    }
+
+    if (aktion === 'einladungen') {
+      res.status(200).json(await einladungenAuswertung(b))
       return
     }
 

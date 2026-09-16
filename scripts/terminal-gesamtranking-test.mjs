@@ -252,7 +252,16 @@ rufe = []
   pruefe('Ohne eigene id kein eigen', r.eigen === null && r.eintraege.every((e) => e.ich === false))
   pruefe('Preise leer, nicht erfunden', r.preise[1] === null && r.preise[2] === null && r.preise[3] === null)
   pruefe('Offen', r.abgeschlossen === false)
-  pruefe('Namen nur mit leaderboard_ok', rufe.filter((x) => x.pfad.endsWith('_teilnehmer')).every((x) => x.suche.includes('leaderboard_ok=is.true') && !x.suche.includes('email')))
+  /* Nur die Namensabfragen sind gemeint. Seit den Einladungen liest das
+     Modul zusaetzlich die Gast-ids (select=id, ohne Namen) — die duerfen
+     naturgemaess keine Ranglistenfreigabe verlangen. */
+  const namensrufe = rufe.filter((x) => x.pfad.endsWith('_teilnehmer') && x.suche.includes('instagram_handle'))
+  pruefe('Namen nur mit leaderboard_ok',
+    namensrufe.length > 0 && namensrufe.every((x) => x.suche.includes('leaderboard_ok=is.true') && !x.suche.includes('email')))
+  pruefe('Namen nur von offiziellen Teilnehmern',
+    namensrufe.every((x) => x.suche.includes('teilnahme_status=eq.offiziell')))
+  pruefe('Keine E-Mail in irgendeiner Teilnehmerabfrage',
+    rufe.filter((x) => x.pfad.endsWith('_teilnehmer')).every((x) => !x.suche.includes('email')))
   pruefe('Nur gueltige Laeufe gelesen', rufe.filter((x) => x.pfad.endsWith('_scores')).every((x) => x.suche.includes('status=eq.gueltig')))
 }
 

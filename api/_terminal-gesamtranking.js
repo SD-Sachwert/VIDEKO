@@ -8,11 +8,13 @@ import {
   besteJePerson,
   clean,
   einstellungenSchreiben,
+  gastIds,
   gemerkt,
   gesamtrankingEinstellungenLesen,
   kopfzeilen,
   lesen,
   namenLesen,
+  ohneGaeste,
   rangSpeicherLeeren,
   restUrl,
 } from './_terminal-kern.js'
@@ -141,13 +143,29 @@ export function gesamtrankingRechnen(hauptgames, bestJeSpiel) {
   return { anzahl, teilnehmer }
 }
 
-/** Live aus den Laeufen rechnen. `streng`: bei einem Lesefehler null statt Luecke. */
+/**
+ * Live aus den Laeufen rechnen. `streng`: bei einem Lesefehler null statt Luecke.
+ *
+ * Gastlaeufe werden vor der Rechnung entfernt — und zwar VOR dem Zaehlen von
+ * N. Das ist der entscheidende Punkt: N ist die Zahl der Personen mit einem
+ * Lauf in diesem Game, und aus N ergeben sich die Rangpunkte jedes einzelnen
+ * offiziellen Teilnehmers. Wuerden Gaeste mitgezaehlt, verschoebe jeder
+ * Gastlauf die Punkte aller offiziellen Teilnehmer. Ein Gast darf das
+ * offizielle Ranking nicht um einen einzigen Punkt bewegen.
+ *
+ * Laesst sich die Gastliste nicht lesen, wird gar nicht gerechnet. Lieber
+ * kein Ranking als ein Ranking, in dem moeglicherweise Gaeste stecken.
+ */
 async function liveRechnen(hauptgames, streng = false) {
-  const teile = await Promise.all(hauptgames.map((g) => laeufeAlleLesen(g)))
+  const [gaeste, ...teile] = await Promise.all([
+    gastIds(),
+    ...hauptgames.map((g) => laeufeAlleLesen(g)),
+  ])
+  if (gaeste == null) return null
   if (streng && teile.some((t) => t == null)) return null
   const bestJeSpiel = {}
   hauptgames.forEach((g, i) => {
-    bestJeSpiel[g] = besteJePerson(teile[i] ?? [])
+    bestJeSpiel[g] = besteJePerson(ohneGaeste(teile[i] ?? [], gaeste))
   })
   return gesamtrankingRechnen(hauptgames, bestJeSpiel)
 }
@@ -182,7 +200,10 @@ export async function gesamtrankingDaten() {
         }
       }
     }
-    const { anzahl, teilnehmer } = await liveRechnen(einstellungen.hauptgames)
+    /* Ohne Gastliste liefert liveRechnen bewusst nichts. Dann steht hier eine
+       leere Wertung — sichtbar unvollstaendig, aber niemals falsch. */
+    const { anzahl, teilnehmer } = (await liveRechnen(einstellungen.hauptgames))
+      ?? { anzahl: {}, teilnehmer: [] }
     return {
       einstellungen,
       hauptgames: einstellungen.hauptgames,

@@ -1,0 +1,965 @@
+/**
+ * Einladungen und Gastspieler — Pruefungen A bis T.
+ *
+ *   node scripts/terminal-einladungen-test.mjs
+ *
+ * Laeuft ohne Netz, ohne echte Zugangsdaten und ohne einen einzigen echten
+ * Teilnehmer: die Umgebung bekommt Platzhalter, `fetch` wird durch eine
+ * PostgREST-Attrappe ersetzt. Die Attrappe ist hier bewusst aufwendiger als
+ * in den aelteren Testdateien — sie haelt die Zeilen wirklich vor und setzt
+ * die Bedingungen der Migration durch:
+ *
+ *   - videko_terminal_gast_ohne_deckel_chk   Gast  => deckel_nummer IS NULL
+ *   - videko_terminal_offiziell_deckel_chk   offiziell => deckel_nummer NOT NULL
+ *   - der partielle UNIQUE-Index auf (kampagne, deckel_nummer)
+ *     where anspruch_art = 'erstaktivierung'
+ *   - der partielle UNIQUE-Index auf (kampagne, einlader_teilnehmer_id,
+ *     slot_nummer) where widerrufen_am is null
+ *   - UNIQUE auf token_hash, auf gast_teilnehmer_id und auf scores.lauf_id
+ *
+ * Damit werden genau die Schloesser geprueft, die Verlosung und Ranking
+ * schuetzen — und nicht bloss angenommen, dass es sie gibt.
+ *
+ * Die Notbremse (TERMINAL_SCHREIBEN=0) wird beim Import gelesen; der Teil
+ * dazu laeuft deshalb in einem eigenen Kindprozess (Argument `pause`).
+ */
+
+import crypto from 'node:crypto'
+import fs from 'node:fs'
+import path from 'node:path'
+import { spawnSync } from 'node:child_process'
+import { fileURLToPath } from 'node:url'
+
+const PAUSE = process.argv[2] === 'pause'
+
+Object.assign(process.env, {
+  TERMINAL_SUPABASE_URL: 'https://attrappe.invalid',
+  TERMINAL_SUPABASE_SERVICE_KEY: 'attrappe',
+  TERMINAL_TOKEN_SECRET: 'attrappe',
+  TERMINAL_IP_SALT: 'attrappe',
+  TERMINAL_ADMIN_TOKEN: 'richtiger-test-schluessel',
+  TERMINAL_SCHREIBEN: PAUSE ? '0' : '1',
+})
+
+let fehler = 0
+let gesamt = 0
+function pruefe(name, ok, info = '') {
+  gesamt += 1
+  if (!ok) fehler += 1
+  console.log(`${ok ? 'OK  ' : 'FEHL'} ${name}${info ? ` — ${info}` : ''}`)
+}
+
+/* ================================================================== */
+/* PostgREST-Attrappe                                                  */
+/* ================================================================== */
+
+const DB = {
+  videko_terminal_teilnehmer: [],
+  videko_terminal_einladungen: [],
+  videko_terminal_scores: [],
+  videko_terminal_spielstarts: [],
+  videko_terminal_einstellungen: [],
+  videko_terminal_gesamtranking_snapshot: [],
+  videko_terminal_ziehungen: [],
+  videko_terminal_meldungen: [],
+  videko_terminal_wiederherstellung: [],
+  videko_terminal_admin_versuche: [],
+}
+
+let rufe = []
+
+const RESERVIERT = new Set(['select', 'order', 'limit', 'offset', 'columns', 'on_conflict'])
+
+const json = (daten, status = 200, headers = {}) =>
+  new Response(JSON.stringify(daten), { status, headers: { 'content-type': 'application/json', ...headers } })
+
+/** Zahlen numerisch, alles andere als Text — reicht fuer ISO-Zeitstempel. */
+function vergleich(a, b) {
+  const za = Number(a)
+  const zb = Number(b)
+  if (Number.isFinite(za) && Number.isFinite(zb) && String(a).trim() !== '' && String(b).trim() !== '') {
+    return za - zb
+  }
+  return String(a) < String(b) ? -1 : String(a) > String(b) ? 1 : 0
+}
+
+/** Ein einzelner Filterausdruck, z. B. `eq.1847` oder `is.null`. */
+function bedingung(zeile, feld, ausdruck) {
+  const punkt = ausdruck.indexOf('.')
+  const op = punkt < 0 ? ausdruck : ausdruck.slice(0, punkt)
+  const roh = punkt < 0 ? '' : ausdruck.slice(punkt + 1)
+  const wert = zeile[feld]
+  switch (op) {
+    case 'eq': return String(wert) === roh
+    case 'neq': return String(wert) !== roh
+    case 'is':
+      if (roh === 'null') return wert == null
+      if (roh === 'true') return wert === true
+      if (roh === 'false') return wert === false
+      return false
+    case 'in':
+      return roh.replace(/^\(/, '').replace(/\)$/, '').split(',')
+        .map((s) => s.replace(/^"|"$/g, ''))
+        .includes(String(wert))
+    case 'gt': return wert != null && vergleich(wert, roh) > 0
+    case 'gte': return wert != null && vergleich(wert, roh) >= 0
+    case 'lt': return wert != null && vergleich(wert, roh) < 0
+    case 'lte': return wert != null && vergleich(wert, roh) <= 0
+    default: throw new Error(`Attrappe kennt den Operator nicht: ${op}`)
+  }
+}
+
+/** `or=(a.is.null,a.gt.X)` — eine Ebene, mehr braucht das Terminal nicht. */
+function oderTeile(ausdruck) {
+  return ausdruck.replace(/^\(/, '').replace(/\)$/, '').split(',')
+}
+
+function passt(zeile, p) {
+  for (const [schluessel, ausdruck] of p.entries()) {
+    if (RESERVIERT.has(schluessel)) continue
+    if (schluessel === 'or') {
+      const treffer = oderTeile(ausdruck).some((teil) => {
+        const i = teil.indexOf('.')
+        return bedingung(zeile, teil.slice(0, i), teil.slice(i + 1))
+      })
+      if (!treffer) return false
+      continue
+    }
+    if (!bedingung(zeile, schluessel, ausdruck)) return false
+  }
+  return true
+}
+
+function sortiert(zeilen, p) {
+  const order = p.get('order')
+  if (!order) return zeilen
+  const schluessel = order.split(',').map((t) => {
+    const [feld, richtung = 'asc'] = t.split('.')
+    return { feld, minus: richtung.startsWith('desc') ? -1 : 1 }
+  })
+  return [...zeilen].sort((a, b) => {
+    for (const s of schluessel) {
+      const v = vergleich(a[s.feld], b[s.feld]) * s.minus
+      if (v !== 0) return v
+    }
+    return 0
+  })
+}
+
+function seite(zeilen, p) {
+  const von = Number(p.get('offset') || 0)
+  const grenze = p.get('limit') ? Number(p.get('limit')) : zeilen.length
+  return zeilen.slice(von, von + grenze)
+}
+
+function projektion(zeile, p) {
+  const select = p.get('select')
+  if (!select) return { ...zeile }
+  const aus = {}
+  for (const spalte of select.split(',')) aus[spalte] = zeile[spalte] ?? null
+  return aus
+}
+
+/** Vorbelegungen, die in der echten Datenbank als DEFAULT stehen. */
+function standard(tabelle) {
+  const jetzt = new Date().toISOString()
+  if (tabelle === 'videko_terminal_teilnehmer') {
+    return {
+      deckel_nummer: null,
+      instagram_handle: null,
+      email: null,
+      status: 'aktiv',
+      leaderboard_ok: false,
+      leaderboard_ok_am: null,
+      folgt_bestaetigt_von_nutzer: false,
+      aktiviert_am: jetzt,
+      ip_hash: null,
+      anspruch_art: 'erstaktivierung',
+      besitz_status: null,
+      teilnahme_status: 'offiziell',
+      eingeladen_von: null,
+      eingeladen_am: null,
+      gast_konvertiert_am: null,
+    }
+  }
+  if (tabelle === 'videko_terminal_einladungen') {
+    return {
+      erstellt_am: jetzt,
+      geoeffnet_am: null,
+      oeffnungen: 0,
+      verwendet_am: null,
+      widerrufen_am: null,
+      abgelaufen_am: null,
+      gast_teilnehmer_id: null,
+      ip_hash: null,
+    }
+  }
+  if (tabelle === 'videko_terminal_scores') {
+    return { created_at: jetzt, status: 'gueltig', runden: null, dauer_ms: null, notiz: null }
+  }
+  return { created_at: jetzt }
+}
+
+/**
+ * Die Bedingungen der Migration. Gibt `null` zurueck, wenn die Zeile in
+ * Ordnung ist — sonst Status und Meldung wie PostgREST sie liefert.
+ */
+function verstoss(tabelle, zeile, alle) {
+  const andere = alle.filter((a) => a !== zeile)
+  if (tabelle === 'videko_terminal_teilnehmer') {
+    if (zeile.teilnahme_status === 'gast' && zeile.deckel_nummer != null) {
+      return { status: 400, text: 'videko_terminal_gast_ohne_deckel_chk' }
+    }
+    if (zeile.teilnahme_status !== 'gast' && zeile.deckel_nummer == null) {
+      return { status: 400, text: 'videko_terminal_offiziell_deckel_chk' }
+    }
+    if (zeile.teilnahme_status !== 'offiziell' && zeile.teilnahme_status !== 'gast') {
+      return { status: 400, text: 'videko_terminal_teilnahme_status_chk' }
+    }
+    if (zeile.anspruch_art === 'erstaktivierung' && zeile.deckel_nummer != null
+      && andere.some((a) => a.anspruch_art === 'erstaktivierung'
+        && a.kampagne === zeile.kampagne && a.deckel_nummer === zeile.deckel_nummer)) {
+      return { status: 409, text: 'duplicate key value violates unique constraint' }
+    }
+  }
+  if (tabelle === 'videko_terminal_einladungen') {
+    if (andere.some((a) => a.token_hash === zeile.token_hash)) {
+      return { status: 409, text: 'videko_terminal_einladung_hash_uidx' }
+    }
+    if (zeile.widerrufen_am == null
+      && andere.some((a) => a.widerrufen_am == null && a.kampagne === zeile.kampagne
+        && a.einlader_teilnehmer_id === zeile.einlader_teilnehmer_id
+        && Number(a.slot_nummer) === Number(zeile.slot_nummer))) {
+      return { status: 409, text: 'videko_terminal_einladung_slot_uidx' }
+    }
+    if (zeile.gast_teilnehmer_id != null
+      && andere.some((a) => a.gast_teilnehmer_id === zeile.gast_teilnehmer_id)) {
+      return { status: 409, text: 'videko_terminal_einladung_gast_uidx' }
+    }
+  }
+  if (tabelle === 'videko_terminal_scores' && zeile.lauf_id != null
+    && andere.some((a) => a.lauf_id === zeile.lauf_id)) {
+    return { status: 409, text: 'duplicate key value violates unique constraint' }
+  }
+  return null
+}
+
+globalThis.fetch = async (url, opt = {}) => {
+  const u = new URL(url)
+  const tabelle = u.pathname.replace('/rest/v1/', '')
+  const methode = opt.method || 'GET'
+  const p = u.searchParams
+  const prefer = String(opt.headers?.Prefer || '')
+  const koerper = opt.body ? JSON.parse(opt.body) : null
+  rufe.push({ methode, tabelle, suche: u.search, body: koerper })
+
+  const zeilen = DB[tabelle]
+  if (!zeilen) return json({ message: `Attrappe kennt die Tabelle nicht: ${tabelle}` }, 404)
+
+  const treffer = zeilen.filter((z) => passt(z, p))
+
+  if (methode === 'GET') {
+    if (prefer.includes('count=exact')) {
+      return json([], 200, { 'content-range': `0-0/${treffer.length}` })
+    }
+    return json(seite(sortiert(treffer, p), p).map((z) => projektion(z, p)))
+  }
+
+  if (methode === 'POST') {
+    const eingang = Array.isArray(koerper) ? koerper : [koerper]
+    const neue = eingang.map((z) => ({ id: crypto.randomUUID(), ...standard(tabelle), ...z }))
+    const zusammen = [...zeilen, ...neue]
+    for (const z of neue) {
+      const v = verstoss(tabelle, z, zusammen)
+      if (v) return json({ message: v.text }, v.status)
+    }
+    zeilen.push(...neue)
+    if (prefer.includes('return=representation')) {
+      return json(neue.map((z) => projektion(z, p)), 201)
+    }
+    return new Response(null, { status: 201 })
+  }
+
+  if (methode === 'PATCH') {
+    const sicherung = treffer.map((z) => ({ ...z }))
+    for (const z of treffer) Object.assign(z, koerper)
+    for (const z of treffer) {
+      const v = verstoss(tabelle, z, zeilen)
+      if (v) {
+        treffer.forEach((ziel, i) => {
+          for (const k of Object.keys(ziel)) delete ziel[k]
+          Object.assign(ziel, sicherung[i])
+        })
+        return json({ message: v.text }, v.status)
+      }
+    }
+    if (prefer.includes('return=representation')) {
+      return json(treffer.map((z) => projektion(z, p)))
+    }
+    return new Response(null, { status: 204 })
+  }
+
+  if (methode === 'DELETE') {
+    for (const z of treffer) zeilen.splice(zeilen.indexOf(z), 1)
+    return new Response(null, { status: 204 })
+  }
+
+  return json({ message: `Attrappe kennt die Methode nicht: ${methode}` }, 405)
+}
+
+/* ================================================================== */
+/* Module laden                                                        */
+/* ================================================================== */
+
+const kern = await import('../api/_terminal-kern.js')
+const gr = await import('../api/_terminal-gesamtranking.js')
+const einl = await import('../api/_terminal-einladungen.js')
+const { default: terminal } = await import('../api/terminal.js')
+const { topfBilden } = await import('../api/terminal-admin.js')
+const { RANGPUNKTE_MAX } = await import('../src/data/terminal.js')
+
+const K = kern.KAMPAGNE
+const HAUPT = ['leitungsfinder', 'kuechen_merge', 'kuechen_crush', 'videko_jump', 'kuechen_fit']
+
+/* ================================================================== */
+/* Hilfen                                                              */
+/* ================================================================== */
+
+function antwortAttrappe() {
+  return {
+    code: 0,
+    body: null,
+    setHeader() {},
+    status(c) { this.code = c; return this },
+    json(d) { this.body = d; return this },
+  }
+}
+
+let ipZaehler = 0
+/** Jede Anfrage aus einer eigenen Adresse: die Bremsen sollen nicht stoeren. */
+function frischeIp() {
+  ipZaehler += 1
+  return `10.9.${Math.floor(ipZaehler / 250)}.${(ipZaehler % 250) + 1}`
+}
+
+async function ruf(body, ip = frischeIp()) {
+  const res = antwortAttrappe()
+  await terminal({ method: 'POST', headers: { 'x-forwarded-for': ip }, body }, res)
+  return res
+}
+
+function teilnehmerAnlegen(felder = {}) {
+  const zeile = { id: crypto.randomUUID(), kampagne: K, ...standard('videko_terminal_teilnehmer'), ...felder }
+  DB.videko_terminal_teilnehmer.push(zeile)
+  return zeile
+}
+
+function offizieller(nummer, handle) {
+  return teilnehmerAnlegen({
+    deckel_nummer: nummer,
+    instagram_handle: handle,
+    email: `${handle}@example.invalid`,
+    leaderboard_ok: true,
+    teilnahme_status: 'offiziell',
+    anspruch_art: 'erstaktivierung',
+  })
+}
+
+let scoreUhr = Date.parse('2026-09-01T10:00:00.000Z')
+function scoreAnlegen(teilnehmerId, game, punkte) {
+  scoreUhr += 1000
+  DB.videko_terminal_scores.push({
+    id: crypto.randomUUID(),
+    kampagne: K,
+    teilnehmer_id: teilnehmerId,
+    game,
+    score: punkte,
+    status: 'gueltig',
+    lauf_id: crypto.randomUUID(),
+    dauer_ms: 60000,
+    runden: 100,
+    created_at: new Date(scoreUhr).toISOString(),
+  })
+}
+
+const sitzungFuer = (id) => kern.belegErzeugen('s', { id })
+
+/** Ein Laufticket mit einem Start, der weit genug zurueckliegt. */
+const ticketFuer = (id, game, vorMs = 60000) =>
+  kern.belegErzeugen('r', { p: id, g: game, s: Date.now() - vorMs, n: crypto.randomUUID() })
+
+const teilnehmerPosts = () => rufe.filter((r) => r.methode === 'POST' && r.tabelle === 'videko_terminal_teilnehmer')
+const gaesteInDb = () => DB.videko_terminal_teilnehmer.filter((z) => z.teilnahme_status === 'gast')
+
+/* Einstellungen: eine Zeile, drei Einladungen, alles Uebrige Standard. */
+DB.videko_terminal_einstellungen.push({
+  id: crypto.randomUUID(),
+  kampagne: K,
+  einladungen_pro_teilnehmer: 3,
+  guest_practice_game: null,
+  gesamtranking_spiele: null,
+  spiele_aktiv: null,
+  spiele_reihenfolge: null,
+  live_modus: true,
+})
+
+/* ================================================================== */
+/* Notbremse (Kindprozess)                                             */
+/* ================================================================== */
+
+if (PAUSE) {
+  const chef = offizieller(1001, 'pause_chef')
+  const s = sitzungFuer(chef.id)
+  rufe = []
+
+  let r = await ruf({ aktion: 'einladung-erzeugen', sitzung: s })
+  pruefe('Pause: einladung-erzeugen 503', r.code === 503, String(r.code))
+  r = await ruf({ aktion: 'gast-anlegen', sitzung: s, token: 'x'.repeat(43), instagram: 'pause_gast', email: 'p@example.invalid', bedingungen: true })
+  pruefe('Pause: gast-anlegen 503', r.code === 503, String(r.code))
+  r = await ruf({ aktion: 'einladung-widerrufen', sitzung: s, slot: 1 })
+  pruefe('Pause: einladung-widerrufen 503', r.code === 503, String(r.code))
+  pruefe('Pause: nichts geschrieben',
+    !rufe.some((x) => x.methode === 'POST' || x.methode === 'PATCH' || x.methode === 'DELETE'),
+    rufe.map((x) => x.methode).join(','))
+  pruefe('Pause: keine Einladungszeile', DB.videko_terminal_einladungen.length === 0)
+  pruefe('Pause: kein Gast', gaesteInDb().length === 0)
+
+  /* Lesen bleibt erlaubt: eine Landingpage darf auch bei Pause antworten. */
+  r = await ruf({ aktion: 'einladung-pruefen', token: 'x'.repeat(43) })
+  pruefe('Pause: einladung-pruefen antwortet weiterhin 200', r.code === 200 && r.body?.ok === false, String(r.code))
+
+  console.log(`\n${gesamt - fehler}/${gesamt} Pruefungen bestanden`)
+  process.exit(fehler ? 1 : 0)
+}
+
+/* ================================================================== */
+/* A — drei Slots, der vierte nicht                                    */
+/* ================================================================== */
+
+const chef = offizieller(1847, 'chef_offiziell')
+const chefSitzung = sitzungFuer(chef.id)
+
+rufe = []
+const slots = []
+for (let i = 0; i < 3; i += 1) {
+  const r = await ruf({ aktion: 'einladung-erzeugen', sitzung: chefSitzung })
+  if (r.code === 200) slots.push(r.body.slot)
+}
+pruefe('A: drei Einladungen entstehen', slots.length === 3 && slots.map((s) => s.slot).join(',') === '1,2,3',
+  slots.map((s) => s.slot).join(','))
+pruefe('A: jede Einladung hat einen 43-Zeichen-Token',
+  slots.every((s) => einl.EINLADUNG_MUSTER.test(s.token)))
+pruefe('A: Link zeigt auf /terminal/einladung/<token>',
+  slots.every((s) => s.link === `https://videko-kuechen.de/terminal/einladung/${s.token}`), slots[0]?.link)
+pruefe('A: in der Datenbank steht nur der Hash, nie der Token',
+  DB.videko_terminal_einladungen.length === 3
+  && DB.videko_terminal_einladungen.every((z, i) => z.token_hash === kern.sha256Hex(slots[i].token))
+  && !JSON.stringify(DB.videko_terminal_einladungen).includes(slots[0].token))
+
+const vierter = await ruf({ aktion: 'einladung-erzeugen', sitzung: chefSitzung })
+pruefe('A: der vierte Slot wird abgelehnt', vierter.code === 409 && vierter.body?.grund === 'keine-slots',
+  `${vierter.code} ${JSON.stringify(vierter.body)}`)
+pruefe('A: und erzeugt keine vierte Zeile', DB.videko_terminal_einladungen.length === 3)
+
+const team = await ruf({ aktion: 'einladungen', sitzung: chefSitzung })
+pruefe('A: das Team zeigt drei Slots', team.code === 200 && team.body?.team?.slots.length === 3)
+pruefe('A: alle drei stehen auf "eingeladen"',
+  team.body?.team?.slots.every((s) => s.status === 'eingeladen') && team.body.team.frei === 0)
+
+/* ================================================================== */
+/* B — ohne gueltigen Token kein Gast                                  */
+/* ================================================================== */
+
+rufe = []
+const vorher = DB.videko_terminal_teilnehmer.length
+let r = await ruf({ aktion: 'gast-anlegen', instagram: 'gast_ohne', email: 'ohne@example.invalid', bedingungen: true })
+pruefe('B: ohne Token 401 link', r.code === 401 && r.body?.grund === 'link', `${r.code} ${JSON.stringify(r.body)}`)
+r = await ruf({ aktion: 'gast-anlegen', token: 'z'.repeat(43), instagram: 'gast_falsch', email: 'falsch@example.invalid', bedingungen: true })
+pruefe('B: erfundener Token 401 link', r.code === 401 && r.body?.grund === 'link', String(r.code))
+r = await ruf({ aktion: 'gast-anlegen', token: slots[0].token, instagram: '', email: 'x', bedingungen: false })
+pruefe('B: fehlende Felder 400 mit Feldliste',
+  r.code === 400 && r.body?.grund === 'felder'
+  && ['instagram', 'email', 'bedingungen'].every((f) => r.body.felder.includes(f)), JSON.stringify(r.body))
+r = await ruf({ aktion: 'gast-anlegen', token: slots[0].token, instagram: 'ohne_haken', email: 'ohne@example.invalid' })
+pruefe('B: ohne Zustimmung 400 bedingungen',
+  r.code === 400 && r.body?.felder?.includes('bedingungen'), JSON.stringify(r.body))
+pruefe('B: kein einziger Teilnehmer entstanden',
+  DB.videko_terminal_teilnehmer.length === vorher && teilnehmerPosts().length === 0)
+
+/* ================================================================== */
+/* C — gueltige Einladung erzeugt genau einen Gast                     */
+/* ================================================================== */
+
+rufe = []
+r = await ruf({
+  aktion: 'gast-anlegen',
+  token: slots[0].token,
+  instagram: '@gast_eins',
+  email: 'gast.eins@example.invalid',
+  bedingungen: true,
+})
+pruefe('C: Gast wird angelegt', r.code === 200 && r.body?.ok === true, `${r.code} ${JSON.stringify(r.body)?.slice(0, 120)}`)
+const gastSitzung = r.body?.sitzung
+const gastZeile = gaesteInDb()[0]
+pruefe('C: genau ein Gast in der Datenbank', gaesteInDb().length === 1)
+pruefe('C: teilnahme_status = gast', gastZeile?.teilnahme_status === 'gast')
+pruefe('C: keine Deckelnummer', gastZeile?.deckel_nummer === null)
+pruefe('C: eingeladen_von zeigt auf den Einlader', gastZeile?.eingeladen_von === chef.id)
+pruefe('C: eingeladen_am gesetzt', !Number.isNaN(Date.parse(gastZeile?.eingeladen_am)))
+pruefe('C: keine Ranglistenfreigabe und kein Instagram-Haken',
+  gastZeile?.leaderboard_ok === false && gastZeile?.folgt_bestaetigt_von_nutzer === false)
+pruefe('C: Antwort nennt den Einlader, aber keine E-Mail',
+  r.body?.teilnehmer?.einladerInstagram === 'chef_offiziell'
+  && r.body?.teilnehmer?.gast === true
+  && !JSON.stringify(r.body).includes('gast.eins@example.invalid'), JSON.stringify(r.body?.teilnehmer))
+pruefe('C: Einladung ist verbraucht und mit dem Gast verknuepft',
+  DB.videko_terminal_einladungen[0].verwendet_am != null
+  && DB.videko_terminal_einladungen[0].gast_teilnehmer_id === gastZeile.id)
+
+const zustandGast = await ruf({ aktion: 'zustand', sitzung: gastSitzung })
+pruefe('C: zustand meldet den Gaststatus vom Server',
+  zustandGast.body?.teilnehmer?.gast === true && zustandGast.body?.teilnehmer?.deckel == null)
+pruefe('C: Gast bekommt kein Team mitgeliefert', zustandGast.body?.team == null)
+
+/* ================================================================== */
+/* R — derselbe Token ein zweites Mal                                  */
+/* ================================================================== */
+
+rufe = []
+r = await ruf({
+  aktion: 'gast-anlegen',
+  token: slots[0].token,
+  instagram: 'gast_zweitversuch',
+  email: 'zwei@example.invalid',
+  bedingungen: true,
+})
+pruefe('R: derselbe Token ein zweites Mal 401 link', r.code === 401 && r.body?.grund === 'link', String(r.code))
+pruefe('R: kein zweiter Gast', gaesteInDb().length === 1 && teilnehmerPosts().length === 0)
+
+const offen = await ruf({ aktion: 'einladung-pruefen', token: slots[0].token })
+pruefe('R: die Landingpage nennt den Link verbraucht',
+  offen.code === 200 && offen.body?.ok === false && offen.body?.grund === 'verbraucht', JSON.stringify(offen.body))
+
+const offen2 = await ruf({ aktion: 'einladung-pruefen', token: slots[1].token })
+pruefe('R: ein offener Link nennt den Einlader',
+  offen2.body?.ok === true && offen2.body?.einladung?.einladerInstagram === 'chef_offiziell'
+  && offen2.body?.einladung?.slot === 2, JSON.stringify(offen2.body?.einladung))
+pruefe('R: die Pruefung verbraucht nichts',
+  DB.videko_terminal_einladungen[1].verwendet_am == null)
+
+/* ================================================================== */
+/* S — gefaelschte Felder in der Anfrage                               */
+/* ================================================================== */
+
+rufe = []
+r = await ruf({
+  aktion: 'gast-anlegen',
+  token: slots[1].token,
+  instagram: 'gast_zwei',
+  email: 'gast.zwei@example.invalid',
+  bedingungen: true,
+  /* Alles, was ein Angreifer hier gern setzen wuerde: */
+  teilnahme_status: 'offiziell',
+  deckel_nummer: 4711,
+  deckel: 4711,
+  eingeladen_von: chef.id,
+  leaderboard_ok: true,
+  anspruch_art: 'erstaktivierung',
+  kampagne: 'fremde-kampagne',
+})
+const gastZwei = gaesteInDb().find((z) => z.instagram_handle === 'gast_zwei')
+const postKoerper = teilnehmerPosts()[0]?.body
+pruefe('S: Anfrage geht durch, aber als Gast', r.code === 200 && gastZwei?.teilnahme_status === 'gast')
+pruefe('S: der Einfuegekoerper traegt immer gast/null',
+  postKoerper?.teilnahme_status === 'gast' && postKoerper?.deckel_nummer === null
+  && postKoerper?.leaderboard_ok === false && postKoerper?.kampagne === K,
+  JSON.stringify(postKoerper && { s: postKoerper.teilnahme_status, d: postKoerper.deckel_nummer, l: postKoerper.leaderboard_ok }))
+pruefe('S: anspruch_art kommt nicht aus der Anfrage', !Object.hasOwn(postKoerper ?? {}, 'anspruch_art'))
+pruefe('S: Gast hat weiterhin keine Nummer', gastZwei?.deckel_nummer === null)
+
+const gastZweiSitzung = r.body?.sitzung
+
+/* ================================================================== */
+/* I — ein Gast erzeugt keine Einladungen                              */
+/* ================================================================== */
+
+rufe = []
+const einladungenVorher = DB.videko_terminal_einladungen.length
+for (const aktion of ['einladungen', 'einladung-erzeugen', 'einladung-widerrufen']) {
+  const a = await ruf({ aktion, sitzung: gastSitzung, slot: 1 })
+  pruefe(`I: ${aktion} als Gast 403 gast`, a.code === 403 && a.body?.grund === 'gast',
+    `${a.code} ${JSON.stringify(a.body)}`)
+}
+pruefe('I: keine Einladungskette — keine neue Zeile',
+  DB.videko_terminal_einladungen.length === einladungenVorher
+  && !rufe.some((x) => x.methode === 'POST' && x.tabelle === 'videko_terminal_einladungen'))
+
+for (const aktion of ['einladungen', 'einladung-erzeugen', 'einladung-widerrufen']) {
+  const a = await ruf({ aktion, slot: 1 })
+  pruefe(`I: ${aktion} ohne Sitzung 401`, a.code === 401 && a.body?.grund === 'sitzung', String(a.code))
+}
+
+/* Ein Gast kann auch nicht die fremde Einlader-ID unterschieben. */
+const fremd = await ruf({ aktion: 'einladung-erzeugen', sitzung: gastSitzung, einlader: chef.id, einlader_teilnehmer_id: chef.id })
+pruefe('I: untergeschobene Einlader-ID hilft dem Gast nicht', fremd.code === 403 && fremd.body?.grund === 'gast')
+
+/* ================================================================== */
+/* D + E — der Gast spielt alle fuenf Hauptspiele                      */
+/* ================================================================== */
+
+rufe = []
+const laeufe = []
+for (const game of HAUPT) {
+  const start = await ruf({ aktion: 'spiel-start', sitzung: gastSitzung, game })
+  /* Der Start liefert ein echtes Ticket; fuer die Wertung braucht der Test
+     aber einen Lauf, der lang genug gedauert hat — sonst greift
+     laufVerdacht und der Score landet als "verdacht" statt "gueltig".
+     Deshalb wird das Ticket mit zurueckdatiertem Start selbst ausgestellt. */
+  const ticket = ticketFuer(gastZeile.id, game)
+  const ende = await ruf({ aktion: 'spiel-ende', sitzung: gastSitzung, game, ticket, score: 1000, runden: 100 })
+  laeufe.push({ game, start, ende, ticket })
+}
+pruefe('D: alle fuenf Spiele starten fuer den Gast',
+  laeufe.every((l) => l.start.code === 200 && typeof l.start.body?.ticket === 'string'),
+  laeufe.map((l) => `${l.game}:${l.start.code}`).join(' '))
+pruefe('D: alle fuenf Ergebnisse werden angenommen',
+  laeufe.every((l) => l.ende.code === 200 && l.ende.body?.gespeichert === true),
+  laeufe.map((l) => `${l.game}:${l.ende.code}`).join(' '))
+pruefe('D: und als gueltig gewertet', laeufe.every((l) => l.ende.body?.gewertet === true),
+  laeufe.map((l) => `${l.game}:${l.ende.body?.gewertet}`).join(' '))
+
+const gastScores = DB.videko_terminal_scores.filter((z) => z.teilnehmer_id === gastZeile.id)
+pruefe('E: fuenf Scorezeilen unter der Gast-ID', gastScores.length === 5, String(gastScores.length))
+pruefe('E: jede Zeile traegt genau ein Hauptspiel',
+  HAUPT.every((g) => gastScores.filter((z) => z.game === g).length === 1))
+pruefe('E: alle fuenf haben status gueltig', gastScores.every((z) => z.status === 'gueltig'))
+
+const doppelt = await ruf({
+  aktion: 'spiel-ende',
+  sitzung: gastSitzung,
+  game: HAUPT[0],
+  ticket: laeufe[0].ticket,
+  score: 1000,
+  runden: 100,
+})
+pruefe('E: dasselbe Laufticket zaehlt kein zweites Mal',
+  doppelt.code === 409 && doppelt.body?.grund === 'doppelt', `${doppelt.code} ${JSON.stringify(doppelt.body)}`)
+pruefe('E: und es bleibt bei fuenf Zeilen',
+  DB.videko_terminal_scores.filter((z) => z.teilnehmer_id === gastZeile.id).length === 5)
+
+/* ================================================================== */
+/* F + G — das offizielle Ranking bleibt unberuehrt                    */
+/* ================================================================== */
+
+const a1 = offizieller(2001, 'offiziell_eins')
+const a2 = offizieller(2002, 'offiziell_zwei')
+const a3 = offizieller(2003, 'offiziell_drei')
+const offizielle = [a1, a2, a3]
+offizielle.forEach((t, i) => {
+  for (const game of HAUPT) scoreAnlegen(t.id, game, 1000 + i * 100)
+})
+
+kern.rangSpeicherLeeren()
+const standVorher = await gr.gesamtrankingDaten()
+pruefe('F: drei offizielle Teilnehmer in der Wertung',
+  standVorher.teilnehmer.length === 3 && standVorher.teilnehmer.every((t) => t.qualifiziert),
+  String(standVorher.teilnehmer.length))
+pruefe('F: der spielende Gast steht nicht drin',
+  !standVorher.teilnehmer.some((t) => t.id === gastZeile.id))
+pruefe('F: N zaehlt nur offizielle Laeufe',
+  HAUPT.every((g) => standVorher.anzahl[g] === 3), JSON.stringify(standVorher.anzahl))
+
+/* Jetzt zwei Gaeste mit Spitzenwerten — sie duerften nichts verschieben. */
+const gastHoch1 = teilnehmerAnlegen({ instagram_handle: 'gast_hoch1', teilnahme_status: 'gast', anspruch_art: null, eingeladen_von: chef.id })
+const gastHoch2 = teilnehmerAnlegen({ instagram_handle: 'gast_hoch2', teilnahme_status: 'gast', anspruch_art: null, eingeladen_von: chef.id })
+for (const g of [gastHoch1, gastHoch2]) {
+  for (const game of HAUPT) scoreAnlegen(g.id, game, 999999)
+}
+
+kern.rangSpeicherLeeren()
+const standNachher = await gr.gesamtrankingDaten()
+pruefe('G: die Rangpunkte sind Zeichen fuer Zeichen dieselben',
+  JSON.stringify(standNachher.teilnehmer) === JSON.stringify(standVorher.teilnehmer))
+pruefe('G: auch N bleibt gleich',
+  JSON.stringify(standNachher.anzahl) === JSON.stringify(standVorher.anzahl),
+  `${JSON.stringify(standVorher.anzahl)} / ${JSON.stringify(standNachher.anzahl)}`)
+pruefe('G: kein Gast in der Wertung',
+  !standNachher.teilnehmer.some((t) => t.id === gastHoch1.id || t.id === gastHoch2.id || t.id === gastZeile.id))
+
+/* Und die oeffentlichen Listen: auch dort taucht kein Gast auf. */
+const listen = await ruf({ aktion: 'rangliste' })
+const listenText = JSON.stringify(listen.body)
+pruefe('G: keine Gast-ID in den oeffentlichen Listen',
+  ![gastZeile.id, gastHoch1.id, gastHoch2.id].some((id) => listenText.includes(id)))
+pruefe('G: kein Gastname in den oeffentlichen Listen',
+  !['gast_eins', 'gast_zwei', 'gast_hoch1', 'gast_hoch2'].some((n) => listenText.includes(n)))
+
+/* ================================================================== */
+/* H — der Lostopf                                                     */
+/* ================================================================== */
+
+const topfZeilen = [
+  { deckel_nummer: 1847, teilnahme_status: 'offiziell' },
+  { deckel_nummer: 2001, teilnahme_status: 'offiziell' },
+  { deckel_nummer: 2002, teilnahme_status: null },
+  /* So etwas kann es nach der Migration gar nicht geben — der Topf faengt
+     es trotzdem ab. Drei Schloesser vor derselben Tuer. */
+  { deckel_nummer: 4711, teilnahme_status: 'gast' },
+  { deckel_nummer: null, teilnahme_status: 'gast' },
+]
+const topf = topfBilden(topfZeilen)
+pruefe('H: ein Gast bekommt kein Los, auch nicht mit Nummer',
+  !topf.includes(4711) && topf.length === 3, JSON.stringify(topf))
+pruefe('H: alte Zeilen ohne teilnahme_status bleiben im Topf', topf.includes(2002))
+
+rufe = []
+const adminModul = await import('../api/terminal-admin.js')
+const adminRes = antwortAttrappe()
+await adminModul.default({
+  method: 'POST',
+  headers: { 'x-forwarded-for': frischeIp(), 'x-terminal-admin': process.env.TERMINAL_ADMIN_TOKEN },
+  body: { aktion: 'ziehen' },
+}, adminRes)
+const topfLesen = rufe.find((x) => x.methode === 'GET' && x.tabelle === 'videko_terminal_teilnehmer'
+  && x.suche.includes('select=deckel_nummer'))
+pruefe('H: die Ziehung liest nur offizielle Zeilen',
+  Boolean(topfLesen) && topfLesen.suche.includes('teilnahme_status=eq.offiziell'), topfLesen?.suche)
+const gezogen = rufe.find((x) => x.methode === 'POST' && x.tabelle === 'videko_terminal_ziehungen')?.body?.deckel_nummer
+pruefe('H: gezogen wurde eine echte Deckelnummer',
+  [1847, 2001, 2002, 2003].includes(gezogen), String(gezogen))
+
+/* ================================================================== */
+/* J + K + L + M — aus dem Gast wird ein Deckelbesitzer                */
+/* ================================================================== */
+
+rufe = []
+const teilnehmerVorZahl = DB.videko_terminal_teilnehmer.length
+const konv = await ruf({
+  aktion: 'aktivieren',
+  sitzung: gastSitzung,
+  deckel: '3001',
+  folgt: true,
+  leaderboard: true,
+})
+pruefe('J: Konvertierung gelingt', konv.code === 200 && konv.body?.konvertiert === true,
+  `${konv.code} ${JSON.stringify(konv.body)?.slice(0, 140)}`)
+pruefe('J: kein zweiter Account',
+  DB.videko_terminal_teilnehmer.length === teilnehmerVorZahl && teilnehmerPosts().length === 0,
+  `${teilnehmerVorZahl} -> ${DB.videko_terminal_teilnehmer.length}`)
+const konvertiert = DB.videko_terminal_teilnehmer.find((z) => z.id === gastZeile.id)
+pruefe('J: dieselbe Zeile, jetzt offiziell',
+  konvertiert?.teilnahme_status === 'offiziell' && konvertiert?.deckel_nummer === 3001)
+pruefe('J: Antwort traegt dieselbe id in der Sitzung',
+  kern.belegPruefen(konv.body?.sitzung, 's')?.id === gastZeile.id)
+pruefe('J: anspruch_art erstaktivierung', konvertiert?.anspruch_art === 'erstaktivierung')
+
+const besteNach = await kern.eigeneBestwerte(gastZeile.id)
+pruefe('K: alle fuenf Bestleistungen sind noch da',
+  HAUPT.every((g) => besteNach[g] === 1000), JSON.stringify(HAUPT.map((g) => besteNach[g])))
+pruefe('K: die Scorezeilen haengen unveraendert an derselben id',
+  DB.videko_terminal_scores.filter((z) => z.teilnehmer_id === gastZeile.id).length === 5)
+
+pruefe('M: eingeladen_von bleibt stehen', konvertiert?.eingeladen_von === chef.id)
+pruefe('M: gast_konvertiert_am ist gesetzt', !Number.isNaN(Date.parse(konvertiert?.gast_konvertiert_am)))
+pruefe('M: eingeladen_am bleibt stehen', !Number.isNaN(Date.parse(konvertiert?.eingeladen_am)))
+pruefe('M: die Einladung zeigt weiterhin auf denselben Menschen',
+  DB.videko_terminal_einladungen[0].gast_teilnehmer_id === gastZeile.id)
+
+const neueSitzung = konv.body.sitzung
+const teamNeu = await ruf({ aktion: 'einladungen', sitzung: neueSitzung })
+pruefe('L: der frisch konvertierte Teilnehmer hat eigene Slots',
+  teamNeu.code === 200 && teamNeu.body?.team?.slots.length === 3 && teamNeu.body.team.frei === 3,
+  `${teamNeu.code} ${JSON.stringify(teamNeu.body?.team?.frei)}`)
+const eigenerSlot = await ruf({ aktion: 'einladung-erzeugen', sitzung: neueSitzung })
+pruefe('L: und darf jetzt selbst einladen', eigenerSlot.code === 200 && eigenerSlot.body?.slot?.slot === 1,
+  String(eigenerSlot.code))
+
+const teamChef = await ruf({ aktion: 'einladungen', sitzung: chefSitzung })
+const slot1 = teamChef.body?.team?.slots.find((s) => s.slot === 1)
+pruefe('L: im Team des Einladers steht der Gast als beigetreten',
+  slot1?.status === 'beigetreten' && slot1?.gast?.instagram === 'gast_eins', JSON.stringify(slot1?.gast))
+pruefe('L: und ist als inzwischen offiziell markiert', slot1?.gast?.offiziell === true)
+pruefe('L: das Team nennt keine E-Mail-Adresse',
+  !JSON.stringify(teamChef.body).includes('@example.invalid'))
+
+/* ================================================================== */
+/* P — Konvertierung auf eine bereits aktivierte Nummer                */
+/* ================================================================== */
+
+rufe = []
+const gastDrei = teilnehmerAnlegen({
+  instagram_handle: 'gast_drei',
+  email: 'drei@example.invalid',
+  teilnahme_status: 'gast',
+  anspruch_art: null,
+  eingeladen_von: chef.id,
+})
+const gastDreiSitzung = sitzungFuer(gastDrei.id)
+let p1 = await ruf({ aktion: 'aktivieren', sitzung: gastDreiSitzung, deckel: '1847', folgt: true })
+pruefe('P: belegte Nummer ohne Bestaetigung 409 belegt',
+  p1.code === 409 && p1.body?.grund === 'belegt', `${p1.code} ${JSON.stringify(p1.body)}`)
+pruefe('P: dabei wird nichts umgeschrieben',
+  DB.videko_terminal_teilnehmer.find((z) => z.id === gastDrei.id)?.teilnahme_status === 'gast')
+
+p1 = await ruf({ aktion: 'aktivieren', sitzung: gastDreiSitzung, deckel: '1847', folgt: true, besitzBestaetigt: true })
+const gastDreiNach = DB.videko_terminal_teilnehmer.find((z) => z.id === gastDrei.id)
+pruefe('P: mit Bestaetigung wird daraus ein weiterer Besitzanspruch',
+  p1.code === 200 && gastDreiNach?.anspruch_art === 'weiterer_besitzanspruch'
+  && gastDreiNach?.teilnahme_status === 'offiziell', `${p1.code} ${gastDreiNach?.anspruch_art}`)
+pruefe('P: der Mehrfachanspruch bringt kein zweites Los',
+  topfBilden(DB.videko_terminal_teilnehmer.filter((z) => z.anspruch_art === 'erstaktivierung'))
+    .filter((n) => n === 1847).length === 1)
+
+/* Und der andere Gast bleibt Gast — eine Konvertierung faerbt nicht ab. */
+pruefe('P: der zweite Gast ist weiterhin Gast',
+  DB.videko_terminal_teilnehmer.find((z) => z.id === gastZwei.id)?.teilnahme_status === 'gast')
+
+/* ================================================================== */
+/* Widerruf                                                            */
+/* ================================================================== */
+
+rufe = []
+const widerruf = await ruf({ aktion: 'einladung-widerrufen', sitzung: chefSitzung, slot: 3 })
+pruefe('Widerruf: ein offener Slot laesst sich zurueckziehen', widerruf.code === 200 && widerruf.body?.ok === true,
+  `${widerruf.code} ${JSON.stringify(widerruf.body)}`)
+const nochmal = await ruf({ aktion: 'einladung-widerrufen', sitzung: chefSitzung, slot: 3 })
+pruefe('Widerruf: ein zweites Mal geht nicht', nochmal.code === 409 && nochmal.body?.grund === 'nicht-offen',
+  `${nochmal.code} ${JSON.stringify(nochmal.body)}`)
+const verbraucht = await ruf({ aktion: 'einladung-widerrufen', sitzung: chefSitzung, slot: 1 })
+pruefe('Widerruf: ein eingeloester Slot bleibt eingeloest',
+  verbraucht.code === 409 && verbraucht.body?.grund === 'nicht-offen', `${verbraucht.code}`)
+const nachWiderruf = await ruf({ aktion: 'einladung-erzeugen', sitzung: chefSitzung })
+pruefe('Widerruf: der freigewordene Slot laesst sich neu vergeben',
+  nachWiderruf.code === 200 && nachWiderruf.body?.slot?.slot === 3, `${nachWiderruf.code} ${nachWiderruf.body?.slot?.slot}`)
+pruefe('Widerruf: der alte Token des Slots ist wertlos',
+  kern.sha256Hex(slots[2].token) !== kern.sha256Hex(nachWiderruf.body.slot.token))
+const alterLink = await ruf({ aktion: 'einladung-pruefen', token: slots[2].token })
+pruefe('Widerruf: der alte Link meldet sich als widerrufen',
+  alterLink.body?.ok === false && alterLink.body?.grund === 'widerrufen', JSON.stringify(alterLink.body))
+
+/* ================================================================== */
+/* N + O + Q — Konfiguration und Formel                                */
+/* ================================================================== */
+
+pruefe('N: die fuenf Hauptspiele stehen unveraendert',
+  kern.hauptgamesSaeubern(undefined).join(',') === HAUPT.join(','), kern.hauptgamesSaeubern(undefined).join(','))
+pruefe('N: Kuechen-Tinder ist kein Hauptspiel', !kern.hauptgamesSaeubern(undefined).includes('kuechen_tinder'))
+pruefe('N: eine unvollstaendige Liste faellt auf den Standard zurueck',
+  kern.hauptgamesSaeubern(['leitungsfinder', 'kuechen_tinder']).join(',') === HAUPT.join(','))
+pruefe('N: Kuechen-Tinder bleibt als Testslot moeglich',
+  kern.testslotSaeubern('kuechen_tinder', HAUPT) === 'kuechen_tinder')
+
+pruefe('O: Practice Mode spielt Leitungsfinder',
+  kern.PRACTICE_STANDARD === 'leitungsfinder' && kern.practiceSaeubern(undefined) === 'leitungsfinder')
+
+pruefe('Q: alleine im Spiel gibt es 1000 Punkte je Hauptspiel, also 5000',
+  gr.gesamtrankingRechnen(HAUPT, Object.fromEntries(HAUPT.map((g) => [g, new Map([['x', { punkte: 1, wann: 'a' }]])])))
+    .teilnehmer[0].gesamt === 5000)
+pruefe('Q: niemand kommt ueber 5000', standNachher.teilnehmer.every((t) => t.gesamt <= 5000))
+pruefe('Q: der Letzte eines Spiels bekommt 0, der Erste 1000',
+  RANGPUNKTE_MAX === 1000 && gr.rangpunkte(1, 7) === 1000 && gr.rangpunkte(7, 7) === 0
+  && gr.rangpunkte(1, 1) === 1000)
+
+/* ================================================================== */
+/* Einladungszahl ist konfigurierbar                                   */
+/* ================================================================== */
+
+pruefe('Slots: Standard ist 3',
+  kern.EINLADUNGEN_STANDARD === 3 && kern.einladungenSaeubern(undefined) === 3
+  && kern.einladungenSaeubern('drei') === 3 && kern.einladungenSaeubern(-1) === 3)
+pruefe('Slots: 0 heisst geschlossen und wird nicht wegkorrigiert', kern.einladungenSaeubern(0) === 0)
+pruefe('Slots: 5 ist erlaubt, 999 nicht',
+  kern.einladungenSaeubern(5) === 5 && kern.einladungenSaeubern(999) === 3)
+
+/* Wird die Zahl gesenkt, bleiben vergebene Einladungen sichtbar. */
+DB.videko_terminal_einstellungen[0].einladungen_pro_teilnehmer = 1
+const teamEng = await ruf({ aktion: 'einladungen', sitzung: chefSitzung })
+pruefe('Slots: nach dem Senken bleiben vergebene Einladungen erhalten',
+  teamEng.body?.team?.slots.length === 3, String(teamEng.body?.team?.slots.length))
+const keinSlot = await ruf({ aktion: 'einladung-erzeugen', sitzung: chefSitzung })
+pruefe('Slots: neue Einladungen gibt es dann aber nicht',
+  keinSlot.code === 409 && keinSlot.body?.grund === 'keine-slots', String(keinSlot.code))
+
+DB.videko_terminal_einstellungen[0].einladungen_pro_teilnehmer = 0
+const zu = await ruf({ aktion: 'einladung-erzeugen', sitzung: chefSitzung })
+pruefe('Slots: bei 0 ist das Programm geschlossen',
+  zu.code === 409 && zu.body?.grund === 'geschlossen', `${zu.code} ${JSON.stringify(zu.body)}`)
+DB.videko_terminal_einstellungen[0].einladungen_pro_teilnehmer = 3
+
+/* ================================================================== */
+/* Verwaltung: Auswertung ohne Klartext-Token                          */
+/* ================================================================== */
+
+rufe = []
+const auswertung = antwortAttrappe()
+await adminModul.default({
+  method: 'POST',
+  headers: { 'x-forwarded-for': frischeIp(), 'x-terminal-admin': process.env.TERMINAL_ADMIN_TOKEN },
+  body: { aktion: 'einladungen' },
+}, auswertung)
+const auswertungText = JSON.stringify(auswertung.body)
+pruefe('Admin: die Auswertung antwortet', auswertung.code === 200 && auswertung.body?.ok === true,
+  `${auswertung.code} ${auswertungText?.slice(0, 120)}`)
+pruefe('Admin: kein Klartext-Token in der Antwort',
+  !DB.videko_terminal_einladungen.some((z) => auswertungText.includes(einl.einladungToken(z.id))))
+pruefe('Admin: kein token_hash in der Antwort',
+  !DB.videko_terminal_einladungen.some((z) => auswertungText.includes(z.token_hash)))
+pruefe('Admin: keine E-Mail-Adresse in der Antwort', !auswertungText.includes('@example.invalid'))
+
+/* ================================================================== */
+/* T — nichts Geheimes im ausgelieferten Bundle                        */
+/* ================================================================== */
+
+const wurzel = path.resolve(fileURLToPath(new URL('..', import.meta.url)))
+const assets = path.join(wurzel, 'dist', 'assets')
+
+function geheimnisse() {
+  const datei = path.join(wurzel, '.env.local')
+  if (!fs.existsSync(datei)) return null
+  const werte = new Map()
+  for (const zeile of fs.readFileSync(datei, 'utf8').split(/\r?\n/)) {
+    const treffer = /^\s*([A-Z0-9_]+)\s*=\s*(.*)$/.exec(zeile)
+    if (!treffer) continue
+    const wert = treffer[2].trim().replace(/^["']|["']$/g, '')
+    /* Nur lange Werte suchen: eine kurze Zeichenkette faende sich in jedem
+       Bundle zufaellig wieder und ergaebe eine Falschmeldung. */
+    if (wert.length >= 16) werte.set(treffer[1], wert)
+  }
+  return werte
+}
+
+if (!fs.existsSync(assets)) {
+  pruefe('T: Bundle-Pruefung uebersprungen (dist/assets fehlt — vorher `npm run build`)', true)
+} else {
+  const dateien = fs.readdirSync(assets).filter((n) => n.endsWith('.js'))
+  const inhalt = dateien.map((n) => fs.readFileSync(path.join(assets, n), 'utf8')).join('\n')
+  pruefe('T: JavaScript-Dateien im Bundle gefunden', dateien.length > 0, `${dateien.length} Dateien`)
+
+  const werte = geheimnisse()
+  if (!werte) {
+    pruefe('T: .env.local nicht vorhanden — Wertesuche uebersprungen', true)
+  } else {
+    /* Es wird ausschliesslich der NAME gemeldet, nie der Wert. */
+    const gefunden = [...werte.entries()].filter(([, wert]) => inhalt.includes(wert)).map(([name]) => name)
+    pruefe('T: kein Wert aus .env.local steht im Bundle', gefunden.length === 0,
+      gefunden.length ? `betroffen: ${gefunden.join(', ')}` : `${werte.size} Werte geprueft`)
+  }
+
+  for (const marker of ['service_role', 'TERMINAL_SUPABASE_SERVICE_KEY', 'supabase.co/rest/v1']) {
+    pruefe(`T: Marker "${marker}" kommt im Bundle nicht vor`, !inhalt.includes(marker))
+  }
+  /* Der Einladungstoken wird serverseitig erzeugt; im Bundle darf nichts
+     stehen, was ihn nachbauen koennte. */
+  pruefe('T: das Bundle leitet keine Einladungstoken ab', !inhalt.includes('einladung|'))
+}
+
+/* ================================================================== */
+/* Notbremse im Kindprozess                                            */
+/* ================================================================== */
+
+const kind = spawnSync(process.execPath, [fileURLToPath(import.meta.url), 'pause'], { encoding: 'utf8' })
+process.stdout.write(`${kind.stdout.split('\n').filter((z) => /^(OK|FEHL)/.test(z)).map((z) => `  ${z}`).join('\n')}\n`)
+pruefe('Notbremse-Pruefungen bestanden', kind.status === 0, kind.stderr?.slice(0, 300))
+
+console.log(`\n${gesamt - fehler}/${gesamt} Pruefungen bestanden`)
+process.exit(fehler ? 1 : 0)

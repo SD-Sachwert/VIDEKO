@@ -73,7 +73,10 @@ globalThis.fetch = async (url, opt = {}) => {
       const n = Number(p.get('deckel_nummer').replace(/^eq\./, ''))
       return json(belegteNummern.has(n) ? [{ id: 'erst-1' }] : [])
     }
-    if (p.get('select') === 'deckel_nummer') {
+    /* Seit den Einladungen liest die Ziehung zusaetzlich teilnahme_status,
+       darum wird der Anfang der Spaltenliste verglichen und nicht mehr
+       die ganze Zeichenkette. */
+    if (p.get('select')?.startsWith('deckel_nummer')) {
       const von = Number(p.get('offset') || 0)
       const bis = von + Number(p.get('limit') || 1000)
       return json(topfZeilen.slice(von, bis))
@@ -216,6 +219,9 @@ pruefe('Ziehen: 200', r.code === 200 && r.body?.ok === true, `${r.code} ${JSON.s
 pruefe('Ziehen: zweite Seite gelesen (offset=1000)', seiten.length === 2 && seiten[1].suche.includes('offset=1000'), seiten.map((s) => s.suche).join(' | '))
 const gezogen = rufe.find((x) => x.methode === 'POST' && x.pfad.endsWith('/videko_terminal_ziehungen'))?.body?.deckel_nummer
 pruefe('Ziehen: gezogene Nummer stammt aus dem Topf', gezogen === 1847 || gezogen === 1848, String(gezogen))
+pruefe('Ziehen: gelesen wird nur, wer offiziell teilnimmt',
+  seiten.length > 0 && seiten.every((s) => s.suche.includes('teilnahme_status=eq.offiziell')),
+  seiten[0]?.suche)
 let treffer1847 = 0
 for (let i = 0; i < 2000; i += 1) {
   const t = topfBilden(topfZeilen)

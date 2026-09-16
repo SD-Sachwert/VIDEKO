@@ -57,8 +57,30 @@ export const TABELLE_SCORES = 'videko_terminal_scores'
 export const TABELLE_WIEDER = 'videko_terminal_wiederherstellung'
 export const TABELLE_SPIELSTARTS = 'videko_terminal_spielstarts'
 export const TABELLE_ADMIN_VERSUCHE = 'videko_terminal_admin_versuche'
+export const TABELLE_EINLADUNGEN = 'videko_terminal_einladungen'
 
 export const KAMPAGNE = TERMINAL_KAMPAGNE.id
+
+/**
+ * Der Teilnahmestatus. Steht als Spalte `teilnahme_status` an jeder
+ * Teilnehmerzeile und entscheidet ueber Los und Ranking:
+ *
+ *   'offiziell' — ein echter Deckel wurde aktiviert. Ein Los, ein Platz im
+ *                 Gesamtranking, eigene Einladungsslots.
+ *   'gast'      — ueber eine Einladung angelegt. Spielt alle Hauptgames,
+ *                 Scores werden gespeichert, aber: kein Los, kein Eintrag
+ *                 im offiziellen Gesamtranking, keine eigenen Einladungen.
+ *
+ * Ein Gast wird ausschliesslich dadurch offiziell, dass er selbst einen
+ * Deckel aktiviert. Die Datenbank erzwingt das zusaetzlich ueber
+ * `videko_terminal_offiziell_deckel_chk`: offiziell ohne Deckelnummer
+ * kann gar nicht erst gespeichert werden.
+ */
+export const STATUS_OFFIZIELL = 'offiziell'
+export const STATUS_GAST = 'gast'
+
+/** Filterstueck fuer jede Abfrage, die nur offizielle Teilnehmer meint. */
+export const NUR_OFFIZIELLE = `&teilnahme_status=eq.${STATUS_OFFIZIELL}`
 
 /* ------------------------------------------------------------------ */
 /* Kleinkram                                                           */
@@ -167,6 +189,20 @@ function signieren(text) {
   return b64(crypto.createHmac('sha256', TERMINAL_TOKEN_SECRET).update(text).digest())
 }
 
+/**
+ * Dieselbe Signatur, aber fuer andere Zwecke als Belege — derzeit fuer die
+ * Ableitung der Einladungstoken. Der Schluessel selbst verlaesst diese Datei
+ * nicht; wer einen Wert ableiten will, ruft hier an.
+ *
+ * Aufrufer muessen ihren Text eindeutig kennzeichnen (z. B. 'einladung|<id>'),
+ * damit zwei Verwendungszwecke nie denselben Wert erzeugen koennen.
+ */
+export const ableiten = (text) => signieren(text)
+
+/** SHA-256 als Hex. Fuer alles, was nur als Hash gespeichert werden darf. */
+export const sha256Hex = (text) =>
+  crypto.createHash('sha256').update(String(text ?? '')).digest('hex')
+
 export function belegErzeugen(typ, daten = {}) {
   const nutzlast = b64(JSON.stringify({
     ...daten,
@@ -252,7 +288,25 @@ export async function zaehlen(pfad) {
 export const EINSTELLUNGEN_SPALTEN =
   'kampagne,naechste_ziehung,follower_zahl,follower_ziel,live_modus,'
   + 'gezogene_nummer,meldefrist_bis,meldefrist_stunden,meilenstein_gewinne,spiele_aktiv,spiele_reihenfolge,'
-  + 'guest_practice_game'
+  + 'guest_practice_game,einladungen_pro_teilnehmer'
+
+/** Wie viele Einladungen ein offizieller Teilnehmer vergeben darf. */
+export const EINLADUNGEN_STANDARD = 3
+export const EINLADUNGEN_MAX = 20
+
+/**
+ * Die Zahl kommt aus der Datenbank und ist damit aenderbar, ohne dass Code
+ * angefasst wird. Unsinnige Werte fallen auf den Standard zurueck; 0 ist
+ * ausdruecklich erlaubt und heisst: das Einladungsprogramm ist zu.
+ *
+ * Wird der Wert gesenkt, verlieren bereits erzeugte Einladungen nichts —
+ * die Zahl begrenzt nur, wie viele NEUE Slots belegt werden duerfen.
+ */
+export function einladungenSaeubern(roh) {
+  const n = Number(roh)
+  if (!Number.isInteger(n) || n < 0 || n > EINLADUNGEN_MAX) return EINLADUNGEN_STANDARD
+  return n
+}
 
 /** Das Game, das ohne aktivierten Deckel im Practice Mode spielbar ist. */
 export const PRACTICE_STANDARD = 'leitungsfinder'
@@ -266,14 +320,25 @@ export async function einstellungenLesen() {
   /* Das Gesamtranking liest seine Spalten in einer eigenen Abfrage. Fehlen
      sie (Migration noch nicht gelaufen), scheitert nur diese — die uebrigen
      Einstellungen kommen trotzdem, und das Gesamtranking nimmt die Standards. */
+  const filter = `&kampagne=eq.${encodeURIComponent(KAMPAGNE)}&limit=1`
   const [zeilen, gesamtranking] = await Promise.all([
-    lesen(
-      `${TABELLE_EINSTELLUNGEN}?select=${EINSTELLUNGEN_SPALTEN}`
-      + `&kampagne=eq.${encodeURIComponent(KAMPAGNE)}&limit=1`,
-    ),
+    lesen(`${TABELLE_EINSTELLUNGEN}?select=${EINSTELLUNGEN_SPALTEN}${filter}`),
     gesamtrankingEinstellungenLesen(),
   ])
-  const z = zeilen[0] ?? {}
+
+  /* Sicherheitsnetz fuer den Fall, dass eine neu hinzugekommene Spalte in
+     dieser Datenbank noch fehlt: PostgREST lehnt dann die ganze Abfrage ab,
+     und ohne diesen zweiten Versuch faende das Terminal weder Termin noch
+     Live-Modus. Der zweite Versuch laesst die junge Spalte weg. */
+  const alt = zeilen.length === 0
+    ? await lesen(
+      `${TABELLE_EINSTELLUNGEN}?select=`
+      + EINSTELLUNGEN_SPALTEN.replace(',einladungen_pro_teilnehmer', '')
+      + filter,
+    )
+    : []
+
+  const z = zeilen[0] ?? alt[0] ?? {}
   return {
     gesamtranking,
     naechsteZiehung: z.naechste_ziehung ?? null,
@@ -287,6 +352,7 @@ export async function einstellungenLesen() {
     spieleAktiv: spieleAktivSaeubern(z.spiele_aktiv, gesamtranking),
     spieleReihenfolge: reihenfolgeSaeubern(z.spiele_reihenfolge),
     guestPracticeGame: practiceSaeubern(z.guest_practice_game),
+    einladungenProTeilnehmer: einladungenSaeubern(z.einladungen_pro_teilnehmer),
   }
 }
 
@@ -413,9 +479,15 @@ export async function einstellungenSchreiben(felder) {
  * Anzahl aktivierter Deckel. Oeffentliche Zahl, keine Personendaten.
  * Gezaehlt werden Nummern, nicht Ansprueche: ein weiterer Besitzanspruch auf
  * eine schon aktivierte Nummer macht aus einem Deckel keine zwei.
+ *
+ * Gaeste sind hier nie dabei. Sie haben keinen Deckel, also erhoehen sie
+ * diese Zahl nicht — auch nicht die Zahl der vergebenen Lose.
  */
 export async function aktivierteZaehlen() {
-  return zaehlen(`${TABELLE_TEILNEHMER}?kampagne=eq.${encodeURIComponent(KAMPAGNE)}&anspruch_art=eq.${ANSPRUCH_ERST}`)
+  return zaehlen(
+    `${TABELLE_TEILNEHMER}?kampagne=eq.${encodeURIComponent(KAMPAGNE)}`
+    + `&anspruch_art=eq.${ANSPRUCH_ERST}${NUR_OFFIZIELLE}`,
+  )
 }
 
 export const ANSPRUCH_ERST = 'erstaktivierung'
@@ -627,14 +699,68 @@ export async function gemerkt(schluessel, hole) {
   return wert
 }
 
+/* --- Gaeste aus den Wertungen heraushalten ------------------------- */
+
+/**
+ * Die ids aller Gastspieler dieser Kampagne.
+ *
+ * Es gibt bewusst keinen Fremdschluessel zwischen Laeufen und Teilnehmern,
+ * deshalb laesst sich der Status nicht in der Score-Abfrage mitfiltern. Die
+ * Gastliste wird stattdessen einmal geholt und die Laeufe werden danach
+ * durchgesiebt. Gaeste sind naturgemaess die kleinere Gruppe.
+ *
+ * Gibt `null` zurueck, wenn die Liste nicht gelesen werden konnte. Wer damit
+ * eine Wertung baut, aus der Gaeste herausbleiben MUESSEN, darf dann keine
+ * Wertung ausliefern — siehe _terminal-gesamtranking.js.
+ */
+const GAST_SEITE = 1000
+const GAST_MAX_SEITEN = 50
+const GAST_SCHLUESSEL = 'gast:ids'
+
+export async function gastIdsLesen() {
+  const menge = new Set()
+  for (let seite = 0; seite < GAST_MAX_SEITEN; seite += 1) {
+    const antwort = await fetch(
+      restUrl(
+        `${TABELLE_TEILNEHMER}?select=id`
+        + `&kampagne=eq.${encodeURIComponent(KAMPAGNE)}`
+        + `&teilnahme_status=eq.${STATUS_GAST}`
+        + `&order=id.asc&limit=${GAST_SEITE}&offset=${seite * GAST_SEITE}`,
+      ),
+      { headers: kopfzeilen() },
+    )
+    if (!antwort.ok) return null
+    const zeilen = await antwort.json().catch(() => null)
+    if (!Array.isArray(zeilen)) return null
+    for (const z of zeilen) if (z.id) menge.add(z.id)
+    if (zeilen.length < GAST_SEITE) break
+  }
+  return menge
+}
+
+/** Dasselbe, kurz gemerkt. Ein Fehlschlag wird ausdruecklich nicht gemerkt. */
+export async function gastIds() {
+  const wert = await gemerkt(GAST_SCHLUESSEL, gastIdsLesen)
+  if (wert == null) rangSpeicher.delete(GAST_SCHLUESSEL)
+  return wert
+}
+
+/** Laeufe von Gaesten entfernen. Ohne Gastliste bleibt die Liste, wie sie ist. */
+export const ohneGaeste = (zeilen, gaeste) =>
+  gaeste && gaeste.size ? zeilen.filter((z) => !gaeste.has(z.teilnehmer_id)) : zeilen
+
 async function laeufeLesen(game) {
-  return lesen(
-    `${TABELLE_SCORES}?select=teilnehmer_id,score,created_at`
-    + `&kampagne=eq.${encodeURIComponent(KAMPAGNE)}`
-    + `&game=eq.${encodeURIComponent(game)}`
-    + '&status=eq.gueltig'
-    + `&order=score.desc,created_at.asc&limit=${RANG_ROHGRENZE}`,
-  )
+  const [zeilen, gaeste] = await Promise.all([
+    lesen(
+      `${TABELLE_SCORES}?select=teilnehmer_id,score,created_at`
+      + `&kampagne=eq.${encodeURIComponent(KAMPAGNE)}`
+      + `&game=eq.${encodeURIComponent(game)}`
+      + '&status=eq.gueltig'
+      + `&order=score.desc,created_at.asc&limit=${RANG_ROHGRENZE}`,
+    ),
+    gastIds(),
+  ])
+  return ohneGaeste(zeilen, gaeste)
 }
 
 /**
@@ -666,6 +792,12 @@ export const nachRang = (a, b) => (b.punkte - a.punkte) || String(a.wann).locale
  *
  * Ausgewaehlt werden nur id und instagram_handle. Deckelnummer und E-Mail
  * verlassen die Datenbank fuer diesen Zweck nicht.
+ *
+ * Gaeste stehen hier grundsaetzlich nicht drin. Diese Funktion ist das Tor
+ * zu jeder oeffentlichen Liste des Terminals — wer hier nicht durchkommt,
+ * erscheint nirgends oeffentlich. Ein Gast sieht seine eigenen Bestwerte,
+ * aber er taucht in keiner offiziellen Rangliste auf, weil das aussehen
+ * wuerde, als sei er fuer die Hauptpreise qualifiziert. Ist er nicht.
  */
 export async function namenLesen(ids) {
   const sauber = ids.filter((i) => UUID_MUSTER.test(String(i)))
@@ -676,6 +808,7 @@ export async function namenLesen(ids) {
       `${TABELLE_TEILNEHMER}?select=id,instagram_handle`
       + `&kampagne=eq.${encodeURIComponent(KAMPAGNE)}`
       + '&leaderboard_ok=is.true'
+      + NUR_OFFIZIELLE
       + `&id=in.(${teil.join(',')})`,
     )
     for (const z of zeilen) {
@@ -795,15 +928,20 @@ function tagesbeginnBerlin(jetzt = new Date()) {
 export async function bestesHeute(game) {
   return gemerkt(`h:${game}`, async () => {
     const ab = tagesbeginnBerlin().toISOString()
-    const zeilen = await lesen(
-      `${TABELLE_SCORES}?select=teilnehmer_id,score`
-      + `&kampagne=eq.${encodeURIComponent(KAMPAGNE)}`
-      + `&game=eq.${encodeURIComponent(game)}`
-      + '&status=eq.gueltig'
-      + `&created_at=gte.${encodeURIComponent(ab)}`
-      + '&order=score.desc,created_at.asc&limit=1',
-    )
-    const top = zeilen[0]
+    /* Mehr als eine Zeile, damit nach dem Aussieben der Gaeste noch der beste
+       offizielle Lauf des Tages uebrig bleibt. */
+    const [zeilen, gaeste] = await Promise.all([
+      lesen(
+        `${TABELLE_SCORES}?select=teilnehmer_id,score`
+        + `&kampagne=eq.${encodeURIComponent(KAMPAGNE)}`
+        + `&game=eq.${encodeURIComponent(game)}`
+        + '&status=eq.gueltig'
+        + `&created_at=gte.${encodeURIComponent(ab)}`
+        + '&order=score.desc,created_at.asc&limit=50',
+      ),
+      gastIds(),
+    ])
+    const top = ohneGaeste(zeilen, gaeste)[0]
     const punkte = Number(top?.score)
     if (!top || !Number.isFinite(punkte)) return null
     const namen = await namenLesen([top.teilnehmer_id])

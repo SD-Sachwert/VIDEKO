@@ -26,6 +26,8 @@ import {
   SPEICHER_SZENE,
   SPEICHER_TRESOR,
   SPEICHER_ZUGANG,
+  einladungErzeugen,
+  einladungWiderrufen,
   einwilligungSetzen,
   introMerken,
   merkeLesen,
@@ -33,6 +35,7 @@ import {
   probeAktiv,
   sitzungLesen,
   sitzungSchreiben,
+  teamHolen,
   terminalRuf,
   wiederAnfordern,
   wiederEinloesen,
@@ -614,6 +617,270 @@ function SpielWahl({ spiel, best, oeffnen }) {
   )
 }
 
+/* ------------------------------------------------------------------ */
+/* DEIN TEAM — die eigenen Einladungen                                 */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Der Einladungslink als QR-Code.
+ *
+ * Die Bibliothek wird erst geladen, wenn jemand QR ZEIGEN antippt — im
+ * uebrigen Terminal hat sie nichts zu suchen. Gezeichnet wird ein einziger
+ * Pfad statt tausend Rechtecke; das bleibt auch auf einem kleinen Handy
+ * flott. Klappt das Laden nicht, steht der Link darunter trotzdem da.
+ */
+function QrBild({ text }) {
+  const [muster, setMuster] = useState(null)
+
+  useEffect(() => {
+    let lebt = true
+    import('qrcode-generator')
+      .then(({ default: qrcode }) => {
+        if (!lebt) return
+        const code = qrcode(0, 'M')
+        code.addData(text)
+        code.make()
+        const kanten = code.getModuleCount()
+        let pfad = ''
+        for (let zeile = 0; zeile < kanten; zeile += 1) {
+          for (let spalte = 0; spalte < kanten; spalte += 1) {
+            if (code.isDark(zeile, spalte)) pfad += `M${spalte} ${zeile}h1v1h-1z`
+          }
+        }
+        setMuster({ pfad, kanten })
+      })
+      .catch(() => {
+        if (lebt) setMuster(null)
+      })
+    return () => {
+      lebt = false
+    }
+  }, [text])
+
+  if (!muster) return <p className="trm-qr__laedt">{TEXTE.g.laedt}</p>
+
+  /* Vier Module Rand: ohne diese ruhige Zone finden manche Scanner den Code
+     nicht. Heller Grund, dunkles Muster — nie umgekehrt. */
+  const rand = 4
+  const kante = muster.kanten + rand * 2
+  return (
+    <svg
+      className="trm-qr"
+      viewBox={`0 0 ${kante} ${kante}`}
+      role="img"
+      aria-label={TEXTE.team.qrTitel}
+    >
+      <rect x="0" y="0" width={kante} height={kante} fill="#f2e9d8" />
+      <g transform={`translate(${rand} ${rand})`}>
+        <path d={muster.pfad} fill="#0a0a0c" />
+      </g>
+    </svg>
+  )
+}
+
+/**
+ * Text in die Zwischenablage legen.
+ *
+ * Der moderne Weg braucht eine sichere Verbindung und die Erlaubnis des
+ * Browsers. Scheitert er, bleibt der alte ueber ein unsichtbares Feld.
+ * Zurueck kommt, ob es geklappt hat — wenn nicht, zeigt die Karte den Link
+ * im QR-Fenster zum Markieren von Hand.
+ */
+async function inZwischenablage(text) {
+  try {
+    await navigator.clipboard.writeText(text)
+    return true
+  } catch {
+    /* Aelterer Browser oder verweigert — unten weiter. */
+  }
+  try {
+    const feld = document.createElement('textarea')
+    feld.value = text
+    feld.setAttribute('readonly', '')
+    feld.style.position = 'fixed'
+    feld.style.top = '-1000px'
+    document.body.appendChild(feld)
+    feld.select()
+    const gelungen = document.execCommand('copy')
+    document.body.removeChild(feld)
+    return gelungen
+  } catch {
+    return false
+  }
+}
+
+/**
+ * „DEIN TEAM" — die Einladungsplaetze eines offiziellen Teilnehmers.
+ *
+ * Drei Plaetze, jeder in genau einem von drei Zustaenden. Was hier NICHT
+ * steht, ist so wichtig wie der Rest: kein Wort ueber zusaetzliche Lose,
+ * keine Zahl, die nach Gewinnchance aussieht, und nie die E-Mail-Adresse
+ * eines Gastes. Ein Deckel ist ein Los; drei Einladungen sind null Lose.
+ * Dieser Satz steht offen unter den Plaetzen und nicht im Kleingedruckten.
+ *
+ * Welcher Platz als naechstes vergeben wird und ob ueberhaupt einer frei
+ * ist, entscheidet der Server. Die Karte schickt nur „mach den naechsten".
+ */
+function TeamKarte({ team, sendet, fehler, onErzeugen, onWiderrufen }) {
+  const T = TEXTE.team
+  const [qrSlot, setQrSlot] = useState(null)
+  const [kopiert, setKopiert] = useState(null)
+  const kopierUhr = useRef(null)
+
+  useEffect(() => () => window.clearTimeout(kopierUhr.current), [])
+
+  const slots = team?.slots ?? []
+  /* Der Knopf steht nur am ersten freien Platz — erzeugt wird ohnehin immer
+     der naechste. */
+  const ersterFreier = slots.find((s) => s.status === 'frei')?.slot ?? null
+  const qrOffen = qrSlot != null ? slots.find((s) => s.slot === qrSlot) ?? null : null
+
+  async function kopieren(slot) {
+    const gelungen = await inZwischenablage(`${T.teilenText} ${slot.link}`)
+    if (!gelungen) {
+      /* Kein Zugriff auf die Zwischenablage: dann eben das Fenster mit
+         QR-Code und lesbarem Link. */
+      setQrSlot(slot.slot)
+      return
+    }
+    setKopiert(slot.slot)
+    window.clearTimeout(kopierUhr.current)
+    kopierUhr.current = window.setTimeout(() => setKopiert(null), 2200)
+  }
+
+  async function teilen(slot) {
+    const daten = { title: T.teilenTitel, text: T.teilenText, url: slot.link }
+    if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
+      try {
+        await navigator.share(daten)
+        return
+      } catch (grund) {
+        /* Abgebrochen ist kein Fehler: dann passiert einfach nichts. */
+        if (grund?.name === 'AbortError') return
+      }
+    }
+    await kopieren(slot)
+  }
+
+  return (
+    <section className="trm-karte trm-team" id="trm-team" aria-labelledby="trm-team-titel">
+      <div className="trm-karte__kopf">
+        <Ikon name="krone" size={22} className="trm-ikon" />
+        <h2 className="trm-karte__titel" id="trm-team-titel">
+          {T.label}
+        </h2>
+      </div>
+      <p className="trm-karte__sub">{fuelle(T.sub, { anzahl: slots.length })}</p>
+
+      <ol className="trm-team__slots">
+        {slots.map((s) => (
+          <li className="trm-team__slot" key={s.slot} data-status={s.status}>
+            <p className="trm-team__zeile">
+              <span className="trm-team__nr" aria-hidden="true">
+                {s.slot}
+              </span>
+              <span className="trm-team__status">
+                {s.status === 'frei' ? T.slotFrei : s.status === 'eingeladen' ? T.slotOffen : T.slotBesetzt}
+              </span>
+            </p>
+
+            {s.status === 'frei' && s.slot === ersterFreier ? (
+              <button
+                type="button"
+                className="trm-cta trm-cta--klein"
+                onClick={onErzeugen}
+                disabled={sendet}
+              >
+                {sendet ? T.erzeugt : T.erzeugen}
+              </button>
+            ) : null}
+
+            {s.status === 'eingeladen' ? (
+              <>
+                <div className="trm-team__tasten">
+                  <button type="button" className="trm-cta trm-cta--klein" onClick={() => teilen(s)}>
+                    <Ikon name="schluessel" size={16} />
+                    {T.teilen}
+                  </button>
+                  <button
+                    type="button"
+                    className="trm-cta trm-cta--umriss trm-cta--klein"
+                    onClick={() => setQrSlot(s.slot)}
+                  >
+                    {T.qr}
+                  </button>
+                  <button
+                    type="button"
+                    className="trm-cta trm-cta--umriss trm-cta--klein"
+                    onClick={() => kopieren(s)}
+                  >
+                    {kopiert === s.slot ? T.kopiert : T.kopieren}
+                  </button>
+                </div>
+                <p className="trm-team__notiz">
+                  {s.oeffnungen > 0 ? fuelle(T.geoeffnet, { n: s.oeffnungen }) : T.nochNicht}
+                </p>
+                <button
+                  type="button"
+                  className="trm-team__zurueck"
+                  disabled={sendet}
+                  onClick={() => {
+                    if (window.confirm(T.widerrufFrage)) onWiderrufen(s.slot)
+                  }}
+                >
+                  {T.widerrufen}
+                </button>
+              </>
+            ) : null}
+
+            {s.status === 'beigetreten' ? (
+              <p className="trm-team__gast">
+                <span className="trm-team__gastname">
+                  {s.gast?.instagram ? `@${s.gast.instagram}` : TEXTE.r.grAnonym}
+                </span>
+                <span className="trm-team__gaststand">
+                  {s.gast?.offiziell ? T.gastOffiziell : T.gastGast}
+                </span>
+              </p>
+            ) : null}
+          </li>
+        ))}
+      </ol>
+
+      <div aria-live="polite">
+        {fehler ? <p className="trm-meldung trm-meldung--fehler">{fehler}</p> : null}
+      </div>
+
+      <p className="trm-fuss-notiz">{T.keinLos}</p>
+
+      {qrOffen ? (
+        <div
+          className="trm-belegt"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="trm-qr-titel"
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setQrSlot(null)
+          }}
+        >
+          <div className="trm-karte trm-belegt__blatt trm-qr__blatt">
+            <h2 className="trm-karte__titel" id="trm-qr-titel">
+              {T.qrTitel}
+            </h2>
+            <p className="trm-karte__sub">{T.qrText}</p>
+            <QrBild text={qrOffen.link} />
+            {/* Der Link im Klartext: fuer alles, was keinen Scanner hat. */}
+            <p className="trm-qr__link">{qrOffen.link}</p>
+            <button type="button" className="trm-cta" onClick={() => setQrSlot(null)}>
+              {T.schliessen}
+            </button>
+          </div>
+        </div>
+      ) : null}
+    </section>
+  )
+}
+
 export default function Terminal() {
   /* 'a' verschlossen, 'z' Zugang, 'b' Tresor ohne Aktivierung, 'c' aktiviert */
   const [ansicht, setAnsicht] = useState('a')
@@ -664,6 +931,15 @@ export default function Terminal() {
      zeigen soll — auch wenn es in der Verwaltung ausgeblendet ist. */
   const [offeneSpiele, setOffeneSpiele] = useState({})
   const [laborSpiel, setLaborSpiel] = useState(null)
+
+  /* Die eigenen Einladungsplaetze. Sie kommen fertig vom Server und stehen
+     nur offiziellen Teilnehmern zu — ein Gast bekommt dort immer null und
+     damit gar keine Oberflaeche dafuer. */
+  const [team, setTeam] = useState(null)
+  const [teamSendet, setTeamSendet] = useState(false)
+  const [teamFehler, setTeamFehler] = useState(null)
+  /* Ein Gast, der gerade seinen eigenen Deckel aktiviert hat. */
+  const [konvertiert, setKonvertiert] = useState(false)
 
   /* Die Einwilligung ins oeffentliche Leaderboard, jederzeit aenderbar.
      null heisst: der Haken folgt dem gespeicherten Stand. */
@@ -979,6 +1255,8 @@ export default function Terminal() {
         setSitzung(beleg)
         setTeilnehmer(antwort.teilnehmer)
         setSpiele(antwort.spiele ?? null)
+        /* Nur offizielle Teilnehmer bekommen hier ueberhaupt etwas. */
+        setTeam(antwort.team ?? null)
         /* Wer aktiviert hat, war im Tresor. Nach einem Reload soll die
            Inszenierung nicht noch einmal laufen. */
         merkeSchreiben(SPEICHER_TRESOR, '1')
@@ -1196,10 +1474,16 @@ export default function Terminal() {
     const handle = instagramNormalisieren(formular.instagram)
     const email = formular.email.trim()
 
+    /* Ein Gast hat Name und Adresse schon bei der Einladung hinterlegt. Das
+       Formular fragt beides deshalb nicht noch einmal, und der Server nimmt
+       es auch nicht entgegen — sonst liesse sich darueber ein fremder
+       Account umschreiben. */
+    const gast = teilnehmer?.gast === true
+
     const fehler = {}
     if (nummer == null) fehler.deckel = fuelle(TEXTE.b.fehler.nummer, { gesamt: GESAMT })
-    if (!handle) fehler.instagram = TEXTE.b.fehler.instagram
-    if (!EMAIL_MUSTER.test(email)) fehler.email = TEXTE.b.fehler.email
+    if (!gast && !handle) fehler.instagram = TEXTE.b.fehler.instagram
+    if (!gast && !EMAIL_MUSTER.test(email)) fehler.email = TEXTE.b.fehler.email
     if (!formular.folgt) fehler.folgt = fuelle(TEXTE.b.fehler.folgt, { handle: HANDLE })
     /* Die Leaderboard-Einwilligung wird hier bewusst nicht geprueft: sie ist
        freiwillig. Ohne sie gilt die Teilnahme genauso. */
@@ -1240,6 +1524,11 @@ export default function Terminal() {
     const antwort = await terminalRuf({
       aktion: 'aktivieren',
       zugang: merkeLesen(SPEICHER_ZUGANG),
+      /* Der Sitzungsbeleg entscheidet nichts ueber den Status — er sagt dem
+         Server nur, WER da aktiviert. Ist es ein Gast, wird seine vorhandene
+         Zeile fortgeschrieben statt eine zweite anzulegen. Alles andere
+         steht in der Datenbank. */
+      sitzung: merkeLesen(SPEICHER_SITZUNG),
       deckel: nummer,
       instagram: handle,
       email,
@@ -1264,7 +1553,18 @@ export default function Terminal() {
         setKennzahlen((alt) => ({ ...(alt ?? {}), aktiviert: antwort.aktiviert }))
       }
       setFormular(LEERES_FORMULAR)
+      setFeldFehler({})
       setAnsicht('c')
+
+      /* Aus einem Gast ist gerade ein offizieller Teilnehmer geworden: die
+         Scores liegen unveraendert an derselben id, und ab jetzt gibt es
+         eigene Einladungsplaetze. Die holt die Seite frisch — die Antwort
+         auf die Aktivierung kennt sie noch nicht. */
+      if (antwort.konvertiert) {
+        setKonvertiert(true)
+        const frisch = await teamHolen(antwort.sitzung ?? sitzung)
+        if (frisch.ok && frisch.team) setTeam(frisch.team)
+      }
       return
     }
 
@@ -1290,6 +1590,51 @@ export default function Terminal() {
     }
 
     setFeldFehler({ allgemein: TEXTE.b.fehler.allgemein })
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Einladungen — „DEIN TEAM"                                        */
+  /* ---------------------------------------------------------------- */
+
+  /**
+   * Eine Einladung erzeugen bzw. eine zurueckziehen.
+   *
+   * Beide Aufrufe schicken nur den Sitzungsbeleg — und im zweiten Fall die
+   * Platznummer. Ob die Person ueberhaupt einladen darf, wie viele Plaetze
+   * sie hat und welcher als naechstes drankommt, entscheidet allein der
+   * Server. Ein Gast bekommt hier eine Absage, egal was der Browser sagt.
+   *
+   * Zurueck kommt jedes Mal das vollstaendige Team, damit die Karte nie aus
+   * einzelnen Antworten zusammengestueckelt werden muss.
+   */
+  async function teamErzeugen() {
+    if (teamSendet) return
+    setTeamSendet(true)
+    setTeamFehler(null)
+
+    const antwort = await einladungErzeugen(sitzung)
+    setTeamSendet(false)
+
+    if (antwort.ok && antwort.team) {
+      setTeam(antwort.team)
+      return
+    }
+    setTeamFehler(TEXTE.team.fehler[antwort.grund] ?? TEXTE.team.fehler.allgemein)
+  }
+
+  async function teamWiderrufen(slot) {
+    if (teamSendet) return
+    setTeamSendet(true)
+    setTeamFehler(null)
+
+    const antwort = await einladungWiderrufen(sitzung, slot)
+    setTeamSendet(false)
+
+    if (antwort.ok && antwort.team) {
+      setTeam(antwort.team)
+      return
+    }
+    setTeamFehler(TEXTE.team.fehler[antwort.grund] ?? TEXTE.team.fehler.allgemein)
   }
 
   /* ---------------------------------------------------------------- */
@@ -1499,6 +1844,237 @@ export default function Terminal() {
     )
   }
 
+  /**
+   * Die Games mit gespeicherten Scores.
+   *
+   * Offizielle Teilnehmer und Gaeste spielen genau dieselben Spiele, in
+   * derselben Reihenfolge, mit denselben gespeicherten Bestwerten. Der
+   * Unterschied zwischen beiden steht ueber der Liste und in den Wertungen —
+   * nie in der Liste selbst. Deshalb eine Funktion fuer beide Ansichten.
+   *
+   * Ausgeblendete Spiele fehlen hier nur; ihre Scores bleiben bestehen.
+   */
+  function spieleBlock(titel) {
+    const sichtbar = aktiveSpiele(
+      laborSpiel ? { ...kennzahlen?.spieleAktiv, [laborSpiel]: true } : kennzahlen?.spieleAktiv,
+      kennzahlen?.spieleReihenfolge,
+    )
+    return (
+      <section className="trm-spiele" id="trm-games" aria-labelledby="trm-games-titel">
+        <div className="trm-karte__kopf trm-spiele__kopf">
+          <Ikon name="spiel" size={22} className="trm-ikon" />
+          <h2 className="trm-karte__titel" id="trm-games-titel">
+            {titel}
+          </h2>
+        </div>
+
+        {sichtbar.map((s) => {
+          const best = spiele?.beste?.[s.key] ?? null
+          const Bauteil = SPIEL_BAUTEILE[s.key]
+          if (Bauteil) {
+            return <Bauteil key={s.key} sitzung={sitzung} best={best} onErgebnis={ergebnisUebernehmen} />
+          }
+          const Nachgeladen = SPIEL_NACHLADEN[s.key]
+          if (!Nachgeladen) return null
+          if (!offeneSpiele[s.key]) {
+            return (
+              <SpielWahl
+                key={s.key}
+                spiel={s}
+                best={best}
+                oeffnen={() => setOffeneSpiele((o) => ({ ...o, [s.key]: true }))}
+              />
+            )
+          }
+          return (
+            <Suspense
+              key={s.key}
+              fallback={
+                <div className="trm-karte trm-spielwahl trm-spielwahl--laedt" id={s.key}>
+                  {TEXTE.g.laedt}
+                </div>
+              }
+            >
+              <Nachgeladen sitzung={sitzung} best={best} onErgebnis={ergebnisUebernehmen} />
+            </Suspense>
+          )
+        })}
+
+        <p className="trm-fuss-notiz">{TEXTE.g.hinweis}</p>
+      </section>
+    )
+  }
+
+  /* ================================================================ */
+  /* Zustand C, Gastfassung — eingeladen, noch ohne eigenen Deckel     */
+  /* ================================================================ */
+
+  /*
+   * Ein Gast sieht sein eigenes Terminal: alle fuenf Hauptgames, alle
+   * eigenen Bestwerte, und den Weg zum eigenen Deckel.
+   *
+   * Was er NICHT sieht, ist Absicht und nicht Sparsamkeit: keine Uhr zur
+   * Ziehung, keinen Lostopf, keinen Tresorkoenig, kein Gesamtranking, keine
+   * Einwilligung in eine oeffentliche Liste, in der er gar nicht steht, und
+   * keine Einladungsplaetze. Es gibt auf dieser Seite keinen Satz, der
+   * andeutet, ein Gast sei fuer die Hauptpreise qualifiziert — er ist es
+   * nicht, und er erfaehrt das im ersten Absatz und nicht im Kleingedruckten.
+   *
+   * Der Weg nach oben steht als Formular mitten auf der Seite: eine echte
+   * Deckelnummer, sonst nichts. Name und Adresse hat er schon hinterlegt.
+   */
+  if (ansicht === 'c' && teilnehmer?.gast) {
+    const G = TEXTE.einladung
+    const B = TEXTE.b.belegt
+
+    return (
+      <>
+        {seo}
+        <Buehne art={buehne} wort={buehneWort} />
+        <TerminalRahmen>
+          <div className="trm-abzeichen trm-abzeichen--gast">
+            <Ikon name="schluessel" size={28} className="trm-abzeichen__haken" />
+            <span className="trm-abzeichen__wort">{G.gastLabel}</span>
+          </div>
+
+          <h1 className="trm-titel trm-gold">{G.gastTitel}</h1>
+          <p className="trm-sub">{G.gastText}</p>
+
+          {teilnehmer.einladerInstagram ? (
+            <p className="trm-frei">
+              <Ikon name="schluessel" size={17} className="trm-ikon" />
+              <span className="trm-frei__text">
+                {fuelle(G.gastVon, { name: teilnehmer.einladerInstagram })}
+              </span>
+            </p>
+          ) : null}
+
+          <Raute />
+
+          {/* Der Weg zum eigenen Los. Kein zweiter Account, keine neue
+              Anmeldung — dieselbe Zeile bekommt eine Nummer. */}
+          <form className="trm-karte trm-gast-weg" id="trm-aktivieren" onSubmit={aktivieren} noValidate>
+            <div className="trm-karte__kopf">
+              <Ikon name="deckel" size={22} className="trm-ikon" />
+              <h2 className="trm-karte__titel">{G.gastCta}</h2>
+            </div>
+
+            <Feld
+              id="trm-deckel"
+              label={TEXTE.b.felder.nummer}
+              hilfe={fuelle(TEXTE.b.felder.nummerHilfe, { gesamt: GESAMT })}
+              fehler={feldFehler.deckel}
+              nach={`/ ${TERMINAL_KAMPAGNE.deckelGesamt}`}
+            >
+              {({ hilfeId, fehlerId }) => (
+                <input
+                  id="trm-deckel"
+                  className="trm-eingabe"
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="off"
+                  value={formular.deckel}
+                  onChange={(e) => aendern('deckel', e.target.value.replace(/\D/g, '').slice(0, 7))}
+                  placeholder={TEXTE.b.felder.nummerPlatz}
+                  aria-describedby={[hilfeId, fehlerId].filter(Boolean).join(' ') || undefined}
+                  aria-invalid={feldFehler.deckel ? 'true' : undefined}
+                  required
+                />
+              )}
+            </Feld>
+
+            <label className="trm-haken" htmlFor="trm-folgt">
+              <input
+                id="trm-folgt"
+                type="checkbox"
+                checked={formular.folgt}
+                onChange={(e) => aendern('folgt', e.target.checked)}
+                aria-describedby={feldFehler.folgt ? 'trm-folgt-fehler' : undefined}
+                aria-invalid={feldFehler.folgt ? 'true' : undefined}
+                required
+              />
+              <span>{fuelle(TEXTE.b.felder.haken, { handle: HANDLE })}</span>
+            </label>
+            {feldFehler.folgt ? (
+              <p className="trm-feld__fehler" id="trm-folgt-fehler" role="alert">
+                {feldFehler.folgt}
+              </p>
+            ) : null}
+
+            <label className="trm-haken trm-haken--frei" htmlFor="trm-leaderboard">
+              <input
+                id="trm-leaderboard"
+                type="checkbox"
+                checked={formular.leaderboard}
+                onChange={(e) => aendern('leaderboard', e.target.checked)}
+                aria-describedby="trm-leaderboard-hilfe"
+              />
+              <span>{TEXTE.b.felder.leaderboard}</span>
+            </label>
+            <p className="trm-feld__hilfe" id="trm-leaderboard-hilfe">
+              {TEXTE.b.felder.leaderboardHilfe}
+            </p>
+
+            <button type="submit" className="trm-cta" disabled={sendet}>
+              {sendet ? 'Wird aktiviert …' : G.gastCta}
+            </button>
+
+            {feldFehler.allgemein ? (
+              <p className="trm-meldung trm-meldung--fehler" role="alert">
+                {feldFehler.allgemein}
+              </p>
+            ) : null}
+
+            <p className="trm-fuss-notiz">{G.gastKeinRanking}</p>
+          </form>
+
+          {spieleBlock(G.gastBestleistungen)}
+        </TerminalRahmen>
+
+        {/* Auch fuer einen Gast gilt der gewoehnliche Mehrfachanspruch: ist
+            die Nummer schon aktiviert, entscheidet dieselbe Frage. */}
+        {belegtFrage && (
+          <div
+            className="trm-belegt"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="trm-belegt-titel"
+            aria-describedby="trm-belegt-frage"
+            data-belegt
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') belegtNein()
+            }}
+          >
+            <div className="trm-karte trm-belegt__blatt">
+              <h2 className="trm-karte__titel" id="trm-belegt-titel">
+                {B.titel}
+              </h2>
+              <p className="trm-karte__sub" id="trm-belegt-frage">
+                {B.frage}
+              </p>
+              <p className="trm-fuss-notiz">{B.hinweis}</p>
+              <div className="trm-belegt__tasten">
+                <button type="button" className="trm-cta" data-belegt-ja disabled={sendet} onClick={belegtJa}>
+                  {sendet ? 'Wird aktiviert …' : B.ja}
+                </button>
+                <button
+                  type="button"
+                  ref={belegtNeinRef}
+                  className="trm-cta trm-cta--umriss"
+                  data-belegt-nein
+                  disabled={sendet}
+                  onClick={belegtNein}
+                >
+                  {B.nein}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </>
+    )
+  }
+
   if (ansicht === 'c' && teilnehmer) {
     const nummer = deckelText(teilnehmer.deckel)
     const termin = terminText(kennzahlen?.naechsteZiehung)
@@ -1517,10 +2093,6 @@ export default function Terminal() {
     const E = TEXTE.c.einwilligung
     const oeffentlich = teilnehmer.leaderboardOk === true
     const entwurf = einwEntwurf ?? oeffentlich
-    const spieleSichtbar = aktiveSpiele(
-      laborSpiel ? { ...kennzahlen?.spieleAktiv, [laborSpiel]: true } : kennzahlen?.spieleAktiv,
-      kennzahlen?.spieleReihenfolge,
-    )
 
     return (
       <>
@@ -1543,6 +2115,17 @@ export default function Terminal() {
             <b className="trm-frei__wort">{TEXTE.t.freiTitel}</b>
             <span className="trm-frei__text">{TEXTE.t.freiText}</span>
           </p>
+
+          {/* Nur unmittelbar nach dem Wechsel vom Gast zum Deckelbesitzer.
+              Der Satz beantwortet die eine Frage, die in diesem Moment
+              zaehlt: sind meine Scores noch da. */}
+          {konvertiert ? (
+            <p className="trm-frei trm-frei--neu" role="status">
+              <Ikon name="deckel" size={17} className="trm-ikon" />
+              <b className="trm-frei__wort">{TEXTE.einladung.konvertiertTitel}</b>
+              <span className="trm-frei__text">{TEXTE.einladung.konvertiertText}</span>
+            </p>
+          ) : null}
 
           <Raute />
 
@@ -1620,6 +2203,19 @@ export default function Terminal() {
             follower={kennzahlen?.followerZahl ?? TERMINAL_KAMPAGNE.followerStart}
             gewinne={kennzahlen?.meilensteinGewinne}
           />
+
+          {/* Einladungen. Nur fuer offizielle Teilnehmer, und nur wenn der
+              Server tatsaechlich Plaetze mitgeschickt hat — die Entscheidung
+              darueber faellt dort, nicht hier. */}
+          {team ? (
+            <TeamKarte
+              team={team}
+              sendet={teamSendet}
+              fehler={teamFehler}
+              onErzeugen={teamErzeugen}
+              onWiderrufen={teamWiderrufen}
+            />
+          ) : null}
 
           {/* Der Tresorkoenig. Oeffentlich ist daran nur, was die Person dafuer
               freigegeben hat: Instagram-Name und Punktzahl. */}
@@ -1739,52 +2335,7 @@ export default function Terminal() {
             <p className="trm-feld__hilfe">{E.hinweis}</p>
           </section>
 
-          {/* Die Games. Zwei Karten, ein Hinweis — und kein Wort, das den
-              Eindruck erwecken koennte, Punkte wuerden die Ziehung
-              beeinflussen. */}
-          <section className="trm-spiele" id="trm-games" aria-labelledby="trm-games-titel">
-            <div className="trm-karte__kopf trm-spiele__kopf">
-              <Ikon name="spiel" size={22} className="trm-ikon" />
-              <h2 className="trm-karte__titel" id="trm-games-titel">
-                {TEXTE.t.gamesLabel}
-              </h2>
-            </div>
-
-            {/* Ausgeblendete Spiele fehlen hier nur — ihre Scores bleiben. */}
-            {spieleSichtbar.map((s) => {
-              const best = spiele?.beste?.[s.key] ?? null
-              const Bauteil = SPIEL_BAUTEILE[s.key]
-              if (Bauteil) {
-                return <Bauteil key={s.key} sitzung={sitzung} best={best} onErgebnis={ergebnisUebernehmen} />
-              }
-              const Nachgeladen = SPIEL_NACHLADEN[s.key]
-              if (!Nachgeladen) return null
-              if (!offeneSpiele[s.key]) {
-                return (
-                  <SpielWahl
-                    key={s.key}
-                    spiel={s}
-                    best={best}
-                    oeffnen={() => setOffeneSpiele((o) => ({ ...o, [s.key]: true }))}
-                  />
-                )
-              }
-              return (
-                <Suspense
-                  key={s.key}
-                  fallback={
-                    <div className="trm-karte trm-spielwahl trm-spielwahl--laedt" id={s.key}>
-                      {TEXTE.g.laedt}
-                    </div>
-                  }
-                >
-                  <Nachgeladen sitzung={sitzung} best={best} onErgebnis={ergebnisUebernehmen} />
-                </Suspense>
-              )
-            })}
-
-            <p className="trm-fuss-notiz">{TEXTE.g.hinweis}</p>
-          </section>
+          {spieleBlock(TEXTE.t.gamesLabel)}
 
           {ziehungZeile()}
 

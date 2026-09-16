@@ -517,6 +517,111 @@ export const TEXTE = {
     testLink: 'TESTLINK ÖFFNEN',
   },
 
+  /* Einladungen im Dashboard eines offiziellen Teilnehmers.
+     Der Wortlaut hier hat eine Aufgabe, die wichtiger ist als der Ton: er
+     darf nie den Eindruck erwecken, Einladen bringe Gewinnchancen. Ein
+     Deckel ist ein Los. Drei Einladungen sind null Lose. */
+  team: {
+    label: 'DEIN TEAM',
+    sub: 'Hol {anzahl} Leute mit in den Tresor.',
+    keinLos:
+      'Einladen bringt dir keine zusätzliche Gewinnchance. Ein Deckel ist ein Los — daran ändert kein Team etwas. Was du bekommst: Leute, die deinen Score jagen.',
+    slotFrei: 'FREIER PLATZ',
+    slotOffen: 'EINGELADEN',
+    slotBesetzt: 'IM TRESOR',
+    erzeugen: 'EINLADUNG ERSTELLEN',
+    erzeugt: 'Wird erstellt …',
+    teilen: 'LINK TEILEN',
+    qr: 'QR ZEIGEN',
+    kopieren: 'EINLADUNG KOPIEREN',
+    kopiert: 'KOPIERT',
+    widerrufen: 'ZURÜCKZIEHEN',
+    widerrufFrage: 'Diesen Einladungslink ungültig machen? Der Platz wird danach wieder frei.',
+    qrTitel: 'ZUM SCANNEN',
+    qrText: 'Handy davorhalten. Der Link öffnet den Tresoreingang.',
+    schliessen: 'SCHLIESSEN',
+    gastOffiziell: 'HAT EINEN EIGENEN DECKEL',
+    gastGast: 'Spielt als Gast',
+    geoeffnet: '{n}× geöffnet',
+    nochNicht: 'Noch nicht geöffnet.',
+    leer: 'Noch niemand eingeladen.',
+    teilenText: 'Ich bin im VIDEKO Tresor. Komm mit rein und schlag meinen Score.',
+    teilenTitel: 'VIDEKO Tresor',
+    fehler: {
+      gast: 'Einladungen gibt es nur mit eigenem Deckel.',
+      'keine-slots': 'Alle Plätze sind vergeben.',
+      geschlossen: 'Einladungen sind gerade geschlossen.',
+      'nicht-offen': 'Dieser Platz lässt sich nicht mehr zurückziehen.',
+      allgemein: 'Gerade keine Verbindung. Bitte noch einmal versuchen.',
+    },
+  },
+
+  /* Die Landingpage hinter einem Einladungslink und alles, was ein Gast
+     danach sieht. Der wichtigste Satz steht ganz oben und nicht im
+     Kleingedruckten: ein Gast spielt mit, aber er spielt nicht um die
+     Hauptpreise. */
+  einladung: {
+    marke: 'EINLADUNG',
+    pruefen: 'Einladung wird geprüft …',
+    titel: 'DU BIST EINGELADEN.',
+    vonLabel: 'EINGELADEN VON',
+    sub: 'Spiel mit im VIDEKO Tresor.',
+    klartextTitel: 'DU SPIELST ALS GAST.',
+    klartext:
+      'Für die Hauptverlosung brauchst du einen eigenen der {gesamt} nummerierten Deckel. Als Gast spielst du alle Games, deine Scores werden gespeichert — aber du bist in keiner Verlosung und stehst in keiner offiziellen Rangliste.',
+    was: [
+      'Alle Games, voller Zugang.',
+      'Deine Scores werden gespeichert.',
+      'Keine Verlosung, kein offizielles Ranking — dafür braucht es einen Deckel.',
+    ],
+    cta: 'ALS GAST MITSPIELEN',
+    laeuft: 'Wird eingerichtet …',
+    felder: {
+      instagram: 'Instagram-Name',
+      instagramPlatz: 'z. B. @deinname',
+      email: 'E-Mail-Adresse',
+      emailPlatz: 'z. B. name@beispiel.de',
+      emailHilfe:
+        'Nur damit du deine Scores auf einem anderen Gerät wiederfindest. Nie öffentlich sichtbar.',
+      bedingungen: 'Ich akzeptiere die Teilnahmebedingungen und die Datenschutzerklärung.',
+    },
+    fehler: {
+      instagram: 'Bitte deinen Instagram-Namen eintragen.',
+      email: 'Bitte eine gültige E-Mail-Adresse eintragen.',
+      bedingungen: 'Bitte Teilnahmebedingungen und Datenschutzerklärung akzeptieren.',
+      link: 'Diese Einladung ist ungültig oder gehört zu keinem Platz mehr.',
+      felder: 'Bitte die markierten Felder prüfen.',
+      widerrufen: 'Diese Einladung wurde zurückgezogen.',
+      verbraucht: 'Diese Einladung wurde bereits eingelöst.',
+      abgelaufen: 'Diese Einladung ist abgelaufen.',
+      bremse: 'Gerade zu viele Versuche. Bitte in ein paar Minuten noch einmal.',
+      allgemein: 'Gerade keine Verbindung. Bitte noch einmal versuchen.',
+    },
+    /* Der Link geht nicht mehr. Kein Drama, aber auch keine Ausrede: der Weg
+       zum Terminal steht daneben, und er funktioniert auch ohne Einladung —
+       nur eben mit eigenem Deckel. */
+    fehlerTitel: 'DIESER LINK FÜHRT NICHT WEITER.',
+    fehlerText: 'Frag die Person, die dich eingeladen hat, nach einem neuen Link. Mit einem eigenen VIDEKO-Deckel kommst du auch ohne Einladung hinein.',
+    zurueck: 'ZUM TERMINAL',
+    /* Auf dem Gerät liegt schon ein Zugang. Dann ist Einlösen fast immer ein
+       Versehen — und es würde den Platz der einladenden Person verbrauchen. */
+    schonDa: 'Auf diesem Gerät ist schon ein Zugang gespeichert. Wenn du das bist, brauchst du diese Einladung nicht — dein Deckel ist mehr wert als ein Gastplatz.',
+    schonDaCta: 'ZU MEINEM TRESOR',
+    trotzdem: 'Ich bin jemand anderes — als Gast mitspielen',
+    /* Das Gastdashboard. Erst die Beruhigung, dann der Weg nach oben. */
+    gastLabel: 'GAST',
+    gastTitel: 'DEINE SCORES SIND SICHER.',
+    gastText:
+      'Alles, was du spielst, wird gespeichert. Mit einem echten Deckel wirst du offizieller Teilnehmer — deine Scores bleiben, und du kommst in Verlosung und Gesamtranking.',
+    gastCta: 'DECKEL AKTIVIEREN',
+    gastBestleistungen: 'DEINE BESTLEISTUNGEN',
+    gastKeinRanking:
+      'Als Gast stehst du in keiner offiziellen Rangliste und in keiner Verlosung.',
+    gastVon: 'Eingeladen von @{name}',
+    konvertiertTitel: 'DU BIST JETZT OFFIZIELL DABEI.',
+    konvertiertText: 'Dein Deckel ist aktiviert. Deine Scores sind alle da.',
+  },
+
   gewinneTitel: 'DAS KÖNNTE IN DER TRUHE AUF DICH WARTEN',
 
   /* Der Verweis auf die oeffentliche Ziehung. Steht auf mehreren Seiten. */

@@ -2336,6 +2336,279 @@ textarea.trm-eingabe {
 }
 
 /* ------------------------------------------------------------------ */
+/* Einladungen — „DEIN TEAM" und die Gastansicht                       */
+/* ------------------------------------------------------------------ */
+
+/* Drei Plaetze in einem Tresorfach: dieselbe Karte wie alles andere, nur
+   innen in Faecher geteilt. Kein Fortschrittsbalken, keine Punktestaende,
+   keine Prozente — das hier ist kein Empfehlungsprogramm, sondern eine
+   Gaesteliste. Drei Zeilen, drei Zustaende, fertig. */
+.trm-team__slots {
+  list-style: none;
+  margin: clamp(12px, 3.2vw, 18px) 0 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(8px, 2.4vw, 12px);
+}
+
+.trm-team__slot {
+  padding: clamp(11px, 3.2vw, 15px) clamp(12px, 3.4vw, 16px);
+  border: 1px solid var(--trm-linie);
+  border-radius: var(--trm-radius);
+  background: var(--trm-feld);
+}
+
+/* Ein besetzter Platz bekommt den staerkeren Rand und einen Hauch Gold von
+   links: er ist das Ergebnis, nicht die Aufgabe. */
+.trm-team__slot[data-status='beigetreten'] {
+  border-color: var(--trm-linie-stark);
+  background:
+    linear-gradient(90deg, rgba(201, 160, 80, 0.14) 0%, rgba(9, 8, 7, 0) 58%),
+    var(--trm-feld);
+}
+
+/* Ein freier Platz bleibt bewusst blass — er soll einladen, nicht mahnen. */
+.trm-team__slot[data-status='frei'] {
+  border-style: dashed;
+}
+
+.trm-team__zeile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+}
+
+.trm-team__nr {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--trm-linie-stark);
+  border-radius: 50%;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--trm-gold-hell);
+  font-variant-numeric: tabular-nums;
+}
+
+.trm-team__status {
+  font-size: clamp(12px, 3.4vw, 13px);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--trm-creme-weich);
+}
+
+.trm-team__slot[data-status='beigetreten'] .trm-team__status {
+  color: var(--trm-gold-hell);
+}
+
+/* Teilen, QR, Kopieren. Auf 390 px passen zwei Knoepfe in eine Zeile und der
+   dritte rutscht darunter — deshalb Wrap statt Grid mit fester Spaltenzahl. */
+.trm-team__tasten {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: clamp(10px, 2.6vw, 14px);
+}
+
+.trm-team__tasten .trm-cta {
+  flex: 1 1 auto;
+  min-width: 132px;
+  margin: 0;
+}
+
+.trm-team__slot .trm-cta--klein {
+  margin-top: clamp(10px, 2.6vw, 14px);
+  width: 100%;
+}
+
+.trm-team__tasten .trm-cta--klein {
+  margin-top: 0;
+  width: auto;
+}
+
+.trm-team__notiz {
+  margin: 10px 0 0;
+  font-size: clamp(11px, 3.1vw, 12px);
+  letter-spacing: 0.08em;
+  color: var(--trm-creme-leise);
+}
+
+/* Zuruecknehmen ist kein Knopf, sondern eine Nebentuer: derselbe Text in
+   klein, ohne Flaeche. Wer zurueckzieht, sucht das gezielt. */
+.trm-team__zurueck {
+  margin-top: 8px;
+  padding: 6px 0;
+  min-height: 32px;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: clamp(11px, 3.1vw, 12px);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  color: var(--trm-creme-leise);
+  cursor: pointer;
+}
+
+.trm-team__zurueck:hover,
+.trm-team__zurueck:focus-visible {
+  color: var(--trm-gold-hell);
+}
+
+.trm-team__gast {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  margin: 10px 0 0;
+}
+
+.trm-team__gastname {
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(16px, 4.4vw, 19px);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--trm-creme);
+}
+
+.trm-team__gaststand {
+  font-size: clamp(11px, 3.1vw, 12px);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--trm-creme-leise);
+}
+
+/* Der QR-Code. Er wird gescannt, also braucht er hellen Grund und Rand —
+   das ist die einzige helle Flaeche im ganzen Terminal, und sie ist es aus
+   optischen Gruenden nicht, sondern weil Scanner sonst scheitern. */
+.trm-qr__blatt {
+  text-align: center;
+}
+
+.trm-qr {
+  display: block;
+  width: min(248px, 68vw);
+  height: auto;
+  margin: clamp(14px, 4vw, 20px) auto 0;
+  border-radius: 8px;
+  box-shadow: 0 0 30px rgba(201, 160, 80, 0.2);
+  image-rendering: pixelated;
+}
+
+.trm-qr__laedt {
+  margin: clamp(14px, 4vw, 20px) 0 0;
+  font-size: clamp(12px, 3.4vw, 13px);
+  letter-spacing: 0.1em;
+  color: var(--trm-creme-leise);
+}
+
+/* Der Link im Klartext. Er muss umbrechen duerfen, sonst sprengt er auf dem
+   Handy die Karte. */
+.trm-qr__link {
+  margin: clamp(12px, 3.2vw, 16px) 0 0;
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  font-size: clamp(11px, 3vw, 12px);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  color: var(--trm-creme-weich);
+}
+
+/* Das Gastabzeichen. Dieselbe Form wie AKTIVIERT, aber in Gold statt Gruen:
+   ein Gast ist im Tresor — er ist nur nicht im Lostopf. Das Gruen bleibt
+   dem echten Deckel vorbehalten. */
+.trm-abzeichen--gast {
+  border-color: var(--trm-linie-stark);
+  background: rgba(201, 150, 60, 0.14);
+  box-shadow: 0 0 26px rgba(201, 160, 80, 0.16);
+}
+
+.trm-abzeichen--gast .trm-abzeichen__haken {
+  color: var(--trm-gold-hell);
+}
+
+/* Der Weg vom Gast zum Deckel. Die Karte steht ueber den Spielen und traegt
+   deshalb etwas mehr Gewicht als eine gewoehnliche Karte. */
+.trm-gast-weg {
+  border-color: var(--trm-linie-stark);
+  background:
+    radial-gradient(120% 150% at 0% 0%, rgba(201, 150, 60, 0.14) 0%, rgba(10, 9, 8, 0) 68%),
+    var(--trm-panel);
+}
+
+/* Die einmalige Bestaetigung nach der Konvertierung. */
+.trm-frei--neu {
+  border-color: rgba(87, 196, 124, 0.5);
+}
+
+.trm-frei--neu svg {
+  color: var(--trm-gruen);
+}
+
+/* Die Landingpage hinter einem Einladungslink.
+
+   „EINGELADEN VON @xyz" steht direkt unter der Ueberschrift: der Name ist
+   der Grund, warum jemand diesen Link ueberhaupt angeklickt hat. Der
+   Instagram-Name ist oeffentlich, eine E-Mail steht hier nie. */
+.trm-einladung__von {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  margin: 0 0 clamp(10px, 3vw, 14px);
+}
+
+.trm-einladung__wer {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--trm-creme-leise);
+}
+
+.trm-einladung__name {
+  font-size: clamp(17px, 5vw, 21px);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--trm-gold-hell);
+  overflow-wrap: anywhere;
+}
+
+/* Der ehrliche Kasten. Er steht ueber dem Formular und nicht darunter,
+   und er ist deshalb die einzige Karte auf dieser Seite mit einer
+   sichtbar staerkeren Kante. */
+.trm-klartext {
+  border-color: var(--trm-linie-stark);
+}
+
+.trm-klartext__liste {
+  display: grid;
+  gap: 9px;
+  margin: clamp(10px, 3vw, 14px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.trm-klartext__liste li {
+  display: grid;
+  grid-template-columns: 17px 1fr;
+  align-items: start;
+  gap: 10px;
+  font-size: clamp(12px, 3.4vw, 14px);
+  line-height: 1.42;
+  color: var(--trm-creme-weich);
+}
+
+.trm-klartext__liste svg {
+  margin-top: 2px;
+  color: var(--trm-gold);
+}
+
+/* ------------------------------------------------------------------ */
 /* Mini-Spiel                                                          */
 /* ------------------------------------------------------------------ */
 
@@ -4059,6 +4332,17 @@ textarea.trm-eingabe {
 
 .trm-adm__suche {
   margin-top: 12px;
+}
+
+/* Zwischenueberschrift innerhalb einer Verwaltungskarte — etwa EINLADER
+   und GÄSTE im Bereich EINLADUNGEN. */
+.trm-adm__untertitel {
+  margin: 20px 0 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--trm-gold);
 }
 
 .trm-adm__liste {
