@@ -95,6 +95,36 @@
   font-size: 11px;
 }
 
+/* Magnet zieht Gold heran — rot, damit er sich vom Gold selbst abhebt. */
+.trm-jump-kraft[data-art='magnet'] {
+  border-color: var(--trm-rot, #e2453a);
+  color: var(--trm-rot, #e2453a);
+  background: rgba(226, 69, 58, 0.14);
+}
+
+/* Der seltenste Zustand im Spiel bekommt den einzigen hellen Chip. */
+.trm-jump-kraft[data-art='superkoch'] {
+  border-color: var(--trm-gold-hell);
+  background: rgba(201, 150, 60, 0.4);
+  color: var(--trm-creme, #f4efe4);
+  font-size: 10px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .trm-jump-kraft[data-art='superkoch'] {
+    animation: trm-jump-super 1.1s ease-in-out infinite;
+  }
+}
+
+.trm-jump-buehne[data-sanft='1'] .trm-jump-kraft[data-art='superkoch'] {
+  animation: none;
+}
+
+@keyframes trm-jump-super {
+  0%, 100% { border-color: var(--trm-gold-hell); }
+  50% { border-color: var(--trm-creme, #f4efe4); }
+}
+
 /* Optionale Neigungssteuerung: kleine Goldkante oben links, 44 px Tippflaeche.
    Fragt erst beim Tipp nach dem Sensor, nie beim Laden. */
 .trm-jump-neigung {

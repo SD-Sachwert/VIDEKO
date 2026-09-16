@@ -2697,6 +2697,138 @@ textarea.trm-eingabe {
   }
 }
 
+/* ------------------------------------------------------------------ */
+/* Game-Shell — dieselben drei Tasten in jedem Spiel, plus Vollbild    */
+/* ------------------------------------------------------------------ */
+
+/* Die Tastenreihe sitzt oben rechts im Feld, dort, wo bisher jedes Spiel
+   seinen eigenen Tonschalter hatte. `touch-action: manipulation` nimmt der
+   Reihe die 300-ms-Verzoegerung, ohne die Buehne darunter zu beeinflussen. */
+.trm-shell {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 9;
+  display: flex;
+  gap: 6px;
+  touch-action: manipulation;
+}
+
+.trm-shell__knopf {
+  position: relative;
+  display: grid;
+  place-items: center;
+  /* 34 px sichtbar, 44 px Trefferflaeche — die Vergroesserung liegt als
+     unsichtbares Pseudoelement darum, damit die Reihe schlank bleibt. */
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid rgb(201 160 80 / 0.35);
+  border-radius: 50%;
+  background: rgb(10 9 8 / 0.62);
+  color: var(--trm-gold, #c9a050);
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 160ms ease, color 160ms ease, background-color 160ms ease;
+}
+
+.trm-shell__knopf::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+}
+
+.trm-shell__knopf:hover {
+  border-color: rgb(201 160 80 / 0.7);
+  color: var(--trm-gold-hell, #e8c978);
+}
+
+.trm-shell__knopf[aria-pressed='false'] {
+  color: rgb(244 239 228 / 0.42);
+}
+
+/* Das Vollbild ist die einzige Taste, die im aktiven Zustand leuchten soll —
+   der Ton meldet Stille durch Blasswerden, das Vollbild Fuelle durch Gold. */
+.trm-shell__knopf[aria-pressed='true'] {
+  color: var(--trm-gold-hell, #e8c978);
+}
+
+.trm-shell__knopf--weg {
+  border-color: rgb(201 160 80 / 0.2);
+  color: rgb(244 239 228 / 0.6);
+}
+
+.trm-shell__knopf--weg:hover {
+  border-color: rgb(196 92 72 / 0.7);
+  color: #e8a08e;
+}
+
+/* Pseudo-Vollbild: die Karte legt sich ueber alles. Im echten Vollbild
+   greift dieselbe Regel — dort ist sie wirkungslos, weil das Element ohnehin
+   den Bildschirm fuellt, aber sie haelt das Layout identisch. */
+.trm-spiel--vollbild {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  padding:
+    max(10px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right))
+    max(10px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(201, 150, 60, 0.1) 0%, rgba(0, 0, 0, 0) 62%),
+    #050504;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+/* Im Vollbild bekommt das Feld allen Platz, den Kopf und Leiste uebrig
+   lassen — statt der festen Hoehe von oben. */
+.trm-spiel--vollbild .trm-feld-spiel,
+.trm-spiel--vollbild .trm-feld-spiel--hoch {
+  flex: 1 1 auto;
+  height: auto;
+  min-height: 0;
+  margin-top: 10px;
+  touch-action: none;
+}
+
+/* Der Titel darf im Vollbild schrumpfen: dort zaehlt das Feld, nicht die
+   Ueberschrift. Der Startknopf bleibt, damit NOCHMAL erreichbar ist. */
+.trm-spiel--vollbild .trm-spiel__kopf {
+  flex: 0 0 auto;
+}
+
+.trm-spiel--vollbild .trm-spiel__zeile {
+  display: none;
+}
+
+.trm-spiel--vollbild .trm-spiel__leiste {
+  flex: 0 0 auto;
+  margin-bottom: 0;
+}
+
+/* Sehr flache Fenster (Querformat auf dem Handy): der Kopf frisst sonst die
+   halbe Hoehe. */
+@media (max-height: 460px) {
+  .trm-spiel--vollbild .trm-karte__titel {
+    font-size: 14px;
+  }
+
+  .trm-spiel--vollbild .trm-ikon {
+    display: none;
+  }
+}
+
 /* Kompakte Auswahlkarte: ein Spiel, eine Zeile. Das Spiel selbst wird erst
    beim Antippen nachgeladen. */
 .trm-spielwahl {

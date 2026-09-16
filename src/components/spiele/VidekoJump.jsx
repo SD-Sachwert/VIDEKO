@@ -8,9 +8,12 @@ import {
   FIGUR_B,
   FIGUR_H,
   GABE_R,
+  GEGNER_DREH,
   GEGNER_H,
   GOLD_BONUS,
+  HERD_BONUS,
   HOEHE_JE_EINHEIT,
+  MAGNET_R,
   MEILENSTEIN,
   NEIGUNG_WARTEN_MS,
   PLATTE_DICKE,
@@ -20,11 +23,12 @@ import {
   TAKT,
   VX_MAX,
   eingabeAus,
+  neigungAchse,
   neigungGrad,
-  neigungRichtung,
   neuesSpiel,
   schritt,
-  seiteVon,
+  tiefpass,
+  zeigerAchse,
 } from './jump-logik.js'
 import {
   HAPTIK,
@@ -34,8 +38,6 @@ import {
   rufwerk,
   ruettler,
   sanftHoeren,
-  tonStatus,
-  tonUmschalten,
   vibrieren,
 } from './spielgefuehl.js'
 import './spielgefuehl.css'
@@ -49,16 +51,23 @@ import './jump.css'
  *
  * STEUERUNG
  * ---------
- * Linke Haelfte halten lenkt nach links, rechte nach rechts; mit mehreren
+ * Standard ist der Daumen. Das ganze Feld ist ein waagerechter Regler: wo
+ * der Finger liegt, dahin zieht es, und zwar so stark, wie er von der Mitte
+ * weg liegt. Am Rand voller Ausschlag, in der Mitte Ruhe. Das ist bewusst
+ * eine Position und kein Wischen — eine Position kann man blind halten und
+ * mitten im Fall umgreifen, ohne einen Startpunkt zu verlieren. Mit mehreren
  * Fingern gilt der zuletzt aufgesetzte. Tastatur: Pfeile oder A/D halten.
  * Gesprungen wird von allein.
  *
- * Wahlweise lenkt die Neigung des Handys. Gefragt wird erst nach einem Tipp
- * auf NEIGUNG AKTIVIEREN — nie beim Laden. Liefert der Sensor nichts, wird
- * die Erlaubnis verweigert oder fehlt er ganz, sagt die Taste es kurz, und
- * Touch geht weiter. Ein liegender Finger schlaegt immer die Neigung.
+ * Die Neigung ist nur noch eine Option und muss eingeschaltet werden. Beim
+ * Einschalten wird der Neutralpunkt gemessen (kaum jemand haelt das Handy
+ * flach); darunter liegt eine Totzone, darueber ein Tiefpass und eine
+ * Maximalgeschwindigkeit. Wer still haelt, steht still. Liefert der Sensor
+ * nichts, wird die Erlaubnis verweigert oder fehlt er ganz, sagt die Taste
+ * es kurz, und Touch laeuft weiter. Ein liegender Finger schlaegt immer die
+ * Neigung.
  *
- * Fuer Tests steht die wirksame Richtung als data-richtung (-1, 0, 1) und
+ * Fuer Tests steht die wirksame Richtung als data-richtung (-1 … 1) und
  * ihre Quelle als data-steuerung (touch, neigung) an der Buehne.
  *
  * GLEICH AUF JEDEM HANDY
@@ -102,13 +111,26 @@ const TASTEN_RECHTS = ['ArrowRight', 'd', 'D']
 
 /* So lange bleibt eine Fehlermeldung auf der Neigungstaste stehen. */
 const NEIGUNG_FEHLER_MS = 2500
+/* So viele Messwerte bilden den Neutralpunkt. Bei 60 Hz sind das gut
+   100 ms — kurz genug, dass es sich nach dem Tipp sofort anfuehlt. */
+const NEIGUNG_PROBEN = 6
+/* Die Taste zeigt die geltende Steuerung, nicht einen Wunsch. */
 const NEIGUNG_TEXT = {
-  aus: 'NEIGUNG AKTIVIEREN',
+  aus: 'STEUERUNG TOUCH',
   fragt: 'NEIGUNG …',
-  aktiv: 'NEIGUNG AN',
+  aktiv: 'STEUERUNG NEIGUNG',
   verweigert: 'NEIGUNG VERWEIGERT',
   'nicht-unterstuetzt': 'KEIN NEIGUNGSSENSOR',
 }
+const NEIGUNG_HILFE = {
+  aus: 'Steuerung Touch. Tippen schaltet auf Neigung um.',
+  fragt: 'Neigungssensor wird angefragt.',
+  aktiv: 'Steuerung Neigung. Tippen schaltet zurück auf Touch.',
+  verweigert: 'Neigung wurde verweigert. Touch bleibt aktiv.',
+  'nicht-unterstuetzt': 'Kein Neigungssensor gefunden. Touch bleibt aktiv.',
+}
+/* So lange fliegt die Kochmuetze nach einer Boostplatte hoch. */
+const BOOST_FLUG_MS = 520
 
 /* Farben fuer das Canvas. Gelesen aus den CSS-Tokens, mit denselben Werten
    als Rueckfall, falls die Tokens (noch) fehlen. */
@@ -209,21 +231,42 @@ const logoDa = (img) => !!(img && img.complete && img.naturalWidth > 0)
 /* Trockene Kommentare (sparsam eingesetzt)                            */
 /* ------------------------------------------------------------------ */
 
+/* Ein Spruch je Teilesorte. VIDEKO baut nicht nur Kuechen, also fliegt hier
+   auch nicht nur Kuecheninventar — und der Ton bleibt trocken, nie albern. */
 const SPRUCH_TREFFER = {
   backofen: 'DER BACKOFEN WAR SCHNELLER.',
   kuehlschrank: 'DER KÜHLSCHRANK HATTE ANDERE PLÄNE.',
-  spuelmaschine: 'SPÜLGANG BEENDET.',
-  topf: 'TOPF TRIFFT KOPF.',
   pfanne: 'DIE PFANNE WAR ZUERST DA.',
   karton: 'NUR EIN KARTON. TROTZDEM BLÖD.',
-  haube: 'ABZUG. NACH UNTEN.',
-  spuelbecken: 'BECKEN VERSENKT.',
+  werkzeugkiste: 'WER HAT DAS AUFGEMESSEN?',
+  farbrolle: 'ZWEITER ANSTRICH. INKLUSIVE.',
+  kabeltrommel: 'DER ELEKTRIKER WAR ES.',
+  pvmodul: 'VOLLE EINSPEISUNG. NACH UNTEN.',
+  bodenpaket: 'BODEN KAM FRÜHER ALS GEPLANT.',
+  waschbecken: 'BECKEN VERSENKT.',
+  leuchte: 'LICHT AUS.',
+  maklerschild: 'OBJEKT LEIDER VERGEBEN.',
+  deckenring: 'SPANNDECKE ÜBERSPANNT.',
+  schranktuer: 'DAS WAR NICHT IM LEISTUNGSVERZEICHNIS.',
 }
-const SPRUCH_KNAPP = ['KNAPP.', 'DAS WAR SPORTLICH.', 'MIT DER FUSSSPITZE.', 'KOCHMÜTZE SITZT.']
+const SPRUCH_KNAPP = ['KNAPP.', 'DAS WAR SPORTLICH.', 'MIT DER FUSSSPITZE.', 'PASST. FAST.']
 /* An die Leiter der Logik gebunden, damit Wort und Zahl nicht auseinanderlaufen. */
-const STUFEN_WORT = ['HEISS', 'KÜCHENCHEF', 'KÜCHE ESKALIERT', 'KOMPLETT GESTÖRT']
+const STUFEN_WORT = ['HEISS', 'BAULEITUNG NERVÖS', 'BAUSTELLE ESKALIERT', 'KOMPLETT GESTÖRT']
 const SPRUCH_STUFE = Object.fromEntries(COMBO_AB.map((n, i) => [n, STUFEN_WORT[i] || 'KOMPLETT GESTÖRT']))
-const SPRUCH_GABE = { muetze: 'GOLDENE KOCHMÜTZE', schuerze: 'SCHUTZSCHÜRZE', turbo: 'TURBO' }
+const SPRUCH_GABE = {
+  muetze: 'GOLDENE KOCHMÜTZE',
+  schuerze: 'SCHUTZSCHÜRZE',
+  turbo: 'TURBO',
+  magnet: 'MAGNET',
+  superkoch: 'VIDEKO SUPERKOCH',
+}
+/* Die vier seltenen Wellen. Kurzer Titel oben, trockener Satz im Feld. */
+const SPRUCH_WELLE = {
+  stampede: { titel: 'KÜHLSCHRANK-STAMPEDE', satz: 'ALLE AUF EINMAL.' },
+  ofenalarm: { titel: 'OFEN-ALARM', satz: 'ES WIRD HEISS.' },
+  goldrausch: { titel: 'GOLDRAUSCH', satz: 'DAS GEHT AUF REGIE.' },
+  kuechenchef: { titel: 'KÜCHENCHEF-MODUS', satz: 'DOPPELT. OHNE NACHFRAGE.' },
+}
 
 function rundesRechteck(ctx, x, y, b, h, r) {
   ctx.beginPath()
@@ -287,9 +330,10 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
   const [crash, setCrash] = useState(false)
   const [sanft, setSanft] = useState(false)
   const [gelenkt, setGelenkt] = useState(false)
-  const [ton, setTon] = useState(tonStatus)
   /* Was gerade wirkt: fuer die kleine Leiste ueber dem Spielfeld. */
-  const [kraefte, setKraefte] = useState({ combo: 0, muetze: 0, schutz: false, turbo: 0 })
+  const [kraefte, setKraefte] = useState({
+    combo: 0, muetze: 0, schutz: false, turbo: 0, magnet: 0, superkoch: 0,
+  })
   /* aus | fragt | aktiv | verweigert | nicht-unterstuetzt */
   const [neigung, setNeigung] = useState('aus')
 
@@ -309,7 +353,10 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
   /* Eingabe: gehaltene Tasten und Finger (pointerId -> -1, 0, 1). 0 heisst:
      dieser Finger hat die Pause beendet und lenkt nicht. */
   const eingabeRef = useRef({ links: false, rechts: false, sperre: false, finger: new Map() })
-  const bildRef = useRef({ gelandet: 0, crashSeit: 0, getroffen: 0, gabe: 0, muetzeWackel: 0 })
+  const bildRef = useRef({
+    gelandet: 0, crashSeit: 0, getroffen: 0, gabe: 0, muetzeWackel: 0,
+    boost: 0, fegeUhr: 0, endeText: '',
+  })
   /* Effektwerke (§7). Einmal angelegt, ueber die ganze Runde wiederverwendet:
      fester Vorrat, keine neuen Objekte pro Funke. */
   const fxRef = useRef(null)
@@ -319,7 +366,11 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
   const logoRef = useRef(null)
   /* Neigung: Hoerer, Uhren und die zuletzt erkannte Richtung. `token` macht
      spaete Antworten einer abgebrochenen Anfrage wirkungslos. */
-  const neigungRef = useRef({ aktiv: false, fragt: false, richtung: 0, token: 0, hoerer: null, uhr: 0, zurueck: 0 })
+  const neigungRef = useRef({
+    aktiv: false, fragt: false, richtung: 0, token: 0, hoerer: null, uhr: 0, zurueck: 0,
+    /* Neutralpunkt und die Messwerte, aus denen er gebildet wird. */
+    null0: 0, proben: 0, summe: 0,
+  })
 
   const lauf = useSpielLauf({ sitzung, game: 'videko_jump', dauerVorgabe: 540000, onErgebnis, sofort: true })
   const { laeuft, punkteGeben, rundeZaehlen, fertig, starten: laufStarten, ticketSeitRef } = lauf
@@ -391,7 +442,10 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
     if (n.hoerer) window.removeEventListener('deviceorientation', n.hoerer)
     clearTimeout(n.uhr)
     clearTimeout(n.zurueck)
-    Object.assign(n, { aktiv: false, fragt: false, richtung: 0, hoerer: null, uhr: 0, zurueck: 0 })
+    Object.assign(n, {
+      aktiv: false, fragt: false, richtung: 0, hoerer: null, uhr: 0, zurueck: 0,
+      null0: 0, proben: 0, summe: 0,
+    })
   }, [])
 
   /* Mit dem Lauf endet auch die Neigung — und beim Aushaengen sowieso. */
@@ -435,7 +489,9 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
     bildRef.current.crashSeit = performance.now()
     setPause(false)
     setCrash(true)
-    melden('verkantet', 'ABGESTÜRZT')
+    /* Ein Gegnertreffer hat schon die passende Zeile gesetzt. Nur wer
+       wirklich ins Leere faellt, bekommt ABGESTUERZT. */
+    melden('verkantet', bildRef.current.endeText || 'ABGESTÜRZT')
     summen([60, 40, 90])
     const beginn = Date.now()
     /* Erst abgeben, wenn die Kasse leer ist — siehe DER SERVER RECHNET MIT. */
@@ -458,7 +514,10 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
     clearTimeout(uhrRef.current)
     standRef.current = neuesSpiel(Math.floor(Math.random() * 2147483646) + 1)
     kasseRef.current = { offen: [], letzte: 0 }
-    bildRef.current = { gelandet: 0, crashSeit: 0, getroffen: 0, gabe: 0, muetzeWackel: 0 }
+    bildRef.current = {
+      gelandet: 0, crashSeit: 0, getroffen: 0, gabe: 0, muetzeWackel: 0,
+      boost: 0, fegeUhr: 0, endeText: '',
+    }
     /* Nichts aus der letzten Runde darf in die neue hineinragen. */
     fxRef.current.funken.leeren()
     fxRef.current.rufe.leeren()
@@ -467,7 +526,7 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
     crashRef.current = false
     eingabeLoslassen()
     setHoehe(0)
-    setKraefte({ combo: 0, muetze: 0, schutz: false, turbo: 0 })
+    setKraefte({ combo: 0, muetze: 0, schutz: false, turbo: 0, magnet: 0, superkoch: 0 })
     setMeldung(null)
     setPause(false)
     setCrash(false)
@@ -526,6 +585,25 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
             summen(HAPTIK.tipp)
             klang('fehler', 1.4)
           }
+          if (e.boost) {
+            /* Die rote Platte ist kein Fehler, sondern der Katapultstart.
+               Also Funken nach oben, Rauch hinterher, und die Muetze fliegt. */
+            const b = weltZuBild(e.platte.x, e.platte.y)
+            bildRef.current.boost = performance.now()
+            fx.funken.schuss({
+              x: b.x, y: b.y, anzahl: 18, farbe: [gold, rot],
+              tempo: b.s * 1.2, streuung: 1.1, richtung: -Math.PI / 2, gr: 3, art: 'stern',
+            })
+            /* Negative Schwere = Rauch, der langsam nach oben zieht. */
+            fx.funken.schuss({
+              x: b.x, y: b.y, anzahl: 7, farbe: creme, tempo: b.s * 0.3,
+              streuung: 2.2, richtung: -Math.PI / 2, schwere: -140, leben: 900, gr: 4,
+            })
+            fx.beben.stoss(7)
+            melden('gold', `HEISS! +${HERD_BONUS}`)
+            klang('kraft', 1.25)
+            summen(HAPTIK.fieber)
+          }
           if (!e.neu) continue
           kasseRef.current.offen.push(e.punkte)
           if (e.punkte) setHoehe(e.hoehe)
@@ -566,34 +644,65 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
         } else if (e.art === 'gabe') {
           const b = weltZuBild(e.gabe.x, e.gabe.y)
           bildRef.current.gabe = performance.now()
+          const gabeFarbe = e.gart === 'schuerze' ? gruen : e.gart === 'magnet' ? rot : gold
           fx.funken.schuss({
-            x: b.x, y: b.y, anzahl: 16,
-            farbe: e.gart === 'schuerze' ? gruen : gold,
+            x: b.x, y: b.y, anzahl: e.gart === 'superkoch' ? 26 : 16,
+            farbe: e.gart === 'superkoch' ? [gold, creme] : gabeFarbe,
             tempo: b.s * 0.9, gr: 3, art: 'stern',
           })
-          fx.rufe.zeigen({ x: b.x, y: b.y - 18, text: SPRUCH_GABE[e.gart], art: 'combo', gr: 15 })
-          fx.beben.stoss(4)
-          klang('kraft', e.gart === 'turbo' ? 1.3 : 1)
-          summen(HAPTIK.gut)
+          fx.rufe.zeigen({
+            x: b.x, y: b.y - 18, text: SPRUCH_GABE[e.gart] || 'BONUS',
+            art: 'combo', gr: e.gart === 'superkoch' ? 20 : 15,
+          })
+          fx.beben.stoss(e.gart === 'superkoch' ? 10 : 4)
+          klang('kraft', e.gart === 'turbo' ? 1.3 : e.gart === 'superkoch' ? 0.8 : 1)
+          summen(e.gart === 'superkoch' ? HAPTIK.fieber : HAPTIK.gut)
+          if (e.gart === 'superkoch') melden('gold', 'VIDEKO SUPERKOCH')
+        } else if (e.art === 'welle') {
+          /* Wellen betreffen den ganzen Bildschirm, also ruft der Text
+             aus der Mitte und nicht von einer einzelnen Platte. */
+          const { breite, hoehe: h } = masseRef.current
+          const w = SPRUCH_WELLE[e.welle] || { titel: 'BAUSTELLE', satz: 'ES GEHT LOS.' }
+          fx.rufe.zeigen({ x: breite / 2, y: h * 0.42, text: w.titel, art: 'combo', gr: 22 })
+          fx.beben.stoss(8)
+          melden('gold', w.satz)
+          klang('kraft', 0.9)
+          summen(HAPTIK.fieber)
+        } else if (e.art === 'wegfegen') {
+          /* Turbo und Superkoch raeumen ganze Reihen ab. Ohne Bremse waere
+             das ein Funkenregen, der das Budget sprengt. */
+          const jetzt = performance.now()
+          const b = weltZuBild(e.gegner.x, e.gegner.y)
+          fx.funken.schuss({ x: b.x, y: b.y, anzahl: 6, farbe: [gold, creme], tempo: b.s * 0.8, gr: 2.4, art: 'krume' })
+          if (jetzt - bildRef.current.fegeUhr > 60) {
+            bildRef.current.fegeUhr = jetzt
+            fx.beben.stoss(4)
+            klang('treffer', 1.3)
+            summen(HAPTIK.tipp)
+          }
         } else if (e.art === 'schutz') {
           const b = weltZuBild(e.gegner.x, e.gegner.y)
-          fx.funken.schuss({ x: b.x, y: b.y, anzahl: 12, farbe: gruen, tempo: b.s * 0.8, gr: 2.8 })
-          fx.rufe.zeigen({ x: b.x, y: b.y - 16, text: 'SCHÜRZE HÄLT', art: 'combo', gr: 14 })
-          fx.beben.stoss(6)
-          klang('treffer', 0.8)
+          /* Das Schild zerplatzt sichtbar — sonst merkt niemand, dass der
+             eine Rettungsanker jetzt aufgebraucht ist. */
+          fx.funken.schuss({ x: b.x, y: b.y, anzahl: 22, farbe: [gruen, creme], tempo: b.s * 1.1, gr: 3, art: 'stern' })
+          fx.funken.schuss({ x: b.x, y: b.y, anzahl: 10, farbe: gruen, tempo: b.s * 0.5, gr: 2.2, art: 'krume' })
+          fx.rufe.zeigen({ x: b.x, y: b.y - 16, text: 'SCHÜRZE GERETTET.', art: 'combo', gr: 15 })
+          fx.beben.stoss(9)
+          melden('perfekt', 'SCHÜRZE GERETTET.')
+          klang('explosion', 1.2)
           summen(HAPTIK.treffer)
         } else if (e.art === 'treffer') {
           const b = weltZuBild(e.gegner.x, e.gegner.y)
           bildRef.current.getroffen = performance.now()
+          const text = SPRUCH_TREFFER[e.gegner.art] || 'DAS WAR KEIN SPRUNGBRETT.'
           fx.funken.schuss({ x: b.x, y: b.y, anzahl: 18, farbe: [rot, creme], tempo: b.s * 1.1, gr: 3, art: 'krume' })
-          melden('verkantet', SPRUCH_TREFFER[e.gegner.art] || 'DAS WAR KEIN SPRUNGBRETT.')
+          melden('verkantet', text)
+          /* Der Absturz folgt im selben Durchlauf. Damit aufgeben() die
+             Zeile nicht ueberschreibt, merken wir sie uns hier. */
+          if (e.toedlich) bildRef.current.endeText = text
           fx.beben.stoss(10)
           klang('explosion')
           summen(HAPTIK.explosion)
-        } else if (e.art === 'heiss') {
-          melden('verkantet', 'HEISS!')
-          summen(HAPTIK.fehler)
-          klang('fehler')
         } else if (e.art === 'absturz') {
           aufgeben()
         }
@@ -612,9 +721,11 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
     setPause(false)
   }
 
-  const seiteAus = (e) => {
+  /* Der Daumen gibt eine Position vor, keine Geste: wo er liegt, dorthin
+     zieht die Figur — und zwar umso staerker, je weiter aussen er liegt. */
+  const achseAus = (e) => {
     const r = e.currentTarget.getBoundingClientRect()
-    return seiteVon(e.clientX, r.left, r.width)
+    return zeigerAchse(e.clientX, r.left, r.width)
   }
 
   const zeigerRunter = (e) => {
@@ -629,19 +740,22 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
     }
     if (pauseRef.current) {
       weiter()
-      eingabeRef.current.finger.set(e.pointerId, 0)
+      /* null statt 0: der Finger, der die Pause beendet hat, lenkt nicht
+         mit — aber er ist bekannt, damit sein Ziehen ignoriert wird. */
+      eingabeRef.current.finger.set(e.pointerId, null)
       return
     }
     const finger = eingabeRef.current.finger
     finger.delete(e.pointerId)
-    finger.set(e.pointerId, seiteAus(e))
+    finger.set(e.pointerId, achseAus(e))
     if (!gelenkt) setGelenkt(true)
   }
 
   const zeigerZieht = (e) => {
     const finger = eingabeRef.current.finger
-    if (!finger.get(e.pointerId)) return
-    finger.set(e.pointerId, seiteAus(e))
+    /* 0 ist eine gueltige Mitte, deshalb has() statt einer Wahrheitspruefung. */
+    if (!finger.has(e.pointerId) || finger.get(e.pointerId) === null) return
+    finger.set(e.pointerId, achseAus(e))
   }
 
   const zeigerWeg = (e) => {
@@ -724,15 +838,25 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
         }
         const grad = neigungGrad(ev.beta, ev.gamma, winkel)
         if (grad === null) return
-        n.richtung = neigungRichtung(grad, n.richtung)
         if (!n.aktiv) {
+          /* Neutralpunkt: die ersten Messwerte legen fest, wie das Geraet
+             gerade gehalten wird. Sonst driftet jeder, der nicht exakt
+             senkrecht sitzt, dauerhaft in eine Richtung. */
+          n.proben += 1
+          n.summe += grad
+          if (n.proben < NEIGUNG_PROBEN) return
+          n.null0 = n.summe / n.proben
+          n.richtung = 0
           n.aktiv = true
           n.fragt = false
           clearTimeout(n.uhr)
           n.uhr = 0
           setNeigung('aktiv')
           setGelenkt(true)
+          return
         }
+        /* Tiefpass: der Sensor rauscht, die Figur soll nicht zittern. */
+        n.richtung = tiefpass(n.richtung, neigungAchse(grad, n.null0))
       }
       n.hoerer = hoerer
       window.addEventListener('deviceorientation', hoerer)
@@ -788,13 +912,17 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
         neigung: n.richtung,
         neigungAktiv: n.aktiv,
       })
-      if (steuer.richtung !== gemeldet.richtung || steuer.quelle !== gemeldet.quelle) {
+      /* Analoge Werte aendern sich fast jedes Bild. Fuer das Attribut
+         genuegen zwei Nachkommastellen — sonst schreiben wir sechzigmal
+         je Sekunde ins DOM, nur damit ein Test etwas ablesen kann. */
+      const grob = Math.round(steuer.richtung * 100) / 100
+      if (grob !== gemeldet.richtung || steuer.quelle !== gemeldet.quelle) {
         const el = buehneRef.current
         if (el) {
-          el.setAttribute('data-richtung', String(steuer.richtung))
+          el.setAttribute('data-richtung', String(grob))
           el.setAttribute('data-steuerung', steuer.quelle)
         }
-        gemeldet = steuer
+        gemeldet = { richtung: grob, quelle: steuer.quelle }
       }
       return steuer.richtung
     }
@@ -938,7 +1066,9 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
 
       const koerper =
         p.art === 'herd'
-          ? palette.nacht
+          /* Die Boostplatte ist die einzige rot leuchtende Flaeche im Spiel.
+             Sie darf nicht wie eine Falle aussehen, sondern wie eine Rampe. */
+          ? mischen(palette.nacht, palette.rot, 0.55)
           : p.art === 'bewegt'
             ? mischen(palette.nacht, palette.tief, 0.55)
             : p.art === 'lift'
@@ -982,26 +1112,39 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
         }
         ctx.stroke()
       } else if (p.art === 'herd') {
-        /* Zwei Kochfelder. Glueht, und nach Beruehrung erst recht. */
+        /* BOOSTPLATTE. Glut darunter, drei Pfeile nach oben darauf: beides
+           zusammen sagt "hier geht es hoch", ohne ein Wort Erklaerung. */
         const puls = sanftRef.current ? 0.8 : 0.65 + 0.35 * Math.sin(jetzt / 180 + p.id)
         const glut = p.heiss ? 1 : puls
-        const rr = Math.min(dicke * 0.34, pw * 0.12)
-        for (const f of [0.3, 0.7]) {
-          ctx.beginPath()
-          ctx.arc(px + pw * f, py + dicke * 0.55, rr, 0, Math.PI * 2)
-          ctx.strokeStyle = rgb(palette.rot, 0.55 + 0.45 * glut)
-          ctx.lineWidth = 1.5
-          ctx.stroke()
-          ctx.fillStyle = rgb(palette.rot, 0.25 * glut)
-          ctx.fill()
+        const hof = ctx.createLinearGradient(0, py - dicke * 1.6, 0, py + dicke)
+        hof.addColorStop(0, rgb(palette.rot, 0))
+        hof.addColorStop(1, rgb(palette.rot, 0.34 * glut))
+        ctx.fillStyle = hof
+        ctx.fillRect(px - 2, py - dicke * 1.6, pw + 4, dicke * 2.6)
+
+        ctx.strokeStyle = rgb(mischen(palette.hell, palette.creme, 0.4), 0.55 + 0.45 * glut)
+        ctx.lineWidth = 1.6
+        ctx.lineCap = 'round'
+        const ph = dicke * 0.3
+        const ym = py + dicke * 0.62
+        ctx.beginPath()
+        for (const f of [0.28, 0.5, 0.72]) {
+          const xm = px + pw * f
+          ctx.moveTo(xm - ph, ym)
+          ctx.lineTo(xm, ym - ph)
+          ctx.lineTo(xm + ph, ym)
         }
+        ctx.stroke()
+        ctx.lineCap = 'butt'
       }
     }
 
     /**
-     * Ein fliegendes Kuechenteil. Acht Sorten, alle aus demselben Bauplan:
-     * Korpus in Stein, eine Front in Gold. Das reicht, um sie im Flug
-     * auseinanderzuhalten, und kostet pro Bild nur ein paar Rechtecke.
+     * Ein fliegendes Bauteil. Vierzehn Sorten quer durch die VIDEKO-Gewerke —
+     * Kueche, Bad, Boden, Wand, Decke, Elektro, PV, Licht, Immobilie. Alle aus
+     * demselben Bauplan: Korpus in Stein, ein Merkmal in Gold oder Rot. Das
+     * reicht, um sie im Flug auseinanderzuhalten, und kostet pro Bild nur ein
+     * paar Rechtecke. Keine Fremdmarken, nur Formen.
      */
     const gegnerMalen = (ctx, palette, cx, cy, s, g, jetzt) => {
       const b = g.b * s
@@ -1013,28 +1156,39 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
       ctx.save()
       ctx.globalAlpha = alpha
       ctx.translate(cx, cy)
-      /* Nur die runden Sachen rollen wirklich; der Rest schaukelt bloss. */
-      if (g.art === 'topf' || g.art === 'pfanne') ctx.rotate(dreh)
+      /* Nur was rund ist, rollt wirklich; der Rest schaukelt bloss. */
+      if (GEGNER_DREH[g.art]) ctx.rotate(dreh)
       else ctx.rotate(Math.sin(jetzt / 260 + g.id) * 0.06)
       const korpus = mischen(palette.nacht, palette.creme, 0.24)
       ctx.fillStyle = rgb(korpus)
       ctx.strokeStyle = rgb(palette.nacht, 0.85)
       ctx.lineWidth = 1
 
-      if (g.art === 'backofen') {
-        rundesRechteck(ctx, -b / 2, -h / 2, b, h, 3)
+      if (g.art === 'backofen' || g.art === 'schranktuer') {
+        /* Klappmuster: die Tuer geht auf und zu, und genau so weit reicht
+           auch die Trefferflaeche. Was man sieht, trifft — nichts anderes. */
+        const auf = Math.max(0, Math.min(1, g.auf || 0))
+        const kern = b * 0.34
+        const ofen = g.art === 'backofen'
+        rundesRechteck(ctx, -kern / 2, -h / 2, kern, h, 3)
         ctx.fill()
         ctx.stroke()
-        /* Die Tuer klappt im Flug auf und zu — das macht ihn erkennbar. */
-        const auf = (Math.sin(jetzt / 220 + g.id) * 0.5 + 0.5) * 0.9
         ctx.save()
-        ctx.translate(-b / 2, h / 2)
-        ctx.rotate(auf)
-        ctx.fillStyle = rgb(palette.rot, 0.65)
-        ctx.fillRect(0, -h * 0.12, b * 0.8, h * 0.12)
+        ctx.translate(kern / 2, -h / 2)
+        ctx.rotate(auf * 1.35)
+        ctx.fillStyle = rgb(ofen ? palette.rot : palette.gold, 0.75)
+        rundesRechteck(ctx, 0, 0, b * 0.66, h * 0.9, 2)
+        ctx.fill()
+        ctx.stroke()
         ctx.restore()
-        ctx.fillStyle = rgb(palette.rot, 0.5 + 0.4 * auf)
-        ctx.fillRect(-b * 0.34, -h * 0.18, b * 0.68, h * 0.34)
+        if (ofen) {
+          /* Glut hinter der Scheibe, nur wenn die Tuer offen steht. */
+          ctx.fillStyle = rgb(palette.rot, 0.35 + 0.5 * auf)
+          ctx.fillRect(-kern * 0.32, -h * 0.2, kern * 0.64, h * 0.4)
+        } else {
+          ctx.fillStyle = rgb(palette.hell, 0.85)
+          ctx.fillRect(-kern * 0.1, -h * 0.1, kern * 0.5, 1.8)
+        }
       } else if (g.art === 'kuehlschrank') {
         rundesRechteck(ctx, -b / 2, -h / 2, b, h, 3)
         ctx.fill()
@@ -1043,29 +1197,6 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
         ctx.fillRect(-b / 2 + 2, -h * 0.06, b - 4, 1.4)
         ctx.fillStyle = rgb(palette.hell, 0.85)
         ctx.fillRect(b * 0.28, -h * 0.34, 2, h * 0.26)
-      } else if (g.art === 'spuelmaschine') {
-        rundesRechteck(ctx, -b / 2, -h / 2, b, h, 3)
-        ctx.fill()
-        ctx.stroke()
-        ctx.fillStyle = rgb(palette.creme, 0.22)
-        ctx.beginPath()
-        ctx.arc(0, 0, Math.min(b, h) * 0.3, 0, Math.PI * 2)
-        ctx.fill()
-        ctx.fillStyle = rgb(palette.hell, 0.8)
-        ctx.fillRect(-b / 2 + 2, -h / 2 + 2, b - 4, 1.6)
-      } else if (g.art === 'topf') {
-        ctx.beginPath()
-        ctx.arc(0, 0, h * 0.5, 0, Math.PI * 2)
-        ctx.fill()
-        ctx.stroke()
-        ctx.strokeStyle = rgb(palette.hell, 0.9)
-        ctx.lineWidth = 1.6
-        ctx.beginPath()
-        ctx.moveTo(-h * 0.62, 0)
-        ctx.lineTo(-h * 0.42, 0)
-        ctx.moveTo(h * 0.42, 0)
-        ctx.lineTo(h * 0.62, 0)
-        ctx.stroke()
       } else if (g.art === 'pfanne') {
         ctx.beginPath()
         ctx.ellipse(0, 0, h * 0.52, h * 0.34, 0, 0, Math.PI * 2)
@@ -1082,20 +1213,86 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
         ctx.moveTo(0, -h / 2)
         ctx.lineTo(0, h / 2)
         ctx.stroke()
-      } else if (g.art === 'haube') {
-        /* Trapez: unten breit, oben schmal — die Dunstabzugshaube. */
-        ctx.beginPath()
-        ctx.moveTo(-b / 2, h / 2)
-        ctx.lineTo(b / 2, h / 2)
-        ctx.lineTo(b * 0.22, -h / 2)
-        ctx.lineTo(-b * 0.22, -h / 2)
-        ctx.closePath()
+      } else if (g.art === 'werkzeugkiste') {
+        /* Kiste mit Buegelgriff. */
+        rundesRechteck(ctx, -b / 2, -h * 0.12, b, h * 0.62, 2)
         ctx.fill()
         ctx.stroke()
-        ctx.fillStyle = rgb(palette.hell, 0.7)
-        ctx.fillRect(-b / 2 + 2, h / 2 - 2, b - 4, 1.6)
-      } else {
-        /* Spuelbecken: Wanne mit Hahn. */
+        ctx.strokeStyle = rgb(palette.hell, 0.9)
+        ctx.lineWidth = 1.8
+        ctx.beginPath()
+        ctx.moveTo(-b * 0.22, -h * 0.12)
+        ctx.quadraticCurveTo(0, -h * 0.62, b * 0.22, -h * 0.12)
+        ctx.stroke()
+        ctx.fillStyle = rgb(palette.rot, 0.55)
+        ctx.fillRect(-b / 2 + 2, h * 0.1, b - 4, 2)
+      } else if (g.art === 'farbrolle') {
+        /* Walze mit Stiel. */
+        rundesRechteck(ctx, -b * 0.42, -h * 0.3, b * 0.84, h * 0.6, h * 0.2)
+        ctx.fill()
+        ctx.stroke()
+        ctx.strokeStyle = rgb(palette.hell, 0.9)
+        ctx.lineWidth = 1.6
+        ctx.beginPath()
+        ctx.moveTo(0, h * 0.3)
+        ctx.lineTo(0, h * 0.78)
+        ctx.stroke()
+        ctx.fillStyle = rgb(palette.creme, 0.35)
+        ctx.fillRect(-b * 0.42, -h * 0.06, b * 0.84, 1.6)
+      } else if (g.art === 'kabeltrommel') {
+        /* Rolle mit Speichen und einem herausstehenden Kabelende. */
+        const rr = h * 0.5
+        ctx.beginPath()
+        ctx.arc(0, 0, rr, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.stroke()
+        ctx.strokeStyle = rgb(palette.hell, 0.75)
+        ctx.lineWidth = 1.2
+        ctx.beginPath()
+        for (let i = 0; i < 3; i += 1) {
+          const a = (i * Math.PI) / 3
+          ctx.moveTo(-Math.cos(a) * rr * 0.8, -Math.sin(a) * rr * 0.8)
+          ctx.lineTo(Math.cos(a) * rr * 0.8, Math.sin(a) * rr * 0.8)
+        }
+        ctx.stroke()
+        ctx.strokeStyle = rgb(palette.rot, 0.8)
+        ctx.beginPath()
+        ctx.moveTo(rr * 0.7, 0)
+        ctx.quadraticCurveTo(b * 0.5, -h * 0.2, b * 0.52, h * 0.1)
+        ctx.stroke()
+      } else if (g.art === 'pvmodul') {
+        /* Flache Platte mit Zellenraster — das breiteste Teil im Spiel. */
+        rundesRechteck(ctx, -b / 2, -h * 0.28, b, h * 0.56, 2)
+        ctx.fillStyle = rgb(mischen(palette.nacht, palette.tief, 0.5))
+        ctx.fill()
+        ctx.stroke()
+        ctx.strokeStyle = rgb(palette.hell, 0.45)
+        ctx.lineWidth = 1
+        ctx.beginPath()
+        for (const f of [0.25, 0.5, 0.75]) {
+          const xm = -b / 2 + b * f
+          ctx.moveTo(xm, -h * 0.28)
+          ctx.lineTo(xm, h * 0.28)
+        }
+        ctx.moveTo(-b / 2, 0)
+        ctx.lineTo(b / 2, 0)
+        ctx.stroke()
+      } else if (g.art === 'bodenpaket') {
+        /* Gestapelte Dielen. */
+        ctx.fillStyle = rgb(mischen(palette.stein, palette.gold, 0.2))
+        rundesRechteck(ctx, -b / 2, -h * 0.34, b, h * 0.68, 2)
+        ctx.fill()
+        ctx.stroke()
+        ctx.strokeStyle = rgb(palette.nacht, 0.55)
+        ctx.lineWidth = 1
+        ctx.beginPath()
+        for (const f of [-0.1, 0.12]) {
+          ctx.moveTo(-b / 2, h * f)
+          ctx.lineTo(b / 2, h * f)
+        }
+        ctx.stroke()
+      } else if (g.art === 'waschbecken') {
+        /* Wanne mit Hahn. */
         rundesRechteck(ctx, -b / 2, -h * 0.3, b, h * 0.8, 3)
         ctx.fill()
         ctx.stroke()
@@ -1105,12 +1302,57 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
         ctx.moveTo(-b * 0.22, -h * 0.3)
         ctx.quadraticCurveTo(-b * 0.22, -h * 0.75, b * 0.08, -h * 0.7)
         ctx.stroke()
+      } else if (g.art === 'leuchte') {
+        /* Pendelleuchte: Schirm mit Lichtkegel. */
+        ctx.beginPath()
+        ctx.moveTo(-b * 0.4, h * 0.2)
+        ctx.lineTo(b * 0.4, h * 0.2)
+        ctx.lineTo(b * 0.14, -h * 0.34)
+        ctx.lineTo(-b * 0.14, -h * 0.34)
+        ctx.closePath()
+        ctx.fill()
+        ctx.stroke()
+        const kegel = ctx.createLinearGradient(0, h * 0.2, 0, h * 0.9)
+        kegel.addColorStop(0, rgb(palette.hell, 0.5))
+        kegel.addColorStop(1, rgb(palette.hell, 0))
+        ctx.fillStyle = kegel
+        ctx.beginPath()
+        ctx.moveTo(-b * 0.4, h * 0.2)
+        ctx.lineTo(b * 0.4, h * 0.2)
+        ctx.lineTo(b * 0.62, h * 0.9)
+        ctx.lineTo(-b * 0.62, h * 0.9)
+        ctx.closePath()
+        ctx.fill()
+      } else if (g.art === 'maklerschild') {
+        /* Schild am Pfosten. Text waere unleserlich, also nur zwei Balken. */
+        ctx.strokeStyle = rgb(palette.nacht, 0.85)
+        ctx.fillRect(-1, -h * 0.1, 2, h * 0.7)
+        rundesRechteck(ctx, -b / 2, -h * 0.5, b, h * 0.44, 2)
+        ctx.fillStyle = rgb(palette.creme, 0.85)
+        ctx.fill()
+        ctx.stroke()
+        ctx.fillStyle = rgb(palette.nacht, 0.6)
+        ctx.fillRect(-b * 0.36, -h * 0.4, b * 0.72, 2)
+        ctx.fillRect(-b * 0.36, -h * 0.28, b * 0.46, 2)
+      } else {
+        /* Spanndecken-Ring: ein offener Reif, der sich dreht. */
+        const rr = h * 0.5
+        ctx.strokeStyle = rgb(mischen(palette.stein, palette.creme, 0.3))
+        ctx.lineWidth = Math.max(2, h * 0.16)
+        ctx.beginPath()
+        ctx.arc(0, 0, rr, 0.35, Math.PI * 2 - 0.35)
+        ctx.stroke()
+        ctx.strokeStyle = rgb(palette.hell, 0.6)
+        ctx.lineWidth = 1
+        ctx.beginPath()
+        ctx.arc(0, 0, rr * 0.62, 0, Math.PI * 2)
+        ctx.stroke()
       }
       ctx.restore()
       ctx.globalAlpha = 1
     }
 
-    /** Eine Kraft, frei in der Luft: Muetze, Schuerze oder Turbo. */
+    /** Eine Kraft, frei in der Luft: Muetze, Schuerze, Turbo, Magnet, Superkoch. */
     const gabeMalen = (ctx, palette, cx, cy, s, gb, jetzt) => {
       const alpha = gb.weg ? Math.max(0, (gb.wegBis - standRef.current.zeit) / 0.5) : 1
       if (alpha <= 0) return
@@ -1119,7 +1361,7 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
       ctx.save()
       ctx.globalAlpha = alpha
       ctx.translate(cx, cy + schweben)
-      const farbe = gb.art === 'schuerze' ? palette.gruen : palette.hell
+      const farbe = gb.art === 'schuerze' ? palette.gruen : gb.art === 'magnet' ? palette.rot : palette.hell
       /* Heller Hof, damit man sie von weitem sieht. */
       const hof = ctx.createRadialGradient(0, 0, 0, 0, 0, r * 2.1)
       hof.addColorStop(0, rgb(farbe, 0.4))
@@ -1128,8 +1370,46 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
       ctx.beginPath()
       ctx.arc(0, 0, r * 2.1, 0, Math.PI * 2)
       ctx.fill()
+      if (gb.art === 'superkoch') {
+        /* Der seltenste Fund bekommt einen zweiten, pulsenden Ring. */
+        const puls = sanftRef.current ? 0.7 : 0.55 + 0.45 * Math.sin(jetzt / 140 + gb.id)
+        ctx.strokeStyle = rgb(palette.hell, 0.35 + 0.45 * puls)
+        ctx.lineWidth = 2
+        ctx.beginPath()
+        ctx.arc(0, 0, r * (1.5 + 0.25 * puls), 0, Math.PI * 2)
+        ctx.stroke()
+      }
 
-      if (gb.art === 'muetze') {
+      if (gb.art === 'superkoch') {
+        /* Das Markenzeichen selbst — die staerkste Kraft traegt das VD. */
+        const logo = logoRef.current
+        if (logo) {
+          ctx.drawImage(logo, -r * 0.95, -r * 0.95, r * 1.9, r * 1.9)
+        } else {
+          muetzeMalen(ctx, r * 1.9, rgb(palette.hell), rgb(palette.tief))
+        }
+      } else if (gb.art === 'magnet') {
+        /* Hufeisen: offener Bogen, zwei Schenkel, rote Pole. */
+        ctx.strokeStyle = rgb(palette.rot)
+        ctx.lineWidth = Math.max(2.4, r * 0.34)
+        ctx.lineCap = 'butt'
+        ctx.beginPath()
+        ctx.arc(0, r * 0.1, r * 0.62, Math.PI, 0)
+        ctx.stroke()
+        ctx.beginPath()
+        ctx.moveTo(-r * 0.62, r * 0.1)
+        ctx.lineTo(-r * 0.62, r * 0.7)
+        ctx.moveTo(r * 0.62, r * 0.1)
+        ctx.lineTo(r * 0.62, r * 0.7)
+        ctx.stroke()
+        ctx.strokeStyle = rgb(palette.creme, 0.9)
+        ctx.beginPath()
+        ctx.moveTo(-r * 0.62, r * 0.7)
+        ctx.lineTo(-r * 0.62, r * 0.95)
+        ctx.moveTo(r * 0.62, r * 0.7)
+        ctx.lineTo(r * 0.62, r * 0.95)
+        ctx.stroke()
+      } else if (gb.art === 'muetze') {
         muetzeMalen(ctx, r * 1.9, rgb(palette.hell), rgb(palette.tief))
       } else if (gb.art === 'schuerze') {
         ctx.fillStyle = rgb(palette.gruen)
@@ -1206,6 +1486,8 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
       const neigung = sanftAn ? 0 : (stand.spieler.vx / VX_MAX) * 0.16
       const muetzeAn = stand.muetzeBis > stand.zeit
       const turboAn = stand.turboBis > stand.zeit
+      const magnetAn = stand.magnetBis > stand.zeit
+      const superAn = stand.superBis > stand.zeit
       const blinkt = stand.unverwundbarBis > stand.zeit
       /* Getroffen: die Figur flackert, solange sie unverwundbar ist. */
       const sicht = blinkt && !sanftAn ? (Math.sin(jetzt / 45) > 0 ? 0.35 : 1) : 1
@@ -1220,6 +1502,20 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
       ctx.ellipse(0, 0, (w * 0.46) / stauch, w * 0.12 * stauch, 0, 0, Math.PI * 2)
       ctx.fill()
       ctx.globalAlpha = 1
+
+      if (magnetAn) {
+        /* Der Wirkradius wird gezeigt, nicht behauptet: alles Gold innerhalb
+           dieses Kreises kommt von selbst. Ohne Drehung, damit er ruhig liegt. */
+        const rr = MAGNET_R * s
+        const puls = sanftAn ? 0.5 : 0.35 + 0.25 * Math.sin(jetzt / 220)
+        ctx.strokeStyle = rgb(palette.rot, 0.28 + 0.2 * puls)
+        ctx.lineWidth = 1.4
+        ctx.setLineDash([6, 7])
+        ctx.beginPath()
+        ctx.arc(0, -h * 0.4, rr, 0, Math.PI * 2)
+        ctx.stroke()
+        ctx.setLineDash([])
+      }
 
       ctx.rotate(neigung)
 
@@ -1249,6 +1545,30 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
         ctx.arc(0, -koerper * 0.5, koerper, 0, Math.PI * 2)
         ctx.fill()
       }
+      if (superAn) {
+        /* SUPERKOCH: der einzige Zustand, in dem die Figur selbst brennt.
+           Zwei gegenlaeufige Ringe, damit er sich vom Muetzenhof abhebt. */
+        const dreh = sanftAn ? 0 : jetzt / 420
+        const hof = ctx.createRadialGradient(0, -koerper * 0.5, 0, 0, -koerper * 0.5, koerper * 1.35)
+        hof.addColorStop(0, rgb(palette.hell, 0.55))
+        hof.addColorStop(0.6, rgb(palette.gold, 0.25))
+        hof.addColorStop(1, rgb(palette.hell, 0))
+        ctx.fillStyle = hof
+        ctx.beginPath()
+        ctx.arc(0, -koerper * 0.5, koerper * 1.35, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.strokeStyle = rgb(palette.creme, 0.7)
+        ctx.lineWidth = 1.6
+        for (const [rf, vz] of [[0.9, 1], [1.12, -1]]) {
+          ctx.save()
+          ctx.translate(0, -koerper * 0.5)
+          ctx.rotate(dreh * vz)
+          ctx.beginPath()
+          ctx.arc(0, 0, koerper * rf, 0.4, Math.PI * 2 - 0.4)
+          ctx.stroke()
+          ctx.restore()
+        }
+      }
       if (stand.schutz) {
         /* Schutzschuerze: ein gruener Ring, der einen Treffer schluckt. */
         ctx.strokeStyle = rgb(palette.gruen, 0.75)
@@ -1277,9 +1597,14 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
       const wackel = !sanftAn && seit < STAUCHEN_MS * 3
         ? Math.sin((seit / STAUCHEN_MS) * 4) * 0.22 * (1 - seit / (STAUCHEN_MS * 3))
         : 0
+      /* Nach einer Boostplatte hebt es ihr kurz die Muetze vom Kopf —
+         eine halbe Sekunde hoch und zurueck, mit einer Drehung. */
+      const flugSeit = jetzt - bild.boost
+      const flug = !sanftAn && bild.boost && flugSeit < BOOST_FLUG_MS ? 1 - flugSeit / BOOST_FLUG_MS : 0
+      const bogen = flug ? Math.sin((1 - flug) * Math.PI) : 0
       ctx.save()
-      ctx.translate(0, -koerper * 0.94)
-      ctx.rotate(wackel)
+      ctx.translate(0, -koerper * 0.94 - bogen * koerper * 0.85)
+      ctx.rotate(wackel + bogen * 0.9)
       ctx.scale(1 / stauch, stauch)
       muetzeMalen(
         ctx,
@@ -1440,8 +1765,13 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
           muetze: rest(stand.muetzeBis),
           schutz: !!stand.schutz,
           turbo: stand.turboBis > stand.zeit ? 1 : 0,
+          magnet: rest(stand.magnetBis),
+          superkoch: rest(stand.superBis),
         }
-        const schluessel = `${jetztKraefte.combo}|${jetztKraefte.muetze}|${jetztKraefte.schutz}|${jetztKraefte.turbo}`
+        const schluessel = [
+          jetztKraefte.combo, jetztKraefte.muetze, jetztKraefte.schutz,
+          jetztKraefte.turbo, jetztKraefte.magnet, jetztKraefte.superkoch,
+        ].join('|')
         if (schluessel !== kraefteMerk) {
           kraefteMerk = schluessel
           setKraefte(jetztKraefte)
@@ -1472,7 +1802,7 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
             ref={buehneRef}
             role="application"
             tabIndex={0}
-            aria-label="VIDEKO Jump Spielfeld. Linke oder rechte Hälfte halten oder Pfeiltasten halten zum Lenken. Wahlweise per Neigung."
+            aria-label="VIDEKO Jump Spielfeld. Daumen auflegen und liegen lassen: die Figur zieht dorthin, wo der Daumen liegt, weiter außen stärker. Pfeiltasten halten geht auch. Wahlweise per Neigung."
             data-sanft={sanft ? '1' : '0'}
             data-crash={crash ? '1' : '0'}
             data-pause={pause ? '1' : '0'}
@@ -1500,25 +1830,19 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
               )}
               {kraefte.schutz && <span className="trm-jump-kraft" data-art="schutz">SCHÜRZE</span>}
               {kraefte.turbo > 0 && <span className="trm-jump-kraft" data-art="turbo">TURBO</span>}
+              {kraefte.magnet > 0 && (
+                <span className="trm-jump-kraft" data-art="magnet">MAGNET {kraefte.magnet}</span>
+              )}
+              {kraefte.superkoch > 0 && (
+                <span className="trm-jump-kraft" data-art="superkoch">SUPERKOCH {kraefte.superkoch}</span>
+              )}
             </span>
             <span className="trm-jump-hinweis" aria-hidden="true">
-              <span>‹ HALTEN</span>
-              <span>HALTEN ›</span>
+              <span>‹ DAUMEN</span>
+              <span>DAUMEN ›</span>
             </span>
-            {/* Ton: stumm startbar, Zustand bleibt ueber Runden hinweg. */}
-            <button
-              type="button"
-              className="sg-ton"
-              aria-pressed={ton}
-              aria-label={ton ? 'Ton aus' : 'Ton an'}
-              onPointerDown={(e) => e.stopPropagation()}
-              onKeyDown={(e) => {
-                if (e.key === ' ' || e.key === 'Enter') e.stopPropagation()
-              }}
-              onClick={() => setTon(tonUmschalten())}
-            >
-              {ton ? '♪' : '✕'}
-            </button>
+            {/* Der Tonschalter sitzt in der gemeinsamen Game-Shell
+                (SpielKarte), nicht mehr hier. */}
             {/* Eigene Taste in der Buehne: ihr Tipp lenkt nicht und beendet
                 keine Pause. Pfeiltasten laufen weiter zur Buehne durch. */}
             <button
@@ -1526,6 +1850,8 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
               className="trm-jump-neigung"
               data-status={neigung}
               aria-pressed={neigung === 'aktiv'}
+              aria-label={NEIGUNG_HILFE[neigung] || NEIGUNG_HILFE.aus}
+              title={NEIGUNG_HILFE[neigung] || NEIGUNG_HILFE.aus}
               aria-live="polite"
               disabled={crash}
               onPointerDown={(e) => e.stopPropagation()}

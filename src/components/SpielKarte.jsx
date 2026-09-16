@@ -1,9 +1,11 @@
-import { useContext, useEffect, useRef } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { Ikon } from './TerminalRahmen.jsx'
 import { PracticeKontext, START_EREIGNIS, startWunschNehmen } from './spiel-lauf.js'
 import { motivation } from './spiel-motivation.js'
+import { useSpielShell } from './spiele/spiel-shell.js'
+import { tonStatus, tonUmschalten } from './spiele/spielgefuehl.js'
 import { TEXTE, fuelle, zahl } from '../data/terminal.js'
 
 /**
@@ -16,9 +18,22 @@ import { TEXTE, fuelle, zahl } from '../data/terminal.js'
  * Die Startmeldung und das Ergebnis liegen als Schicht ueber dem Feld, nicht
  * daneben: so springt beim Start kein Layout, und die Karte behaelt auf allen
  * Breiten dieselbe Hoehe.
+ *
+ * Seit der Game-Shell traegt die Karte ausserdem die drei Tasten, die jedes
+ * Spiel braucht und die vorher jedes Spiel einzeln gebaut hat: Ton, Vollbild,
+ * Verlassen. Sie sitzen immer an derselben Stelle, und die Seitensperre
+ * (`useSpielShell`) haengt an derselben Huelle — ein Spiel muss sich darum
+ * nicht mehr kuemmern.
  */
 
 const T = TEXTE.g
+
+/* Die Shell-Tasten sitzen mitten im Spielfeld. Was sie nicht weiterreichen
+   duerfen, steht hier einmal statt sechsmal im Markup. */
+const halt = (e) => e.stopPropagation()
+const tastenHalt = (e) => {
+  if (e.key === ' ' || e.key === 'Enter') e.stopPropagation()
+}
 
 export default function SpielKarte({ spiel, lauf, best, leiste = null, children }) {
   const { phase, laeuft, restSek, punkte, antwort, fehler } = lauf
@@ -28,6 +43,12 @@ export default function SpielKarte({ spiel, lauf, best, leiste = null, children 
      fallen weg; stattdessen fuehrt ein CTA zur Aktivierung. */
   const practiceWeg = useContext(PracticeKontext)
   const practice = lauf.practice === true
+
+  /* Die Huelle: Seitensperre solange gespielt wird, Vollbild auf Wunsch.
+     `startet` zaehlt mit — zwischen Tastendruck und erstem Bild soll die
+     Seite schon stillstehen. */
+  const { huelleRef, vollbild, echt, vollbildSetzen } = useSpielShell(laeuft || phase === 'startet')
+  const [ton, setTon] = useState(() => tonStatus())
 
   /* Direktstart aus dem Testlabor: entweder liegt der Wunsch schon beim
      Einhaengen bereit (die Karte wurde gerade erst nachgeladen), oder er
@@ -86,8 +107,26 @@ export default function SpielKarte({ spiel, lauf, best, leiste = null, children 
     if (phase === 'vorbei') nochmalRef.current?.focus({ preventScroll: true })
   }, [phase])
 
+  /* VERLASSEN macht genau zwei Dinge, in dieser Reihenfolge: es holt aus dem
+     Vollbild zurueck und beendet eine noch laufende Runde regulaer. Der
+     erreichte Punktestand wird dabei ganz normal abgegeben — Aufhoeren ist
+     kein Betrug und darf keinen Lauf verschlucken. */
+  const verlassen = () => {
+    if (vollbild) vollbildSetzen(false)
+    if (laeuft) lauf.fertig()
+  }
+
+  const huelleKlasse = [
+    'trm-karte',
+    'trm-spiel',
+    vollbild ? 'trm-spiel--vollbild' : '',
+    echt ? 'trm-spiel--vollbild-echt' : '',
+  ]
+    .filter(Boolean)
+    .join(' ')
+
   return (
-    <section className="trm-karte trm-spiel" id={spiel.key} aria-labelledby={titelId}>
+    <section className={huelleKlasse} id={spiel.key} aria-labelledby={titelId} ref={huelleRef}>
       <div className="trm-spiel__kopf">
         <Ikon name={spiel.icon} size={26} className="trm-ikon" />
         <div className="trm-spiel__text">
@@ -112,6 +151,55 @@ export default function SpielKarte({ spiel, lauf, best, leiste = null, children 
 
       <div className={`trm-feld-spiel${spiel.hochformat ? ' trm-feld-spiel--hoch' : ''}`}>
         {children}
+
+        {/* Die drei Tasten der Shell. Sie liegen ueber dem Spielfeld und
+            duerfen es nicht bedienen: jedes Spiel haengt an denselben
+            Zeigerereignissen, ein durchgereichter Tipp wuerde drehen,
+            abwerfen oder springen. Darum stoppt jede Taste Zeiger und
+            Leertaste, bevor die Buehne sie sieht. */}
+        <div className="trm-shell" data-vollbild={vollbild ? '' : undefined}>
+          <button
+            type="button"
+            className="trm-shell__knopf"
+            aria-pressed={ton}
+            aria-label={ton ? T.shellTonAus : T.shellTonAn}
+            onPointerDown={halt}
+            onPointerUp={halt}
+            onKeyDown={tastenHalt}
+            onClick={() => setTon(tonUmschalten())}
+          >
+            {ton ? '♪' : '✕'}
+          </button>
+          <button
+            type="button"
+            className="trm-shell__knopf"
+            aria-pressed={vollbild}
+            aria-label={vollbild ? T.shellVollbildAus : T.shellVollbild}
+            title={vollbild ? T.shellVollbildAus : T.shellVollbild}
+            onPointerDown={halt}
+            onPointerUp={halt}
+            onKeyDown={tastenHalt}
+            /* Echtes Vollbild gibt es nur auf eine echte Nutzergeste. Genau
+               diese ist der Klick hier — nie ein Effekt, nie ein Timer. */
+            onClick={() => vollbildSetzen(!vollbild)}
+          >
+            <span aria-hidden="true">{vollbild ? '⤡' : '⤢'}</span>
+          </button>
+          {(laeuft || vollbild) && (
+            <button
+              type="button"
+              className="trm-shell__knopf trm-shell__knopf--weg"
+              aria-label={T.shellVerlassenHilfe}
+              title={T.shellVerlassenHilfe}
+              onPointerDown={halt}
+              onPointerUp={halt}
+              onKeyDown={tastenHalt}
+              onClick={verlassen}
+            >
+              <span aria-hidden="true">✕</span>
+            </button>
+          )}
+        </div>
 
         {phase === 'ruht' && (
           <div className="trm-spiel__mitte">
