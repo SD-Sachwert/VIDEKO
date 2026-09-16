@@ -6,14 +6,22 @@ import {
   ABWURF_MAX,
   ABWURF_MS,
   BREITE,
+  GNADE_S,
+  HITZE_AB,
+  HITZE_NAMEN,
+  HITZE_STOP_S,
   HOEHE,
   KOMBO_MAX,
   KOMBO_S,
   LINIE_Y,
   OBERSTE,
+  SPAWN_GEWICHTE,
+  SPAWN_GEWICHTE_HEISS,
   STUFEN,
   TRAUM_PUNKTE,
   UEBER_S,
+  hitze,
+  spawnGewichte,
   abwerfen,
   basisPunkte,
   komboFaktor,
@@ -255,6 +263,105 @@ console.log('\n— Warnung, kritisch, Ueberlauf')
   pruefe('Teil ueber der Linie: warnung und kritisch', warnGesehen && kritischGesehen)
   pruefe('Nach UEBER_S ueber der Linie: vorbei', stand.vorbei && vorbeiNach != null && Math.abs(vorbeiNach - UEBER_S) < 0.05, `nach ${vorbeiNach}s`)
   pruefe('Nach vorbei: abwerfen tut nichts', abwerfen(stand, 50) === null)
+}
+
+/* ---------------------------------------------------------------- */
+console.log('\n— Druckkurve (Hitze)')
+{
+  /* Die erste Minute ist unangetastet: exakt das Spiel von vorher. */
+  let kaltGleich = true
+  for (const t of [0, 1, 17, 30, 45, 59, 59.9]) {
+    const h = hitze(t)
+    if (h.stufe !== 0 || h.fall !== 1 || h.gross !== 0 || h.linieY !== LINIE_Y || h.ueberS !== UEBER_S || h.gnadeS !== GNADE_S) {
+      kaltGleich = false
+    }
+  }
+  pruefe('Bis 60 s exakt das alte Spiel (Stufe 0, alle Werte unveraendert)', kaltGleich)
+
+  pruefe(
+    `Stufen schalten bei ${HITZE_AB.join('/')} s`,
+    hitze(59.9).stufe === 0 && hitze(60).stufe === 1 && hitze(89.9).stufe === 1 && hitze(90).stufe === 2 && hitze(119.9).stufe === 2 && hitze(120).stufe === 3 && hitze(179).stufe === 3,
+  )
+  pruefe('Stufe 2 heisst ÜBERHITZT', HITZE_NAMEN[2].includes('ÜBERHITZT'), HITZE_NAMEN[2])
+  pruefe('Stufe 0 hat keinen Namen (nichts anzuzeigen)', HITZE_NAMEN[0] === '')
+
+  /* "Schwerer anfuehlen, nicht willkuerlich": jede Stellschraube laeuft in
+     eine Richtung, und zwischen zwei Sekunden springt nichts. */
+  let monoton = true
+  let stetig = true
+  let v = hitze(0)
+  for (let t = 0.5; t <= HITZE_STOP_S + 10; t += 0.5) {
+    const h = hitze(t)
+    if (h.fall < v.fall || h.gross < v.gross || h.linieY < v.linieY || h.ueberS > v.ueberS || h.gnadeS > v.gnadeS) monoton = false
+    /* Halbe Sekunde darf die Linie um hoechstens eine Einheit wandern. */
+    if (h.linieY - v.linieY > 1 || v.ueberS - h.ueberS > 0.06 || h.fall - v.fall > 0.04) stetig = false
+    v = h
+  }
+  pruefe('Kurve monoton: Fall und Teilegroesse rauf, Linie runter, Nachsicht kuerzer', monoton)
+  pruefe('Kurve stetig: keine Spruenge zwischen zwei Halbsekunden', stetig)
+
+  const ende = hitze(HITZE_STOP_S)
+  pruefe('Am Ende ist es deutlich haerter als am Anfang', ende.fall >= 1.8 && ende.linieY >= LINIE_Y * 2 && ende.ueberS <= UEBER_S * 0.4, `fall ${ende.fall}, linieY ${ende.linieY}, ueberS ${ende.ueberS}`)
+  pruefe('Ueber HITZE_STOP_S hinaus bleibt die Kurve stehen', hitze(HITZE_STOP_S + 60).linieY === ende.linieY)
+
+  /* Abwurfgewichte: kalt meist klein, heiss meist gross. */
+  pruefe('spawnGewichte(0) ist unveraendert die alte Verteilung', spawnGewichte(0).every((w, i) => w === SPAWN_GEWICHTE[i]))
+  pruefe('spawnGewichte(1) ist die heisse Verteilung', spawnGewichte(1).every((w, i) => w === SPAWN_GEWICHTE_HEISS[i]))
+  pruefe('Kalt kommen kleine Teile haeufiger, heiss grosse', SPAWN_GEWICHTE[0] > SPAWN_GEWICHTE[4] && SPAWN_GEWICHTE_HEISS[4] > SPAWN_GEWICHTE_HEISS[0])
+  {
+    const z = saat(31)
+    const zaehl = [0, 0, 0, 0, 0]
+    for (let i = 0; i < 5000; i += 1) zaehl[zufallsStufe(z, 1)] += 1
+    pruefe('zufallsStufe(z, 1) wirft ueberwiegend grosse Teile', zaehl[4] > zaehl[0] * 2, zaehl.join('/'))
+  }
+
+  /* Der Ueberlauf am heissen Ende: dieselbe Situation wie im kalten Test
+     oben, nur bei 150 s — sie muss deutlich frueher toedlich sein. */
+  {
+    const stand = neuesSpiel(saat(32))
+    stand.zeit = 150
+    const r = STUFEN[8].r
+    const linie = hitze(150).linieY
+    const hoch = legen(stand, 8, BREITE / 2, linie + 2 - r)
+    hoch.geboren = -10
+    let vorbeiNach = null
+    for (let i = 0; i < 400 && !stand.vorbei; i += 1) {
+      hoch.x = BREITE / 2
+      hoch.y = linie + 2 - r
+      hoch.px = hoch.x
+      hoch.py = hoch.y
+      hoch.vx = 0
+      hoch.vy = 0
+      const ev = schritt(stand)
+      hoch.y = linie + 2 - r
+      if (ev.some((e) => e.art === 'vorbei')) vorbeiNach = (i + 1) / 120
+    }
+    const erwartet = hitze(150).ueberS
+    pruefe(`Bei 150 s kippt der Ueberlauf nach ${erwartet.toFixed(2)} s statt ${UEBER_S} s`, stand.vorbei && vorbeiNach != null && Math.abs(vorbeiNach - erwartet) < 0.08, `nach ${vorbeiNach}s`)
+  }
+
+  /* Die absolute Sicherheitsgrenze — leerer Behaelter, es kann nur die Zeit sein. */
+  {
+    const stand = neuesSpiel(saat(33))
+    stand.zeit = HITZE_STOP_S - 0.05
+    let gruende = []
+    for (let i = 0; i < 40 && !stand.vorbei; i += 1) {
+      gruende = schritt(stand).filter((e) => e.art === 'vorbei')
+    }
+    pruefe(`Absolute Grenze bei ${HITZE_STOP_S} s greift`, stand.vorbei && stand.grund === 'zeit' && gruende.some((e) => e.grund === 'zeit'), `grund ${stand.grund}`)
+  }
+
+  /* Jede Stufe wird genau einmal gemeldet — sonst blinkt die Anzeige. */
+  {
+    const stand = neuesSpiel(saat(34))
+    const gezaehlt = [0, 0, 0, 0]
+    for (let i = 0; i < 130 * 120; i += 1) {
+      if (stand.vorbei) break
+      for (const e of schritt(stand)) if (e.art === 'hitze') gezaehlt[e.stufe] += 1
+    }
+    pruefe('Stufe 1, 2 und 3 melden sich je genau einmal', gezaehlt[1] === 1 && gezaehlt[2] === 1 && gezaehlt[3] === 1, gezaehlt.join('/'))
+    pruefe('Der Stand traegt Stufe, Name und Linie fuer die Anzeige', stand.hitze === 3 && stand.hitzeName === HITZE_NAMEN[3] && stand.linieY > LINIE_Y && stand.ueberS < UEBER_S)
+  }
 }
 
 /* ---------------------------------------------------------------- */

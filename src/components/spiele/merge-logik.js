@@ -223,6 +223,110 @@ export const OBERSTE = STUFEN_ANZAHL - 1
 
 /* Abgeworfen werden nur die fuenf kleinsten Teile, meist die kleinen. */
 export const SPAWN_GEWICHTE = [34, 27, 20, 12, 7]
+/* Dieselben fuenf Teile, aber am Ende der Druckkurve: jetzt kommen vor allem
+   die grossen. Groessere Startteile fuellen den Behaelter schneller — das ist
+   der staerkste Hebel gegen "weniger sichere Situationen". */
+export const SPAWN_GEWICHTE_HEISS = [4, 10, 20, 30, 36]
+
+/* ------------------------------------------------------------------ *
+ * DRUCKKURVE — die Kueche heizt sich auf
+ * ------------------------------------------------------------------ *
+ *
+ * Kuechen-Merge ist endlos: ohne Gegendruck haelt ein guter Spieler den
+ * Stapel beliebig lange klein, und aus einer Terminalrunde werden fuenf bis
+ * acht Minuten. Deshalb steigt der Druck mit der reinen Spielzeit — nicht
+ * mit dem Punktestand, sonst wuerde gutes Spiel bestraft.
+ *
+ * Vier Stufen, und bis HITZE_AB[1] passiert gar nichts: die erste Minute
+ * ist exakt das Spiel von vorher.
+ *   0 –  60 s  ruhig        alles wie gehabt
+ *  60 –  90 s  heizt auf    etwas schnellerer Fall, etwas weniger Platz
+ *  90 – 120 s  ueberhitzt   deutlich schneller, spuerbar groessere Teile
+ * 120 – 180 s  brennt       Endgame: kaum noch sichere Ablagen
+ *
+ * Bei HITZE_STOP_S ist Schluss. Das ist die absolute Sicherheitsgrenze,
+ * kein Abbruch mitten im Spielfluss: wer so weit kommt, spielt da schon
+ * seit einer Minute am Anschlag.
+ *
+ * Alle Werte werden zwischen den Stuetzpunkten linear geblendet — die
+ * Schwierigkeit waechst stetig, nicht in Spruengen. Ein Spieler soll
+ * merken, dass es enger wird, und nicht, dass etwas umgeschaltet hat.
+ */
+export const HITZE_AB = [0, 60, 90, 120]
+export const HITZE_NAMEN = ['', 'KÜCHE HEIZT AUF', 'KÜCHE ÜBERHITZT', 'KÜCHE BRENNT']
+export const HITZE_STOP_S = 180
+
+/*
+ * Die Stuetzpunkte der Kurve. `fall` multipliziert die Schwerkraft,
+ * `gross` blendet die Abwurfgewichte Richtung SPAWN_GEWICHTE_HEISS,
+ * `linieY` schiebt die Ueberlauflinie nach unten (y waechst nach unten,
+ * der Raum wird also kleiner), `ueberS` und `gnadeS` verkuerzen die
+ * Nachsicht, mit der ein zu hoch liegendes Teil geduldet wird.
+ */
+const HITZE_PUNKTE = [
+  { t: 0, fall: 1, gross: 0, linieY: LINIE_Y, ueberS: UEBER_S, gnadeS: GNADE_S },
+  { t: 60, fall: 1, gross: 0, linieY: LINIE_Y, ueberS: UEBER_S, gnadeS: GNADE_S },
+  { t: 90, fall: 1.2, gross: 0.4, linieY: 34, ueberS: 1.2, gnadeS: 0.9 },
+  { t: 120, fall: 1.6, gross: 0.85, linieY: 52, ueberS: 0.8, gnadeS: 0.78 },
+  { t: 150, fall: 1.9, gross: 1, linieY: 70, ueberS: 0.55, gnadeS: 0.68 },
+  { t: HITZE_STOP_S, fall: 2.1, gross: 1, linieY: 86, ueberS: 0.35, gnadeS: 0.6 },
+]
+
+function blende(a, b, anteil) {
+  return a + (b - a) * anteil
+}
+
+/**
+ * Der Druck zur Spielzeit `zeit` (Sekunden). Rein und ohne Stand: so kann
+ * der Test die Kurve Punkt fuer Punkt nachrechnen, ohne ein Spiel zu bauen.
+ * Gibt Stufe, Anzeigename und alle vier Stellschrauben zurueck.
+ */
+export function hitze(zeit) {
+  const t = Math.max(0, Number.isFinite(zeit) ? zeit : 0)
+  let stufe = 0
+  for (let i = HITZE_AB.length - 1; i > 0; i -= 1) {
+    if (t >= HITZE_AB[i]) {
+      stufe = i
+      break
+    }
+  }
+  const letzter = HITZE_PUNKTE[HITZE_PUNKTE.length - 1]
+  let a = HITZE_PUNKTE[0]
+  let b = letzter
+  let anteil = 0
+  if (t >= letzter.t) {
+    a = letzter
+    b = letzter
+  } else {
+    for (let i = 0; i < HITZE_PUNKTE.length - 1; i += 1) {
+      if (t >= HITZE_PUNKTE[i].t && t < HITZE_PUNKTE[i + 1].t) {
+        a = HITZE_PUNKTE[i]
+        b = HITZE_PUNKTE[i + 1]
+        anteil = (t - a.t) / (b.t - a.t)
+        break
+      }
+    }
+  }
+  return {
+    stufe,
+    name: HITZE_NAMEN[stufe],
+    fall: blende(a.fall, b.fall, anteil),
+    gross: blende(a.gross, b.gross, anteil),
+    linieY: blende(a.linieY, b.linieY, anteil),
+    ueberS: blende(a.ueberS, b.ueberS, anteil),
+    gnadeS: blende(a.gnadeS, b.gnadeS, anteil),
+    /* 0 … 1 ueber die ganze Runde — fuer Balken und Rahmen in der Anzeige. */
+    anteil: Math.min(1, t / HITZE_STOP_S),
+    rest: Math.max(0, HITZE_STOP_S - t),
+  }
+}
+
+/** Die Abwurfgewichte bei Hitzeanteil `gross` (0 = kalt, 1 = Endgame). */
+export function spawnGewichte(gross = 0) {
+  const a = Math.max(0, Math.min(1, Number.isFinite(gross) ? gross : 0))
+  if (a === 0) return SPAWN_GEWICHTE
+  return SPAWN_GEWICHTE.map((w, i) => blende(w, SPAWN_GEWICHTE_HEISS[i], a))
+}
 
 /** Punkte fuer ein neues Teil der Stufe (0-basiert): Dreieckszahl × 10. */
 export function basisPunkte(stufe) {
@@ -328,11 +432,16 @@ export function spruchHolen(stand, anlass) {
   return liste[Math.min(liste.length - 1, Math.floor(w * liste.length))]
 }
 
-export function zufallsStufe(zufall = Math.random) {
-  const summe = SPAWN_GEWICHTE.reduce((a, b) => a + b, 0)
+/**
+ * Welches Teil kommt als naechstes? `gross` ist der Hitzeanteil: bei 0 die
+ * alte Verteilung (meist kleine Teile), bei 1 die heisse (meist grosse).
+ */
+export function zufallsStufe(zufall = Math.random, gross = 0) {
+  const gewichte = spawnGewichte(gross)
+  const summe = gewichte.reduce((a, b) => a + b, 0)
   let wurf = zufall() * summe
-  for (let i = 0; i < SPAWN_GEWICHTE.length; i += 1) {
-    wurf -= SPAWN_GEWICHTE[i]
+  for (let i = 0; i < gewichte.length; i += 1) {
+    wurf -= gewichte[i]
     if (wurf < 0) return i
   }
   return 0
@@ -367,6 +476,14 @@ export function neuesSpiel(zufall = Math.random) {
     warnung: false,
     kritisch: false,
     vorbei: false,
+    /* Die Druckkurve, wie sie der letzte Schritt gesehen hat. Die Anzeige
+       liest nur hier — sie rechnet die Kurve nicht ein zweites Mal nach. */
+    hitze: 0,
+    hitzeName: HITZE_NAMEN[0],
+    hitzeAnteil: 0,
+    linieY: LINIE_Y,
+    ueberS: UEBER_S,
+    grund: null,
     zufall,
   }
 }
@@ -420,7 +537,8 @@ export function abwerfen(stand, x) {
   const k = koerperBauen(stand, stufe, klemmeX(stufe, x), SPAWN_Y)
   stand.koerper.push(k)
   stand.aktuell = stand.naechstes
-  stand.naechstes = zufallsStufe(stand.zufall)
+  /* Je heisser die Kueche, desto groesser das Nachrueckende. */
+  stand.naechstes = zufallsStufe(stand.zufall, hitze(stand.zeit).gross)
   stand.abwuerfe += 1
   stand.abwurfPunkte = 0
   if (stufe > stand.hoechste) stand.hoechste = stufe
@@ -614,8 +732,24 @@ export function schritt(stand) {
   if (stand.goldBis && stand.zeit >= stand.goldBis) stand.goldBis = 0
   if (stand.frostBis && stand.zeit >= stand.frostBis) stand.frostBis = 0
 
-  /* Frost bremst nur den Fall, nicht die Loesung — die Physik bleibt stabil. */
-  const g = stand.frostBis > stand.zeit ? SCHWERKRAFT * FROST_ANTEIL : SCHWERKRAFT
+  /* Der Druck dieses Augenblicks. Einmal je Schritt gerechnet und im Stand
+     hinterlegt, damit Physik, Ueberlauf und Anzeige dieselbe Zahl sehen. */
+  const hz = hitze(stand.zeit)
+  /* Jede neue Stufe wird genau einmal gemeldet — die Anzeige braucht den
+     Moment, nicht den Zustand, und holt sich den Rest aus dem Stand. */
+  if (hz.stufe !== stand.hitze) {
+    ereignisse.push({ art: 'hitze', stufe: hz.stufe, name: hz.name, hoch: hz.stufe > stand.hitze })
+  }
+  stand.hitze = hz.stufe
+  stand.hitzeName = hz.name
+  stand.hitzeAnteil = hz.anteil
+  stand.linieY = hz.linieY
+  stand.ueberS = hz.ueberS
+
+  /* Frost bremst nur den Fall, nicht die Loesung — die Physik bleibt stabil.
+     Die Druckkurve zieht danach an: im Endgame faellt alles spuerbar zaeher
+     zu kontrollieren, Frost bleibt aber die Notbremse, die er war. */
+  const g = (stand.frostBis > stand.zeit ? SCHWERKRAFT * FROST_ANTEIL : SCHWERKRAFT) * hz.fall
 
   for (let i = 0; i < n; i += 1) {
     const k = liste[i]
@@ -739,28 +873,36 @@ export function schritt(stand) {
   }
   if (weg.size) stand.koerper = liste.filter((k) => !weg.has(k.id)).concat(neu)
 
-  /* Ueberlauf, Fuellstand und Warnung. */
+  /* Ueberlauf, Fuellstand und Warnung — alle drei Grenzen kommen aus der
+     Druckkurve, nicht mehr aus den Konstanten. */
   let ueberMax = 0
   let fuellung = 0
   for (const k of stand.koerper) {
-    if (stand.zeit - k.geboren < GNADE_S) {
+    if (stand.zeit - k.geboren < hz.gnadeS) {
       k.ueber = 0
       continue
     }
     const oben = k.y - k.r
-    if (oben < LINIE_Y) k.ueber += h
+    if (oben < hz.linieY) k.ueber += h
     else k.ueber = 0
-    const f = (LINIE_Y + WARN_ABSTAND - oben) / WARN_ABSTAND
+    const f = (hz.linieY + WARN_ABSTAND - oben) / WARN_ABSTAND
     if (f > fuellung) fuellung = f
     if (k.ueber > ueberMax) ueberMax = k.ueber
   }
   stand.fuellung = Math.max(0, Math.min(1, fuellung))
-  stand.gefahr = Math.min(1, ueberMax / UEBER_S)
+  stand.gefahr = Math.min(1, ueberMax / hz.ueberS)
   stand.warnung = stand.fuellung > 0
   stand.kritisch = stand.gefahr > 0 || stand.fuellung >= KRITISCH_AB
-  if (ueberMax >= UEBER_S) {
+  if (ueberMax >= hz.ueberS) {
     stand.vorbei = true
-    ereignisse.push({ art: 'vorbei' })
+    stand.grund = 'ueberlauf'
+    ereignisse.push({ art: 'vorbei', grund: 'ueberlauf' })
+  } else if (stand.zeit >= HITZE_STOP_S) {
+    /* Die absolute Sicherheitsgrenze. Sie soll praktisch nie greifen — die
+       Kurve davor ist so gebaut, dass vorher der Behaelter ueberlaeuft. */
+    stand.vorbei = true
+    stand.grund = 'zeit'
+    ereignisse.push({ art: 'vorbei', grund: 'zeit' })
   }
   return ereignisse
 }

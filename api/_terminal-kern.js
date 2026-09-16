@@ -603,7 +603,13 @@ export const SPIELE = {
      Neu: maxJeRunde 1000 (traegt einen Abwurf am Deckel ABWURF_MAX 3000 nach
      drei Abwuerfen), plausibel 280000 knapp ueber dem Bot, hart bei gut dem
      Doppelten. */
-  kuechen_merge: { titel: 'Küchen-Merge', dauerMs: 540000, endlos: true, plausibel: 280000, hart: 600000, msJeRunde: 400, maxJeRunde: 1000 },
+  /* plausibel/hart aus 960 legalen Bot-Laeufen nach dem Druckkurven-Umbau
+     abgeleitet: bester Lauf 174259 Punkte in 173 s, hoechster Schnitt 489
+     Punkte je Abwurf, schnellster Abwurf 447 ms (Clientsperre 450 ms).
+     Die Sicherheitsgrenze von 180 s deckelt jetzt die Rundenlaenge, darum
+     liegt die Punktedecke niedriger als vorher. Faktor 1,4 auf das legale
+     Maximum, hart doppelt. */
+  kuechen_merge: { titel: 'Küchen-Merge', dauerMs: 540000, endlos: true, plausibel: 250000, hart: 500000, msJeRunde: 400, maxJeRunde: 1000 },
   /* Leitungsfinder: unveraendert. Die Logik hat sich nicht geaendert, und die
      Messung passt weiter — sehr guter Mensch 128755, extrem flink 277115 (beide
      unter plausibel), Takt-Bot 1278355 (von hart abgewiesen). */

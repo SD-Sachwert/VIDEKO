@@ -108,6 +108,7 @@ const TAKT_START = {
   tasten: 0,
   kette: 0, // zuletzt gerenderte Kombo, damit React nur bei Aenderung rendert
   warn: 0, // zuletzt gerenderte Warnstufe
+  hitze: 0, // zuletzt gerenderte Stufe der Druckkurve
   alarmSeit: -Infinity,
   traumSeit: 0,
   goldSeit: 0,
@@ -355,6 +356,9 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
   /* an: laeuft das Fieber gerade, nr: zaehlt Fieberphasen, damit der
      Zeitbalken bei jeder neuen Phase von vorn startet. */
   const [fieber, setFieber] = useState({ an: false, nr: 0 })
+  /* Stufe der Druckkurve: 0 ruhig, 1 heizt auf, 2 ueberhitzt, 3 brennt.
+     nr zaehlt die Wechsel, damit die Einblendung jedes Mal neu anlaeuft. */
+  const [hitzeStufe, setHitzeStufe] = useState({ stufe: 0, name: '', nr: 0 })
 
   const buehneRef = useRef(null)
   const canvasRef = useRef(null)
@@ -509,6 +513,7 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
     setKombo({ kette: 0, nr: 0 })
     setFieber({ an: false, nr: 0 })
     setWarnstufe(0)
+    setHitzeStufe({ stufe: 0, name: '', nr: 0 })
     return laufStarten()
   }, [laufStarten])
 
@@ -560,6 +565,7 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
       const gold = palette ? palette.farben.gold : '#c9a050'
       const hell = palette ? palette.farben.goldHell : '#e8c978'
       const creme = palette ? palette.farben.creme : '#f4efe4'
+      const rot = palette ? palette.farben.rot : '#e2453a'
 
       let summe = 0
       let groesstes = null
@@ -588,6 +594,19 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
             tempo: 300, streuung: Math.PI * 2, schwere: 420, leben: 900, gr: 3.4, art: 'stern',
           })
           rufe?.zeigen({ x: px(BREITE / 2), y: py(LINIE_Y + 14), text: 'FIEBER', art: 'combo', gr: 30, farbe: hell })
+          continue
+        }
+        if (e.art === 'hitze') {
+          /* Die Kueche heizt auf. Einmal ansagen — Ruf, Ton, kurzer Stoss —
+             danach traegt die Stufe nur noch der Rahmen und die Linie. */
+          t.hitze = e.stufe
+          setHitzeStufe((alt) => ({ stufe: e.stufe, name: e.name, nr: alt.nr + 1 }))
+          if (e.hoch && e.name) {
+            rufe?.zeigen({ x: px(BREITE / 2), y: py(LINIE_Y + 22), text: e.name, art: 'ruf', gr: 21, farbe: rot })
+            klang('fehler', 0.85 + e.stufe * 0.2)
+            vibrieren(HAPTIK.treffer)
+            beben?.stoss(e.stufe >= 3 ? 11 : 6)
+          }
           continue
         }
         if (e.art === 'fieber-ende') {
@@ -870,7 +889,9 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
          kritischem Fuellstand wird der obere Bereich rot unterlegt. */
       ctx.fillStyle = rgb(palette.nacht, 0.5)
       ctx.fillRect(x0, y0, fb, fh)
-      const ly = y0 + LINIE_Y * z
+      /* Die Ueberlauflinie wandert mit der Druckkurve nach unten — der Stand
+         traegt sie, gerechnet wird sie nur einmal je Schritt in der Logik. */
+      const ly = y0 + (stand.linieY ?? LINIE_Y) * z
       const puls = weich ? 1 : 0.55 + 0.45 * Math.sin(jetzt / 90)
       if (!crashRef.current && (stand.warnung || stand.gefahr > 0)) {
         const staerke = stand.kritisch ? 0.16 + 0.16 * puls + stand.gefahr * 0.2 : 0.1 * stand.fuellung
@@ -961,7 +982,7 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
           ctx.fillText(kuerzel, kx, ky - kr * 0.52)
         }
         if (k.ueber > 0 && !tot) {
-          ctx.strokeStyle = rgb(palette.rot, 0.45 + 0.5 * (k.ueber / UEBER_S) * puls)
+          ctx.strokeStyle = rgb(palette.rot, 0.45 + 0.5 * Math.min(1, k.ueber / (stand.ueberS || UEBER_S)) * puls)
           ctx.lineWidth = 2.5
           ctx.beginPath()
           ctx.arc(x0 + k.x * z, y0 + k.y * z, k.r * z + 1.5, 0, Math.PI * 2)
@@ -1226,6 +1247,7 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
             data-pause={pause ? '1' : '0'}
             data-fieber={fieberAn ? '1' : '0'}
             data-warnung={warnung}
+            data-hitze={crash ? 0 : hitzeStufe.stufe}
             data-combo={crash ? 0 : kombo.kette}
             data-hoechste={hoechste}
             data-naechstes={naechstes ?? undefined}
@@ -1245,6 +1267,19 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
             <canvas className="trm-merge-canvas" ref={canvasRef} aria-hidden="true" />
             <span className="trm-merge-naechstes" data-stufe={naechstes ?? undefined} aria-hidden="true">
               NÄCHSTES: <b>{naechsterName}</b>
+            </span>
+
+            {/* Die Druckkurve: ein eigenes Element, weil beide Pseudo-Elemente
+                der Buehne schon Fieber und Warnung tragen. Es glueht nur,
+                der Name steht darunter in der Pille. */}
+            <span className="trm-merge-hitze-schein" data-stufe={crash ? 0 : hitzeStufe.stufe} aria-hidden="true" />
+            <span
+              className="trm-merge-hitze"
+              key={hitzeStufe.nr}
+              data-stufe={crash ? 0 : hitzeStufe.stufe}
+              role="status"
+            >
+              {crash ? '' : hitzeStufe.name}
             </span>
 
             <span className="trm-merge-alarm" data-an={warnung === 2 ? '1' : '0'} role="status">
