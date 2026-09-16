@@ -8,11 +8,16 @@
  * Bohrung gegen die Servergrenzen (api/_terminal-kern.js, nur gelesen).
  */
 
+import { readFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
+
 import {
   ANZAHL_MAX,
   ARTEN,
   BOHRUNG_MAX,
   FELDER,
+  GESCHAFFT_SPRUECHE,
   NACHBARN,
   OFFEN,
   SERIE_MS,
@@ -22,6 +27,7 @@ import {
   ableiten,
   bohrFreigabe,
   bohren,
+  geschafftSpruch,
   index,
   markieren,
   neueWand,
@@ -34,6 +40,9 @@ import {
   wandParameter,
 } from '../../src/components/spiele/leitung-logik.js'
 import { SPIELE } from '../../api/_terminal-kern.js'
+
+const HIER = dirname(fileURLToPath(import.meta.url))
+const WURZEL = resolve(HIER, '../..')
 
 /* Servergrenzen fuer leitungsfinder. Gelesen statt abgeschrieben: eine Kopie
    veraltet still, und dann prueft der Test gegen eine Grenze, die es nicht
@@ -324,6 +333,70 @@ const SEEDS = [1, 2, 3, 4, 5, 6]
   console.log(`     Hochrechnung 9 min, extrem flink 0,55 s: ${flink.punkte} Punkte, ${flink.waende} Waende, ${flink.bohrungen} Bohrungen`)
   console.log(`     Hochrechnung 9 min, Takt-Bot:          ${bot.punkte} Punkte, ${bot.waende} Waende, ${bot.bohrungen} Bohrungen`)
   pruefe('Hochrechnung: sehr guter Mensch unter plausibel', mensch.punkte <= SERVER.plausibel, `${mensch.punkte} / ${SERVER.plausibel}`)
+}
+
+/* ------------------------------------------------------------------ */
+/* Finger und Abschluss (Auftrag §12)                                  */
+/*                                                                      */
+/* Die Regeln hier lassen sich ohne Browser pruefen: die Spruchliste    */
+/* direkt, das Bild ueber den Quelltext. Das ersetzt KEINEN Blick auf   */
+/* ein Geraet — es haelt nur fest, dass eine spaetere Aenderung die     */
+/* Zusage nicht still wieder ausbaut.                                   */
+/* ------------------------------------------------------------------ */
+
+{
+  pruefe('Genug Sprueche fuer eine Runde ohne Wiederholung', GESCHAFFT_SPRUECHE.length >= 4, `${GESCHAFFT_SPRUECHE.length} Saetze`)
+  pruefe('Sprueche sind kurz genug fuer eine Zeile', GESCHAFFT_SPRUECHE.every((s) => s.length <= 32))
+  pruefe('Sprueche sind in Versalien', GESCHAFFT_SPRUECHE.every((s) => s === s.toUpperCase()))
+  pruefe('Keine Doppelung in der Liste', new Set(GESCHAFFT_SPRUECHE).size === GESCHAFFT_SPRUECHE.length)
+
+  let reihum = true
+  let nieZweimal = true
+  for (let n = 0; n < 40; n += 1) {
+    if (geschafftSpruch(n) !== GESCHAFFT_SPRUECHE[n % GESCHAFFT_SPRUECHE.length]) reihum = false
+    if (n > 0 && geschafftSpruch(n) === geschafftSpruch(n - 1)) nieZweimal = false
+  }
+  pruefe('Sprueche laufen reihum', reihum)
+  pruefe('Nie zweimal derselbe Satz hintereinander', nieZweimal)
+  pruefe('Unsinnige Zaehler stuerzen nicht ab', typeof geschafftSpruch(-3) === 'string' && typeof geschafftSpruch(2.7) === 'string')
+}
+
+{
+  const jsx = readFileSync(resolve(WURZEL, 'src/components/spiele/Leitungsfinder.jsx'), 'utf8')
+  const css = readFileSync(resolve(WURZEL, 'src/components/spiele/leitung.css'), 'utf8')
+
+  /* Touch-Feedback: der Druck ist eigener Zustand, wird beim Aufsetzen
+     gesetzt und auf jedem Weg wieder geloescht — sonst klebt eine Fliese. */
+  pruefe('Druckzustand vorhanden', /const \[druck, setDruck\] = useState\(-1\)/.test(jsx))
+  pruefe('Druck wird beim Aufsetzen gesetzt', /setDruck\(i\)/.test(jsx))
+  pruefe('Druck wird beim Loslassen geloescht', /const fingerLoesen = \(f\) => \{[\s\S]*?setDruck\(-1\)/.test(jsx))
+  pruefe('Druck wird auch beim Verwerfen geloescht', (jsx.match(/setDruck\(-1\)/g) || []).length >= 3)
+  pruefe('Fliese traegt data-druck', /data-druck=\{druck === i \? '1' : undefined\}/.test(jsx))
+  pruefe('Jede Fliese antwortet, nicht nur die verdeckte', !/zustand\[i\] !== OFFEN && spielbar\(\)\) \{[\s\S]{0,80}setDruck/.test(jsx))
+
+  pruefe('CSS kennt den Druckzustand', /\.trm-leitung-zelle\[data-druck='1'\]/.test(css))
+  const druckRegel = css.slice(css.indexOf(".trm-leitung-zelle[data-druck='1']"))
+  pruefe('Der Druck kommt ohne Verzoegerung an', /transition: none/.test(druckRegel.slice(0, 200)))
+  pruefe('Die Fliese sinkt sichtbar ein', /scale: 0\.9/.test(druckRegel.slice(0, 200)))
+  pruefe('Das Zurueckfedern ist weich', /\.trm-leitung-zelle \{\s*transition: scale/.test(css))
+
+  /* Abschluss: mehr Funken, zweite Welle, Goldstreif, trockener Satz. */
+  pruefe('Funkenwurf traegt weiter als vorher', /anzahl: 20, art: 'gold', weite: 96/.test(jsx))
+  pruefe('Zweite, hellere Welle', /anzahl: 8, art: 'creme', weite: 128/.test(jsx))
+  pruefe('Kein Beben im ruhigen Spiel', !/domRuetteln/.test(jsx))
+  pruefe('Der zweite Ton umgeht die Klangbremse', /spaeter\(\(\) => klang\('kraft', 1\.5\), 90\)/.test(jsx))
+  pruefe('Spruch haengt am Schild', /geschafftSpruch\(waendeRef\.current\)/.test(jsx) && /trm-leitung-geschafft-spruch/.test(jsx))
+  pruefe('Spruchzeiger startet jeden Lauf neu', /waendeRef\.current = 0/.test(jsx))
+  pruefe('Goldstreif haengt an data-geschafft', /\[data-geschafft='1'\] \.trm-leitung-wand::after/.test(css))
+  pruefe('Streif braucht einen Bezugspunkt', /\.trm-leitung-wand \{\s*position: relative/.test(css))
+  pruefe('Streif laeuft einmal durch', /@keyframes trm-leitung-streif/.test(css) && !/trm-leitung-streif[^;]*infinite/.test(css))
+
+  /* Weniger Bewegung: der Streif verschwindet ganz (er waere sonst ein
+     schiefer Balken), die Rueckmeldung am Finger bleibt. */
+  const sanft = css.slice(css.indexOf("[data-sanft='1'] .trm-leitung-wand::after"))
+  pruefe('Streif faellt bei wenig Bewegung weg', /display: none/.test(sanft.slice(0, 120)))
+  pruefe('Auch reduced-motion kennt den Streif', /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.trm-leitung-wand::after \{\s*display: none/.test(css))
+  pruefe('Druck bleibt bei wenig Bewegung sichtbar', /\[data-sanft='1'\] \.trm-leitung-zelle\[data-druck='1'\] \{\s*scale: 1/.test(css))
 }
 
 console.log(`\nLeitungsfinder-Logik: ${gut} OK, ${schlecht} Fehler`)

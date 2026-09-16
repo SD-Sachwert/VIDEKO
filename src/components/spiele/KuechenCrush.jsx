@@ -38,8 +38,6 @@ import {
   klang,
   klangSchliessen,
   sanftHoeren,
-  tonStatus,
-  tonUmschalten,
   vibrieren,
 } from './spielgefuehl.js'
 import './spielgefuehl.css'
@@ -119,6 +117,26 @@ const SANFT_EFFEKT_LEBEN_MS = 260
 const BANNER_MS = 820
 const SANFT_BANNER_MS = 700
 
+/* Das echte Markenzeichen, nicht ein nachgemaltes V. Dieselbe Datei wie in
+   VIDEKO Jump — ein Bild, das der Browser ohnehin schon geladen hat. */
+const WILD_QUELLE = '/favicon-512.png'
+
+/* Ab dieser Kaskadentiefe gilt ein Schritt auch ohne Sonderteil als gross.
+   Mit KASKADE_FAKTOREN (6 Stufen) ist das der vorletzte Sprung — selten
+   genug, dass die oberste Stufe etwas bleibt, das man sich verdient. */
+const MEGA_KOMBO = 5
+
+/* Trockene Sprueche fuer den grossen Moment. Reihum statt zufaellig: so
+   kommt nie zweimal hintereinander derselbe Satz. */
+const SPRUCH_MEGA = [
+  'JETZT WIRD ES UNVERNÜNFTIG.',
+  'DAS GEHT AUF REGIE.',
+  'BAUSTELLE ESKALIERT.',
+  'SO WAR DAS NICHT GEPLANT.',
+  'WER HAT DAS AUFGEMESSEN?',
+  'DAS WAR NICHT IM LEISTUNGSVERZEICHNIS.',
+]
+
 /* Wie lange die Uhr nach einem Kuehlschrank eingefroren aussieht. */
 const FROST_ZEIGE_MS = FROST_MS
 
@@ -182,10 +200,20 @@ function schrittBild(schritt) {
   }
   if (arten.has('bombe') || arten.has('feld') || arten.has('mega')) schlag = 3
   else if (!schlag && (arten.has('reihe') || arten.has('spalte') || arten.has('ofen'))) schlag = 1
+  /* Die oberste Stufe ist absichtlich selten: zwei Sonderteile zuenden
+     zusammen, das Feld raeumt sich leer, oder die Kette traegt ueber fuenf
+     Schritte. Ein gewoehnlicher Dreier kommt hier nie an. */
+  const mega = arten.has('mega') || arten.has('feld') || schritt.kombo >= MEGA_KOMBO
+  if (mega) {
+    schlag = 4
+    /* Eine tiefe Kaskade ohne Sonderteil haette sonst keine Ansage. */
+    if (!banner) banner = { stufe: '5', gross: 'MEGA-KOMBO', klein: 'DIE KETTE REISST NICHT AB' }
+  }
   return {
     effekte,
     banner,
     schlag,
+    mega,
     wuchtig,
     frost: schritt.frost || 0,
     booster: arten.has('reihe') || arten.has('spalte') || arten.has('ofen'),
@@ -215,8 +243,17 @@ function schwerpunkt(schritt, rueck) {
   return n ? [sx / n, sy / n] : rueck
 }
 
-/** Die sechs Gegenstaende als Linienzeichnung, dazu die VIDEKO-BOMBE. */
-function Zeichen({ typ, spezial }) {
+/**
+ * Die sechs Gegenstaende als Linienzeichnung. Sie kommen aus sechs
+ * verschiedenen Gewerken — Kueche und Bad, Boden, Wand, Licht, Elektro,
+ * Photovoltaik — und nicht mehr alle aus der Kueche: VIDEKO ist die
+ * Dachmarke ueber allen. Fremde Firmenzeichen kommen keine vor.
+ *
+ * Wichtiger als das Motiv ist die Silhouette: hoch-schlank, liegendes
+ * Rechteck, Walze, Dreieck, Kreis, Diagonale. So bleiben sechs Sorten auch
+ * ohne Farbsehen und auf einem 44-Pixel-Feld auseinanderzuhalten.
+ */
+function Zeichen({ typ }) {
   const linie = {
     fill: 'none',
     stroke: 'currentColor',
@@ -225,68 +262,62 @@ function Zeichen({ typ, spezial }) {
     strokeLinejoin: 'round',
   }
   let inhalt
-  if (spezial === 'bombe') {
+  if (typ === 1) {
+    /* Armatur — Kueche und Bad. Hoch und schlank. */
     inhalt = (
       <>
-        <circle cx="12" cy="13" r="8" />
-        <path d="M8.3 9.6 12 17l3.7-7.4" strokeWidth="2.3" />
-        <path d="M16.5 5.5 18 3.5M19.5 7.5l2-1M18.8 4.2l.9 2.1" />
-      </>
-    )
-  } else if (typ === 1) {
-    /* Kaffeetasse */
-    inhalt = (
-      <>
-        <path d="M4.5 9.5h11v4.5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z" />
-        <path d="M15.5 11h1.7a2.4 2.4 0 0 1 0 4.8h-1.9" />
-        <path d="M8.5 3.5c-.9 1 .9 2.1 0 3.2M12 3.5c-.9 1 .9 2.1 0 3.2" />
-        <path d="M3.5 21h14" />
+        <path d="M6.5 21h11" />
+        <path d="M9 21v-6.5h6V21" />
+        <path d="M12 14.5V6.2a2.7 2.7 0 0 1 2.7-2.7h4.1" />
+        <path d="M18.8 2.1v2.8" />
+        <path d="M8.6 10.5h6.8" />
       </>
     )
   } else if (typ === 2) {
-    /* Topf */
+    /* Bodendiele — liegendes Rechteck mit Maserung. */
     inhalt = (
       <>
-        <path d="M3.5 10h17" />
-        <path d="M5.5 10v7.5a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2V10" />
-        <path d="M1.8 12h3.7M18.5 12h3.7" />
-        <path d="M8 7.5c1-1.4 7-1.4 8 0M12 5v1.4" />
+        <rect x="2.6" y="7.5" width="18.8" height="9" rx="1.2" />
+        <path d="M9 7.5v9M15.4 7.5v9" strokeOpacity="0.55" />
+        <path d="M4.6 11h2.6M11 13h2.6M17.4 10.6h2.2" strokeOpacity="0.5" strokeWidth="1.4" />
       </>
     )
   } else if (typ === 3) {
-    /* Pfanne */
+    /* Farbrolle — Wand. Walze plus abgewinkelter Stiel. */
     inhalt = (
       <>
-        <circle cx="9" cy="14" r="6.5" />
-        <circle cx="9" cy="14" r="3.6" strokeOpacity="0.55" />
-        <path d="M14 9.2 21.5 3" strokeWidth="3" />
+        <rect x="3" y="4.2" width="12.5" height="6" rx="1.6" />
+        <path d="M15.5 7.2h3.3v3.6h-6.5v2.4" />
+        <path d="M12.3 13.2v7.4" strokeWidth="2.4" />
       </>
     )
   } else if (typ === 4) {
-    /* Messer */
+    /* Pendelleuchte — Licht. Dreieck am Draht, mit Lichtkegel. */
     inhalt = (
       <>
-        <path d="M8.2 15.8 18.6 3.9c1.7-.5 2.6.6 2.2 2.3L10.4 18z" />
-        <path d="M3 21l4.3-4.3" strokeWidth="3.2" />
+        <path d="M12 2.2v4" />
+        <path d="M12 6.2 4.6 15h14.8z" />
+        <path d="M8.4 19.2h7.2" strokeOpacity="0.55" />
+        <path d="M6.6 21.4h10.8" strokeOpacity="0.35" />
       </>
     )
   } else if (typ === 5) {
-    /* Schneidebrett */
+    /* Steckdose — Elektro und Smart Home. Der einzige volle Kreis. */
     inhalt = (
       <>
-        <rect x="4" y="7" width="16" height="14" rx="2.6" />
-        <path d="M10 7V4.2a2 2 0 0 1 4 0V7" />
-        <path d="M8.5 12v5M12 12v5M15.5 12v5" strokeOpacity="0.6" />
+        <circle cx="12" cy="12" r="9" />
+        <circle cx="8.6" cy="12" r="1.1" strokeWidth="2.4" />
+        <circle cx="15.4" cy="12" r="1.1" strokeWidth="2.4" />
+        <path d="M12 3.6v2.2M12 18.2v2.2" strokeOpacity="0.5" />
       </>
     )
   } else {
-    /* Gewuerzglas */
+    /* Photovoltaik-Modul — schraeg gestelltes Gitter, die Diagonale. */
     inhalt = (
       <>
-        <rect x="7" y="2.8" width="10" height="4" rx="1" />
-        <path d="M6.5 6.8h11V19a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2z" />
-        <path d="M6.5 11h11v5.5h-11" />
-        <path d="M10 4.8h.01M12 4.8h.01M14 4.8h.01" strokeWidth="2.2" />
+        <path d="M5.4 4.5h14.2l-2.6 12H2.8z" />
+        <path d="M4.1 10.5h14.5M11.3 4.5l-1.7 12" strokeOpacity="0.55" />
+        <path d="M9.6 16.5 8.4 21.5M13.2 21.5h-7" />
       </>
     )
   }
@@ -294,6 +325,25 @@ function Zeichen({ typ, spezial }) {
     <svg viewBox="0 0 24 24" aria-hidden="true" {...linie}>
       {inhalt}
     </svg>
+  )
+}
+
+/**
+ * Das VIDEKO-Wild: das echte Markenzeichen als Bild, kein nachgemaltes V.
+ * Es raeumt alles eines Typs — und ist das einzige Teil im Feld, das keinen
+ * eigenen Typ zeigt, damit es nie mit einem gewoehnlichen Stein verwechselt
+ * wird.
+ */
+function Wild() {
+  return (
+    <img
+      className="trm-crush-wild"
+      src={WILD_QUELLE}
+      alt=""
+      aria-hidden="true"
+      draggable="false"
+      decoding="async"
+    />
   )
 }
 
@@ -351,7 +401,7 @@ const Stein = memo(function Stein({ stein, x, y, weg, neu, gewaehlt, fokus, hinw
       style={{ transform: `translate(${x * 100}%, ${y * 100}%)`, '--neu': neu || 0 }}
     >
       <span className="trm-crush-kachel" key={stein.spezial || 'n'}>
-        <Zeichen typ={stein.typ} spezial={stein.spezial} />
+        {stein.spezial === 'bombe' ? <Wild /> : <Zeichen typ={stein.typ} />}
         {booster && <Pfeile />}
         {stein.spezial === 'ofen' && <Flamme />}
         {stein.spezial === 'frost' && <Kristall />}
@@ -380,7 +430,6 @@ export default function KuechenCrush({ sitzung, best = null, onErgebnis }) {
   const [masse, setMasse] = useState({ breite: 320, hoehe: 480 })
   const [sanft, setSanft] = useState(false)
   const [frost, setFrost] = useState(false)
-  const [ton, setTon] = useState(tonStatus)
 
   const buehneRef = useRef(null)
   const gitterRef = useRef(null)
@@ -398,6 +447,9 @@ export default function KuechenCrush({ sitzung, best = null, onErgebnis }) {
   const freiSeitRef = useRef(0)
   const zugNrRef = useRef(0)
   const tickRef = useRef(0)
+  /* Zeiger in SPRUCH_MEGA. Reihum statt zufaellig — so kann derselbe Satz
+     nicht zweimal hintereinander fallen, was den Moment entwerten wuerde. */
+  const spruchRef = useRef(-1)
   /* domRuetteln haengt einen Timer an die Buehne und gibt die Aufraeumfunktion
      zurueck. Sie wird hier festgehalten, damit ein Unmount mitten im Beben den
      Timer loest, statt 420 ms spaeter auf ein abgehaengtes Element zu greifen. */
@@ -595,6 +647,7 @@ export default function KuechenCrush({ sitzung, best = null, onErgebnis }) {
     freiSeitRef.current = 0
     zugNrRef.current = 0
     tickRef.current = 0
+    spruchRef.current = -1
     restRef.current = START_MS
     schichtRef.current?.leeren()
     setFrost(false)
@@ -701,7 +754,12 @@ export default function KuechenCrush({ sitzung, best = null, onErgebnis }) {
           setCombo(wertung.multi[i])
           const zu = schrittBild(schritt)
           effekteZeigen(zu.effekte)
-          if (zu.banner) einblenden(zu.banner)
+          if (zu.banner && zu.mega) {
+            spruchRef.current = (spruchRef.current + 1) % SPRUCH_MEGA.length
+            einblenden({ ...zu.banner, klein: SPRUCH_MEGA[spruchRef.current] })
+          } else if (zu.banner) {
+            einblenden(zu.banner)
+          }
           if (zu.schlag && !leise) {
             nrRef.current += 1
             setSchlag({ nr: nrRef.current, stufe: zu.schlag })
@@ -710,7 +768,9 @@ export default function KuechenCrush({ sitzung, best = null, onErgebnis }) {
           const schicht = schichtRef.current
           const [mx, my] = schwerpunkt(schritt, b)
           const p = zellePunkt(mx, my)
-          schicht?.popup({ x: p.x, y: p.y, text: `+${wertung.jeSchritt[i]}`, art: 'punkte' })
+          /* Die grosse Zahl gibt es nur im grossen Moment. Sie ist auch bei
+             reduzierter Bewegung zu sehen — sie ist Information, kein Effekt. */
+          schicht?.popup({ x: p.x, y: p.y, text: `+${wertung.jeSchritt[i]}`, art: zu.mega ? 'gross' : 'punkte' })
           if (gabe > 0) {
             schicht?.popup({ x: p.x, y: Math.max(6, p.y - 9), text: sekText(gabe), art: 'zeit' })
           }
@@ -720,9 +780,9 @@ export default function KuechenCrush({ sitzung, best = null, onErgebnis }) {
             schicht?.funken({
               x: p.x,
               y: p.y,
-              anzahl: zu.schlag >= 3 ? 16 : zu.schlag === 2 ? 12 : 8,
+              anzahl: zu.schlag >= 4 ? 26 : zu.schlag >= 3 ? 16 : zu.schlag === 2 ? 12 : 8,
               art: zu.frost ? 'creme' : 'gold',
-              weite: zu.schlag >= 3 ? 66 : 46,
+              weite: zu.schlag >= 4 ? 96 : zu.schlag >= 3 ? 66 : 46,
             })
             /* Das Gitter ruettelt ohnehin bei jedem Schlag. Die ganze Buehne
                bewegt sich nur bei den grossen Momenten. */
@@ -731,6 +791,9 @@ export default function KuechenCrush({ sitzung, best = null, onErgebnis }) {
               bebenLoesenRef.current?.()
               bebenLoesenRef.current = domRuetteln(buehneRef.current, 2)
             }
+            /* Oberste Stufe: eine zweite, weite Welle in Creme ueber dem
+               Gold — dazu zoomt das Feld kurz heran (data-schlag='4'). */
+            if (zu.schlag >= 4) schicht?.funken({ x: p.x, y: p.y, anzahl: 14, art: 'creme', weite: 140 })
           }
           if (zu.frost > 0) {
             setFrost(true)
@@ -746,7 +809,10 @@ export default function KuechenCrush({ sitzung, best = null, onErgebnis }) {
           else if (zu.schlag === 1 || schritt.kombo === 2) vibrieren(HAPTIK.treffer)
           else vibrieren(HAPTIK.tipp)
 
-          if (zu.schlag >= 3) klang('explosion')
+          /* Der zweite Wert ist die Tonhoehe: 0,72 zieht die Explosion tiefer,
+             sie klingt dadurch groesser statt nur lauter. */
+          if (zu.schlag >= 4) klang('explosion', 0.72)
+          else if (zu.schlag >= 3) klang('explosion')
           else if (zu.schlag === 2) klang('kraft')
           else if (schritt.kombo >= 3) klang('combo', 1 + 0.06 * Math.min(8, schritt.kombo))
           else if (zu.frost > 0) klang('zeit')
@@ -1006,20 +1072,8 @@ export default function KuechenCrush({ sitzung, best = null, onErgebnis }) {
             {/* Gemeinsame Effektschicht: Zahlen, Funken, Blitz. */}
             <div className="sg-schicht" ref={schichtElRef} aria-hidden="true" />
 
-            {/* Ton: stumm startbar, Zustand bleibt ueber Runden hinweg. */}
-            <button
-              type="button"
-              className="sg-ton"
-              aria-pressed={ton}
-              aria-label={ton ? 'Ton aus' : 'Ton an'}
-              onPointerDown={(e) => e.stopPropagation()}
-              onKeyDown={(e) => {
-                if (e.key === ' ' || e.key === 'Enter') e.stopPropagation()
-              }}
-              onClick={() => setTon(tonUmschalten())}
-            >
-              {ton ? '♪' : '✕'}
-            </button>
+            {/* Der Tonschalter sitzt in der gemeinsamen Game-Shell
+                (SpielKarte), nicht mehr hier. */}
           </div>
 
           {meldung && (

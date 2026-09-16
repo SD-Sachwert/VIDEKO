@@ -199,11 +199,63 @@ export const SPEZIAL_REGELN = [
  */
 export const SPRUCH_PAUSE = 16
 
+/* Die Sprueche reden inzwischen nicht mehr nur ueber Kuechen: VIDEKO baut
+   Baeder, Boeden, Waende, Decken, Elektrik, Licht und Photovoltaik. Der Ton
+   bleibt derselbe — trocken, kurz, nie erklaerend. */
 export const SPRUECHE = {
-  chain: ['ORDNUNG WAR GESTERN.', "JETZT RÄUMT'S AUF.", 'KÜCHENCHAOS.', 'DAS WAR NICHT GEPLANT.'],
-  spezial: ['DIE KÜCHE REGELT DAS.', 'GEHT DOCH.', 'EINBAU LÄUFT.'],
-  fieber: ['ALLES BRENNT. GUT SO.', 'JETZT WIRD GEKOCHT.'],
-  traum: ['FERTIG GEPLANT.', 'DAS NENNT MAN KÜCHE.'],
+  chain: [
+    'ORDNUNG WAR GESTERN.',
+    "JETZT RÄUMT'S AUF.",
+    'KÜCHENCHAOS.',
+    'DAS WAR NICHT GEPLANT.',
+    'BAUSTELLE ESKALIERT.',
+    'SO WAR DAS NICHT GEPLANT.',
+    "DER ELEKTRIKER WAR'S.",
+  ],
+  spezial: [
+    'DIE KÜCHE REGELT DAS.',
+    'GEHT DOCH.',
+    'EINBAU LÄUFT.',
+    'PASST. FAST.',
+    'DAS GEHT AUF REGIE.',
+  ],
+  fieber: [
+    'ALLES BRENNT. GUT SO.',
+    'JETZT WIRD GEKOCHT.',
+    'DAS WAR NICHT IM LEISTUNGSVERZEICHNIS.',
+  ],
+  traum: [
+    'FERTIG GEPLANT.',
+    'DAS NENNT MAN KÜCHE.',
+    'ABNAHME OHNE MÄNGEL.',
+  ],
+}
+
+/* ------------------------------------------------------------------ *
+ * Seltene Ansagen
+ * ------------------------------------------------------------------ *
+ *
+ * Nur fuer die oberen Stufen, und je Runde nur beim allerersten Mal. Wer
+ * eine SPÜLMASCHINE zum ersten Mal zusammenbaut, soll dafuer einen eigenen
+ * Satz bekommen; wer die zwanzigste baut, bekommt wieder die normale
+ * Anzeige. Die Schwelle liegt bewusst hoch — sonst ist es kein Ereignis,
+ * sondern eine Statusmeldung.
+ *
+ * Schluessel ist der Stufenindex aus STUFEN.
+ */
+export const SELTEN_AB_STUFE = 6
+
+export const SELTENE_ANSAGEN = {
+  6: 'WER HAT DAS AUFGEMESSEN?',
+  7: 'PASST. FAST.',
+  8: 'DAS GEHT AUF REGIE.',
+  9: 'ABNAHME OHNE MÄNGEL.',
+}
+
+/** Der seltene Satz zu einer Stufe — oder null, wenn es keinen gibt. */
+export function selteneAnsage(stufe) {
+  if (stufe < SELTEN_AB_STUFE) return null
+  return SELTENE_ANSAGEN[stufe] || null
 }
 
 /* Zehn Stufen, klein nach gross. Die Radien wachsen erst schnell (die

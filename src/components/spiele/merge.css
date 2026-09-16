@@ -503,3 +503,18 @@
   }
   /* Die beiden Zeitbalken bleiben: sie sind Information, keine Zierde. */
 }
+
+/* Die zweite Zeile unter einer seltenen Ansage. Sie traegt den trockenen
+   Satz, waehrend die Zeile darueber den Namen des Teils behaelt. Kleiner,
+   ruhiger, in Creme statt Gold — sie soll den Moment begleiten, nicht mit
+   ihm konkurrieren. Sie erbt Ein- und Ausblenden vom Elternelement. */
+.trm-merge-ruf__klein {
+  display: block;
+  margin-top: 3px;
+  font-family: var(--sans, system-ui, sans-serif);
+  font-size: clamp(9px, 2.6vw, 11px);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--trm-creme-leise);
+  text-shadow: 0 0 10px rgba(3, 3, 2, 0.9);
+}

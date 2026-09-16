@@ -9,6 +9,9 @@
  * sauberes Ende des Fiebers, die Einbau-Zone und die langsam steigende
  * Schwierigkeit. Kein React, kein DOM, keine Uhr.
  */
+import { readFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import {
   BREITE,
   FIEBER_AB,
@@ -29,6 +32,7 @@ import {
   PERFEKT_PASSUNG,
   PLATZ_PUNKTE,
   STUFE_MAX,
+  TEILE,
   ZEIT_BONUS,
   ZEIT_JE_REIHE,
   ZEIT_ZONE,
@@ -453,6 +457,87 @@ console.log('\nDauerlauf: nichts laeuft aus dem Ruder')
   const schnitt = Math.round(punkte / 160)
   pruefe('der Schnitt je Platzierung bleibt unter 1200', schnitt < 1200, `${schnitt}/Zug`)
   console.log(`        160 Platzierungen: ${punkte} Platzierungspunkte, ${schnitt}/Zug, ${z.fieberZahl}x Fieber, beste Combo ${z.besteCombo}, ${leerGemeldet} Leermeldungen`)
+}
+
+/* -------------------------------------------------------------------- */
+/* Taste FALLEN LASSEN und die Teile aus dem ganzen VIDEKO-Universum.     */
+/*                                                                       */
+/* Was hier folgt, liest Quelltext als Text. Das ist kein Ersatz dafuer,  */
+/* das Spiel auf einem Geraet in die Hand zu nehmen — eine Taste kann in  */
+/* der Datei richtig stehen und auf 390 px trotzdem unter dem Daumen      */
+/* verschwinden. Der Block haelt nur fest, was ohne Browser pruefbar ist: */
+/* dass die Taste da ist, gross genug angelegt, am Zeiger haengt und die  */
+/* Buehne nicht mitbedient — und dass die Teileliste ueber die Gewerke    */
+/* reicht, ohne dass an den gemessenen Formen etwas verrutscht ist.       */
+const HIER = dirname(fileURLToPath(import.meta.url))
+const WURZEL = resolve(HIER, '../..')
+const FIT_JSX = readFileSync(resolve(WURZEL, 'src/components/spiele/KuechenFit.jsx'), 'utf8')
+const FIT_CSS = readFileSync(resolve(WURZEL, 'src/components/spiele/fit.css'), 'utf8')
+
+console.log('\nTaste FALLEN LASSEN')
+{
+  pruefe('die Taste steht im Spiel', /className="trm-fit-drop"/.test(FIT_JSX))
+  pruefe('sie traegt den Text FALLEN LASSEN', /FALLEN LASSEN/.test(FIT_JSX))
+  pruefe('sie hat eine Beschriftung fuer Screenreader', /aria-label="Teil sofort fallen lassen"/.test(FIT_JSX))
+
+  const block = FIT_JSX.slice(FIT_JSX.indexOf('className="trm-fit-drop"'))
+  const taste = block.slice(0, block.indexOf('</button>'))
+  pruefe('sie wirft auf pointerdown ab, nicht erst auf click', /onPointerDown=\{[^}]*hartAbsetzen\(\)/s.test(taste))
+  pruefe('click greift nur fuer die Tastatur (detail === 0)', /detail === 0/.test(taste))
+  const stopps = (taste.match(/stopPropagation\(\)/g) || []).length
+  pruefe('sie reicht Zeiger und Tasten nicht an die Buehne durch', stopps >= 4, `${stopps} Stopps`)
+
+  /* Thumb-friendly heisst hier: mindestens 48 px hoch — darunter wird die
+     Taste auf dem Handy zur Zielscheibe statt zum Knopf. */
+  const hoehe = Number((FIT_CSS.match(/\.trm-fit-drop\s*\{[^}]*min-height:\s*(\d+)px/s) || [])[1])
+  pruefe('sie ist mindestens 48 px hoch', hoehe >= 48, `${hoehe}px`)
+  const breite = Number((FIT_CSS.match(/\.trm-fit-drop\s*\{[^}]*min-width:\s*min\((\d+)px/s) || [])[1])
+  pruefe('sie laeuft breit ueber das Feld', breite >= 240, `${breite}px`)
+  pruefe('sie sitzt unten im Bild', /\.trm-fit-drop\s*\{[^}]*bottom:/s.test(FIT_CSS))
+  pruefe('der Druck ist spuerbar (scale beim Tippen)', /\.trm-fit-drop:active\s*\{[^}]*scale:\s*0\.9/s.test(FIT_CSS))
+  pruefe('sanfter Modus laesst das Nachgeben weg', /prefers-reduced-motion[\s\S]*\.trm-fit-drop:active\s*\{\s*scale:\s*1/.test(FIT_CSS))
+
+  /* Auf dem Desktop faellt das Teil weiter ueber die Buehne: Leertaste und
+     Enter stehen in ihrer Liste bekannter Tasten und landen im Zweig, der
+     hart absetzt. */
+  const bekannt = FIT_JSX.match(/const bekannt = \[([^\]]*)\]/)
+  pruefe('die Buehne kennt Leertaste und Enter', !!bekannt && /' '/.test(bekannt[1]) && /'Enter'/.test(bekannt[1]))
+  pruefe('sie setzt damit hart ab', /if \(!e\.repeat\) hartAbsetzen\(\)/.test(FIT_JSX))
+}
+
+console.log('\nTeile aus dem ganzen VIDEKO-Universum')
+{
+  const teile = Object.values(TEILE)
+  const namen = teile.map((t) => t.name)
+  pruefe('jedes Teil hat einen Namen', namen.every((n) => typeof n === 'string' && n.length >= 3))
+  pruefe('kein Name doppelt', new Set(namen).size === namen.length)
+
+  /* Kuechen bleiben drin — sie sind der Kern. Sie duerfen die Liste aber
+     nicht mehr allein fuellen: Bad, Boden, Wand, Decke, Elektro und PV
+     gehoeren genauso ins Bild. */
+  const kueche = ['UNTERSCHRANK', 'ECKSCHRANK', 'KOCHINSEL', 'KÜHLKOMBI']
+  const weiter = ['STEIGLEITUNG', 'DIELENPAKET', 'SOCKELPROFIL', 'DECKENPROFIL', 'WANDPANEEL', 'WASCHTISCH', 'PV-WINKEL', 'LEITUNGSKREUZ', 'TREPPENLAUF']
+  pruefe('die Kueche bleibt vertreten', kueche.every((n) => namen.includes(n)))
+  pruefe('andere Gewerke sind dabei', weiter.every((n) => namen.includes(n)), weiter.filter((n) => !namen.includes(n)).join(','))
+  pruefe('kein Gewerk stellt die Mehrheit', weiter.length > kueche.length, `${kueche.length} Kueche, ${weiter.length} uebrige`)
+
+  /* Die Umbenennung darf die Balance nicht angefasst haben: Code, Gruppe,
+     Kasten und Zellen sind gemessen und bleiben, wie sie waren. */
+  const codes = teile.map((t) => t.code)
+  pruefe('die Codes sind unveraendert', codes.join(',') === '1,2,3,4,5,6,7,8,10,11,12,13,14', codes.join(','))
+  const zellen = teile.map((t) => t.zellen.length)
+  pruefe('die Zellenzahlen sind unveraendert', zellen.join(',') === '4,3,4,4,4,4,4,4,5,5,5,5,5', zellen.join(','))
+  pruefe('die Kaesten bleiben 2 bis 4 breit', teile.every((t) => t.box >= 2 && t.box <= 4))
+  const gruppen = teile.map((t) => t.gruppe)
+  pruefe('acht Basisteile', gruppen.filter((g) => g === 'basis').length === 8)
+  pruefe('drei komplexe Teile', gruppen.filter((g) => g === 'komplex').length === 3)
+  pruefe('zwei Problemteile', gruppen.filter((g) => g === 'problem').length === 2)
+
+  /* Die drei neuen Fronten brauchen jeweils einen eigenen Pinselstrich,
+     sonst heissen die Teile anders und sehen gleich aus. */
+  for (const griff of ['rohr', 'fuge', 'raster']) {
+    pruefe(`Front "${griff}" wird auch gemalt`, new RegExp(`griff === '${griff}'`).test(FIT_JSX))
+  }
 }
 
 console.log(`\n${gut} ok, ${schlecht} fehlgeschlagen`)

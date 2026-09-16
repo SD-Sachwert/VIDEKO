@@ -13,6 +13,10 @@
  * nachgebaut (gleiche Rechnung, ohne React und ohne echte Zeit).
  */
 
+import { existsSync, readFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
+
 import {
   BREITE,
   DECKEL_MS,
@@ -46,6 +50,9 @@ import {
   zugPunkte,
   zugZeit,
 } from '../../src/components/spiele/crush-logik.js'
+
+const HIER = dirname(fileURLToPath(import.meta.url))
+const WURZEL = resolve(HIER, '../..')
 
 let gut = 0
 let schlecht = 0
@@ -509,6 +516,144 @@ function profil(name, pause, laeufe, guete = 'best') {
   console.log(`       sehr guter Mensch: Max ${sehrGut.max} Punkte, Dauer bis ${(sehrGut.maxDauer / 1000).toFixed(1)} s, bester Zug ${sehrGut.maxZug}`)
   console.log(`       Bot ohne Pause:    Max ${bot.max} Punkte, Dauer bis ${(bot.maxDauer / 1000).toFixed(1)} s, bester Zug ${bot.maxZug}, Zuege bis ${bot.maxRunden}`)
   console.log(`       ms je Zug minimal: ${Math.round(bot.maxDauer / bot.maxRunden)}`)
+}
+
+/* ------------------------------------------------------------------ */
+/* Die Darstellungsschicht laesst sich ohne Browser nicht ausfuehren.
+   Nachweisbar ist aber, dass die Zusagen aus §9 (MEGA-KOMBO), §10
+   (unverwechselbare Sonderteile) und §1d.3 (breiteres Zeichen-Set) wirklich
+   im Quelltext stehen und zusammenpassen — dafuer werden KuechenCrush.jsx,
+   crush.css und die gemeinsame Effektschicht als Text gelesen. Das ersetzt
+   keinen Blick aufs Geraet, verhindert aber, dass eine Zusage still wieder
+   herausfaellt. */
+console.log('\nDarstellung haelt, was zugesagt wurde (§9, §10, §1d.3)')
+{
+  const jsx = readFileSync(resolve(WURZEL, 'src/components/spiele/KuechenCrush.jsx'), 'utf8')
+  const css = readFileSync(resolve(WURZEL, 'src/components/spiele/crush.css'), 'utf8')
+  const sgJs = readFileSync(resolve(WURZEL, 'src/components/spiele/spielgefuehl.js'), 'utf8')
+  const sgCss = readFileSync(resolve(WURZEL, 'src/components/spiele/spielgefuehl.css'), 'utf8')
+
+  /** Einen Abschnitt zwischen zwei Markierungen ausschneiden. */
+  function von(text, start, ende) {
+    const a = text.indexOf(start)
+    if (a < 0) return ''
+    const b = text.indexOf(ende, a + start.length)
+    return b < 0 ? text.slice(a) : text.slice(a, b + ende.length)
+  }
+
+  /* --- §9: die grosse Ansage gibt es, und sie ist selten --------------- */
+
+  const megaWert = Number((jsx.match(/const MEGA_KOMBO = (\d+)/) || [])[1])
+  pruefe('MEGA_KOMBO ist gesetzt', Number.isFinite(megaWert), String(megaWert))
+  /* Bei sechs Kaskadenstufen ist 5 der vorletzte Sprung. Waere die Schwelle
+     2 oder 3, traefe sie fast jeden zweiten Zug — genau das, was §9
+     ausschliesst ("nicht nach jedem Zug"). */
+  pruefe('Die Schwelle liegt weit oben in der Kaskade', megaWert >= 4, `${megaWert} von 6 Stufen`)
+
+  const megaZeile = jsx.match(/const mega = ([^\n]+)/)
+  pruefe('Mega zuendet nur bei Doppelzuendung, leerem Feld oder tiefer Kette',
+    !!megaZeile
+    && megaZeile[1].includes("arten.has('mega')")
+    && megaZeile[1].includes("arten.has('feld')")
+    && megaZeile[1].includes('schritt.kombo >= MEGA_KOMBO'))
+  pruefe('Ein gewoehnlicher Treffer kommt nie auf Stufe 4', !/schlag = 4(?!\n?\s*\/)/.test(von(jsx, 'let schlag = 0', 'const mega =')))
+  pruefe('Stufe 4 wird gesetzt', jsx.includes('schlag = 4'))
+  pruefe('Stufe 4 bekommt auch ohne Sonderteil eine Ansage', jsx.includes("gross: 'MEGA-KOMBO'"))
+
+  const sprueche = [...von(jsx, 'const SPRUCH_MEGA = [', ']').matchAll(/'([^']+)'/g)].map((t) => t[1])
+  pruefe('Es gibt genug trockene Sprueche', sprueche.length >= 5, `${sprueche.length}`)
+  pruefe('Kein Spruch wiederholt sich', new Set(sprueche).size === sprueche.length)
+  pruefe('Die Sprueche sind kurz genug fuer eine Zeile', sprueche.every((s) => s.length <= 40),
+    `laengster ${Math.max(...sprueche.map((s) => s.length))} Zeichen`)
+  /* Reihum statt zufaellig: sonst faellt derselbe Satz zweimal hintereinander
+     und entwertet genau den Moment, den er tragen soll. */
+  pruefe('Die Sprueche laufen reihum', jsx.includes('(spruchRef.current + 1) % SPRUCH_MEGA.length'))
+  pruefe('Der Spruchzeiger ist angelegt', /const spruchRef = useRef\(-1\)/.test(jsx))
+  pruefe('Der Spruchzeiger wird zum Rundenstart zurueckgesetzt', jsx.includes('spruchRef.current = -1'))
+
+  /* Zoom, Beben, Goldblitz, Explosion, grosse Zahl — die fuenf Zusagen aus §9. */
+  pruefe('§9 Zoom: eigene Stufe im Gitter', css.includes("[data-schlag='4'][data-takt='a']") && css.includes("[data-schlag='4'][data-takt='b']"))
+  const zoom = Number((css.match(/@keyframes trm-crush-mega-a[^}]*?scale: ([\d.]+)/s) || [])[1])
+  pruefe('§9 Zoom faehrt wirklich heran', zoom >= 1.05, `scale ${zoom}`)
+  pruefe('§9 Beben: die Buehne ruettelt stark', jsx.includes('domRuetteln(buehneRef.current, 2)'))
+  pruefe('§9 Goldblitz', jsx.includes("blitz('gold')"))
+  pruefe('§9 Explosion klingt tiefer als der normale Knall', jsx.includes("klang('explosion', 0.72)"))
+  pruefe('§9 mehr Funken auf der obersten Stufe', jsx.includes('zu.schlag >= 4 ? 26'))
+  pruefe('§9 zweite, weite Welle in Creme', jsx.includes("art: 'creme', weite: 140"))
+  pruefe('§9 grosse Score-Zahl nur im grossen Moment', jsx.includes("art: zu.mega ? 'gross' : 'punkte'"))
+  pruefe('Die grosse Zahl hat eine eigene Schrift', sgCss.includes('.sg-ruf--gross'))
+  pruefe('Die grosse Zahl wird im Feld gehalten', sgJs.includes("art === 'gross'"))
+  /* popup() unterdrueckt nur art==='punkte'. Die grosse Zahl traegt eine
+     Information und bleibt deshalb auch bei reduzierter Bewegung sichtbar. */
+  pruefe('Die grosse Zahl bleibt auch bei reduzierter Bewegung', sgJs.includes("sanft() && art === 'punkte'"))
+
+  /* --- §10: jedes Sonderteil sieht anders aus ------------------------- */
+
+  pruefe('Reihenblaster: Pfeile in Wirkrichtung', jsx.includes('className="trm-crush-pfeil"'))
+  pruefe('Spaltenblaster: dieselben Pfeile gedreht', css.includes("[data-spezial='spalte'] .trm-crush-pfeil"))
+  pruefe('Backofen: eigener Rahmen', css.includes("[data-spezial='ofen'] .trm-crush-kachel"))
+  pruefe('Backofen: eigenes Abzeichen', jsx.includes("data-art=\"ofen\""))
+  pruefe('Freeze: eigenes Abzeichen', jsx.includes("data-art=\"frost\""))
+  pruefe('Wild: runder Rahmen statt Kachel', css.includes("[data-spezial='bombe'] .trm-crush-kachel"))
+  pruefe('Wild traegt das echte Emblem', jsx.includes("const WILD_QUELLE = '/favicon-512.png'"))
+  pruefe('Die Emblem-Datei liegt auch wirklich da', existsSync(resolve(WURZEL, 'public/favicon-512.png')))
+  pruefe('Wild wird statt eines Typzeichens gezeichnet', jsx.includes("stein.spezial === 'bombe' ? <Wild /> : <Zeichen typ={stein.typ} />"))
+  pruefe('Kein nachgemaltes V mehr im Zeichen-Satz', !/function Zeichen\(\{ typ, spezial/.test(jsx))
+  pruefe('Das Emblem hat eine eigene Groesse', css.includes('.trm-crush-wild'))
+  /* Die Drehung hing frueher am <svg> der Bombe. Das Wild ist ein <img> —
+     ohne Umzug der Regel waere die Animation still verschwunden. */
+  pruefe('Die Drehung haengt am Emblem, nicht mehr am alten svg',
+    !css.includes("[data-spezial='bombe'] .trm-crush-kachel svg")
+    && /\.trm-crush-wild \{[^}]*trm-crush-bombe-dreh/s.test(css))
+  pruefe('Das Emblem steht bei reduzierter Bewegung still',
+    css.includes(".trm-crush-buehne[data-sanft='1'] .trm-crush-wild") && css.includes('  .trm-crush-wild,'))
+
+  /* --- §1d.3: das Zeichen-Set deckt mehr als die Kueche ab ------------ */
+
+  const zeichen = von(jsx, 'function Zeichen({ typ })', '\n}\n')
+  pruefe('Es gibt sechs Zeichen', (zeichen.match(/inhalt = \(/g) || []).length === 6,
+    `${(zeichen.match(/inhalt = \(/g) || []).length}`)
+  const gewerke = ['Bad', 'Boden', 'Wand', 'Licht', 'Elektro', 'Photovoltaik']
+  const fehlend = gewerke.filter((g) => !zeichen.includes(g))
+  pruefe('Mehrere Gewerke sind vertreten', fehlend.length === 0, fehlend.join(', ') || 'alle')
+  /* VIDEKO bleibt Dachmarke: das einzige Markenzeichen im Feld ist das
+     eigene. Fremde Firmenzeichen kommen nicht vor. */
+  pruefe('Nur ein Bild im ganzen Feld, und das ist das eigene',
+    (jsx.match(/<img/g) || []).length === 1 && (jsx.match(/src=\{?['"]?\//g) || []).length <= 1)
+
+  /* --- Wie selten ist die tiefe Kette wirklich? ----------------------- */
+
+  /* Der Zweig, der auch im gewoehnlichen Spiel zuenden koennte, ist
+     `schritt.kombo >= MEGA_KOMBO`. Also nachmessen, wie oft ein sehr guter
+     Spieler ihn ausloest. §9 verlangt: ein Hoehepunkt, keine Gewohnheit. */
+  let zuege = 0
+  let megaZuege = 0
+  for (let s = 0; s < 24; s += 1) {
+    const saat = 4100 + s * 631
+    const zufall = zufallMitSaat(saat)
+    const st = neuesSpiel(zufall)
+    for (let r = 0; r < 60; r += 1) {
+      const moeglich = alleZuege(st.feld)
+      if (!moeglich.length) break
+      let best = moeglich[0]
+      let bestWert = -1
+      for (const [a, b] of moeglich) {
+        const probe = { feld: kopie(st.feld), naechsteId: st.naechsteId, zufall: zufallMitSaat(saat + r) }
+        const w = tauschen(probe, a, b).punkte
+        if (w > bestWert) {
+          bestWert = w
+          best = [a, b]
+        }
+      }
+      const e = tauschen(st, best[0], best[1])
+      if (!e.gueltig) break
+      zuege += 1
+      if (e.schritte.some((sc) => sc.kombo >= megaWert)) megaZuege += 1
+    }
+  }
+  const anteil = megaZuege / Math.max(1, zuege)
+  pruefe('Die tiefe Kette kommt vor', megaZuege > 0, `${megaZuege} von ${zuege} Zuegen`)
+  pruefe('… aber nicht bei jedem Zug', anteil < 0.12, `${(anteil * 100).toFixed(1)} %`)
 }
 
 console.log(`\nKuechen-Crush Game Feel: ${gut} OK, ${schlecht} Fehler`)

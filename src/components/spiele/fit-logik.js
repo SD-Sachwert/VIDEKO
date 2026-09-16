@@ -53,21 +53,31 @@ import { comboMult } from './spielgefuehl.js'
 export const BREITE = 10
 export const HOEHE = 18
 
-/* Acht vertraute Kuechenteile, drei Fuenfer-Module und zwei Problemteile. */
+/* Acht vertraute Ausbauteile, drei Fuenfer-Module und zwei Problemteile.
+ *
+ * Die Namen kommen aus dem ganzen Haus, nicht nur aus der Kueche: VIDEKO
+ * baut auch Baeder, Boeden, Waende, Spanndecken, Elektrik, Licht und
+ * Photovoltaik, und das Spiel darf das zeigen. Jeder Name beschreibt die
+ * Form, die er traegt — die lange Vier ist ein Dielenpaket, die stehende
+ * Drei eine Steigleitung, das Kreuz ein Leitungskreuz.
+ *
+ * WICHTIG: Nur `name` ist hier je geaendert worden. `code`, `gruppe`, `box`
+ * und `zellen` bestimmen Form, Farbe und Wertung — sie sind gemessen und
+ * bleiben, wie sie sind. Ein neuer Name kostet kein einziges Spielgefuehl. */
 export const TEILE = {
   O: { code: 1, name: 'UNTERSCHRANK', gruppe: 'basis', box: 2, zellen: [[0, 0], [1, 0], [0, 1], [1, 1]] },
-  K: { code: 2, name: 'HOCHSCHRANK', gruppe: 'basis', box: 3, zellen: [[1, 0], [1, 1], [1, 2]] },
-  I: { code: 3, name: 'ARBEITSPLATTE', gruppe: 'basis', box: 4, zellen: [[0, 1], [1, 1], [2, 1], [3, 1]] },
+  K: { code: 2, name: 'STEIGLEITUNG', gruppe: 'basis', box: 3, zellen: [[1, 0], [1, 1], [1, 2]] },
+  I: { code: 3, name: 'DIELENPAKET', gruppe: 'basis', box: 4, zellen: [[0, 1], [1, 1], [2, 1], [3, 1]] },
   L: { code: 4, name: 'ECKSCHRANK', gruppe: 'basis', box: 3, zellen: [[2, 0], [0, 1], [1, 1], [2, 1]] },
-  J: { code: 5, name: 'ECKSCHRANK', gruppe: 'basis', box: 3, zellen: [[0, 0], [0, 1], [1, 1], [2, 1]] },
+  J: { code: 5, name: 'SOCKELPROFIL', gruppe: 'basis', box: 3, zellen: [[0, 0], [0, 1], [1, 1], [2, 1]] },
   T: { code: 6, name: 'KOCHINSEL', gruppe: 'basis', box: 3, zellen: [[1, 0], [0, 1], [1, 1], [2, 1]] },
-  S: { code: 7, name: 'INSELMODUL', gruppe: 'basis', box: 3, zellen: [[1, 0], [2, 0], [0, 1], [1, 1]] },
-  Z: { code: 8, name: 'INSELMODUL', gruppe: 'basis', box: 3, zellen: [[0, 0], [1, 0], [1, 1], [2, 1]] },
-  U: { code: 10, name: 'SPÜLENZEILE', gruppe: 'komplex', box: 3, zellen: [[0, 1], [2, 1], [0, 2], [1, 2], [2, 2]] },
+  S: { code: 7, name: 'DECKENPROFIL', gruppe: 'basis', box: 3, zellen: [[1, 0], [2, 0], [0, 1], [1, 1]] },
+  Z: { code: 8, name: 'WANDPANEEL', gruppe: 'basis', box: 3, zellen: [[0, 0], [1, 0], [1, 1], [2, 1]] },
+  U: { code: 10, name: 'WASCHTISCH', gruppe: 'komplex', box: 3, zellen: [[0, 1], [2, 1], [0, 2], [1, 2], [2, 2]] },
   P: { code: 11, name: 'KÜHLKOMBI', gruppe: 'komplex', box: 3, zellen: [[0, 0], [1, 0], [0, 1], [1, 1], [0, 2]] },
-  V: { code: 12, name: 'WINKELZEILE', gruppe: 'komplex', box: 3, zellen: [[0, 0], [0, 1], [0, 2], [1, 2], [2, 2]] },
-  X: { code: 13, name: 'SÄULENKREUZ', gruppe: 'problem', box: 3, zellen: [[1, 0], [0, 1], [1, 1], [2, 1], [1, 2]] },
-  W: { code: 14, name: 'TREPPENREGAL', gruppe: 'problem', box: 3, zellen: [[0, 0], [0, 1], [1, 1], [1, 2], [2, 2]] },
+  V: { code: 12, name: 'PV-WINKEL', gruppe: 'komplex', box: 3, zellen: [[0, 0], [0, 1], [0, 2], [1, 2], [2, 2]] },
+  X: { code: 13, name: 'LEITUNGSKREUZ', gruppe: 'problem', box: 3, zellen: [[1, 0], [0, 1], [1, 1], [2, 1], [1, 2]] },
+  W: { code: 14, name: 'TREPPENLAUF', gruppe: 'problem', box: 3, zellen: [[0, 0], [0, 1], [1, 1], [1, 2], [2, 2]] },
 }
 
 export const TYPEN = Object.keys(TEILE)

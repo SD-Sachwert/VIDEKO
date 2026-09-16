@@ -87,6 +87,24 @@ export const VORSCHUSS = 1
 export const LANG_MS = 350
 export const VERSUCHE = 250
 
+/* Eine geschaffte Wand bekommt einen trockenen Satz unter das Schild. Er
+   traegt keine Information — die steht darueber — sondern nur den Ton. Die
+   Saetze laufen reihum, damit nicht zweimal hintereinander derselbe faellt;
+   sie bleiben kurz genug, um neben dem Bonus in eine Zeile zu passen. */
+export const GESCHAFFT_SPRUECHE = [
+  'DER ELEKTRIKER WAR’S.',
+  'NICHTS ANGEBOHRT. DIESMAL.',
+  'WER HAT DAS AUFGEMESSEN?',
+  'PASST. FAST.',
+  'DAS GEHT AUF REGIE.',
+]
+
+/** Der Satz zur n-ten geschafften Wand (n ab 0), reihum. */
+export function geschafftSpruch(n) {
+  const i = Math.max(0, Math.floor(n)) % GESCHAFFT_SPRUECHE.length
+  return GESCHAFFT_SPRUECHE[i]
+}
+
 /* Nachbarn einmal vorab, fuer jede Zelle. */
 export const NACHBARN = Array.from({ length: FELDER }, (_, i) => {
   const x = i % SPALTEN

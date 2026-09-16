@@ -246,6 +246,14 @@ export const TEXTE = {
       'Dieser Lauf wurde gespeichert, aber nicht gewertet. Bei Fragen dazu gerne kurz melden.',
     fehler: 'Das Ergebnis konnte nicht gespeichert werden. Die Runde zählt dann leider nicht.',
     ticketFehler: 'Die Runde ließ sich nicht starten. Bitte noch einmal versuchen.',
+    /* Die gemeinsame Game-Shell: dieselben drei Tasten in jedem Spiel, damit
+       niemand raten muss, wo der Ton sitzt oder wie man wieder rauskommt. */
+    shellVollbild: 'VOLLBILD',
+    shellVollbildAus: 'VOLLBILD BEENDEN',
+    shellTonAn: 'Ton an',
+    shellTonAus: 'Ton aus',
+    shellVerlassen: 'VERLASSEN',
+    shellVerlassenHilfe: 'Runde beenden und zurück zur Seite',
     /* Practice Mode: ein Game zum Reinspielen, ohne Konto. Der Lauf wird
        nicht gewertet, taucht in keiner Rangliste auf und zaehlt auch nicht
        im Gesamtranking. Danach gibt es genau zwei Wege ins Ranking: eine
@@ -300,6 +308,7 @@ export const TEXTE = {
       leitungsfinder: 'LEITUNGSFINDER',
       kuechen_crush: 'CRUSH',
       kuechen_tinder: 'TINDER',
+      videko_slam: 'SLAM',
       gesamtranking: 'GESAMTRANKING',
       gesamt: 'GESAMT',
     },
@@ -490,6 +499,7 @@ export const TEXTE = {
       { key: 'leitungsfinder', wort: 'LEITUNGSFINDER' },
       { key: 'kuechen_crush', wort: 'KÜCHEN-CRUSH' },
       { key: 'kuechen_tinder', wort: 'KÜCHEN-TINDER' },
+      { key: 'videko_slam', wort: 'VIDEKO SLAM' },
       { key: 'mission', wort: 'FOLLOWER-MISSION' },
       { key: 'einwilligung', wort: 'LEADERBOARD OPT-IN / OPT-OUT' },
       { key: 'spaehen', wort: 'KEYHOLE-PREVIEW VOR CODE' },
@@ -856,6 +866,14 @@ export const SPIELE_LISTE = [
     regel: 'Lies die Aufgabe über der Karte. Rechts heißt JA, links heißt NEIN. Richtige Serien bringen Combo, Fehler kosten 2 s.',
     hochformat: true,
   },
+  {
+    key: 'videko_slam',
+    titel: 'VIDEKO SLAM',
+    icon: 'hammer',
+    zeile: 'Aus den Fronten kommt alles. Auch Mist. 50 Sekunden.',
+    regel: 'Tippen, was ins Haus gehört. Mist kostet Zeit. Gold, Kühlschrank, Backofen und die Sirene ändern die Lage.',
+    hochformat: true,
+  },
 ]
 
 /**
@@ -889,10 +907,11 @@ export const PRACTICE_STANDARD = 'kuechen_merge'
 /**
  * Ohne Eintrag ausgeblendet. Der Server schickt die Schalter ohnehin
  * vollstaendig (Hauptgames und ein eingetragener Testslot an); diese Liste
- * greift nur, wenn ein Eintrag fehlt. Kuechen-Tinder steht darin, weil der
- * Testslot ohne Eintrag leer ist.
+ * greift nur, wenn ein Eintrag fehlt. Kuechen-Tinder und VIDEKO Slam stehen
+ * darin, weil der Testslot ohne Eintrag leer ist: beide sind Kandidaten fuer
+ * denselben einen Platz und werden erst durch einen Eintrag sichtbar.
  */
-export const STANDARD_AUS = ['kuechen_stack', 'kuechen_dash', 'kuechen_balance', 'truhenknacker', 'goldrausch', 'kuechen_tinder']
+export const STANDARD_AUS = ['kuechen_stack', 'kuechen_dash', 'kuechen_balance', 'truhenknacker', 'goldrausch', 'kuechen_tinder', 'videko_slam']
 
 /** Ist ein Spiel sichtbar? Ein ausdrueckliches true/false gewinnt, sonst der Standard. */
 export const spielAktiv = (schalter, key) =>
@@ -912,8 +931,8 @@ export function aktiveSpiele(schalter = {}, reihenfolge = null) {
  * lesen dieselbe Liste.
  */
 export const STANDARD_REIHENFOLGE = [
-  'leitungsfinder', 'kuechen_merge', 'kuechen_crush', 'videko_jump', 'kuechen_fit', 'kuechen_tinder',
-  'kuechen_balance', 'truhenknacker', 'goldrausch', 'kuechen_stack', 'kuechen_dash',
+  'leitungsfinder', 'kuechen_merge', 'kuechen_crush', 'videko_jump', 'kuechen_fit', 'videko_slam',
+  'kuechen_tinder', 'kuechen_balance', 'truhenknacker', 'goldrausch', 'kuechen_stack', 'kuechen_dash',
 ]
 
 export function spieleSortiert(reihenfolge = null) {

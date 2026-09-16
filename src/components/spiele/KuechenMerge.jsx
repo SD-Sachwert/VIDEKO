@@ -26,6 +26,7 @@ import {
   landeY,
   neuesSpiel,
   schritt,
+  selteneAnsage,
   vorschau,
 } from './merge-logik.js'
 import {
@@ -37,8 +38,6 @@ import {
   rufwerk,
   ruettler,
   sanftHoeren,
-  tonStatus,
-  tonUmschalten,
   vibrieren,
 } from './spielgefuehl.js'
 import './spielgefuehl.css'
@@ -347,7 +346,6 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
   const [pause, setPause] = useState(false)
   const [crash, setCrash] = useState(false)
   const [sanft, setSanft] = useState(false)
-  const [ton, setTon] = useState(tonStatus)
   /* kette: laufende Kombo (0 = keine), nr: zaehlt Verschmelzungen, damit der
      Zeitbalken bei jeder neu startet. */
   const [kombo, setKombo] = useState({ kette: 0, nr: 0 })
@@ -451,9 +449,12 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
     return () => document.removeEventListener('visibilitychange', wechsel)
   }, [laeuft])
 
-  const melden = useCallback((art, text) => {
+  /* `klein` ist optional: eine zweite, leise Zeile unter der Ansage. Sie
+     traegt den trockenen Satz, waehrend die erste Zeile die Information
+     behaelt — so muss keine der beiden der anderen weichen. */
+  const melden = useCallback((art, text, klein = '') => {
     nrRef.current += 1
-    setMeldung({ nr: nrRef.current, art, text })
+    setMeldung({ nr: nrRef.current, art, text, klein })
   }, [])
 
   useEffect(() => {
@@ -713,7 +714,10 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
         else if (groesstes.art === 'traum') melden('perfekt', groesstes.kette >= 2 ? `TRAUMKÜCHE ×${groesstes.kette}` : 'TRAUMKÜCHE')
         else if (groesstes.art === 'spezial') melden(groesstes.abgeraeumt >= 3 ? 'gold' : 'treffer', groesstes.wort)
         else if (chainMax >= CHAIN_ESKALIERT) melden('gold', `CHAIN ×${chainMax}`)
-        else if (groesstes.neuHoechste && groesstes.stufe >= 4) melden('gold', `NEU: ${STUFEN[groesstes.stufe].name}`)
+        /* Die oberen Stufen baut man je Runde genau einmal zum ersten Mal.
+           Dieser eine Moment bekommt einen eigenen trockenen Satz — der Name
+           bleibt daneben stehen, damit die Ansage trotzdem etwas sagt. */
+        else if (groesstes.neuHoechste && groesstes.stufe >= 4) melden('gold', `NEU: ${STUFEN[groesstes.stufe].name}`, selteneAnsage(groesstes.stufe) || '')
         else if (groesstes.kette >= 2) melden(groesstes.kette >= 3 ? 'gold' : 'gut', `KOMBO ×${groesstes.kette}`)
         else if (groesstes.gross) melden('treffer', STUFEN[groesstes.stufe].name)
       } else if (spruch) {
@@ -1286,26 +1290,8 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
               {warnung === 2 ? 'ÜBERLAUF!' : ''}
             </span>
 
-            {/* Ton: stumm startbar, Zustand bleibt ueber Runden hinweg. Der
-                Schalter darf den Wurf nicht ausloesen — darum stoppt er
-                Zeiger und Leertaste, bevor die Buehne sie sieht. */}
-            <button
-              type="button"
-              className="sg-ton"
-              aria-pressed={ton}
-              aria-label={ton ? 'Ton aus' : 'Ton an'}
-              onPointerDown={(e) => e.stopPropagation()}
-              onPointerUp={(e) => e.stopPropagation()}
-              onKeyDown={(e) => {
-                if (e.key === ' ' || e.key === 'Enter') e.stopPropagation()
-              }}
-              onKeyUp={(e) => {
-                if (e.key === ' ' || e.key === 'Enter') e.stopPropagation()
-              }}
-              onClick={() => setTon(tonUmschalten())}
-            >
-              {ton ? '♪' : '✕'}
-            </button>
+            {/* Der Tonschalter sitzt in der gemeinsamen Game-Shell
+                (SpielKarte), nicht mehr hier. */}
 
             <span className="trm-merge-fieber" data-an={fieberAn ? '1' : '0'} aria-hidden="true">
               FIEBER
@@ -1338,6 +1324,7 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
           {meldung && (
             <p key={meldung.nr} className={`trm-spiel__ruf trm-spiel__ruf--${meldung.art}`}>
               {meldung.text}
+              {meldung.klein && <small className="trm-merge-ruf__klein">{meldung.klein}</small>}
             </p>
           )}
         </>

@@ -138,6 +138,31 @@
   to { translate: 0 0; scale: 1; }
 }
 
+/* Stufe 4 — die MEGA-KOMBO. Sie gibt es nur, wenn zwei Sonderteile zusammen
+   zuenden, das Feld sich leert oder die Kette ueber fuenf Schritte traegt.
+   Deshalb darf sie sich anders anfuehlen als alles darunter: das Feld faehrt
+   wirklich heran (1,06 statt 1,012), schwingt zweimal aus und braucht dafuer
+   die doppelte Zeit. Die Buehne hat overflow:hidden, der Zoom kann also
+   nicht aus dem Spielfeld laufen. */
+.trm-crush-gitter[data-schlag='4'][data-takt='a'] { animation: trm-crush-mega-a 520ms cubic-bezier(0.16, 1, 0.3, 1); }
+.trm-crush-gitter[data-schlag='4'][data-takt='b'] { animation: trm-crush-mega-b 520ms cubic-bezier(0.16, 1, 0.3, 1); }
+
+@keyframes trm-crush-mega-a {
+  12% { translate: -5px 3px; scale: 1.06; }
+  30% { translate: 5px -3px; scale: 1.042; }
+  50% { translate: -3px 2px; scale: 1.026; }
+  72% { translate: 2px -1px; scale: 1.012; }
+  to { translate: 0 0; scale: 1; }
+}
+
+@keyframes trm-crush-mega-b {
+  12% { translate: 5px 3px; scale: 1.06; }
+  30% { translate: -5px -3px; scale: 1.042; }
+  50% { translate: 3px 2px; scale: 1.026; }
+  72% { translate: -2px -1px; scale: 1.012; }
+  to { translate: 0 0; scale: 1; }
+}
+
 /* ---------------------------- Steine ------------------------------ */
 
 .trm-crush-stein {
@@ -322,7 +347,18 @@
   animation: trm-crush-bombe-puls 900ms ease-in-out infinite;
 }
 
-.trm-crush-stein[data-spezial='bombe'] .trm-crush-kachel svg {
+/* Das Wild traegt das echte VIDEKO-Emblem als Bild, kein nachgemaltes V —
+   dieselbe Datei, die der Browser fuer das Favicon ohnehin schon geladen hat.
+   Es ist der einzige Stein mit Bild statt Zeichnung und dadurch auf einen
+   Blick von allen sechs Typen zu unterscheiden. */
+.trm-crush-wild {
+  position: relative;
+  z-index: 1;
+  width: 74%;
+  height: 74%;
+  object-fit: contain;
+  pointer-events: none;
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--trm-gold-hell) 70%, transparent));
   animation: trm-crush-bombe-dreh 2.4s linear infinite;
 }
 
@@ -811,6 +847,7 @@
 .trm-crush-buehne[data-sanft='1'] .trm-crush-stein .trm-crush-kachel,
 .trm-crush-buehne[data-sanft='1'] .trm-crush-stein .trm-crush-kachel::after,
 .trm-crush-buehne[data-sanft='1'] .trm-crush-stein svg,
+.trm-crush-buehne[data-sanft='1'] .trm-crush-wild,
 .trm-crush-buehne[data-sanft='1'] .trm-crush-gitter {
   transition: none;
   animation: none;
@@ -883,6 +920,7 @@
   .trm-crush-stein .trm-crush-kachel,
   .trm-crush-stein .trm-crush-kachel::after,
   .trm-crush-stein svg,
+  .trm-crush-wild,
   .trm-crush-gitter,
   .trm-crush-banner__gross,
   .trm-crush-multi span {

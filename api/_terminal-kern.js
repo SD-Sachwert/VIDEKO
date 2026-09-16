@@ -590,12 +590,15 @@ export const SPIELE = {
      keinen Platz. 2500 traegt so einen Ausreisser nach sechs Teilen mit und
      liegt trotzdem beim Dreizehnfachen des besten gemessenen Schnitts. */
   kuechen_fit: { titel: 'Küchen-Fit', dauerMs: 540000, endlos: true, plausibel: 250000, hart: 450000, msJeRunde: 150, maxJeRunde: 2500 },
-  /* Jump: die Logik deckelt eine Landung bei MAX_JE_LANDUNG 1100 (Combo x2,5 ×
+  /* Jump: die Logik deckelt eine Landung bei MAX_JE_LANDUNG (Combo x2,5 ×
      goldene Kochmuetze ×2 auf einen knappen Sprung). Die alten 400 stammen aus
      der Zeit vor Combo und Power-Ups und haetten jede lange Comboserie zum
-     Verdachtsfall gemacht. Die besten Bot-Laeufe bleiben bei 7755 Punkten, so
-     dass plausibel 35000 weiter mit reichlich Luft darueber liegt. */
-  videko_jump: { titel: 'VIDEKO Jump', dauerMs: 540000, endlos: true, plausibel: 35000, hart: 80000, msJeRunde: 150, maxJeRunde: 1200 },
+     Verdachtsfall gemacht. Mit der roten Boostplatte (1,75-facher Absprung,
+     120 Bonus) steigt diese Obergrenze von 1100 auf 1260, darum jetzt 1400
+     statt 1200 — ein hoeherer Deckel lehnt nichts ab, was vorher durchging.
+     Die besten Bot-Laeufe bleiben bei 7755 Punkten, so dass plausibel 35000
+     weiter mit reichlich Luft darueber liegt. */
+  videko_jump: { titel: 'VIDEKO Jump', dauerMs: 540000, endlos: true, plausibel: 35000, hart: 80000, msJeRunde: 150, maxJeRunde: 1400 },
   /* Merge: der pausenlose Bot kommt auf 230142 Punkte aus 687 Abwuerfen (309 s)
      — das lag ueber dem alten plausibel 120000 UND ueber dem alten hart 250000,
      ein perfekter ehrlicher Lauf waere also abgelehnt worden. Der hoechste
@@ -629,6 +632,19 @@ export const SPIELE = {
      `msJeRunde` 300 bleibt unter dem gemessenen Minimum von 422 ms je Zug. */
   kuechen_crush: { titel: 'Küchen-Crush', dauerMs: 45000, plausibel: 220000, hart: 400000, msJeRunde: 300, maxJeRunde: 4200 },
   kuechen_tinder: { titel: 'Küchen-Tinder', dauerMs: 30000, plausibel: 10000, hart: 16000, msJeRunde: 450, maxJeRunde: 330 },
+  /* VIDEKO SLAM: feste Runde von 50 s, Punkte je Schlag auf eine Front.
+     Gemessen in scripts/spiele/slam-logik-test.mjs mit 60 Laeufen eines
+     pausenlosen Bots ohne Reaktionszeit und ohne Fehlgriff: bester Lauf 42400
+     Punkte aus 89 Schlaegen, hoechster Schnitt 476 Punkte je Schlag, im Mittel
+     562 ms zwischen zwei Schlaegen. `plausibel` liegt mit 60000 rund beim
+     Anderthalbfachen dieses unerreichbaren Laufs, `hart` beim Doppelten davon.
+     `maxJeRunde` 1000 folgt der Punktdecke, die die Logik selbst erzwingt
+     (MAX_JE_TREFFER 900). `msJeRunde` 120 bleibt klar unter dem kuerzesten
+     Abstand, der ueberhaupt moeglich ist: in der Chaos-Phase kommt Nachschub
+     im Kurztakt, und mehrere Fronten lassen sich im selben Moment schlagen.
+     Zeitstrafen kuerzen die Runde um hoechstens STRAFE_MAX_MS (10 s), die
+     gemeldete Dauer bleibt also immer ueber der Haelfte von dauerMs. */
+  videko_slam: { titel: 'VIDEKO Slam', dauerMs: 50000, plausibel: 60000, hart: 120000, msJeRunde: 120, maxJeRunde: 1000 },
 }
 
 export const SPIEL_SCHLUESSEL = Object.keys(SPIELE)

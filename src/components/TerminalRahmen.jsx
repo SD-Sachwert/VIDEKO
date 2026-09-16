@@ -9,6 +9,7 @@ import {
   Dices,
   Footprints,
   Gamepad2,
+  Hammer,
   Hash,
   Heart,
   KeyRound,
@@ -111,6 +112,7 @@ const IKONEN = {
   blitz: Zap,
   funkeln: Sparkles,
   herz: Heart,
+  hammer: Hammer,
 }
 
 export function Ikon({ name, size = 18, className }) {

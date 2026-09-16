@@ -62,6 +62,65 @@
   color: var(--trm-rot, #e2453a);
 }
 
+/* FALLEN LASSEN. Sitzt im Fussstreifen unter dem Feld (FUSS in
+   KuechenFit.jsx haelt ihn frei) und laeuft quer ueber die halbe Breite —
+   breit genug, dass der Daumen ihn blind trifft. */
+.trm-fit-drop {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  z-index: 3;
+  translate: -50% 0;
+  min-width: min(280px, 76%);
+  min-height: 54px;
+  padding: 0 22px;
+  border: 1px solid rgba(201, 150, 60, 0.55);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(201, 150, 60, 0.22) 0%, rgba(8, 7, 5, 0.85) 100%);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--trm-gold-hell);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: scale 90ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.trm-fit-drop:hover {
+  border-color: rgba(232, 201, 120, 0.9);
+}
+
+/* Der Druckmoment: die Taste gibt kurz nach, damit der harte Fall auch in
+   der Hand ankommt und nicht nur auf dem Feld. */
+.trm-fit-drop:active {
+  scale: 0.96;
+  background: linear-gradient(180deg, rgba(232, 201, 120, 0.34) 0%, rgba(8, 7, 5, 0.9) 100%);
+}
+
+.trm-fit-drop:focus-visible {
+  outline: 2px solid var(--trm-gold-hell);
+  outline-offset: 2px;
+}
+
+/* Im Pausen- und Crashbild nimmt die Taste sich zurueck: dort faellt
+   nichts, und ein leuchtender Knopf wuerde etwas anderes versprechen. */
+.trm-fit-buehne[data-pause='1'] .trm-fit-drop,
+.trm-fit-buehne[data-crash='1'] .trm-fit-drop {
+  opacity: 0.35;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trm-fit-drop {
+    transition: none;
+  }
+
+  .trm-fit-drop:active {
+    scale: 1;
+  }
+}
+
 /* Stufe und Combo teilen sich den einen Platz in der Leiste. Beide Chips
    sind schmal gehalten, damit die Zeile auf 390 px nicht umbricht. */
 .trm-fit-stand {

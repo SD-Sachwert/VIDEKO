@@ -95,18 +95,12 @@
 
 /* Der Markier-Schalter. Mindestens 32 px hoch, eindeutig an oder aus:
    an ist er gold gefuellt, aus nur umrandet. */
-/* Ton und MARKIEREN teilen sich die rechte Seite des Kopfes. Der Tonschalter
-   kommt aus spielgefuehl.css und liegt dort absolut — hier reiht er sich ein. */
+/* MARKIEREN steht rechts im Kopf. Der Tonschalter sass frueher daneben und
+   sitzt jetzt in der gemeinsamen Game-Shell. */
 .trm-leitung-schalter {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-}
-
-.trm-leitung-schalter .sg-ton {
-  position: static;
-  width: 32px;
-  height: 32px;
 }
 
 .trm-leitung-modus {
@@ -156,6 +150,7 @@
 
 /* Die Wand: dunkle Fugen, goldener Rahmen. Jede neue Wand faehrt kurz ein. */
 .trm-leitung-wand {
+  position: relative;
   display: grid;
   flex: 0 0 auto;
   grid-template-columns: repeat(8, var(--trm-leitung-z));
@@ -183,6 +178,39 @@
 
 .trm-leitung-buehne[data-modus-an='1'] .trm-leitung-wand {
   border-color: var(--trm-gold-hell);
+}
+
+/* Wand frei: ein Goldstreif laeuft einmal quer darueber. Der laute Bruder
+   dieses Moments waere ein Beben — das bleibt den anderen Spielen. Hier
+   genuegt Licht, das ueber den Putz zieht. */
+.trm-leitung-buehne[data-geschafft='1'] .trm-leitung-wand::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 6px;
+  pointer-events: none;
+  background: linear-gradient(
+    102deg,
+    transparent 40%,
+    color-mix(in srgb, var(--trm-gold-hell) 40%, transparent) 50%,
+    transparent 60%
+  );
+  background-size: 260% 100%;
+  animation: trm-leitung-streif 760ms ease-out both;
+}
+
+@keyframes trm-leitung-streif {
+  0% {
+    background-position: 150% 0;
+    opacity: 0;
+  }
+  14% {
+    opacity: 1;
+  }
+  100% {
+    background-position: -60% 0;
+    opacity: 0;
+  }
 }
 
 /* Eine Fliese: schwarzer Marmor mit Glanzkante. */
@@ -289,6 +317,21 @@
 
 .trm-leitung-zelle[data-zustand='markiert'] .trm-leitung-marker {
   filter: drop-shadow(0 0 4px color-mix(in srgb, var(--trm-gold-hell) 60%, transparent));
+}
+
+/* Der Finger liegt auf der Fliese: sie geht sofort ein Stueck ein und wird
+   heller. Ohne Uebergang — die Antwort muss im selben Moment da sein wie die
+   Beruehrung; nur das Zurueckfedern nach dem Loslassen darf weich sein.
+   Das gilt auch fuer offene Fliesen, auf denen nichts mehr passiert: eine
+   Beruehrung, die gar nichts tut, fuehlt sich sonst wie ein Aussetzer an. */
+.trm-leitung-zelle {
+  transition: scale 130ms ease-out, filter 130ms ease-out;
+}
+
+.trm-leitung-zelle[data-druck='1'] {
+  scale: 0.9;
+  filter: brightness(1.4);
+  transition: none;
 }
 
 /* Langer Druck: ein goldener Ring laeuft in LANG_MS voll. */
@@ -669,6 +712,16 @@
   color: var(--trm-gold-hell);
 }
 
+/* Der trockene Satz unter dem Bonus. Er ist leiser als beide Zeilen darueber
+   — er soll den Moment faerben, nicht ihn uebernehmen. */
+.trm-leitung-geschafft-spruch {
+  margin-top: 2px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--trm-creme-leise);
+}
+
 @keyframes trm-leitung-schild {
   0% {
     opacity: 0;
@@ -857,6 +910,22 @@
   animation: none;
 }
 
+/* Der Goldstreif ist reine Bewegung — ohne sie bliebe ein schiefer Balken
+   auf der Wand stehen. Also ganz weg statt still. */
+.trm-leitung-buehne[data-sanft='1'] .trm-leitung-wand::after {
+  display: none;
+}
+
+/* Die Fliese darf auch hier sofort auf den Finger antworten: das ist keine
+   Zierde, sondern die Rueckmeldung selbst. Nur das Einsinken faellt weg. */
+.trm-leitung-buehne[data-sanft='1'] .trm-leitung-zelle {
+  transition: none;
+}
+
+.trm-leitung-buehne[data-sanft='1'] .trm-leitung-zelle[data-druck='1'] {
+  scale: 1;
+}
+
 .trm-leitung-buehne[data-sanft='1'] .trm-leitung-serie {
   transition: none;
 }
@@ -867,6 +936,7 @@
   .trm-leitung-art,
   .trm-leitung-noch,
   .trm-leitung-geschafft,
+  .trm-leitung-zelle,
   .trm-leitung-zelle::before,
   .trm-leitung-zelle::after,
   .trm-leitung-modus,
@@ -878,5 +948,13 @@
   .trm-leitung-blitz {
     opacity: 0.45;
     animation: none;
+  }
+
+  .trm-leitung-wand::after {
+    display: none;
+  }
+
+  .trm-leitung-zelle[data-druck='1'] {
+    scale: 1;
   }
 }

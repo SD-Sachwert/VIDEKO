@@ -1,0 +1,348 @@
+/* ------------------------------------------------------------------ */
+/* VIDEKO SLAM — neun Fronten, und aus jeder kommt etwas                */
+/* ------------------------------------------------------------------ */
+
+/* Die Buehne fuellt das Hochformat-Feld. Sie scrollt nicht und faengt
+   keine Auswahl ab: jeder Zeigerdruck ist ein Schlag, kein Text-Markieren. */
+.trm-slam-buehne {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  overflow: hidden;
+  outline: none;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  background:
+    radial-gradient(120% 60% at 50% 30%, rgba(201, 150, 60, 0.1) 0%, rgba(3, 3, 2, 0) 72%),
+    linear-gradient(180deg, rgba(3, 3, 2, 0) 60%, rgba(201, 150, 60, 0.05) 100%);
+}
+
+.trm-slam-buehne:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--trm-gold-hell);
+}
+
+.trm-slam-feldbox {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Immer neun Plaetze. Waechst die Stufe, geht unten eine Front auf —
+   nichts wandert, nichts springt. */
+.trm-slam-feld {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 8px;
+  width: 100%;
+  height: 100%;
+}
+
+/* --- Die Front ------------------------------------------------------- */
+
+.trm-slam-front {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  overflow: hidden;
+  color: var(--trm-creme);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0) 42%),
+    linear-gradient(180deg, #14130f 0%, #0a0907 100%);
+  border: 1px solid rgba(201, 150, 60, 0.28);
+  border-radius: calc(var(--trm-radius) - 6px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 4px 14px rgba(3, 3, 2, 0.5);
+  cursor: pointer;
+  transition: transform 90ms ease-out, border-color 160ms ease-out;
+}
+
+.trm-slam-front:active {
+  transform: scale(0.97);
+}
+
+.trm-slam-front:focus-visible {
+  border-color: var(--trm-gold-hell);
+  box-shadow: inset 0 0 0 2px var(--trm-gold-hell);
+}
+
+/* Die Tuerfuge: eine feine Linie, damit die Kachel als Front lesbar wird. */
+.trm-slam-front__tuer {
+  position: absolute;
+  inset: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: calc(var(--trm-radius) - 10px);
+  pointer-events: none;
+}
+
+.trm-slam-front__griff {
+  position: absolute;
+  right: 7px;
+  top: 50%;
+  width: 3px;
+  height: 26px;
+  margin-top: -13px;
+  background: linear-gradient(180deg, var(--trm-gold-hell), var(--trm-gold-tief));
+  border-radius: 2px;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* Eine Front, die auf dieser Stufe noch zu ist: sichtbar, aber still. */
+.trm-slam-front[data-zu='1'] {
+  cursor: default;
+  opacity: 0.3;
+  border-color: rgba(201, 150, 60, 0.12);
+  box-shadow: none;
+}
+
+.trm-slam-front[data-zu='1'] .trm-slam-front__griff {
+  opacity: 0.2;
+}
+
+/* Speziale duerfen leuchten — Gutes und Mist sehen bewusst gleich aus,
+   erkannt wird das Ding, nicht die Farbe. */
+.trm-slam-front[data-art='spezial'] {
+  border-color: rgba(232, 201, 120, 0.7);
+  box-shadow:
+    inset 0 0 22px rgba(232, 201, 120, 0.22),
+    0 0 18px rgba(201, 160, 80, 0.35);
+}
+
+.trm-slam-front[data-wirkung='frost'] {
+  border-color: rgba(150, 205, 235, 0.7);
+  box-shadow:
+    inset 0 0 22px rgba(150, 205, 235, 0.2),
+    0 0 18px rgba(120, 190, 230, 0.3);
+}
+
+.trm-slam-front[data-wirkung='hitze'],
+.trm-slam-front[data-wirkung='chaos'] {
+  border-color: rgba(226, 120, 58, 0.72);
+  box-shadow:
+    inset 0 0 22px rgba(226, 120, 58, 0.2),
+    0 0 18px rgba(226, 100, 50, 0.32);
+}
+
+/* --- Was aus der Front kommt ----------------------------------------- */
+
+.trm-slam-ding {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 100%;
+  padding: 4px;
+  pointer-events: none;
+  animation: trm-slam-raus 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes trm-slam-raus {
+  0% {
+    transform: translateY(14%) scale(0.72);
+    opacity: 0;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.trm-slam-svg {
+  width: clamp(38px, 12vw, 58px);
+  height: clamp(38px, 12vw, 58px);
+  color: var(--trm-creme);
+  opacity: 0.94;
+}
+
+.trm-slam-emblem {
+  width: clamp(38px, 12vw, 58px);
+  height: clamp(38px, 12vw, 58px);
+  object-fit: contain;
+  filter: drop-shadow(0 0 10px rgba(232, 201, 120, 0.6));
+}
+
+/* Ein Wort, mehr nicht. Lange Namen brechen, statt zu ueberlaufen. */
+.trm-slam-ding__wort {
+  max-width: 100%;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1.15;
+  text-align: center;
+  color: var(--trm-creme);
+  opacity: 0.66;
+  overflow-wrap: anywhere;
+}
+
+.trm-slam-front[data-art='spezial'] .trm-slam-svg {
+  color: var(--trm-gold-hell);
+}
+
+.trm-slam-front[data-art='spezial'] .trm-slam-ding__wort {
+  color: var(--trm-gold-hell);
+  opacity: 0.9;
+}
+
+/* --- Der Schlag ------------------------------------------------------ */
+
+.trm-slam-knall {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, rgba(232, 201, 120, 0.5), rgba(3, 3, 2, 0) 70%);
+  animation: trm-slam-knall 320ms ease-out both;
+}
+
+.trm-slam-knall[data-art='mist'] {
+  background: radial-gradient(circle at 50% 50%, rgba(226, 69, 58, 0.5), rgba(3, 3, 2, 0) 70%);
+}
+
+.trm-slam-knall[data-art='frost'] {
+  background: radial-gradient(circle at 50% 50%, rgba(150, 205, 235, 0.5), rgba(3, 3, 2, 0) 70%);
+}
+
+.trm-slam-knall[data-art='hitze'],
+.trm-slam-knall[data-art='chaos'] {
+  background: radial-gradient(circle at 50% 50%, rgba(226, 120, 58, 0.55), rgba(3, 3, 2, 0) 72%);
+}
+
+@keyframes trm-slam-knall {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  22% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.12);
+    opacity: 0;
+  }
+}
+
+/* --- Die Lage: Frost und Chaos --------------------------------------- */
+
+.trm-slam-buehne[data-frost='1'] .trm-slam-feld {
+  filter: saturate(0.75) brightness(1.04);
+}
+
+.trm-slam-buehne[data-frost='1'] .trm-slam-front {
+  border-color: rgba(150, 205, 235, 0.42);
+}
+
+.trm-slam-buehne[data-chaos='1'] .trm-slam-front {
+  border-color: rgba(232, 201, 120, 0.6);
+  animation: trm-slam-chaos 480ms ease-in-out infinite alternate;
+}
+
+@keyframes trm-slam-chaos {
+  from {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 4px 14px rgba(3, 3, 2, 0.5);
+  }
+  to {
+    box-shadow: inset 0 0 18px rgba(232, 201, 120, 0.2), 0 4px 18px rgba(3, 3, 2, 0.5);
+  }
+}
+
+/* Ein Wort oben rechts sagt, welche Lage gerade gilt. */
+.trm-slam-lage {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  z-index: 3;
+  padding: 3px 8px 4px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: var(--trm-nacht);
+  border-radius: 999px;
+  pointer-events: none;
+  animation: trm-slam-lage 260ms ease-out both;
+}
+
+.trm-slam-lage--frost {
+  background: linear-gradient(135deg, #cfe9f6, #8fc4de);
+}
+
+.trm-slam-lage--chaos {
+  background: linear-gradient(135deg, var(--trm-gold-hell), #e2783a);
+}
+
+@keyframes trm-slam-lage {
+  0% {
+    transform: translateY(-8px);
+    opacity: 0;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+/* --- Effektschicht und Rufe ------------------------------------------ */
+
+.trm-slam-fx {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.trm-slam-serie[data-an='0'] {
+  opacity: 0;
+}
+
+/* Der trockene Zusatz unter dem Ruf — kleiner, damit die Zahl fuehrt. */
+.trm-slam-klein {
+  display: block;
+  margin-top: 2px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--trm-creme);
+  opacity: 0.72;
+}
+
+/* --- Reduzierte Bewegung --------------------------------------------- */
+
+.trm-slam-buehne[data-sanft='1'] .trm-slam-ding,
+.trm-slam-buehne[data-sanft='1'] .trm-slam-knall,
+.trm-slam-buehne[data-sanft='1'] .trm-slam-lage {
+  animation: none;
+}
+
+.trm-slam-buehne[data-sanft='1'] .trm-slam-front {
+  transition: none;
+}
+
+.trm-slam-buehne[data-sanft='1'][data-chaos='1'] .trm-slam-front {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trm-slam-ding,
+  .trm-slam-knall,
+  .trm-slam-lage {
+    animation: none;
+  }
+
+  .trm-slam-front {
+    transition: none;
+  }
+
+  .trm-slam-buehne[data-chaos='1'] .trm-slam-front {
+    animation: none;
+  }
+}

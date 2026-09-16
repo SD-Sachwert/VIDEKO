@@ -36,8 +36,6 @@ import {
   rufwerk,
   ruettler,
   sanftHoeren,
-  tonStatus,
-  tonUmschalten,
   vibrieren,
 } from './spielgefuehl.js'
 import './spielgefuehl.css'
@@ -179,22 +177,27 @@ function paletteBauen(el) {
     tief,
     creme,
     rot,
-    /* code -> [Front, Kante, Griffart] */
+    /* code -> [Front, Kante, Oberflaechenzeichen]
+       Die Teile kommen aus dem ganzen Haus (siehe TEILE in fit-logik.js),
+       darum traegt nicht mehr jede Zelle einen Schrankgriff: die Steigleitung
+       bekommt ein Rohr, das Dielenpaket eine Fuge, der PV-Winkel ein Raster.
+       Die Farben sind gemessen und bleiben unveraendert — nur das Zeichen
+       obendrauf sagt jetzt, welches Gewerk da liegt. */
     fronten: {
       1: [front(tief, 0.55), hell, 'leiste'], // Unterschrank: Eiche dunkel
-      2: [front(creme, 0.62), gold, 'stange'], // Hochschrank: Lack creme
-      3: [front(gold, 0.72), hell, 'kante'], // Arbeitsplatte: Gold
+      2: [front(creme, 0.62), gold, 'rohr'], // Steigleitung: Lack creme
+      3: [front(gold, 0.72), hell, 'fuge'], // Dielenpaket: Gold
       4: [front(creme, 0.2), gold, 'knopf'], // Eckschrank: Anthrazit
-      5: [front(tief, 0.3), hell, 'knopf'], // Eckschrank: Nussbaum
+      5: [front(tief, 0.3), hell, 'knopf'], // Sockelprofil: Nussbaum
       6: [front(gruen, 0.28), gold, 'mulde'], // Kochinsel: Salbei
-      7: [front(rot, 0.26), gold, 'leiste'], // Inselmodul: Bordeaux
-      8: [front(gold, 0.36), hell, 'mulde'], // Inselmodul: Bronze
+      7: [front(rot, 0.26), gold, 'leiste'], // Deckenprofil: Bordeaux
+      8: [front(gold, 0.36), hell, 'mulde'], // Wandpaneel: Bronze
       9: [front(creme, 0.1), tief, 'altbestand'], // Altbestand: matt, schraffiert
-      10: [front(creme, 0.45), hell, 'doppel'], // Spuelenzeile: Stein hell
+      10: [front(creme, 0.45), hell, 'doppel'], // Waschtisch: Stein hell
       11: [front(gruen, 0.45), gold, 'stange'], // Kuehlkombi: Salbei hell
-      12: [front(tief, 0.75), hell, 'leiste'], // Winkelzeile: Eiche hell
-      13: [front(rot, 0.42), rot, 'warnung'], // Saeulenkreuz: Problemteil
-      14: [front(rot, 0.2), rot, 'warnung'], // Treppenregal: Problemteil
+      12: [front(tief, 0.75), hell, 'raster'], // PV-Winkel: Eiche hell
+      13: [front(rot, 0.42), rot, 'warnung'], // Leitungskreuz: Problemteil
+      14: [front(rot, 0.2), rot, 'warnung'], // Treppenlauf: Problemteil
     },
   }
 }
@@ -232,6 +235,22 @@ function frontMalen(ctx, palette, code, px, py, z, alpha = 1) {
     ctx.fillRect(px + i, py + i, b, Math.max(2, z * 0.14))
     ctx.fillStyle = rgb(palette.nacht, 0.35)
     ctx.fillRect(px + z * 0.3, py + z * 0.58, z * 0.4, dicke)
+  } else if (griff === 'rohr') {
+    /* Steigleitung: ein Strang senkrecht durch die Zelle, oben und unten
+       ein Flansch. Die Zelle liest sich damit als Leitung, nicht als Front. */
+    ctx.fillRect(mitte - dicke / 2, py + i, dicke, b)
+    ctx.fillRect(px + z * 0.3, py + z * 0.2, z * 0.4, Math.max(1.2, z * 0.05))
+    ctx.fillRect(px + z * 0.3, py + z * 0.74, z * 0.4, Math.max(1.2, z * 0.05))
+  } else if (griff === 'fuge') {
+    /* Dielenpaket: eine durchlaufende Fuge und ein versetzter Stoss —
+       genau das Muster, an dem man einen verlegten Boden erkennt. */
+    ctx.fillRect(px + i, py + z * 0.46, b, Math.max(1.2, z * 0.045))
+    ctx.fillStyle = rgb(palette.nacht, 0.4)
+    ctx.fillRect(px + z * 0.62, py + i, Math.max(1.2, z * 0.045), b * 0.46)
+  } else if (griff === 'raster') {
+    /* PV-Winkel: das Zellraster eines Moduls, ein Kreuz genuegt dafuer. */
+    ctx.fillRect(mitte - dicke / 4, py + i, Math.max(1.2, dicke / 2), b)
+    ctx.fillRect(px + i, py + z / 2 - dicke / 4, b, Math.max(1.2, dicke / 2))
   } else if (griff === 'knopf') {
     ctx.beginPath()
     ctx.arc(mitte, py + z * 0.34, Math.max(1.5, z * 0.08), 0, Math.PI * 2)
@@ -270,9 +289,12 @@ function frontMalen(ctx, palette, code, px, py, z, alpha = 1) {
 
 /**
  * Wo das Feld auf der Buehne liegt. Oben bleibt ein Streifen fuer die
- * Vorschau, unten einer fuer den Geduldsbalken.
+ * Vorschau, unten einer fuer den Geduldsbalken — und seit der Daumentaste
+ * fuer FALLEN LASSEN, die dort quer sitzt. Der Streifen kostet auf 390 x 844
+ * genau eine Zellenbreite Feld; dafuer liegt die wichtigste Eingabe des
+ * Spiels dort, wo der Daumen ohnehin ist.
  */
-const FUSS = 14
+const FUSS = 62
 
 function geometrie(breite, hoehe) {
   const rand = 8
@@ -294,7 +316,6 @@ export default function KuechenFit({ sitzung, best = null, onErgebnis }) {
   const [pause, setPause] = useState(false)
   const [crash, setCrash] = useState(false)
   const [sanft, setSanft] = useState(false)
-  const [ton, setTon] = useState(tonStatus)
   /* Nur was die Leiste und die Buehne brauchen — nie pro Frame gesetzt. */
   const [anzeige, setAnzeige] = useState({ combo: 0, fieber: 0 })
 
@@ -1226,22 +1247,44 @@ export default function KuechenFit({ sitzung, best = null, onErgebnis }) {
               NÄCHSTES: <b>{naechsterName}</b>
             </span>
 
-            {/* Ton: stumm startbar, Zustand bleibt ueber Runden hinweg. Der
-                Schalter darf kein Absetzen ausloesen — darum stoppt er Zeiger
-                und Leertaste, bevor die Buehne sie sieht. */}
+            {/* Der Tonschalter sitzt in der gemeinsamen Game-Shell
+                (SpielKarte), nicht mehr hier. */}
+
+            {/* FALLEN LASSEN. Der harte Fall war bisher nur ueber einen
+                schnellen Wisch nach unten erreichbar — das findet auf dem
+                Handy niemand. Jetzt liegt er als breite Taste unter dem
+                Feld, genau im Daumenweg.
+
+                Sie darf die Buehne nicht mitbedienen: ein durchgereichter
+                Tipp wuerde das Teil drehen, eine durchgereichte Leertaste
+                es ein zweites Mal absetzen. Darum stoppt sie Zeiger und
+                Tasten, bevor die Buehne sie sieht, und wirft selbst auf
+                `pointerdown` ab — nicht auf `click`, damit der Fall genau
+                dann passiert, wenn der Daumen aufsetzt. `click` bleibt nur
+                fuer die Tastatur (dort ist `detail` 0); sonst faenge der
+                Klick nach dem Zeiger ein zweites Teil ab. */}
             <button
               type="button"
-              className="sg-ton"
-              aria-pressed={ton}
-              aria-label={ton ? 'Ton aus' : 'Ton an'}
-              onPointerDown={(e) => e.stopPropagation()}
+              className="trm-fit-drop"
+              aria-label="Teil sofort fallen lassen"
+              onPointerDown={(e) => {
+                e.stopPropagation()
+                hartAbsetzen()
+              }}
               onPointerUp={(e) => e.stopPropagation()}
+              onPointerMove={(e) => e.stopPropagation()}
+              onPointerCancel={(e) => e.stopPropagation()}
               onKeyDown={(e) => {
                 if (e.key === ' ' || e.key === 'Enter') e.stopPropagation()
               }}
-              onClick={() => setTon(tonUmschalten())}
+              onKeyUp={(e) => {
+                if (e.key === ' ' || e.key === 'Enter') e.stopPropagation()
+              }}
+              onClick={(e) => {
+                if (e.detail === 0) hartAbsetzen()
+              }}
             >
-              {ton ? '♪' : '✕'}
+              FALLEN LASSEN
             </button>
           </div>
 

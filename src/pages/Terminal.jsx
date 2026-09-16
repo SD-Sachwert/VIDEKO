@@ -564,6 +564,7 @@ const ZIEL_SZENEN = [
   'leitungsfinder',
   'kuechen_crush',
   'kuechen_tinder',
+  'videko_slam',
   'mission',
   'einwilligung',
 ]
@@ -578,7 +579,7 @@ const SPIEL_BAUTEILE = {
 
 /*
  * Die Game-Lab-Spiele werden erst geladen, wenn jemand ihre Karte antippt.
- * Sieben Spielfelder samt Logik gehoeren nicht in den ersten Seitenaufbau —
+ * Acht Spielfelder samt Logik gehoeren nicht in den ersten Seitenaufbau —
  * wer nur seinen Deckel aktiviert, soll davon nichts herunterladen.
  */
 const SPIEL_NACHLADEN = {
@@ -589,6 +590,7 @@ const SPIEL_NACHLADEN = {
   leitungsfinder: lazy(() => import('../components/spiele/Leitungsfinder.jsx')),
   kuechen_crush: lazy(() => import('../components/spiele/KuechenCrush.jsx')),
   kuechen_tinder: lazy(() => import('../components/spiele/KuechenTinder.jsx')),
+  videko_slam: lazy(() => import('../components/spiele/VidekoSlam.jsx')),
 }
 
 /** Die kompakte Auswahlkarte eines nachgeladenen Spiels. */

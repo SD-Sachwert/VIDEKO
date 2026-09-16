@@ -16,6 +16,7 @@ import {
   bohrFreigabe,
   bohren,
   faktorFuer,
+  geschafftSpruch,
   index,
   lage,
   markieren,
@@ -30,8 +31,6 @@ import {
   klang,
   klangSchliessen,
   sanftHoeren,
-  tonStatus,
-  tonUmschalten,
   vibrieren,
 } from './spielgefuehl.js'
 import './spielgefuehl.css'
@@ -148,6 +147,12 @@ export default function Leitungsfinder({ sitzung, best = null, onErgebnis }) {
   const [tastatur, setTastatur] = useState(false)
   const [bohrt, setBohrt] = useState(-1)
   const [halten, setHalten] = useState(-1)
+  /* Der Finger liegt gerade auf dieser Fliese. Anders als `halten` gilt das
+     fuer JEDE Fliese und ab der ersten Millisekunde — auch fuer bereits
+     geoeffnete, auf denen nichts mehr passiert. Genau darum geht es: der
+     Tipp soll sichtbar ankommen, bevor das Spiel entscheidet, was er wert
+     ist. */
+  const [druck, setDruck] = useState(-1)
   const [z, setZ] = useState(32)
   const [meldung, setMeldung] = useState(null)
   const [pause, setPause] = useState(false)
@@ -156,7 +161,6 @@ export default function Leitungsfinder({ sitzung, best = null, onErgebnis }) {
   const [sanft, setSanft] = useState(false)
   const [serie, setSerie] = useState({ n: 0, stufe: 0, nr: 0 })
   const [geschafft, setGeschafft] = useState(null)
-  const [ton, setTon] = useState(tonStatus)
 
   const buehneRef = useRef(null)
   const schichtElRef = useRef(null)
@@ -172,6 +176,9 @@ export default function Leitungsfinder({ sitzung, best = null, onErgebnis }) {
   const crashRef = useRef(false)
   const wechselRef = useRef(false)
   const weiterSeitRef = useRef(0)
+  /* Wie viele Waende in diesem Lauf schon frei waren — nur als Zeiger in die
+     Spruchliste, nicht als Wertung. */
+  const waendeRef = useRef(0)
   /* n: laufende Serie, letzte: performance.now() der letzten Bohrung, uhr: Ablauf. */
   const serieRef = useRef({ n: 0, letzte: 0, uhr: 0 })
 
@@ -312,6 +319,7 @@ export default function Leitungsfinder({ sitzung, best = null, onErgebnis }) {
     fingerRef.current = null
     setBohrt(-1)
     setHalten(-1)
+    setDruck(-1)
   }, [uhrStoppen])
 
   /* Wer den Tab wechselt, findet das Spiel angehalten vor. Der Tipp zum
@@ -368,6 +376,8 @@ export default function Leitungsfinder({ sitzung, best = null, onErgebnis }) {
     setTastatur(false)
     setBohrt(-1)
     setHalten(-1)
+    setDruck(-1)
+    waendeRef.current = 0
     setMeldung(null)
     setPause(false)
     setCrash(false)
@@ -432,12 +442,23 @@ export default function Leitungsfinder({ sitzung, best = null, onErgebnis }) {
     uhrStoppen(s.uhr)
     s.uhr = 0
     wechselRef.current = true
-    setGeschafft({ nr: neu.nr, bonus: ereignis.bonus })
+    setGeschafft({ nr: neu.nr, bonus: ereignis.bonus, spruch: geschafftSpruch(waendeRef.current) })
+    waendeRef.current += 1
     vibrieren(HAPTIK.perfekt)
     klang('kraft')
     /* Der einzige groessere Effekt im Spiel: eine freie Wand darf funkeln.
-       Kein Beben, kein Blitz — das bleibt den lauten Spielen vorbehalten. */
-    if (punkt) schichtRef.current?.funken({ x: punkt.x, y: punkt.y, anzahl: 10, art: 'gold', weite: 52 })
+       Kein Beben, kein Blitz — das bleibt den lauten Spielen vorbehalten.
+       Gewachsen ist trotzdem etwas: der Funkenwurf traegt jetzt weiter, eine
+       zweite, hellere Welle kommt kurz hinterher, und ein Goldstreif laeuft
+       einmal quer ueber die Wand (data-geschafft, rein in CSS). Das bleibt im
+       eigenen Ton des Spiels — heller, nicht lauter. */
+    if (punkt) {
+      schichtRef.current?.funken({ x: punkt.x, y: punkt.y, anzahl: 20, art: 'gold', weite: 96 })
+      schichtRef.current?.funken({ x: punkt.x, y: punkt.y, anzahl: 8, art: 'creme', weite: 128 })
+    }
+    /* Der Ton bekommt einen zweiten, hoeheren Schlag — die 24-ms-Bremse in
+       klang() wuerde ihn im selben Takt verschlucken, darum leicht versetzt. */
+    spaeter(() => klang('kraft', 1.5), 90)
     spaeter(
       () => {
         if (crashRef.current) return
@@ -544,6 +565,7 @@ export default function Leitungsfinder({ sitzung, best = null, onErgebnis }) {
       flaggeSetzen(i)
       return
     }
+    setDruck(i)
     try {
       e.currentTarget.setPointerCapture?.(e.pointerId)
     } catch {
@@ -566,6 +588,7 @@ export default function Leitungsfinder({ sitzung, best = null, onErgebnis }) {
   const fingerLoesen = (f) => {
     if (f?.uhr) clearTimeout(f.uhr)
     setHalten(-1)
+    setDruck(-1)
   }
 
   const zeigerZieht = (e) => {
@@ -651,6 +674,7 @@ export default function Leitungsfinder({ sitzung, best = null, onErgebnis }) {
           data-falsch={zeigeLeitungen && zustand === FLAGGE && !istLeitung ? '1' : undefined}
           data-bohrt={bohrt === i ? '1' : undefined}
           data-halten={halten === i ? '1' : undefined}
+          data-druck={druck === i ? '1' : undefined}
           data-cursor={tastatur && cursor === i ? '1' : undefined}
           aria-label={`Spalte ${x + 1}, Reihe ${y + 1}: ${text}`}
         >
@@ -716,22 +740,8 @@ export default function Leitungsfinder({ sitzung, best = null, onErgebnis }) {
                 </span>
               </span>
               <span className="trm-leitung-schalter">
-                {/* Ton: stumm startbar, die Wahl haelt ueber Runden hinweg.
-                    Der Schalter darf keine Fliese anfassen — darum stoppt er
-                    Zeiger und Tasten, bevor die Buehne sie sieht. */}
-                <button
-                  type="button"
-                  className="sg-ton"
-                  data-modus
-                  aria-pressed={ton}
-                  aria-label={ton ? 'Ton aus' : 'Ton an'}
-                  onPointerDown={(e) => e.stopPropagation()}
-                  onPointerUp={(e) => e.stopPropagation()}
-                  onKeyDown={(e) => { if (e.key === ' ' || e.key === 'Enter') e.stopPropagation() }}
-                  onClick={() => setTon(tonUmschalten())}
-                >
-                  {ton ? '♪' : '✕'}
-                </button>
+                {/* Der Tonschalter sitzt in der gemeinsamen Game-Shell
+                    (SpielKarte), nicht mehr hier. */}
                 <button
                   type="button"
                   className="trm-leitung-modus"
@@ -778,6 +788,7 @@ export default function Leitungsfinder({ sitzung, best = null, onErgebnis }) {
               <div className="trm-leitung-geschafft" role="status">
                 <span className="trm-leitung-geschafft-titel">WAND {geschafft.nr} GESCHAFFT</span>
                 <span className="trm-leitung-geschafft-bonus">+{geschafft.bonus}</span>
+                {geschafft.spruch && <span className="trm-leitung-geschafft-spruch">{geschafft.spruch}</span>}
               </div>
             )}
 

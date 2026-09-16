@@ -496,7 +496,9 @@ export function domSchicht(el) {
       d.style.top = `${y}%`
       d.textContent = String(text)
       setzen(d, 1000)
-      if (art === 'combo' || art === 'ruf') mitteHalten(el, d)
+      /* Breite Texte und die grosse Zahl duerfen nicht am Rand abgeschnitten
+         werden, nur weil der Treffer dort lag. */
+      if (art === 'combo' || art === 'ruf' || art === 'gross') mitteHalten(el, d)
     },
     /** Kleine Funkenwolke an einer Stelle. */
     funken({ x, y, anzahl = 8, art = 'gold', weite = 46 }) {
