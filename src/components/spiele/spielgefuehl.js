@@ -420,9 +420,18 @@ export function rufwerk(vorrat = 14) {
         const gross = t < 0.16 ? 0.6 + (t / 0.16) * 0.55 : 1.15 - (t - 0.16) * 0.16
         ctx.save()
         ctx.globalAlpha = Math.max(0, Math.min(1, p.leben / p.dauer * 1.8))
-        ctx.translate(p.x, p.y - hoch)
-        ctx.scale(gross, gross)
+        /* Die Schrift steht vor dem Verschieben, damit measureText misst und
+           nicht raet. Lange Rufe wie DAS WAR SPORTLICH. entstehen dort, wo
+           der Treffer lag — auf einem 390er Display auch am Rand, und
+           dann schneidet die Leinwand sie ab. Die DOM-Schicht klemmt dafuer
+           schon (mitteHalten); die Leinwand tat es bisher nicht. */
         ctx.font = `800 ${p.gr}px "Inter", system-ui, sans-serif`
+        const massstab = (typeof ctx.getTransform === 'function' && ctx.getTransform().a) || 1
+        const raum = ctx.canvas.width / massstab
+        const halb = (ctx.measureText(p.text).width / 2) * gross + 6
+        const px = raum > halb * 2 ? Math.min(Math.max(p.x, halb), raum - halb) : p.x
+        ctx.translate(px, p.y - hoch)
+        ctx.scale(gross, gross)
         ctx.textAlign = 'center'
         ctx.textBaseline = 'middle'
         const farbe = p.farbe

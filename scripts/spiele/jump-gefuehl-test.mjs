@@ -52,6 +52,7 @@ import {
   schritt,
   trifft,
 } from '../../src/components/spiele/jump-logik.js'
+import { rufwerk } from '../../src/components/spiele/spielgefuehl.js'
 
 const HIER = dirname(fileURLToPath(import.meta.url))
 const WURZEL = resolve(HIER, '../..')
@@ -557,6 +558,55 @@ console.log('\nDarstellung haelt, was die Logik anbietet (§2-§5)')
     jsx.includes('stand.magnetBis') && jsx.includes('stand.superBis'))
   pruefe('Magnetreichweite wird mit MAGNET_R gezeichnet', jsx.includes('MAGNET_R *'))
   pruefe('drehende Teile drehen nach Liste der Logik', /GEGNER_DREH\[g\.art\]/.test(jsx))
+}
+
+/* ---------------------------------------------------------------- */
+{
+  console.log('\n— Rufe bleiben auf einem 390er Display im Bild')
+  /* Belegt beim Sichtcheck: der Knapp-Spruch entsteht an der Figur, und
+     stand die am rechten Rand, lief er aus der Leinwand heraus. Die
+     DOM-Schicht klemmt dafuer laengst; die Leinwand tut es jetzt auch.
+     Gemessen wird an einer Attrappe — kein Browser noetig. */
+  const buehne = 390
+  const FARBEN = { gruen: '#0f0', goldHell: '#fc0', creme: '#fff', nacht: '#000' }
+  /* Ein Ruf wird waehrend seiner Lebenszeit erst groesser und dann wieder
+     kleiner. Geprueft wird deshalb jedes Bild, nicht nur das erste — der
+     breiteste Moment entscheidet, ob etwas heraushaengt. */
+  const malprobe = (x, text) => {
+    const bilder = []
+    const ctx = {
+      canvas: { width: buehne, height: 844 },
+      getTransform: () => ({ a: 1 }),
+      measureText: (s) => ({ width: s.length * 11 }),
+      save() {}, restore() {}, strokeText() {},
+      translate(px) { this._x = px },
+      scale(sx) { this._s = sx },
+      fillText(s) { bilder.push({ x: this._x, halb: ((s.length * 11) / 2) * this._s }) },
+    }
+    const werk = rufwerk(4)
+    werk.zeigen({ x, y: 400, text, art: 'ruf', gr: 13 })
+    for (let n = 0; n < 24; n += 1) {
+      werk.malen(ctx, FARBEN)
+      werk.schritt(0.05)
+    }
+    return bilder
+  }
+
+  const rechts = malprobe(buehne - 10, 'DAS WAR SPORTLICH.')
+  pruefe('ein langer Ruf am rechten Rand wird nach innen gezogen',
+    rechts.length > 0 && rechts.every((b) => b.x < buehne - 10))
+  pruefe('und haengt in keinem einzigen Bild rechts heraus',
+    rechts.length > 0 && rechts.every((b) => b.x + b.halb <= buehne + 0.001))
+
+  const links = malprobe(6, 'WER SOLL DICH STOPPEN?')
+  pruefe('derselbe Schutz gilt am linken Rand',
+    links.length > 0 && links.every((b) => b.x > 6))
+  pruefe('und auch links bleibt in jedem Bild alles drin',
+    links.length > 0 && links.every((b) => b.x - b.halb >= -0.001))
+
+  const mitte = malprobe(195, 'KNAPP.')
+  pruefe('ein kurzer Ruf in der Mitte wird nie verschoben',
+    mitte.length > 0 && mitte.every((b) => b.x === 195))
 }
 
 console.log(`\n${gut} ok, ${schlecht} fehlgeschlagen\n`)
