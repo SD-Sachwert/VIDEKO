@@ -357,7 +357,7 @@ console.log('\nDie fuenf Kraefte')
 console.log('\nKombo-Leiter')
 {
   pruefe('vier Stufen', COMBO_AB.length === 4, COMBO_AB.join(', '))
-  pruefe('Stufen bei 3, 5, 8, 10', COMBO_AB.join(',') === '3,5,8,10')
+  pruefe('Stufen bei 3, 5, 8, 12', COMBO_AB.join(',') === '3,5,8,12')
   pruefe('jede Stufe hat einen Faktor', COMBO_MULT.length === COMBO_AB.length)
   pruefe('Faktoren steigen streng', COMBO_MULT.every((m, i) => i === 0 || m > COMBO_MULT[i - 1]))
   pruefe('ohne Kombo kein Aufschlag', comboFaktor(0) === 1 && comboFaktor(2) === 1)

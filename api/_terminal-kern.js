@@ -342,11 +342,13 @@ export function einladungenSaeubern(roh) {
 /**
  * Das Game, das ohne Registrierung als Teaser spielbar ist.
  *
- * Kuechen-Merge: in zehn Sekunden verstanden, mit einem Daumen zu spielen und
- * ohne Erklaerung. Der Probelauf wird nicht gewertet und steht in keiner
- * Liste — danach steht die Frage im Raum, ob man auf die Rangliste will.
+ * VIDEKO Jump: laeuft sofort los, braucht nur einen Daumen und ist nach
+ * etwa einer Minute vorbei — danach will man noch einmal. Der Probelauf
+ * wird nicht gewertet und steht in keiner Liste; erst danach steht die
+ * Frage im Raum, ob man auf die Rangliste will. Kuechen-Merge bleibt
+ * Hauptgame, ist aber nicht mehr das oeffentliche Probespiel.
  */
-export const PRACTICE_STANDARD = 'kuechen_merge'
+export const PRACTICE_STANDARD = 'videko_jump'
 
 export function practiceSaeubern(roh) {
   const key = clean(roh, 32)

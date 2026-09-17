@@ -1182,14 +1182,16 @@ pruefe('U: eine unvollstaendige Liste faellt auf den Standard zurueck',
 pruefe('U: Kuechen-Tinder bleibt ausschliesslich Testslot',
   kern.testslotSaeubern('kuechen_tinder', HAUPT) === 'kuechen_tinder')
 
-/* T: der anonyme Teaser vor der Anmeldung ist Kuechen-Merge. */
-pruefe('T: der Probelauf spielt Kuechen-Merge',
-  kern.PRACTICE_STANDARD === 'kuechen_merge' && kern.practiceSaeubern(undefined) === 'kuechen_merge',
+/* T: der anonyme Teaser vor der Anmeldung ist VIDEKO Jump. Kuechen-Merge
+   bleibt Hauptgame, aber als Koeder braucht es etwas, das ohne ein Wort
+   Erklaerung losgeht. */
+pruefe('T: der Probelauf spielt VIDEKO Jump',
+  kern.PRACTICE_STANDARD === 'videko_jump' && kern.practiceSaeubern(undefined) === 'videko_jump',
   `${kern.PRACTICE_STANDARD} / ${kern.practiceSaeubern(undefined)}`)
 pruefe('T: PRACTICE_STANDARD ist in beiden Modulen dasselbe Spiel',
   PRACTICE_STANDARD === kern.PRACTICE_STANDARD, `${PRACTICE_STANDARD} / ${kern.PRACTICE_STANDARD}`)
 pruefe('T: ein unbekanntes Practice-Spiel faellt auf den Standard zurueck',
-  kern.practiceSaeubern('gibt_es_nicht') === 'kuechen_merge')
+  kern.practiceSaeubern('gibt_es_nicht') === 'videko_jump')
 
 pruefe('V: alleine im Spiel gibt es 1000 Punkte je Hauptspiel, also 5000',
   gr.gesamtrankingRechnen(HAUPT, Object.fromEntries(HAUPT.map((g) => [g, new Map([['x', { punkte: 1, wann: 'a' }]])])))

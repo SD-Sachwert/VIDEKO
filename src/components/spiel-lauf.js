@@ -108,13 +108,16 @@ export function startWunschNehmen(game) {
  * kein Laufticket, kein Score, kein Ranking, kein Tresorkoenig.
  *
  * Der Wert des Kontexts traegt `onCta` fuer den Weg zur Aktivierung und darf
- * vier weitere Felder mitbringen, alle freiwillig:
+ * weitere Felder mitbringen, alle freiwillig:
  *   `frageText`, `ctaText` — eigener Wortlaut statt der Standardtexte,
+ *   `ctaSub`, `ctaDrei`   — zwei kleine Zeilen unter dem Knopf,
+ *   `neuText`             — der Hinweis, dass der Probe-Score nicht
+ *                           uebernommen wird, sondern ein neuer Lauf folgt,
  *   `onEnde()`            — wird einmal gerufen, wenn eine Probrunde vorbei
  *                           ist; die Seite holt dann die oeffentliche
  *                           Rangliste (nur lesend),
- *   `rangSatz(punkte)`    — gibt `{ art, text }` fuer den Vergleichssatz
- *                           zurueck oder null.
+ *   `rangSatz(punkte)`    — gibt `{ art, text, zusatz }` fuer den
+ *                           Vergleichssatz zurueck oder null.
  */
 export const PracticeKontext = createContext(null)
 

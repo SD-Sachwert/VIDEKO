@@ -260,9 +260,9 @@ rufe = []
 r = await adminRuf({ aktion: 'einstellungen', guestPracticeGame: 'kuechen_fit' })
 const eingestellt = rufe.find((x) => x.methode === 'POST' && x.pfad.endsWith('/videko_terminal_einstellungen'))
 pruefe('Practice: gueltiges Game wird gespeichert', r.code === 200 && eingestellt?.body.guest_practice_game === 'kuechen_fit', String(r.code))
-pruefe('practiceSaeubern: Standard kuechen_merge',
-  kern.practiceSaeubern(undefined) === 'kuechen_merge' && kern.practiceSaeubern('xyz') === 'kuechen_merge'
-  && kern.practiceSaeubern('kuechen_fit') === 'kuechen_fit' && kern.PRACTICE_STANDARD === 'kuechen_merge')
+pruefe('practiceSaeubern: Standard videko_jump',
+  kern.practiceSaeubern(undefined) === 'videko_jump' && kern.practiceSaeubern('xyz') === 'videko_jump'
+  && kern.practiceSaeubern('kuechen_fit') === 'kuechen_fit' && kern.PRACTICE_STANDARD === 'videko_jump')
 
 /* 11. Notbremse im Kindprozess */
 const kind = spawnSync(process.execPath, [fileURLToPath(import.meta.url), 'pause'], { encoding: 'utf8' })

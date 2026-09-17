@@ -623,7 +623,7 @@ const SPIEL_NACHLADEN = {
 }
 
 /** Die kompakte Auswahlkarte eines nachgeladenen Spiels. */
-function SpielWahl({ spiel, best, oeffnen }) {
+function SpielWahl({ spiel, best, oeffnen, losWort = null }) {
   return (
     <button
       type="button"
@@ -643,7 +643,7 @@ function SpielWahl({ spiel, best, oeffnen }) {
         )}
       </span>
       <span className="trm-spielwahl__los" aria-hidden="true">
-        {TEXTE.g.spielen}
+        {losWort ?? TEXTE.g.spielen}
       </span>
     </button>
   )
@@ -1410,6 +1410,9 @@ export default function Terminal() {
     () => ({
       frageText: TEXTE.g.practiceFrage,
       ctaText: TEXTE.g.practiceEchtCta,
+      ctaSub: TEXTE.g.practiceEchtSub,
+      ctaDrei: TEXTE.g.practiceEchtDrei,
+      neuText: TEXTE.g.practiceEchtNeu,
       onEnde: probeRangHolen,
       rangSatz: rangSatzRechnen,
       onCta: () => {
@@ -3112,6 +3115,42 @@ export default function Terminal() {
           {punktWort ? <span className="trm-truhe__pille">{punktWort}</span> : null}
         </p>
 
+        {/* Erst spielen, dann reden. Der Abschnitt steht bewusst VOR dem
+            Codefeld: wer hier landet, soll in fuenf Sekunden etwas in der
+            Hand haben und nicht erst drei Absaetze lesen. Der Lauf ist ein
+            Probelauf — das steht darunter, bevor jemand spielt, und nicht
+            erst danach. */}
+        {probeSpiel && ProbeBauteil ? (
+          <section className={`trm-probespiel ${stufe(5)}`} data-probe={probeSpiel.key}>
+            <h2 className="trm-probespiel__titel">{TEXTE.a.probeTitel}</h2>
+            <p className="trm-probespiel__spiel">{probeSpiel.titel}</p>
+
+            {!probeOffen && !SPIEL_BAUTEILE[probeSpiel.key] ? (
+              <SpielWahl
+                spiel={probeSpiel}
+                best={null}
+                losWort={TEXTE.a.probeCta}
+                oeffnen={() => setProbeOffen(true)}
+              />
+            ) : (
+              <PracticeKontext.Provider value={probeWeg}>
+                <Suspense
+                  fallback={
+                    <div className="trm-karte trm-spielwahl trm-spielwahl--laedt">
+                      {TEXTE.g.laedt}
+                    </div>
+                  }
+                >
+                  <ProbeBauteil sitzung={null} best={null} onErgebnis={null} />
+                </Suspense>
+              </PracticeKontext.Provider>
+            )}
+
+            <p className="trm-probespiel__sub">{TEXTE.a.probeSub}</p>
+            <p className="trm-probespiel__notiz">{TEXTE.a.probeNotiz}</p>
+          </section>
+        ) : null}
+
         <form
           className={`trm-code ${stufe(6)}`}
           onSubmit={codePruefen}
@@ -3141,35 +3180,6 @@ export default function Terminal() {
         <p className={`trm-hinweis ${stufe(6)}`}>{TEXTE.a.hinweis}</p>
 
         {wiederBlock(stufe(6))}
-
-        {/* Das Probespiel. Es steht bewusst hinter dem Codefeld: wer den
-            Code hat, soll ihn zuerst eingeben. Wer keinen hat, findet hier
-            trotzdem etwas zum Anfassen. Der Lauf ist ein Probelauf — das
-            steht darunter, bevor jemand spielt, und nicht erst danach. */}
-        {probeSpiel && ProbeBauteil ? (
-          <section className={`trm-probespiel ${stufe(6)}`} data-probe={probeSpiel.key}>
-            <h2 className="trm-probespiel__titel">{TEXTE.a.probeTitel}</h2>
-            <p className="trm-probespiel__sub">{TEXTE.a.probeSub}</p>
-
-            {!probeOffen && !SPIEL_BAUTEILE[probeSpiel.key] ? (
-              <SpielWahl spiel={probeSpiel} best={null} oeffnen={() => setProbeOffen(true)} />
-            ) : (
-              <PracticeKontext.Provider value={probeWeg}>
-                <Suspense
-                  fallback={
-                    <div className="trm-karte trm-spielwahl trm-spielwahl--laedt">
-                      {TEXTE.g.laedt}
-                    </div>
-                  }
-                >
-                  <ProbeBauteil sitzung={null} best={null} onErgebnis={null} />
-                </Suspense>
-              </PracticeKontext.Provider>
-            )}
-
-            <p className="trm-probespiel__notiz">{TEXTE.a.probeNotiz}</p>
-          </section>
-        ) : null}
 
         <ol className={`trm-ablauf ${stufe(6)}`}>
           {ABLAUF.map((schritt, index) => (

@@ -20,7 +20,7 @@ import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 
-import { PRACTICE_STANDARD, TEXTE, probeListeAus, probeRangSatz } from '../src/data/terminal.js'
+import { PRACTICE_STANDARD, PROBE_SPITZE, TEXTE, probeListeAus, probeRangSatz } from '../src/data/terminal.js'
 
 const wurzel = join(dirname(fileURLToPath(import.meta.url)), '..')
 const lies = (p) => readFileSync(join(wurzel, p), 'utf8')
@@ -46,6 +46,7 @@ console.log('\n— Der Satz nach der Probrunde: nur abzaehlbare Plaetze')
 
   const oben = probeRangSatz('da', liste, 31000)
   pruefe('Bester Wert: Platz 1', oben?.art === 'platz' && oben.text.includes('PLATZ 1.'), oben?.text)
+  pruefe('Platz 1 ist kein Zufall der Formel', probeRangSatz('da', liste, 999999)?.text.includes('PLATZ 1.'))
 
   const mitte = probeRangSatz('da', liste, 12430)
   pruefe(
@@ -53,10 +54,47 @@ console.log('\n— Der Satz nach der Probrunde: nur abzaehlbare Plaetze')
     mitte?.art === 'platz' && mitte.text.includes('PLATZ 4.'),
     mitte?.text,
   )
+  /* Die Punktzahl steht seit dem Funnel-Umbau nicht mehr im Platzsatz: sie
+     steht direkt darueber als grosse Zahl, und zweimal dieselbe Zahl in
+     zwei Zeilen las sich wie ein Formular. Im knappen Satz bleibt sie, weil
+     es dort keinen Platz gibt, an dem man sich festhalten koennte. */
   pruefe(
-    'Die Punktzahl steht in deutscher Schreibweise im Satz',
-    mitte?.text.includes('12.430'),
+    'Der Platzsatz wiederholt die Punktzahl nicht',
+    !mitte?.text.includes('12.430'),
     mitte?.text,
+  )
+  pruefe(
+    'Im knappen Satz steht die Punktzahl in deutscher Schreibweise',
+    probeRangSatz('da', liste, 1234)?.text.includes('1.234'),
+    probeRangSatz('da', liste, 1234)?.text,
+  )
+
+  /* Platz 1 bekommt einen eigenen Satz — „PLATZ 1" mit derselben Formel wie
+     Platz 7 waere die schwaechste Stelle des ganzen Trichters. */
+  pruefe(
+    'Platz 1 hat einen eigenen Wortlaut',
+    oben?.text === TEXTE.g.practiceRangEins,
+    oben?.text,
+  )
+  pruefe('Und nennt keinen Abstand zur Spitze', oben?.zusatz == null, String(oben?.zusatz))
+
+  /* Der Abstand zur Spitze: nur echte Arithmetik gegen die Liste, die
+     wirklich kam. 18.000 ist der dritte Wert, 12.430 der eigene — es fehlen
+     18.000 - 12.430 + 1 = 5.571 Punkte. */
+  pruefe(
+    'Ausserhalb der Top 3 kommt der echte Abstand dazu',
+    mitte?.zusatz?.includes('5.571') && mitte.zusatz.includes(`TOP ${PROBE_SPITZE}`),
+    mitte?.zusatz,
+  )
+  pruefe(
+    'Innerhalb der Top 3 gibt es keinen Abstand zu nennen',
+    probeRangSatz('da', liste, 25000)?.zusatz == null,
+    String(probeRangSatz('da', liste, 25000)?.zusatz),
+  )
+  pruefe(
+    'Ohne drei veroeffentlichte Eintraege wird keine Top 3 behauptet',
+    probeRangSatz('da', [100, 90], 1)?.zusatz == null,
+    String(probeRangSatz('da', [100, 90], 1)?.zusatz),
   )
 
   const gleich = probeRangSatz('da', liste, 9000)
@@ -173,13 +211,39 @@ console.log('\n— Die Texte sagen vorher, dass nichts gezaehlt wird')
   pruefe('Er nennt: keine Teilnahme', /keine Teilnahme/i.test(notiz), notiz)
   pruefe('Er nennt: kein Los', /kein Los/i.test(notiz), notiz)
   pruefe('Der Abschnitt hat Titel und Unterzeile', !!TEXTE.a.probeTitel && !!TEXTE.a.probeSub)
-  pruefe('Der Weg weiter heisst „JETZT RICHTIG MITSPIELEN"', TEXTE.g.practiceEchtCta === 'JETZT RICHTIG MITSPIELEN')
+
+  /* Der Kopf der Landing Page: erst spielen, dann reden. Der Knopf verspricht
+     nichts, was er nicht haelt — „SOFORT" heisst ohne Zwischenschritt, und
+     direkt darunter steht, dass keine Anmeldung noetig ist. */
+  pruefe('Die Ueberschrift stellt das Spielen vor das Erklaeren', TEXTE.a.probeTitel === 'ERST SPIELEN. DANN REDEN WIR.', TEXTE.a.probeTitel)
+  pruefe('Der Knopf heisst „SOFORT SPIELEN"', TEXTE.a.probeCta === 'SOFORT SPIELEN', TEXTE.a.probeCta)
+  pruefe('Darunter steht, dass keine Anmeldung noetig ist', /Keine Anmeldung/i.test(TEXTE.a.probeSub), TEXTE.a.probeSub)
+
+  /* Nach der Probrunde: der Knopf macht aus dem Vorschau-Score einen echten.
+     Die drei Zeilen darunter sagen, wie — und dass der Probe-Score selbst
+     nicht mitwandert. */
+  pruefe('Der Weg weiter heisst „SCORE OFFIZIELL MACHEN"', TEXTE.g.practiceEchtCta === 'SCORE OFFIZIELL MACHEN', TEXTE.g.practiceEchtCta)
+  pruefe('Die Unterzeile nennt den Kanal und die Anmeldung', /@videko\.kuechen/.test(TEXTE.g.practiceEchtSub), TEXTE.g.practiceEchtSub)
+  pruefe('Die dritte Zeile nennt Einladungen, Rankings und Preise', /3 Freunde/.test(TEXTE.g.practiceEchtDrei) && /Preise/.test(TEXTE.g.practiceEchtDrei), TEXTE.g.practiceEchtDrei)
+
+  /* §17: der Probe-Score wird nicht uebernommen. Das muss dastehen, bevor
+     jemand auf den Knopf drueckt — sonst ist die Enttaeuschung danach. */
   pruefe(
-    'Die Vergleichssaetze tragen beide Platzhalter',
-    TEXTE.g.practiceRang.includes('{punkte}') &&
-      TEXTE.g.practiceRang.includes('{platz}') &&
-      TEXTE.g.practiceRangKnapp.includes('{top}'),
+    'Es steht da, dass danach ein neuer offizieller Lauf kommt',
+    /Vorschau/i.test(TEXTE.g.practiceEchtNeu) && /offizieller Run/i.test(TEXTE.g.practiceEchtNeu),
+    TEXTE.g.practiceEchtNeu,
   )
+
+  pruefe(
+    'Die Vergleichssaetze tragen ihre Platzhalter',
+    TEXTE.g.practiceRang.includes('{platz}') &&
+      TEXTE.g.practiceRangKnapp.includes('{punkte}') &&
+      TEXTE.g.practiceRangKnapp.includes('{top}') &&
+      TEXTE.g.practiceRangBis.includes('{fehlt}') &&
+      TEXTE.g.practiceRangBis.includes('{top}'),
+  )
+  pruefe('Platz 1 und die leere Liste kommen ohne Platzhalter aus', !/\{/.test(TEXTE.g.practiceRangEins) && !/\{/.test(TEXTE.g.practiceRangLeer))
+  pruefe('Die leere Liste ist eine Einladung, keine Fehlermeldung', TEXTE.g.practiceRangLeer === 'DER ERSTE PLATZ WARTET NOCH.', TEXTE.g.practiceRangLeer)
   pruefe(
     'Die zwei Wege hinein sind benannt: Deckel und Einladung',
     !!TEXTE.a.deckelTitel && !!TEXTE.a.deckelText && !!TEXTE.a.einladungTitel && !!TEXTE.a.einladungText,
@@ -193,6 +257,21 @@ console.log('\n— Die Seite haengt das Probespiel ohne Konto ein')
   const seite = lies('src/pages/Terminal.jsx')
 
   pruefe('Es gibt einen Probe-Abschnitt', /className=\{`trm-probespiel /.test(seite))
+
+  /* Die Reihenfolge ist der halbe Trichter: wer auf der Seite landet, soll
+     etwas zu tun haben, bevor er etwas zu lesen bekommt. Das Probespiel
+     steht darum vor dem Codefeld und vor den zwei Wegen. */
+  const wo = (k) => seite.indexOf(k)
+  pruefe(
+    'Das Probespiel steht vor dem Codefeld',
+    wo('`trm-probespiel ') > 0 && wo('`trm-probespiel ') < wo('`trm-code '),
+    `${wo('`trm-probespiel ')} < ${wo('`trm-code ')}`,
+  )
+  pruefe(
+    'Und vor den zwei Wegen',
+    wo('`trm-probespiel ') < wo('`trm-wege '),
+    `${wo('`trm-probespiel ')} < ${wo('`trm-wege ')}`,
+  )
   pruefe(
     'Das Probespiel bekommt keine Sitzung und keinen Ergebnisweg',
     /<ProbeBauteil sitzung=\{null\} best=\{null\} onErgebnis=\{null\} \/>/.test(seite),
@@ -202,7 +281,10 @@ console.log('\n— Die Seite haengt das Probespiel ohne Konto ein')
     'Welches Spiel, sagt der Server — mit PRACTICE_STANDARD als Rueckfall',
     /kennzahlen\?\.guestPracticeGame \?\? PRACTICE_STANDARD/.test(seite),
   )
-  pruefe('Der Standard ist Kuechen-Merge', PRACTICE_STANDARD === 'kuechen_merge', PRACTICE_STANDARD)
+  /* Seit dem Funnel-Umbau ist VIDEKO Jump das oeffentliche Probespiel:
+     es laeuft ohne Erklaerung los und ist nach einer Minute vorbei.
+     Kuechen-Merge bleibt Hauptgame, ist aber nicht mehr der Koeder. */
+  pruefe('Der Standard ist VIDEKO Jump', PRACTICE_STANDARD === 'videko_jump', PRACTICE_STANDARD)
   pruefe('Die Rangliste wird ohne Sitzung gelesen', /ranglisteHolen\(null\)/.test(seite))
   pruefe(
     'Und nur einmal — der Merkzettel verhindert jeden weiteren Abruf',
@@ -262,13 +344,90 @@ console.log('\n— Zu jeder Klasse gibt es auch Gestaltung')
   ]) {
     pruefe(`${klasse} ist gestaltet`, css.includes(`${klasse} {`))
   }
+  /* `leer` gehoert nicht mehr dazu: „DER ERSTE PLATZ WARTET NOCH." ist die
+     beste Nachricht, die der Satz haben kann, und bleibt laut. Leise sind
+     nur die Zustaende, in denen wirklich nichts da ist. */
   pruefe(
-    'Die vier stillen Varianten des Vergleichssatzes sind gestaltet',
-    ["[data-art='knapp']", "[data-art='leer']", "[data-art='laedt']", "[data-art='fehler']"].every((v) =>
+    'Die stillen Varianten des Vergleichssatzes sind gestaltet',
+    ["[data-art='knapp']", "[data-art='laedt']", "[data-art='fehler']"].every((v) =>
       css.includes(`.trm-spiel__probe-rang${v}`),
     ),
   )
+  for (const klasse of ['.trm-spiel__probe-bis', '.trm-spiel__probe-sub', '.trm-spiel__probe-drei', '.trm-spiel__probe-neu', '.trm-probespiel__spiel']) {
+    pruefe(`${klasse} ist gestaltet`, css.includes(`${klasse} {`))
+  }
   pruefe('Die zwei Wege stehen erst auf breiten Schirmen nebeneinander', /@media \(min-width: 620px\) \{\s*\.trm-wege \{/.test(css))
+}
+
+/* ---------------------------------------------------------------- */
+console.log('\n— Sicherheit: die Probrunde fasst den Server nicht an')
+{
+  /* Das Probespiel laeuft ohne Konto auf einer oeffentlichen Seite. Es darf
+     deshalb keinen Lauf eroeffnen, keinen Punktestand abgeben und keine
+     Teilnehmerzeile ausloesen — sonst waere der Trichter ein Einfallstor.
+     Geprueft wird am Quelltext: spiel-lauf.js hat genau drei Stellen, an
+     denen ein Lauf den Server erreicht, und alle drei sind hier benannt. */
+  const lauf = lies('src/components/spiel-lauf.js')
+
+  pruefe(
+    'Der Probemodus kommt aus dem Kontext, nicht aus einer Eigenschaft',
+    /const practice = useContext\(PracticeKontext\) != null/.test(lauf),
+  )
+
+  /* 1. Kein Punktestand. spielBeenden ist der einzige Weg zur Score-API. */
+  pruefe(
+    'Am Rundenende wird in der Probrunde nur angezeigt, nichts abgegeben',
+    /if \(practice\) \{\s*setAntwort\(\{ ok: true, practice: true \}\)\s*setPhase\('vorbei'\)\s*return\s*\}/.test(lauf),
+  )
+  const abzweig = lauf.indexOf('setAntwort({ ok: true, practice: true })')
+  const abgaben = [...lauf.matchAll(/spielBeenden\(/g)].map((m) => m.index)
+  pruefe('Es gibt ueberhaupt Abgabestellen zu pruefen', abgaben.length > 0, String(abgaben.length))
+  pruefe(
+    'Jede Abgabe steht hinter dieser Abzweigung, keine davor',
+    abzweig > 0 && abgaben.every((i) => i > abzweig),
+  )
+
+  /* 2. Kein Ticket. Das Ticket ist der Laufschein des Servers; in der
+     Probrunde wird er lokal erfunden oder bleibt schlicht leer. */
+  pruefe(
+    'Im Sofortstart wird das Ticket lokal gesetzt statt beim Server geholt',
+    /ticketWartenRef\.current = Promise\.resolve\('practice'\)/.test(lauf),
+  )
+  pruefe(
+    'Im getakteten Start bleibt das Ticket leer',
+    /if \(practice\) \{\s*ticketRef\.current = null\s*\} else \{/.test(lauf),
+  )
+  const starts = [...lauf.matchAll(/spielStarten\(/g)].map((m) => m.index)
+  pruefe('Es gibt ueberhaupt Startstellen zu pruefen', starts.length > 0, String(starts.length))
+  starts.forEach((stelle, nr) => {
+    /* Jeder Aufruf muss in einem Zweig liegen, der vorher auf practice
+       geprueft hat — der Absatz davor entscheidet das. */
+    pruefe(
+      `spielStarten #${nr + 1} liegt hinter einer Probe-Abzweigung`,
+      /if \(practice\) \{/.test(lauf.slice(Math.max(0, stelle - 600), stelle)),
+    )
+  })
+
+  /* 3. Keine Teilnehmerzeile. Die entsteht serverseitig am Eintritt — und
+     der Probe-Abschnitt reicht bewusst keine Sitzung herein. */
+  const seite = lies('src/pages/Terminal.jsx')
+  pruefe(
+    'Ohne Sitzung keine Teilnehmerzeile: das Probespiel bekommt keine',
+    /<ProbeBauteil sitzung=\{null\} best=\{null\} onErgebnis=\{null\} \/>/.test(seite),
+  )
+  pruefe(
+    'Und keinen Ergebnisweg, ueber den ein Punktestand abfließen koennte',
+    !/<ProbeBauteil[^>]*onErgebnis=\{(?!null\})/.test(seite),
+  )
+
+  /* 4. Gelesen wird nur: die Rangliste, und die ist oeffentlich. */
+  const holen = seite.indexOf('const probeRangHolen')
+  const block = seite.slice(holen, seite.indexOf('const rangSatzRechnen'))
+  pruefe('Der Trichterblock wurde gefunden', holen > 0 && block.length > 0)
+  pruefe(
+    'Nach der Probrunde wird nur die Rangliste gelesen',
+    /ranglisteHolen\(null\)/.test(block) && !/spielBeenden\(|spielStarten\(/.test(block),
+  )
 }
 
 console.log(`\n${ok} OK, ${fehler} Fehler`)

@@ -3274,7 +3274,9 @@ textarea.trm-eingabe {
   text-shadow: none;
 }
 
-.trm-spiel__probe-rang[data-art='leer'],
+/* „DER ERSTE PLATZ WARTET NOCH." ist keine Stoermeldung, sondern die beste
+   Nachricht, die der Satz haben kann — also bleibt sie laut und golden.
+   Nur `laedt` und `fehler` sind wirklich leise: da ist gerade nichts da. */
 .trm-spiel__probe-rang[data-art='laedt'],
 .trm-spiel__probe-rang[data-art='fehler'] {
   font-family: inherit;
@@ -3284,6 +3286,45 @@ textarea.trm-eingabe {
   text-transform: none;
   color: var(--trm-creme-leise);
   text-shadow: none;
+}
+
+/* Der Abstand zur Spitze, als zweite Zeile im selben Satz. Leiser als der
+   Platz selbst: die Zahl ist ein Ziel, keine Auszeichnung. */
+.trm-spiel__probe-bis {
+  display: block;
+  margin: 4px 0 0;
+  font-family: inherit;
+  font-size: clamp(11px, 3.2vw, 13px);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--trm-creme);
+  text-shadow: none;
+}
+
+/* Die zwei kleinen Zeilen unter dem Knopf. Sie sagen, was der Knopf tut und
+   was danach kommt — mehr nicht, sonst wird aus dem Ende ein Formular. */
+.trm-spiel__probe-sub {
+  margin: 2px 0 0;
+  font-size: clamp(11px, 3.2vw, 12.5px);
+  line-height: 1.4;
+  color: var(--trm-creme-weich);
+}
+
+.trm-spiel__probe-drei {
+  margin: 0;
+  font-size: clamp(10.5px, 3vw, 12px);
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  line-height: 1.4;
+  color: var(--trm-gold-hell);
+}
+
+/* Der ehrliche Nachsatz: der Probe-Score kommt nicht mit. */
+.trm-spiel__probe-neu {
+  margin: 2px 0 0;
+  font-size: clamp(10px, 2.9vw, 11.5px);
+  line-height: 1.45;
+  color: var(--trm-creme-leise);
 }
 
 /* Der Abstand nach oben. Leiser als der eigene Platz — es ist eine
@@ -6546,8 +6587,21 @@ textarea.trm-eingabe {
   color: var(--trm-gold-hell);
 }
 
+/* Der Name des Spiels, direkt unter der Zeile „ERST SPIELEN." Er steht
+   zwischen Ueberschrift und Knopf, damit sofort klar ist, was gleich
+   passiert — und nicht erst auf der Spielkarte. */
+.trm-probespiel__spiel {
+  margin: 6px 0 clamp(10px, 3vw, 14px);
+  font-size: clamp(11px, 3.2vw, 13px);
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--trm-creme);
+}
+
 .trm-probespiel__sub {
-  margin: 6px 0 0;
+  margin: clamp(8px, 2.4vw, 10px) 0 0;
   font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
   font-size: clamp(14px, 4vw, 17px);
   line-height: 1.35;

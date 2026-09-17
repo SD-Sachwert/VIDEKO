@@ -114,11 +114,13 @@ export const TEXTE = {
     cta: 'ZUGANG PRÜFEN',
     hinweis: 'Rätsel lösen. Code eingeben. Deckel aktivieren.',
     fehler: 'Code noch nicht geknackt.',
-    /* Das Probespiel direkt auf der Landing Page. Es laeuft ohne Konto,
-       ohne Ticket und ohne Score — der Text sagt das vorher, damit
-       niemand glaubt, hier sei schon etwas gewertet worden. */
-    probeTitel: 'SPIEL EINE RUNDE. OHNE ANMELDUNG.',
-    probeSub: 'Ein Game zum Reinspielen — direkt hier, direkt jetzt.',
+    /* Das Probespiel steht jetzt vor dem Codefeld: erst spielen, dann
+       erklaeren. Es laeuft ohne Konto, ohne Ticket und ohne Score — der
+       Text sagt das vorher, damit niemand glaubt, hier sei schon etwas
+       gewertet worden. */
+    probeTitel: 'ERST SPIELEN. DANN REDEN WIR.',
+    probeCta: 'SOFORT SPIELEN',
+    probeSub: 'Keine Anmeldung nötig.',
     probeNotiz:
       'Diese Runde ist ein Probespiel: kein offizieller Score, keine Teilnahme, kein Los. Die Ziehung hängt allein an deiner Deckelnummer.',
     /* Die zwei Wege hinein, angerissen — ausgespielt wird beides erst
@@ -278,17 +280,27 @@ export const TEXTE = {
        Einladung oder ein eigener Deckel. Beide fuehren zum selben Konto. */
     practiceLabel: 'PRACTICE MODE',
     practiceSub: 'Ein Game zum Reinspielen. Dieser Lauf wird nicht gewertet und steht in keiner Rangliste.',
-    practiceScore: 'DEIN PRACTICE-SCORE',
+    practiceScore: 'DEIN SCORE',
     practiceFrage: 'WILLST DU AUF DIE RANGLISTE?',
     practiceCta: 'HOL DIR EINE EINLADUNG ODER AKTIVIERE DEINEN DECKEL',
-    practiceEchtCta: 'JETZT RICHTIG MITSPIELEN',
+    practiceEchtCta: 'SCORE OFFIZIELL MACHEN',
+    /* Was unter dem Knopf steht. Der Probe-Score wird bewusst NICHT
+       uebernommen: nach der Anmeldung laeuft ein neuer, offizieller Lauf.
+       Das ist fairer und nimmt jeden Anreiz, hier zu tricksen. */
+    practiceEchtSub: '@videko.kuechen folgen, anmelden und richtig mitspielen.',
+    practiceEchtDrei: '3 Freunde einladen. Rankings knacken. Preise freischalten.',
+    practiceEchtNeu: 'Der Probe-Score bleibt Vorschau. Danach läuft ein neuer, offizieller Run. Jetzt zählt’s.',
     /* Der Vergleich nach dem Probespiel. Er liest die oeffentliche
        Rangliste und rechnet nur nach, wie viele Eintraege darueber liegen.
        Reicht der Score nicht in die veroeffentlichte Liste, wird keine Zahl
        erfunden — dann sagt practiceRangKnapp genau das. */
-    practiceRang: 'MIT {punkte} PUNKTEN WÄRST DU AKTUELL PLATZ {platz}.',
+    practiceRang: 'DAMIT WÄRST DU AKTUELL PLATZ {platz}.',
+    practiceRangEins: 'DU WÄRST GERADE PLATZ 1.',
     practiceRangKnapp: 'MIT {punkte} PUNKTEN REICHT ES NOCH NICHT IN DIE TOP {top}.',
-    practiceRangLeer: 'Für dieses Game steht noch keine öffentliche Rangliste.',
+    /* Nur wenn die veroeffentlichte Liste wirklich drei Eintraege hat —
+       sonst gibt es keine Top 3, an der sich etwas messen liesse. */
+    practiceRangBis: 'NOCH {fehlt} PUNKTE BIS TOP {top}.',
+    practiceRangLeer: 'DER ERSTE PLATZ WARTET NOCH.',
     practiceRangLaedt: 'Rangliste wird geprüft …',
     practiceRangFehler: 'Die Rangliste ist gerade nicht erreichbar.',
     gesperrt: 'ERST ANMELDEN',
@@ -739,6 +751,8 @@ export const zahl = (n) => Number(n ?? 0).toLocaleString('de-DE')
  *
  * Gibt `null` zurueck, wenn es nichts zu sagen gibt.
  */
+export const PROBE_SPITZE = 3
+
 export function probeRangSatz(stand, liste, punkte) {
   if (stand === 'laedt') return { art: 'laedt', text: TEXTE.g.practiceRangLaedt }
   if (stand === 'fehler') return { art: 'fehler', text: TEXTE.g.practiceRangFehler }
@@ -746,15 +760,32 @@ export function probeRangSatz(stand, liste, punkte) {
   if (stand !== 'da' || !Array.isArray(liste) || !liste.length) return null
   const wert = Number(punkte) || 0
   const besser = liste.filter((p) => p > wert).length
+  const platz = besser + 1
+
+  /* Der Abstand zur Spitze — aber nur, wenn es die Spitze wirklich gibt.
+     Hat die veroeffentlichte Liste keine drei Eintraege, gibt es auch keine
+     Top 3, an der sich etwas messen liesse; dann bleibt der Zusatz weg.
+     Gerechnet wird gegen den letzten Platz, der noch dazugehoert: ein Punkt
+     mehr als diese Punktzahl reicht. Nichts davon ist geschaetzt. */
+  let zusatz = null
+  if (platz > PROBE_SPITZE && liste.length >= PROBE_SPITZE) {
+    const schwelle = liste[PROBE_SPITZE - 1]
+    const fehlt = Math.max(1, schwelle - wert + 1)
+    zusatz = fuelle(TEXTE.g.practiceRangBis, { fehlt: zahl(fehlt), top: PROBE_SPITZE })
+  }
+
   if (besser >= liste.length) {
     return {
       art: 'knapp',
       text: fuelle(TEXTE.g.practiceRangKnapp, { punkte: zahl(wert), top: liste.length }),
+      zusatz,
     }
   }
+  if (platz === 1) return { art: 'platz', text: TEXTE.g.practiceRangEins, zusatz: null }
   return {
     art: 'platz',
-    text: fuelle(TEXTE.g.practiceRang, { punkte: zahl(wert), platz: besser + 1 }),
+    text: fuelle(TEXTE.g.practiceRang, { punkte: zahl(wert), platz }),
+    zusatz,
   }
 }
 
@@ -995,9 +1026,13 @@ export const RANGPUNKTE_MAX = 1000
  * taucht in keiner Rangliste auf. Die Verwaltung kann einen anderen Slot
  * eintragen; ohne Eintrag gilt dieser. Kuechen-Tinder ist hier bewusst
  * nicht vorgesehen: der bleibt reiner Testslot.
+ *
+ * Seit dem Funnel-Umbau ist das VIDEKO Jump: es startet ohne Erklaerung,
+ * eine Runde dauert unter zwei Minuten, und man will sofort noch einmal.
+ * Kuechen-Merge bleibt Hauptgame, ist aber nicht mehr das Probespiel.
  * Muss mit PRACTICE_STANDARD in api/_terminal-kern.js uebereinstimmen.
  */
-export const PRACTICE_STANDARD = 'kuechen_merge'
+export const PRACTICE_STANDARD = 'videko_jump'
 
 /**
  * Ohne Eintrag ausgeblendet. Der Server schickt die Schalter ohnehin

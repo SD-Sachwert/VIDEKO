@@ -17,9 +17,12 @@ import {
   MEILENSTEIN,
   NEIGUNG_WARTEN_MS,
   PLATTE_DICKE,
+  PLATTE_MAGNET_DAUER,
   SCHWERE,
   SICHT_MIN,
   SPERRE_MS,
+  STUECK_R,
+  STUECK_WERT,
   TAKT,
   VX_MAX,
   eingabeAus,
@@ -131,6 +134,11 @@ const NEIGUNG_HILFE = {
 }
 /* So lange fliegt die Kochmuetze nach einer Boostplatte hoch. */
 const BOOST_FLUG_MS = 520
+
+/* Der Starthinweis steht genau so lange und verschwindet dann von
+   allein — wer schon lenkt, sieht ihn ohnehin nicht mehr. Die erste
+   Runde soll ohne Erklaertext auskommen. */
+const HINWEIS_MS = 2000
 
 /* Farben fuer das Canvas. Gelesen aus den CSS-Tokens, mit denselben Werten
    als Rueckfall, falls die Tokens (noch) fehlen. */
@@ -251,8 +259,10 @@ const SPRUCH_TREFFER = {
 }
 const SPRUCH_KNAPP = ['KNAPP.', 'DAS WAR SPORTLICH.', 'MIT DER FUSSSPITZE.', 'PASST. FAST.']
 /* An die Leiter der Logik gebunden, damit Wort und Zahl nicht auseinanderlaufen. */
-const STUFEN_WORT = ['HEISS', 'BAULEITUNG NERVÖS', 'BAUSTELLE ESKALIERT', 'KOMPLETT GESTÖRT']
-const SPRUCH_STUFE = Object.fromEntries(COMBO_AB.map((n, i) => [n, STUFEN_WORT[i] || 'KOMPLETT GESTÖRT']))
+const STUFEN_WORT = ['LÄUFT.', 'SPORTLICH.', 'VIDEKO-MODUS.', 'WER SOLL DICH STOPPEN?']
+const SPRUCH_STUFE = Object.fromEntries(
+  COMBO_AB.map((n, i) => [n, STUFEN_WORT[i] || STUFEN_WORT[STUFEN_WORT.length - 1]]),
+)
 const SPRUCH_GABE = {
   muetze: 'GOLDENE KOCHMÜTZE',
   schuerze: 'SCHUTZSCHÜRZE',
@@ -260,13 +270,54 @@ const SPRUCH_GABE = {
   magnet: 'MAGNET',
   superkoch: 'VIDEKO SUPERKOCH',
 }
-/* Die vier seltenen Wellen. Kurzer Titel oben, trockener Satz im Feld. */
+/* Die acht seltenen Wellen. Kurzer Titel oben, trockener Satz im Feld. */
 const SPRUCH_WELLE = {
   stampede: { titel: 'KÜHLSCHRANK-STAMPEDE', satz: 'ALLE AUF EINMAL.' },
   ofenalarm: { titel: 'OFEN-ALARM', satz: 'ES WIRD HEISS.' },
   goldrausch: { titel: 'GOLDRAUSCH', satz: 'DAS GEHT AUF REGIE.' },
   kuechenchef: { titel: 'KÜCHENCHEF-MODUS', satz: 'DOPPELT. OHNE NACHFRAGE.' },
+  baustellenchaos: { titel: 'BAUSTELLENCHAOS', satz: 'WER HAT DAS DA HINGESTELLT?' },
+  lichtaus: { titel: 'LICHT AUS', satz: 'NUR DAS GOLD LEUCHTET NOCH.' },
+  pvboost: { titel: 'PV-BOOST', satz: 'VOLLE EINSPEISUNG.' },
+  makler: { titel: 'MAKLER-MODUS', satz: 'SCHLÜSSELÜBERGABE. IM FLUG.' },
 }
+/* Eine Welle wirkt hoechstens so lange aufs Bild. Die Logik kennt kein
+   Ende in Sekunden, also deckelt das Bild es selbst (Vorgabe: 4-7 s). */
+const WELLE_BILD_MS = { lichtaus: 6000, goldrausch: 5000, pvboost: 4500, makler: 5000 }
+
+/* Kleinkram. Nur die Ente wird kommentiert — sonst redet das Spiel bei
+   jeder einzelnen Muenze. */
+const SPRUCH_STUECK = { ente: 'WAR JA KLAR.' }
+/* Nicht jede Muenze darf klingen: drei liegen oft nebeneinander. */
+const STUECK_TON_MS = 90
+
+/* Die sechs Welten im Bild. `ton` legt einen Hauch ueber den Marmor,
+   `satz` steht einmal beim Wechsel im Feld. Die Farben sind bewusst
+   schwach: VIDEKO bleibt schwarz-gold, die Welt ist nur ein Hauch. */
+const WELT_BILD = {
+  showroom: { ton: [236, 226, 204], kraft: 0.05, satz: 'SHOWROOM. NOCH IST ALLES HEIL.' },
+  baustelle: { ton: [214, 138, 46], kraft: 0.08, satz: 'BAUSTELLE. AB HIER WIRD GEBAUT.' },
+  bad: { ton: [96, 168, 196], kraft: 0.09, satz: 'BAD. WASSER MARSCH.' },
+  licht: { ton: [180, 196, 255], kraft: 0.08, satz: 'LICHT. UND ES WARD HELL.' },
+  energie: { ton: [104, 198, 140], kraft: 0.08, satz: 'ENERGIE. VOLLE EINSPEISUNG.' },
+  immobilien: { ton: [198, 162, 92], kraft: 0.07, satz: 'IMMOBILIEN. JETZT WIRD VERKAUFT.' },
+}
+/* So lange braucht der Hauch, um von einer Welt in die naechste zu
+   wechseln. Ein harter Schnitt saehe nach Fehler aus. */
+const WELT_BLENDE_MS = 1400
+
+/* Welches Accessoire in welcher Welt auf dem Symbol sitzt. An die Welt
+   gebunden und nicht gewuerfelt: sonst flackert der Kopf im Sekundentakt.
+   Krone und Kochmuetze kommen vom Power-Up und stechen das hier. */
+const ACC_WELT = {
+  showroom: 'muetze', baustelle: 'helm', bad: 'visier',
+  licht: 'brille', energie: 'brille', immobilien: 'schild',
+}
+
+/* Das Standbild nach einem Treffer. Kurz genug, dass es nicht haengt,
+   lang genug, dass man sieht, was einen erwischt hat. */
+const FROST_MS = 130
+const FROST_SCHUTZ_MS = 90
 
 function rundesRechteck(ctx, x, y, b, h, r) {
   ctx.beginPath()
@@ -330,6 +381,7 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
   const [crash, setCrash] = useState(false)
   const [sanft, setSanft] = useState(false)
   const [gelenkt, setGelenkt] = useState(false)
+  const [hinweis, setHinweis] = useState(false)
   /* Was gerade wirkt: fuer die kleine Leiste ueber dem Spielfeld. */
   const [kraefte, setKraefte] = useState({
     combo: 0, muetze: 0, schutz: false, turbo: 0, magnet: 0, superkoch: 0,
@@ -356,6 +408,11 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
   const bildRef = useRef({
     gelandet: 0, crashSeit: 0, getroffen: 0, gabe: 0, muetzeWackel: 0,
     boost: 0, fegeUhr: 0, endeText: '',
+    /* Standbild nach einem Treffer, Tonbremse fuer Kleinkram, und bis
+       wann eine Welle das Bild noch faerben darf. */
+    frostBis: 0, stueckUhr: 0, welleArt: '', welleBis: 0,
+    /* Welche Welt das Bild gerade zeigt, und woher es kommt. */
+    weltKey: '', weltVor: '', weltSeit: 0,
   })
   /* Effektwerke (§7). Einmal angelegt, ueber die ganze Runde wiederverwendet:
      fester Vorrat, keine neuen Objekte pro Funke. */
@@ -517,6 +574,8 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
     bildRef.current = {
       gelandet: 0, crashSeit: 0, getroffen: 0, gabe: 0, muetzeWackel: 0,
       boost: 0, fegeUhr: 0, endeText: '',
+      frostBis: 0, stueckUhr: 0, welleArt: '', welleBis: 0,
+      weltKey: '', weltVor: '', weltSeit: 0,
     }
     /* Nichts aus der letzten Runde darf in die neue hineinragen. */
     fxRef.current.funken.leeren()
@@ -531,10 +590,19 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
     setPause(false)
     setCrash(false)
     setGelenkt(false)
+    setHinweis(true)
     neigungAus()
     setNeigung('aus')
     return true
   }, [laufStarten, eingabeLoslassen, neigungAus])
+
+  /* Nach HINWEIS_MS ist der Starthinweis weg, egal ob schon gelenkt wurde.
+     Ein einziger Rerender, kein Zaehler im Bild. */
+  useEffect(() => {
+    if (!hinweis) return undefined
+    const u = setTimeout(() => setHinweis(false), HINWEIS_MS)
+    return () => clearTimeout(u)
+  }, [hinweis])
 
   /** Hoechstens eine Runde aus der Kasse buchen — mit Ticket und Abstand. */
   const buchen = useCallback(() => {
@@ -604,6 +672,39 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
             klang('kraft', 1.25)
             summen(HAPTIK.fieber)
           }
+          if (e.feder) {
+            /* Die Feder traegt so hoch wie die Boostplatte, gibt aber keine
+               Punkte. Ihr Versprechen ist Verlaesslichkeit, nicht Bonus —
+               also federt sie sichtbar und bleibt beim Ton leiser. */
+            const b = weltZuBild(e.platte.x, e.platte.y)
+            bildRef.current.boost = performance.now()
+            fx.funken.schuss({
+              x: b.x, y: b.y, anzahl: 12, farbe: [creme, gold],
+              tempo: b.s * 0.95, streuung: 1.1, richtung: -Math.PI / 2, gr: 2.4, art: 'stern',
+            })
+            fx.beben.stoss(5)
+            klang('sprung', 1.5)
+            summen(HAPTIK.gut)
+          }
+          if (e.magnet) {
+            const b = weltZuBild(e.platte.x, e.platte.y)
+            fx.funken.schuss({ x: b.x, y: b.y, anzahl: 10, farbe: rot, tempo: b.s * 0.6, gr: 2.4, art: 'stern' })
+            melden('gold', `MAGNET ${PLATTE_MAGNET_DAUER} S`)
+            klang('kraft', 1.1)
+            summen(HAPTIK.gut)
+          }
+          if (e.teleport) {
+            /* Beide Enden zeigen: sonst wirkt der Sprung wie ein Fehler. */
+            const von = weltZuBild(e.teleport.vonX, e.platte.y)
+            const nach = weltZuBild(e.teleport.nachX, e.platte.y)
+            for (const b of [von, nach]) {
+              fx.funken.schuss({ x: b.x, y: b.y, anzahl: 14, farbe: [gold, creme], tempo: b.s * 0.8, gr: 2.6, art: 'stern' })
+            }
+            fx.rufe.zeigen({ x: nach.x, y: nach.y - 22, text: 'WÄRE ZU EINFACH.', art: 'ruf', gr: 13 })
+            fx.beben.stoss(6)
+            klang('zeit', 1.2)
+            summen(HAPTIK.tipp)
+          }
           if (!e.neu) continue
           kasseRef.current.offen.push(e.punkte)
           if (e.punkte) setHoehe(e.hoehe)
@@ -611,6 +712,11 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
           const b = weltZuBild(e.platte.x, e.platte.y)
           if (e.punkte && (e.knapp || e.gold || e.mult > 1 || !landung)) {
             fx.rufe.zeigen({ x: b.x, y: b.y - 14, text: `+${e.punkte}`, art: 'punkte', gr: 16 })
+          }
+          if (e.beute) {
+            /* Eingesammelter Kleinkram wird erst bei der Landung gutgeschrieben.
+               Ohne diese Zeile waere unklar, wo die Muenzen geblieben sind. */
+            fx.rufe.zeigen({ x: b.x, y: b.y - 30, text: `BEUTE +${e.beute}`, art: 'combo', gr: 13 })
           }
           if (e.knapp) {
             /* KNAPP: Goldfunken an der Fussspitze, und die Kombo zaehlt hoch. */
@@ -658,11 +764,53 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
           klang('kraft', e.gart === 'turbo' ? 1.3 : e.gart === 'superkoch' ? 0.8 : 1)
           summen(e.gart === 'superkoch' ? HAPTIK.fieber : HAPTIK.gut)
           if (e.gart === 'superkoch') melden('gold', 'VIDEKO SUPERKOCH')
+        } else if (e.art === 'stueck') {
+          const b = weltZuBild(e.stueck.x, e.stueck.y)
+          const ente = e.sart === 'ente'
+          fx.funken.schuss({
+            x: b.x, y: b.y, anzahl: ente ? 20 : 6,
+            farbe: ente ? [gold, creme] : gold,
+            tempo: b.s * (ente ? 0.9 : 0.5), gr: ente ? 3 : 2, art: 'stern',
+          })
+          if (ente) {
+            /* Der seltenste Fund im Spiel. Der bekommt einen Satz. */
+            fx.rufe.zeigen({ x: b.x, y: b.y - 18, text: SPRUCH_STUECK.ente, art: 'combo', gr: 18 })
+            melden('gold', `${SPRUCH_STUECK.ente} +${STUECK_WERT.ente}`)
+            fx.beben.stoss(6)
+            klang('perfekt')
+            summen(HAPTIK.fieber)
+          } else {
+            /* Kein Ruettler und nicht jedes Mal ein Ton: Kleinkram liegt in
+               Dreierreihen, das waere sonst ein Dauerklingeln. */
+            const jetzt = performance.now()
+            if (jetzt - bildRef.current.stueckUhr > STUECK_TON_MS) {
+              bildRef.current.stueckUhr = jetzt
+              klang('pop', e.sart === 'schluessel' ? 1 : 1.35)
+            }
+            if (e.sart === 'schluessel') {
+              fx.rufe.zeigen({ x: b.x, y: b.y - 14, text: `+${STUECK_WERT.schluessel}`, art: 'punkte', gr: 13 })
+            }
+          }
+        } else if (e.art === 'welt') {
+          /* Ortswechsel. Einmal gross in der Mitte, dann faerbt malen()
+             den Grund um — ohne dass die Logik davon etwas wissen muss. */
+          const { breite, hoehe: h } = masseRef.current
+          const w = WELT_BILD[e.welt]
+          fx.rufe.zeigen({ x: breite / 2, y: h * 0.34, text: e.titel, art: 'combo', gr: 24 })
+          melden('gold', w ? w.satz : e.titel)
+          fx.beben.stoss(5)
+          klang('perfekt', 0.85)
+          summen(HAPTIK.gut)
         } else if (e.art === 'welle') {
           /* Wellen betreffen den ganzen Bildschirm, also ruft der Text
              aus der Mitte und nicht von einer einzelnen Platte. */
           const { breite, hoehe: h } = masseRef.current
           const w = SPRUCH_WELLE[e.welle] || { titel: 'BAUSTELLE', satz: 'ES GEHT LOS.' }
+          const dauer = WELLE_BILD_MS[e.welle]
+          if (dauer) {
+            bildRef.current.welleArt = e.welle
+            bildRef.current.welleBis = performance.now() + dauer
+          }
           fx.rufe.zeigen({ x: breite / 2, y: h * 0.42, text: w.titel, art: 'combo', gr: 22 })
           fx.beben.stoss(8)
           melden('gold', w.satz)
@@ -686,6 +834,7 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
              eine Rettungsanker jetzt aufgebraucht ist. */
           fx.funken.schuss({ x: b.x, y: b.y, anzahl: 22, farbe: [gruen, creme], tempo: b.s * 1.1, gr: 3, art: 'stern' })
           fx.funken.schuss({ x: b.x, y: b.y, anzahl: 10, farbe: gruen, tempo: b.s * 0.5, gr: 2.2, art: 'krume' })
+          bildRef.current.frostBis = performance.now() + FROST_SCHUTZ_MS
           fx.rufe.zeigen({ x: b.x, y: b.y - 16, text: 'SCHÜRZE GERETTET.', art: 'combo', gr: 15 })
           fx.beben.stoss(9)
           melden('perfekt', 'SCHÜRZE GERETTET.')
@@ -694,6 +843,9 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
         } else if (e.art === 'treffer') {
           const b = weltZuBild(e.gegner.x, e.gegner.y)
           bildRef.current.getroffen = performance.now()
+          /* Standbild: das Bild haelt kurz an, der Screenshake laeuft weiter.
+             Erst danach faellt die Figur — sonst sieht niemand den Ofen. */
+          bildRef.current.frostBis = performance.now() + FROST_MS
           const text = SPRUCH_TREFFER[e.gegner.art] || 'DAS WAR KEIN SPRUNGBRETT.'
           fx.funken.schuss({ x: b.x, y: b.y, anzahl: 18, farbe: [rot, creme], tempo: b.s * 1.1, gr: 3, art: 'krume' })
           melden('verkantet', text)
@@ -979,19 +1131,9 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
       }
 
       if (p.art === 'gold') {
-        /* Feder unter der Platte: das Zeichen fuer den hohen Sprung. */
-        const mitte = px + pw / 2
-        const unten = py + dicke + dicke * 1.1
-        ctx.beginPath()
-        ctx.moveTo(mitte - dicke * 0.5, py + dicke)
-        for (let i = 1; i <= 4; i += 1) {
-          ctx.lineTo(mitte + (i % 2 ? dicke * 0.5 : -dicke * 0.5), py + dicke + (dicke * 1.1 * i) / 4)
-        }
-        ctx.strokeStyle = rgb(palette.tief)
-        ctx.lineWidth = Math.max(1.5, dicke * 0.18)
-        ctx.stroke()
-        ctx.fillStyle = rgb(palette.tief)
-        ctx.fillRect(mitte - dicke * 0.7, unten - 1, dicke * 1.4, 2)
+        /* Die Goldplatte zahlt Punkte, sie schiesst nicht hoeher. Das
+           Federzeichen gehoert deshalb zur Federplatte, hier steht ein
+           Muenzstapel: zwei Zeichen, zwei Versprechen. */
         const verlauf = ctx.createLinearGradient(0, py, 0, py + dicke)
         verlauf.addColorStop(0, rgb(palette.hell))
         verlauf.addColorStop(1, rgb(palette.tief))
@@ -1000,6 +1142,17 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
         ctx.fill()
         ctx.fillStyle = rgb(palette.creme, p.beruehrt ? 0.35 : 0.8)
         ctx.fillRect(px + r, py + 1, pw - 2 * r, 1.2)
+        /* Drei Muenzen im Profil, mittig auf der Platte. */
+        const mitte = px + pw / 2
+        ctx.strokeStyle = rgb(palette.tief, p.beruehrt ? 0.4 : 0.9)
+        ctx.lineWidth = 1.2
+        for (let i = 0; i < 3; i += 1) {
+          ctx.beginPath()
+          ctx.ellipse(mitte, py - dicke * (0.35 + i * 0.5), dicke * 0.52, dicke * 0.2, 0, 0, Math.PI * 2)
+          ctx.fillStyle = rgb(palette.hell, p.beruehrt ? 0.35 : 0.95)
+          ctx.fill()
+          ctx.stroke()
+        }
         return
       }
 
@@ -1064,6 +1217,46 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
         ctx.setLineDash([])
       }
 
+      if (p.art === 'feder') {
+        /* Die Feder sitzt UNTER der Platte und traegt so hoch wie die rote
+           Rampe — nur ohne Punkte. Sie ist das verlaessliche Zeichen. */
+        const mitte = px + pw / 2
+        const druck = p.beruehrt ? 0.6 : 1
+        const tiefe = dicke * 1.1 * druck
+        ctx.beginPath()
+        ctx.moveTo(mitte - dicke * 0.5, py + dicke)
+        for (let i = 1; i <= 4; i += 1) {
+          ctx.lineTo(mitte + (i % 2 ? dicke * 0.5 : -dicke * 0.5), py + dicke + (tiefe * i) / 4)
+        }
+        ctx.strokeStyle = rgb(palette.tief)
+        ctx.lineWidth = Math.max(1.5, dicke * 0.18)
+        ctx.stroke()
+        ctx.fillStyle = rgb(palette.tief)
+        ctx.fillRect(mitte - dicke * 0.7, py + dicke + tiefe - 1, dicke * 1.4, 2)
+      } else if (p.art === 'teleport') {
+        /* Beide Enden sind vorher sichtbar: ein Sprung, der aus dem Nichts
+           versetzt, faende jeder Spieler kaputt. So ist es eine Ansage. */
+        const zx = x0 + p.zielX * s
+        const ym = py + dicke / 2
+        ctx.strokeStyle = rgb(palette.gold, 0.3)
+        ctx.lineWidth = 1
+        ctx.setLineDash([3, 4])
+        ctx.beginPath()
+        ctx.moveTo(px + pw / 2, ym)
+        ctx.lineTo(zx, ym)
+        ctx.stroke()
+        ctx.setLineDash([])
+        ctx.save()
+        ctx.translate(zx, ym)
+        ctx.rotate(sanftRef.current ? 0 : jetzt / 520)
+        ctx.strokeStyle = rgb(palette.hell, 0.55)
+        ctx.lineWidth = 1.4
+        ctx.beginPath()
+        ctx.arc(0, 0, dicke * 1.05, 0.5, Math.PI * 2 - 0.5)
+        ctx.stroke()
+        ctx.restore()
+      }
+
       const koerper =
         p.art === 'herd'
           /* Die Boostplatte ist die einzige rot leuchtende Flaeche im Spiel.
@@ -1073,7 +1266,13 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
             ? mischen(palette.nacht, palette.tief, 0.55)
             : p.art === 'lift'
               ? mischen(palette.stein, palette.gold, 0.25)
-              : palette.stein
+              : p.art === 'feder'
+                ? mischen(palette.stein, palette.creme, 0.2)
+                : p.art === 'magnetplatte'
+                  ? mischen(palette.nacht, palette.tief, 0.4)
+                  : p.art === 'teleport'
+                    ? mischen(palette.nacht, palette.gold, 0.35)
+                    : palette.stein
       const verlauf = ctx.createLinearGradient(0, py, 0, py + dicke)
       verlauf.addColorStop(0, rgb(mischen(koerper, palette.creme, 0.08)))
       verlauf.addColorStop(1, rgb(mischen(koerper, palette.nacht, 0.35)))
@@ -1136,6 +1335,43 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
         }
         ctx.stroke()
         ctx.lineCap = 'butt'
+      } else if (p.art === 'magnetplatte') {
+        /* Hufeisen mit roten Enden: dieselbe Bildsprache wie der
+           Magnet-Bonus, damit man die Wirkung sofort zuordnet. */
+        const hm = dicke * 0.34
+        const ym = py + dicke * 0.58
+        ctx.lineWidth = Math.max(1.6, dicke * 0.2)
+        ctx.strokeStyle = rgb(palette.creme, 0.85)
+        ctx.beginPath()
+        ctx.arc(px + pw / 2, ym, hm, Math.PI, 0)
+        ctx.stroke()
+        ctx.strokeStyle = rgb(palette.rot)
+        ctx.beginPath()
+        ctx.moveTo(px + pw / 2 - hm, ym)
+        ctx.lineTo(px + pw / 2 - hm, ym + hm * 0.55)
+        ctx.moveTo(px + pw / 2 + hm, ym)
+        ctx.lineTo(px + pw / 2 + hm, ym + hm * 0.55)
+        ctx.stroke()
+        /* Der Feldbogen darueber pulst, damit die Platte nicht tot wirkt. */
+        const kraft = sanftRef.current ? 0.4 : 0.25 + 0.25 * Math.sin(jetzt / 240 + p.id)
+        ctx.strokeStyle = rgb(palette.rot, kraft)
+        ctx.lineWidth = 1.2
+        ctx.setLineDash([4, 5])
+        ctx.beginPath()
+        ctx.arc(px + pw / 2, ym, hm * 2.4, Math.PI, 0)
+        ctx.stroke()
+        ctx.setLineDash([])
+      } else if (p.art === 'teleport') {
+        /* Der Ring auf der Platte gehoert zum Zwilling am anderen Ende. */
+        ctx.save()
+        ctx.translate(px + pw / 2, py + dicke / 2)
+        ctx.rotate(sanftRef.current ? 0 : -jetzt / 520)
+        ctx.strokeStyle = rgb(palette.hell, 0.9)
+        ctx.lineWidth = 1.6
+        ctx.beginPath()
+        ctx.arc(0, 0, dicke * 0.72, 0.5, Math.PI * 2 - 0.5)
+        ctx.stroke()
+        ctx.restore()
       }
     }
 
@@ -1457,6 +1693,112 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
      * Markenzeichen darunter unangetastet bleibt. Gezeichnet um (0,0) mit
      * `br` als Gesamtbreite, Unterkante auf y = 0.
      */
+    /**
+     * Die Accessoires. Alle zeichnen von (0,0) nach oben weg, damit sie
+     * denselben Slot ueber dem Symbol teilen. Keine Fremdmarken, keine
+     * Schrift — nur Umrisse, die man in 200 ms erkennt.
+     */
+    function accessoireMalen(ctx, palette, art, br, betont) {
+      const hb = br / 2
+      if (art === 'muetze') {
+        muetzeMalen(ctx, br, rgb(betont ? palette.hell : palette.creme), rgb(palette.nacht, 0.7))
+        return
+      }
+      ctx.lineWidth = 1
+      if (art === 'krone') {
+        /* VIDEKO-MODUS: die einzige Krone im Spiel. */
+        const kh = br * 0.5
+        ctx.fillStyle = rgb(palette.hell)
+        ctx.strokeStyle = rgb(palette.tief)
+        ctx.beginPath()
+        ctx.moveTo(-hb, 0)
+        ctx.lineTo(-hb, -kh * 0.5)
+        ctx.lineTo(-hb * 0.45, -kh * 0.18)
+        ctx.lineTo(0, -kh)
+        ctx.lineTo(hb * 0.45, -kh * 0.18)
+        ctx.lineTo(hb, -kh * 0.5)
+        ctx.lineTo(hb, 0)
+        ctx.closePath()
+        ctx.fill()
+        ctx.stroke()
+        ctx.fillStyle = rgb(palette.rot)
+        for (const f of [-0.5, 0, 0.5]) {
+          ctx.beginPath()
+          ctx.arc(hb * f, -kh * 0.16, Math.max(1, br * 0.045), 0, Math.PI * 2)
+          ctx.fill()
+        }
+        return
+      }
+      if (art === 'helm') {
+        /* Bauhelm: Kuppel, Krempe, Rippe. */
+        ctx.fillStyle = rgb(mischen(palette.hell, palette.rot, 0.3))
+        ctx.strokeStyle = rgb(palette.nacht, 0.7)
+        ctx.beginPath()
+        ctx.arc(0, 0, hb * 0.76, Math.PI, 0)
+        ctx.closePath()
+        ctx.fill()
+        ctx.stroke()
+        rundesRechteck(ctx, -hb, -hb * 0.16, br, hb * 0.24, hb * 0.1)
+        ctx.fill()
+        ctx.stroke()
+        ctx.beginPath()
+        ctx.moveTo(0, -hb * 0.74)
+        ctx.lineTo(0, -hb * 0.16)
+        ctx.stroke()
+        return
+      }
+      if (art === 'brille') {
+        /* Sonnenbrille, hochgeschoben auf die Oberkante — so bleibt das
+           Symbol darunter frei lesbar. */
+        const gh = hb * 0.3
+        ctx.fillStyle = rgb(palette.nacht, 0.9)
+        ctx.strokeStyle = rgb(palette.hell)
+        ctx.lineWidth = 1.2
+        for (const vz of [-1, 1]) {
+          rundesRechteck(ctx, vz < 0 ? -hb * 0.94 : hb * 0.14, -gh, hb * 0.8, gh * 1.7, gh * 0.55)
+          ctx.fill()
+          ctx.stroke()
+        }
+        ctx.beginPath()
+        ctx.moveTo(-hb * 0.14, -gh * 0.2)
+        ctx.lineTo(hb * 0.14, -gh * 0.2)
+        ctx.stroke()
+        return
+      }
+      if (art === 'schild') {
+        /* Kleines Maklerschild neben der Figur. Bewusst ohne Text: ein
+           erfundener Schriftzug waere eine Marke, die es nicht gibt. */
+        const sx = hb * 0.78
+        ctx.strokeStyle = rgb(palette.creme)
+        ctx.lineWidth = Math.max(1.2, br * 0.05)
+        ctx.beginPath()
+        ctx.moveTo(sx, br * 0.1)
+        ctx.lineTo(sx, -br * 0.6)
+        ctx.stroke()
+        ctx.fillStyle = rgb(palette.hell)
+        ctx.strokeStyle = rgb(palette.nacht, 0.7)
+        ctx.lineWidth = 1
+        rundesRechteck(ctx, sx - br * 0.32, -br * 0.78, br * 0.64, br * 0.3, 2)
+        ctx.fill()
+        ctx.stroke()
+        ctx.fillStyle = rgb(palette.nacht, 0.7)
+        ctx.fillRect(sx - br * 0.22, -br * 0.68, br * 0.44, br * 0.05)
+        ctx.fillRect(sx - br * 0.22, -br * 0.58, br * 0.26, br * 0.05)
+        return
+      }
+      /* Handwerker-/Schweisservisier, hochgeklappt. */
+      ctx.fillStyle = rgb(palette.tief)
+      ctx.strokeStyle = rgb(palette.creme, 0.8)
+      ctx.lineWidth = 1.1
+      ctx.beginPath()
+      ctx.arc(0, hb * 0.04, hb * 0.84, Math.PI, 0)
+      ctx.closePath()
+      ctx.fill()
+      ctx.stroke()
+      ctx.fillStyle = rgb(palette.gruen, 0.75)
+      ctx.fillRect(-hb * 0.52, -hb * 0.46, hb * 1.04, hb * 0.22)
+    }
+
     function muetzeMalen(ctx, br, fuellung, kante) {
       const hb = br / 2
       const bandH = br * 0.26
@@ -1471,6 +1813,165 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
       rundesRechteck(ctx, -hb, -bandH, br, bandH, bandH * 0.35)
       ctx.fill()
       ctx.stroke()
+    }
+
+    /**
+     * Kleinkram: Goldmuenze, Schluessel, Badeente. Drei Formen, mehr nicht —
+     * das Feld soll voll wirken, nicht zugestellt.
+     */
+    const stueckMalen = (ctx, palette, cx, cy, s, st, jetzt) => {
+      const r = Math.max(5, STUECK_R * s)
+      const heb = sanftRef.current ? 0 : Math.sin(jetzt / 420 + st.id) * r * 0.22
+      ctx.save()
+      ctx.translate(cx, cy + heb)
+      if (st.art === 'muenze') {
+        /* Dreht sich um die Hochachse: nur die Breite atmet. */
+        const dreh = sanftRef.current ? 0.8 : Math.abs(Math.cos(jetzt / 340 + st.id))
+        const br = Math.max(1.2, r * (0.22 + 0.78 * dreh))
+        const verlauf = ctx.createLinearGradient(-br, 0, br, 0)
+        verlauf.addColorStop(0, rgb(palette.gold))
+        verlauf.addColorStop(0.5, rgb(palette.hell))
+        verlauf.addColorStop(1, rgb(palette.gold))
+        ctx.fillStyle = verlauf
+        ctx.beginPath()
+        ctx.ellipse(0, 0, br, r, 0, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.strokeStyle = rgb(palette.tief, 0.85)
+        ctx.lineWidth = 1
+        ctx.stroke()
+        if (br > r * 0.45) {
+          ctx.beginPath()
+          ctx.ellipse(0, 0, br * 0.48, r * 0.48, 0, 0, Math.PI * 2)
+          ctx.stroke()
+        }
+      } else if (st.art === 'schluessel') {
+        ctx.strokeStyle = rgb(palette.hell)
+        ctx.lineWidth = Math.max(1.4, r * 0.26)
+        ctx.lineCap = 'round'
+        ctx.beginPath()
+        ctx.arc(0, -r * 0.5, r * 0.42, 0, Math.PI * 2)
+        ctx.moveTo(0, -r * 0.08)
+        ctx.lineTo(0, r)
+        ctx.moveTo(0, r * 0.55)
+        ctx.lineTo(r * 0.45, r * 0.55)
+        ctx.moveTo(0, r)
+        ctx.lineTo(r * 0.38, r)
+        ctx.stroke()
+        ctx.lineCap = 'butt'
+      } else {
+        /* Die Badeente ist der seltenste Fund im Spiel — also das einzige
+           Stueck mit Gesicht und mit einem Hof, der sie verraet. */
+        const hof = ctx.createRadialGradient(0, 0, 0, 0, 0, r * 2.2)
+        hof.addColorStop(0, rgb(palette.hell, 0.45))
+        hof.addColorStop(1, rgb(palette.hell, 0))
+        ctx.fillStyle = hof
+        ctx.beginPath()
+        ctx.arc(0, 0, r * 2.2, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.fillStyle = rgb(palette.hell)
+        ctx.beginPath()
+        ctx.ellipse(-r * 0.15, r * 0.35, r * 0.95, r * 0.55, 0, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.beginPath()
+        ctx.arc(r * 0.45, -r * 0.4, r * 0.48, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.fillStyle = rgb(palette.rot)
+        ctx.beginPath()
+        ctx.moveTo(r * 0.82, -r * 0.52)
+        ctx.lineTo(r * 1.5, -r * 0.3)
+        ctx.lineTo(r * 0.82, -r * 0.14)
+        ctx.closePath()
+        ctx.fill()
+        ctx.fillStyle = rgb(palette.nacht)
+        ctx.beginPath()
+        ctx.arc(r * 0.56, -r * 0.55, Math.max(1, r * 0.11), 0, Math.PI * 2)
+        ctx.fill()
+      }
+      ctx.restore()
+    }
+
+    /* Deterministisch aus der Hoehe gewuerfelt: beim Scrollen darf nichts
+       springen, und zwei Laeufe auf derselben Hoehe sehen gleich aus. */
+    const streu = (k) => {
+      let n = (k * 374761393 + 668265263) >>> 0
+      n = ((n ^ (n >>> 13)) * 1274126177) >>> 0
+      return ((n ^ (n >>> 16)) >>> 0) / 4294967296
+    }
+
+    /**
+     * Die Kulisse: blasse Umrisse aus dem Gewerk der aktuellen Welt, weit
+     * hinten. Sie sagt "du bist jetzt woanders", ohne dem Marmor die Buehne
+     * zu nehmen — deshalb Alpha 0.1 und nur Linien, keine Flaechen.
+     */
+    const kulisseMalen = (ctx, palette, g, yBild, kamera, hoehe, welt) => {
+      const { s, x0 } = g
+      const von = Math.floor(kamera) - 1
+      const bis = Math.ceil(kamera + hoehe / s) + 1
+      ctx.save()
+      ctx.globalAlpha = 0.1
+      ctx.strokeStyle = rgb(palette.creme)
+      ctx.lineWidth = Math.max(1.5, s * 0.007)
+      for (let k = von; k <= bis; k += 1) {
+        if (streu(k) > 0.45) continue
+        const cx = x0 + (0.14 + streu(k + 991) * 0.72) * s
+        const cy = yBild(k + streu(k + 77) * 0.8)
+        const gr = s * (0.16 + streu(k + 313) * 0.12)
+        ctx.beginPath()
+        if (welt === 'baustelle') {
+          /* Leiter. */
+          ctx.moveTo(cx - gr * 0.3, cy)
+          ctx.lineTo(cx - gr * 0.3, cy - gr * 1.6)
+          ctx.moveTo(cx + gr * 0.3, cy)
+          ctx.lineTo(cx + gr * 0.3, cy - gr * 1.6)
+          for (let i = 1; i <= 4; i += 1) {
+            ctx.moveTo(cx - gr * 0.3, cy - (gr * 1.6 * i) / 5)
+            ctx.lineTo(cx + gr * 0.3, cy - (gr * 1.6 * i) / 5)
+          }
+        } else if (welt === 'bad') {
+          /* Waschbecken auf einem Rohr. */
+          ctx.moveTo(cx - gr * 0.7, cy - gr)
+          ctx.lineTo(cx + gr * 0.7, cy - gr)
+          ctx.lineTo(cx + gr * 0.45, cy - gr * 0.55)
+          ctx.lineTo(cx - gr * 0.45, cy - gr * 0.55)
+          ctx.closePath()
+          ctx.moveTo(cx, cy - gr * 0.55)
+          ctx.lineTo(cx, cy)
+        } else if (welt === 'licht') {
+          /* Pendelleuchte. */
+          ctx.moveTo(cx, cy - gr * 1.8)
+          ctx.lineTo(cx, cy - gr * 0.7)
+          ctx.moveTo(cx - gr * 0.6, cy)
+          ctx.lineTo(cx, cy - gr * 0.7)
+          ctx.lineTo(cx + gr * 0.6, cy)
+          ctx.closePath()
+        } else if (welt === 'energie') {
+          /* PV-Modul im Anschnitt. */
+          ctx.rect(cx - gr * 0.85, cy - gr * 0.9, gr * 1.7, gr * 0.9)
+          ctx.moveTo(cx - gr * 0.28, cy - gr * 0.9)
+          ctx.lineTo(cx - gr * 0.28, cy)
+          ctx.moveTo(cx + gr * 0.28, cy - gr * 0.9)
+          ctx.lineTo(cx + gr * 0.28, cy)
+          ctx.moveTo(cx - gr * 0.85, cy - gr * 0.45)
+          ctx.lineTo(cx + gr * 0.85, cy - gr * 0.45)
+        } else if (welt === 'immobilien') {
+          /* Haus mit Dach. */
+          ctx.rect(cx - gr * 0.7, cy - gr, gr * 1.4, gr)
+          ctx.moveTo(cx - gr * 0.9, cy - gr)
+          ctx.lineTo(cx, cy - gr * 1.7)
+          ctx.lineTo(cx + gr * 0.9, cy - gr)
+        } else {
+          /* Showroom: eine Schrankfront mit zwei Griffen. */
+          ctx.rect(cx - gr * 0.8, cy - gr * 1.5, gr * 1.6, gr * 1.5)
+          ctx.moveTo(cx, cy - gr * 1.5)
+          ctx.lineTo(cx, cy)
+          ctx.moveTo(cx - gr * 0.22, cy - gr * 1.1)
+          ctx.lineTo(cx - gr * 0.22, cy - gr * 0.7)
+          ctx.moveTo(cx + gr * 0.22, cy - gr * 1.1)
+          ctx.lineTo(cx + gr * 0.22, cy - gr * 0.7)
+        }
+        ctx.stroke()
+      }
+      ctx.restore()
     }
 
     const figurMalen = (ctx, palette, cx, fuss, s, jetzt) => {
@@ -1606,11 +2107,15 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
       ctx.translate(0, -koerper * 0.94 - bogen * koerper * 0.85)
       ctx.rotate(wackel + bogen * 0.9)
       ctx.scale(1 / stauch, stauch)
-      muetzeMalen(
+      /* Das Accessoire wechselt mit der Welt, Krone und Kochmuetze kommen
+         vom Power-Up. Es liegt IMMER nur ueber dem Symbol — skaliert,
+         gedreht und gestaucht wird dieser Slot, nie das Logo darunter. */
+      accessoireMalen(
         ctx,
+        palette,
+        superAn ? 'krone' : muetzeAn ? 'muetze' : ACC_WELT[stand.welt] || 'muetze',
         w * 0.72,
-        rgb(muetzeAn ? palette.hell : palette.creme),
-        rgb(palette.nacht, 0.7),
+        muetzeAn || superAn,
       )
       ctx.restore()
 
@@ -1649,6 +2154,37 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
       ctx.rect(x0, 0, s, hoehe)
       ctx.clip()
 
+      /* Weltwechsel weich ueberblenden: ein harter Farbschnitt saehe aus
+         wie ein Fehler. Der vorherige Ton wird hier gemerkt, damit die
+         Logik nichts ueber das Bild wissen muss. */
+      const bs = bildRef.current
+      if (bs.weltKey !== stand.welt) {
+        bs.weltVor = bs.weltKey || stand.welt
+        bs.weltKey = stand.welt
+        bs.weltSeit = jetzt
+      }
+      const blende = Math.min(1, (jetzt - bs.weltSeit) / WELT_BLENDE_MS)
+      const wVor = WELT_BILD[bs.weltVor] || WELT_BILD.showroom
+      const wNach = WELT_BILD[bs.weltKey] || WELT_BILD.showroom
+      ctx.fillStyle = rgb(
+        mischen(wVor.ton, wNach.ton, blende),
+        wVor.kraft + (wNach.kraft - wVor.kraft) * blende,
+      )
+      ctx.fillRect(x0, 0, s, hoehe)
+      kulisseMalen(ctx, palette, g, yBild, kamera, hoehe, bs.weltKey)
+
+      /* LICHT AUS (§12): der Grund wird dunkel, die Platten bleiben hell.
+         Ein- und Ausblende, damit es nicht wie ein Aussetzer wirkt. */
+      if (bs.welleArt === 'lichtaus') {
+        const rest = bs.welleBis - jetzt
+        if (rest > 0) {
+          const ein = Math.min(1, (WELLE_BILD_MS.lichtaus - rest) / 400)
+          const aus = Math.min(1, rest / 600)
+          ctx.fillStyle = rgb(palette.nacht, 0.62 * Math.max(0, Math.min(ein, aus)))
+          ctx.fillRect(x0, 0, s, hoehe)
+        }
+      }
+
       /* Hoehenmarken rechts: alle 10 HOEHE ein Strich, alle 100 eine Linie. */
       const unten = Math.floor(kamera)
       const oben = Math.ceil(kamera + hoehe / s)
@@ -1680,6 +2216,12 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
       for (const p of stand.platten) {
         if (p.y > obenWelt || p.y < kamera - 0.2) continue
         plattenMalen(ctx, p, palette, g, yBild, jetzt)
+      }
+
+      /* Kleinkram liegt zwischen Platten und Figur. */
+      for (const st of stand.stuecke) {
+        if (st.weg || st.y > obenWelt || st.y < kamera - 0.2) continue
+        stueckMalen(ctx, palette, x0 + st.x * s, yBild(st.y), s, st, jetzt)
       }
 
       /* Kraefte liegen hinter der Figur, die Kuechenteile davor. */
@@ -1736,8 +2278,13 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
       const richtung = steuerungLesen()
       const dt = Math.min(250, Math.max(0, jetzt - vorher)) / 1000
       vorher = jetzt
+      /* Standbild nach einem Treffer: Physik und Partikel stehen still,
+         nur der Screenshake laeuft. Danach geht es normal weiter. */
+      const frost = bildRef.current.frostBis > jetzt
       if (stand && helfer) {
-        if (crashRef.current) {
+        if (frost) {
+          speicher = 0
+        } else if (crashRef.current) {
           /* Nach dem Absturz faellt nur noch die Figur, der Rest steht. */
           stand.spieler.vy -= SCHWERE * dt
           stand.spieler.y += stand.spieler.vy * dt
@@ -1777,8 +2324,9 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
           setKraefte(jetztKraefte)
         }
       }
-      /* Effekte laufen auch in der Pause und nach dem Absturz aus. */
-      const dtMs = Math.min(250, Math.max(0, dt * 1000))
+      /* Effekte laufen auch in der Pause und nach dem Absturz aus — nur im
+         Standbild nicht, sonst waere es keines. */
+      const dtMs = frost ? 0 : Math.min(250, Math.max(0, dt * 1000))
       fxRef.current.funken.schritt(dtMs)
       fxRef.current.rufe.schritt(dtMs)
       malen(jetzt)
@@ -1837,10 +2385,14 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
                 <span className="trm-jump-kraft" data-art="superkoch">SUPERKOCH {kraefte.superkoch}</span>
               )}
             </span>
-            <span className="trm-jump-hinweis" aria-hidden="true">
-              <span>‹ DAUMEN</span>
-              <span>DAUMEN ›</span>
-            </span>
+            {/* Zwei Woerter, zwei Seiten: der Hinweis sagt nicht nur WAS,
+                sondern gleich WO. Nach zwei Sekunden ist er weg. */}
+            {hinweis && !gelenkt && (
+              <span className="trm-jump-hinweis" aria-hidden="true">
+                <span>‹ LINKS DRÜCKEN</span>
+                <span>RECHTS DRÜCKEN ›</span>
+              </span>
+            )}
             {/* Der Tonschalter sitzt in der gemeinsamen Game-Shell
                 (SpielKarte), nicht mehr hier. */}
             {/* Eigene Taste in der Buehne: ihr Tipp lenkt nicht und beendet

@@ -2480,9 +2480,11 @@ await warte(900)
 await sP.evaluate(() => window.dispatchEvent(new CustomEvent('trm-game-over', { detail: 'leitungsfinder' })))
 await sP.waitForSelector('#leitungsfinder [data-practice-cta]', { timeout: 8000 }).catch(() => null)
 const ergP = await sP.$eval('#leitungsfinder .trm-spiel__mitte--ergebnis', (e) => e.innerText).catch(() => '')
-pruefe('Practice: DEIN PRACTICE-SCORE nach Game Over', /DEIN PRACTICE-SCORE/i.test(ergP), ergP.slice(0, 80))
+pruefe('Practice: DEIN SCORE nach Game Over', /DEIN SCORE/i.test(ergP), ergP.slice(0, 80))
 pruefe('Practice: Score steht da', (await sP.$('#leitungsfinder [data-practice-score]')) !== null)
-pruefe('Practice: CTA DECKEL AKTIVIEREN UND INS RANKING', /DECKEL AKTIVIEREN UND INS RANKING/i.test(ergP))
+/* Seit dem Funnel-Umbau heisst der Weg weiter „SCORE OFFIZIELL MACHEN" —
+   der Knopf verspricht das Ergebnis, nicht den Verwaltungsschritt. */
+pruefe('Practice: CTA SCORE OFFIZIELL MACHEN', /SCORE OFFIZIELL MACHEN/i.test(ergP), ergP.slice(0, 200))
 pruefe('Practice: kein Platz, keine Bestwerte',
   (await sP.$('#leitungsfinder .trm-spiel__marken')) === null && (await sP.$('#leitungsfinder .trm-spiel__platz')) === null)
 const rufeP = sP.__rufe.slice(rufeVorPractice)

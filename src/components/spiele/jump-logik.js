@@ -63,6 +63,23 @@ export const GOLD_FAKTOR = 1.45
    Hoehe eines normalen Sprungs. Sie traegt hoeher als Gold — genau darum
    gluehen die Pfeile darauf nach oben. Frueher fiel man hier durch. */
 export const HERD_FAKTOR = 1.75
+/*
+ * Federplatte: wirft genauso hoch wie die Boostplatte, gibt aber keine
+ * Punkte — dafuer nutzt sie sich nie ab. Hoeher darf sie nicht werfen: die
+ * Sprunghoehe geht quadratisch in MAX_JE_LANDUNG ein, und der Deckel des
+ * Servers (SPIELE.videko_jump.maxJeRunde) ist bei diesem Faktor schon
+ * ausgereizt. Der Unterschied zur roten Platte ist also nicht die Hoehe,
+ * sondern die Verlaesslichkeit.
+ */
+export const FEDER_FAKTOR = 1.75
+/* Magnetplatte: wirft beim Betreten den Magneten an. */
+export const PLATTE_MAGNET_DAUER = 4
+/* Teleportplatte: versetzt seitlich, mindestens ein Viertel des Rings. */
+export const TELEPORT_MIN = 0.25
+export const TELEPORT_STREUUNG = 0.2
+/* Nach dem Sprung durchs Portal kurz unverwundbar — sonst landet man im
+   Zweifel neben einem fliegenden Teil, ohne es gesehen zu haben. */
+export const TELEPORT_SCHONFRIST = 0.35
 export const VX_MAX = 1.05
 export const BESCHLEUNIGUNG = 10
 export const BREMSE = 8
@@ -122,11 +139,16 @@ export const VOLL_BEI = 600
 export const KNAPP_ANTEIL = 0.62
 
 /**
- * Dieselbe Kombo-Leiter wie in spielgefuehl.js (HEISS, KUECHENCHEF,
- * KUECHE ESKALIERT, KOMPLETT GESTOERT). Hier stehen nur die Zahlen: die
- * Logik kennt kein DOM und darf die Anzeige nicht importieren.
+ * Die Kombo-Leiter: LAEUFT. bei 3, SPORTLICH. bei 5, VIDEKO-MODUS. bei 8,
+ * WER SOLL DICH STOPPEN? bei 12. Hier stehen nur die Zahlen — die Logik
+ * kennt kein DOM und darf die Anzeige nicht importieren; die Woerter
+ * stehen in VidekoJump.jsx.
+ *
+ * Die letzte Stufe liegt bei 12 statt bei 10, weil sie etwas wert sein
+ * soll. Der Multiplikator dahinter bleibt gleich, MULT_MAX also auch —
+ * die Punktobergrenze aendert sich dadurch nicht.
  */
-export const COMBO_AB = [3, 5, 8, 10]
+export const COMBO_AB = [3, 5, 8, 12]
 export const COMBO_MULT = [1.5, 1.8, 2.2, 2.5]
 
 /** Der Kombo-Multiplikator fuer einen Stand. 1, solange keine Stufe erreicht ist. */
@@ -177,6 +199,81 @@ export const SUPERKOCH_DAUER = 5
 export const SUPERKOCH_MULT = 3
 /** Anteil aller Kraefte, der Superkoch ist. Bewusst klein. */
 export const SUPERKOCH_ANTEIL = 0.05
+
+/* ------------------------------------------------------------------ */
+/* Welten — der Turm fuehrt durch die Gewerke                           */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Wer steigt, verlaesst irgendwann die Kueche. Sechs Stufen, jede mit
+ * eigener Farbe, eigenem Inventar und eigenen fliegenden Teilen — das ist
+ * der Grund, ueberhaupt weiterzusteigen, wenn die Punkte schon stimmen.
+ *
+ * Die Schwellen folgen dem Steigtempo: bei ruhigem Spiel kommen rund 4
+ * HOEHE je Sekunde zusammen. SHOWROOM traegt damit ueber die erste halbe
+ * Minute und ueberlebt bewusst GEGNER_AB_HOEHE — die erste Welt soll man
+ * noch ohne fliegenden Kuehlschrank gesehen haben.
+ */
+export const WELTEN = [
+  { key: 'showroom', titel: 'SHOWROOM', ab: 0 },
+  { key: 'baustelle', titel: 'BAUSTELLE', ab: 130 },
+  { key: 'bad', titel: 'BAD', ab: 260 },
+  { key: 'licht', titel: 'LICHT', ab: 400 },
+  { key: 'energie', titel: 'ENERGIE', ab: 560 },
+  { key: 'immobilien', titel: 'IMMOBILIEN', ab: 740 },
+]
+
+/** Index der Welt zu einer Hoehe. Steigend, nie rueckwaerts gelesen. */
+export function weltIndexVon(hoehe) {
+  let i = 0
+  for (let k = 0; k < WELTEN.length; k += 1) if (hoehe >= WELTEN[k].ab) i = k
+  return i
+}
+export const weltVon = (hoehe) => WELTEN[weltIndexVon(hoehe)]
+
+/**
+ * Welches Inventar in welcher Welt fliegt. Das ist eine Gewichtung, keine
+ * Sperre: WELT_ANTEIL der Teile kommen aus der Welt, der Rest aus dem
+ * ganzen Lager. Sonst saehe man in einem Lauf nur vier der vierzehn Arten,
+ * und die Ueberraschung — ein Riesenschluessel im Bad — waere weg.
+ */
+export const WELT_GEGNER = {
+  showroom: ['backofen', 'kuehlschrank', 'pfanne', 'schranktuer'],
+  baustelle: ['werkzeugkiste', 'karton', 'farbrolle', 'kabeltrommel', 'bodenpaket'],
+  bad: ['waschbecken', 'karton', 'farbrolle', 'bodenpaket'],
+  licht: ['leuchte', 'deckenring', 'karton', 'schranktuer'],
+  energie: ['pvmodul', 'kabeltrommel', 'werkzeugkiste', 'deckenring'],
+  immobilien: ['maklerschild', 'karton', 'kuehlschrank', 'backofen'],
+}
+export const WELT_ANTEIL = 0.75
+
+/* ------------------------------------------------------------------ */
+/* Sammelobjekte — Kleinkram, der sich lohnt                            */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Goldmuenzen, Schluessel und — sehr selten — eine Badeente. Sie liegen in
+ * den Luecken zwischen den Platten und kosten nichts ausser einem kleinen
+ * Umweg.
+ *
+ * Wichtig fuer den Server: Beute zaehlt KEINE Runde. Wuerde jedes Stueck
+ * `stand.runden` erhoehen, kaeme die Pruefung `dauerMs < runden *
+ * msJeRunde` in api/_terminal-kern.js ins Rutschen und ein ehrlicher Lauf
+ * fiele als Betrug auf. Stattdessen sammelt sich die Beute an und wird bei
+ * der naechsten Landung ausgezahlt — hoechstens BEUTE_MAX auf einmal, der
+ * Rest wandert in die Landung danach. Verloren geht nichts, und
+ * MAX_JE_LANDUNG bleibt beweisbar.
+ */
+export const STUECK_ARTEN = ['muenze', 'schluessel', 'ente']
+export const STUECK_WERT = { muenze: 20, schluessel: 45, ente: 120 }
+export const STUECK_R = 0.035
+/** Deckel je Landung. Siehe MAX_JE_LANDUNG ganz unten. */
+export const BEUTE_MAX = 120
+export const STUECK_AB_HOEHE = 12
+/** Hoechstens so viele Stuecke liegen in einer Luecke. */
+export const STUECK_REIHE = 3
+export const ENTE_ANTEIL = 0.012
+export const SCHLUESSEL_ANTEIL = 0.16
 
 /**
  * Was durch die Baustelle fliegt. VIDEKO baut nicht nur Kuechen, also fliegt
@@ -256,15 +353,34 @@ export const GEGNER_FREI = 0.18
 /* ------------------------------------------------------------------ */
 
 /**
- * Vier Wellen, die den Generator fuer ein paar Kettenglieder umstellen.
+ * Acht Wellen, die den Generator fuer ein paar Kettenglieder umstellen.
  * Sie sind selten, kurz und angekuendigt: der Reiz liegt darin, dass man
- * sie erkennt, nicht darin, dass sie ueberraschen.
- *   stampede    eine Reihe schwerer Teile, alle in dieselbe Richtung
- *   ofenalarm   mehrere Boostplatten hintereinander
- *   goldrausch  die Kette wird zu Gold
- *   kuechenchef ein geschenkter Doppel-Multiplikator beim Eintritt
+ * sie erkennt, nicht darin, dass sie ueberraschen. Ueber WELLE_GLIEDER
+ * Kettenglieder dauert eine Welle rund vier bis sieben Sekunden — lang
+ * genug zum Wiedererkennen, kurz genug, dass sie nie unfair wird.
+ *   stampede        eine Reihe schwerer Teile, alle in dieselbe Richtung
+ *   ofenalarm       mehrere Boostplatten hintereinander
+ *   goldrausch      die Kette wird zu Gold, dazu Muenzen
+ *   kuechenchef     ein geschenkter Doppel-Multiplikator beim Eintritt
+ *   baustellenchaos gemischtes Baustelleninventar, aus beiden Richtungen
+ *   lichtaus        die Umgebung wird dunkel, nur Gold und Muenzen leuchten
+ *   pvboost         Federplatten reihenweise, es geht steil nach oben
+ *   makler          Schluessel fliegen durchs Bild
+ *
+ * Nur stampede und baustellenchaos erzwingen Gegner. Ihr Anteil bleibt
+ * damit bei einem Viertel — genau wie vorher mit vier Wellen, als nur
+ * stampede das tat.
  */
-export const WELLEN = ['stampede', 'ofenalarm', 'goldrausch', 'kuechenchef']
+export const WELLEN = [
+  'stampede',
+  'ofenalarm',
+  'goldrausch',
+  'kuechenchef',
+  'baustellenchaos',
+  'lichtaus',
+  'pvboost',
+  'makler',
+]
 export const WELLE_AB_HOEHE = 120
 export const WELLE_CHANCE = 0.055
 /** So viele Weltbreiten liegen mindestens zwischen zwei Wellen. */
@@ -420,8 +536,24 @@ export function eingabeAus({ finger = [], links = false, rechts = false, neigung
 /* Platten                                                             */
 /* ------------------------------------------------------------------ */
 
-/** Welche Plattenarten es gibt. */
-export const ARTEN = ['boden', 'normal', 'bewegt', 'lift', 'glas', 'broeckel', 'gold', 'herd']
+/**
+ * Welche Plattenarten es gibt. Die letzten drei geben keine Punkte, sie
+ * aendern die Bahn: feder wirft hoch, magnetplatte zieht den Kleinkram
+ * heran, teleport versetzt quer durch den Ring.
+ */
+export const ARTEN = [
+  'boden',
+  'normal',
+  'bewegt',
+  'lift',
+  'glas',
+  'broeckel',
+  'gold',
+  'herd',
+  'feder',
+  'magnetplatte',
+  'teleport',
+]
 /** Welche Rhythmus-Abschnitte es gibt. */
 export const ABSCHNITTE = ['frei', 'treppe', 'zickzack', 'weit', 'dicht']
 
@@ -443,13 +575,23 @@ export function regeln(hoehe) {
     schmal: hoehe < 40 ? 0.04 : 0.1 + 0.2 * s,
     breit: 0.16 - 0.08 * s,
     streuung: 0.28 + 0.22 * s,
-    bewegt: hoehe < 30 ? 0 : 0.08 + 0.22 * s,
+    /* Die ersten rund zehn Sekunden (bis HOEHE 45) gehoert der Turm dem
+       Spieler: nichts wackelt, nichts bricht weg. Man soll Erfolg haben,
+       bevor man Regeln lernt — danach kommt in Schueben dazu, was stoert. */
+    bewegt: hoehe < 45 ? 0 : 0.08 + 0.22 * s,
     tempo: 0.12 + 0.28 * s,
     lift: hoehe < 90 ? 0 : 0.03 + 0.09 * s,
-    glas: hoehe < 50 ? 0 : 0.04 + 0.08 * s,
-    broeckel: hoehe < 35 ? 0 : 0.05 + 0.09 * s,
+    glas: hoehe < 70 ? 0 : 0.04 + 0.08 * s,
+    broeckel: hoehe < 50 ? 0 : 0.05 + 0.09 * s,
     gold: hoehe < 20 ? 0 : 0.07,
     herd: hoehe < 80 ? 0 : 0.06 + 0.16 * s,
+    /* Die drei Sonderfaelle. Selten, sonst verlieren sie ihren Reiz — und
+       der Teleport ganz besonders, der die Bahn am staerksten umwirft. */
+    feder: hoehe < 60 ? 0 : 0.05 + 0.05 * s,
+    magnetplatte: hoehe < 110 ? 0 : 0.03 + 0.03 * s,
+    teleport: hoehe < 160 ? 0 : 0.012 + 0.014 * s,
+    /* Kleinkram liegt frueh herum: er ist harmlos und zeigt, wohin es geht. */
+    stueck: hoehe < STUECK_AB_HOEHE ? 0 : 0.34 - 0.08 * s,
     extra: 0.45 - 0.35 * s,
     /* Kraefte werden nach oben hin seltener: oben sind sie mehr wert. */
     gabe: hoehe < GABE_AB_HOEHE ? 0 : 0.17 - 0.06 * s,
@@ -512,6 +654,8 @@ function platteNeu(stand, felder) {
     weg: false,
     fallV: 0,
     heiss: false,
+    /* Nur fuer 'teleport': wohin es die Figur beim Absprung versetzt. */
+    zielX: 0,
     ...felder,
   }
   p.yAlt = p.y
@@ -622,7 +766,7 @@ export function kettenGlied(stand) {
       neu.y = y + z() * hub
       neu.yAlt = neu.y
       neu.v = (0.08 + 0.1 * z()) * (z() < 0.5 ? -1 : 1)
-    } else if (w < grenze + r.bewegt * (ab.art === 'zickzack' ? 0.6 : 1)) {
+    } else if (w < (grenze += r.bewegt * (ab.art === 'zickzack' ? 0.6 : 1))) {
       neu.art = 'bewegt'
       const weite = 0.08 + z() * 0.32
       neu.xMin = Math.max(halb, x - weite)
@@ -632,6 +776,19 @@ export function kettenGlied(stand) {
         neu.xMax = 1 - halb
       }
       neu.v = r.tempo * (0.6 + 0.8 * z()) * (z() < 0.5 ? -1 : 1)
+    } else if (w < (grenze += r.feder)) {
+      /* Die Feder wirft so hoch wie die rote Platte, aber verlaesslich und
+         ohne Punkte. Sie ist der ruhige Weg nach oben. */
+      neu.art = 'feder'
+    } else if (w < (grenze += r.magnetplatte)) {
+      neu.art = 'magnetplatte'
+    } else if (w < grenze + r.teleport) {
+      /* Mindestens ein Viertel des Rings weiter — sonst merkt man es nicht.
+         Erreichbar bleibt alles: erreichbar() rechnet ohnehin mit dem
+         schlechtesten Fall auf dem Ring, die Seite spielt dort keine Rolle. */
+      neu.art = 'teleport'
+      const richtung = z() < 0.5 ? -1 : 1
+      neu.zielX = umbrechen(x + richtung * (TELEPORT_MIN + z() * TELEPORT_STREUUNG))
     }
   }
   stand.platten.push(neu)
@@ -654,9 +811,19 @@ export function kettenGlied(stand) {
     zusatz(r.glas && w < r.glas ? 'glas' : r.broeckel && w < r.glas + r.broeckel ? 'broeckel' : 'normal')
   }
   if (welle === 'ofenalarm' || (r.herd && z() < r.herd * (ab.art === 'zickzack' ? 1.4 : 1))) zusatz('herd')
+  /* PV-BOOST: reihenweise Federn, es geht steil nach oben. */
+  if (welle === 'pvboost') zusatz('feder')
 
   gabeVielleicht(stand, basis, dy, hoehe, r)
-  gegnerVielleicht(stand, basis, dy, hoehe, r, welle === 'stampede')
+  stueckeVielleicht(stand, basis, dy, hoehe, r, welle)
+  gegnerVielleicht(
+    stand,
+    basis,
+    dy,
+    hoehe,
+    r,
+    welle === 'stampede' ? 'stampede' : welle === 'baustellenchaos' ? 'chaos' : null,
+  )
 }
 
 /**
@@ -709,29 +876,89 @@ function gabeVielleicht(stand, basis, dy, hoehe, r) {
 }
 
 /**
+ * Kleinkram in die Luecke: Goldmuenzen, seltener ein Schluessel, sehr
+ * selten die Badeente. Wie die Kraefte haengt er frei und ist nie ein Weg,
+ * den man gehen MUSS — wer geradeaus springt, verliert nichts ausser ein
+ * paar Punkten.
+ *
+ * Zwei Wellen bestimmen mit, was liegt: im MAKLER-MODUS fliegen Schluessel,
+ * im GOLDRAUSCH und bei LICHT AUS leuchten Muenzen.
+ */
+function stueckeVielleicht(stand, basis, dy, hoehe, r, welle) {
+  if (dy < 0.1) return
+  const z = stand.zufall
+  const zwang =
+    welle === 'makler' ? 'schluessel' : welle === 'goldrausch' || welle === 'lichtaus' ? 'muenze' : null
+  if (!zwang) {
+    if (!r.stueck) return
+    if (z() >= r.stueck) return
+    if (basis - stand.letztesStueck < 0.5) return
+  }
+  const anzahl = 1 + Math.floor(z() * STUECK_REIHE)
+  const xBasis = klemmen(z(), STUECK_R + 0.06, 1 - STUECK_R - 0.06)
+  const versatz = (z() * 2 - 1) * 0.055
+  const raum = Math.max(0.02, dy - 0.08)
+  for (let i = 0; i < anzahl; i += 1) {
+    let art = zwang
+    if (!art) {
+      const w = z()
+      art = w < ENTE_ANTEIL ? 'ente' : w < ENTE_ANTEIL + SCHLUESSEL_ANTEIL ? 'schluessel' : 'muenze'
+    }
+    stand.naechsteId += 1
+    stand.stuecke.push({
+      id: stand.naechsteId,
+      art,
+      x: klemmen(umbrechen(xBasis + i * versatz), STUECK_R, 1 - STUECK_R),
+      y: basis + 0.04 + ((i + 0.5) / anzahl) * raum,
+      weg: false,
+      wegBis: 0,
+    })
+  }
+  stand.letztesStueck = basis
+}
+
+/**
+ * Welche Art gerade fliegt. Drei von vier Teilen stammen aus der Welt, in
+ * der man unterwegs ist — der Rest aus dem ganzen Lager. Eine harte Sperre
+ * waere falsch: Gegner beginnen erst bei GEGNER_AB_HOEHE, und man saehe in
+ * einem guten Lauf sonst nur eine Handvoll der vierzehn Arten.
+ */
+function gegnerArtFuer(z, hoehe) {
+  const liste = WELT_GEGNER[weltVon(hoehe).key]
+  if (liste && liste.length && z() < WELT_ANTEIL) return liste[Math.floor(z() * liste.length) % liste.length]
+  return GEGNER_ARTEN[Math.floor(z() * GEGNER_ARTEN.length) % GEGNER_ARTEN.length]
+}
+
+/**
  * Ein fliegendes Baustellenteil zwischen zwei Gliedern. Seit ein Treffer
  * toetet, haengt es nie direkt ueber oder unter einer Platte: es sitzt
  * genau in der Mitte der Luecke, in einer Luecke, die gross genug ist. So
  * bleibt immer Zeit, seitlich vorbeizulaufen — und weil die Kueche ein Ring
  * ist, gibt es diesen Weg auch immer.
  *
- * In der STAMPEDE (`erzwingen`) ist es keine Auswahl mehr: dann kommt eine
- * Reihe schwerer Teile, und die kommen alle aus derselben Richtung.
+ * `erzwingen` kennt zwei Formen. In der STAMPEDE kommt eine Reihe
+ * schwerer Teile, alle aus derselben Richtung. Im BAUSTELLENCHAOS fliegt
+ * gemischtes Baustelleninventar, und zwar aus beiden Richtungen — dasselbe
+ * Tempo, aber kein Rudel, dem man einfach ausweicht.
  */
-function gegnerVielleicht(stand, basis, dy, hoehe, r, erzwingen = false) {
+function gegnerVielleicht(stand, basis, dy, hoehe, r, erzwingen = null) {
   if (dy < GEGNER_FREI) return
   if (!erzwingen && !r.gegner) return
   const z = stand.zufall
   if (!erzwingen && z() >= r.gegner) return
   const y = basis + dy * (0.4 + 0.2 * z())
   if (!erzwingen && y - stand.letzterGegner < GEGNER_ABSTAND) return
-  const art = erzwingen
-    ? 'kuehlschrank'
-    : GEGNER_ARTEN[Math.floor(z() * GEGNER_ARTEN.length) % GEGNER_ARTEN.length]
+  const CHAOS = ['werkzeugkiste', 'karton', 'farbrolle', 'kabeltrommel', 'bodenpaket']
+  const art =
+    erzwingen === 'stampede'
+      ? 'kuehlschrank'
+      : erzwingen === 'chaos'
+        ? CHAOS[Math.floor(z() * CHAOS.length) % CHAOS.length]
+        : gegnerArtFuer(z, hoehe)
   const muster = GEGNER_MUSTER[art] || 'zieht'
   const tempo = r.gegnerTempo * (0.7 + 0.6 * z()) * (muster === 'schwer' ? GEGNER_SCHWER : 1)
   /* Die Stampede zieht als Rudel: eine Richtung fuer die ganze Welle. */
-  const seite = erzwingen ? stand.stampedeSeite : z() < 0.5 ? -1 : 1
+  const seite = erzwingen === 'stampede' ? stand.stampedeSeite : z() < 0.5 ? -1 : 1
   stand.naechsteId += 1
   const g = {
     id: stand.naechsteId,
@@ -783,6 +1010,8 @@ export function nachfuellen(stand) {
   }
   /* Eingesammeltes und Weggeflogenes darf nicht im Speicher liegen bleiben. */
   if (stand.gaben.length && stand.gaben[0].y < grenze) stand.gaben = stand.gaben.filter((g) => g.y >= grenze && !g.weg)
+  if (stand.stuecke.length && stand.stuecke[0].y < grenze)
+    stand.stuecke = stand.stuecke.filter((g) => g.y >= grenze && !g.weg)
   if (stand.gegner.length && stand.gegner[0].y < grenze) stand.gegner = stand.gegner.filter((g) => g.y >= grenze && !g.weg)
   /* Angesagte Wellen sind erledigt und muessen nicht liegen bleiben. */
   if (stand.wellen.length > 6) stand.wellen = stand.wellen.filter((w) => !w.gemeldet)
@@ -799,8 +1028,14 @@ function standNeu(startwert) {
     letztesGold: -10,
     gaben: [],
     gegner: [],
+    /* Kleinkram und das, was er bisher eingebracht hat. `beute` wird bei
+       der naechsten Landung ausgezahlt, siehe BEUTE_MAX. */
+    stuecke: [],
+    beute: 0,
+    enten: 0,
     letzteGabe: -10,
     letzterGegner: -10,
+    letztesStueck: -10,
     /* Seltene Wellen: `welleArt`/`welleRest` steuern den Generator,
        `wellen` merkt sich, wo eine anfaengt, damit die Komponente sie erst
        ansagt, wenn die Figur dort ankommt. */
@@ -812,6 +1047,10 @@ function standNeu(startwert) {
     spieler: { x: 0.5, y: 0, vx: 0, vy: ABSPRUNG },
     kamera: -0.2,
     hoehe: 0,
+    /* Welche Welt gerade laeuft. Nur steigend gelesen: wer faellt, bekommt
+       die Ansage nicht ein zweites Mal. */
+    welt: WELTEN[0].key,
+    weltIndex: 0,
     punkte: 0,
     runden: 0,
     zeit: 0,
@@ -1021,16 +1260,18 @@ export function schritt(stand, richtung = 0) {
      Umweg ab, den es nicht gibt — er spart das millimetergenaue Zielen
      waehrend eines Sprungs, und genau das nervt am Sammeln. */
   if (stand.magnetBis > stand.zeit) {
-    for (const gb of stand.gaben) {
-      if (gb.weg) continue
+    const anziehen = (gb) => {
+      if (gb.weg) return
       const dx = ringAbstand(gb.x, s.x)
       const dy = s.y + FIGUR_H / 2 - gb.y
       const d = Math.hypot(dx, dy)
-      if (d > MAGNET_R || d < 1e-6) continue
+      if (d > MAGNET_R || d < 1e-6) return
       const zug = Math.min(d, MAGNET_V * dt)
       gb.x = umbrechen(gb.x + (dx / d) * zug)
       gb.y += (dy / d) * zug
     }
+    for (const gb of stand.gaben) anziehen(gb)
+    for (const st of stand.stuecke) anziehen(st)
   }
 
   /* Kraefte einsammeln. Sie liegen frei in der Luft, man nimmt sie im
@@ -1047,6 +1288,21 @@ export function schritt(stand, richtung = 0) {
     else if (gb.art === 'superkoch') stand.superBis = stand.zeit + SUPERKOCH_DAUER
     else stand.turboBis = stand.zeit + TURBO_DAUER
     ereignisse.push({ art: 'gabe', gabe: gb, gart: gb.art })
+  }
+
+  /* Kleinkram einsammeln. Er erhoeht bewusst NICHT stand.runden: die
+     Serverpruefung `dauerMs < runden * msJeRunde` wuerde sonst einen
+     ehrlichen Lauf als Betrug lesen. Der Wert wandert in stand.beute und
+     wird bei der naechsten Landung gedeckelt ausgezahlt. */
+  for (const st of stand.stuecke) {
+    if (st.weg) continue
+    if (Math.abs(ringAbstand(st.x, s.x)) > STUECK_R + FIGUR_B / 2) continue
+    if (Math.abs(st.y - (s.y + FIGUR_H / 2)) > STUECK_R + FIGUR_H / 2) continue
+    st.weg = true
+    st.wegBis = stand.zeit + 0.5
+    stand.beute += STUECK_WERT[st.art] || 0
+    if (st.art === 'ente') stand.enten += 1
+    ereignisse.push({ art: 'stueck', stueck: st, sart: st.art })
   }
 
   /* Treffer. Im Turbo und als Superkoch raeumt die Figur alles beiseite.
@@ -1091,6 +1347,15 @@ export function schritt(stand, richtung = 0) {
     ereignisse.push({ art: 'welle', welle: w.art })
   }
 
+  /* Weltwechsel. Nur aufwaerts: wer zurueckfaellt, bekommt die Ansage
+     nicht noch einmal. */
+  const wi = weltIndexVon(stand.hoehe)
+  if (wi > stand.weltIndex) {
+    stand.weltIndex = wi
+    stand.welt = WELTEN[wi].key
+    ereignisse.push({ art: 'welt', welt: WELTEN[wi].key, titel: WELTEN[wi].titel })
+  }
+
   if (stand.erzeugen && !stand.vorbei) {
     if (s.y > stand.kamera + KAMERA_HALT) stand.kamera = s.y - KAMERA_HALT
     nachfuellen(stand)
@@ -1110,7 +1375,14 @@ function landen(stand, p) {
      bekam nur ein "HEISS!" zu sehen — niemand konnte daraus lesen, wozu sie
      gut ist. Jetzt schleudert sie hoeher als Gold, jedes Mal. */
   const boost = p.art === 'herd'
-  s.vy = boost ? ABSPRUNG * HERD_FAKTOR : p.art === 'gold' ? ABSPRUNG * GOLD_FAKTOR : ABSPRUNG
+  const feder = p.art === 'feder'
+  s.vy = boost
+    ? ABSPRUNG * HERD_FAKTOR
+    : feder
+      ? ABSPRUNG * FEDER_FAKTOR
+      : p.art === 'gold'
+        ? ABSPRUNG * GOLD_FAKTOR
+        : ABSPRUNG
   if (boost) p.heiss = true
   const ereignis = {
     art: 'landung',
@@ -1119,8 +1391,20 @@ function landen(stand, p) {
     punkte: 0,
     gold: false,
     boost,
+    feder,
     meilenstein: 0,
     hoehe: stand.hoehe,
+  }
+  if (p.art === 'magnetplatte') {
+    stand.magnetBis = Math.max(stand.magnetBis, stand.zeit + PLATTE_MAGNET_DAUER)
+    ereignis.magnet = true
+  } else if (p.art === 'teleport') {
+    /* Quer durch den Ring. Danach kurz unverwundbar: man soll nicht in
+       etwas hineinfallen, das man nie gesehen hat. */
+    ereignis.teleport = { vonX: s.x, nachX: umbrechen(p.zielX) }
+    s.x = umbrechen(p.zielX)
+    s.vx = 0
+    stand.unverwundbarBis = Math.max(stand.unverwundbarBis, stand.zeit + TELEPORT_SCHONFRIST)
   }
   if (p.art === 'glas') {
     p.weg = true
@@ -1200,6 +1484,15 @@ function werten(stand, p, ereignis, knappPruefen) {
     punkte += HERD_BONUS
     ereignis.boost = true
   }
+  /* Eingesammelter Kleinkram wird hier ausgezahlt, gedeckelt auf BEUTE_MAX.
+     Was darueber liegt, bleibt liegen und kommt bei der naechsten Landung —
+     verloren geht nichts, und MAX_JE_LANDUNG bleibt beweisbar. */
+  if (stand.beute > 0) {
+    const zahlung = Math.min(BEUTE_MAX, stand.beute)
+    fest += zahlung
+    stand.beute -= zahlung
+    ereignis.beute = zahlung
+  }
   const gesamt = Math.round(punkte * mult) + fest
   stand.punkte += gesamt
   ereignis.punkte = gesamt
@@ -1212,12 +1505,20 @@ function werten(stand, p, ereignis, knappPruefen) {
  * gehen mal dem groesstmoeglichen Multiplikator, der feste Meilenstein
  * kommt unveraendert obendrauf.
  *
- * Der weiteste Sprung kommt jetzt von der Boostplatte, nicht mehr von Gold;
+ * Der weiteste Sprung kommt von Boostplatte und Feder, nicht mehr von Gold;
  * und weil eine Platte immer genau eine Art hat, kann auch nur einer der
- * beiden Boni anfallen — darum `Math.max` und nicht die Summe.
+ * beiden Boni anfallen — darum `Math.max` und nicht die Summe. Die Feder
+ * gibt keinen Bonus, traegt aber gleich hoch, also geht sie nur in die
+ * Hoehe ein.
+ *
+ * Ganz zuletzt kommt die Beute dazu: eingesammelter Kleinkram wird bei der
+ * Landung ausgezahlt und ist auf BEUTE_MAX gedeckelt. Der Multiplikator
+ * greift dort nicht — sonst waere die Obergrenze nicht mehr zu halten.
  */
 export const MAX_JE_LANDUNG =
-  ((Math.ceil(SPRUNG_HOEHE * Math.max(GOLD_FAKTOR, HERD_FAKTOR) ** 2 * HOEHE_JE_EINHEIT) + 1) * PUNKTE_JE_HOEHE +
+  ((Math.ceil(SPRUNG_HOEHE * Math.max(GOLD_FAKTOR, HERD_FAKTOR, FEDER_FAKTOR) ** 2 * HOEHE_JE_EINHEIT) + 1) *
+    PUNKTE_JE_HOEHE +
     Math.max(GOLD_BONUS, HERD_BONUS)) *
     MULT_MAX +
-  MEILENSTEIN_BONUS
+  MEILENSTEIN_BONUS +
+  BEUTE_MAX

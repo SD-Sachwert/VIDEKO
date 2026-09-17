@@ -244,6 +244,9 @@ export default function SpielKarte({ spiel, lauf, best, leiste = null, children 
                 {probeRang && (
                   <p className="trm-spiel__probe-rang" data-art={probeRang.art} role="status">
                     {probeRang.text}
+                    {probeRang.zusatz ? (
+                      <span className="trm-spiel__probe-bis">{probeRang.zusatz}</span>
+                    ) : null}
                   </p>
                 )}
                 <p className="trm-spiel__jagd">{practiceWeg?.frageText ?? T.practiceFrage}</p>
@@ -255,6 +258,18 @@ export default function SpielKarte({ spiel, lauf, best, leiste = null, children 
                 >
                   {practiceWeg?.ctaText ?? T.practiceCta}
                 </button>
+                {/* Was der Knopf bedeutet — und warum der Probe-Score nicht
+                    mitkommt. Steht nur im Practice-Kontext, nie im echten
+                    Lauf. */}
+                {practiceWeg?.ctaSub ? (
+                  <p className="trm-spiel__probe-sub">{practiceWeg.ctaSub}</p>
+                ) : null}
+                {practiceWeg?.ctaDrei ? (
+                  <p className="trm-spiel__probe-drei">{practiceWeg.ctaDrei}</p>
+                ) : null}
+                {practiceWeg?.neuText ? (
+                  <p className="trm-spiel__probe-neu">{practiceWeg.neuText}</p>
+                ) : null}
               </>
             )}
             {neuerBest && <p className="trm-spiel__neu">{T.neuerBest}</p>}

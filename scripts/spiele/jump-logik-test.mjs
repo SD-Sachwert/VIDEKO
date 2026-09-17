@@ -4,14 +4,18 @@
  *   node scripts/spiele/jump-logik-test.mjs
  *
  * Prueft Erreichbarkeit des Plattengenerators, messbare Abwechslung,
- * Eingabelogik (Finger, Tasten, Neigung), Sonderplatten und die Wertung
- * gegen die Servergrenzen.
+ * Eingabelogik (Finger, Tasten, Neigung), Sonderplatten, die sechs Welten,
+ * die Sammelobjekte und die Wertung gegen die Servergrenzen.
  */
 import {
   ABSCHNITTE,
+  ARTEN,
+  BEUTE_MAX,
   BREITE_MIN,
   BROECKEL_HAELT,
+  COMBO_AB,
   DY_GRENZE,
+  ENTE_ANTEIL,
   FIGUR_B,
   FIGUR_H,
   GEGNER_AB_HOEHE,
@@ -25,24 +29,36 @@ import {
   NEIGUNG_MAX,
   NEIGUNG_TOT,
   NEIGUNG_VOLL,
+  PLATTE_MAGNET_DAUER,
   SCHWERE,
   SPRUNG_HOEHE,
+  STUECK_AB_HOEHE,
+  STUECK_ARTEN,
+  STUECK_WERT,
+  TELEPORT_MIN,
   VX_MAX,
+  WELLEN,
+  WELTEN,
+  WELT_GEGNER,
   ZEIGER_VOLL,
   breiteJetzt,
   eingabeAus,
   erreichbar,
   hoeheVon,
+  kettenGlied,
   neigungAchse,
   neigungGrad,
   neigungRichtung,
   neuesSpiel,
   plattenErzeugen,
+  regeln,
   ringAbstand,
   schritt,
   seiteVon,
   tiefpass,
   umbrechen,
+  weltIndexVon,
+  weltVon,
   yOben,
   yUnten,
   zeigerAchse,
@@ -480,6 +496,238 @@ function landungen(stand, sekunden) {
   pruefe('andere Muster behalten ihre Breite', breiteJetzt({ art: 'pfanne', muster: 'zieht', b: 0.12 }) === 0.12)
 }
 pruefe('Schwerkraft und Sprung wie bisher', SCHWERE === 3.4 && SPRUNG_HOEHE === 0.42)
+
+console.log('\nWelten')
+{
+  const steigend = WELTEN.every((w, i) => i === 0 || w.ab > WELTEN[i - 1].ab)
+  pruefe(`${WELTEN.length} Welten mit streng steigenden Schwellen`, WELTEN.length === 6 && steigend)
+  pruefe('die erste Welt faengt bei 0 an', WELTEN[0].ab === 0)
+  /* Der SHOWROOM muss laenger halten, als der erste Gegner braucht — sonst
+     hat man die erste Welt nie ohne fliegenden Kuehlschrank gesehen. */
+  pruefe(
+    `SHOWROOM traegt ueber GEGNER_AB_HOEHE hinaus (${WELTEN[1].ab} > ${GEGNER_AB_HOEHE})`,
+    WELTEN[1].ab > GEGNER_AB_HOEHE,
+  )
+  let monoton = true
+  let letzter = -1
+  for (let h = 0; h <= 1200; h += 1) {
+    const i = weltIndexVon(h)
+    if (i < letzter) monoton = false
+    letzter = i
+  }
+  pruefe(
+    'weltIndexVon steigt nie zurueck und erreicht die letzte Welt',
+    monoton && weltIndexVon(0) === 0 && weltIndexVon(1200) === WELTEN.length - 1,
+  )
+  pruefe(
+    'weltVon passt zu weltIndexVon',
+    weltVon(0).key === WELTEN[0].key && weltVon(1200).key === WELTEN[WELTEN.length - 1].key,
+  )
+  pruefe(
+    'jede Welt hat Titel und eigenes Inventar',
+    WELTEN.every((w) => !!w.titel && Array.isArray(WELT_GEGNER[w.key]) && WELT_GEGNER[w.key].length >= 3),
+  )
+  const ausWelten = new Set(Object.values(WELT_GEGNER).flat())
+  pruefe(
+    'jede Gegnerart kommt in mindestens einer Welt vor',
+    GEGNER_ARTEN.every((a) => ausWelten.has(a)),
+    GEGNER_ARTEN.filter((a) => !ausWelten.has(a)).join(','),
+  )
+  pruefe('keine Welt nennt eine unbekannte Gegnerart', [...ausWelten].every((a) => GEGNER_ARTEN.includes(a)))
+}
+{
+  /* Angesagt wird nur aufwaerts: wer zurueckfaellt, hoert die Welt nicht
+     ein zweites Mal. */
+  const stand = neuesSpiel(1)
+  stand.erzeugen = false
+  stand.platten = []
+  const gesehen = []
+  for (const h of [0, 50, 140, 140, 300, 100, 300, 800]) {
+    stand.hoehe = h
+    for (const e of schritt(stand, 0)) if (e.art === 'welt') gesehen.push(e.welt)
+  }
+  pruefe(
+    'Weltwechsel wird je Welt genau einmal angesagt, Rueckfall zaehlt nicht',
+    gesehen.join(',') === 'baustelle,bad,immobilien',
+    gesehen.join(',') || 'nichts',
+  )
+}
+
+console.log('\nSammelobjekte')
+{
+  pruefe(
+    'jede Sammelart hat einen Wert',
+    STUECK_ARTEN.every((a) => Number.isFinite(STUECK_WERT[a]) && STUECK_WERT[a] > 0),
+  )
+  pruefe(
+    `kein Einzelstueck sprengt den Deckel (${BEUTE_MAX})`,
+    STUECK_ARTEN.every((a) => STUECK_WERT[a] <= BEUTE_MAX),
+  )
+  pruefe(
+    'die Badeente ist die Ausnahme und ist es wert',
+    ENTE_ANTEIL < 0.02 && STUECK_WERT.ente > STUECK_WERT.muenze * 3,
+  )
+}
+{
+  /* Einsammeln darf KEINE Runde erzeugen. Der Server rechnet
+     dauerMs < runden * msJeRunde — eine geschenkte Runde je Muenze wuerde
+     einen ehrlichen Lauf als Betrug lesen lassen. */
+  const stand = testStand({ art: 'normal', x: 0.5, y: 1, b: 0.3 })
+  stand.stuecke = [
+    { id: 90, art: 'muenze', x: 0.5, y: 1.05, weg: false, wegBis: 0 },
+    { id: 91, art: 'schluessel', x: 0.5, y: 1.06, weg: false, wegBis: 0 },
+  ]
+  const vorher = stand.runden
+  let eingesammelt = 0
+  for (let i = 0; i < 12; i += 1) for (const e of schritt(stand, 0)) if (e.art === 'stueck') eingesammelt += 1
+  pruefe('Kleinkram wird im Vorbeifliegen eingesammelt', eingesammelt === 2 && stand.stuecke.every((s) => s.weg))
+  pruefe('Einsammeln erzeugt keine Runde', stand.runden === vorher, `${vorher} auf ${stand.runden}`)
+  pruefe(
+    'der Wert liegt als Beute bereit',
+    stand.beute === STUECK_WERT.muenze + STUECK_WERT.schluessel,
+    `${stand.beute}`,
+  )
+}
+{
+  /* Ausgezahlt wird bei der Landung, gedeckelt — der Rest kommt spaeter. */
+  const stand = testStand({ art: 'normal', x: 0.5, y: 1, b: 0.3 })
+  stand.beute = BEUTE_MAX + 55
+  const l = landungen(stand, 2)
+  pruefe('Beute wird bei der Landung gedeckelt ausgezahlt', l[0]?.beute === BEUTE_MAX, `${l[0]?.beute}`)
+  pruefe('der Rest geht nicht verloren', stand.beute === 55, `${stand.beute}`)
+}
+
+console.log('\nFeder, Magnetplatte und Teleport')
+{
+  const gipfel = (art) => {
+    const stand = testStand({ art, x: 0.5, y: 1, b: 0.3 })
+    let max = 0
+    for (let i = 0; i < 300; i += 1) {
+      schritt(stand, 0)
+      max = Math.max(max, stand.spieler.y)
+    }
+    return max - 1
+  }
+  const feder = gipfel('feder')
+  const normal = gipfel('normal')
+  const herd = gipfel('herd')
+  pruefe(
+    `Feder traegt wie die Boostplatte (${feder.toFixed(2)} zu ${herd.toFixed(2)}, normal ${normal.toFixed(2)})`,
+    Math.abs(feder - herd) < 0.01 && feder > normal + 0.05,
+  )
+  const punkteFuer = (art) => landungen(testStand({ art, x: 0.5, y: 1, b: 0.3 }), 2)[0]?.punkte ?? -1
+  pruefe('Feder gibt Hoehe, aber keinen Plattenbonus', punkteFuer('feder') === punkteFuer('normal'))
+  pruefe('die Boostplatte schon', punkteFuer('herd') === punkteFuer('normal') + HERD_BONUS)
+}
+{
+  const stand = testStand({ art: 'magnetplatte', x: 0.5, y: 1, b: 0.3 })
+  const l = landungen(stand, 0.5)
+  pruefe(
+    'Magnetplatte schaltet den Magneten ein',
+    l[0]?.magnet === true && stand.magnetBis > stand.zeit + PLATTE_MAGNET_DAUER - 0.5,
+  )
+}
+{
+  const stand = testStand({ art: 'teleport', x: 0.5, y: 1, b: 0.3, zielX: 0.85 })
+  const e = landungen(stand, 0.5)[0]
+  pruefe(
+    'Teleport versetzt quer durch den Ring',
+    !!e?.teleport && Math.abs(ringAbstand(e.teleport.vonX, e.teleport.nachX)) >= TELEPORT_MIN,
+    JSON.stringify(e?.teleport ?? null),
+  )
+  pruefe('danach ist man kurz unverwundbar', stand.unverwundbarBis > stand.zeit)
+  pruefe(
+    'und steht ohne Seitwaertsschwung da',
+    Math.abs(ringAbstand(stand.spieler.x, 0.85)) < 1e-9 && stand.spieler.vx === 0,
+    `${stand.spieler.x} / ${stand.spieler.vx}`,
+  )
+}
+{
+  /* Was der Generator ueber viele Seeds wirklich baut. */
+  const sammel = new Map()
+  const plattenArten = new Set()
+  const teleports = []
+  const wellenArten = new Set()
+  for (const seed of [...SEEDS, 3, 19, 77, 512, 8191, 60013]) {
+    const stand = neuesSpiel(seed)
+    for (let i = 0; i < 900; i += 1) kettenGlied(stand)
+    for (const s of stand.stuecke) sammel.set(s.art, (sammel.get(s.art) || 0) + 1)
+    for (const p of stand.platten) {
+      plattenArten.add(p.art)
+      if (p.art === 'teleport') teleports.push(p)
+    }
+    for (const w of stand.wellen) wellenArten.add(w.art)
+  }
+  const gesamt = [...sammel.values()].reduce((a, b) => a + b, 0)
+  pruefe('alle drei Sammelarten kommen vor', STUECK_ARTEN.every((a) => sammel.has(a)), [...sammel.keys()].join(','))
+  pruefe(
+    `Muenzen sind die Regel (${Math.round(((sammel.get('muenze') || 0) / gesamt) * 100)} % von ${gesamt})`,
+    (sammel.get('muenze') || 0) / gesamt > 0.7,
+  )
+  pruefe(
+    `Enten bleiben eine Ueberraschung (${sammel.get('ente') || 0} von ${gesamt})`,
+    (sammel.get('ente') || 0) / gesamt < 0.03,
+  )
+  pruefe(
+    'Feder, Magnetplatte und Teleport werden auch wirklich gebaut',
+    ['feder', 'magnetplatte', 'teleport'].every((a) => plattenArten.has(a)),
+    [...plattenArten].join(','),
+  )
+  pruefe('keine unbekannte Plattenart', [...plattenArten].every((a) => ARTEN.includes(a)))
+  pruefe(
+    `jede Teleportplatte versetzt mindestens ${TELEPORT_MIN} (${teleports.length} geprueft)`,
+    teleports.length > 0 && teleports.every((p) => Math.abs(ringAbstand(p.x, p.zielX)) >= TELEPORT_MIN - 1e-9),
+  )
+  pruefe(`${WELLEN.length} Wellen, keine doppelt`, WELLEN.length === 8 && new Set(WELLEN).size === 8)
+  pruefe(
+    'jede Welle kommt vor',
+    WELLEN.every((w) => wellenArten.has(w)),
+    WELLEN.filter((w) => !wellenArten.has(w)).join(','),
+  )
+}
+
+console.log('\nSchwierigkeitskurve')
+{
+  /* Die ersten rund zehn Sekunden (bis HOEHE 45) steht der Turm still.
+     Man soll Erfolg haben, bevor man Regeln lernt. */
+  pruefe(
+    'bis HOEHE 45 bewegt sich keine Platte',
+    regeln(0).bewegt === 0 && regeln(44).bewegt === 0 && regeln(45).bewegt > 0,
+  )
+  pruefe(
+    'und bis dahin bricht nichts weg',
+    regeln(44).glas === 0 && regeln(44).broeckel === 0 && regeln(50).broeckel > 0 && regeln(70).glas > 0,
+  )
+  pruefe('Gold ist die erste Abwechslung', regeln(0).gold === 0 && regeln(20).gold > 0)
+  pruefe('Kleinkram liegt fast von Anfang an herum', regeln(0).stueck === 0 && regeln(STUECK_AB_HOEHE).stueck > 0)
+  pruefe(
+    'Gegner kommen erst deutlich spaeter',
+    regeln(GEGNER_AB_HOEHE - 1).gegner === 0 && regeln(GEGNER_AB_HOEHE).gegner > 0,
+  )
+  pruefe(
+    'die Sonderplatten staffeln sich nach oben',
+    regeln(59).feder === 0 &&
+      regeln(60).feder > 0 &&
+      regeln(109).magnetplatte === 0 &&
+      regeln(110).magnetplatte > 0 &&
+      regeln(159).teleport === 0 &&
+      regeln(160).teleport > 0,
+  )
+  /* Die Sonderarten duerfen die Kette nie ganz auffressen — sonst gibt es
+     ganz oben keine normale Platte mehr. */
+  let voll = 0
+  for (let h = 0; h <= 1500; h += 10) {
+    const r = regeln(h)
+    voll = Math.max(voll, r.glas + r.broeckel + r.lift + r.bewegt + r.feder + r.magnetplatte + r.teleport)
+  }
+  pruefe(`Sonderarten fressen die Kette nie ganz auf (hoechstens ${Math.round(voll * 100)} %)`, voll < 0.9)
+  /* Entscheidender als die Summe: worauf man nicht stehenbleiben kann.
+     Glas und Broeckel duerfen auch ganz oben die Minderheit bleiben. */
+  let muerbe = 0
+  for (let h = 0; h <= 1500; h += 10) muerbe = Math.max(muerbe, regeln(h).glas + regeln(h).broeckel)
+  pruefe(`muerbe Platten bleiben die Minderheit (hoechstens ${Math.round(muerbe * 100)} %)`, muerbe < 0.35)
+  pruefe('Kombo-Leiter nach Vorgabe: 3 / 5 / 8 / 12', COMBO_AB.join(',') === '3,5,8,12')
+}
 
 console.log(`\n${gut} ok, ${schlecht} fehlgeschlagen`)
 process.exit(schlecht ? 1 : 0)
