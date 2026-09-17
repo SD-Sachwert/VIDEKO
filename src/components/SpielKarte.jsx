@@ -149,15 +149,21 @@ export default function SpielKarte({ spiel, lauf, best, leiste = null, children 
           <p className="trm-spiel__zeile">{spiel.zeile}</p>
         </div>
         {/* Die Endlosspiele (lauf.sofort) duerfen schon waehrend des
-            Speicherns neu starten: der alte Lauf wird trotzdem abgegeben. */}
-        {!laeuft && (phase !== 'sendet' || lauf.sofort) && (
+            Speicherns neu starten: der alte Lauf wird trotzdem abgegeben.
+
+            Sobald das Ergebnis steht, uebernimmt NOCHMAL im Ergebnisblock
+            den Neustart. Dieser Knopf verschwindet dann - zwei Knoepfe mit
+            derselben Wirkung uebereinander sind keine Auswahl, sondern nur
+            eine Frage mehr. Uebrig bleibt die klare Staffel: NOCHMAL, und
+            daneben der Weg, der den Lauf zaehlen laesst. */}
+        {!laeuft && !nochmalMoeglich && (phase !== 'sendet' || lauf.sofort) && (
           <button
             type="button"
             className="trm-cta trm-cta--klein"
             onClick={lauf.starten}
             disabled={phase === 'startet'}
           >
-            {phase === 'vorbei' ? T.nochmal : T.start}
+            {T.start}
           </button>
         )}
       </div>

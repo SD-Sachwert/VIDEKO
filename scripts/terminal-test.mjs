@@ -933,7 +933,10 @@ await warte(200)
 console.log('  … Runde laeuft aus (30 s)')
 await warte(31000)
 t = await text(seite)
-pruefe('Runde endet von selbst', /RUNDE VORBEI|NOCH EINE RUNDE/i.test(t),
+/* Der Neustart heisst im Ergebnisblock NOCHMAL. Den zweiten Knopf
+   NOCH EINE RUNDE im Kartenkopf gibt es nach dem Rundenende nicht
+   mehr; das Wort bleibt hier nur als Rueckfall stehen. */
+pruefe('Runde endet von selbst', /RUNDE VORBEI|NOCH EINE RUNDE|NOCHMAL/i.test(t),
   await seite
     .$eval('#truhenknacker .trm-spiel__ergebnis-label', (e) => e.textContent)
     .catch(() => 'kein Ergebnisblock'))

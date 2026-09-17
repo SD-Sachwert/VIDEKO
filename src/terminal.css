@@ -6600,6 +6600,48 @@ textarea.trm-eingabe {
   color: var(--trm-creme);
 }
 
+/* Die Probekarte ist die erste Karte der Seite und traegt den wichtigsten
+   Knopf. Bei 390 px stand SOFORT SPIELEN neben dem Text und nahm ihm so
+   viel Breite weg, dass VIDEKO JUMP mitten im Namen umbrach und der Satz
+   darunter in einem Auslassungszeichen endete. Auf schmalen Geraeten
+   bekommt der Text deshalb die ganze Zeile und der Knopf die naechste -
+   dasselbe Verhalten wie im Kopf der Spielkarte. */
+@media (max-width: 479px) {
+  .trm-probespiel .trm-spielwahl {
+    flex-wrap: wrap;
+  }
+
+  /* 24 px Ikon plus 12 px Abstand: der Text nimmt genau den Rest. */
+  .trm-probespiel .trm-spielwahl__text {
+    flex-basis: calc(100% - 36px);
+  }
+
+  /* Volle Breite. Der wichtigste Knopf der Seite ist damit auch der
+     groesste und mit dem Daumen kaum zu verfehlen. */
+  .trm-probespiel .trm-spielwahl__los {
+    flex: 1 0 100%;
+    margin-top: 10px;
+    padding: 11px 12px;
+    text-align: center;
+  }
+
+  /* Jetzt ist Platz fuer den ganzen Satz. Er darf in zwei Zeilen
+     umbrechen - abgeschnitten wird hier nichts mehr. */
+  .trm-probespiel .trm-spielwahl__zeile {
+    overflow: visible;
+    white-space: normal;
+    text-overflow: clip;
+  }
+}
+
+/* Der Name bleibt zusammen. Sollte er doch einmal brechen, dann zwischen
+   den beiden Woertern und nicht mitten im Wort. */
+.trm-probespiel .trm-spielwahl__titel {
+  overflow-wrap: normal;
+  word-break: keep-all;
+  text-wrap: balance;
+}
+
 .trm-probespiel__sub {
   margin: clamp(8px, 2.4vw, 10px) 0 0;
   font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
