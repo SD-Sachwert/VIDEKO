@@ -293,10 +293,18 @@ export const TEXTE = {
     /* Der Vergleich nach dem Probespiel. Er liest die oeffentliche
        Rangliste und rechnet nur nach, wie viele Eintraege darueber liegen.
        Reicht der Score nicht in die veroeffentlichte Liste, wird keine Zahl
-       erfunden — dann sagt practiceRangKnapp genau das. */
+       erfunden — dann sagt practiceRangKnapp genau das.
+
+       Und solange die Liste fast leer ist, wird ueberhaupt kein Platz
+       genannt: „PLATZ 3“ unter drei Eintraegen ist rechnerisch richtig und
+       trotzdem wertlos — es klingt nach viel und ist nichts. Dann sagen
+       practiceRangJung und practiceRangJungBis lieber, was wirklich der
+       Fall ist: vorne ist noch alles frei. */
     practiceRang: 'DAMIT WÄRST DU AKTUELL PLATZ {platz}.',
     practiceRangEins: 'DU WÄRST GERADE PLATZ 1.',
     practiceRangKnapp: 'MIT {punkte} PUNKTEN REICHT ES NOCH NICHT IN DIE TOP {top}.',
+    practiceRangJung: 'DIE BESTENLISTE FÜLLT SICH GERADE.',
+    practiceRangJungBis: 'JETZT KANNST DU DICH NOCH GANZ VORNE FESTSETZEN.',
     /* Nur wenn die veroeffentlichte Liste wirklich drei Eintraege hat —
        sonst gibt es keine Top 3, an der sich etwas messen liesse. */
     practiceRangBis: 'NOCH {fehlt} PUNKTE BIS TOP {top}.',
@@ -741,6 +749,10 @@ export const zahl = (n) => Number(n ?? 0).toLocaleString('de-DE')
  * zwanzig Eintraege; mehr gibt der Server ohne Sitzung nicht heraus, und mehr
  * wird hier auch nicht behauptet:
  *
+ *   - hat die veroeffentlichte Liste weniger als PROBE_MINDEST Eintraege,
+ *     wird gar kein Platz genannt. Nicht weil er falsch waere, sondern
+ *     weil er nichts bedeutet: wer bei zwei Eintraegen „Platz 3“ liest,
+ *     liest eine leere Rangliste und glaubt, er habe etwas erreicht;
  *   - liegt der Wert ueber mindestens einem Eintrag, ist der Platz exakt
  *     abzaehlbar — er wird genannt;
  *   - liegt er unter allen, ist der echte Platz unbekannt. Dann wird keine
@@ -753,25 +765,55 @@ export const zahl = (n) => Number(n ?? 0).toLocaleString('de-DE')
  */
 export const PROBE_SPITZE = 3
 
+/* Die zweite Marke darunter. Wer weit hinten liegt, dem nuetzt der
+   Abstand zur Top 3 nichts — das naechste erreichbare Ziel ist die
+   Top 10. Genannt wird sie nur, wenn die Liste so weit reicht. */
+export const PROBE_MITTE = 10
+
+/* Ab so vielen echten Eintraegen ist ein Platz eine Aussage. Darunter
+   ist die Rangliste noch im Aufbau und der Satz sagt genau das. */
+export const PROBE_MINDEST = 5
+
 export function probeRangSatz(stand, liste, punkte) {
   if (stand === 'laedt') return { art: 'laedt', text: TEXTE.g.practiceRangLaedt }
   if (stand === 'fehler') return { art: 'fehler', text: TEXTE.g.practiceRangFehler }
   if (stand === 'leer') return { art: 'leer', text: TEXTE.g.practiceRangLeer }
   if (stand !== 'da' || !Array.isArray(liste) || !liste.length) return null
   const wert = Number(punkte) || 0
+
+  /* Eine Rangliste mit drei Eintraegen macht aus jedem Score einen
+     Spitzenplatz. Das ist korrekt gezaehlt und trotzdem das Gegenteil
+     einer Auszeichnung — wer es liest, sieht sofort, dass niemand da ist.
+     Also wird unterhalb von PROBE_MINDEST kein Platz behauptet, auch kein
+     knapper: die Liste ist jung, und genau das steht dann da. */
+  if (liste.length < PROBE_MINDEST) {
+    return {
+      art: 'jung',
+      text: TEXTE.g.practiceRangJung,
+      zusatz: TEXTE.g.practiceRangJungBis,
+    }
+  }
+
   const besser = liste.filter((p) => p > wert).length
   const platz = besser + 1
 
-  /* Der Abstand zur Spitze — aber nur, wenn es die Spitze wirklich gibt.
-     Hat die veroeffentlichte Liste keine drei Eintraege, gibt es auch keine
-     Top 3, an der sich etwas messen liesse; dann bleibt der Zusatz weg.
+  /* Der Abstand zur naechsten Marke — aber nur zu einer, die in der
+     veroeffentlichten Liste wirklich steht. Wer hinter Platz 10 liegt,
+     bekommt die Top 10 genannt; naeher dran zaehlt nur noch die Top 3.
      Gerechnet wird gegen den letzten Platz, der noch dazugehoert: ein Punkt
-     mehr als diese Punktzahl reicht. Nichts davon ist geschaetzt. */
+     mehr als diese Punktzahl reicht. Nichts davon ist geschaetzt — beide
+     Schwellen sind Werte aus der Liste selbst. */
+  const marke =
+    platz > PROBE_MITTE && liste.length >= PROBE_MITTE
+      ? PROBE_MITTE
+      : platz > PROBE_SPITZE && liste.length >= PROBE_SPITZE
+        ? PROBE_SPITZE
+        : null
   let zusatz = null
-  if (platz > PROBE_SPITZE && liste.length >= PROBE_SPITZE) {
-    const schwelle = liste[PROBE_SPITZE - 1]
+  if (marke) {
+    const schwelle = liste[marke - 1]
     const fehlt = Math.max(1, schwelle - wert + 1)
-    zusatz = fuelle(TEXTE.g.practiceRangBis, { fehlt: zahl(fehlt), top: PROBE_SPITZE })
+    zusatz = fuelle(TEXTE.g.practiceRangBis, { fehlt: zahl(fehlt), top: marke })
   }
 
   if (besser >= liste.length) {

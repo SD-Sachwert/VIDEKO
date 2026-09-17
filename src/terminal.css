@@ -3276,6 +3276,8 @@ textarea.trm-eingabe {
 
 /* „DER ERSTE PLATZ WARTET NOCH." ist keine Stoermeldung, sondern die beste
    Nachricht, die der Satz haben kann — also bleibt sie laut und golden.
+   Dasselbe gilt fuer `jung`: eine Rangliste, die sich gerade erst fuellt,
+   ist eine Gelegenheit und wird auch so gesetzt.
    Nur `laedt` und `fehler` sind wirklich leise: da ist gerade nichts da. */
 .trm-spiel__probe-rang[data-art='laedt'],
 .trm-spiel__probe-rang[data-art='fehler'] {

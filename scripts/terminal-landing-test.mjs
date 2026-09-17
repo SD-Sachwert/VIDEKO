@@ -20,7 +20,15 @@ import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 
-import { PRACTICE_STANDARD, PROBE_SPITZE, TEXTE, probeListeAus, probeRangSatz } from '../src/data/terminal.js'
+import {
+  PRACTICE_STANDARD,
+  PROBE_MINDEST,
+  PROBE_MITTE,
+  PROBE_SPITZE,
+  TEXTE,
+  probeListeAus,
+  probeRangSatz,
+} from '../src/data/terminal.js'
 
 const wurzel = join(dirname(fileURLToPath(import.meta.url)), '..')
 const lies = (p) => readFileSync(join(wurzel, p), 'utf8')
@@ -41,8 +49,10 @@ function pruefe(name, bedingung, info = '') {
 console.log('\n— Der Satz nach der Probrunde: nur abzaehlbare Plaetze')
 {
   /* Eine veroeffentlichte Liste, wie sie der Server ohne Sitzung liefert:
-     nur Punktwerte, absteigend. */
+     nur Punktwerte, absteigend. Fuenf Eintraege — das ist genau die
+     Schwelle, ab der ein Platz ueberhaupt genannt werden darf. */
   const liste = [30000, 24000, 18000, 12000, 9000]
+  pruefe('Die Testliste erreicht die Schwelle gerade so', liste.length === PROBE_MINDEST)
 
   const oben = probeRangSatz('da', liste, 31000)
   pruefe('Bester Wert: Platz 1', oben?.art === 'platz' && oben.text.includes('PLATZ 1.'), oben?.text)
@@ -91,10 +101,27 @@ console.log('\n— Der Satz nach der Probrunde: nur abzaehlbare Plaetze')
     probeRangSatz('da', liste, 25000)?.zusatz == null,
     String(probeRangSatz('da', liste, 25000)?.zusatz),
   )
+  /* Weiter hinten ist die Top 3 kein Ziel mehr, sondern eine Absage.
+     Dann wird die naechste Marke genannt, die in der Liste wirklich
+     steht — die Top 10. Zwoelf Eintraege: 12.000 bis 1.000 in
+     Tausenderschritten, der zehnte Wert ist 3.000. */
+  const lang = Array.from({ length: 12 }, (_, i) => 12000 - i * 1000)
+  const hinten = probeRangSatz('da', lang, 2500)
   pruefe(
-    'Ohne drei veroeffentlichte Eintraege wird keine Top 3 behauptet',
-    probeRangSatz('da', [100, 90], 1)?.zusatz == null,
-    String(probeRangSatz('da', [100, 90], 1)?.zusatz),
+    'Hinter Platz 10 zaehlt der Abstand zur Top 10, nicht zur Top 3',
+    hinten?.zusatz?.includes(`TOP ${PROBE_MITTE}`) && hinten.zusatz.includes('501'),
+    hinten?.zusatz,
+  )
+  const dazwischen = probeRangSatz('da', lang, 5000)
+  pruefe(
+    'Innerhalb der Top 10 zaehlt wieder die Spitze',
+    dazwischen?.zusatz?.includes(`TOP ${PROBE_SPITZE}`) && dazwischen.zusatz.includes('5.001'),
+    dazwischen?.zusatz,
+  )
+  pruefe(
+    'Ohne zehn veroeffentlichte Eintraege wird keine Top 10 behauptet',
+    !/TOP 10/.test(probeRangSatz('da', liste, 1)?.zusatz ?? ''),
+    probeRangSatz('da', liste, 1)?.zusatz,
   )
 
   const gleich = probeRangSatz('da', liste, 9000)
@@ -117,8 +144,8 @@ console.log('\n— Der Satz nach der Probrunde: nur abzaehlbare Plaetze')
   )
   pruefe(
     'Die Laenge ist nicht fest verdrahtet',
-    probeRangSatz('da', [100, 90], 1)?.text.includes('TOP 2'),
-    probeRangSatz('da', [100, 90], 1)?.text,
+    probeRangSatz('da', [600, 500, 400, 300, 200, 100], 50)?.text.includes('TOP 6'),
+    probeRangSatz('da', [600, 500, 400, 300, 200, 100], 50)?.text,
   )
   pruefe(
     'Eine volle Zwanzigerliste sagt TOP 20',
@@ -127,6 +154,60 @@ console.log('\n— Der Satz nach der Probrunde: nur abzaehlbare Plaetze')
       Array.from({ length: 20 }, (_, i) => 1000 - i),
       1,
     )?.text.includes('TOP 20'),
+  )
+}
+
+/* ---------------------------------------------------------------- */
+console.log('\n— Die junge Rangliste: lieber kein Platz als ein leerer Platz')
+{
+  /* Der Anlass: bei drei offiziellen Scores machte ein Probelauf von 60
+     Punkten „PLATZ 3“. Rechnerisch stimmt das, und trotzdem steht da
+     eine Auszeichnung fuer eine leere Liste. Bis PROBE_MINDEST wird
+     deshalb kein Platz genannt — weder ein guter noch ein knapper. */
+  for (const n of [1, 2, 3, 4]) {
+    const kurz = Array.from({ length: n }, (_, i) => 1000 - i * 10)
+    const oben = probeRangSatz('da', kurz, 99999)
+    const unten = probeRangSatz('da', kurz, 1)
+    pruefe(`${n} Eintraege: kein Platz, egal wie gut gespielt wurde`, oben?.art === 'jung', oben?.text)
+    pruefe(`${n} Eintraege: auch kein knapper Satz`, unten?.art === 'jung', unten?.text)
+    for (const satz of [oben, unten]) {
+      const ganz = `${satz.text} ${satz.zusatz ?? ''}`
+      pruefe(`${n} Eintraege: keine Zahl im Satz`, !/[0-9]/.test(ganz), ganz)
+      pruefe(`${n} Eintraege: das Wort PLATZ faellt nicht`, !/PLATZ/.test(ganz), ganz)
+      pruefe(`${n} Eintraege: und keine TOP N`, !/TOP/.test(ganz), ganz)
+    }
+  }
+
+  /* Ab der Schwelle zaehlt wieder die echte Rangliste. */
+  const gerade = Array.from({ length: PROBE_MINDEST }, (_, i) => 1000 - i * 10)
+  pruefe(
+    `Ab ${PROBE_MINDEST} Eintraegen wird der Platz wieder genannt`,
+    probeRangSatz('da', gerade, 975)?.text.includes('PLATZ 4.'),
+    probeRangSatz('da', gerade, 975)?.text,
+  )
+
+  /* Der junge Satz ist eine Einladung, keine Entschuldigung. */
+  pruefe(
+    'Der junge Satz nennt die Bestenliste beim Namen',
+    TEXTE.g.practiceRangJung === 'DIE BESTENLISTE FÜLLT SICH GERADE.',
+    TEXTE.g.practiceRangJung,
+  )
+  pruefe(
+    'Und sagt, was jetzt moeglich ist',
+    TEXTE.g.practiceRangJungBis === 'JETZT KANNST DU DICH NOCH GANZ VORNE FESTSETZEN.',
+    TEXTE.g.practiceRangJungBis,
+  )
+  pruefe(
+    'Beide kommen ohne Platzhalter aus',
+    !/[{]/.test(TEXTE.g.practiceRangJung) && !/[{]/.test(TEXTE.g.practiceRangJungBis),
+  )
+
+  /* Null Eintraege sind etwas anderes als wenige: da ist wirklich noch
+     niemand, und der erste Platz steht offen. */
+  pruefe(
+    'Ohne jeden Eintrag bleibt es bei der Einladung auf Platz 1',
+    probeRangSatz('leer', [], 60)?.text === TEXTE.g.practiceRangLeer,
+    probeRangSatz('leer', [], 60)?.text,
   )
 }
 
@@ -145,7 +226,7 @@ console.log('\n— Der Satz, wenn es nichts zu vergleichen gibt')
   }
   pruefe(
     'Ohne Punktzahl wird mit 0 gerechnet, nicht mit NaN',
-    !/NaN/.test(probeRangSatz('da', [100], undefined)?.text ?? ''),
+    !/NaN/.test(probeRangSatz('da', [100, 90, 80, 70, 60], undefined)?.text ?? ''),
   )
 }
 
@@ -164,6 +245,9 @@ console.log('\n— Die Serverantwort auspacken: genau die Form, die wirklich kom
         eintraege: [
           { platz: 1, instagram: 'a_name', punkte: 8450, ich: false },
           { platz: 2, instagram: 'b_name', punkte: 6100, ich: false },
+          { platz: 3, instagram: 'c_name', punkte: 5200, ich: false },
+          { platz: 4, instagram: 'd_name', punkte: 3300, ich: false },
+          { platz: 5, instagram: 'e_name', punkte: 1500, ich: false },
         ],
         eigenerPlatz: null,
         eigenePunkte: null,
@@ -174,7 +258,11 @@ console.log('\n— Die Serverantwort auspacken: genau die Form, die wirklich kom
 
   const raus = probeListeAus(serverform, 'kuechen_merge')
   pruefe('Die echte Serverform wird gelesen, nicht verworfen', Array.isArray(raus), JSON.stringify(raus))
-  pruefe('Es kommen die Punktwerte heraus, absteigend', JSON.stringify(raus) === '[8450,6100]', JSON.stringify(raus))
+  pruefe(
+    'Es kommen die Punktwerte heraus, absteigend',
+    JSON.stringify(raus) === '[8450,6100,5200,3300,1500]',
+    JSON.stringify(raus),
+  )
 
   /* Und der Satz danach muss daraus wirklich einen Platz machen — das war
      der sichtbare Schaden: „noch keine oeffentliche Rangliste", obwohl eine
