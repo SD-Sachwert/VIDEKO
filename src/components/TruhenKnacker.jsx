@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import SpielKarte from './SpielKarte.jsx'
 import { useSpielLauf } from './spiel-lauf.js'
+import { istPausiert } from './spiele/spiel-pause.js'
 import {
   MITTE,
   RUNDEN_BONUS,
@@ -107,6 +108,9 @@ function Ring({ ring, zustand, bahnRef }) {
   )
 }
 
+/* Der Schluessel dieses Spiels — er steht im Lauf und im Pause-Register. */
+const GAME = 'truhenknacker'
+
 export default function TruhenKnacker({ sitzung, best = null, onErgebnis }) {
   const [runde, setRunde] = useState(1)
   const [ringe, setRinge] = useState([])
@@ -123,7 +127,7 @@ export default function TruhenKnacker({ sitzung, best = null, onErgebnis }) {
   const meldungNrRef = useRef(0)
   const sanftRef = useRef(false)
 
-  const lauf = useSpielLauf({ sitzung, game: 'truhenknacker', onErgebnis })
+  const lauf = useSpielLauf({ sitzung, game: GAME, onErgebnis })
   const { laeuft, punkteGeben, rundeZaehlen, zeitStrafe, starten: laufStarten } = lauf
 
   /* Einmal nachsehen, ob jemand weniger Bewegung moechte. */
@@ -182,6 +186,15 @@ export default function TruhenKnacker({ sitzung, best = null, onErgebnis }) {
     let vorher = performance.now()
 
     const schritt = (jetzt) => {
+      /* Minimiert steht die Runde still. Der Zeitanker wandert mit,
+         sonst kaeme der erste Frame danach mit einem dt von mehreren
+         Sekunden zurueck und rechnete die Runde in einem Schritt zu
+         Ende. */
+      if (istPausiert(GAME)) {
+        vorher = jetzt
+        frame = requestAnimationFrame(schritt)
+        return
+      }
       const dt = Math.min(0.05, (jetzt - vorher) / 1000)
       vorher = jetzt
 

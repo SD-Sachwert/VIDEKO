@@ -118,16 +118,29 @@ export const TEXTE = {
        erklaeren. Es laeuft ohne Konto, ohne Ticket und ohne Score — der
        Text sagt das vorher, damit niemand glaubt, hier sei schon etwas
        gewertet worden. */
-    probeTitel: 'ERST SPIELEN. DANN REDEN WIR.',
-    probeCta: 'SOFORT SPIELEN',
+    probeTitel: 'ERST SPIELEN. DANN GEWINNEN.',
+    probeLead:
+      'Teste dich kostenlos – ohne Anmeldung. Mit einem offiziellen Account zählt dein Score fürs Ranking und die Game-Preise.',
+    probeCta: 'JETZT KOSTENLOS SPIELEN',
     probeSub: 'Keine Anmeldung nötig.',
     probeNotiz:
-      'Diese Runde ist ein Probespiel: kein offizieller Score, keine Teilnahme, kein Los. Die Ziehung hängt allein an deiner Deckelnummer.',
+      'Diese Runde ist ein Probespiel: kein offizieller Score, keine Rangliste, kein Los in der Deckelziehung.',
     /* Die zwei Wege hinein, angerissen — ausgespielt wird beides erst
        hinter dem Code. */
-    deckelTitel: '5.000 NUMMERIERTE DECKEL.',
+    /* Es wird MEHR als eine Nummer gezogen: die Aktion hat mehrere
+       ausgeschriebene Gewinne. Die Anzahl steht nicht hier, sondern kommt
+       aus terminal-gewinne.js — wer dort einen Preis ergänzt, ändert diesen
+       Satz mit, ohne ihn anzufassen. */
+    deckelTitel: '{gesamt} NUMMERIERTE DECKEL. MEHRERE GEWINNER.',
     deckelText:
-      'Jeder Deckel trägt eine handschriftliche Nummer von 1 bis {gesamt}. Genau eine davon wird gezogen. Dein Deckel ist dein Los.',
+      'Jeder Deckel trägt eine handschriftliche Nummer von 1 bis {gesamt}. Gezogen wird mehr als eine Nummer — {gewinne} Gewinne sind ausgeschrieben. Jeder nummerierte Deckel ist eine Chance in der Deckelziehung.',
+    /* Drei getrennte Wege zu einem Gewinn. Der Abschnitt steht auf der
+       Landing, weil sonst der Eindruck bleibt, ohne Deckel sei nichts zu
+       holen — das stimmt seit den Game-Preisen nicht mehr. */
+    gewinnTitel: 'NICHT NUR ZUM SPASS.',
+    gewinnSub: 'Es gibt drei getrennte Wege zu einem Gewinn.',
+    gewinnNotiz:
+      'Deckelziehung und Game-Preise sind getrennt. Ohne Deckel kannst du spielen, in den Ranglisten stehen und Game-Preise gewinnen — nur an der Deckelziehung nimmst du dann nicht teil.',
     einladungTitel: 'ODER DU WIRST EINGELADEN.',
     einladungText:
       'Wer schon dabei ist, kann Einladungen weitergeben. Eine Einladung öffnet dieselbe Tür wie ein Code — mit Deckel bleibt sie trotzdem nötig, um zu gewinnen.',
@@ -146,7 +159,7 @@ export const TEXTE = {
     belegt: {
       titel: 'DIESER DECKEL WURDE BEREITS AKTIVIERT.',
       frage: 'Bist du sicher, dass du den physischen Deckel mit dieser Nummer besitzt?',
-      hinweis: '5.000 NUMMERIERTE DECKEL. DIE GEZOGENE NUMMER MUSS MIT DEM ORIGINALDECKEL NACHGEWIESEN WERDEN.',
+      hinweis: '{gesamt} NUMMERIERTE DECKEL, MEHRERE GEWINNER. JEDE GEZOGENE NUMMER MUSS MIT DEM ORIGINALDECKEL NACHGEWIESEN WERDEN.',
       ja: 'JA, ICH HABE DEN DECKEL',
       nein: 'NEIN, ZURÜCK',
     },
@@ -227,7 +240,7 @@ export const TEXTE = {
   g: {
     label: 'GAMES',
     hinweis:
-      'Alle Spiele sind reine Unterhaltung. Sie haben keinen Einfluss auf die Ziehung und keinen auf deine Gewinnchance — die hängt allein an deiner Deckelnummer.',
+      'Deine offiziellen Scores zählen für die Ranglisten und das Gesamtranking — dafür gibt es eigene Game-Preise. Auf die Deckelziehung haben sie keinen Einfluss: die hängt allein an deiner Deckelnummer.',
     start: 'RUNDE STARTEN',
     nochmal: 'NOCH EINE RUNDE',
     punkte: 'PUNKTE',
@@ -266,14 +279,36 @@ export const TEXTE = {
       'Dieser Lauf wurde gespeichert, aber nicht gewertet. Bei Fragen dazu gerne kurz melden.',
     fehler: 'Das Ergebnis konnte nicht gespeichert werden. Die Runde zählt dann leider nicht.',
     ticketFehler: 'Die Runde ließ sich nicht starten. Bitte noch einmal versuchen.',
-    /* Die gemeinsame Game-Shell: dieselben drei Tasten in jedem Spiel, damit
+    /* Die gemeinsame Game-Shell: dieselben Tasten in jedem Spiel, damit
        niemand raten muss, wo der Ton sitzt oder wie man wieder rauskommt. */
     shellVollbild: 'VOLLBILD',
     shellVollbildAus: 'VOLLBILD BEENDEN',
-    shellTonAn: 'Ton an',
-    shellTonAus: 'Ton aus',
+    shellTonAn: 'Musik und Effekte an',
+    shellTonAus: 'Musik und Effekte aus',
     shellVerlassen: 'VERLASSEN',
     shellVerlassenHilfe: 'Runde beenden und zurück zur Seite',
+    shellAnleitung: 'ANLEITUNG',
+    shellAnleitungHilfe: 'Kurze Anleitung zu diesem Spiel',
+    shellMinimieren: 'MINIMIEREN',
+    shellMinimierenHilfe: 'Runde pausieren und die Seite wieder freigeben',
+    /* Minimieren haelt die Runde an: die Uhr steht, die Simulation friert
+       ein, der Body-Scroll ist sofort wieder frei. */
+    pauseTitel: 'RUNDE PAUSIERT',
+    pauseSub: 'Deine Zeit steht still. Der Score bleibt.',
+    pauseWeiter: 'WEITERSPIELEN',
+    pauseBeenden: 'BEENDEN',
+    /* Die Anleitung: fuenf kurze Bloecke, nie mehr. Wer laenger als ein
+       paar Sekunden liest, spielt in der Zeit nicht. */
+    anleitungZiel: 'ZIEL',
+    anleitungSteuerung: 'STEUERUNG',
+    anleitungBesonders: 'BESONDERHEITEN',
+    anleitungEnde: 'WIE ENDET DIE RUNDE?',
+    anleitungGewinn: 'WAS KANN ICH GEWINNEN?',
+    anleitungGewinnText:
+      'Dein offizieller Score kann für die Rangliste dieses Games und die ausgeschriebenen Game-Preise zählen.',
+    anleitungGewinnProbe:
+      'Dieser Probelauf zählt nicht. Mit einem offiziellen Account kann dein Score für die Rangliste dieses Games und die ausgeschriebenen Game-Preise zählen.',
+    anleitungZu: 'VERSTANDEN',
     /* Practice Mode: ein Game zum Reinspielen, ohne Konto. Der Lauf wird
        nicht gewertet, taucht in keiner Rangliste auf und zaehlt auch nicht
        im Gesamtranking. Danach gibt es genau zwei Wege ins Ranking: eine
@@ -449,7 +484,7 @@ export const TEXTE = {
   /* Zustand D — oeffentliche Live-Ziehung */
   d: {
     titel: 'LIVE-ZIEHUNG',
-    sub: '{gesamt} Deckel. Aktivierte Nummern im Lostopf. Eine Truhe.',
+    sub: '{gesamt} Deckel. Aktivierte Nummern im Lostopf. Mehrere Gewinne.',
     zeile: 'ECHTE GEWINNE. ECHTE MENSCHEN. LIVE BEI VIDEKO.',
     live: 'JETZT LIVE',
     liveZusatz: 'ZIEHUNG LÄUFT',
@@ -890,13 +925,41 @@ export const AKTIVIER_KARTEN = [
   },
 ]
 
+/* Drei Wege zu einem Gewinn — und sie haengen NICHT voneinander ab.
+   Lange stand auf der Landing sinngemaess, ohne Deckel sei nichts zu holen;
+   seit es Game-Preise gibt, ist das falsch. Die Karten trennen deshalb
+   sauber: zwei Wege ueber das Spielen, einer ueber den physischen Deckel.
+   Die Zahl der Hauptspiele kommt aus STANDARD_HAUPTGAMES, damit der Text
+   mitzieht, wenn die Aufstellung sich aendert. Konkrete Preise stehen
+   bewusst nicht hier — die sind ausgeschrieben, nicht erfunden. */
+export const GEWINN_WEGE = [
+  {
+    key: 'game',
+    icon: 'pokal',
+    titel: 'Game-Ranglisten',
+    text: 'Jedes Game hat seine eigene Bestenliste. Dein offizieller Score kann dort f\u00fcr die ausgeschriebenen Game-Preise z\u00e4hlen \u2014 ganz ohne Deckel.',
+  },
+  {
+    key: 'gesamt',
+    icon: 'krone',
+    titel: 'Gesamtranking',
+    text: 'Deine besten Scores aus den {hauptspiele} Hauptspielen ergeben zusammen deinen Platz im Gesamtranking. Daf\u00fcr gibt es eigene Gewinne.',
+  },
+  {
+    key: 'deckel',
+    icon: 'nummer',
+    titel: 'Deckelziehung',
+    text: 'Jeder physische, nummerierte Deckel ist zus\u00e4tzlich eine Chance in der Deckelziehung. Die l\u00e4uft getrennt von den Spielen \u2014 gut spielen hilft dort nicht, ein Deckel bei den Spielen nicht.',
+  },
+]
+
 /** Erklaerkarten der Live-Ziehung (Zustand D). */
 export const ZIEHUNG_KARTEN = [
   {
     key: 'original',
     icon: 'deckel',
     titel: 'Gewinn nur mit Originaldeckel',
-    text: 'Die gezogene Nummer muss auf dem echten, handschriftlich beschrifteten Deckel stehen.',
+    text: 'Jede gezogene Nummer muss auf dem echten, handschriftlich beschrifteten Deckel stehen.',
   },
   {
     key: 'follow',
@@ -1050,6 +1113,141 @@ export const SPIELE_LISTE = [
  * aber nicht — sonst waeren alle bisherigen Gesamtstaende auf einen Schlag
  * nicht mehr vergleichbar.
  */
+/*
+ * DIE ANLEITUNGEN — eine je Spiel, und bewusst kurz.
+ *
+ * Wer eine Anleitung aufmacht, spielt in dieser Zeit nicht. Deshalb hoechstens
+ * fuenf Bloecke: Ziel, Steuerung, ein paar Besonderheiten, wie die Runde endet
+ * und was zu gewinnen ist. Der Gewinnsatz steht nicht hier, sondern einmal in
+ * TEXTE.g (anleitungGewinnText / anleitungGewinnProbe) — er gilt fuer alle
+ * Spiele gleich und darf nie mehr versprechen als die Teilnahmebedingungen.
+ *
+ * `punkte` ist eine Liste aus [Ueberschrift, Satz]. Alles hier ist aus der
+ * jeweiligen Spiellogik abgelesen, nicht ausgedacht.
+ */
+export const ANLEITUNGEN = {
+  videko_jump: {
+    ziel: 'Spring so hoch wie möglich und sammle Punkte.',
+    steuerung: 'Links oder rechts gedrückt halten. Gesprungen wird von allein.',
+    punkte: [
+      ['FEDERPLATTE', 'Gibt extra Schub nach oben.'],
+      ['SCHÜRZE', 'Fängt genau einen Treffer ab und zerspringt dabei.'],
+      ['MÜTZE & SUPERKOCH', 'Deine Punkte zählen doppelt bzw. dreifach.'],
+      ['MAGNET', 'Zieht das Gold in der Nähe zu dir.'],
+    ],
+    ende: 'Ein Treffer ohne Schürze beendet die Runde. Wer unten aus dem Bild fällt, auch.',
+  },
+  kuechen_merge: {
+    ziel: 'Bring gleiche Teile zusammen, bis die Kücheninsel entsteht.',
+    steuerung: 'Finger waagerecht bewegen zum Zielen, loslassen wirft ab.',
+    punkte: [
+      ['VORSCHAU', 'Oben steht, welches Teil als Nächstes kommt.'],
+      ['KOMBO', 'Verschmelzungen kurz nacheinander zählen höher.'],
+      ['LAGE', 'Wo ein Teil landet, entscheidet mehr als wie schnell du wirfst.'],
+    ],
+    ende: 'Ragt der Stapel zu lange über die Linie, ist Schluss.',
+  },
+  kuechen_crush: {
+    ziel: 'Drei gleiche in einer Reihe — so viele Züge wie möglich.',
+    steuerung: 'Von einem Stein zum Nachbarn wischen. Oder erst den einen, dann den anderen antippen.',
+    punkte: [
+      ['VIER', 'Gibt einen Booster.'],
+      ['FÜNF', 'Gibt die VIDEKO-BOMBE.'],
+      ['KOMBO', 'Kaskaden und Tempo heben den Multiplikator.'],
+      ['ZEIT', 'Gute Züge geben Zeit zurück.'],
+    ],
+    ende: 'Die Runde endet, wenn die Uhr abgelaufen ist.',
+  },
+  kuechen_fit: {
+    ziel: 'Passe die Schränke ein und räume volle Reihen ab.',
+    steuerung: 'Waagerecht ziehen schiebt, kurzer Tipp dreht, Wisch nach unten setzt sofort ab.',
+    punkte: [
+      ['PERFECT FIT', 'Sauber eingepasst gibt deutlich mehr Punkte.'],
+      ['MEHRERE REIHEN', 'Zwei, drei oder vier Reihen auf einmal zählen überproportional.'],
+      ['TEMPO', 'Alle paar Sekunden fällt es etwas schneller.'],
+    ],
+    ende: 'Passt kein Teil mehr ins Feld, ist Schluss.',
+  },
+  leitungsfinder: {
+    ziel: 'Bohr die Wand auf, ohne eine Leitung zu treffen.',
+    steuerung: 'Tippen zum Bohren. Lange drücken oder MARKIEREN umlegen setzt eine Markierung.',
+    punkte: [
+      ['DIE ZAHLEN', 'Eine Zahl nennt die Leitungen in den acht Feldern ringsum.'],
+      ['ERSTER TIPP', 'Der erste Tipp jeder Wand ist immer sicher.'],
+      ['SERIE', 'Zügig weiterbohren gibt bis zu +50 % auf die Fliesenpunkte.'],
+    ],
+    ende: 'Eine getroffene Leitung beendet die Runde. Wand geschafft heißt: die nächste wird dichter.',
+  },
+  videko_slam: {
+    ziel: 'Tipp an, was ins Haus gehört. Der Mist bleibt liegen.',
+    steuerung: 'Antippen. Mehr braucht es nicht.',
+    punkte: [
+      ['MIST', 'Kostet Zeit und beendet deine Serie.'],
+      ['SERIE', 'Richtige Treffer hintereinander zählen höher.'],
+      ['GOLD, KÜHLSCHRANK, BACKOFEN, SIRENE', 'Ändern kurz die Lage.'],
+    ],
+    ende: '50 Sekunden, dann ist Schluss.',
+  },
+  kuechen_balance: {
+    ziel: 'Stapel den Turm so hoch wie möglich.',
+    steuerung: 'Ziehen richtet aus, loslassen setzt ab. Ein kurzer Tipp legt drehbare Teile quer.',
+    punkte: [
+      ['SCHWERPUNKT', 'Entscheidend ist, ob der Schwerpunkt noch auf der Auflage liegt.'],
+      ['RISKANT', 'Knapp gesetzte Teile geben mehr Punkte — und wackeln.'],
+    ],
+    ende: 'Kippt der Turm, ist Schluss.',
+  },
+  kuechen_stack: {
+    ziel: 'Stapel die Küche so hoch es geht.',
+    steuerung: 'Ein Tipp setzt das Modul ab.',
+    punkte: [
+      ['ÜBERSTAND', 'Was übersteht, wird abgeschnitten — das nächste Modul ist schmaler.'],
+      ['PERFECT', 'Genau getroffen schneidet nichts ab und hebt den Faktor bis ×4.'],
+      ['ZURÜCK', 'Ab drei perfekten Landungen wächst das Modul ein Stück nach.'],
+    ],
+    ende: 'Wer ganz danebentippt, beendet die Runde.',
+  },
+  kuechen_dash: {
+    ziel: 'Lauf so weit wie möglich.',
+    steuerung: 'Tippen zum Springen. Genau ein Sprung, keiner in der Luft.',
+    punkte: [
+      ['METER', 'Punkte sind Meter.'],
+      ['TEMPO', 'Es wird schneller, bis rund 400 m.'],
+      ['FAIR', 'Jedes Hindernis ist mit einem sauberen Sprung zu schaffen.'],
+    ],
+    ende: 'Ein Treffer, und die Runde ist vorbei.',
+  },
+  truhenknacker: {
+    ziel: 'Stopp jeden der drei Ringe im goldenen Feld.',
+    steuerung: 'Tippen stoppt den aktiven Ring.',
+    punkte: [
+      ['PERFEKT', 'Genau getroffen gibt Bonus.'],
+      ['VERKANTET', 'Danebengetroffen kostet Spielzeit.'],
+      ['SPÄTER', 'Die Felder werden enger, die Ringe schneller, und es tauchen falsche Markierungen auf.'],
+    ],
+    ende: 'Die Runde endet mit der Uhr.',
+  },
+  goldrausch: {
+    ziel: 'Tipp das Gold an. Finger weg von den Bomben.',
+    steuerung: 'Antippen.',
+    punkte: [
+      ['GOLDENE BADEENTE', 'Gibt 5.000 — und kommt fast nie.'],
+      ['BOMBE', 'Kostet Punkte.'],
+      ['BIER, KATER, STEIN', 'Verschwimmen den Blick, drehen die Richtung, blockieren kurz.'],
+    ],
+    ende: 'Dreißig Sekunden, und sie werden immer schneller.',
+  },
+  kuechen_tinder: {
+    ziel: 'Entscheide, ob es passt oder nicht.',
+    steuerung: 'Rechts heißt JA, links heißt NEIN. Die Aufgabe steht über der Karte.',
+    punkte: [
+      ['SERIE', 'Richtige Serien bringen Combo.'],
+      ['FEHLER', 'Kosten 2 Sekunden.'],
+    ],
+    ende: 'Zehn Aufgaben oder dreißig Sekunden.',
+  },
+}
+
 export const GESAMT_SPIELE = ['truhenknacker', 'goldrausch']
 
 /**

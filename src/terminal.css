@@ -2821,7 +2821,7 @@ textarea.trm-eingabe {
 .trm-feld-spiel {
   position: relative;
   height: clamp(260px, 62vw, 340px);
-  margin: 14px 0 0;
+  margin: 8px 0 0;
   overflow: hidden;
   border: 1px solid var(--trm-linie-stark);
   border-radius: var(--trm-radius);
@@ -2846,19 +2846,36 @@ textarea.trm-eingabe {
   }
 }
 
+/* Der Rahmen um die Buehne traegt den Abstand zum Kopf, seit die
+   Tastenreihe als erste Zeile darin steht. */
+.trm-spiel__buehne {
+  margin: 12px 0 0;
+}
+
+/* Im Normalfall tut der Rahmen nichts. Minimiert klappt er auf Hoehe null
+   zusammen — und weil nur er schrumpft, behaelt das Spielfeld darin seine
+   Masse: kein Canvas vermisst sich neu, kein ResizeObserver feuert, die
+   Runde steht einfach still. */
+.trm-spiel__buehne[data-klein] {
+  height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
 /* ------------------------------------------------------------------ */
 /* Game-Shell — dieselben drei Tasten in jedem Spiel, plus Vollbild    */
 /* ------------------------------------------------------------------ */
 
-/* Die Tastenreihe sitzt oben rechts im Feld, dort, wo bisher jedes Spiel
-   seinen eigenen Tonschalter hatte. `touch-action: manipulation` nimmt der
-   Reihe die 300-ms-Verzoegerung, ohne die Buehne darunter zu beeinflussen. */
+/* Die Tastenreihe sitzt rechtsbuendig ueber dem Feld. Frueher lag sie im
+   Feld: fuenf Tasten sind 194 px breit, das Feld ist bei 390 px Bildschirm
+   nur 321 px — die Reihe deckte damit die obere Haelfte jeder Spiel-Kopfzeile
+   zu und nahm ihr die Tipps. Eine eigene Zeile kostet 34 px Hoehe und macht
+   beides wieder erreichbar. `touch-action: manipulation` nimmt der Reihe die
+   300-ms-Verzoegerung, ohne die Buehne darunter zu beeinflussen. */
 .trm-shell {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  z-index: 9;
   display: flex;
+  flex: none;
+  justify-content: flex-end;
   gap: 6px;
   touch-action: manipulation;
 }
@@ -2918,6 +2935,152 @@ textarea.trm-eingabe {
   color: #e8a08e;
 }
 
+/* ------------------------------------------------------------------ */
+/* Pausierte Runde und Anleitung                                       */
+/* ------------------------------------------------------------------ */
+
+/* Die kompakte Karte nimmt den Platz der zugeklappten Buehne ein und
+   bleibt bewusst klein: wer minimiert hat, wollte die Seite lesen. */
+.trm-spiel__pausekarte {
+  margin-top: 14px;
+  border: 1px solid var(--trm-linie-stark);
+  border-radius: var(--trm-radius);
+  padding: 16px 14px;
+  background:
+    radial-gradient(90% 120% at 50% 0%, rgba(201, 150, 60, 0.12) 0%, rgba(4, 4, 3, 0) 70%),
+    rgba(3, 3, 2, 0.72);
+  text-align: center;
+}
+
+.trm-spiel__pausekarte-titel {
+  margin: 0;
+  color: var(--trm-gold-hell, #e8c978);
+  font-size: 13px;
+  letter-spacing: 0.16em;
+}
+
+.trm-spiel__pausekarte-sub {
+  margin: 6px 0 0;
+  color: rgb(244 239 228 / 0.62);
+  font-size: 12px;
+}
+
+.trm-spiel__pausekarte-wege {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin: 14px 0 0;
+}
+
+/* Die Anleitung kommt von unten herein: am Handy ein Bottom Sheet, auf
+   breiten Schirmen eine mittige Karte. Sie liegt im Markup in der Karte
+   selbst — sonst waere sie im echten Vollbild unsichtbar. */
+.trm-anleitung {
+  position: fixed;
+  inset: 0;
+  z-index: 9500;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgb(2 2 2 / 0.72);
+}
+
+.trm-anleitung__blatt {
+  width: min(520px, 100%);
+  max-height: 82svh;
+  overflow-y: auto;
+  border: 1px solid var(--trm-linie-stark);
+  border-bottom: 0;
+  border-radius: 18px 18px 0 0;
+  padding: 18px 18px max(18px, env(safe-area-inset-bottom));
+  background: linear-gradient(180deg, #0c0b09 0%, #060605 100%);
+  animation: trm-anleitung-auf 220ms ease;
+}
+
+@supports not (height: 1svh) {
+  .trm-anleitung__blatt {
+    max-height: 82vh;
+  }
+}
+
+@keyframes trm-anleitung-auf {
+  from {
+    transform: translateY(14px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trm-anleitung__blatt {
+    animation: none;
+  }
+}
+
+.trm-anleitung__marke {
+  margin: 0;
+  color: rgb(201 160 80 / 0.7);
+  font-size: 10px;
+  letter-spacing: 0.24em;
+}
+
+.trm-anleitung__titel {
+  margin: 4px 0 14px;
+  color: var(--trm-creme-weich);
+  font-size: 18px;
+  letter-spacing: 0.04em;
+}
+
+.trm-anleitung__liste {
+  margin: 0;
+}
+
+/* Zwei Spalten: links das Stichwort, rechts der Satz. Die linke Spalte ist
+   schmal, damit rechts genug Zeile bleibt — lange Stichworte brechen um. */
+.trm-anleitung__zeile {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 10px;
+  border-top: 1px solid rgb(201 160 80 / 0.14);
+  padding: 7px 0;
+}
+
+.trm-anleitung__zeile dt {
+  color: var(--trm-gold, #c9a050);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.trm-anleitung__zeile dd {
+  margin: 0;
+  color: rgb(244 239 228 / 0.8);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.trm-anleitung__zu {
+  width: 100%;
+  margin-top: 16px;
+}
+
+@media (min-width: 640px) {
+  .trm-anleitung {
+    align-items: center;
+  }
+
+  .trm-anleitung__blatt {
+    border-bottom: 1px solid var(--trm-linie-stark);
+    border-radius: 18px;
+  }
+}
+
 /* Pseudo-Vollbild: die Karte legt sich ueber alles. Im echten Vollbild
    greift dieselbe Regel — dort ist sie wirkungslos, weil das Element ohnehin
    den Bildschirm fuellt, aber sie haelt das Layout identisch. */
@@ -2941,7 +3104,15 @@ textarea.trm-eingabe {
 }
 
 /* Im Vollbild bekommt das Feld allen Platz, den Kopf und Leiste uebrig
-   lassen — statt der festen Hoehe von oben. */
+   lassen — statt der festen Hoehe von oben. Der Rahmen gibt die Dehnung
+   nur weiter; gemessen wird weiterhin das Feld. */
+.trm-spiel--vollbild .trm-spiel__buehne {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
 .trm-spiel--vollbild .trm-feld-spiel,
 .trm-spiel--vollbild .trm-feld-spiel--hoch {
   flex: 1 1 auto;
@@ -2981,6 +3152,7 @@ textarea.trm-eingabe {
 /* Kompakte Auswahlkarte: ein Spiel, eine Zeile. Das Spiel selbst wird erst
    beim Antippen nachgeladen. */
 .trm-spielwahl {
+  --trm-wahl-bild: 88px;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -2996,6 +3168,21 @@ textarea.trm-eingabe {
 .trm-spielwahl:focus-visible {
   outline: 2px solid var(--trm-gold-hell);
   outline-offset: 2px;
+}
+
+/* Das Vorschaubild ist ein echter Ausschnitt aus dem Spiel. Es steht
+   bewusst an der Stelle, an der vorher das Ikon stand: die Karte wird
+   dadurch nicht laenger, sondern nur aussagekraeftiger. object-fit deckt
+   den Rahmen, falls ein Bild einmal ein anderes Seitenverhaeltnis hat. */
+.trm-spielwahl__bild {
+  flex: none;
+  width: var(--trm-wahl-bild);
+  height: calc(var(--trm-wahl-bild) / 1.3);
+  object-fit: cover;
+  border: 1px solid var(--trm-linie);
+  border-radius: 8px;
+  background: #0b0b0b;
+  user-select: none;
 }
 
 .trm-spielwahl__text {
@@ -3052,6 +3239,10 @@ textarea.trm-eingabe {
 .trm-spielwahl--gesperrt {
   cursor: default;
   opacity: 0.62;
+}
+
+.trm-spielwahl--gesperrt .trm-spielwahl__bild {
+  filter: grayscale(0.7);
 }
 
 .trm-spielwahl--gesperrt .trm-spielwahl__los {
@@ -4554,10 +4745,41 @@ textarea.trm-eingabe {
   text-decoration: none;
 }
 
+/* Die KI-Kennzeichnung. Sie steht bewusst in eigener Zeile ganz unten und
+   nicht als Aufkleber im Inhalt: sichtbar fuer jeden, der hinsieht, und im
+   Weg fuer niemanden. Kleiner als der uebrige Fuss ist sie nicht — eine
+   Kennzeichnung, die man suchen muss, ist keine. */
+.trm-fuss__ki {
+  flex-basis: 100%;
+  text-align: right;
+  letter-spacing: 0.06em;
+  color: var(--trm-creme-leise);
+}
+
 .trm-fuss a:hover,
 .trm-fuss a:focus-visible {
   color: var(--trm-gold-hell);
   text-decoration: underline;
+}
+
+/* Eine Zustandsampel in der Verwaltung. Kein Punkt, kein Symbol: das Wort
+   selbst traegt die Farbe, damit es auch in einer Vorlesung ankommt. */
+.trm-adm__ampel {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.trm-adm__ampel[data-art='aktiv'] {
+  color: var(--trm-gruen);
+}
+
+.trm-adm__ampel[data-art='fehler'] {
+  color: var(--trm-rot);
+}
+
+.trm-adm__ampel[data-art='aus'],
+.trm-adm__ampel[data-art='wartet'] {
+  color: var(--trm-creme-weich);
 }
 
 /* ------------------------------------------------------------------ */
@@ -6602,37 +6824,73 @@ textarea.trm-eingabe {
   color: var(--trm-creme);
 }
 
-/* Die Probekarte ist die erste Karte der Seite und traegt den wichtigsten
-   Knopf. Bei 390 px stand SOFORT SPIELEN neben dem Text und nahm ihm so
-   viel Breite weg, dass VIDEKO JUMP mitten im Namen umbrach und der Satz
-   darunter in einem Auslassungszeichen endete. Auf schmalen Geraeten
-   bekommt der Text deshalb die ganze Zeile und der Knopf die naechste -
-   dasselbe Verhalten wie im Kopf der Spielkarte. */
+/* Der Satz, der aus dem Probespiel mehr macht als einen Zeitvertreib:
+   kostenlos testen, mit Account zaehlt der Score. Er steht VOR dem Knopf,
+   weil er die Entscheidung traegt — danach gelesen ist er wertlos. */
+.trm-probespiel__lead {
+  margin: 0 0 clamp(12px, 3.4vw, 16px);
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(14px, 4vw, 17px);
+  line-height: 1.4;
+  text-align: center;
+  text-wrap: pretty;
+  color: var(--trm-creme-weich);
+}
+
+/* Bei 390 px stand der Knopf neben dem Text und nahm ihm so viel Breite
+   weg, dass VIDEKO JUMP mitten im Namen umbrach und der Satz darunter in
+   einem Auslassungszeichen endete. Mit dem Vorschaubild davor blieben dem
+   Satz noch 127 von 290 Pixeln - also nicht einmal die Haelfte.
+
+   Auf schmalen Geraeten bekommt der Text deshalb die erste Zeile neben dem
+   Bild und der Knopf die ganze zweite. Das ist dasselbe Verhalten wie im
+   Kopf der Spielkarte, es galt bisher nur fuer die Probekarte, und es gilt
+   jetzt fuer jede Auswahlkarte. Nebenbei wird der Knopf so auf jeder Karte
+   daumengross. */
 @media (max-width: 479px) {
-  .trm-probespiel .trm-spielwahl {
+  .trm-spielwahl {
     flex-wrap: wrap;
+    /* Der Abstand von 12 px war fuer die Luecke zwischen Bild und Text
+       gedacht. Zwischen den beiden Zeilen kaeme er zum Abstand des Knopfes
+       hinzu und machte die Karte 19 px hoeher als noetig. */
+    row-gap: 0;
+    /* Zwei Zeilen statt einer: die Polsterung faellt etwas knapper aus,
+       damit die Karte kompakt bleibt. */
+    padding: 10px 12px;
   }
 
-  /* 24 px Ikon plus 12 px Abstand: der Text nimmt genau den Rest. */
-  .trm-probespiel .trm-spielwahl__text {
-    flex-basis: calc(100% - 36px);
+  /* Bildbreite plus 12 px Abstand: der Text nimmt genau den Rest. */
+  .trm-spielwahl__text {
+    flex-basis: calc(100% - var(--trm-wahl-bild) - 12px);
   }
 
-  /* Volle Breite. Der wichtigste Knopf der Seite ist damit auch der
-     groesste und mit dem Daumen kaum zu verfehlen. */
-  .trm-probespiel .trm-spielwahl__los {
+  /* Volle Breite. Der Knopf ist damit auch der groesste Treffer der Karte
+     und mit dem Daumen kaum zu verfehlen. */
+  .trm-spielwahl__los {
     flex: 1 0 100%;
-    margin-top: 10px;
-    padding: 11px 12px;
+    margin-top: 7px;
+    padding: 9px 12px;
     text-align: center;
   }
 
   /* Jetzt ist Platz fuer den ganzen Satz. Er darf in zwei Zeilen
      umbrechen - abgeschnitten wird hier nichts mehr. */
-  .trm-probespiel .trm-spielwahl__zeile {
+  .trm-spielwahl__zeile {
     overflow: visible;
     white-space: normal;
     text-overflow: clip;
+  }
+
+  /* Die Ladekarte hat weder Bild noch Knopf: sie bleibt eine Mitte. */
+  .trm-spielwahl--laedt {
+    flex-wrap: nowrap;
+  }
+
+  /* Gesperrt ist kein Knopf, sondern ein Hinweis. Er bleibt schmal und
+     rechts, sonst sieht die Karte aus wie eine Aufforderung. */
+  .trm-spielwahl--gesperrt .trm-spielwahl__los {
+    flex: 0 0 auto;
+    margin-left: auto;
   }
 }
 
@@ -6695,6 +6953,64 @@ textarea.trm-eingabe {
   font-size: clamp(12px, 3.6vw, 14px);
   line-height: 1.5;
   color: var(--trm-creme-weich);
+}
+
+/* ---- Drei Wege zu einem Gewinn -------------------------------------- */
+
+/* Lange stand auf dieser Seite nur der Deckel. Wer keinen hatte, las sich
+   durch eine Landing, die ihm nichts anbot. Seit es Game-Preise gibt,
+   stimmt das nicht mehr — der Abschnitt sagt das ausdruecklich, bevor
+   ueberhaupt nach einer Deckelnummer gefragt wird. */
+.trm-gewinnwege {
+  margin: clamp(26px, 7vw, 40px) 0 0;
+}
+
+.trm-gewinnwege__titel {
+  margin: 0;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(19px, 5.6vw, 26px);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: 0.04em;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--trm-gold-hell);
+}
+
+.trm-gewinnwege__sub {
+  margin: 8px 0 0;
+  font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(14px, 4vw, 17px);
+  line-height: 1.35;
+  text-align: center;
+  text-wrap: pretty;
+  color: var(--trm-creme-weich);
+}
+
+.trm-gewinnwege__liste {
+  display: grid;
+  gap: clamp(10px, 3vw, 14px);
+  margin: clamp(14px, 4vw, 20px) 0 0;
+}
+
+/* Die Karte bringt ihren eigenen Aussenabstand mit; im Raster macht das
+   die Luecke doppelt. Den Abstand setzt hier allein `gap`. */
+.trm-gewinnweg {
+  margin: 0;
+}
+
+.trm-gewinnweg .trm-karte__titel {
+  margin: 8px 0 0;
+  font-size: clamp(16px, 4.6vw, 20px);
+}
+
+/* Der Nachsatz zur rechtlichen Seite: leise, aber nicht versteckt. */
+.trm-gewinnwege__notiz {
+  margin: clamp(10px, 3vw, 14px) 0 0;
+  font-size: clamp(11px, 3.2vw, 12px);
+  line-height: 1.45;
+  text-align: center;
+  color: var(--trm-creme-leise);
 }
 
 /* ---- Oeffentliches Leaderboard -------------------------------------- */
@@ -6799,6 +7115,10 @@ textarea.trm-eingabe {
   flex-basis: 100%;
   justify-content: center;
   margin-right: 0;
+}
+
+.trm-fuss__ki {
+  text-align: center;
 }
 
 /* F: Kein Termin — eine kompakte Karte statt einer grossen leeren. */

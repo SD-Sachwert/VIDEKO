@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import SpielKarte from './SpielKarte.jsx'
 import { useSpielLauf } from './spiel-lauf.js'
+import { istPausiert } from './spiele/spiel-pause.js'
 import { SPIEL_NACH_KEY, TEXTE } from '../data/terminal.js'
 
 /**
@@ -243,6 +244,9 @@ function Laeufer() {
   )
 }
 
+/* Der Schluessel dieses Spiels — er steht im Lauf und im Pause-Register. */
+const GAME = 'kuechen_dash'
+
 export default function KuechenDash({ sitzung, best = null, onErgebnis }) {
   const [hindernisse, setHindernisse] = useState([])
   const [schilder, setSchilder] = useState([])
@@ -266,7 +270,7 @@ export default function KuechenDash({ sitzung, best = null, onErgebnis }) {
   const sanftRef = useRef(false)
   const nrRef = useRef(0)
 
-  const lauf = useSpielLauf({ sitzung, game: 'kuechen_dash', dauerVorgabe: 540000, onErgebnis, sofort: true })
+  const lauf = useSpielLauf({ sitzung, game: GAME, dauerVorgabe: 540000, onErgebnis, sofort: true })
   const { laeuft, punkteGeben, rundeZaehlen, fertig, starten: laufStarten } = lauf
 
   useEffect(() => {
@@ -351,6 +355,15 @@ export default function KuechenDash({ sitzung, best = null, onErgebnis }) {
     let naechsteAnzeige = 0
 
     const schritt = (jetzt) => {
+      /* Minimiert steht die Runde still. Der Zeitanker wandert mit,
+         sonst kaeme der erste Frame danach mit einem dt von mehreren
+         Sekunden zurueck und rechnete die Runde in einem Schritt zu
+         Ende. */
+      if (istPausiert(GAME)) {
+        vorher = jetzt
+        frame = requestAnimationFrame(schritt)
+        return
+      }
       const dt = Math.min(0.05, (jetzt - vorher) / 1000)
       vorher = jetzt
       const w = welt.current

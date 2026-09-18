@@ -68,6 +68,13 @@ const kurve = [0, 20, 40, 60].map((s) => ({ s, ...schwierigkeit(s) }))
 for (const k of kurve) {
   console.log(`        ${String(k.s).padStart(2)} s: Stufe ${k.stufe}, fall ${k.fallMs} ms, lock ${k.lockMs} ms, komplex ${k.komplexAnteil}, problem ${k.problemChance}, nachschub alle ${k.nachschubAlle || '–'}`)
 }
+/* Mittlere Fallzeit der ersten 30 Sekunden — das Mass fuer die fruehe
+   Beschleunigung, unabhaengig davon, wo genau ein Stufensprung liegt. */
+let mittel30 = 0
+for (let s = 0; s < 30; s += 0.1) mittel30 += schwierigkeit(s).fallMs * 0.1
+mittel30 /= 30
+console.log(`        Mittel 0–30 s: ${mittel30.toFixed(1)} ms Fallzeit`)
+
 const streng = (feld, auf) =>
   kurve.every((k, i) => i === 0 || (auf ? k[feld] > kurve[i - 1][feld] : k[feld] < kurve[i - 1][feld]))
 pruefe('Stufe steigt streng bei 0/20/40/60 s', streng('stufe', true), kurve.map((k) => k.stufe).join('/'))
@@ -76,8 +83,14 @@ pruefe('Einrastzeit sinkt streng bei 0/20/40/60 s', streng('lockMs', false), kur
 pruefe('Komplexanteil steigt streng bei 0/20/40/60 s', streng('komplexAnteil', true))
 pruefe('Problemchance steigt bei 20/40/60 s', kurve[2].problemChance > kurve[1].problemChance && kurve[3].problemChance > kurve[2].problemChance)
 pruefe('0 s ist leicht: Stufe 1, >= 700 ms, keine Sonderteile, kein Nachschub', kurve[0].stufe === 1 && kurve[0].fallMs >= 700 && kurve[0].komplexAnteil === 0 && kurve[0].problemChance === 0 && kurve[0].nachschubAlle === 0)
-pruefe('bis 9,9 s bleibt es Stufe 1', schwierigkeit(9.9).stufe === 1)
-pruefe('bei 60 s ist es deutlich schneller (Fallzeit <= 30 % vom Start)', kurve[3].fallMs <= kurve[0].fallMs * 0.3)
+pruefe('bis 10,9 s bleibt es Stufe 1', schwierigkeit(10.9).stufe === 1)
+pruefe('ab 11 s beginnt Stufe 2', schwierigkeit(11).stufe === 2)
+/* Die sanfte Rampe: die erste halbe Minute muss lesbar bleiben. Vorher
+   fielen die Teile bei 30 s schon mit 410 ms — zu frueh zu hektisch. */
+pruefe('sanfte Rampe: bei 30 s noch >= 500 ms Fallzeit', schwierigkeit(30).fallMs >= 500, `${schwierigkeit(30).fallMs} ms`)
+pruefe('sanfte Rampe: die ersten 30 s im Mittel >= 670 ms', mittel30 >= 670, `${mittel30.toFixed(1)} ms`)
+pruefe('aber kein Stillstand: bei 60 s hoechstens 40 % der Startfallzeit', kurve[3].fallMs <= kurve[0].fallMs * 0.4, `${kurve[3].fallMs} ms`)
+pruefe('Hoechsttempo unveraendert: 90 ms, erreicht vor 150 s', schwierigkeit(150).fallMs === 90 && schwierigkeit(600).fallMs === 90)
 pruefe('bei 60 s drueckt Nachschub', kurve[3].nachschubAlle > 0)
 {
   let ok = true

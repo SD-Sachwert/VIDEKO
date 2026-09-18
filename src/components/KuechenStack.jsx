@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import SpielKarte from './SpielKarte.jsx'
 import { useSpielLauf } from './spiel-lauf.js'
+import { istPausiert } from './spiele/spiel-pause.js'
 import { SPIEL_NACH_KEY, TEXTE } from '../data/terminal.js'
 
 /**
@@ -94,6 +95,9 @@ function Modul({ perfekt = false }) {
   )
 }
 
+/* Der Schluessel dieses Spiels — er steht im Lauf und im Pause-Register. */
+const GAME = 'kuechen_stack'
+
 export default function KuechenStack({ sitzung, best = null, onErgebnis }) {
   const [turm, setTurm] = useState([])
   const [abfall, setAbfall] = useState([])
@@ -115,7 +119,7 @@ export default function KuechenStack({ sitzung, best = null, onErgebnis }) {
   const crashRef = useRef(false)
   const sanftRef = useRef(false)
 
-  const lauf = useSpielLauf({ sitzung, game: 'kuechen_stack', dauerVorgabe: 540000, onErgebnis, sofort: true })
+  const lauf = useSpielLauf({ sitzung, game: GAME, dauerVorgabe: 540000, onErgebnis, sofort: true })
   const { laeuft, punkteGeben, rundeZaehlen, fertig, starten: laufStarten, ticketSeitRef } = lauf
 
   useEffect(() => {
@@ -209,6 +213,15 @@ export default function KuechenStack({ sitzung, best = null, onErgebnis }) {
     let vorher = performance.now()
 
     const schritt = (jetzt) => {
+      /* Minimiert steht die Runde still. Der Zeitanker wandert mit,
+         sonst kaeme der erste Frame danach mit einem dt von mehreren
+         Sekunden zurueck und rechnete die Runde in einem Schritt zu
+         Ende. */
+      if (istPausiert(GAME)) {
+        vorher = jetzt
+        frame = requestAnimationFrame(schritt)
+        return
+      }
       const dt = Math.min(0.05, (jetzt - vorher) / 1000)
       vorher = jetzt
 

@@ -3,6 +3,7 @@ import { Beer, Bomb, Cat, Coins, Gem, Mountain } from 'lucide-react'
 
 import SpielKarte from './SpielKarte.jsx'
 import { useSpielLauf } from './spiel-lauf.js'
+import { istPausiert } from './spiele/spiel-pause.js'
 import { GOLD_NACH_KEY, GOLD_OBJEKTE, SPIEL_NACH_KEY, TEXTE, fuelle, zahl } from '../data/terminal.js'
 
 /**
@@ -143,6 +144,9 @@ function GoldZeichen({ typ }) {
   return <Mountain size={24} aria-hidden="true" />
 }
 
+/* Der Schluessel dieses Spiels — er steht im Lauf und im Pause-Register. */
+const GAME = 'goldrausch'
+
 export default function Goldrausch({ sitzung, best = null, onErgebnis }) {
   const [objekte, setObjekte] = useState([])
   const [combo, setCombo] = useState(0)
@@ -166,7 +170,7 @@ export default function Goldrausch({ sitzung, best = null, onErgebnis }) {
   const sanftRef = useRef(false)
   const [sanft, setSanft] = useState(false)
 
-  const lauf = useSpielLauf({ sitzung, game: 'goldrausch', onErgebnis })
+  const lauf = useSpielLauf({ sitzung, game: GAME, onErgebnis })
   const { laeuft, punkteGeben, rundeZaehlen, starten: laufStarten } = lauf
 
   /* Die Vorliebe steht doppelt: im Ref fuer die Animationsschleife, die
@@ -219,6 +223,15 @@ export default function Goldrausch({ sitzung, best = null, onErgebnis }) {
     let vorher = performance.now()
 
     const schritt = (jetzt) => {
+      /* Minimiert steht die Runde still. Der Zeitanker wandert mit,
+         sonst kaeme der erste Frame danach mit einem dt von mehreren
+         Sekunden zurueck und rechnete die Runde in einem Schritt zu
+         Ende. */
+      if (istPausiert(GAME)) {
+        vorher = jetzt
+        frame = requestAnimationFrame(schritt)
+        return
+      }
       const dt = Math.min(0.05, (jetzt - vorher) / 1000)
       vorher = jetzt
 

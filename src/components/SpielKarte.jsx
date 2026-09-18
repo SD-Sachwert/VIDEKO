@@ -5,8 +5,9 @@ import { Ikon } from './TerminalRahmen.jsx'
 import { PracticeKontext, START_EREIGNIS, startWunschNehmen } from './spiel-lauf.js'
 import { motivation } from './spiel-motivation.js'
 import { useSpielShell } from './spiele/spiel-shell.js'
+import { musikAn, musikAus, musikZurueck } from './spiele/spielmusik.js'
 import { tonStatus, tonUmschalten } from './spiele/spielgefuehl.js'
-import { TEXTE, fuelle, zahl } from '../data/terminal.js'
+import { ANLEITUNGEN, TEXTE, fuelle, zahl } from '../data/terminal.js'
 
 /**
  * Die Huelle um ein Spielfeld — Kopf, Startbildschirm, Ergebnis, Leiste.
@@ -19,11 +20,23 @@ import { TEXTE, fuelle, zahl } from '../data/terminal.js'
  * daneben: so springt beim Start kein Layout, und die Karte behaelt auf allen
  * Breiten dieselbe Hoehe.
  *
- * Seit der Game-Shell traegt die Karte ausserdem die drei Tasten, die jedes
- * Spiel braucht und die vorher jedes Spiel einzeln gebaut hat: Ton, Vollbild,
- * Verlassen. Sie sitzen immer an derselben Stelle, und die Seitensperre
- * (`useSpielShell`) haengt an derselben Huelle — ein Spiel muss sich darum
- * nicht mehr kuemmern.
+ * Seit der Game-Shell traegt die Karte ausserdem die Tasten, die jedes Spiel
+ * braucht und die vorher jedes Spiel einzeln gebaut hat: Ton, Anleitung,
+ * Minimieren, Vollbild, Verlassen. Sie sitzen immer an derselben Stelle, und
+ * die Seitensperre (`useSpielShell`) haengt an derselben Huelle — ein Spiel
+ * muss sich darum nicht mehr kuemmern.
+ *
+ * Auch die Musik haengt an der Shell und nicht an einem einzelnen Spiel:
+ * ein Stueck fuer alle Runden, dieselbe Stummtaste wie fuer die Effekte, und
+ * es faengt nie von selbst an — der erste Ton kommt immer aus einem Klick.
+ *
+ * MINIMIEREN ist die Antwort auf ein echtes Problem am Handy: ein offenes
+ * Spiel sperrt den Seitenscroll, und wer weiterlesen will, muss die Runde
+ * wegwerfen. Minimiert klappt die Buehne auf Hoehe null, die Runde steht
+ * still (`lauf.pausieren`) und die Seite ist sofort wieder frei. Die Buehne
+ * bleibt dabei eingehaengt und behaelt ihre eigene Hoehe — wer sie in einen
+ * zusammengeklappten Rahmen steckt, statt sie selbst zu schrumpfen, laesst
+ * Canvas und ResizeObserver der Spiele in Ruhe.
  */
 
 const T = TEXTE.g
@@ -47,8 +60,19 @@ export default function SpielKarte({ spiel, lauf, best, leiste = null, children 
   /* Die Huelle: Seitensperre solange gespielt wird, Vollbild auf Wunsch.
      `startet` zaehlt mit — zwischen Tastendruck und erstem Bild soll die
      Seite schon stillstehen. */
-  const { huelleRef, vollbild, echt, vollbildSetzen } = useSpielShell(laeuft || phase === 'startet')
+  /* Minimiert ist die Seite wieder frei: die Sperre haengt ausdruecklich
+     auch an `!klein`, nicht nur an der Phase. */
+  const [klein, setKlein] = useState(false)
+  const [hilfe, setHilfe] = useState(false)
+  const { huelleRef, vollbild, echt, vollbildSetzen } = useSpielShell(
+    (laeuft || phase === 'startet') && !klein,
+  )
   const [ton, setTon] = useState(() => tonStatus())
+  const anleitung = ANLEITUNGEN[spiel.key] ?? null
+  /* Nur die Pause, die die Anleitung selbst ausgeloest hat, darf sie auch
+     wieder aufheben — sonst laeuft eine minimierte Runde weiter, weil
+     jemand zwischendurch die Anleitung zugemacht hat. */
+  const hilfePauseRef = useRef(false)
 
   /* Direktstart aus dem Testlabor: entweder liegt der Wunsch schon beim
      Einhaengen bereit (die Karte wurde gerade erst nachgeladen), oder er
@@ -78,6 +102,29 @@ export default function SpielKarte({ spiel, lauf, best, leiste = null, children 
     window.addEventListener(START_EREIGNIS, hoeren)
     return () => window.removeEventListener(START_EREIGNIS, hoeren)
   }, [spiel.key])
+
+  /* START und NOCHMAL sind echte Tipps — genau hier darf die Musik zum
+     ersten Mal anfangen. Alles danach haelt der Effekt weiter unten am
+     Zustand der Runde fest. */
+  const starten = () => {
+    musikAn(spiel.key)
+    lauf.starten()
+  }
+
+  /* Die Musik folgt der Runde: sie laeuft, solange wirklich gespielt wird,
+     und steht bei Pause, Anleitung, Minimieren und Stumm. Aus einem Effekt
+     heraus darf `musikAn` still scheitern; dann fehlte die Geste. */
+  const musikSoll = laeuft && !lauf.pausiert && ton
+  useEffect(() => {
+    if (musikSoll) musikAn(spiel.key)
+    else musikAus()
+  }, [musikSoll, spiel.key])
+
+  /* Vor und nach einer Runde faengt das Stueck wieder vorn an. */
+  useEffect(() => {
+    if (phase === 'ruht' || phase === 'vorbei') musikZurueck()
+  }, [phase])
+  useEffect(() => () => musikZurueck(), [])
 
   /* Der Server schickt die eigenen Bestwerte zurueck. Ist der gerade
      gespielte Lauf der beste, sagen wir es — aber nur, wenn er auch
@@ -129,11 +176,56 @@ export default function SpielKarte({ spiel, lauf, best, leiste = null, children 
     if (laeuft) lauf.fertig()
   }
 
+  /* MINIMIEREN: erst aus dem Vollbild, dann die Runde anhalten, dann die
+     Buehne zuklappen. Die Reihenfolge ist wichtig — die Uhr soll stehen,
+     bevor irgendetwas am Layout passiert. */
+  const minimieren = () => {
+    if (vollbild) vollbildSetzen(false)
+    if (hilfe) setHilfe(false)
+    hilfePauseRef.current = false
+    lauf.pausieren?.()
+    setKlein(true)
+  }
+
+  const weiterspielen = () => {
+    setKlein(false)
+    lauf.weiter?.()
+    musikAn(spiel.key)
+  }
+
+  /* BEENDEN gibt den Lauf ganz normal ab. Die Pause wird vorher aufgeloest,
+     damit die gestandene Zeit sauber verrechnet ist, bevor der Endstand
+     entsteht. */
+  const pauseBeenden = () => {
+    setKlein(false)
+    lauf.weiter?.()
+    lauf.fertig()
+  }
+
+  /* Wer die Anleitung aufmacht, spielt in dieser Zeit nicht. Also steht die
+     Runde auch dann still — und laeuft beim Zumachen genau dort weiter. */
+  const hilfeAuf = () => {
+    if (laeuft && !lauf.pausiert) {
+      hilfePauseRef.current = true
+      lauf.pausieren?.()
+    }
+    setHilfe(true)
+  }
+
+  const hilfeZu = () => {
+    setHilfe(false)
+    if (!hilfePauseRef.current) return
+    hilfePauseRef.current = false
+    lauf.weiter?.()
+    musikAn(spiel.key)
+  }
+
   const huelleKlasse = [
     'trm-karte',
     'trm-spiel',
     vollbild ? 'trm-spiel--vollbild' : '',
     echt ? 'trm-spiel--vollbild-echt' : '',
+    klein ? 'trm-spiel--klein' : '',
   ]
     .filter(Boolean)
     .join(' ')
@@ -160,7 +252,7 @@ export default function SpielKarte({ spiel, lauf, best, leiste = null, children 
           <button
             type="button"
             className="trm-cta trm-cta--klein"
-            onClick={lauf.starten}
+            onClick={starten}
             disabled={phase === 'startet'}
           >
             {T.start}
@@ -168,14 +260,19 @@ export default function SpielKarte({ spiel, lauf, best, leiste = null, children 
         )}
       </div>
 
-      <div className={`trm-feld-spiel${spiel.hochformat ? ' trm-feld-spiel--hoch' : ''}`}>
-        {children}
+      {/* Der Rahmen um die Buehne. Nur er klappt zu; die Buehne darin behaelt
+          ihre Hoehe, damit kein Spiel sich auf 0 × 0 neu vermisst. */}
+      <div className="trm-spiel__buehne" data-klein={klein ? '' : undefined} inert={klein || undefined}>
+        {/* Die Tasten der Shell. Sie stehen in einer eigenen Zeile ueber
+            dem Feld, nicht mehr darin: nebeneinander sind es 194 px, und bei
+            390 px Bildschirmbreite lag darunter genau die Kopfzeile, die
+            jedes Spiel selbst dort zeichnet — beim Leitungsfinder der
+            Schalter MARKIEREN, der so gar nicht mehr zu treffen war.
 
-        {/* Die drei Tasten der Shell. Sie liegen ueber dem Spielfeld und
-            duerfen es nicht bedienen: jedes Spiel haengt an denselben
-            Zeigerereignissen, ein durchgereichter Tipp wuerde drehen,
-            abwerfen oder springen. Darum stoppt jede Taste Zeiger und
-            Leertaste, bevor die Buehne sie sieht. */}
+            Bedienen duerfen sie das Spiel trotzdem nicht: jedes Spiel haengt
+            an denselben Zeigerereignissen, ein durchgereichter Tipp wuerde
+            drehen, abwerfen oder springen. Darum stoppt jede Taste Zeiger
+            und Leertaste, bevor die Buehne sie sieht. */}
         <div className="trm-shell" data-vollbild={vollbild ? '' : undefined}>
           <button
             type="button"
@@ -185,10 +282,49 @@ export default function SpielKarte({ spiel, lauf, best, leiste = null, children 
             onPointerDown={halt}
             onPointerUp={halt}
             onKeyDown={tastenHalt}
-            onClick={() => setTon(tonUmschalten())}
+            onClick={() => {
+              const neu = tonUmschalten()
+              setTon(neu)
+              if (neu && laeuft && !lauf.pausiert) musikAn(spiel.key)
+              else musikAus()
+            }}
           >
             {ton ? '♪' : '✕'}
           </button>
+          {/* Die Anleitung steht immer bereit — vor der Runde, um zu wissen,
+              worauf man sich einlaesst, und mittendrin, wenn eine Taste
+              unklar war. */}
+          {anleitung && (
+            <button
+              type="button"
+              className="trm-shell__knopf"
+              aria-label={T.shellAnleitungHilfe}
+              title={T.shellAnleitungHilfe}
+              data-anleitung-auf
+              onPointerDown={halt}
+              onPointerUp={halt}
+              onKeyDown={tastenHalt}
+              onClick={hilfeAuf}
+            >
+              <span aria-hidden="true">ⓘ</span>
+            </button>
+          )}
+          {/* Minimieren gibt es nur, solange es etwas anzuhalten gibt. */}
+          {laeuft && (
+            <button
+              type="button"
+              className="trm-shell__knopf"
+              aria-label={T.shellMinimierenHilfe}
+              title={T.shellMinimierenHilfe}
+              data-minimieren
+              onPointerDown={halt}
+              onPointerUp={halt}
+              onKeyDown={tastenHalt}
+              onClick={minimieren}
+            >
+              <span aria-hidden="true">–</span>
+            </button>
+          )}
           <button
             type="button"
             className="trm-shell__knopf"
@@ -219,121 +355,199 @@ export default function SpielKarte({ spiel, lauf, best, leiste = null, children 
             </button>
           )}
         </div>
+        <div className={`trm-feld-spiel${spiel.hochformat ? ' trm-feld-spiel--hoch' : ''}`}>
+          {children}
 
-        {phase === 'ruht' && (
-          <div className="trm-spiel__mitte">
-            <p className="trm-metrik__text">{spiel.regel}</p>
-            <p className="trm-spiel__best" data-practice-hinweis={practice ? '' : undefined}>
-              {practice ? T.practiceSub : best != null ? `${T.best}: ${zahl(best)}` : T.bestLeer}
-            </p>
-            {fehler && <p className="trm-meldung trm-meldung--fehler">{T.ticketFehler}</p>}
-          </div>
-        )}
-
-        {phase === 'startet' && (
-          <div className="trm-spiel__mitte">
-            <p className="trm-metrik__text">{T.startet}</p>
-          </div>
-        )}
-
-        {(phase === 'sendet' || phase === 'vorbei') && (
-          <div className="trm-spiel__mitte trm-spiel__mitte--ergebnis">
-            <p className="trm-spiel__ergebnis-label">{practice ? T.practiceScore : T.ergebnis}</p>
-            <p className="trm-metrik__zahl trm-spiel__endstand" data-practice-score={practice ? '' : undefined}>
-              {zahl(punkte)}
-            </p>
-
-            {/* Der Probelauf ist vorbei und zaehlt nicht. Hier steht, was
-                stattdessen zaehlt — und die beiden Wege dahin. */}
-            {practice && phase === 'vorbei' && (
-              <>
-                {probeRang && (
-                  <p className="trm-spiel__probe-rang" data-art={probeRang.art} role="status">
-                    {probeRang.text}
-                    {probeRang.zusatz ? (
-                      <span className="trm-spiel__probe-bis">{probeRang.zusatz}</span>
-                    ) : null}
-                  </p>
-                )}
-                <p className="trm-spiel__jagd">{practiceWeg?.frageText ?? T.practiceFrage}</p>
-                <button
-                  type="button"
-                  className="trm-cta trm-cta--umriss"
-                  data-practice-cta
-                  onClick={() => practiceWeg?.onCta?.()}
-                >
-                  {practiceWeg?.ctaText ?? T.practiceCta}
-                </button>
-                {/* Was der Knopf bedeutet — und warum der Probe-Score nicht
-                    mitkommt. Steht nur im Practice-Kontext, nie im echten
-                    Lauf. */}
-                {practiceWeg?.ctaSub ? (
-                  <p className="trm-spiel__probe-sub">{practiceWeg.ctaSub}</p>
-                ) : null}
-                {practiceWeg?.ctaDrei ? (
-                  <p className="trm-spiel__probe-drei">{practiceWeg.ctaDrei}</p>
-                ) : null}
-                {practiceWeg?.neuText ? (
-                  <p className="trm-spiel__probe-neu">{practiceWeg.neuText}</p>
-                ) : null}
-              </>
-            )}
-            {neuerBest && <p className="trm-spiel__neu">{T.neuerBest}</p>}
-
-            {rang?.platz > 0 && (
-              <p className="trm-spiel__platz">
-                {fuelle(T.platzVon, { platz: rang.platz, von: zahl(rang.von ?? rang.platz) })}
+          {phase === 'ruht' && (
+            <div className="trm-spiel__mitte">
+              <p className="trm-metrik__text">{spiel.regel}</p>
+              <p className="trm-spiel__best" data-practice-hinweis={practice ? '' : undefined}>
+                {practice ? T.practiceSub : best != null ? `${T.best}: ${zahl(best)}` : T.bestLeer}
               </p>
-            )}
-            {ansage && !(neuerBest && ansage === T.motivRekord) && (
-              <p className="trm-spiel__jagd trm-spiel__motiv">{ansage}</p>
-            )}
+              {fehler && <p className="trm-meldung trm-meldung--fehler">{T.ticketFehler}</p>}
+            </div>
+          )}
 
-            {/* Der Tagesbestwert und der eigene Bestwert nebeneinander: das
-                eine ist das Ziel, das andere die Messlatte. */}
-            {phase === 'vorbei' && antwort?.ok && !practice && (
-              <dl className="trm-spiel__marken">
-                <div className="trm-spiel__marke">
-                  <dt>{T.besterHeute}</dt>
-                  <dd>{heute?.punkte != null ? zahl(heute.punkte) : T.besterHeuteLeer}</dd>
-                </div>
-                <div className="trm-spiel__marke">
-                  <dt>{T.deinBester}</dt>
-                  <dd>{eigenBest != null ? zahl(eigenBest) : T.besterHeuteLeer}</dd>
-                </div>
-              </dl>
-            )}
+          {phase === 'startet' && (
+            <div className="trm-spiel__mitte">
+              <p className="trm-metrik__text">{T.startet}</p>
+            </div>
+          )}
 
-            {/* Zwei Wege aus dem Ergebnis: sofort nochmal — oder nachsehen,
-                wo der Lauf gelandet ist. Im Probelauf zaehlt nichts davon,
-                dort steht stattdessen der Weg zur Aktivierung. */}
-            {nochmalMoeglich && (
-              <p className="trm-spiel__wege">
-                <button
-                  type="button"
-                  ref={nochmalRef}
-                  className="trm-cta trm-spiel__nochmal"
-                  onClick={lauf.starten}
-                >
-                  {T.nochmalKurz}
-                </button>
-                {!practice && (
-                  <Link className="trm-cta trm-cta--umriss trm-cta--klein" to="/terminal/rangliste">
-                    {T.zurRangliste}
-                  </Link>
-                )}
+          {(phase === 'sendet' || phase === 'vorbei') && (
+            <div className="trm-spiel__mitte trm-spiel__mitte--ergebnis">
+              <p className="trm-spiel__ergebnis-label">{practice ? T.practiceScore : T.ergebnis}</p>
+              <p className="trm-metrik__zahl trm-spiel__endstand" data-practice-score={practice ? '' : undefined}>
+                {zahl(punkte)}
               </p>
-            )}
 
-            <p className="trm-metrik__text trm-spiel__status" aria-live="polite" hidden={practice}>
-              {phase === 'sendet' && T.speichert}
-              {phase === 'vorbei' && antwort?.ok && antwort.gewertet && T.gespeichert}
-              {phase === 'vorbei' && antwort?.ok && !antwort.gewertet && T.nichtGewertet}
-              {phase === 'vorbei' && antwort && !antwort.ok && T.fehler}
-            </p>
-          </div>
-        )}
+              {/* Der Probelauf ist vorbei und zaehlt nicht. Hier steht, was
+                  stattdessen zaehlt — und die beiden Wege dahin. */}
+              {practice && phase === 'vorbei' && (
+                <>
+                  {probeRang && (
+                    <p className="trm-spiel__probe-rang" data-art={probeRang.art} role="status">
+                      {probeRang.text}
+                      {probeRang.zusatz ? (
+                        <span className="trm-spiel__probe-bis">{probeRang.zusatz}</span>
+                      ) : null}
+                    </p>
+                  )}
+                  <p className="trm-spiel__jagd">{practiceWeg?.frageText ?? T.practiceFrage}</p>
+                  <button
+                    type="button"
+                    className="trm-cta trm-cta--umriss"
+                    data-practice-cta
+                    onClick={() => practiceWeg?.onCta?.()}
+                  >
+                    {practiceWeg?.ctaText ?? T.practiceCta}
+                  </button>
+                  {/* Was der Knopf bedeutet — und warum der Probe-Score nicht
+                      mitkommt. Steht nur im Practice-Kontext, nie im echten
+                      Lauf. */}
+                  {practiceWeg?.ctaSub ? (
+                    <p className="trm-spiel__probe-sub">{practiceWeg.ctaSub}</p>
+                  ) : null}
+                  {practiceWeg?.ctaDrei ? (
+                    <p className="trm-spiel__probe-drei">{practiceWeg.ctaDrei}</p>
+                  ) : null}
+                  {practiceWeg?.neuText ? (
+                    <p className="trm-spiel__probe-neu">{practiceWeg.neuText}</p>
+                  ) : null}
+                </>
+              )}
+              {neuerBest && <p className="trm-spiel__neu">{T.neuerBest}</p>}
+
+              {rang?.platz > 0 && (
+                <p className="trm-spiel__platz">
+                  {fuelle(T.platzVon, { platz: rang.platz, von: zahl(rang.von ?? rang.platz) })}
+                </p>
+              )}
+              {ansage && !(neuerBest && ansage === T.motivRekord) && (
+                <p className="trm-spiel__jagd trm-spiel__motiv">{ansage}</p>
+              )}
+
+              {/* Der Tagesbestwert und der eigene Bestwert nebeneinander: das
+                  eine ist das Ziel, das andere die Messlatte. */}
+              {phase === 'vorbei' && antwort?.ok && !practice && (
+                <dl className="trm-spiel__marken">
+                  <div className="trm-spiel__marke">
+                    <dt>{T.besterHeute}</dt>
+                    <dd>{heute?.punkte != null ? zahl(heute.punkte) : T.besterHeuteLeer}</dd>
+                  </div>
+                  <div className="trm-spiel__marke">
+                    <dt>{T.deinBester}</dt>
+                    <dd>{eigenBest != null ? zahl(eigenBest) : T.besterHeuteLeer}</dd>
+                  </div>
+                </dl>
+              )}
+
+              {/* Zwei Wege aus dem Ergebnis: sofort nochmal — oder nachsehen,
+                  wo der Lauf gelandet ist. Im Probelauf zaehlt nichts davon,
+                  dort steht stattdessen der Weg zur Aktivierung. */}
+              {nochmalMoeglich && (
+                <p className="trm-spiel__wege">
+                  <button
+                    type="button"
+                    ref={nochmalRef}
+                    className="trm-cta trm-spiel__nochmal"
+                    onClick={starten}
+                  >
+                    {T.nochmalKurz}
+                  </button>
+                  {!practice && (
+                    <Link className="trm-cta trm-cta--umriss trm-cta--klein" to="/terminal/rangliste">
+                      {T.zurRangliste}
+                    </Link>
+                  )}
+                </p>
+              )}
+
+              <p className="trm-metrik__text trm-spiel__status" aria-live="polite" hidden={practice}>
+                {phase === 'sendet' && T.speichert}
+                {phase === 'vorbei' && antwort?.ok && antwort.gewertet && T.gespeichert}
+                {phase === 'vorbei' && antwort?.ok && !antwort.gewertet && T.nichtGewertet}
+                {phase === 'vorbei' && antwort && !antwort.ok && T.fehler}
+              </p>
+            </div>
+          )}
+        </div>
       </div>
+
+      {/* Die kompakte Karte. Sie steht an der Stelle der Buehne und sagt
+          genau zwei Dinge: die Runde steht, und wie es weitergeht. */}
+      {klein && (
+        <div className="trm-spiel__pausekarte" data-pause role="status">
+          <p className="trm-spiel__pausekarte-titel">{T.pauseTitel}</p>
+          <p className="trm-spiel__pausekarte-sub">{T.pauseSub}</p>
+          <p className="trm-spiel__pausekarte-wege">
+            <button type="button" className="trm-cta" data-pause-weiter onClick={weiterspielen}>
+              {T.pauseWeiter}
+            </button>
+            <button
+              type="button"
+              className="trm-cta trm-cta--umriss trm-cta--klein"
+              data-pause-beenden
+              onClick={pauseBeenden}
+            >
+              {T.pauseBeenden}
+            </button>
+          </p>
+        </div>
+      )}
+
+      {/* Die Anleitung: ein Blatt ueber dem Feld, nicht daneben. Sie liegt
+          in der Karte selbst, damit sie auch im echten Vollbild sichtbar
+          bleibt — ein fest positioniertes Element ausserhalb des
+          Vollbildelements zeigt der Browser nicht an. */}
+      {hilfe && anleitung && (
+        <div
+          className="trm-anleitung"
+          data-anleitung
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${T.shellAnleitung}: ${spiel.titel}`}
+          onPointerDown={halt}
+          onPointerUp={halt}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) hilfeZu()
+          }}
+        >
+          <div className="trm-anleitung__blatt">
+            <p className="trm-anleitung__marke">{T.shellAnleitung}</p>
+            <h3 className="trm-anleitung__titel">{spiel.titel}</h3>
+            <dl className="trm-anleitung__liste">
+              <div className="trm-anleitung__zeile">
+                <dt>{T.anleitungZiel}</dt>
+                <dd>{anleitung.ziel}</dd>
+              </div>
+              <div className="trm-anleitung__zeile">
+                <dt>{T.anleitungSteuerung}</dt>
+                <dd>{anleitung.steuerung}</dd>
+              </div>
+              {anleitung.punkte.map(([kopf, satz]) => (
+                <div className="trm-anleitung__zeile" key={kopf}>
+                  <dt>{kopf}</dt>
+                  <dd>{satz}</dd>
+                </div>
+              ))}
+              <div className="trm-anleitung__zeile">
+                <dt>{T.anleitungEnde}</dt>
+                <dd>{anleitung.ende}</dd>
+              </div>
+              {/* Was zu holen ist — einmal fuer alle Spiele gleich, und nie
+                  mehr versprochen als die Teilnahmebedingungen hergeben. */}
+              <div className="trm-anleitung__zeile" data-anleitung-gewinn>
+                <dt>{T.anleitungGewinn}</dt>
+                <dd>{practice ? T.anleitungGewinnProbe : T.anleitungGewinnText}</dd>
+              </div>
+            </dl>
+            <button type="button" className="trm-cta trm-anleitung__zu" data-anleitung-zu onClick={hilfeZu}>
+              {T.anleitungZu}
+            </button>
+          </div>
+        </div>
+      )}
 
       <p className="trm-spiel__leiste">
         {/* Die Endlosspiele haben keine Uhr: die Runde endet mit dem Fehler.

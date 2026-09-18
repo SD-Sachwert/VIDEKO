@@ -53,6 +53,41 @@
   opacity: 0;
 }
 
+/* Die Kalibrierungsansage. Mittig, weil sie fuer die knappe Sekunde das
+   Wichtigste im Bild ist, und ohne Tippflaeche, weil sie nichts zu bedienen
+   gibt: still halten reicht. */
+.trm-jump-kalib {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  max-width: 82%;
+  padding: 14px 18px;
+  border: 1px solid var(--trm-gold-tief);
+  border-radius: 3px;
+  background: rgba(3, 3, 2, 0.82);
+  text-align: center;
+  pointer-events: none;
+}
+
+.trm-jump-kalib__satz {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--trm-gold-hell);
+}
+
+.trm-jump-kalib__sub {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--trm-creme-leise);
+}
+
 /* Kraefte-Leiste: liegt unter den beiden Ecktasten, mittig, und ist leer,
    solange nichts wirkt. Sie umbricht statt aus dem Bild zu laufen. */
 .trm-jump-kraefte {

@@ -477,6 +477,7 @@ function Fuss() {
       <Link to="/impressum">Impressum</Link>
       <Link to="/datenschutz">Datenschutz</Link>
       <Link to="/terminal/teilnahmebedingungen">Teilnahmebedingungen</Link>
+      <span className="trm-fuss__ki">KI-unterstützt erstellt</span>
     </footer>
   )
 }

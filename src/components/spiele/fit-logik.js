@@ -21,16 +21,22 @@
  * SCHWIERIGKEIT
  * -------------
  * `schwierigkeit(sekunden, reihen)` ist die eine Quelle fuer das Tempo:
- *   stufe       = max(1 + floor(sekunden / 10), 1 + floor(reihen / 8)), hoechstens 20
- *   fallMs      = max(90, round(800 × 0,8^(stufe − 1)))
+ *   stufe       = max(1 + floor(sekunden / 11), 1 + floor(reihen / 8)), hoechstens 20
+ *   fallMs      = max(90, round(800 × 0,82^(stufe − 1)))
  *   lockMs      = max(250, 450 − 20 × (stufe − 1))
  *   komplex     = 0 in Stufe 1, dann min(0,30, 0,04 + 0,03 × (stufe − 1))
  *   problem     = 0 in Stufe 1–2, dann min(0,12, 0,015 × (stufe − 2))
  *   nachschub   = ab Stufe 4 alle max(7, round(16 − 1,5 × (stufe − 4))) Teile
  *                 eine Altbestand-Reihe von unten, ab Stufe 7 mit zwei Luecken
- * Die ersten 10 Sekunden sind also das alte, ruhige Spiel mit den acht
- * vertrauten Teilen; ab 10 s kommen Fuenfer-Teile, ab 20 s Problemteile,
- * ab 30 s drueckt Nachschub von unten.
+ * Die ersten 11 Sekunden sind also das alte, ruhige Spiel mit den acht
+ * vertrauten Teilen; ab 11 s kommen Fuenfer-Teile, ab 22 s Problemteile,
+ * ab 33 s drueckt Nachschub von unten.
+ *
+ * Die Rampe war einmal steiler (Stufe alle 10 s, Faktor 0,8). Sie zog zu
+ * frueh an: nach einer halben Minute fielen die Teile schon mit 410 ms,
+ * bevor man das Feld gelesen hatte. Jetzt sind es dort 538 ms — die erste
+ * halbe Minute bleibt lesbar, das Hoechsttempo (90 ms) ist unveraendert
+ * und wird nur spaeter erreicht (ab 121 s statt ab 100 s).
  *
  * DAS SPIELGEFUEHL (zweiter Teil dieser Datei)
  * --------------------------------------------
@@ -102,11 +108,11 @@ export const REIHEN_JE_LEVEL = 8
 export const FAKTOR_MAX = 5
 
 /* Tempo. */
-export const STUFE_S = 10
+export const STUFE_S = 11
 export const STUFE_MAX = 20
 export const FALL_START_MS = 800
 export const FALL_MIN_MS = 90
-export const FALL_KURVE = 0.8
+export const FALL_KURVE = 0.82
 export const LOCK_START_MS = 450
 export const LOCK_MIN_MS = 250
 /* Alter Name, bleibt fuer Stufe 1. */

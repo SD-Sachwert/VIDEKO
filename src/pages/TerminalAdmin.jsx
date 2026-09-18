@@ -269,7 +269,25 @@ function instagramFehlerText(grund) {
   )
 }
 
+/**
+ * Der Zustand des Syncs in einem Wort. Reihenfolge nach Dringlichkeit:
+ * ein abgelaufener Token ist ein anderer Fall als ein fehlender Zugang,
+ * und beide sind etwas anderes als "eingerichtet, aber noch nie gelaufen".
+ */
+function instagramStatus(sync) {
+  if (!sync?.eingerichtet || sync?.fehler === 'nicht-konfiguriert') {
+    return { wort: 'NICHT EINGERICHTET', art: 'aus' }
+  }
+  if (typeof sync?.fehler === 'string' && sync.fehler.startsWith('http-')) {
+    return { wort: 'TOKENFEHLER', art: 'fehler' }
+  }
+  if (sync?.fehler) return { wort: 'LETZTER LAUF FEHLGESCHLAGEN', art: 'fehler' }
+  if (!sync?.am) return { wort: 'EINGERICHTET, NOCH KEIN LAUF', art: 'wartet' }
+  return { wort: 'AKTIV', art: 'aktiv' }
+}
+
 function Einstellungen({ einstellungen, speichern, laeuft, instagramSync, synchronisieren }) {
+  const igStatus = instagramStatus(instagramSync)
   const [formular, setFormular] = useState(() => ({
     naechsteZiehung: fuerFeld(einstellungen?.naechsteZiehung),
     followerZahl: String(einstellungen?.followerZahl ?? TERMINAL_KAMPAGNE.followerStart),
@@ -375,12 +393,22 @@ function Einstellungen({ einstellungen, speichern, laeuft, instagramSync, synchr
       </form>
 
       <div className="trm-feld">
+        <Zeile label="INSTAGRAM SYNC">
+          <span className="trm-adm__ampel" data-art={igStatus.art}>{igStatus.wort}</span>
+        </Zeile>
         <Zeile label="LETZTER INSTAGRAM-SYNC">
           {terminText(instagramSync?.am) ?? 'noch nie'}
         </Zeile>
         <Zeile label="AKTUELLER API-WERT">
           {typeof instagramSync?.wert === 'number' ? zahl(instagramSync.wert) : '–'}
         </Zeile>
+        {!instagramSync?.eingerichtet && (
+          <p className="trm-feld__hilfe">
+            INSTAGRAM_ACCESS_TOKEN und INSTAGRAM_USER_ID sind in der Serverumgebung nicht
+            gesetzt. Solange das so ist, läuft nichts automatisch und die Followerzahl
+            oben ist die einzige Quelle.
+          </p>
+        )}
         {instagramSync?.fehler && (
           <p className="trm-meldung trm-meldung--fehler">
             <AlertTriangle size={15} aria-hidden="true" /> {instagramFehlerText(instagramSync.fehler)}

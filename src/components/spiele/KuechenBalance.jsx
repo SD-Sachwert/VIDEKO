@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import SpielKarte from '../SpielKarte.jsx'
 import { useSpielLauf, useTestEnde } from '../spiel-lauf.js'
+import { istPausiert } from './spiel-pause.js'
 import { SPIEL_NACH_KEY } from '../../data/terminal.js'
 import {
   CRASH_MS,
@@ -529,6 +530,15 @@ export default function KuechenBalance({ sitzung, best = null, onErgebnis }) {
     let vorher = performance.now()
 
     const schritt = (jetzt) => {
+      /* Minimiert steht die Runde still. Der Zeitanker wandert mit,
+         sonst kaeme der erste Frame danach mit einem dt von mehreren
+         Sekunden zurueck und rechnete die Runde in einem Schritt zu
+         Ende. */
+      if (istPausiert(GAME)) {
+        vorher = jetzt
+        frame = requestAnimationFrame(schritt)
+        return
+      }
       const dt = Math.min(0.05, (jetzt - vorher) / 1000)
       vorher = jetzt
       const s = g.current

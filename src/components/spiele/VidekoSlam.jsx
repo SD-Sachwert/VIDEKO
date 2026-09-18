@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import SpielKarte from '../SpielKarte.jsx'
 import { useSpielLauf, useTestEnde } from '../spiel-lauf.js'
+import { istPausiert } from './spiel-pause.js'
 import { SPIEL_NACH_KEY } from '../../data/terminal.js'
 import {
   FRONTEN_MAX,
@@ -276,6 +277,9 @@ function Bild({ name }) {
 
 /* ------------------------------------------------------------------ */
 
+/* Der Schluessel dieses Spiels — er steht im Lauf und im Pause-Register. */
+const GAME = 'videko_slam'
+
 export default function VidekoSlam({ sitzung, best, onErgebnis }) {
   const [fronten, setFronten] = useState(() => Array.from({ length: FRONTEN_MAX }, () => null))
   const [offen, setOffen] = useState(6)
@@ -298,7 +302,7 @@ export default function VidekoSlam({ sitzung, best, onErgebnis }) {
   const nrRef = useRef(0)
   const spruchRef = useRef({ fehler: 0, verpasst: 0, serie: 0 })
 
-  const lauf = useSpielLauf({ sitzung, game: 'videko_slam', dauerVorgabe: SPIELZEIT_MS, onErgebnis })
+  const lauf = useSpielLauf({ sitzung, game: GAME, dauerVorgabe: SPIELZEIT_MS, onErgebnis })
   const { laeuft, punkteGeben, rundeZaehlen, zeitStrafe, fertig, starten: laufStarten } = lauf
 
   /* Reduced Motion wird mitgehoert, nicht nur einmal gelesen. */
@@ -406,6 +410,15 @@ export default function VidekoSlam({ sitzung, best, onErgebnis }) {
     let frame = 0
     let letzte = performance.now()
     const schleife = (jetzt) => {
+      /* Minimiert steht die Runde still. Der Zeitanker wandert mit,
+         sonst kaeme der erste Frame danach mit einem dt von mehreren
+         Sekunden zurueck und rechnete die Runde in einem Schritt zu
+         Ende. */
+      if (istPausiert(GAME)) {
+        letzte = jetzt
+        frame = requestAnimationFrame(schleife)
+        return
+      }
       const dt = jetzt - letzte
       letzte = jetzt
       const z = zustandRef.current

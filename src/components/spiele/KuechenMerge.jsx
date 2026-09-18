@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import SpielKarte from '../SpielKarte.jsx'
 import { useSpielLauf, useTestEnde } from '../spiel-lauf.js'
+import { istPausiert } from './spiel-pause.js'
 import { SPIEL_NACH_KEY } from '../../data/terminal.js'
 import {
   ABWURF_MS,
@@ -1151,6 +1152,15 @@ export default function KuechenMerge({ sitzung, best = null, onErgebnis }) {
     }
 
     const tick = (jetzt) => {
+      /* Minimiert steht die Runde still. Der Zeitanker wandert mit,
+         sonst kaeme der erste Frame danach mit einem dt von mehreren
+         Sekunden zurueck und rechnete die Runde in einem Schritt zu
+         Ende. */
+      if (istPausiert(GAME)) {
+        vorher = jetzt
+        frame = requestAnimationFrame(tick)
+        return
+      }
       const dtMs = Math.min(100, jetzt - vorher)
       const dt = dtMs / 1000
       vorher = jetzt

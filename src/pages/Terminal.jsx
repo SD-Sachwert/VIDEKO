@@ -19,6 +19,7 @@ import TerminalRahmen, {
 } from '../components/TerminalRahmen.jsx'
 import TruhenKnacker from '../components/TruhenKnacker.jsx'
 import { PracticeKontext, startWunschSetzen } from '../components/spiel-lauf.js'
+import { VORSCHAU_BREITE, VORSCHAU_HOEHE, vorschauBild } from '../data/spiel-vorschau.js'
 import { GEWINNE } from '../data/terminal-gewinne.js'
 import {
   SPEICHER_INTRO_WUNSCH,
@@ -56,6 +57,8 @@ import {
   deckelNummer,
   deckelText,
   fuelle,
+  GEWINN_WEGE,
+  STANDARD_HAUPTGAMES,
   instagramNormalisieren,
   missionStand,
   probeListeAus,
@@ -622,6 +625,33 @@ const SPIEL_NACHLADEN = {
   videko_slam: lazy(() => import('../components/spiele/VidekoSlam.jsx')),
 }
 
+/**
+ * Die Vorschau eines Spiels — ein echter Ausschnitt aus dem Spielfeld.
+ *
+ * Ein Spielname allein sagt niemandem, was ihn erwartet. Wo ein Bild
+ * vorliegt, ersetzt es das Ikon; wo keines vorliegt (Legacy-Slots), bleibt
+ * das Ikon stehen. Das Bild ist rein dekorativ: Name und Beschreibung stehen
+ * unmittelbar daneben, eine Vorlesung gewinnt durch "Spielfeld von ..."
+ * nichts dazu. Breite und Hoehe stehen im Markup, damit die Liste beim Laden
+ * nicht springt.
+ */
+function SpielBild({ spiel }) {
+  const bild = vorschauBild(spiel.key)
+  if (!bild) return <Ikon name={spiel.icon} size={24} className="trm-ikon" />
+  return (
+    <img
+      className="trm-spielwahl__bild"
+      src={bild}
+      alt=""
+      width={VORSCHAU_BREITE}
+      height={VORSCHAU_HOEHE}
+      loading="lazy"
+      decoding="async"
+      draggable="false"
+    />
+  )
+}
+
 /** Die kompakte Auswahlkarte eines nachgeladenen Spiels. */
 function SpielWahl({ spiel, best, oeffnen, losWort = null }) {
   return (
@@ -632,7 +662,7 @@ function SpielWahl({ spiel, best, oeffnen, losWort = null }) {
       data-spielwahl={spiel.key}
       onClick={oeffnen}
     >
-      <Ikon name={spiel.icon} size={24} className="trm-ikon" />
+      <SpielBild spiel={spiel} />
       <span className="trm-spielwahl__text">
         <span className="trm-spielwahl__titel">{spiel.titel}</span>
         <span className="trm-spielwahl__zeile">{spiel.zeile}</span>
@@ -2203,7 +2233,7 @@ export default function Terminal() {
           <p className="trm-karte__sub" id="trm-belegt-frage">
             {B.frage}
           </p>
-          <p className="trm-fuss-notiz">{B.hinweis}</p>
+          <p className="trm-fuss-notiz">{fuelle(B.hinweis, { gesamt: GESAMT })}</p>
           <div className="trm-belegt__tasten">
             <button type="button" className="trm-cta" data-belegt-ja disabled={sendet} onClick={belegtJa}>
               {sendet ? 'Wird aktiviert …' : B.ja}
@@ -2834,7 +2864,7 @@ export default function Terminal() {
                 data-gesperrt={s.key}
                 aria-disabled="true"
               >
-                <Ikon name={s.icon} size={24} className="trm-ikon" />
+                <SpielBild spiel={s} />
                 <span className="trm-spielwahl__text">
                   <span className="trm-spielwahl__titel">{s.titel}</span>
                   <span className="trm-spielwahl__zeile">{s.zeile}</span>
@@ -2872,7 +2902,7 @@ export default function Terminal() {
               <p className="trm-karte__sub" id="trm-belegt-frage">
                 {B.frage}
               </p>
-              <p className="trm-fuss-notiz">{B.hinweis}</p>
+              <p className="trm-fuss-notiz">{fuelle(B.hinweis, { gesamt: GESAMT })}</p>
               <div className="trm-belegt__tasten">
                 <button type="button" className="trm-cta" data-belegt-ja disabled={sendet} onClick={belegtJa}>
                   {sendet ? 'Wird aktiviert …' : B.ja}
@@ -3124,6 +3154,7 @@ export default function Terminal() {
           <section className={`trm-probespiel ${stufe(5)}`} data-probe={probeSpiel.key}>
             <h2 className="trm-probespiel__titel">{TEXTE.a.probeTitel}</h2>
             <p className="trm-probespiel__spiel">{probeSpiel.titel}</p>
+            <p className="trm-probespiel__lead">{TEXTE.a.probeLead}</p>
 
             {!probeOffen && !SPIEL_BAUTEILE[probeSpiel.key] ? (
               <SpielWahl
@@ -3150,6 +3181,23 @@ export default function Terminal() {
             <p className="trm-probespiel__notiz">{TEXTE.a.probeNotiz}</p>
           </section>
         ) : null}
+
+        <section className={`trm-gewinnwege ${stufe(5)}`}>
+          <h2 className="trm-gewinnwege__titel">{TEXTE.a.gewinnTitel}</h2>
+          <p className="trm-gewinnwege__sub">{TEXTE.a.gewinnSub}</p>
+          <div className="trm-gewinnwege__liste">
+            {GEWINN_WEGE.map((weg) => (
+              <article className="trm-karte trm-gewinnweg" key={weg.key}>
+                <Ikon name={weg.icon} size={20} className="trm-ikon" />
+                <h3 className="trm-karte__titel">{weg.titel}</h3>
+                <p className="trm-weg__text">
+                  {fuelle(weg.text, { hauptspiele: STANDARD_HAUPTGAMES.length })}
+                </p>
+              </article>
+            ))}
+          </div>
+          <p className="trm-gewinnwege__notiz">{TEXTE.a.gewinnNotiz}</p>
+        </section>
 
         <form
           className={`trm-code ${stufe(6)}`}
@@ -3209,8 +3257,8 @@ export default function Terminal() {
         <div className={`trm-wege ${stufe(6)}`}>
           <section className="trm-karte trm-weg">
             <Ikon name="nummer" size={20} className="trm-ikon" />
-            <h2 className="trm-karte__titel">{TEXTE.a.deckelTitel}</h2>
-            <p className="trm-weg__text">{fuelle(TEXTE.a.deckelText, { gesamt: GESAMT })}</p>
+            <h2 className="trm-karte__titel">{fuelle(TEXTE.a.deckelTitel, { gesamt: GESAMT })}</h2>
+            <p className="trm-weg__text">{fuelle(TEXTE.a.deckelText, { gesamt: GESAMT, gewinne: GEWINNE.length })}</p>
           </section>
           <section className="trm-karte trm-weg">
             <Ikon name="schluessel" size={20} className="trm-ikon" />

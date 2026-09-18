@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
 
 import { spielBeenden, spielStarten } from '../data/terminal-api.js'
+import { pauseSetzen } from './spiele/spiel-pause.js'
 
 /**
  * Der Ablauf einer Spielrunde — fuer beide Spiele derselbe.
@@ -147,10 +148,17 @@ export function useSpielLauf({
   /* 'ruht' → 'startet' → 'laeuft' → 'sendet' → 'vorbei' */
   const [phase, setPhase] = useState('ruht')
   const [restMs, setRestMs] = useState(dauerVorgabe)
+  /* Minimieren haelt die Runde an. `laeuft` bleibt dabei bewusst wahr:
+     die Spielfelder haengen daran und wuerden sonst ausgehaengt.
+     Gueltig ist die Pause nur waehrend einer Runde — deshalb wird der
+     rohe Wunsch unten mit der Phase verrechnet und nicht in einem Effekt
+     zurueckgesetzt. */
+  const [pauseWunsch, setPauseWunsch] = useState(false)
   const [punkte, setPunkte] = useState(0)
   const [antwort, setAntwort] = useState(null)
   const [fehler, setFehler] = useState(null)
   const practice = useContext(PracticeKontext) != null
+  const pausiert = pauseWunsch && phase === 'laeuft'
 
   const ticketRef = useRef(null)
   const endeRef = useRef(0)
@@ -161,6 +169,8 @@ export function useSpielLauf({
   const abpfiffRef = useRef(0)
   const strafeRef = useRef(0)
   const punkteRef = useRef(0)
+  /* Seit wann die Runde steht — daraus wird die Uhr nachgestellt. */
+  const pauseSeitRef = useRef(0)
   const rundenRef = useRef(0)
   /* Gegen die doppelte Abgabe: Uhr und Spielfeld koennen beide beenden wollen. */
   const abgegebenRef = useRef(false)
@@ -285,9 +295,11 @@ export function useSpielLauf({
     if (daten?.ok && onErgebnis) onErgebnis(daten)
   }, [sitzung, game, onErgebnis, sofort, practice])
 
-  /* Die Uhr. Laeuft nur waehrend der Runde. */
+  /* Die Uhr. Laeuft nur waehrend der Runde — und nicht, solange pausiert
+     ist. Das Intervall wird dann abgeraeumt statt uebersprungen: so
+     laeuft nichts mit, was hinterher nachgeholt werden muesste. */
   useEffect(() => {
-    if (phase !== 'laeuft') return undefined
+    if (phase !== 'laeuft' || pausiert) return undefined
 
     const uhr = setInterval(() => {
       const rest = Math.max(0, endeRef.current - Date.now())
@@ -302,7 +314,46 @@ export function useSpielLauf({
     }, UHR_MS)
 
     return () => clearInterval(uhr)
-  }, [phase, fertig])
+  }, [phase, fertig, pausiert])
+
+  /**
+   * Pause an. Die Uhr bleibt stehen, das Spielfeld bleibt haengen, die
+   * Simulation friert ueber spiel-pause.js ein.
+   */
+  const pausieren = useCallback(() => {
+    if (pausiert) return
+    pauseSeitRef.current = Date.now()
+    setPauseWunsch(true)
+    pauseSetzen(game, true)
+  }, [game, pausiert])
+
+  /**
+   * Pause aus. Die gestandene Zeit wird auf das Rundenende UND auf die
+   * Rundendecke aufgeschlagen — sonst liefe im Hintergrund eine Uhr
+   * weiter, die niemand sieht, und die Runde waere beim Weiterspielen
+   * schon halb vorbei.
+   */
+  const weiter = useCallback(() => {
+    if (!pausiert) return
+    const weg = Math.max(0, Date.now() - pauseSeitRef.current)
+    if (weg > 0) {
+      endeRef.current += weg
+      if (deckelRef.current > 0) deckelRef.current += weg
+      if (abpfiffRef.current > 0) abpfiffRef.current += weg
+    }
+    pauseSeitRef.current = 0
+    setPauseWunsch(false)
+    pauseSetzen(game, false)
+    setRestMs(Math.max(0, endeRef.current - Date.now()))
+  }, [game, pausiert])
+
+  /* Eine Pause darf nichts ueberdauern: nicht das Rundenende, nicht das
+     Aushaengen der Komponente. Sonst stuende das naechste Spiel still. */
+  useEffect(() => {
+    if (phase !== 'laeuft') pauseSetzen(game, false)
+  }, [phase, game])
+
+  useEffect(() => () => pauseSetzen(game, false), [game])
 
   /**
    * Runde anmelden. Ohne Laufticket wird nicht gespielt — ein Ergebnis, das
@@ -385,6 +436,9 @@ export function useSpielLauf({
     abgegebenRef.current = false
     setPunkte(0)
     setRestMs(dauer)
+    pauseSeitRef.current = 0
+    setPauseWunsch(false)
+    pauseSetzen(game, false)
     setPhase('laeuft')
     return true
   }, [sitzung, game, dauerVorgabe, dauerMaxVorgabe, sofort, practice])
@@ -395,6 +449,9 @@ export function useSpielLauf({
     ticketSeitRef,
     phase,
     laeuft: phase === 'laeuft',
+    pausiert,
+    pausieren,
+    weiter,
     restMs,
     restSek: Math.ceil(restMs / 1000),
     punkte,

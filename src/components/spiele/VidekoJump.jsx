@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import SpielKarte from '../SpielKarte.jsx'
 import { useSpielLauf, useTestEnde } from '../spiel-lauf.js'
+import { istPausiert } from './spiel-pause.js'
 import { SPIEL_NACH_KEY } from '../../data/terminal.js'
 import {
   COMBO_AB,
@@ -114,20 +115,25 @@ const TASTEN_RECHTS = ['ArrowRight', 'd', 'D']
 
 /* So lange bleibt eine Fehlermeldung auf der Neigungstaste stehen. */
 const NEIGUNG_FEHLER_MS = 2500
-/* So viele Messwerte bilden den Neutralpunkt. Bei 60 Hz sind das gut
-   100 ms — kurz genug, dass es sich nach dem Tipp sofort anfuehlt. */
-const NEIGUNG_PROBEN = 6
+/* So viele Messwerte bilden den Neutralpunkt. Bei 60 Hz sind das rund
+   400 ms, bei 30 Hz rund 800 ms. */
+const NEIGUNG_PROBEN = 24
+/* Und so lange steht der Hinweis mindestens. Die Kalibrierung misst, WIE das
+   Handy gerade gehalten wird — sie ist nur so gut wie die Haltung in diesem
+   Moment. Wer sie in 100 ms durchwinkt, misst die Bewegung des Daumens, der
+   eben noch getippt hat. Deshalb: erst lesen, still halten, dann messen. */
+const NEIGUNG_RUHE_MS = 900
 /* Die Taste zeigt die geltende Steuerung, nicht einen Wunsch. */
 const NEIGUNG_TEXT = {
   aus: 'STEUERUNG TOUCH',
-  fragt: 'NEIGUNG …',
+  fragt: 'KALIBRIERT …',
   aktiv: 'STEUERUNG NEIGUNG',
   verweigert: 'NEIGUNG VERWEIGERT',
   'nicht-unterstuetzt': 'KEIN NEIGUNGSSENSOR',
 }
 const NEIGUNG_HILFE = {
   aus: 'Steuerung Touch. Tippen schaltet auf Neigung um.',
-  fragt: 'Neigungssensor wird angefragt.',
+  fragt: 'Handy gerade halten — die Neigung wird auf deine Haltung eingestellt.',
   aktiv: 'Steuerung Neigung. Tippen schaltet zurück auf Touch.',
   verweigert: 'Neigung wurde verweigert. Touch bleibt aktiv.',
   'nicht-unterstuetzt': 'Kein Neigungssensor gefunden. Touch bleibt aktiv.',
@@ -374,6 +380,9 @@ function marmorMalen(ziel, breite, hoehe, dpr, palette) {
   }
 }
 
+/* Der Schluessel dieses Spiels — er steht im Lauf und im Pause-Register. */
+const GAME = 'videko_jump'
+
 export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
   const [hoehe, setHoehe] = useState(0)
   const [meldung, setMeldung] = useState(null)
@@ -425,11 +434,12 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
      spaete Antworten einer abgebrochenen Anfrage wirkungslos. */
   const neigungRef = useRef({
     aktiv: false, fragt: false, richtung: 0, token: 0, hoerer: null, uhr: 0, zurueck: 0,
-    /* Neutralpunkt und die Messwerte, aus denen er gebildet wird. */
-    null0: 0, proben: 0, summe: 0,
+    /* Neutralpunkt, die Messwerte, aus denen er gebildet wird, und der
+       Zeitpunkt, an dem das Messen begonnen hat. */
+    null0: 0, proben: 0, summe: 0, seit: 0,
   })
 
-  const lauf = useSpielLauf({ sitzung, game: 'videko_jump', dauerVorgabe: 540000, onErgebnis, sofort: true })
+  const lauf = useSpielLauf({ sitzung, game: GAME, dauerVorgabe: 540000, onErgebnis, sofort: true })
   const { laeuft, punkteGeben, rundeZaehlen, fertig, starten: laufStarten, ticketSeitRef } = lauf
 
   /* Eine Quelle fuer alle Spiele — spielgefuehl.js entscheidet, was sanft ist,
@@ -501,7 +511,7 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
     clearTimeout(n.zurueck)
     Object.assign(n, {
       aktiv: false, fragt: false, richtung: 0, hoerer: null, uhr: 0, zurueck: 0,
-      null0: 0, proben: 0, summe: 0,
+      null0: 0, proben: 0, summe: 0, seit: 0,
     })
   }, [])
 
@@ -996,7 +1006,7 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
              senkrecht sitzt, dauerhaft in eine Richtung. */
           n.proben += 1
           n.summe += grad
-          if (n.proben < NEIGUNG_PROBEN) return
+          if (n.proben < NEIGUNG_PROBEN || Date.now() - n.seit < NEIGUNG_RUHE_MS) return
           n.null0 = n.summe / n.proben
           n.richtung = 0
           n.aktiv = true
@@ -1011,9 +1021,13 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
         n.richtung = tiefpass(n.richtung, neigungAchse(grad, n.null0))
       }
       n.hoerer = hoerer
+      n.seit = Date.now()
       window.addEventListener('deviceorientation', hoerer)
+      /* Die Frist gilt dem Sensor, nicht der Ruhephase: kommt ueberhaupt kein
+         Messwert, gibt es keinen brauchbaren Sensor. Sind welche da, laeuft
+         die Kalibrierung ihre Zeit zu Ende. */
       n.uhr = setTimeout(() => {
-        if (!n.aktiv) scheitern('nicht-unterstuetzt')
+        if (!n.aktiv && n.proben === 0) scheitern('nicht-unterstuetzt')
       }, NEIGUNG_WARTEN_MS)
     }
     const fehler = (err) => scheitern(err?.name === 'NotAllowedError' ? 'verweigert' : 'nicht-unterstuetzt')
@@ -2273,6 +2287,15 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
     }
 
     const schleife = (jetzt) => {
+      /* Minimiert steht die Runde still. Der Zeitanker wandert mit,
+         sonst kaeme der erste Frame danach mit einem dt von mehreren
+         Sekunden zurueck und rechnete die Runde in einem Schritt zu
+         Ende. */
+      if (istPausiert(GAME)) {
+        vorher = jetzt
+        frame = requestAnimationFrame(schleife)
+        return
+      }
       const stand = standRef.current
       const helfer = helferRef.current
       const richtung = steuerungLesen()
@@ -2391,6 +2414,16 @@ export default function VidekoJump({ sitzung, best = null, onErgebnis }) {
               <span className="trm-jump-hinweis" aria-hidden="true">
                 <span>‹ LINKS DRÜCKEN</span>
                 <span>RECHTS DRÜCKEN ›</span>
+              </span>
+            )}
+            {/* Die Kalibrierung. Sie dauert knapp eine Sekunde, und in
+                dieser Sekunde muss jemand etwas tun — also steht die Ansage
+                gross im Feld. Der kleine Knopf in der Ecke wuerde reichen,
+                um zu melden, dass etwas passiert; nicht, um zu sagen, was. */}
+            {neigung === 'fragt' && (
+              <span className="trm-jump-kalib" role="status">
+                <span className="trm-jump-kalib__satz">HANDY GERADE HALTEN</span>
+                <span className="trm-jump-kalib__sub">Neigung wird auf diese Haltung eingestellt.</span>
               </span>
             )}
             {/* Der Tonschalter sitzt in der gemeinsamen Game-Shell

@@ -143,8 +143,15 @@ export async function instagramSynchronisieren(optionen = {}) {
  * oder antwortet die Datenbank nicht, kommen Nullwerte — die uebrigen
  * Verwaltungsdaten laden davon unberuehrt.
  */
+export function instagramEingerichtet() {
+  return Boolean(
+    String(process.env.INSTAGRAM_ACCESS_TOKEN ?? '').trim()
+      && String(process.env.INSTAGRAM_USER_ID ?? '').trim(),
+  )
+}
+
 export async function instagramStandLesen() {
-  const leer = { am: null, wert: null, fehler: null }
+  const leer = { am: null, wert: null, fehler: null, eingerichtet: instagramEingerichtet() }
   try {
     const zeilen = await lesen(
       `${TABELLE_EINSTELLUNGEN}?select=instagram_follower_api,instagram_sync_am,instagram_sync_fehler`
@@ -155,6 +162,7 @@ export async function instagramStandLesen() {
       am: typeof z.instagram_sync_am === 'string' ? z.instagram_sync_am : null,
       wert: followerWertGueltig(z.instagram_follower_api) ? z.instagram_follower_api : null,
       fehler: typeof z.instagram_sync_fehler === 'string' ? z.instagram_sync_fehler.slice(0, 80) : null,
+      eingerichtet: instagramEingerichtet(),
     }
   } catch {
     return leer
