@@ -348,6 +348,20 @@ const ALLE_STATISCHEN_ROUTEN = [
     inSitemap: false,
   },
 
+  /* Die vollstaendigen Teilnahme- und Gewinnbedingungen der Stadtfest-Aktion.
+     Oeffentlich erreichbar, weil der Pflichthaken im Formular darauf zeigt —
+     aber aus demselben Grund wie die Aktionsseite selbst weder im Index noch
+     in der Sitemap. */
+  {
+    path: '/stadtfest/teilnahmebedingungen',
+    title: 'Teilnahme- und Gewinnbedingungen | Würzburger Stadtfest 2026',
+    description:
+      'Vollständige Teilnahme- und Gewinnbedingungen der VIDEKO Aktion am Würzburger Stadtfest.',
+    noindex: true,
+    nofollow: true,
+    inSitemap: false,
+  },
+
   /* Bierdeckel-Aktion. Der gedruckte QR-Code zeigt auf /terminal; die vier
      Unterseiten sind von dort aus verlinkt. Alle fuenf bleiben aus dem Index
      und aus der Sitemap: die Aktion ist zeitlich begrenzt, und eine

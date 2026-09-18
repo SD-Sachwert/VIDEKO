@@ -1449,3 +1449,300 @@
     transition: none;
   }
 }
+
+/* ---------------------------------------------------------------- */
+/* Kurz-Spielregeln im Formular                                      */
+/* ---------------------------------------------------------------- */
+
+/* Der Pflichthinweis vor dem Formular. Er erklaert in sieben Zeilen, was am
+   Rad passiert — vor allem, dass ein Hauptpreisfeld noch kein Hauptpreis
+   ist. Deshalb steht er ueber den Feldern und nicht in einem Sheet, das man
+   erst oeffnen muss. */
+.stf-regeln {
+  margin: 0 0 22px;
+  padding: 16px 16px 14px;
+  border: 1px solid var(--stf-linie);
+  border-radius: 2px;
+  background: rgba(6, 6, 5, 0.42);
+}
+
+.stf-regeln__titel {
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--stf-gold-hell);
+}
+
+.stf-regeln__liste {
+  margin: 0;
+  padding: 0 0 0 20px;
+  list-style: decimal;
+}
+
+.stf-regeln__schritt {
+  margin: 0 0 5px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--stf-creme-weich);
+}
+
+.stf-regeln__schritt::marker {
+  color: var(--stf-gold);
+  font-variant-numeric: tabular-nums;
+}
+
+.stf-regeln__fuss {
+  margin: 12px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--stf-linie);
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  color: var(--stf-creme);
+}
+
+.stf-regeln__link {
+  margin: 6px 0 0;
+  font-size: 13px;
+}
+
+/* ---------------------------------------------------------------- */
+/* Seite: Teilnahme- und Gewinnbedingungen                           */
+/* ---------------------------------------------------------------- */
+
+.stf-recht {
+  padding-top: clamp(28px, 7vw, 56px);
+}
+
+.stf-recht__zurueck {
+  margin: 0 0 20px;
+  font-size: 13.5px;
+}
+
+/* Der Kurzblock fuer den A4-Aushang. Am Bildschirm eine hervorgehobene
+   Karte, im Druck die erste Seite. */
+.stf-aushang {
+  margin: 0 0 30px;
+  padding: 18px 18px 16px;
+  border: 2px solid var(--stf-gold);
+  border-radius: 2px;
+  background: rgba(6, 6, 5, 0.5);
+}
+
+.stf-aushang__titel {
+  margin: 0 0 12px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--stf-gold-hell);
+}
+
+.stf-aushang__liste {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stf-aushang__zeile {
+  margin: 0 0 8px;
+  padding-left: 16px;
+  position: relative;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--stf-creme);
+}
+
+.stf-aushang__zeile::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 6px;
+  height: 6px;
+  background: var(--stf-gold);
+  transform: rotate(45deg);
+}
+
+.stf-aushang__zeile:last-child {
+  margin-bottom: 0;
+}
+
+.stf-recht__kopf {
+  margin: 0 0 26px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--stf-linie);
+}
+
+.stf-recht__titel {
+  margin: 0;
+  font-size: clamp(22px, 5vw, 30px);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+  color: var(--stf-creme);
+}
+
+.stf-recht__titel-zusatz {
+  display: block;
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--stf-gold-hell);
+}
+
+.stf-recht__hinweis {
+  margin: 14px 0 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--stf-creme-weich);
+}
+
+.stf-recht__abschnitt {
+  margin: 0 0 24px;
+}
+
+.stf-recht__h {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--stf-creme);
+}
+
+.stf-recht__p {
+  margin: 0 0 9px;
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--stf-creme-weich);
+}
+
+.stf-recht__extern {
+  color: var(--stf-gold-hell);
+  text-underline-offset: 3px;
+}
+
+.stf-recht__stand {
+  margin: 30px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--stf-linie);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  color: rgba(244, 239, 228, 0.34);
+}
+
+/* ---------------------------------------------------------------- */
+/* Druck: A4-Aushang und vollstaendiger Text                         */
+/* ---------------------------------------------------------------- */
+
+/* Wer die Bedingungenseite druckt, bekommt auf Seite 1 den Aushang fuer den
+   Stand und danach den vollstaendigen Text. Nachtschwarz und Fotos fliegen
+   raus — das kostet nur Toner und macht den Text schlechter lesbar.
+   Bewusst KEINE @page-Regel: dieses Stylesheet wird global geladen und soll
+   den Druck anderer Seiten nicht veraendern. Die Masse sind in mm/pt
+   gesetzt und passen auf A4 mit Standardraendern. */
+@media print {
+  .stf-nodruck {
+    display: none !important;
+  }
+
+  .stf-recht {
+    min-height: 0;
+    padding: 0;
+    background: #fff;
+    color: #000;
+  }
+
+  .stf-recht::before,
+  .stf-recht::after {
+    display: none;
+  }
+
+  .stf-recht .stf__spalte {
+    width: 100%;
+    max-width: none;
+    padding: 0;
+  }
+
+  .stf-aushang {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    /* Der Aushang bekommt die erste Seite fuer sich. */
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .stf-aushang__titel {
+    margin: 0 0 14mm;
+    font-size: 26pt;
+    color: #000;
+  }
+
+  .stf-aushang__zeile {
+    margin: 0 0 7mm;
+    padding-left: 8mm;
+    font-size: 15pt;
+    line-height: 1.45;
+    color: #000;
+  }
+
+  .stf-aushang__zeile::before {
+    top: 0.5em;
+    width: 3mm;
+    height: 3mm;
+    background: #000;
+  }
+
+  .stf-recht__kopf {
+    margin: 0 0 8mm;
+    padding-bottom: 4mm;
+    border-bottom: 0.4mm solid #000;
+  }
+
+  .stf-recht__titel {
+    font-size: 18pt;
+    color: #000;
+  }
+
+  .stf-recht__titel-zusatz {
+    font-size: 11pt;
+    color: #000;
+  }
+
+  .stf-recht__hinweis,
+  .stf-recht__p {
+    font-size: 10pt;
+    line-height: 1.5;
+    color: #000;
+  }
+
+  .stf-recht__abschnitt {
+    margin: 0 0 6mm;
+    /* Ueberschrift und erster Absatz bleiben zusammen. */
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .stf-recht__h {
+    font-size: 11pt;
+    color: #000;
+  }
+
+  .stf-recht__extern {
+    color: #000;
+  }
+
+  .stf-recht__stand {
+    margin: 8mm 0 0;
+    padding-top: 3mm;
+    border-top: 0.3mm solid #000;
+    font-size: 9pt;
+    color: #000;
+  }
+}
