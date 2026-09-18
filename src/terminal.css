@@ -4939,6 +4939,22 @@ textarea.trm-eingabe {
   min-width: 0;
 }
 
+/* Verweise im Fliesstext dieser Zeile — etwa auf Impressum und Datenschutz.
+   Ohne eigene Regel malt der Browser sie blau und unterstrichen; das bricht
+   das Bild aus Marmor und Gold auf einer Seite, die jeder aufschlaegt. */
+.trm-zeile__text a {
+  color: var(--trm-creme-weich);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(214, 178, 106, 0.55);
+}
+
+.trm-zeile__text a:hover,
+.trm-zeile__text a:focus-visible {
+  color: var(--trm-gold-hell);
+  text-decoration-color: currentColor;
+}
+
 .trm-zeile .trm-cta {
   flex: 0 0 auto;
   width: auto;

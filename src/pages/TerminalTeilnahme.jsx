@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { AlertTriangle } from 'lucide-react'
+import { AlertTriangle, ArrowLeft } from 'lucide-react'
 
 import Seo from '../components/Seo.jsx'
 import TerminalRahmen, { Raute } from '../components/TerminalRahmen.jsx'
@@ -283,7 +283,10 @@ export default function TerminalTeilnahme() {
             Veranstalter und Kontakt stehen im <Link to="/impressum">Impressum</Link>. Zur
             Verarbeitung der Daten siehe <Link to="/datenschutz">Datenschutz</Link>.
           </span>
-          <Link to="/terminal">Zurück zur Aktion</Link>
+          <Link className="trm-cta trm-cta--umriss trm-cta--klein" to="/terminal">
+            <ArrowLeft size={16} aria-hidden="true" />
+            Zurück zur Aktion
+          </Link>
         </p>
       </TerminalRahmen>
     </>

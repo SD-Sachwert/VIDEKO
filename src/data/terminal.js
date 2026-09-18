@@ -585,7 +585,11 @@ export const TEXTE = {
     grQualifiziert: '{n} qualifiziert',
     grEinzelHinweis:
       'Einzel-Bestenlisten dienen der Wertung und dem Vergleich; daraus entsteht kein eigener Gewinnanspruch.',
-    hinweis: 'Das Leaderboard ist Unterhaltung. Es hat keinen Einfluss auf die Ziehung.',
+    /* Seit die Rankingpreise ausgeschrieben sind, waere "nur Unterhaltung"
+       schlicht falsch: ueber die Gesamtplaetze 1 bis 3 haengt ein Gewinn.
+       Ohne Einfluss bleibt die Liste nur auf die Deckelziehung. */
+    hinweis:
+      'Das Gesamtranking entscheidet über die Rankingpreise der Plätze 1 bis 3. Auf die Deckelziehung hat es keinen Einfluss.',
     cta: 'LEADERBOARD ANSEHEN',
     laedt: 'Lade Bestenliste …',
     fehler: 'Die Bestenliste ist gerade nicht erreichbar.',

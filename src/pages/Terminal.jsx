@@ -100,7 +100,8 @@ import {
  * frei ist. Die Pruefung hier im Formular ist Hoeflichkeit, kein Schutz.
  *
  * Und: die Spiele haben mit der Ziehung nichts zu tun. Gezogen wird allein
- * aus den gueltig aktivierten Deckeln. Punkte sind Unterhaltung.
+ * aus den gueltig aktivierten Deckeln. Punkte entscheiden nur ueber die
+ * Rankingpreise der Gesamtplaetze 1 bis 3 — nie ueber einen Losplatz.
  *
  * ERSTES RENDERN
  * --------------
