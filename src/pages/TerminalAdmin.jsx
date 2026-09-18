@@ -990,9 +990,15 @@ function GesamtrankingVerwaltung({ einstellungen, laeuft, handeln, rufen }) {
                       {p.doppelt.map((d) => `${d.art} wie Platz ${d.mitPlatz}`).join(' · ')}
                     </p>
                   )}
+                  {/* Ohne Deckelnummer gibt es keinen Anspruch. `anspruch_art`
+                      bleibt nach einem Deckel-Reset als Restwert stehen — den
+                      hier anzuzeigen waere irrefuehrend. */}
                   <p className="trm-feld__hilfe" data-gr-top3-deckel="1">
-                    Deckel {p.deckel == null ? '—' : `#${p.deckel}`} · {ANSPRUCH_WORT[p.anspruchArt] ?? 'Anspruch unbekannt'}
-                    {p.besitzStatus ? ` · ${BESITZ_WORT[p.besitzStatus] ?? p.besitzStatus}` : ''}
+                    {p.deckel == null
+                      ? 'Deckel — · kein Deckelanspruch'
+                      : `Deckel #${p.deckel} · ${ANSPRUCH_WORT[p.anspruchArt] ?? 'Anspruch unbekannt'}${
+                          p.besitzStatus ? ` · ${BESITZ_WORT[p.besitzStatus] ?? p.besitzStatus}` : ''
+                        }`}
                   </p>
                 </div>
               ))}
@@ -2654,7 +2660,7 @@ export default function TerminalAdmin() {
             Der Testmodus spielt die komplette Nutzerreise mit einer virtuellen
             Person durch: {TEXTE.probe.person}. Auf der Aktionsseite erscheinen
             oben ein Hinweis „{TEXTE.probe.marke}“ und ein kleines Werkzeug, mit
-            dem sich jeder Zustand direkt anspringen laesst.
+            dem sich jeder Zustand direkt anspringen lässt.
           </p>
 
           <ul className="trm-adm__liste">
