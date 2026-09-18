@@ -33,6 +33,7 @@ import {
   MEILENSTEINE,
   MEILENSTEIN_ARTIKEL,
   MEILENSTEIN_LEER,
+  MEILENSTEIN_SCHRITT,
   PRACTICE_STANDARD,
   SPIELE_LISTE,
   SPIEL_NACH_KEY,
@@ -394,7 +395,8 @@ function Einstellungen({ einstellungen, speichern, laeuft, instagramSync, synchr
           abgerufen. Die Handeingabe bleibt als Rückfall — ein hier eingetragener Wert
           wird beim nächsten erfolgreichen Sync überschrieben. Sie treibt die
           Follower-Mission überall im Terminal: angezeigt wird immer die nächste
-          noch offene Stufe aus der festen Reihe 1.500 bis 5.000. Das Feld
+          noch offene Stufe aus der festen Reihe {zahl(MEILENSTEINE[0])} bis{' '}
+          {zahl(MEGA_MEILENSTEIN)} in {zahl(MEILENSTEIN_SCHRITT)}er-Schritten. Das Feld
           „Follower-Ziel“ ist nur noch ein Rückfallwert und ändert an dieser
           Reihe nichts.
         </p>
