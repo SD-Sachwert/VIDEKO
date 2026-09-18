@@ -47,6 +47,7 @@ import {
   AKTIVIER_KARTEN,
   EMAIL_MUSTER,
   FELD_GRENZEN,
+  MEGA_MEILENSTEIN,
   PRACTICE_STANDARD,
   SCHRITTE,
   TERMINAL_KAMPAGNE,
@@ -527,6 +528,21 @@ function Mission({ follower, gewinne, className = '' }) {
   const stand = missionStand(follower, gewinne)
   const prozent = Math.round(stand.anteil * 100)
 
+  /* Drei Saetze, je nach Lage genau einer: bis zur naechsten Stufe, bis zum
+     MEGA-PREIS, oder — wenn 5.000 stehen — der Vollzug. Die Zahl darin ist
+     immer gerechnet, nie getippt. */
+  const fehltText = stand.naechste
+    ? fuelle(stand.megaNaechste ? M.fehltMega : M.fehlt, { fehlt: zahl(stand.fehlt) })
+    : M.alle
+
+  /* Darunter eine Zeile, die den Takt erklaert — und kurz vor Schluss
+     stattdessen sagt, worum es dann noch geht. Ist alles frei, schweigt sie. */
+  const untenText = stand.megaFrei
+    ? null
+    : stand.megaNaechste
+      ? fuelle(M.megaZeile, { zahl: zahl(MEGA_MEILENSTEIN) })
+      : M.takt
+
   return (
     <section
       className={`trm-karte trm-mission ${className}`.trim()}
@@ -536,9 +552,11 @@ function Mission({ follower, gewinne, className = '' }) {
       <div className="trm-karte__kopf">
         <Ikon name="instagram" size={22} className="trm-ikon" />
         <h2 className="trm-karte__titel" id="trm-mission-titel">
-          {M.label} <span className="trm-mission__trenner">/</span> {M.sub}
+          {M.label}
         </h2>
       </div>
+
+      <p className="trm-mission__frage">{M.frage}</p>
 
       <p className="trm-mission__zahl">{fuelle(M.follower, { zahl: zahl(stand.follower) })}</p>
 
@@ -553,9 +571,11 @@ function Mission({ follower, gewinne, className = '' }) {
         <span className="trm-balken__fuellung" style={{ width: `${prozent}%` }} />
       </div>
 
-      <p className="trm-mission__fehlt">
-        {stand.naechste ? fuelle(M.fehlt, { fehlt: zahl(stand.fehlt) }) : M.alle}
+      <p className="trm-mission__fehlt" data-mega={stand.megaNaechste || stand.megaFrei ? '1' : '0'}>
+        {fehltText}
       </p>
+
+      {untenText ? <p className="trm-mission__takt">{untenText}</p> : null}
 
       <ol className="trm-mission__stufen">
         {stand.stufen.map((st) => (
@@ -564,18 +584,34 @@ function Mission({ follower, gewinne, className = '' }) {
             className="trm-mission__stufe"
             data-frei={st.frei ? '1' : '0'}
             data-naechste={stand.naechste?.ziel === st.ziel ? '1' : '0'}
+            data-mega={st.mega ? '1' : '0'}
           >
             <span className="trm-mission__ziel">
               {zahl(st.ziel)}
-              {st.frei ? null : (
-                <span className="trm-mission__schloss" aria-hidden="true">
-                  {' '}
-                  🔒
-                </span>
-              )}
+              {/* Das Schloss ist gezeichnet, kein Emoji: ein Emoji kommt in
+                  seiner eigenen Farbe und faellt auf schwarzem Marmor als
+                  bunter Fremdkoerper auf. */}
+              {st.frei ? null : <Ikon name="schloss" size={13} className="trm-mission__schloss" />}
             </span>
-            <span className="trm-mission__wort">{st.frei ? M.frei : <span className="trm-nur-sr">{M.zu}</span>}</span>
-            <span className="trm-mission__gewinn">{st.gewinn}</span>
+            {/* Die Zeile darunter sagt die Lage: freigeschaltet, das naechste
+                Ziel, oder — auf der letzten Stufe — worum es dort geht. Nur
+                die spaeteren gesperrten Stufen schweigen sichtbar; fuer
+                Screenreader steht das Wort trotzdem da. */}
+            <span className="trm-mission__wort">
+              {st.mega
+                ? st.frei
+                  ? M.megaWortFrei
+                  : M.megaWort
+                : st.frei
+                  ? M.frei
+                  : stand.naechste?.ziel === st.ziel
+                    ? M.naechstesZiel
+                    : <span className="trm-nur-sr">{M.zu}</span>}
+            </span>
+            {/* Die letzte Stufe traegt ihren Namen schon im Wort darueber.
+                Ein gepflegter Preis wird trotzdem gezeigt — erfunden wird
+                keiner, weder hier noch auf den Stufen davor. */}
+            {st.mega && !st.benannt ? null : <span className="trm-mission__gewinn">{st.gewinn}</span>}
           </li>
         ))}
       </ol>

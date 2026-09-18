@@ -578,8 +578,9 @@ async function einstellungen(b) {
   }
   if ('live' in b) felder.live_modus = b.live === true
   if ('meilensteinGewinne' in b) {
-    /* Preisnamen je Meilenstein. Leer gelassen heisst: MYSTERY-ZUSATZGEWINN.
-       Unbekannte Stufen und ueberlange Texte fallen beim Saeubern weg. */
+    /* Preisnamen je Meilenstein. Leer gelassen heisst schlicht ZUSATZGEWINN,
+       auf der letzten Stufe MEGA-PREIS. Unbekannte Stufen und ueberlange
+       Texte fallen beim Saeubern weg. */
     felder.meilenstein_gewinne = meilensteineSaeubern(b.meilensteinGewinne)
   }
   if ('spieleAktiv' in b) {

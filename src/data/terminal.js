@@ -44,8 +44,12 @@ export const TERMINAL_KAMPAGNE = {
   /** Meldefrist nach einer Ziehung, in Stunden. Danach darf neu gezogen werden. */
   meldefristStunden: 48,
 
-  /** Ziel der Follower-Mission. Im Betrieb ueber die Admin-Ansicht aenderbar. */
-  followerZiel: 1000,
+  /**
+   * Rueckfallwert fuer die Follower-Mission, falls die Einstellungszeile noch
+   * nicht existiert. Angezeigt wird ueberall der naechste echte Meilenstein
+   * aus MEILENSTEINE, nicht dieser Wert.
+   */
+  followerZiel: 1500,
 
   /** Startwert der Follower-Mission, solange die Admin-Ansicht nichts anderes sagt. */
   followerStart: 750,
@@ -63,27 +67,57 @@ export const TERMINAL_KAMPAGNE = {
  * Truhe. Welcher, pflegt der Betrieb in der Verwaltung (Spalte
  * meilenstein_gewinne) — steht dort nichts, heisst er MEILENSTEIN_LEER.
  * Kein Preis wird hier erfunden.
+ *
+ * Getaktet in 500er-Schritten ab 1.500: darunter liegt der Kanal laengst,
+ * eine schon erreichte Stufe ist kein Ziel. Die letzte Stufe ist keine
+ * weitere unter vielen, sondern das Ende der Fahnenstange — sie heisst
+ * MEGA_MEILENSTEIN und wird ueberall anders behandelt als die Stufen davor.
  */
-export const MEILENSTEINE = [1000, 1250, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
-export const MEILENSTEIN_LEER = 'MYSTERY-ZUSATZGEWINN'
+export const MEILENSTEINE = [1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
+export const MEGA_MEILENSTEIN = 5000
+export const MEILENSTEIN_LEER = 'ZUSATZGEWINN'
+export const MEGA_LEER = 'MEGA-PREIS'
 
 /**
  * Die Mission zu einer Followerzahl: welche Stufen offen sind, welche als
- * naechste kommt und wie weit es bis dahin ist. Die Zahl selbst kommt aus
- * der Verwaltung — eine Instagram-Schnittstelle gibt es nicht.
+ * naechste kommt und wie weit es bis dahin ist. Gerechnet wird immer aus der
+ * echten Zahl — es gibt keinen festen Text „noch 439".
+ *
+ * `megaFrei` sagt, ob die letzte Stufe schon steht; `megaNaechste`, ob der
+ * naechste Schritt bereits der MEGA-PREIS ist. Beide bestimmen nur den
+ * Wortlaut, nicht die Rechnung. Ueber 5.000 bleibt `fehlt` bei 0 — eine
+ * negative Differenz gibt es nirgends.
  */
 export function missionStand(followerRoh, gewinne = {}) {
   const follower = Math.max(0, Math.trunc(Number(followerRoh) || 0))
   const stufen = MEILENSTEINE.map((ziel) => {
+    const mega = ziel === MEGA_MEILENSTEIN
     const name = String(gewinne?.[ziel] ?? gewinne?.[String(ziel)] ?? '').trim()
-    return { ziel, frei: follower >= ziel, gewinn: name || MEILENSTEIN_LEER, benannt: Boolean(name) }
+    return {
+      ziel,
+      mega,
+      frei: follower >= ziel,
+      gewinn: name || (mega ? MEGA_LEER : MEILENSTEIN_LEER),
+      benannt: Boolean(name),
+    }
   })
   const naechste = stufen.find((st) => !st.frei) ?? null
-  const vorher = [...stufen].reverse().find((st) => st.frei)?.ziel ?? 0
-  const anteil = naechste
-    ? Math.min(1, Math.max(0, (follower - vorher) / Math.max(1, naechste.ziel - vorher)))
-    : 1
-  return { follower, stufen, naechste, fehlt: naechste ? naechste.ziel - follower : 0, anteil }
+  /* Der Balken misst die ganze Mission — von null bis zum MEGA-PREIS. Er
+     duerfte auch nur den Weg zur naechsten Stufe zeigen; dann faellt er aber
+     bei jedem erreichten Meilenstein auf null zurueck, und bei 4.500
+     Followern stuende ein leerer Balken unter sieben freigeschalteten
+     Stufen. Ueber die volle Strecke waechst er, wie die Frage darueber es
+     verspricht. */
+  const anteil = Math.min(1, Math.max(0, follower / MEGA_MEILENSTEIN))
+  return {
+    follower,
+    stufen,
+    naechste,
+    fehlt: naechste ? Math.max(0, naechste.ziel - follower) : 0,
+    anteil,
+    megaFrei: follower >= MEGA_MEILENSTEIN,
+    megaNaechste: Boolean(naechste?.mega),
+  }
 }
 
 /** Feldlaengen. Gelten im Browser als maxLength und im Server als harte Grenze. */
@@ -445,15 +479,24 @@ export const TEXTE = {
     countdownOffen: 'Termin wird hier bekannt gegeben.',
     deckelNotiz: 'Gemeinsam näher an die nächste Ziehung.',
     followerNotiz: 'Bei {ziel} Followern kommt ein weiterer Gewinn in die Truhe.',
-    /* Die Follower-Mission im Dashboard */
+    followerNotizMega: 'Bei {ziel} Followern öffnet sich der MEGA-PREIS.',
+    /* Die Follower-Mission im Dashboard.
+       Kein Satz nennt hier eine feste Zahl: `fehlt` und die Stufen kommen
+       aus missionStand und damit aus dem echten Followerstand. */
     mission: {
       label: 'MISSION',
-      sub: 'MEILENSTEIN',
+      frage: 'WIE WEIT SCHAFFEN WIR ES?',
       follower: '{zahl} FOLLOWER',
-      fehlt: 'Noch {fehlt} bis zum nächsten Zusatzgewinn',
-      alle: 'Alle Meilensteine erreicht.',
+      fehlt: 'Noch {fehlt} bis zum nächsten Zusatzgewinn.',
+      fehltMega: 'Noch {fehlt} bis zum MEGA-PREIS.',
+      alle: 'MEGA-PREIS FREIGESCHALTET.',
+      takt: 'Alle 500 neuen Follower knacken wir den nächsten Zusatzgewinn.',
+      megaZeile: '{zahl} FOLLOWER = MEGA-PREIS',
       frei: 'FREIGESCHALTET',
       zu: 'Gesperrt',
+      naechstesZiel: 'NÄCHSTES ZIEL',
+      megaWort: 'MEGA-PREIS',
+      megaWortFrei: 'MEGA-PREIS FREIGESCHALTET',
     },
     /* Die Einwilligung ins oeffentliche Leaderboard, jederzeit aenderbar */
     einwilligung: {

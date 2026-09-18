@@ -47,7 +47,7 @@ const welt = {
   beste: { truhenknacker: null, goldrausch: null, kuechen_stack: null, kuechen_dash: null, kuechen_balance: null, kuechen_fit: null, videko_jump: null, kuechen_merge: null, leitungsfinder: null, kuechen_crush: null, kuechen_tinder: null },
   /* 2.3: Follower-Mission und Spiel-Schalter kommen aus den Einstellungen. */
   followerZahl: 1100,
-  meilensteinGewinne: { 1000: 'Testpreis' },
+  meilensteinGewinne: { 1500: 'Testpreis' },
   /* Truhenknacker, Goldrausch und Balance sind im Standard aus. Die alten
      Abschnitte pruefen diese Spiele weiter und schalten sie deshalb
      ausdruecklich an; der echte Standard hat einen eigenen Abschnitt (15). */
@@ -1122,55 +1122,172 @@ await sDash.evaluate(() => {
   localStorage.setItem('videko.terminal.tresor', '1')
 })
 
-/* Mission: Startwert 750, noch keine Stufe offen. */
+/* Mission: Startwert 750, noch keine Stufe offen. Die Reihe beginnt bei
+   1.500 — alles darunter ist laengst gelaufen und steht nirgends mehr. */
 welt.followerZahl = 750
 welt.meilensteinGewinne = {}
 await sDash.goto(`${BASIS}/terminal`, { waitUntil: 'networkidle0' })
 await warte(600)
 const mission750 = await sDash.evaluate(() => ({
   da: document.querySelector('#mission') !== null,
+  kopf: (document.querySelector('#trm-mission-titel')?.textContent || '').trim(),
+  frage: (document.querySelector('.trm-mission__frage')?.textContent || '').trim(),
   zahl: (document.querySelector('.trm-mission__zahl')?.textContent || '').trim(),
   fehlt: (document.querySelector('.trm-mission__fehlt')?.textContent || '').trim(),
+  takt: (document.querySelector('.trm-mission__takt')?.textContent || '').trim(),
   stufen: document.querySelectorAll('.trm-mission__stufe').length,
   frei: document.querySelectorAll('.trm-mission__stufe[data-frei="1"]').length,
   erste: (document.querySelector('.trm-mission__stufe')?.textContent || '').replace(/\s+/g, ' ').trim(),
+  alleStufen: [...document.querySelectorAll('.trm-mission__stufe')]
+    .map((e) => e.textContent.replace(/\s+/g, ' ').trim()).join(' | '),
   gewinne: [...document.querySelectorAll('.trm-mission__gewinn')].map((e) => e.textContent.trim()),
+  /* Das Schloss ist gezeichnet, nicht getippt: ein <svg>, kein Emoji. */
+  schloesser: document.querySelectorAll('.trm-mission__schloss').length,
+  schlossIstSvg: document.querySelector('.trm-mission__schloss')?.tagName.toLowerCase() === 'svg',
+  emojiImText: /🔒/.test(document.querySelector('.trm-mission__stufen')?.textContent || ''),
+  /* Die naechste Stufe muss sich von den spaeteren abheben. */
+  naechsteZahl: document.querySelectorAll('.trm-mission__stufe[data-naechste="1"]').length,
+  naechsteIstErste:
+    document.querySelector('.trm-mission__stufe[data-naechste="1"]') === document.querySelector('.trm-mission__stufe'),
+  naechsteRand: (() => {
+    const n = document.querySelector('.trm-mission__stufe[data-naechste="1"]')
+    const s = [...document.querySelectorAll('.trm-mission__stufe')].find(
+      (e) => e.dataset.naechste === '0' && e.dataset.mega === '0',
+    )
+    return n && s ? { naechste: getComputedStyle(n).borderTopColor, spaeter: getComputedStyle(s).borderTopColor } : null
+  })(),
+  balken: document.querySelector('.trm-mission__balken')?.getAttribute('aria-valuenow'),
 }))
 pruefe('MISSION: Karte im Dashboard', mission750.da)
+pruefe('MISSION: Kopfzeile MISSION', mission750.kopf === 'MISSION', mission750.kopf)
+pruefe('MISSION: Frage WIE WEIT SCHAFFEN WIR ES?', mission750.frage === 'WIE WEIT SCHAFFEN WIR ES?', mission750.frage)
 pruefe('MISSION: 750 FOLLOWER', mission750.zahl === '750 FOLLOWER', mission750.zahl)
-pruefe('MISSION: Noch 250 bis zum nächsten Zusatzgewinn',
-  /^Noch 250 bis zum nächsten Zusatzgewinn/.test(mission750.fehlt), mission750.fehlt)
-pruefe('MISSION: zehn Stufen, keine frei', mission750.stufen === 10 && mission750.frei === 0,
+pruefe('MISSION: Noch 750 bis zum nächsten Zusatzgewinn',
+  /^Noch 750 bis zum nächsten Zusatzgewinn/.test(mission750.fehlt), mission750.fehlt)
+pruefe('MISSION: Taktzeile nennt die 500er-Schritte',
+  /Alle 500 neuen Follower/.test(mission750.takt), mission750.takt)
+pruefe('MISSION: acht Stufen, keine frei', mission750.stufen === 8 && mission750.frei === 0,
   `${mission750.stufen}/${mission750.frei}`)
-pruefe('MISSION: 1000 gesperrt mit Schloss', /1\.?000/.test(mission750.erste) && !/FREIGESCHALTET/.test(mission750.erste),
+pruefe('MISSION: 1.500 gesperrt mit Schloss', /1\.?500/.test(mission750.erste) && !/FREIGESCHALTET/.test(mission750.erste),
   mission750.erste)
-pruefe('MISSION: ohne Eintrag MYSTERY-ZUSATZGEWINN', mission750.gewinne.every((g) => g === 'MYSTERY-ZUSATZGEWINN'),
-  mission750.gewinne.slice(0, 2).join(' | '))
+pruefe('MISSION: acht gezeichnete Schloesser, kein Emoji',
+  mission750.schloesser === 8 && mission750.schlossIstSvg && mission750.emojiImText === false,
+  `${mission750.schloesser} · svg=${mission750.schlossIstSvg} · emoji=${mission750.emojiImText}`)
+pruefe('MISSION: genau die erste Stufe ist als naechstes Ziel markiert',
+  mission750.naechsteZahl === 1 && mission750.naechsteIstErste,
+  `${mission750.naechsteZahl} · erste=${mission750.naechsteIstErste}`)
+pruefe('MISSION: das naechste Ziel ist beschriftet und hebt sich vom Rest ab',
+  /NÄCHSTES ZIEL/.test(mission750.erste)
+    && mission750.naechsteRand != null
+    && mission750.naechsteRand.naechste !== mission750.naechsteRand.spaeter,
+  JSON.stringify(mission750.naechsteRand))
+pruefe('MISSION: Balken misst die ganze Strecke bis 5.000 — 750 sind 15 %',
+  mission750.balken === '15', mission750.balken)
+pruefe('MISSION: keine alte Schwelle 1.000 oder 1.250 mehr sichtbar',
+  !/1\.?000|1\.?250/.test(mission750.alleStufen), mission750.alleStufen.slice(0, 90))
+pruefe('MISSION: ohne Eintrag ZUSATZGEWINN', mission750.gewinne.length === 7 && mission750.gewinne.every((g) => g === 'ZUSATZGEWINN'),
+  `${mission750.gewinne.length} · ${mission750.gewinne.slice(0, 2).join(' | ')}`)
 
-welt.followerZahl = 1300
-welt.meilensteinGewinne = { 1000: 'Testpreis' }
+/* Die letzte Stufe: eigene Zeile, eigenes Wort, mehr Gold. */
+const missionMega = await sDash.evaluate(() => {
+  const stufen = [...document.querySelectorAll('.trm-mission__stufe')]
+  const mega = document.querySelector('.trm-mission__stufe[data-mega="1"]')
+  const erste = stufen[0]
+  const st = mega ? getComputedStyle(mega) : null
+  const sErste = erste ? getComputedStyle(erste) : null
+  return {
+    anzahl: document.querySelectorAll('.trm-mission__stufe[data-mega="1"]').length,
+    letzte: mega === stufen[stufen.length - 1],
+    text: (mega?.textContent || '').replace(/\s+/g, ' ').trim(),
+    breit: mega && erste ? mega.getBoundingClientRect().width > erste.getBoundingClientRect().width * 1.6 : false,
+    zielGross:
+      mega && erste
+        ? parseFloat(getComputedStyle(mega.querySelector('.trm-mission__ziel')).fontSize) >
+          parseFloat(getComputedStyle(erste.querySelector('.trm-mission__ziel')).fontSize)
+        : false,
+    glanz: st ? st.boxShadow : '',
+    rahmen: st ? st.borderTopWidth : '',
+    rahmenErste: sErste ? sErste.borderTopWidth : '',
+  }
+})
+pruefe('MISSION: genau eine MEGA-Stufe, und zwar die letzte',
+  missionMega.anzahl === 1 && missionMega.letzte, `${missionMega.anzahl} · letzte=${missionMega.letzte}`)
+pruefe('MISSION: MEGA-Stufe zeigt 5.000 und das Wort MEGA-PREIS',
+  /5\.?000/.test(missionMega.text) && /MEGA-PREIS/.test(missionMega.text), missionMega.text)
+pruefe('MISSION: MEGA-Stufe nimmt die ganze Zeile ein', missionMega.breit, String(missionMega.breit))
+pruefe('MISSION: MEGA-Zahl ist größer als die der übrigen Stufen', missionMega.zielGross, String(missionMega.zielGross))
+pruefe('MISSION: MEGA-Stufe leuchtet stärker und hat den dickeren Rahmen',
+  /rgba?\(/.test(missionMega.glanz) && parseFloat(missionMega.rahmen) > parseFloat(missionMega.rahmenErste),
+  `${missionMega.rahmen} vs ${missionMega.rahmenErste}`)
+
+/* Kurz vor Schluss: sieben Stufen stehen, der Text wechselt auf MEGA-PREIS. */
+welt.followerZahl = 4600
+welt.meilensteinGewinne = { 1500: 'Testpreis' }
 await sDash.reload({ waitUntil: 'networkidle0' })
 await warte(600)
-const mission1300 = await sDash.evaluate(() => {
+const mission4600 = await sDash.evaluate(() => {
   const stufen = [...document.querySelectorAll('.trm-mission__stufe')]
   return {
     zahl: (document.querySelector('.trm-mission__zahl')?.textContent || '').trim(),
     fehlt: (document.querySelector('.trm-mission__fehlt')?.textContent || '').trim(),
+    takt: (document.querySelector('.trm-mission__takt')?.textContent || '').trim(),
     frei: stufen.filter((e) => e.dataset.frei === '1').length,
     ersteText: (stufen[0]?.textContent || '').replace(/\s+/g, ' '),
     ersteGewinn: (stufen[0]?.querySelector('.trm-mission__gewinn')?.textContent || '').trim(),
     zweiteGewinn: (stufen[1]?.querySelector('.trm-mission__gewinn')?.textContent || '').trim(),
+    megaFrei: document.querySelector('.trm-mission__stufe[data-mega="1"]')?.dataset.frei,
+    naechste: [...document.querySelectorAll('.trm-mission__stufe[data-naechste="1"]')]
+      .map((e) => e.querySelector('.trm-mission__ziel')?.textContent.trim()).join(''),
     glanz: stufen[0] ? getComputedStyle(stufen[0]).boxShadow + getComputedStyle(stufen[0]).textShadow : '',
+    balken: document.querySelector('.trm-mission__balken')?.getAttribute('aria-valuenow'),
+    fuellung: document.querySelector('.trm-mission__balken .trm-balken__fuellung')?.style.width,
   }
 })
-pruefe('MISSION: 1.300 FOLLOWER', /^1\.300 FOLLOWER$/.test(mission1300.zahl), mission1300.zahl)
-pruefe('MISSION: Noch 200 bis 1.500', /^Noch 200 bis zum nächsten Zusatzgewinn/.test(mission1300.fehlt), mission1300.fehlt)
-pruefe('MISSION: zwei Stufen FREIGESCHALTET', mission1300.frei === 2 && /FREIGESCHALTET/.test(mission1300.ersteText),
-  `${mission1300.frei} · ${mission1300.ersteText}`)
-pruefe('MISSION: gepflegter Gewinn wird genannt', mission1300.ersteGewinn === 'Testpreis', mission1300.ersteGewinn)
-pruefe('MISSION: sonst MYSTERY-ZUSATZGEWINN', mission1300.zweiteGewinn === 'MYSTERY-ZUSATZGEWINN', mission1300.zweiteGewinn)
-pruefe('MISSION: freie Stufe leuchtet', /rgba?\(/.test(mission1300.glanz) && !/^none\s*none$/.test(mission1300.glanz),
-  mission1300.glanz.slice(0, 60))
+pruefe('MISSION: 4.600 FOLLOWER', /^4\.600 FOLLOWER$/.test(mission4600.zahl), mission4600.zahl)
+pruefe('MISSION: Noch 400 bis zum MEGA-PREIS', /^Noch 400 bis zum MEGA-PREIS\.$/.test(mission4600.fehlt), mission4600.fehlt)
+pruefe('MISSION: Untenzeile wechselt auf 5.000 FOLLOWER = MEGA-PREIS',
+  /5\.000 FOLLOWER = MEGA-PREIS/.test(mission4600.takt), mission4600.takt)
+pruefe('MISSION: sieben Stufen FREIGESCHALTET, die MEGA-Stufe noch nicht',
+  mission4600.frei === 7 && mission4600.megaFrei === '0' && /FREIGESCHALTET/.test(mission4600.ersteText),
+  `${mission4600.frei} · mega=${mission4600.megaFrei}`)
+pruefe('MISSION: nächste Stufe ist 5.000', /5\.?000/.test(mission4600.naechste), mission4600.naechste)
+pruefe('MISSION: gepflegter Gewinn wird genannt', mission4600.ersteGewinn === 'Testpreis', mission4600.ersteGewinn)
+pruefe('MISSION: sonst ZUSATZGEWINN', mission4600.zweiteGewinn === 'ZUSATZGEWINN', mission4600.zweiteGewinn)
+pruefe('MISSION: freie Stufe leuchtet', /rgba?\(/.test(mission4600.glanz) && !/^none\s*none$/.test(mission4600.glanz),
+  mission4600.glanz.slice(0, 60))
+/* Kurz vor Schluss muss der Balken fast voll stehen. Als er noch nur bis zur
+   naechsten Stufe mass, war er bei 4.500 leer — unter sieben freien Stufen. */
+pruefe('MISSION: Balken steht bei 4.600 fast voll — 92 %',
+  mission4600.balken === '92' && mission4600.fuellung === '92%',
+  `${mission4600.balken} · ${mission4600.fuellung}`)
+
+/* Alles geknackt: kein „noch X", kein negativer Rest. */
+welt.followerZahl = 5200
+welt.meilensteinGewinne = {}
+await sDash.reload({ waitUntil: 'networkidle0' })
+await warte(600)
+const mission5200 = await sDash.evaluate(() => ({
+  fehlt: (document.querySelector('.trm-mission__fehlt')?.textContent || '').trim(),
+  takt: document.querySelector('.trm-mission__takt') !== null,
+  frei: document.querySelectorAll('.trm-mission__stufe[data-frei="1"]').length,
+  schloss: document.querySelectorAll('.trm-mission__schloss').length,
+  megaWort: (document.querySelector('.trm-mission__stufe[data-mega="1"] .trm-mission__wort')?.textContent || '').trim(),
+}))
+pruefe('MISSION: über 5.000 meldet MEGA-PREIS FREIGESCHALTET',
+  mission5200.fehlt === 'MEGA-PREIS FREIGESCHALTET.', mission5200.fehlt)
+pruefe('MISSION: über 5.000 keine Taktzeile, alle acht Stufen frei, kein Schloss',
+  mission5200.takt === false && mission5200.frei === 8 && mission5200.schloss === 0,
+  `takt=${mission5200.takt} frei=${mission5200.frei} schloesser=${mission5200.schloss}`)
+/* Die letzte Stufe darf im Moment des Erfolgs nicht ihre Beschriftung
+   verlieren — sonst steht dort nur noch FREIGESCHALTET wie ueberall. */
+pruefe('MISSION: die geknackte MEGA-Stufe bleibt als MEGA-PREIS beschriftet',
+  mission5200.megaWort === 'MEGA-PREIS FREIGESCHALTET', mission5200.megaWort)
+
+/* Zurueck auf den Wert, mit dem die spaeteren Abschnitte rechnen. */
+welt.followerZahl = 1300
+welt.meilensteinGewinne = { 1500: 'Testpreis' }
+await sDash.reload({ waitUntil: 'networkidle0' })
+await warte(600)
 
 /* Einwilligung: Abschnitt 3 hat sie gesetzt. Erst Widerruf, dann wieder an. */
 const besteVorher = JSON.stringify(welt.beste)

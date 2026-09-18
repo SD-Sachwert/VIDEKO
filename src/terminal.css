@@ -6681,9 +6681,15 @@ textarea.trm-eingabe {
   flex-wrap: wrap;
 }
 
-.trm-mission__trenner {
-  color: var(--trm-gold);
-  opacity: 0.6;
+/* Die Frage steht als leise Zeile zwischen Kopf und Zahl. Sie ist keine
+   zweite Ueberschrift — deshalb klein, gesperrt und gedaempft. */
+.trm-mission__frage {
+  margin: 0 0 8px;
+  font-size: clamp(11px, 3vw, 12px);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--trm-creme-leise);
 }
 
 .trm-mission__zahl {
@@ -6709,25 +6715,39 @@ textarea.trm-eingabe {
   color: var(--trm-creme);
 }
 
+/* Geht es um die letzte Stufe, traegt der Satz selbst schon das Gewicht. */
+.trm-mission__fehlt[data-mega='1'] {
+  color: var(--trm-gold-hell);
+  text-shadow: 0 0 16px rgba(232, 201, 120, 0.3);
+}
+
+/* Die Takt-Zeile erklaert die Regel dahinter und bleibt bewusst leise. */
+.trm-mission__takt {
+  margin: 4px 0 0;
+  font-size: clamp(11px, 3.2vw, 12px);
+  line-height: 1.45;
+  color: var(--trm-creme-leise);
+}
+
+/* Die Stufen liegen im Flex-Fluss, nicht im Raster: die Reihe hat sieben
+   normale Stufen und danach die achte, die allein eine ganze Zeile fuellt.
+   In einem Raster mit gerader Spaltenzahl bliebe dabei eine halbe Zeile
+   leer; hier rutscht die letzte angefangene Reihe einfach in die Mitte. */
 .trm-mission__stufen {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 8px;
   margin: 14px 0 0;
   padding: 0;
   list-style: none;
 }
 
-@media (min-width: 600px) {
-  .trm-mission__stufen {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-  }
-}
-
 .trm-mission__stufe {
   display: grid;
   align-content: start;
   gap: 3px;
+  flex: 0 1 calc(50% - 4px);
   min-width: 0;
   padding: 9px 6px;
   border: 1px solid var(--trm-linie);
@@ -6736,9 +6756,26 @@ textarea.trm-eingabe {
   color: var(--trm-creme-leise);
 }
 
+@media (min-width: 600px) {
+  .trm-mission__stufe {
+    flex-basis: calc(25% - 6px);
+  }
+}
+
+/* Die naechste offene Stufe ist das, worauf gerade hingearbeitet wird. Sie
+   traegt deshalb schon Gold — aber nur als Rahmen und Hauch, ohne den
+   Schein der freigeschalteten Stufen. Wer die Karte ueberfliegt, sieht auf
+   Anhieb, wo die Reihe gerade steht. */
 .trm-mission__stufe[data-naechste='1'] {
-  border-color: var(--trm-linie-stark);
-  color: var(--trm-creme-weich);
+  border-color: rgba(232, 201, 120, 0.6);
+  background:
+    linear-gradient(170deg, rgba(232, 201, 120, 0.1), rgba(3, 3, 2, 0.62));
+  box-shadow: inset 0 0 0 1px rgba(232, 201, 120, 0.16);
+  color: var(--trm-creme);
+}
+
+.trm-mission__stufe[data-naechste='1'] .trm-mission__ziel {
+  color: var(--trm-creme);
 }
 
 .trm-mission__stufe[data-frei='1'] {
@@ -6751,6 +6788,10 @@ textarea.trm-eingabe {
 }
 
 .trm-mission__ziel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
   font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
   font-size: clamp(17px, 4.8vw, 20px);
   font-weight: 700;
@@ -6762,7 +6803,12 @@ textarea.trm-eingabe {
 }
 
 .trm-mission__schloss {
-  font-size: 0.8em;
+  flex: none;
+  color: rgba(232, 201, 120, 0.55);
+}
+
+.trm-mission__stufe[data-naechste='1'] .trm-mission__schloss {
+  color: rgba(243, 215, 145, 0.85);
 }
 
 .trm-mission__wort {
@@ -6780,6 +6826,65 @@ textarea.trm-eingabe {
   line-height: 1.2;
   text-transform: uppercase;
   overflow-wrap: anywhere;
+}
+
+/* ---- Die letzte Stufe ------------------------------------------------
+   5.000 ist keine achte Kachel, sondern das Ende der Fahnenstange: eigene
+   Zeile, groessere Zahl, ein Rahmen, der leuchtet statt nur zu umranden.
+   Das Gold ist dasselbe wie ueberall — nur mehr davon. Kein Blinken, keine
+   zweite Farbe, nichts, was nach Spielhalle aussieht. */
+.trm-mission__stufe[data-mega='1'] {
+  flex: 1 1 100%;
+  gap: 5px;
+  margin: 4px 0 0;
+  padding: 15px 12px;
+  border-width: 2px;
+  border-color: rgba(243, 215, 145, 0.55);
+  border-radius: 13px;
+  background:
+    radial-gradient(130% 150% at 50% 0%, rgba(232, 201, 120, 0.2), rgba(0, 0, 0, 0) 68%),
+    linear-gradient(170deg, rgba(232, 201, 120, 0.08), rgba(9, 8, 7, 0.86));
+  color: var(--trm-creme-weich);
+  box-shadow:
+    0 0 30px rgba(232, 201, 120, 0.26),
+    inset 0 0 22px rgba(232, 201, 120, 0.1);
+}
+
+.trm-mission__stufe[data-mega='1'] .trm-mission__ziel {
+  font-size: clamp(27px, 8vw, 36px);
+  line-height: 1;
+  letter-spacing: 0.03em;
+  color: var(--trm-gold-hell);
+  text-shadow: 0 0 20px rgba(232, 201, 120, 0.4);
+}
+
+/* Das Schloss waechst mit der Zahl mit, sonst haengt ein Streichholz neben
+   einer Kerze. */
+.trm-mission__stufe[data-mega='1'] .trm-mission__schloss {
+  width: clamp(18px, 5vw, 23px);
+  height: clamp(18px, 5vw, 23px);
+  color: rgba(243, 215, 145, 0.8);
+}
+
+.trm-mission__stufe[data-mega='1'] .trm-mission__wort {
+  font-size: 12px;
+  letter-spacing: 0.22em;
+}
+
+.trm-mission__stufe[data-mega='1'] .trm-mission__gewinn {
+  font-size: clamp(10px, 3vw, 12px);
+  letter-spacing: 0.08em;
+}
+
+/* Steht die Zahl wirklich, brennt der Rahmen. */
+.trm-mission__stufe[data-mega='1'][data-frei='1'] {
+  border-color: rgba(243, 215, 145, 0.95);
+  background:
+    radial-gradient(130% 150% at 50% 0%, rgba(232, 201, 120, 0.3), rgba(0, 0, 0, 0) 70%),
+    linear-gradient(170deg, rgba(232, 201, 120, 0.22), rgba(9, 8, 7, 0.7));
+  box-shadow:
+    0 0 44px rgba(232, 201, 120, 0.45),
+    inset 0 0 26px rgba(232, 201, 120, 0.16);
 }
 
 /* ---- Probespiel auf der Landing Page -------------------------------- */

@@ -451,7 +451,7 @@ export async function gesamtrankingEinstellungenLesen() {
 /**
  * Preisnamen je Meilenstein. Nur bekannte Stufen, nur kurzer Text — was
  * darueber hinausgeht, faellt weg. Eine leere Stufe zeigt die Seite als
- * MYSTERY-ZUSATZGEWINN.
+ * ZUSATZGEWINN, die letzte als MEGA-PREIS — erfunden wird nirgends etwas.
  */
 export function meilensteineSaeubern(roh) {
   const aus = {}

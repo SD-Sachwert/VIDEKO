@@ -24,6 +24,8 @@ import {
   terminalAdminRuf,
 } from '../data/terminal-api.js'
 import {
+  MEGA_LEER,
+  MEGA_MEILENSTEIN,
   MEILENSTEINE,
   MEILENSTEIN_LEER,
   PRACTICE_STANDARD,
@@ -34,6 +36,7 @@ import {
   TEXTE,
   deckelText,
   instagramAnzeige,
+  missionStand,
   spielAktiv,
   spieleSortiert,
   terminText,
@@ -383,8 +386,10 @@ function Einstellungen({ einstellungen, speichern, laeuft, instagramSync, synchr
           Die Followerzahl wird stündlich automatisch über die offizielle Instagram-API
           abgerufen. Die Handeingabe bleibt als Rückfall — ein hier eingetragener Wert
           wird beim nächsten erfolgreichen Sync überschrieben. Sie treibt die
-          Follower-Mission im Dashboard; das Follower-Ziel gilt nur noch für die
-          Anzeige auf der Ziehungsseite.
+          Follower-Mission überall im Terminal: angezeigt wird immer die nächste
+          noch offene Stufe aus der festen Reihe 1.500 bis 5.000. Das Feld
+          „Follower-Ziel“ ist nur noch ein Rückfallwert und ändert an dieser
+          Reihe nichts.
         </p>
 
         <button type="submit" className="trm-cta" disabled={laeuft}>
@@ -469,7 +474,8 @@ function MissionGewinne({ einstellungen, speichern, laeuft }) {
       </div>
       <p className="trm-karte__sub">
         Aktuell {zahl(einstellungen?.followerZahl ?? TERMINAL_KAMPAGNE.followerStart)} Follower.
-        Je Meilenstein ein Preisname — leer bleibt „{MEILENSTEIN_LEER}“.
+        Je Meilenstein ein Preisname — leer bleibt „{MEILENSTEIN_LEER}“, bei{' '}
+        {zahl(MEGA_MEILENSTEIN)} „{MEGA_LEER}“.
       </p>
 
       <form
@@ -489,7 +495,7 @@ function MissionGewinne({ einstellungen, speichern, laeuft }) {
                 className="trm-eingabe"
                 type="text"
                 maxLength={80}
-                placeholder={MEILENSTEIN_LEER}
+                placeholder={ziel === MEGA_MEILENSTEIN ? MEGA_LEER : MEILENSTEIN_LEER}
                 value={felder[String(ziel)]}
                 onChange={(ereignis) =>
                   setFelder((alt) => ({ ...alt, [String(ziel)]: ereignis.target.value }))
@@ -1452,6 +1458,11 @@ export default function TerminalAdmin() {
   }
 
   const einstellungen = daten?.einstellungen ?? {}
+  /* Der Nenner der Follower-Metrik ist die naechste echte Stufe, nicht das
+     handgepflegte Follower-Ziel — sonst stuende hier eine Schwelle, die
+     laengst gefallen ist. Steht die 5.000, bleibt sie stehen. */
+  const missionAdmin = missionStand(einstellungen.followerZahl ?? 0, einstellungen.meilensteinGewinne)
+  const missionZiel = missionAdmin.naechste?.ziel ?? MEGA_MEILENSTEIN
   const teilnehmer = treffer ?? daten?.teilnehmer ?? []
   const ziehungen = daten?.ziehungen ?? []
   const meldungen = daten?.meldungen ?? []
@@ -1664,7 +1675,7 @@ export default function TerminalAdmin() {
             ikon="instagram"
             label="FOLLOWER"
             wert={zahl(einstellungen.followerZahl)}
-            von={`/ ${zahl(einstellungen.followerZiel)}`}
+            von={`/ ${zahl(missionZiel)}`}
           />
         </div>
 

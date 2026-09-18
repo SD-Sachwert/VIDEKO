@@ -416,7 +416,10 @@ export default function TerminalZiehung() {
             label={TEXTE.c.followerLabel}
             wert={kennzahlen?.followerZahl ?? null}
             von={followerZiel}
-            notiz={fuelle(TEXTE.c.followerNotiz, { ziel: zahl(followerZiel) })}
+            notiz={fuelle(
+              mission.megaNaechste || mission.megaFrei ? TEXTE.c.followerNotizMega : TEXTE.c.followerNotiz,
+              { ziel: zahl(followerZiel) },
+            )}
           />
         </div>
 
