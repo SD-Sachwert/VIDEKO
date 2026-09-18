@@ -17,6 +17,8 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 import { build } from 'vite'
 import react from '@vitejs/plugin-react'
 
+import { terminalFreigabeAus } from '../src/data/terminal-freigabe.js'
+
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 export const DIST = path.join(ROOT, 'dist')
 const TMP = path.join(ROOT, 'node_modules', '.videko-prerender')
@@ -110,6 +112,13 @@ export async function ladeModule() {
     root: ROOT,
     logLevel: 'error',
     plugins: [assetStubPlugin, react()],
+    // Gleicher Terminal-Schalter wie im Client-Build (vite.config.js), sonst
+    // waere das vorgerenderte Markup ein anderes als das hydrierte.
+    define: {
+      __TERMINAL_PUBLIC_ENABLED__: JSON.stringify(
+        terminalFreigabeAus(process.env.TERMINAL_PUBLIC_ENABLED),
+      ),
+    },
     build: {
       ssr: true,
       outDir: path.relative(ROOT, TMP),

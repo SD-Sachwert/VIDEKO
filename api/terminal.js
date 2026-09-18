@@ -45,6 +45,7 @@ import {
   scoreSpeichern,
   spielSchluessel,
   spielstartVermerken,
+  terminalGesperrt,
   zaehlen,
 } from './_terminal-kern.js'
 import { gesamtranking, tresorkoenigGesamt } from './_terminal-gesamtranking.js'
@@ -1217,6 +1218,9 @@ async function gastAnmelden(b, res, ip) {
 /* ------------------------------------------------------------------ */
 
 export default async function handler(req, res) {
+  /* Temporaer deaktiviert nach Stadtfest 2026 (src/data/terminal-freigabe.js). */
+  if (terminalGesperrt(res)) return
+
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST')
     res.status(405).json({ ok: false, grund: 'methode' })

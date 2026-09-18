@@ -58,6 +58,7 @@ import ogKarriere from '../assets/images/karriere/01_hero_team_beratung.webp'
 import {
   ALLES_AUS_EINER_HAND_FAQS, NACH_MASS_FAQS, ARBEITSPLATTEN_FAQS, MONTAGE_FAQS,
 } from './leistungsseiten.js'
+import { TERMINAL_OEFFENTLICH } from './terminal-freigabe.js'
 
 import ogNachMass from '../assets/images/inspiration/07_kueche_mit_insel.webp'
 import ogArbeitsplatten from '../assets/images/inspiration/06_materialien_und_details.webp'
@@ -79,7 +80,7 @@ export const HOME_META = {
   ],
 }
 
-export const STATIC_ROUTES = [
+const ALLE_STATISCHEN_ROUTEN = [
   HOME_META,
   {
     path: '/leistungen',
@@ -394,6 +395,15 @@ export const STATIC_ROUTES = [
     inSitemap: false,
   },
 ]
+
+/* Terminal gesperrt (src/data/terminal-freigabe.js): die /terminal-Seiten
+   werden dann gar nicht erst vorgerendert, der Server liefert fuer sie die
+   normale 404-Seite. Die Eintraege oben bleiben fuer die Reaktivierung. */
+const istTerminal = (pfad) => pfad === '/terminal' || pfad.startsWith('/terminal/')
+
+export const STATIC_ROUTES = TERMINAL_OEFFENTLICH
+  ? ALLE_STATISCHEN_ROUTEN
+  : ALLE_STATISCHEN_ROUTEN.filter((r) => !istTerminal(r.path))
 
 /** Schneller Zugriff auf die Metadaten eines Pfads. */
 export const ROUTE_META = new Map(STATIC_ROUTES.map((r) => [r.path, r]))

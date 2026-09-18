@@ -10,6 +10,7 @@ import {
   STANDARD_REIHENFOLGE,
   TERMINAL_KAMPAGNE,
 } from '../src/data/terminal.js'
+import { terminalFreigabeAus } from '../src/data/terminal-freigabe.js'
 
 /**
  * Gemeinsamer Kern der beiden Terminal-Endpoints.
@@ -150,6 +151,24 @@ export function ipHash(ip) {
 }
 
 export const schreibenErlaubt = () => TERMINAL_SCHREIBEN !== '0'
+
+/**
+ * Oeffentliche Freigabe (src/data/terminal-freigabe.js).
+ *
+ * Temporaer deaktiviert nach Stadtfest 2026. Fuer zukuenftiges VIDEKO
+ * Community Game vorgesehen. Solange TERMINAL_PUBLIC_ENABLED nicht `true` ist,
+ * antworten alle Terminal-Endpoints mit einem neutralen 404 — vor jeder
+ * Methoden-, Zugangs- oder Datenbankpruefung. Es wird nichts gelesen und
+ * nichts geschrieben; die Daten bleiben unangetastet liegen.
+ *
+ * Gibt `true` zurueck, wenn die Anfrage damit bereits beantwortet ist.
+ */
+export function terminalGesperrt(res) {
+  if (terminalFreigabeAus(process.env.TERMINAL_PUBLIC_ENABLED)) return false
+  res.setHeader('Cache-Control', 'no-store')
+  res.status(404).json({ ok: false, grund: 'nicht-gefunden' })
+  return true
+}
 
 /** Das alte Projekt `buchhaltung`. Bleibt unangetastete Sicherheitskopie. */
 const ALTES_PROJEKT = 'tshdfkmpkcpkeufplzda'

@@ -1,9 +1,18 @@
+import process from 'node:process'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+
+import { terminalFreigabeAus } from './src/data/terminal-freigabe.js'
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  // Oeffentliche Freigabe des Terminals (src/data/terminal-freigabe.js).
+  define: {
+    __TERMINAL_PUBLIC_ENABLED__: JSON.stringify(
+      terminalFreigabeAus(process.env.TERMINAL_PUBLIC_ENABLED),
+    ),
+  },
   build: {
     // scripts/prerender.mjs braucht die gehashten Asset-URLs (z. B. das Bild
     // eines Journalartikels als og:image), bevor es das HTML schreibt.

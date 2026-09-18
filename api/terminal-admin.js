@@ -43,6 +43,7 @@ import {
   reihenfolgeSaeubern,
   restUrl,
   schreibenErlaubt,
+  terminalGesperrt,
   zaehlen,
   ziehungBerechtigt,
 } from './_terminal-kern.js'
@@ -1616,6 +1617,9 @@ async function einladungenAuswertung(b) {
 /* ------------------------------------------------------------------ */
 
 export default async function handler(req, res) {
+  /* Temporaer deaktiviert nach Stadtfest 2026 (src/data/terminal-freigabe.js). */
+  if (terminalGesperrt(res)) return
+
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST')
     res.status(405).json({ ok: false, grund: 'methode' })

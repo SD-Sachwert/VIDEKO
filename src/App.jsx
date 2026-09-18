@@ -2,6 +2,7 @@ import { lazy } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 
 import Layout from './components/Layout.jsx'
+import { TERMINAL_OEFFENTLICH } from './data/terminal-freigabe.js'
 import Home from './pages/Home.jsx'
 
 /**
@@ -71,16 +72,24 @@ export default function App() {
       {/* Bierdeckel-Aktion: Ziel der gedruckten QR-Codes. Eigener schwarzer
           Rahmen mit eigenem Kopf und Fuss, deshalb ebenfalls ausserhalb des
           Layouts. Jede der sechs Seiten bringt ihr eigenes <Seo> mit
-          (noindex, nofollow, nicht in der Sitemap). */}
-      <Route path="/terminal" element={<Terminal />} />
-      <Route path="/terminal/ziehung" element={<TerminalZiehung />} />
-      <Route path="/terminal/admin" element={<TerminalAdmin />} />
-      <Route path="/terminal/teilnahmebedingungen" element={<TerminalTeilnahme />} />
-      <Route path="/terminal/rangliste" element={<TerminalRangliste />} />
-      {/* Einladungslinks. Der Token steht in der Adresse, geprueft wird er
-          ausschliesslich serverseitig. Keine statische Vorabseite: die Route
-          ist dynamisch und steht deshalb nicht in scripts/prerender.mjs. */}
-      <Route path="/terminal/einladung/:token" element={<TerminalEinladung />} />
+          (noindex, nofollow, nicht in der Sitemap).
+          Temporaer deaktiviert nach Stadtfest 2026. Fuer zukuenftiges VIDEKO
+          Community Game vorgesehen. Solange TERMINAL_PUBLIC_ENABLED nicht
+          `true` ist, gibt es diese Routen nicht — /terminal/* faellt dann auf
+          die normale 404-Seite unten (src/data/terminal-freigabe.js). */}
+      {TERMINAL_OEFFENTLICH && (
+        <>
+          <Route path="/terminal" element={<Terminal />} />
+          <Route path="/terminal/ziehung" element={<TerminalZiehung />} />
+          <Route path="/terminal/admin" element={<TerminalAdmin />} />
+          <Route path="/terminal/teilnahmebedingungen" element={<TerminalTeilnahme />} />
+          <Route path="/terminal/rangliste" element={<TerminalRangliste />} />
+          {/* Einladungslinks. Der Token steht in der Adresse, geprueft wird er
+              ausschliesslich serverseitig. Keine statische Vorabseite: die Route
+              ist dynamisch und steht deshalb nicht in scripts/prerender.mjs. */}
+          <Route path="/terminal/einladung/:token" element={<TerminalEinladung />} />
+        </>
+      )}
 
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />

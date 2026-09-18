@@ -13,9 +13,5 @@
     { "source": "/ueber-videko", "destination": "/ueber-uns", "permanent": true },
     { "source": "/kuechenwelten", "destination": "/stylefinder", "permanent": true },
     { "source": "/showroom", "destination": "/studio", "permanent": true }
-  ],
-
-  "crons": [
-    { "path": "/api/terminal-instagram", "schedule": "0 * * * *" }
   ]
 }
