@@ -89,11 +89,16 @@ const LISTE_MAX = 5000
  * `teilnahme_status` muss mit, sonst verweigert der CHECK das UPDATE.
  * `gast_konvertiert_am` ebenfalls: der Vermerk bedeutet "hat spaeter einen
  * Deckel nachgeruestet" und waere ohne Deckel schlicht falsch.
+ *
+ * `deckel_aktiviert` steht ausdruecklich NICHT hier: die Spalte ist
+ * `GENERATED ALWAYS AS (deckel_nummer IS NOT NULL) STORED`. Postgres
+ * verweigert jedes Schreiben darauf ("can only be updated to DEFAULT") und
+ * laesst das ganze UPDATE scheitern. Sie raeumt sich von selbst, sobald die
+ * Nummer faellt.
  */
 const GELOEST = {
   deckel_nummer: null,
   teilnahme_status: STATUS_GAST,
-  deckel_aktiviert: null,
   deckel_aktiviert_am: null,
   besitz_status: null,
   besitz_geprueft_am: null,
@@ -102,7 +107,6 @@ const GELOEST = {
 
 /** Dieselben Felder ohne Statuswechsel — fuer Reste ohne Nummer. */
 const GELOEST_RESTE = {
-  deckel_aktiviert: null,
   deckel_aktiviert_am: null,
   besitz_status: null,
   besitz_geprueft_am: null,
@@ -113,17 +117,29 @@ const GELOEST_RESTE = {
  * wenn die Anfrage gescheitert ist — die beiden zu verwechseln waere fatal,
  * deshalb nie `0` als Ersatz fuer einen Fehler.
  */
+let letzterFehler = null
+
 async function schreiben(methode, pfad, koerper = null) {
   const antwort = await fetch(restUrl(pfad), {
     method: methode,
     headers: kopfzeilen({ Prefer: 'return=minimal,count=exact' }),
     ...(koerper ? { body: JSON.stringify(koerper) } : {}),
   })
-  if (!antwort.ok) return null
+  if (!antwort.ok) {
+    /* Ohne diesen Satz steht der Admin vor einem blanken "server" und kann
+       nichts damit anfangen. PostgREST-Fehler nennen Spalte und Constraint,
+       keine Zugangsdaten; gekappt, damit nichts Langes durchrutscht. */
+    const text = await antwort.text().catch(() => '')
+    letzterFehler = `${antwort.status} ${text.replace(/\s+/g, ' ').slice(0, 200)}`.trim()
+    return null
+  }
   const bereich = antwort.headers.get('content-range') || ''
   const n = Number(bereich.split('/')[1])
   return Number.isFinite(n) ? n : 0
 }
+
+/** Die Absage eines gescheiterten Schritts, samt Grund aus der Datenbank. */
+const serverFehler = () => ({ ok: false, grund: 'server', detail: letzterFehler })
 
 /** Eine `in.()`-Liste aus Ids. Nur, was wie eine Id aussieht. */
 const inListe = (ids) =>
@@ -258,13 +274,13 @@ export async function deckelReset(roh) {
   const gezogen = await schreiben(
     'DELETE', `${TABELLE_ZIEHUNGEN}?${kampagne}&deckel_nummer=eq.${nummer}`,
   )
-  if (gezogen === null) return { ok: false, grund: 'server', schritt: 'ziehungen' }
+  if (gezogen === null) return { ...serverFehler(), schritt: 'ziehungen' }
 
   const gemeldet = await schreiben(
     'DELETE',
     `${TABELLE_MELDUNGEN}?${kampagne}&or=(deckel_nummer.eq.${nummer},gezogene_nummer.eq.${nummer})`,
   )
-  if (gemeldet === null) return { ok: false, grund: 'server', schritt: 'meldungen' }
+  if (gemeldet === null) return { ...serverFehler(), schritt: 'meldungen' }
 
   let wieder = 0
   let geloest = 0
@@ -272,12 +288,12 @@ export async function deckelReset(roh) {
     wieder = await schreiben(
       'DELETE', `${TABELLE_WIEDER}?${kampagne}&teilnehmer_id=in.${inListe(ids)}`,
     )
-    if (wieder === null) return { ok: false, grund: 'server', schritt: 'wiederherstellung' }
+    if (wieder === null) return { ...serverFehler(), schritt: 'wiederherstellung' }
 
     geloest = await schreiben(
       'PATCH', `${TABELLE_TEILNEHMER}?${kampagne}&deckel_nummer=eq.${nummer}`, GELOEST,
     )
-    if (geloest === null) return { ok: false, grund: 'server', schritt: 'teilnehmer' }
+    if (geloest === null) return { ...serverFehler(), schritt: 'teilnehmer' }
   }
 
   const { stand } = await deckelStand()
@@ -303,29 +319,34 @@ export async function deckelResetAlle(b) {
   const vorher = (await deckelStand()).stand
 
   const gezogen = await schreiben('DELETE', `${TABELLE_ZIEHUNGEN}?${kampagne}`)
-  if (gezogen === null) return { ok: false, grund: 'server', schritt: 'ziehungen' }
+  if (gezogen === null) return { ...serverFehler(), schritt: 'ziehungen' }
 
   const gemeldet = await schreiben('DELETE', `${TABELLE_MELDUNGEN}?${kampagne}`)
-  if (gemeldet === null) return { ok: false, grund: 'server', schritt: 'meldungen' }
+  if (gemeldet === null) return { ...serverFehler(), schritt: 'meldungen' }
 
   const wieder = await schreiben('DELETE', `${TABELLE_WIEDER}?${kampagne}`)
-  if (wieder === null) return { ok: false, grund: 'server', schritt: 'wiederherstellung' }
+  if (wieder === null) return { ...serverFehler(), schritt: 'wiederherstellung' }
 
   const geloest = await schreiben(
     'PATCH', `${TABELLE_TEILNEHMER}?${kampagne}&deckel_nummer=not.is.null`, GELOEST,
   )
-  if (geloest === null) return { ok: false, grund: 'server', schritt: 'teilnehmer' }
+  if (geloest === null) return { ...serverFehler(), schritt: 'teilnehmer' }
 
   /* Altzeilen, an denen ein Aktivierungsdatum oder eine Besitzpruefung klebt,
      obwohl gar keine Nummer mehr dransteht. Ohne Statuswechsel — der stimmt
-     bei ihnen schon. */
+     bei ihnen schon.
+
+     `deckel_aktiviert` gehoert nicht in diesen Filter: die generierte Spalte
+     steht bei einer Zeile ohne Nummer auf `false`, nie auf NULL. Ein
+     `not.is.null` darauf traefe also jede Gastzeile und bliese die gemeldete
+     Zahl auf. */
   const reste = await schreiben(
     'PATCH',
     `${TABELLE_TEILNEHMER}?${kampagne}&deckel_nummer=is.null`
-    + '&or=(deckel_aktiviert_am.not.is.null,besitz_status.not.is.null,deckel_aktiviert.not.is.null)',
+    + '&or=(deckel_aktiviert_am.not.is.null,besitz_status.not.is.null)',
     GELOEST_RESTE,
   )
-  if (reste === null) return { ok: false, grund: 'server', schritt: 'reste' }
+  if (reste === null) return { ...serverFehler(), schritt: 'reste' }
 
   const nachher = (await deckelStand()).stand
   return {
