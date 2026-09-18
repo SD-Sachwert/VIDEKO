@@ -829,7 +829,7 @@ export default function Stadtfest() {
                Vorher stand hier Headline ueber Rad ueber Infos ueber Card —
                das las sich wie eine Liste und schob das Formular weit nach
                unten. Jetzt liegt alles in einem Feld, und die Card beginnt
-               auf 390 px schon nach rund 420 px.
+               auf 390 px schon nach rund 360 px.
 
                Die Eckdaten (Was/Wann/Wo) sind ganz entfallen: wer vor dem
                Stand steht, braucht sie nicht, und das Formular rueckt hoch.

@@ -439,7 +439,7 @@
    ruecken Headline, Rad und Schild nach oben und die Card beginnt frueher.
    Die Phase ohne Gewinnspiel behaelt ihr Layout. */
 .stf-held--schritte {
-  --held-h: clamp(398px, 106vw, 452px);
+  --held-h: clamp(340px, 90vw, 388px);
 }
 
 .stf-held__titel--schritte {
@@ -478,8 +478,15 @@
   width: clamp(138px, 38.5vw, 168px);
 }
 
+/* Das Schild steht links unter dem Gruss im freien Feld, nicht mehr unter
+   dem Rad. Damit endet der Hero knapp unter dem Rad und die Card rueckt
+   direkt an. */
 .stf-held--schritte .stf-held__preise {
-  top: clamp(324px, 86vw, 364px);
+  left: var(--held-rand);
+  right: auto;
+  top: clamp(262px, 67.4vw, 292px);
+  transform: rotate(-3deg);
+  transform-origin: left top;
 }
 
 /* Der schlanke Kopf ohne Hero — Erfolgsschirm und phasenneutraler Stand. */
@@ -605,9 +612,15 @@
     top: clamp(270px, 22vw, 340px);
   }
 
-  .stf-held--schritte .stf-held__gruss,
-  .stf-held--schritte .stf-held__preise {
+  .stf-held--schritte .stf-held__gruss {
     top: auto;
+  }
+
+  .stf-held--schritte .stf-held__preise {
+    left: 0;
+    right: auto;
+    top: clamp(340px, 27vw, 420px);
+    bottom: auto;
   }
 }
 
