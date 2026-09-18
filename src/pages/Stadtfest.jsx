@@ -202,6 +202,15 @@ export default function Stadtfest() {
   const gewinnspiel = texte ? texte.mitGewinnspiel : false
   const microcopy = texte ? texte.microcopy : LEERE_MICROCOPY
   const microAnzahl = microcopy.length
+  /* Ein nummerierter Titel ("1. Anmelden. 2. Code zeigen. 3. Gewinnen.")
+     wird Zeile fuer Zeile gesetzt, die Ziffer gehoert sichtbar zur Zeile. */
+  const titelZeilen =
+    texte && /^\d\.\s/.test(texte.titel)
+      ? texte.titel.split(/\s(?=\d\.\s)/).map((z) => {
+          const [, nr, rest] = z.match(/^(\d\.)\s(.*)$/)
+          return { nr, rest }
+        })
+      : null
 
   /* --- Phase und Vorschau erst im Browser bestimmen -----------------
      Das vorgerenderte HTML kann die aktuelle Uhrzeit nicht kennen. Deshalb
@@ -820,14 +829,14 @@ export default function Stadtfest() {
                Vorher stand hier Headline ueber Rad ueber Infos ueber Card —
                das las sich wie eine Liste und schob das Formular weit nach
                unten. Jetzt liegt alles in einem Feld, und die Card beginnt
-               auf 390 px schon nach rund 470 px.
+               auf 390 px schon nach rund 420 px.
 
                Die Eckdaten (Was/Wann/Wo) sind ganz entfallen: wer vor dem
                Stand steht, braucht sie nicht, und das Formular rueckt hoch.
 
                Das Rad traegt keine Information, die nicht auch im Text
                steht — deshalb leeres alt und aria-hidden. */
-            <section className="stf-held">
+            <section className={titelZeilen ? 'stf-held stf-held--schritte' : 'stf-held'}>
               <div className="stf-held__kulisse" aria-hidden="true" />
 
               <p className="stf-held__fahne">
@@ -852,23 +861,17 @@ export default function Stadtfest() {
                 />
               </div>
 
-              <h1 className="stf-held__titel">{texte.titel}</h1>
-
-              {/* Der Ablauf in drei Worten, ganz oben im Hero. Nur solange
-                  das Gluecksrad laeuft — danach gibt es nichts zu gewinnen. */}
-              {gewinnspiel ? (
-                <ol className="stf-schritte">
-                  <li>
-                    <span className="stf-schritte__nr">1</span>Anmelden.
-                  </li>
-                  <li>
-                    <span className="stf-schritte__nr">2</span>Code zeigen.
-                  </li>
-                  <li>
-                    <span className="stf-schritte__nr">3</span>Gewinnen.
-                  </li>
-                </ol>
-              ) : null}
+              {titelZeilen ? (
+                <h1 className="stf-held__titel stf-held__titel--schritte">
+                  {titelZeilen.map((z) => (
+                    <span key={z.nr} className="stf-held__zeile">
+                      <span className="stf-held__nr">{z.nr}</span> {z.rest}
+                    </span>
+                  ))}
+                </h1>
+              ) : (
+                <h1 className="stf-held__titel">{texte.titel}</h1>
+              )}
               {texte.subline ? <p className="stf-held__sub">{texte.subline}</p> : null}
 
               {texte.teilnahmeHinweis ? (

@@ -653,7 +653,7 @@ export function freigabeMoeglich(event = STADTFEST_EVENT) {
 export const PHASEN_TEXTE = {
   vorher: {
     mitGewinnspiel: true,
-    titel: 'Eintragen. Code zeigen. Drehen.',
+    titel: '1. Anmelden. 2. Code zeigen. 3. Gewinnen.',
     subline: '',
     formularTitel: 'Deine Daten.',
     formularText: 'Eintragen, Code holen, am Stand zeigen.',
@@ -673,7 +673,7 @@ export const PHASEN_TEXTE = {
   },
   event: {
     mitGewinnspiel: true,
-    titel: 'Eintragen. Code zeigen. Drehen.',
+    titel: '1. Anmelden. 2. Code zeigen. 3. Gewinnen.',
     subline: '',
     formularTitel: 'Deine Daten.',
     formularText: 'Eintragen, Code holen, am Stand zeigen.',
