@@ -820,7 +820,7 @@ export default function Stadtfest() {
                Vorher stand hier Headline ueber Rad ueber Infos ueber Card —
                das las sich wie eine Liste und schob das Formular weit nach
                unten. Jetzt liegt alles in einem Feld, und die Card beginnt
-               schon nach rund 670 px.
+               auf 390 px schon nach rund 470 px.
 
                Die Eckdaten (Was/Wann/Wo) sind ganz entfallen: wer vor dem
                Stand steht, braucht sie nicht, und das Formular rueckt hoch.
@@ -853,6 +853,22 @@ export default function Stadtfest() {
               </div>
 
               <h1 className="stf-held__titel">{texte.titel}</h1>
+
+              {/* Der Ablauf in drei Worten, ganz oben im Hero. Nur solange
+                  das Gluecksrad laeuft — danach gibt es nichts zu gewinnen. */}
+              {gewinnspiel ? (
+                <ol className="stf-schritte">
+                  <li>
+                    <span className="stf-schritte__nr">1</span>Anmelden.
+                  </li>
+                  <li>
+                    <span className="stf-schritte__nr">2</span>Code zeigen.
+                  </li>
+                  <li>
+                    <span className="stf-schritte__nr">3</span>Gewinnen.
+                  </li>
+                </ol>
+              ) : null}
               {texte.subline ? <p className="stf-held__sub">{texte.subline}</p> : null}
 
               {texte.teilnahmeHinweis ? (
