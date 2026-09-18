@@ -11,7 +11,16 @@ import {
   phasenSchluessel,
   uhrzeitText,
 } from '../data/stadtfest.js'
-import { DATENSCHUTZ_EVENT, TEILNAHMEBEDINGUNGEN } from '../data/stadtfest-recht.js'
+import {
+  DATENSCHUTZ_EVENT,
+  SPIELREGELN_KURZ,
+  TEILNAHMEBEDINGUNGEN,
+} from '../data/stadtfest-recht.js'
+
+/* Die vollstaendigen Bedingungen als eigene Seite. Geoeffnet wird sie in
+   einem neuen Tab, damit weder halb ausgefuellte Felder noch der Beleg mit
+   dem Code verloren gehen. */
+const BEDINGUNGEN_PFAD = '/stadtfest/teilnahmebedingungen'
 import radKlein from '../assets/images/stadtfest/stadtfest-rad-640w.webp'
 import radGross from '../assets/images/stadtfest/stadtfest-rad-1100w.webp'
 
@@ -475,6 +484,28 @@ export default function Stadtfest() {
 
   const formular = texte ? (
     <form className="stf-form" onSubmit={absenden} noValidate>
+      {/* Pflichthinweis zum Gluecksrad. Steht vor den Feldern, damit niemand
+          ein Hauptpreisfeld fuer einen gewonnenen Hauptpreis haelt. Ohne
+          Gewinnspiel gibt es kein Rad und damit nichts zu erklaeren. */}
+      {gewinnspiel && (
+        <section className="stf-regeln" aria-label={SPIELREGELN_KURZ.titel}>
+          <p className="stf-regeln__titel">{SPIELREGELN_KURZ.titel}</p>
+          <ol className="stf-regeln__liste">
+            {SPIELREGELN_KURZ.schritte.map((schritt) => (
+              <li className="stf-regeln__schritt" key={schritt}>
+                {schritt}
+              </li>
+            ))}
+          </ol>
+          <p className="stf-regeln__fuss">{SPIELREGELN_KURZ.fuss}</p>
+          <p className="stf-regeln__link">
+            <a className="stf-link" href={BEDINGUNGEN_PFAD} target="_blank" rel="noopener">
+              {SPIELREGELN_KURZ.linkText}
+            </a>
+          </p>
+        </section>
+      )}
+
       <div>
         <p className="stf-gruppe__titel">{texte.formularTitel}</p>
         <p className="stf-gruppe__text">{texte.formularText}</p>
@@ -611,16 +642,43 @@ export default function Stadtfest() {
               setFehler((f) => ({ ...f, agb: undefined }))
             }}
           />
+          {/* Beide Begriffe sind klickbar und oeffnen das jeweilige Sheet.
+              preventDefault verhindert, dass der Klick als Klick aufs Label
+              zaehlt und den Haken nebenbei setzt oder entfernt. */}
           <span className="stf-check__text">
-            Ich akzeptiere die Teilnahmebedingungen und Datenschutzhinweise.
+            Ich akzeptiere die{' '}
+            <button
+              type="button"
+              className="stf-link"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                setSheet('teilnahme')
+              }}
+            >
+              Teilnahme- und Gewinnbedingungen
+            </button>
+            . Die{' '}
+            <button
+              type="button"
+              className="stf-link"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                setSheet('datenschutz')
+              }}
+            >
+              Datenschutzhinweise
+            </button>{' '}
+            habe ich zur Kenntnis genommen.
             {fehler.agb && <span className="stf-feld__fehler"> {fehler.agb}</span>}
           </span>
         </label>
 
         <div className="stf-linkreihe">
-          <button type="button" className="stf-link" onClick={() => setSheet('teilnahme')}>
-            Teilnahmebedingungen
-          </button>
+          <a className="stf-link" href={BEDINGUNGEN_PFAD} target="_blank" rel="noopener">
+            Teilnahme- und Gewinnbedingungen
+          </a>
           <button type="button" className="stf-link" onClick={() => setSheet('datenschutz')}>
             Datenschutzhinweise
           </button>
@@ -715,14 +773,21 @@ export default function Stadtfest() {
         ) : null}
 
         {gewinnspiel && (
+          <p className="stf-phase__text">
+            Deine Registrierung ist geschafft. Die Gewinnspielteilnahme entsteht erst mit dem
+            bestätigten Besuch am Stadtfest-Stand.
+          </p>
+        )}
+
+        {gewinnspiel && (
           <p className="stf-erfolg__fuss">Screenshot zählt nicht. Wahrscheinlich.</p>
         )}
 
         <div className="stf-linkreihe">
           {gewinnspiel && (
-            <button type="button" className="stf-link" onClick={() => setSheet('teilnahme')}>
-              Teilnahmebedingungen
-            </button>
+            <a className="stf-link" href={BEDINGUNGEN_PFAD} target="_blank" rel="noopener">
+              Spielregeln &amp; Teilnahmebedingungen
+            </a>
           )}
           <button type="button" className="stf-link" onClick={() => setSheet('datenschutz')}>
             Datenschutzhinweise

@@ -3,19 +3,16 @@
  * eventspezifische Datenschutzhinweise.
  *
  * ======================================================================
- * ENTWURF — NOCH NICHT RECHTLICH GEPRÜFT.
- * ----------------------------------------------------------------------
- * Diese Texte sind ein Arbeitsentwurf. Sie müssen vor dem produktiven
- * Start juristisch geprüft und freigegeben werden. Alle Stellen, an denen
- * eine verbindliche Angabe fehlt, sind mit FEHLT markiert und werden im
- * Text sichtbar als Lücke ausgegeben — bewusst, damit niemand einen
- * unfertigen Stand für fertig hält. Es wurden KEINE wirtschaftlichen
- * Bedingungen (Werte, Fristen, Termine, Streamingkanäle) erfunden.
+ * Alle Stellen, an denen eine verbindliche Angabe fehlt, sind mit FEHLT
+ * markiert und werden im Text sichtbar als Lücke ausgegeben — bewusst,
+ * damit niemand einen unfertigen Stand für fertig hält. Es wurden KEINE
+ * wirtschaftlichen Bedingungen (Werte, Fristen, Termine, Streamingkanäle)
+ * erfunden.
  * ======================================================================
  *
  * Die Gewinnmechanik ist zweistufig und muss es an jeder Stelle bleiben:
- *   Sofortgewinn  = wird am Stand ausgegeben, ist sofort erledigt.
- *   Hauptpreisfeld = qualifiziert NUR für die spätere Verlosung.
+ *   Sofortgewinn   = wird am Stand ausgegeben, ist sofort erledigt.
+ *   Hauptpreisfeld = qualifiziert NUR für den betreffenden Lostopf.
  * Der Satz „Du hast den Hauptpreis gewonnen." darf nirgends entstehen.
  *
  * Alles Unternehmensbezogene kommt aus data/company.js (Single Source of
@@ -24,12 +21,18 @@
 import { ACTIVE_OPERATOR, BRAND, OPERATOR_NOTICE } from './company.js'
 import {
   ATLAS_RECHTSDATEN,
+  GOLD_BEDINGUNGEN,
   GUTSCHEIN_BEDINGUNGEN,
   HAUPTPREISE_GESAMT,
+  LOSTOEPFE_GESAMT,
+  SOFORTGEWINN_BEDINGUNGEN,
+  SPANNDECKE_BEDINGUNGEN,
   STADTFEST_EVENT,
   STADTFEST_GEWINNMECHANIK,
   STADTFEST_HAUPTPREISE,
+  STADTFEST_SOFORTGEWINNE,
   STADTFEST_ZIEHUNG,
+  WELLNESS_BEDINGUNGEN,
   zeitraumText,
 } from './stadtfest.js'
 
@@ -66,19 +69,29 @@ const atlasVerantwortlicherLang = [ATLAS_RECHTSDATEN.rechtstextNameLang, ...atla
 /** VIDEKO und ATLAS haben denselben Rechtsträger. Das wird nicht verschleiert. */
 const gleicherTraeger = ATLAS_RECHTSDATEN.firmierung === ACTIVE_OPERATOR.legalName
 
-/** Eine Zeile je Hauptpreis, offene Angaben ausdrücklich als Lücke markiert. */
+/**
+ * Eine Zeile je Lostopf. Der Lostopfname steht vorn, damit unübersehbar
+ * bleibt: das Hauptpreisfeld führt in genau einen dieser Töpfe.
+ * Offene Angaben werden ausdrücklich als Lücke markiert.
+ */
 const hauptpreisZeilen = STADTFEST_HAUPTPREISE.map((preis) => {
-  const kopf = `${preis.anzahl} × ${preis.titel}`
+  const kopf = `Lostopf ${preis.lostopf} — ${preis.anzahl} × ${preis.titel}`
   const text = preis.beschreibung ? `${kopf}: ${preis.beschreibung}` : kopf
   if (preis.offen.length === 0) return text
   const rest = `Noch nicht festgelegt: ${preis.offen.join(', ')}. ${FEHLT}`
   return preis.beschreibung ? `${text} ${rest}` : `${text} — ${rest}`
 })
 
-const ziehungTermin = STADTFEST_ZIEHUNG.terminAt || FEHLT
+/**
+ * Der Ziehungstermin. Das Wochenende ist verbindlich, der exakte Zeitpunkt
+ * nicht — dann steht das Zeitfenster da, nicht eine erfundene Uhrzeit.
+ */
+const ziehungTermin = STADTFEST_ZIEHUNG.terminAt || STADTFEST_ZIEHUNG.zeitfensterText || FEHLT
+
+/** Der Streamingkanal. Wird nicht erfunden; sonst greift der Bekanntgabesatz. */
 const ziehungKanal = STADTFEST_ZIEHUNG.plattform
   ? [STADTFEST_ZIEHUNG.plattform, STADTFEST_ZIEHUNG.url].filter(Boolean).join(', ')
-  : FEHLT
+  : STADTFEST_ZIEHUNG.bekanntgabeText
 
 /**
  * Teilnahmebedingungen.
@@ -87,11 +100,12 @@ const ziehungKanal = STADTFEST_ZIEHUNG.plattform
  * Bottom-Sheet der Seite und in einem späteren PDF/Aushang verwendbar bleibt.
  */
 export const TEILNAHMEBEDINGUNGEN = {
-  titel: 'Teilnahmebedingungen',
+  titel: 'Teilnahme- und Gewinnbedingungen',
+  untertitel: `${STADTFEST_EVENT.name}`,
   stand: STADTFEST_EVENT.termsVersion,
   hinweis:
-    'Entwurfsfassung. Vor dem Aktionsstart rechtlich zu prüfen. Mit '
-    + `„${FEHLT}" markierte Stellen sind noch offen.`,
+    'Für die Aktion am Aktionsstand gelten ausschließlich diese Teilnahme- und '
+    + 'Gewinnbedingungen.',
   abschnitte: [
     {
       titel: '1. Veranstalter',
@@ -184,47 +198,59 @@ export const TEILNAHMEBEDINGUNGEN = {
       ],
     },
     {
-      titel: '9. Eine Drehung am Glücksrad',
+      titel: '9. So funktioniert das Glücksrad',
       absaetze: [
-        `Jede gültige Registrierung berechtigt vor Ort zu genau ${STADTFEST_GEWINNMECHANIK.drehungenProTeilnahme} `
-        + 'Drehung am Glücksrad am Aktionsstand.',
+        'Nach dem bestätigten Stempel wird am physischen Glücksrad am Aktionsstand gedreht. '
+        + 'Gedreht wird so lange, bis ein Sofortgewinn fällt.',
         'Die Drehung ist nur während der Aktionszeiten und nur persönlich am Stand möglich.',
-        'Die Drehung wird vom Standpersonal bestätigt und dabei einmalig festgehalten. Mit '
-        + 'dieser Bestätigung gilt die Teilnahme am Gewinnspiel als erfolgt. Eine zweite '
-        + 'reguläre Drehung ist danach ausgeschlossen.',
+        'Die Drehungen werden vom Standpersonal begleitet und bestätigt. Mit dieser Bestätigung '
+        + 'gilt die Teilnahme am Gewinnspiel als erfolgt.',
+        'Ist der Sofortgewinn gefallen, ist die Teilnahme am Glücksrad abgeschlossen. Eine '
+        + 'weitere Teilnahmerunde ist danach ausgeschlossen.',
       ],
     },
     {
       titel: '10. Sofortgewinne',
       absaetze: [
-        'Zeigt das Glücksrad ein normales Gewinnfeld, erhält die teilnehmende Person einen '
-        + 'Sofortgewinn. Der Sofortgewinn wird unmittelbar am Stand ausgegeben und ist damit '
+        'Zeigt das Glücksrad ein Sofortgewinnfeld, erhält die teilnehmende Person den dort '
+        + 'genannten Sofortgewinn. Er wird unmittelbar am Stand ausgegeben und ist damit '
         + 'erledigt.',
+        'Als Sofortgewinne sind vorgesehen:',
+        ...STADTFEST_SOFORTGEWINNE,
+        ...SOFORTGEWINN_BEDINGUNGEN,
         'Sofortgewinne werden nicht einzeln dokumentiert. Ein Anspruch auf einen bestimmten '
         + 'Sofortgewinn besteht nicht; maßgeblich ist der am Stand vorhandene Bestand.',
       ],
     },
     {
-      titel: '11. Feld HAUPTPREIS: Qualifikation für die Verlosung',
+      titel: `11. Feld ${STADTFEST_GEWINNMECHANIK.hauptpreisFeldName}: Qualifikation für einen Lostopf`,
       absaetze: [
-        `Zeigt das Glücksrad das Feld ${STADTFEST_GEWINNMECHANIK.hauptpreisFeldName}, ist damit `
-        + 'ausdrücklich KEIN Hauptpreis gewonnen.',
-        'Die teilnehmende Person qualifiziert sich in diesem Fall ausschließlich für die '
-        + 'Verlosung der Hauptpreise. Die Qualifikation wird vom Standpersonal im geschützten '
-        + 'internen System bestätigt. Ein zweites Formular ist dafür nicht auszufüllen.',
-        'Die Qualifikation ist je Teilnahme nur einmal möglich.',
-        'Ausschließlich so qualifizierte Teilnahmen nehmen an der Verlosung der Hauptpreise '
-        + 'teil. Werbeeinwilligungen sind für die Aufnahme in die Verlosung und für die '
-        + 'Gewinnchance ohne jede Bedeutung.',
+        `Zeigt das Glücksrad ein Hauptpreisfeld (${STADTFEST_GEWINNMECHANIK.hauptpreisFeldName}), `
+        + 'ist damit ausdrücklich KEIN Hauptpreis gewonnen.',
+        'Es zählt ausschließlich das ERSTE Hauptpreisfeld. Es bedeutet allein: Qualifikation für '
+        + 'den Lostopf des dort genannten Hauptpreises. Der Hauptpreis selbst ist damit noch '
+        + 'nicht gewonnen; über ihn entscheidet erst die spätere Ziehung.',
+        'Nach einem Hauptpreisfeld wird weitergedreht, bis ein Sofortgewinn fällt.',
+        'Weitere Hauptpreisfelder zählen nicht zusätzlich. Eine Person kann nur einem einzigen '
+        + 'Hauptpreis-Lostopf angehören.',
+        'Sofortgewinn und Lostopf-Qualifikation schließen einander nicht aus: Eine Person kann '
+        + 'zum Beispiel gleichzeitig im Lostopf „Spanndecke bis 20 m²" liegen und als '
+        + 'Sofortgewinn ein „VIDEKO T-Shirt" erhalten haben.',
+        'Die Qualifikation wird vom Standpersonal im geschützten internen System bestätigt. Ein '
+        + 'zweites Formular ist dafür nicht auszufüllen.',
+        'Ausschließlich so qualifizierte Teilnahmen nehmen an der Ziehung der Hauptpreise teil. '
+        + 'Werbeeinwilligungen sind für die Aufnahme in einen Lostopf und für die Gewinnchance '
+        + 'ohne jede Bedeutung.',
       ],
     },
     {
-      titel: '12. Die Hauptpreise',
+      titel: '12. Die Hauptpreise und die vier Lostöpfe',
       absaetze: [
-        `Verlost werden insgesamt ${HAUPTPREISE_GESAMT} Hauptpreise:`,
+        `Verlost werden insgesamt ${HAUPTPREISE_GESAMT} Hauptpreise in ${LOSTOEPFE_GESAMT} `
+        + 'getrennten Lostöpfen:',
         ...hauptpreisZeilen,
-        'Für die noch nicht festgelegten Angaben gilt: Sie werden vor dem Aktionsstart ergänzt. '
-        + 'Bis dahin besteht insoweit kein Anspruch auf einen bestimmten Leistungsumfang.',
+        'Jedes Hauptpreisfeld am Glücksrad gehört zu genau einem dieser Lostöpfe. Wer das Feld '
+        + 'trifft, liegt in diesem einen Lostopf — und nur dort.',
       ],
     },
     {
@@ -232,36 +258,56 @@ export const TEILNAHMEBEDINGUNGEN = {
       absaetze: [
         'Für die Küchengutscheine gilt:',
         ...GUTSCHEIN_BEDINGUNGEN,
-        `Einlösefrist: ${FEHLT}.`,
       ],
     },
     {
-      titel: '14. Verlosung der Hauptpreise',
+      titel: '14. Bedingungen der Spanndecke',
+      absaetze: [
+        'Für den Hauptpreis Spanndecke gilt:',
+        ...SPANNDECKE_BEDINGUNGEN,
+      ],
+    },
+    {
+      titel: '15. Bedingungen des Wellnessaufenthalts',
+      absaetze: [
+        'Für den Hauptpreis Wellnessaufenthalt gilt:',
+        ...WELLNESS_BEDINGUNGEN,
+      ],
+    },
+    {
+      titel: '16. Bedingungen des Goldgewinns',
+      absaetze: [
+        'Für den Hauptpreis Gold gilt:',
+        ...GOLD_BEDINGUNGEN,
+      ],
+    },
+    {
+      titel: '17. Ziehung der Hauptpreise',
       absaetze: [
         'Die Hauptpreise werden nach dem Stadtfest in einer öffentlichen Online-Live-Ziehung '
         + 'verlost.',
-        `Termin und Uhrzeit der Ziehung: ${ziehungTermin}.`,
-        `Streamingkanal: ${ziehungKanal}.`,
+        `Die Ziehung findet ${ziehungTermin} statt.`,
+        ziehungKanal,
+        'Jeder Lostopf wird getrennt gezogen: Gold zwei Gewinnerinnen oder Gewinner, '
+        + 'Küchengutschein fünf, Spanndecke eine, Wellnessaufenthalt eine.',
         'Gezogen wird zufällig aus allen Teilnahmen, für die sowohl eine bestätigte Drehung am '
-        + 'Glücksrad als auch eine bestätigte Hauptpreis-Qualifikation vorliegt. Eine bloße '
-        + 'Registrierung über diese Seite nimmt an der Verlosung nicht teil. Eine Beeinflussung '
+        + 'Glücksrad als auch eine bestätigte Lostopf-Qualifikation vorliegt. Eine bloße '
+        + 'Registrierung über diese Seite nimmt an der Ziehung nicht teil. Eine Beeinflussung '
         + 'der Ziehung über die öffentliche Aktionsseite ist technisch nicht möglich.',
-        STADTFEST_ZIEHUNG.regelBestaetigt
-          ? `Eine Person kann höchstens ${STADTFEST_ZIEHUNG.maxGewinneProPerson} Hauptpreis `
-            + 'gewinnen. Wird eine bereits gezogene Person erneut gezogen, wird die Ziehung für '
-            + 'diesen Preis wiederholt.'
-          : `Vorgesehen ist: Eine Person kann höchstens ${STADTFEST_ZIEHUNG.maxGewinneProPerson} `
-            + 'Hauptpreis gewinnen; bei erneuter Ziehung derselben Person wird für diesen Preis '
-            + `neu gezogen. Diese Regel ist noch zu bestätigen: ${FEHLT}.`,
-        'Jede Ziehung wird protokolliert: Preis, gezogene Teilnahme, Zeitpunkt und, falls neu '
-        + 'gezogen wurde, der Grund.',
+        `Eine Person kann insgesamt höchstens ${STADTFEST_ZIEHUNG.maxGewinneProPerson} Hauptpreis `
+        + 'gewinnen.',
+        'Jede Ziehung wird protokolliert: Lostopf, Preis, gezogene Teilnahme, Zeitpunkt und, '
+        + 'falls neu gezogen wurde, der Grund.',
       ],
     },
     {
-      titel: '15. Gewinnerbenachrichtigung',
+      titel: '18. Gewinnerbenachrichtigung',
       absaetze: [
         'Der Livestream ersetzt die persönliche Benachrichtigung nicht. Gewinnende Personen '
-        + 'werden zusätzlich an die bei der Teilnahme angegebene E-Mail-Adresse benachrichtigt.',
+        + 'werden über die bei der Registrierung angegebenen Kontaktdaten benachrichtigt.',
+        'Im Livestream und in sonstigen Veröffentlichungen werden keine vollständigen '
+        + 'Kontaktdaten genannt. Genannt werden ausschließlich Vorname und erster Buchstabe des '
+        + 'Nachnamens oder der Teilnahme-Code.',
         'Die bei der Registrierung angegebene Mobilnummer kann für die Abwicklung des Gewinns '
         + 'verwendet werden. Das ist ausdrücklich keine Einwilligung in Werbung; die Nummer wird '
         + 'für Werbung nur verwendet, wenn dafür gesondert eingewilligt wurde.',
@@ -270,51 +316,95 @@ export const TEILNAHMEBEDINGUNGEN = {
       ],
     },
     {
-      titel: '16. Annahmefrist und Nachziehung',
+      titel: '19. Rückmeldefrist und Ersatzziehung',
       absaetze: [
-        `Der Gewinn ist innerhalb von ${STADTFEST_ZIEHUNG.annahmefristTage} Tagen nach der `
-        + 'Benachrichtigung anzunehmen.',
-        'Erfolgt innerhalb dieser Frist keine Reaktion, verfällt der Anspruch. Der Preis wird '
-        + 'in diesem Fall dokumentiert nachgezogen.',
+        `Auf die Benachrichtigung ist innerhalb von ${STADTFEST_ZIEHUNG.annahmefristTage} `
+        + 'Kalendertagen zurückzumelden.',
+        'Erfolgt innerhalb dieser Frist keine Rückmeldung, kann der Preis dokumentiert aus '
+        + 'demselben Lostopf nachgezogen werden.',
+        'Dasselbe gilt, wenn die angegebenen Kontaktdaten bewusst falsch oder trotz eines '
+        + 'angemessenen Versuchs nicht nutzbar sind.',
       ],
     },
     {
-      titel: '17. Ausschluss bei Manipulation',
+      titel: '20. Ausschluss bei Missbrauch',
       absaetze: [
-        'Die Veranstalterin kann Personen von der Teilnahme ausschließen, die sich unlauterer '
-        + 'Hilfsmittel bedienen, falsche Angaben machen oder sich anderweitig Vorteile '
-        + 'verschaffen. Bereits erfolgte Teilnahmen und Qualifikationen können in diesem Fall '
-        + 'nachträglich gestrichen werden.',
+        'Die Veranstalterin kann Personen von der Teilnahme ausschließen bei nachweislicher '
+        + 'Mehrfachteilnahme, Manipulation, vorsätzlich falschen Angaben, Umgehung technischer '
+        + 'Schutzmaßnahmen oder sonstigem Missbrauch.',
       ],
     },
     {
-      titel: '18. Keine Barauszahlung',
+      titel: '21. Keine Barauszahlung',
       absaetze: [
         'Eine Barauszahlung, ein Umtausch oder eine Übertragung des Gewinns auf Dritte ist '
         + 'nicht möglich.',
       ],
     },
     {
-      titel: '19. Rechtsweg',
+      titel: '22. Rechtsweg',
       absaetze: [
         'Der Rechtsweg ist ausgeschlossen.',
       ],
     },
     {
-      titel: '20. Datenschutz',
+      titel: '23. Datenschutz',
       absaetze: [
         'Welche Daten zu welchem Zweck verarbeitet werden, steht in den Datenschutzhinweisen '
-        + 'zu dieser Aktion. Diese sind auf dieser Seite direkt abrufbar.',
+        + 'zu dieser Aktion sowie in der allgemeinen Datenschutzerklärung dieser Website. Beide '
+        + 'sind auf dieser Seite direkt verlinkt.',
       ],
     },
     {
-      titel: '21. Vorzeitige Beendigung',
+      titel: '24. Vorzeitige Beendigung',
       absaetze: [
         'Die Veranstalterin behält sich vor, das Gewinnspiel aus wichtigem Grund abzubrechen '
         + 'oder zu beenden, insbesondere wenn ein ordnungsgemäßer Ablauf nicht gewährleistet '
-        + 'werden kann.',
+        + 'werden kann. Bereits entstandene Ansprüche bleiben davon unberührt.',
       ],
     },
+  ],
+}
+
+/* ------------------------------------------------------------------ */
+/* Kurz-Spielregeln und Aushang                                        */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Die sieben Kurz-Spielregeln (§15 der Vorgabe). Eine einzige Quelle für den
+ * sichtbaren Block auf /stadtfest und für die Bedingungenseite — damit der
+ * Wortlaut nicht an zwei Stellen auseinanderläuft.
+ */
+export const SPIELREGELN_KURZ = {
+  titel: 'So funktioniert das Glücksrad',
+  schritte: [
+    'Hier eintragen und Code erhalten.',
+    'Code am Stand zeigen und Stempel holen.',
+    'Am Glücksrad drehen.',
+    'Das erste Hauptpreisfeld qualifiziert dich für diesen Hauptpreis-Lostopf.',
+    'Das Hauptpreisfeld ist noch KEIN Hauptpreisgewinn.',
+    'Danach weiterdrehen bis zu deinem Sofortgewinn.',
+    'Weitere Hauptpreisfelder zählen nicht zusätzlich.',
+  ],
+  fuss: 'Teilnahme ab 18 Jahren · kostenlos · kein Kauf erforderlich',
+  linkText: 'Vollständige Teilnahme- und Gewinnbedingungen',
+}
+
+/**
+ * Der druckfähige Kurzblock für den A4-Aushang am Stand (§19 der Vorgabe).
+ * Steht ganz oben auf der Bedingungenseite und ist per Print-CSS allein
+ * druckbar.
+ */
+export const AUSHANG_KURZBLOCK = {
+  titel: 'Hauptpreisfeld getroffen?',
+  zeilen: [
+    'Das erste Hauptpreisfeld qualifiziert dich für den entsprechenden Hauptpreis-Lostopf.',
+    'Es bedeutet noch KEINEN direkten Gewinn des Hauptpreises.',
+    'Danach weiterdrehen bis zu deinem Sofortgewinn.',
+    'Weitere Hauptpreisfelder zählen nicht zusätzlich.',
+    'Teilnahme ab 18 Jahren.',
+    'Kein Kauf erforderlich.',
+    'Es gelten die vollständigen Teilnahme- und Gewinnbedingungen.',
   ],
 }
 
@@ -331,8 +421,7 @@ export const DATENSCHUTZ_EVENT = {
   titel: 'Datenschutzhinweise zur Aktion',
   stand: STADTFEST_EVENT.privacyVersion,
   hinweis:
-    'Entwurfsfassung. Ergänzt die allgemeine Datenschutzerklärung der Website, '
-    + 'ersetzt sie nicht.',
+    'Ergänzt die allgemeine Datenschutzerklärung der Website, ersetzt sie nicht.',
   abschnitte: [
     {
       titel: 'Verantwortliche',

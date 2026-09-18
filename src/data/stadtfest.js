@@ -57,7 +57,7 @@ export const STADTFEST_EVENT = {
 
   /* Versionsstände der Texte. Werden pro Teilnahme mitgespeichert, damit
      später belegbar ist, welcher Wortlaut zugestimmt wurde. */
-  termsVersion: 'stadtfest-teilnahmebedingungen-2026-09-entwurf-1',
+  termsVersion: 'stadtfest-teilnahme-und-gewinnbedingungen-2026-09-v1',
   privacyVersion: 'stadtfest-datenschutz-2026-09-entwurf-1',
   consentVersion: 'stadtfest-einwilligung-2026-09-entwurf-2',
 
@@ -325,7 +325,9 @@ export const MARKETING_EINWILLIGUNG = {
     'VIDEKO Küchen und ATLAS Wealth dürfen mich per E-Mail und Telefon zu ihren '
     + 'Angeboten kontaktieren.',
   /* Die kleine Zeile darunter. */
-  zusatz: 'Freiwillig. Jederzeit widerrufbar.',
+  zusatz:
+    'Freiwillig. Keine Voraussetzung für die Teilnahme. Jederzeit mit Wirkung für die '
+    + 'Zukunft widerrufbar.',
   /* Der vollständige Wortlaut, der als Nachweis gespeichert wird. Er nennt
      den Verantwortlichen, beide Marken, beide Kanäle und den Widerruf. */
   nachweisWortlaut:
@@ -386,141 +388,223 @@ export const ATLAS_RECHTSDATEN = {
  * Zwei Stufen — und die Unterscheidung ist nicht kosmetisch:
  *
  *  1. SOFORTGEWINN
- *     Jede gültige Teilnahme berechtigt vor Ort zu genau EINER Drehung am
- *     physischen Glücksrad. Ein normales Gewinnfeld führt zu einem Sofortpreis,
- *     der direkt am Stand ausgegeben wird. Diese Sofortpreise werden aktuell
- *     NICHT einzeln in der Datenbank protokolliert.
+ *     Jede gültige Teilnahme berechtigt vor Ort dazu, am physischen Glücksrad
+ *     so lange zu drehen, bis ein Sofortgewinn fällt. Der Sofortgewinn wird
+ *     direkt am Stand ausgegeben. Diese Sofortpreise werden aktuell NICHT
+ *     einzeln in der Datenbank protokolliert.
  *
  *  2. HAUPTPREIS-FELD
  *     Wer das Feld HAUPTPREIS dreht, gewinnt KEINEN Hauptpreis. Die Person
- *     qualifiziert sich ausschließlich für den Hauptpreis-Lostopf. Gezogen wird
- *     erst nach dem Stadtfest in einer Online-Live-Ziehung.
+ *     qualifiziert sich ausschließlich für den Lostopf des betreffenden
+ *     Hauptpreises. Es zählt nur das ERSTE Hauptpreisfeld; jedes weitere
+ *     bleibt wirkungslos. Danach wird weitergedreht bis zum Sofortgewinn.
+ *     Gezogen wird erst nach dem Stadtfest in einer Online-Live-Ziehung.
  *
  * Verbotener Wortlaut: „Du hast den Hauptpreis gewonnen."
  * Richtiger Wortlaut: siehe HAUPTPREIS_QUALIFIKATION_TEXT.
  */
 export const STADTFEST_GEWINNMECHANIK = {
-  drehungenProTeilnahme: 1,
+  /* Gedreht wird so lange, bis ein Sofortgewinn faellt. */
+  drehenBisSofortgewinn: true,
   sofortgewinnProtokolliert: false,
   hauptpreisFeldName: 'HAUPTPREIS',
+  /* Nur das ERSTE Hauptpreisfeld zählt. Jedes weitere bleibt wirkungslos. */
+  nurErstesHauptpreisfeldZaehlt: true,
+  /* Ein Hauptpreisfeld ist eine Lostopf-Qualifikation, kein Hauptpreisgewinn. */
+  hauptpreisfeldIstNurQualifikation: true,
+  /* Eine Person kann nur EINEM Hauptpreis-Lostopf angehören. */
+  nurEinLostopfProPerson: true,
   /* Die Qualifikation setzt ausschließlich geschütztes Studio-Personal.
      Über das öffentliche Frontend ist sie technisch nicht erreichbar. */
   qualifikationNurDurchStaff: true,
 }
 
 /** Der einzig zulässige Satz nach einem Hauptpreis-Feld. */
-export const HAUPTPREIS_QUALIFIKATION_TEXT = 'Du bist für die Hauptpreis-Verlosung qualifiziert.'
+export const HAUPTPREIS_QUALIFIKATION_TEXT =
+  'Du bist für den entsprechenden Hauptpreis-Lostopf qualifiziert. '
+  + 'Der Hauptpreis selbst ist damit noch nicht gewonnen.'
 
 /* ------------------------------------------------------------------ */
-/* Hauptpreise (§6, §7)                                                */
+/* Sofortgewinne                                                       */
 /* ------------------------------------------------------------------ */
 
-/** Bedingungen der 1.000-€-Küchengutscheine. Die Einlösefrist fehlt noch. */
+/** Die Sofortgewinne des Glücksrads. Ausgabe direkt am Stand. */
+export const STADTFEST_SOFORTGEWINNE = [
+  'ATLAS Kugelschreiber',
+  'ATLAS Feuerzeug',
+  'VIDEKO/ATLAS Sticker',
+  'VIDEKO T-Shirt',
+  'VIDEKO Tasche',
+  'VIDEKO Einkaufswagenchip',
+  'VIDEKO Kugelschreiber',
+  'ATLAS Block',
+]
+
+export const SOFORTGEWINN_BEDINGUNGEN = [
+  'Die Ausgabe erfolgt unmittelbar am Aktionsstand.',
+  'Bei T-Shirts richtet sich die Größe nach der am Stand vorhandenen Verfügbarkeit.',
+  'Eine Barauszahlung ist ausgeschlossen.',
+  'Ist ein Sofortgewinn nicht verfügbar, kann ein anderer verfügbarer Sofortgewinn '
+  + 'vergleichbarer Art und Wertigkeit ausgegeben werden.',
+]
+
+/* ------------------------------------------------------------------ */
+/* Hauptpreise: vier getrennte Lostöpfe                                */
+/* ------------------------------------------------------------------ */
+
+/** Bedingungen der 1.000-€-Küchengutscheine. */
 export const GUTSCHEIN_BEDINGUNGEN = [
+  'Jeder Küchengutschein hat einen Wert von 1.000 €.',
   'Einlösbar ab einem Mindestauftragswert von 10.000 €.',
-  'Maximal ein 1.000-€-Gutschein pro Auftrag.',
-  'Nicht mit anderen Gewinn- oder Aktionsgutscheinen kombinierbar.',
+  'Je Küchenauftrag kann höchstens ein Gewinn-Gutschein dieser Aktion eingelöst werden.',
+  'Eine Kombination mit weiteren Gewinn-Gutscheinen dieser Aktion ist ausgeschlossen.',
   'Keine Barauszahlung.',
   'Nicht rückwirkend auf bereits abgeschlossene Aufträge anwendbar.',
+  'Einlösbar bis zum 31.12.2027. Maßgeblich ist, dass der Kaufvertrag bis zu diesem Datum '
+  + 'verbindlich abgeschlossen ist; Lieferung und Montage dürfen später erfolgen.',
+]
+
+/** Bedingungen der Spanndecke. */
+export const SPANNDECKE_BEDINGUNGEN = [
+  'Gewonnen wird eine weiße Standard-Spanndecke bis maximal 20 m² inklusive Standardmontage.',
+  'Nicht enthalten sind insbesondere: LEDs, Beleuchtung und Leuchten, Elektroarbeiten, '
+  + 'Druckmotive und bedruckte Decken, Sonderformen, mehrstufige Konstruktionen, aufwendige '
+  + 'Sonderprofile, außergewöhnliche Unterkonstruktionen, notwendige bauseitige Reparatur- oder '
+  + 'Vorarbeiten sowie sonstige Sonderausstattung.',
+  'Vorausgesetzt werden geeignete bauliche Voraussetzungen vor Ort.',
+  'Mehrfläche und Sonderwünsche sind nur nach separater Vereinbarung und gegen Aufpreis möglich.',
+  'Keine Barauszahlung.',
+]
+
+/** Bedingungen des Wellnessaufenthalts. */
+export const WELLNESS_BEDINGUNGEN = [
+  'Gewonnen wird ein Gutschein für 2 Personen und 2 Nächte mit einem Wert von mindestens 250 €.',
+  'Der Gutschein ist 12 Monate ab Ausstellung gültig.',
+  'Die Buchung erfolgt nach Verfügbarkeit des Gutschein- beziehungsweise Hotelpartners.',
+  'Der Leistungsumfang richtet sich nach dem ausgestellten Gutschein.',
+  'Nicht automatisch enthalten sind, soweit im Gutschein nicht ausdrücklich genannt: An- und '
+  + 'Abreise, zusätzliche Verpflegung, Wellnessanwendungen, Kurtaxe, Parken und sonstige Extras.',
+  'Keine Barauszahlung.',
+]
+
+/** Bedingungen des Goldgewinns. Feinheit, Marke und Barrenform sind nicht festgelegt. */
+export const GOLD_BEDINGUNGEN = [
+  'Verlost werden insgesamt 2 × 2,5 g Gold. Zwei gewinnende Personen erhalten je 2,5 g.',
+  'Keine Barauszahlung.',
 ]
 
 /**
- * Die sechs Hauptpreise. Das Feld `offen` listet je Preis die Angaben, die noch
- * nicht feststehen. Nichts davon wird erfunden; die Punkte laufen über
- * STADTFEST_OFFEN zentral zusammen.
+ * Die vier Hauptpreis-Lostöpfe. Jedes Hauptpreisfeld am Glücksrad gehört zu
+ * genau einem dieser Töpfe. Getroffen zu haben heißt ausschließlich, in
+ * diesem einen Topf zu liegen — nicht, den Preis gewonnen zu haben.
  */
 export const STADTFEST_HAUPTPREISE = [
   {
-    key: 'goldbarren',
-    anzahl: 1,
-    titel: '5-g-Goldbarren',
-    beschreibung: 'Ein Goldbarren mit 5 Gramm Feingold.',
+    key: 'gold',
+    lostopf: 'GOLD',
+    anzahl: 2,
+    titel: '2,5 g Gold',
+    beschreibung: 'Insgesamt 2 × 2,5 g Gold; zwei gewinnende Personen erhalten je 2,5 g.',
+    bedingungen: GOLD_BEDINGUNGEN,
     offen: [],
   },
   {
-    key: 'wellnessurlaub',
-    anzahl: 1,
-    titel: 'Wellnessurlaub',
-    beschreibung: null,
-    offen: ['Genaue Leistung und Ziel', 'Umfang und Personenanzahl', 'Wert'],
+    key: 'kuechengutschein',
+    lostopf: 'KÜCHENGUTSCHEIN',
+    anzahl: 5,
+    titel: '1.000-€-Küchengutschein',
+    beschreibung: 'Fünf Gutscheine über je 1.000 € auf einen Küchenauftrag bei VIDEKO Küchen.',
+    bedingungen: GUTSCHEIN_BEDINGUNGEN,
+    offen: [],
   },
   {
     key: 'spanndecke',
+    lostopf: 'SPANNDECKE',
     anzahl: 1,
-    titel: 'Kostenlose Spanndecke',
-    beschreibung: null,
-    offen: ['Genauer Leistungsumfang', 'Maximale Fläche', 'Wertgrenze'],
+    titel: 'Weiße Spanndecke bis 20 m²',
+    beschreibung: 'Eine weiße Spanndecke bis maximal 20 m² inklusive Standardmontage.',
+    bedingungen: SPANNDECKE_BEDINGUNGEN,
+    offen: [],
   },
   {
-    key: 'kuechengutschein',
-    anzahl: 3,
-    titel: '1.000-€-Küchengutschein',
-    beschreibung: 'Gutschein über 1.000 € auf einen Küchenauftrag bei VIDEKO Küchen.',
-    bedingungen: GUTSCHEIN_BEDINGUNGEN,
-    offen: ['Einlösefrist'],
+    key: 'wellness',
+    lostopf: 'WELLNESS',
+    anzahl: 1,
+    titel: 'Wellnessaufenthalt für 2 Personen',
+    beschreibung:
+      'Ein Wellnessaufenthalt für 2 Personen über 2 Nächte, Gutscheinwert mindestens 250 €.',
+    bedingungen: WELLNESS_BEDINGUNGEN,
+    offen: [],
   },
 ]
 
-/** 1 + 1 + 1 + 3 = 6. Gerechnet, nicht getippt. */
+/** 2 + 5 + 1 + 1 = 9. Gerechnet, nicht getippt. */
 export const HAUPTPREISE_GESAMT = STADTFEST_HAUPTPREISE.reduce((n, preis) => n + preis.anzahl, 0)
 
+/** Vier getrennte Lostöpfe. Ebenfalls abgeleitet. */
+export const LOSTOEPFE_GESAMT = STADTFEST_HAUPTPREISE.length
+
 /* ------------------------------------------------------------------ */
-/* Hauptpreis-Ziehung (§8, §9)                                         */
+/* Hauptpreis-Ziehung                                                  */
 /* ------------------------------------------------------------------ */
 
 /**
- * Die Ziehung findet nach dem Stadtfest online im Livestream statt.
- * Termin, Uhrzeit und Kanal stehen noch nicht fest — sie bleiben null, und der
- * Rechtstext markiert die Stelle sauber als offen. Es wird ausdrücklich KEINE
- * YouTube- oder Instagram-Adresse erfunden.
+ * Die Ziehung findet nach dem Stadtfest online im Livestream statt. Das
+ * Wochenende steht fest, der exakte Zeitpunkt und der Kanal nicht — beides
+ * bleibt null und wird über die offiziellen VIDEKO-Kanäle bekanntgegeben.
+ * Es wird ausdrücklich KEINE YouTube- oder Instagram-Adresse erfunden.
  */
 export const STADTFEST_ZIEHUNG = {
   art: 'online-livestream',
   terminAt: null,
+  zeitfensterText: 'am Wochenende 26./27. September 2026',
+  bekanntgabeText:
+    'Der genaue Zeitpunkt und der VIDEKO-Kanal werden über die offiziellen VIDEKO-Kanäle '
+    + 'bekanntgegeben.',
   plattform: null,
   url: null,
 
+  /* Je Lostopf wird getrennt gezogen: Gold 2, Küchengutschein 5,
+     Spanndecke 1, Wellness 1. */
+  getrennteTopfZiehungen: true,
+
   /* Ziehungsgrundlage: ausschließlich gültige Stadtfest-Teilnahmen mit
-     hauptpreis_qualifiziert = true. Marketing-Einwilligungen, VIDEKO wie
+     bestätigter Lostopf-Qualifikation. Marketing-Einwilligungen, VIDEKO wie
      ATLAS, haben auf die Gewinnchance keinen Einfluss. */
   nurQualifizierte: true,
   consentBeeinflusstChance: false,
 
-  /* Verbindlich freigegeben: eine Person kann maximal EINEN Hauptpreis
-     gewinnen. Wird eine bereits gezogene Person erneut gezogen, wird für
-     diesen Preis neu gezogen. Bestätigt — das erlaubt aber nicht die Ziehung
-     selbst, die bleibt separat gesperrt. */
+  /* Verbindlich freigegeben: eine Person kann insgesamt maximal EINEN
+     Hauptpreis gewinnen. Das erlaubt aber nicht die Ziehung selbst — die
+     bleibt separat gesperrt. */
   maxGewinneProPerson: 1,
   regelBestaetigt: true,
 
-  /* Benachrichtigung. Der Livestream ersetzt sie nicht. Die Telefonnummer darf
-     ausschließlich zur Gewinnabwicklung genutzt werden — das ist KEINE
-     Werbeeinwilligung und strikt von Marketing getrennt. */
+  /* Benachrichtigung über die bei der Registrierung angegebenen Kontaktdaten.
+     Der Livestream ersetzt sie nicht. Die Telefonnummer darf ausschließlich
+     zur Gewinnabwicklung genutzt werden — das ist KEINE Werbeeinwilligung und
+     strikt von Marketing getrennt. */
   benachrichtigungKanaele: ['email', 'telefon'],
   benachrichtigungIstKeineWerbung: true,
   annahmefristTage: 7,
   nachziehungBeiKeinerReaktion: true,
+  nachziehungAusDemselbenLostopf: true,
 
-  bestaetigt: false,
+  bestaetigt: true,
 }
 
 /* ------------------------------------------------------------------ */
-/* Offene Punkte (§16)                                                 */
+/* Offene Punkte                                                       */
 /* ------------------------------------------------------------------ */
 
 /**
  * Zentrale Liste aller noch nicht bestätigten Angaben. Nichts davon wird
- * erfunden. Solange hier Einträge stehen, bleibt die Produktivfreigabe zu.
+ * erfunden. Die wirtschaftlichen Bedingungen sind freigegeben; offen ist nur
+ * noch, was ohne verbindliche Festlegung nicht behauptet werden darf.
  */
 export const STADTFEST_OFFEN = [
-  'Wellnessurlaub: genaue Leistung und Ziel',
-  'Wellnessurlaub: Wert, Personenanzahl, enthaltene Leistungen',
-  'Spanndecke: genauer Leistungsumfang',
-  'Spanndecke: maximale Fläche bzw. maximaler Wert',
-  'Küchengutscheine: Einlösefrist',
-  'Hauptpreis-Ziehung: Termin',
-  'Hauptpreis-Ziehung: Uhrzeit',
-  'Hauptpreis-Ziehung: Plattform und Streaming-Adresse',
+  'Hauptpreis-Ziehung: exakter Zeitpunkt innerhalb des Ziehungswochenendes',
+  'Hauptpreis-Ziehung: VIDEKO-Kanal des Livestreams',
   'Finale Speicherdauer der Teilnahmedaten',
 ]
 
