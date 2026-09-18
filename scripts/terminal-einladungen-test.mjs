@@ -343,7 +343,9 @@ const { topfBilden } = await import('../api/terminal-admin.js')
 const { RANGPUNKTE_MAX, PRACTICE_STANDARD } = await import('../src/data/terminal.js')
 
 const K = kern.KAMPAGNE
-const HAUPT = ['leitungsfinder', 'kuechen_merge', 'kuechen_crush', 'videko_jump', 'kuechen_fit']
+/* Sechs Hauptspiele, gewertet werden die besten vier — das Maximum liegt
+   damit bei 4000 und nicht bei 6000. */
+const HAUPT = ['leitungsfinder', 'kuechen_merge', 'kuechen_crush', 'videko_jump', 'kuechen_fit', 'videko_slam']
 
 /* ================================================================== */
 /* Hilfen                                                              */
@@ -816,7 +818,7 @@ pruefe('W: jede Kennzahl kommt mit ihrer Formel heraus',
   Boolean(auswertung.body?.formeln) && Object.keys(auswertung.body.formeln).length > 0)
 
 /* ================================================================== */
-/* E — ein Eingeladener spielt alle fuenf Hauptspiele                   */
+/* E — ein Eingeladener spielt alle sechs Hauptspiele                   */
 /* ================================================================== */
 
 rufe = []
@@ -831,10 +833,10 @@ for (const game of HAUPT) {
   const ende = await ruf({ aktion: 'spiel-ende', sitzung: gastSitzung, game, ticket, score: 1000, runden: 100 })
   laeufe.push({ game, start, ende, ticket })
 }
-pruefe('E: alle fuenf Spiele starten ohne Deckel',
+pruefe('E: alle sechs Spiele starten ohne Deckel',
   laeufe.every((l) => l.start.code === 200 && typeof l.start.body?.ticket === 'string'),
   laeufe.map((l) => `${l.game}:${l.start.code}`).join(' '))
-pruefe('E: alle fuenf Ergebnisse werden angenommen',
+pruefe('E: alle sechs Ergebnisse werden angenommen',
   laeufe.every((l) => l.ende.code === 200 && l.ende.body?.gespeichert === true),
   laeufe.map((l) => `${l.game}:${l.ende.code}`).join(' '))
 pruefe('E: und als gewertet zurueckgemeldet', laeufe.every((l) => l.ende.body?.gewertet === true),
@@ -844,10 +846,10 @@ pruefe('E: jeder Lauf bekommt einen Rang zurueck — kein Probelauf',
   laeufe.map((l) => `${l.game}:${l.ende.body?.rang?.platz}`).join(' '))
 
 const gastScores = DB.videko_terminal_scores.filter((z) => z.teilnehmer_id === gastZeile.id)
-pruefe('E: fuenf Scorezeilen unter derselben id', gastScores.length === 5, String(gastScores.length))
+pruefe('E: sechs Scorezeilen unter derselben id', gastScores.length === 6, String(gastScores.length))
 pruefe('E: jede Zeile traegt genau ein Hauptspiel',
   HAUPT.every((g) => gastScores.filter((z) => z.game === g).length === 1))
-pruefe('E: alle fuenf haben status gueltig', gastScores.every((z) => z.status === 'gueltig'))
+pruefe('E: alle sechs haben status gueltig', gastScores.every((z) => z.status === 'gueltig'))
 
 const doppelt = await ruf({
   aktion: 'spiel-ende',
@@ -859,8 +861,8 @@ const doppelt = await ruf({
 })
 pruefe('E: dasselbe Laufticket zaehlt kein zweites Mal',
   doppelt.code === 409 && doppelt.body?.grund === 'doppelt', `${doppelt.code} ${JSON.stringify(doppelt.body)}`)
-pruefe('E: und es bleibt bei fuenf Zeilen',
-  DB.videko_terminal_scores.filter((z) => z.teilnehmer_id === gastZeile.id).length === 5)
+pruefe('E: und es bleibt bei sechs Zeilen',
+  DB.videko_terminal_scores.filter((z) => z.teilnehmer_id === gastZeile.id).length === 6)
 
 /* ================================================================== */
 /* F + G + H + R — es gibt nur EINE Rangliste                          */
@@ -879,7 +881,7 @@ offizielle.forEach((t, i) => {
   for (const game of HAUPT) scoreAnlegen(t.id, game, 1100 + i * 100)
 })
 
-/* gast_eins hat weiter oben ueber die echten Endpunkte fuenf Mal 1000
+/* gast_eins hat weiter oben ueber die echten Endpunkte sechs Mal 1000
    gespielt — er ist der vierte Mensch in der Wertung. */
 kern.rangSpeicherLeeren()
 const standVorher = await gr.gesamtrankingDaten()
@@ -891,8 +893,14 @@ pruefe('F: vier Teilnehmer — drei ueber Deckel, einer ueber Einladung',
   standVorher.teilnehmer.length === 4, String(standVorher.teilnehmer.length))
 pruefe('F: N zaehlt den Eingeladenen mit',
   HAUPT.every((g) => standVorher.anzahl[g] === 4), JSON.stringify(standVorher.anzahl))
-pruefe('F: der Deckelbeste fuehrt mit 5000', vorherVon(a3.id)?.gesamt === 5000,
+/* Vier Menschen in der Wertung: Platz 1 von 4 gibt 1000 Rangpunkte je Spiel,
+   gewertet werden vier davon — also 4000. */
+pruefe('F: der Deckelbeste fuehrt mit 4000', vorherVon(a3.id)?.gesamt === 4000,
   String(vorherVon(a3.id)?.gesamt))
+pruefe('F: sechs gespielt, vier gewertet, zwei gestrichen',
+  vorherVon(a3.id)?.gespielt === 6 && vorherVon(a3.id)?.gewertet?.length === 4
+  && vorherVon(a3.id)?.gestrichen?.length === 2,
+  JSON.stringify({ g: vorherVon(a3.id)?.gespielt, w: vorherVon(a3.id)?.gewertet?.length }))
 
 /* G: ein weiterer Eingeladener mit Spitzenwerten verschiebt die Plaetze
    aller anderen — genau das ist der Unterschied zum alten Modell. */
@@ -905,16 +913,16 @@ const nachherVon = (id) => standNachher.teilnehmer.find((t) => t.id === id)
 pruefe('G: N waechst von 4 auf 5',
   HAUPT.every((g) => standNachher.anzahl[g] === 5), JSON.stringify(standNachher.anzahl))
 pruefe('G: der bisher Erste rutscht auf Platz 2',
-  nachherVon(a3.id)?.gesamt === 3750 && nachherVon(a3.id).gesamt < vorherVon(a3.id).gesamt,
+  nachherVon(a3.id)?.gesamt === 3000 && nachherVon(a3.id).gesamt < vorherVon(a3.id).gesamt,
   `${vorherVon(a3.id)?.gesamt} -> ${nachherVon(a3.id)?.gesamt}`)
 pruefe('G: auch die uebrigen Rangpunkte rechnen sich neu',
   standNachher.teilnehmer.length === 5
-  && nachherVon(a2.id)?.gesamt === 2500 && nachherVon(a1.id)?.gesamt === 1250,
+  && nachherVon(a2.id)?.gesamt === 2000 && nachherVon(a1.id)?.gesamt === 1000,
   JSON.stringify([nachherVon(a2.id)?.gesamt, nachherVon(a1.id)?.gesamt]))
 
 /* H: ein Einladungsspieler ohne jeden Deckel steht auf Platz 1. */
 pruefe('H: ein Einladungsspieler erreicht Gesamtranking-Platz 1',
-  standNachher.teilnehmer[0]?.id === spitze.id && standNachher.teilnehmer[0]?.gesamt === 5000,
+  standNachher.teilnehmer[0]?.id === spitze.id && standNachher.teilnehmer[0]?.gesamt === 4000,
   JSON.stringify({ erster: standNachher.teilnehmer[0]?.id === spitze.id, gesamt: standNachher.teilnehmer[0]?.gesamt }))
 pruefe('H: und ist dabei nachweislich ohne Deckel unterwegs',
   spitze.deckel_nummer == null && spitze.registrierungsquelle === 'einladung'
@@ -1070,10 +1078,10 @@ pruefe('K: auch die Verwaltung fuehrt ihn weiter unter Einladung',
   standNachKonv.body?.teilnehmer?.find((z) => z.id === gastZeile.id)?.quelle === 'einladung')
 
 const besteNach = await kern.eigeneBestwerte(gastZeile.id)
-pruefe('K: alle fuenf Bestleistungen sind noch da',
+pruefe('K: alle sechs Bestleistungen sind noch da',
   HAUPT.every((g) => besteNach[g] === 1000), JSON.stringify(HAUPT.map((g) => besteNach[g])))
 pruefe('K: die Scorezeilen haengen unveraendert an derselben id',
-  DB.videko_terminal_scores.filter((z) => z.teilnehmer_id === gastZeile.id).length === 5)
+  DB.videko_terminal_scores.filter((z) => z.teilnehmer_id === gastZeile.id).length === 6)
 
 pruefe('M: eingeladen_von bleibt stehen', konvertiert?.eingeladen_von === chef.id)
 pruefe('M: gast_konvertiert_am ist gesetzt', !Number.isNaN(Date.parse(konvertiert?.gast_konvertiert_am)))
@@ -1174,7 +1182,7 @@ pruefe('Widerruf: der alte Link meldet sich als widerrufen',
 /* T + U + V — Konfiguration und Formel                                */
 /* ================================================================== */
 
-pruefe('U: die fuenf Hauptspiele stehen unveraendert',
+pruefe('U: die sechs Hauptspiele stehen unveraendert',
   kern.hauptgamesSaeubern(undefined).join(',') === HAUPT.join(','), kern.hauptgamesSaeubern(undefined).join(','))
 pruefe('U: Kuechen-Tinder ist kein Hauptspiel', !kern.hauptgamesSaeubern(undefined).includes('kuechen_tinder'))
 pruefe('U: eine unvollstaendige Liste faellt auf den Standard zurueck',
@@ -1193,10 +1201,12 @@ pruefe('T: PRACTICE_STANDARD ist in beiden Modulen dasselbe Spiel',
 pruefe('T: ein unbekanntes Practice-Spiel faellt auf den Standard zurueck',
   kern.practiceSaeubern('gibt_es_nicht') === 'videko_jump')
 
-pruefe('V: alleine im Spiel gibt es 1000 Punkte je Hauptspiel, also 5000',
+/* Sechs Hauptspiele zu je 1000 Rangpunkten waeren 6000 — gewertet werden
+   aber nur die besten vier, also ist bei 4000 Schluss. */
+pruefe('V: alleine im Spiel gibt es 1000 Punkte je Hauptspiel, gewertet vier — also 4000',
   gr.gesamtrankingRechnen(HAUPT, Object.fromEntries(HAUPT.map((g) => [g, new Map([['x', { punkte: 1, wann: 'a' }]])])))
-    .teilnehmer[0].gesamt === 5000)
-pruefe('V: niemand kommt ueber 5000', standNachher.teilnehmer.every((t) => t.gesamt <= 5000))
+    .teilnehmer[0].gesamt === 4000)
+pruefe('V: niemand kommt ueber 4000', standNachher.teilnehmer.every((t) => t.gesamt <= 4000))
 pruefe('V: der Letzte eines Spiels bekommt 0, der Erste 1000',
   RANGPUNKTE_MAX === 1000 && gr.rangpunkte(1, 7) === 1000 && gr.rangpunkte(7, 7) === 0
   && gr.rangpunkte(1, 1) === 1000)

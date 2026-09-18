@@ -45,10 +45,9 @@ import {
   scoreSpeichern,
   spielSchluessel,
   spielstartVermerken,
-  tresorkoenig,
   zaehlen,
 } from './_terminal-kern.js'
-import { gesamtranking } from './_terminal-gesamtranking.js'
+import { gesamtranking, tresorkoenigGesamt } from './_terminal-gesamtranking.js'
 import {
   einladenBerechtigt,
   einladungErzeugen,
@@ -192,7 +191,7 @@ async function zustand(b, res) {
   const [einstellungen, aktiviert, koenig] = await Promise.all([
     einstellungenLesen(),
     aktivierteZaehlen(),
-    tresorkoenig(),
+    tresorkoenigGesamt(),
   ])
 
   let teilnehmer = null
@@ -236,7 +235,7 @@ async function zustand(b, res) {
       gesamt: gesamt.eigenePunkte,
       platz: gesamt.eigenerPlatz,
       gelistet: gesamt.gelistet,
-      /* Das Gesamtranking ueber die fuenf Hauptgames: Liste plus eigener Stand. */
+      /* Das Gesamtranking ueber die sechs Hauptgames: Liste plus eigener Stand. */
       gesamtranking: rangGesamt,
     }
   }

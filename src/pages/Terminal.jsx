@@ -1049,6 +1049,10 @@ export default function Terminal() {
   const [teilnehmer, setTeilnehmer] = useState(null)
   const [sitzung, setSitzung] = useState(null)
   const [spiele, setSpiele] = useState(null)
+  /* Die Spitze des Gesamtrankings. Kommt oeffentlich aus jeder
+     Zustandsantwort und haengt deshalb an keiner Sitzung — sonst stuende die
+     Karte direkt nach der Aktivierung leer da. */
+  const [koenig, setKoenig] = useState(null)
   /* Welche nachgeladenen Spiele aufgeklappt sind, und welches das Testlabor
      zeigen soll — auch wenn es in der Verwaltung ausgeblendet ist. */
   const [offeneSpiele, setOffeneSpiele] = useState({})
@@ -1306,6 +1310,7 @@ export default function Terminal() {
 
       setTeilnehmer(neu.teilnehmer)
       setSpiele(neu.spiele ?? null)
+      setKoenig(neu.koenig ?? null)
       merkeSchreiben(SPEICHER_TRESOR, '1')
       setAnsicht('c')
 
@@ -1370,6 +1375,7 @@ export default function Terminal() {
           aktiviert: antwort.aktiviert ?? 0,
           ...antwort.einstellungen,
         })
+        setKoenig(antwort.koenig ?? null)
       }
 
       if (szene) {
@@ -1892,6 +1898,10 @@ export default function Terminal() {
       gelistet: daten.gelistet === true,
       gesamtranking: daten.gesamtranking ?? alt?.gesamtranking ?? null,
     }))
+    /* Ein neuer Lauf kann die Spitze verschoben haben — die Liste im Ergebnis
+       ist frisch gerechnet, also kommt der Koenig von dort. */
+    const neueSpitze = daten.gesamtranking?.eintraege?.[0]
+    if (neueSpitze) setKoenig(neueSpitze)
   }, [])
 
   /* ---------------------------------------------------------------- */
@@ -1928,6 +1938,7 @@ export default function Terminal() {
 
     const neu = await terminalRuf({ aktion: 'zustand', sitzung: merkeLesen(SPEICHER_SITZUNG) })
     if (neu?.ok && neu.spiele) setSpiele(neu.spiele)
+    if (neu?.ok) setKoenig(neu.koenig ?? null)
   }
 
   /* ---------------------------------------------------------------- */
@@ -2297,9 +2308,9 @@ export default function Terminal() {
   /*
    * EIN DASHBOARD FUER ALLE SPIELER
    * -------------------------------
-   * Wer hier ankommt, spielt voll mit: alle fuenf Hauptgames, gewertete
-   * Scores, jede Rangliste, das Gesamtranking, die Preise in den Games und
-   * drei eigene Einladungen. Ob jemand ueber einen Deckel oder ueber eine
+   * Wer hier ankommt, spielt voll mit: alle sechs Hauptgames, gewertete
+   * Scores, jede Rangliste, das Gesamtranking samt Rankingpreisen fuer die
+   * Plaetze 1 bis 3 und drei eigene Einladungen. Ob jemand ueber einen Deckel oder ueber eine
    * Einladung hereingekommen ist, aendert daran nichts — deshalb gibt es
    * hier auch keine zwei Fassungen dieser Seite mehr.
    *
@@ -2329,13 +2340,15 @@ export default function Terminal() {
     )
     const missionFehlt = mission.naechste ? mission.fehlt : null
 
-    /* Spitze und eigener Stand kommen aus dem Gesamtranking ueber die fuenf
-       Hauptgames (maximal 5.000). Die alte Summe aus Truhenknacker und
+    /* Spitze und eigener Stand kommen aus dem Gesamtranking — beste vier aus
+       sechs Hauptgames (maximal 4.000). Die alte Summe aus Truhenknacker und
        Goldrausch (`koenig`, `spiele.gesamt`) liefert der Server weiter, sie
        wird hier aber nicht mehr gezeigt. Ohne Einwilligung gibt es keinen
        oeffentlichen Platz — das steht dann auch so da. */
     const rang = spiele?.gesamtranking ?? null
-    const spitze = rang?.eintraege?.[0] ?? null
+    /* Der Koenig steht oeffentlich in jeder Zustandsantwort; die Liste im
+       eigenen Stand ist nur die genauere Quelle, wenn sie gerade vorliegt. */
+    const spitze = rang?.eintraege?.[0] ?? koenig ?? null
     const eigenerPlatz = rang?.gelistet ? rang.eigenerPlatz ?? null : null
     const eigeneGesamt = rang?.gelistet ? rang.eigenePunkte ?? null : null
 
@@ -2548,8 +2561,9 @@ export default function Terminal() {
             {ranglisteZeile}
           </section>
 
-          {/* Gesamtranking ueber die fuenf Hauptgames: eigener Platz, Rangpunkte
-              je Game, fehlende Games. Alles fertig vom Server. */}
+          {/* Gesamtranking — beste vier aus sechs Hauptgames: eigener Platz,
+              Rangpunkte je Game, was gewertet und was gestrichen wurde, und die
+              oeffentliche Bestenliste. Alles fertig vom Server. */}
           <GesamtrankingKarte daten={spiele?.gesamtranking} />
 
           {/* Oeffentlich oder nicht — jederzeit umzustellen. Ein Widerruf

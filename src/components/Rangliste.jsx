@@ -4,14 +4,18 @@ import { Link } from 'react-router-dom'
 import { GesamtPreise, gesamtrankingZeile } from './Gesamtranking.jsx'
 import { Ikon } from './TerminalRahmen.jsx'
 import { ranglisteHolen } from '../data/terminal-api.js'
-import { SPIELE_LISTE, TEXTE, aktiveSpiele, fuelle, zahl } from '../data/terminal.js'
+import { SPIELE_LISTE, TEXTE, aktiveSpiele, fuelle, spielKurz, zahl } from '../data/terminal.js'
 
 /**
- * Das oeffentliche Leaderboard — fuenf Listen, eine Anfrage.
+ * Das oeffentliche Leaderboard — alle Listen in einer Anfrage.
  *
- * Die vier Spiele und Gesamt kommen in einer einzigen Antwort vom
+ * Die Einzelspiele und das Gesamtranking kommen in einer einzigen Antwort vom
  * Server. Beim Umschalten der Reiter wird deshalb nichts nachgeladen: das
  * Umschalten soll sich wie Blaettern anfuehlen, nicht wie Warten.
+ *
+ * Gewonnen wird nur ueber das Gesamtranking (beste vier aus sechs) — die
+ * Einzel-Bestenlisten sind Vergleich und Rechengrundlage, sonst nichts. Genau
+ * das steht auch unter jeder Einzelliste.
  *
  * WAS HIER NICHT STEHT
  * --------------------
@@ -109,7 +113,9 @@ export default function Rangliste({ sitzung = null, leaderboardOk = true }) {
 
         {istGr && liste != null && (
           <div className="trm-gr__kopf" data-gr-reiter="1">
+            <p className="trm-grliste__beste">{T.grBeste}</p>
             <p className="trm-karte__sub">{T.grSub}</p>
+            <p className="trm-feld__hilfe">{T.grNochHilfe}</p>
             {liste.abgeschlossen && <p className="trm-gr__hinweis">{T.grAbgeschlossen}</p>}
             <GesamtPreise preise={liste.preise} />
           </div>
@@ -147,8 +153,21 @@ export default function Rangliste({ sitzung = null, leaderboardOk = true }) {
                 {/* Nur im Gesamtranking: wer nicht zugestimmt hat, steht mit
                     seinem echten Platz, aber ohne Namen da — sonst saehen die
                     Preisplaetze falsch aus. */}
-                <span className="trm-rang__name" data-anonym={e.instagram ? undefined : '1'}>
+                <span
+                  className="trm-rang__name"
+                  data-anonym={e.instagram ? undefined : '1'}
+                  /* Zwei Zeilen statt einer, sobald die gewerteten Spiele
+                     darunter stehen — sonst schneidet die Ellipse sie weg. */
+                  data-zweizeilig={istGr && e.gewertet?.length ? '1' : undefined}
+                >
                   {e.instagram ? `@${e.instagram}` : T.grAnonym}
+                  {/* Nur im Gesamtranking: welche vier Ergebnisse gezaehlt
+                      haben. Welche das sind, hat der Server bestimmt. */}
+                  {istGr && Array.isArray(e.gewertet) && e.gewertet.length > 0 && (
+                    <span className="trm-grliste__spiele" title={T.grGewerteteSpiele}>
+                      {e.gewertet.map(spielKurz).join(' · ')}
+                    </span>
+                  )}
                 </span>
                 <span className="trm-rang__punkte">{zahl(e.punkte)}</span>
               </li>
@@ -176,6 +195,14 @@ export default function Rangliste({ sitzung = null, leaderboardOk = true }) {
               : ''}
           </p>
         ) : null}
+
+        {/* Unter jeder Einzelliste: aus ihr folgt kein Gewinn. Gewonnen wird
+            nur ueber das Gesamtranking, Plaetze 1 bis 3. */}
+        {!istGr && (
+          <p className="trm-feld__hilfe" data-gr-einzel="1">
+            {T.grEinzelHinweis}
+          </p>
+        )}
       </div>
 
       {istGr && <p className="trm-feld__hilfe" data-gr-formel="1">{T.grFormel}</p>}

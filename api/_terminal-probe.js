@@ -17,9 +17,8 @@ import {
   laufVerdacht,
   rangliste,
   spielSchluessel,
-  tresorkoenig,
 } from './_terminal-kern.js'
-import { gesamtranking } from './_terminal-gesamtranking.js'
+import { gesamtranking, tresorkoenigGesamt } from './_terminal-gesamtranking.js'
 
 /**
  * Das Testlabor: eine vollstaendig virtuelle Teilnehmerin.
@@ -167,7 +166,7 @@ async function probeZustand(stand, res) {
   const [einstellungen, aktiviert, koenig] = await Promise.all([
     einstellungenLesen(),
     aktivierteZaehlen(),
-    tresorkoenig(),
+    tresorkoenigGesamt(),
   ])
 
   let teilnehmer = null

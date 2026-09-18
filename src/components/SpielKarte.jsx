@@ -274,6 +274,27 @@ export default function SpielKarte({ spiel, lauf, best, leiste = null, children 
             drehen, abwerfen oder springen. Darum stoppt jede Taste Zeiger
             und Leertaste, bevor die Buehne sie sieht. */}
         <div className="trm-shell" data-vollbild={vollbild ? '' : undefined}>
+          {/* Die Anleitung steht immer bereit — vor der Runde, um zu wissen,
+              worauf man sich einlaesst, und mittendrin, wenn eine Taste
+              unklar war. */}
+          {anleitung && (
+            <button
+              type="button"
+              className="trm-shell__knopf trm-shell__knopf--wort trm-shell__knopf--anleitung"
+              aria-label={T.shellAnleitungHilfe}
+              title={T.shellAnleitungHilfe}
+              data-anleitung-auf
+              onPointerDown={halt}
+              onPointerUp={halt}
+              onKeyDown={tastenHalt}
+              onClick={hilfeAuf}
+            >
+              <span aria-hidden="true">ⓘ</span>
+              <span className="trm-shell__wort" aria-hidden="true">
+                {T.shellAnleitung}
+              </span>
+            </button>
+          )}
           <button
             type="button"
             className="trm-shell__knopf"
@@ -291,29 +312,14 @@ export default function SpielKarte({ spiel, lauf, best, leiste = null, children 
           >
             {ton ? '♪' : '✕'}
           </button>
-          {/* Die Anleitung steht immer bereit — vor der Runde, um zu wissen,
-              worauf man sich einlaesst, und mittendrin, wenn eine Taste
-              unklar war. */}
-          {anleitung && (
-            <button
-              type="button"
-              className="trm-shell__knopf"
-              aria-label={T.shellAnleitungHilfe}
-              title={T.shellAnleitungHilfe}
-              data-anleitung-auf
-              onPointerDown={halt}
-              onPointerUp={halt}
-              onKeyDown={tastenHalt}
-              onClick={hilfeAuf}
-            >
-              <span aria-hidden="true">ⓘ</span>
-            </button>
-          )}
-          {/* Minimieren gibt es nur, solange es etwas anzuhalten gibt. */}
+          {/* Minimieren gibt es nur, solange es etwas anzuhalten gibt.
+              Waehrend einer Runde ist das Scrollen gesperrt — dann ist diese
+              Taste der einzige Weg zurueck auf die Seite, und deshalb steht
+              sie mit Wort da und nicht als Strich. */}
           {laeuft && (
             <button
               type="button"
-              className="trm-shell__knopf"
+              className="trm-shell__knopf trm-shell__knopf--wort trm-shell__knopf--klein"
               aria-label={T.shellMinimierenHilfe}
               title={T.shellMinimierenHilfe}
               data-minimieren
@@ -323,11 +329,14 @@ export default function SpielKarte({ spiel, lauf, best, leiste = null, children 
               onClick={minimieren}
             >
               <span aria-hidden="true">–</span>
+              <span className="trm-shell__wort" aria-hidden="true">
+                {T.shellMinimieren}
+              </span>
             </button>
           )}
           <button
             type="button"
-            className="trm-shell__knopf"
+            className="trm-shell__knopf trm-shell__knopf--wort trm-shell__knopf--voll"
             aria-pressed={vollbild}
             aria-label={vollbild ? T.shellVollbildAus : T.shellVollbild}
             title={vollbild ? T.shellVollbildAus : T.shellVollbild}
@@ -338,7 +347,10 @@ export default function SpielKarte({ spiel, lauf, best, leiste = null, children 
                diese ist der Klick hier — nie ein Effekt, nie ein Timer. */
             onClick={() => vollbildSetzen(!vollbild)}
           >
-            <span aria-hidden="true">{vollbild ? '⤡' : '⤢'}</span>
+            <span aria-hidden="true">⛶</span>
+            <span className="trm-shell__wort" aria-hidden="true">
+              {vollbild ? T.shellVollbildKurzAus : T.shellVollbildKurz}
+            </span>
           </button>
           {(laeuft || vollbild) && (
             <button

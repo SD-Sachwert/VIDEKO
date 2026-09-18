@@ -401,9 +401,9 @@ export const GESAMTRANKING_SPALTEN =
   'gesamtranking_spiele,testslot_game,preis_gesamt_1,preis_gesamt_2,preis_gesamt_3,gesamtranking_abgeschlossen_am'
 
 /**
- * Die fuenf Hauptgames. Gilt nur eine Liste aus genau fuenf verschiedenen,
+ * Die sechs Hauptgames. Gilt nur eine Liste aus genau sechs verschiedenen,
  * bekannten Spielen — alles andere faellt auf den Standard zurueck. So kann
- * ein halb gespeicherter Wert das Ranking nie auf vier oder sechs Spiele
+ * ein halb gespeicherter Wert das Ranking nie auf fuenf oder sieben Spiele
  * verbiegen.
  */
 export function hauptgamesPruefen(roh) {
@@ -466,7 +466,7 @@ export function meilensteineSaeubern(roh) {
 /**
  * Game-Schalter. Ein ausdrueckliches true/false gewinnt. Fehlt der Eintrag,
  * ist ein Spiel genau dann sichtbar, wenn es Hauptgame oder Testslot ist —
- * ohne Testslot also nur die fuenf Hauptgames. Ohne Gesamtranking-Angaben
+ * ohne Testslot also nur die sechs Hauptgames. Ohne Gesamtranking-Angaben
  * gilt `standardAktiv` des Spiels.
  */
 export function spieleAktivSaeubern(roh, gesamtranking = null) {
@@ -563,7 +563,7 @@ export const ANSPRUCH_WEITERER = 'weiterer_besitzanspruch'
  * Logik inzwischen selbst hart deckelt.
  */
 export const SPIELE = {
-  /* Oeffentlich sichtbar sind standardmaessig nur die fuenf Hauptgames und —
+  /* Oeffentlich sichtbar sind standardmaessig nur die sechs Hauptgames und —
      falls eingetragen — der Testslot (siehe spieleAktivSaeubern). Alle anderen
      lassen sich in der Verwaltung jederzeit wieder einschalten. */
   truhenknacker: { titel: 'Truhenknacker', dauerMs: 30000, plausibel: 45000, hart: 120000, standardAktiv: false },

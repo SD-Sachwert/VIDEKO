@@ -22,7 +22,7 @@ import './spielgefuehl.css'
 import './slam.css'
 
 /**
- * VIDEKO SLAM — der Kandidat fuer den Testslot.
+ * VIDEKO SLAM — sechstes Hauptgame, kein Testslot mehr.
  *
  * Aus neun Fronten kommt das ganze VIDEKO-Feld heraus: Werkzeug, Licht, Bad,
  * Boden, Decke, Elektro, Photovoltaik — und ebenso oft Mist, der in den

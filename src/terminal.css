@@ -1701,6 +1701,24 @@
   font-size: 13px;
 }
 
+/* Loeschen. Die einzige Stelle im Terminal, an der nicht Gold leuchtet:
+   ein Knopf, der Daten entfernt, darf nicht aussehen wie einer, der
+   weiterfuehrt. Gedaempftes Rot auf dunklem Grund, kein Signalton —
+   Marmor und Tresor bleiben, die Farbe warnt. */
+.trm-cta--gefahr {
+  border-color: rgba(226, 69, 58, 0.55);
+  background: linear-gradient(178deg, rgba(120, 32, 26, 0.92) 0%, rgba(74, 20, 16, 0.94) 100%);
+  color: #ffdcd7;
+  box-shadow: 0 10px 26px rgba(120, 30, 24, 0.32);
+}
+
+.trm-cta--gefahr:hover,
+.trm-cta--gefahr:focus-visible {
+  border-color: var(--trm-rot);
+  filter: brightness(1.1);
+  box-shadow: 0 12px 32px rgba(150, 38, 30, 0.42);
+}
+
 /* ------------------------------------------------------------------ */
 /* Karten und Flaechen                                                 */
 /* ------------------------------------------------------------------ */
@@ -2871,43 +2889,95 @@ textarea.trm-eingabe {
    nur 321 px — die Reihe deckte damit die obere Haelfte jeder Spiel-Kopfzeile
    zu und nahm ihr die Tipps. Eine eigene Zeile kostet 34 px Hoehe und macht
    beides wieder erreichbar. `touch-action: manipulation` nimmt der Reihe die
-   300-ms-Verzoegerung, ohne die Buehne darunter zu beeinflussen. */
+   300-ms-Verzoegerung, ohne die Buehne darunter zu beeinflussen.
+
+   Die Reihe kostet jetzt 44 px Hoehe statt 34. Das ist Absicht: waehrend
+   einer Runde ist das Scrollen gesperrt, und MINIMIEREN und VOLLBILD sind
+   die beiden einzigen Auswege. Ein 34-px-Icon ohne Wort war als Ausweg nicht
+   zu erkennen. */
 .trm-shell {
   display: flex;
   flex: none;
+  /* Umbrechen statt ueberlaufen: bei sehr schmalen Geraeten rutscht lieber
+     eine Taste in die zweite Zeile, als dass die Seite seitlich scrollt. */
+  flex-wrap: wrap;
   justify-content: flex-end;
+  align-items: center;
   gap: 6px;
   touch-action: manipulation;
 }
 
 .trm-shell__knopf {
   position: relative;
-  display: grid;
-  place-items: center;
-  /* 34 px sichtbar, 44 px Trefferflaeche — die Vergroesserung liegt als
-     unsichtbares Pseudoelement darum, damit die Reihe schlank bleibt. */
-  width: 34px;
-  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* 44 px echte Flaeche, nicht nur ein unsichtbares Pseudoelement. Waehrend
+     einer Runde ist das Scrollen gesperrt; Minimieren und Vollbild sind dann
+     die einzigen Auswege und muessen ohne Zielen zu treffen sein. */
+  width: 44px;
+  height: 44px;
+  flex: none;
   padding: 0;
-  border: 1px solid rgb(201 160 80 / 0.35);
-  border-radius: 50%;
-  background: rgb(10 9 8 / 0.62);
+  border: 1px solid rgb(201 160 80 / 0.45);
+  border-radius: 22px;
+  background: rgb(10 9 8 / 0.72);
   color: var(--trm-gold, #c9a050);
-  font-size: 15px;
+  font-size: 17px;
   line-height: 1;
   cursor: pointer;
   transition: border-color 160ms ease, color 160ms ease, background-color 160ms ease;
 }
 
-.trm-shell__knopf::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 44px;
-  height: 44px;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
+/* Tasten mit Wort: gleiche Hoehe, nur breiter. Das Wort ist der eigentliche
+   Grund — ein reines Icon hat hier niemand als Ausweg erkannt. */
+.trm-shell__knopf--wort {
+  width: auto;
+  min-width: 44px;
+  gap: 6px;
+  padding: 0 12px;
+  font-size: 15px;
+}
+
+.trm-shell__wort {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+/* Das Vollbild ist die auffaelligste Taste der Reihe. */
+.trm-shell__knopf--voll {
+  border-color: rgb(201 160 80 / 0.85);
+  background: rgb(201 160 80 / 0.16);
+  color: var(--trm-gold-hell, #e8c978);
+}
+
+.trm-shell__knopf--voll:hover {
+  background: rgb(201 160 80 / 0.28);
+}
+
+/* Bei 390 px stehen fuenf Tasten nebeneinander. Die Anleitung ist die
+   einzige, die ohne Wort auskommt — sie ist kein Ausweg, sondern Nachschlag. */
+@media (max-width: 420px) {
+  .trm-shell__knopf--anleitung {
+    width: 44px;
+    padding: 0;
+  }
+
+  .trm-shell__knopf--anleitung .trm-shell__wort {
+    display: none;
+  }
+
+  .trm-shell__knopf--klein .trm-shell__wort,
+  .trm-shell__knopf--voll .trm-shell__wort {
+    font-size: 10px;
+    letter-spacing: 0.06em;
+  }
+
+  .trm-shell__knopf--wort {
+    padding: 0 9px;
+  }
 }
 
 .trm-shell__knopf:hover {
@@ -2917,6 +2987,12 @@ textarea.trm-eingabe {
 
 .trm-shell__knopf[aria-pressed='false'] {
   color: rgb(244 239 228 / 0.42);
+}
+
+/* Der Ton meldet Stille durch Blasswerden — das Vollbild nicht. Es ist ein
+   Ausweg und bleibt sichtbar, ob es gerade an ist oder nicht. */
+.trm-shell__knopf--voll[aria-pressed='false'] {
+  color: var(--trm-gold-hell, #e8c978);
 }
 
 /* Das Vollbild ist die einzige Taste, die im aktiven Zustand leuchten soll —
@@ -4530,10 +4606,22 @@ textarea.trm-eingabe {
   font-variant-numeric: tabular-nums;
 }
 
-/* Gesamtranking ueber die fuenf Hauptgames — Dashboard-Karte und Reiter. */
+/* Gesamtranking — beste vier aus sechs Hauptgames. Dashboard-Karte,
+   oeffentliche Bestenliste und Reiter. */
 .trm-rang__name[data-anonym='1'] {
   font-style: italic;
   opacity: 0.7;
+}
+
+/* Im Gesamtranking steht unter dem Namen, welche vier Spiele gezaehlt haben.
+   Dafuer muss die Zelle zwei Zeilen duerfen — die Ellipse der einzeiligen
+   Fassung wuerde sie sonst abschneiden. */
+.trm-rang__name[data-zweizeilig='1'] {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: visible;
+  white-space: normal;
 }
 
 .trm-gr__kopf {
@@ -4596,6 +4684,138 @@ textarea.trm-eingabe {
 
 .trm-gr__preisliste li {
   padding: 3px 0;
+}
+
+/* "BESTE 4 AUS 6" — die Bedingung steht direkt unter dem Titel, damit
+   niemand erst die Erklaerung suchen muss. */
+.trm-gr__beste,
+.trm-grliste__beste {
+  margin: -4px 0 6px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  font-size: clamp(12px, 3.2vw, 13px);
+  color: var(--trm-gold);
+}
+
+/* "NOCH 2 SPIELE BIS ZUM GESAMTRANKING" — eine Zahl, kein Pflichtprogramm. */
+.trm-gr__fehlt {
+  margin: 8px 0 2px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--trm-gold-hell);
+}
+
+/* gewertet / gestrichen — welche vier zaehlen, sagt der Server. */
+.trm-gr__marke {
+  margin-left: 8px;
+  padding: 1px 6px;
+  border: 1px solid var(--trm-gold);
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--trm-gold);
+  white-space: nowrap;
+}
+
+.trm-gr__marke--aus {
+  border-color: var(--trm-linie);
+  color: var(--trm-creme);
+  opacity: 0.55;
+}
+
+.trm-gr__spiel:not([data-gr-gewertet='1']) .trm-gr__spiel-wert {
+  opacity: 0.55;
+}
+
+/* Die oeffentliche Gesamtrangliste. Drei Spalten: Platz, Spieler, Punkte.
+   Die Spielerspalte ist die einzige dehnbare — `min-width: 0` sorgt dafuer,
+   dass ein langer Instagram-Name umbricht statt die Zeile breiter zu machen. */
+.trm-grliste__kopfzeile,
+.trm-grliste__zeile {
+  display: grid;
+  grid-template-columns: 2.6em minmax(0, 1fr) auto;
+  gap: 2px 10px;
+  align-items: baseline;
+}
+
+.trm-grliste__kopfzeile {
+  margin-top: clamp(10px, 2.8vw, 14px);
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--trm-linie-stark);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--trm-creme);
+  opacity: 0.6;
+}
+
+.trm-grliste__kopfzeile > :last-child {
+  text-align: right;
+}
+
+.trm-grliste__liste {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: none;
+}
+
+.trm-grliste__zeile {
+  padding: 9px 0;
+  font-size: clamp(13px, 3.6vw, 14px);
+}
+
+.trm-grliste__zeile + .trm-grliste__zeile {
+  border-top: 1px solid var(--trm-linie);
+}
+
+.trm-grliste__platz {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.trm-grliste__spieler {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.trm-grliste__name {
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.trm-grliste__anonym {
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.trm-grliste__spiele {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--trm-creme);
+  opacity: 0.72;
+  overflow-wrap: anywhere;
+}
+
+.trm-grliste__punkte {
+  font-weight: 700;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Nur die Plaetze 1 bis 3 gewinnen — das darf man sehen. */
+.trm-grliste__zeile[data-gr-podest='1'] .trm-grliste__platz,
+.trm-grliste__zeile[data-gr-podest='1'] .trm-grliste__punkte {
+  color: var(--trm-gold);
+}
+
+.trm-grliste__zeile[data-gr-ich='1'] {
+  background: rgba(198, 160, 90, 0.1);
 }
 
 /* ------------------------------------------------------------------ */
@@ -4999,6 +5219,77 @@ textarea.trm-eingabe {
   font-variant-numeric: tabular-nums;
 }
 
+/* ------------------------------------------------------------------ */
+/* Datenverwaltung: Bereiche, in denen geloescht wird                  */
+/* ------------------------------------------------------------------ */
+
+/* Ein abgesetzter Kasten mit rotem Rand. Er umschliesst sowohl die
+   Vorschau einer einzelnen Nummer als auch den Komplettreset: was hier
+   drinsteht, veraendert Daten unwiderruflich. */
+.trm-adm__gefahr {
+  margin-top: 16px;
+  padding: 14px;
+  border: 1px solid rgba(226, 69, 58, 0.34);
+  border-radius: 12px;
+  background: rgba(58, 16, 13, 0.24);
+}
+
+/* Der Komplettreset ist auch optisch die schwerere Tuer. */
+.trm-adm__gefahr--stark {
+  border-color: rgba(226, 69, 58, 0.6);
+  background: rgba(70, 18, 14, 0.36);
+}
+
+.trm-adm__gefahr-kopf {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #ffb9b0;
+}
+
+.trm-adm__gefahr-kopf + .trm-feld,
+.trm-adm__gefahr .trm-adm__liste {
+  margin-top: 12px;
+}
+
+/* Zwei Spalten „bleibt erhalten“ und „wird geloescht“. Auf dem Telefon
+   untereinander — nebeneinander waere hier nichts mehr lesbar. */
+.trm-adm__paar[data-deckel-folgen='1'] {
+  gap: 16px;
+  margin-top: 14px;
+}
+
+@media (min-width: 620px) {
+  .trm-adm__paar[data-deckel-folgen='1'] {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Die Aufzaehlungen dort sind einzeilige Punkte mit Icon, keine
+   Datenbloecke — deshalb nebeneinander statt untereinander. */
+.trm-adm__paar[data-deckel-folgen='1'] .trm-adm__liste {
+  margin-top: 10px;
+  gap: 6px;
+}
+
+.trm-adm__paar[data-deckel-folgen='1'] .trm-adm__liste li {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 8px 10px;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.trm-adm__paar[data-deckel-folgen='1'] .trm-adm__liste svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
+}
+
 /* Der Status steht als Wort da, nicht als Farbfleck — dieselbe Regel wie
    ueberall auf der Seite. */
 .trm-adm__status {
@@ -5079,6 +5370,24 @@ textarea.trm-eingabe {
   color: var(--trm-creme-weich);
   text-transform: none;
   letter-spacing: 0.02em;
+}
+
+/* Gesamtranking-Tabelle: neun feste Spalten plus eine je Hauptgame. Sie ist
+   bewusst breit; gescrollt wird nur der Rahmen, nie die Seite. */
+.trm-adm__tabelle--stats[data-gr-tabelle='1'] {
+  min-width: 1180px;
+}
+
+/* Welche vier Ergebnisse gezaehlt haben, soll man beim Ueberfliegen sehen,
+   ohne die Spalte "Gewertet" zu lesen. */
+.trm-adm__tabelle--stats[data-gr-tabelle='1'] td[data-gr-zelle='gewertet'] {
+  color: var(--trm-gold);
+  font-weight: 700;
+}
+
+/* Noch nicht qualifiziert: steht da, tritt aber zurueck. */
+.trm-adm__tabelle--stats[data-gr-tabelle='1'] tr[data-gr-quali='0'] td {
+  opacity: 0.62;
 }
 
 .trm-adm__gewinne {

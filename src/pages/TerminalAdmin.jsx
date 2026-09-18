@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import {
   AlertTriangle,
   Check,
+  Database,
   Dices,
   Download,
   FlaskConical,
@@ -10,6 +11,7 @@ import {
   Lock,
   RefreshCw,
   Search,
+  Trash2,
   Users,
 } from 'lucide-react'
 
@@ -24,6 +26,8 @@ import {
   terminalAdminRuf,
 } from '../data/terminal-api.js'
 import {
+  GEWERTETE_GAMES,
+  HAUPTGAMES_ANZAHL,
   MEGA_LEER,
   MEGA_MEILENSTEIN,
   MEILENSTEINE,
@@ -38,6 +42,7 @@ import {
   instagramAnzeige,
   missionStand,
   spielAktiv,
+  spielKurz,
   spieleSortiert,
   terminText,
   zahl,
@@ -630,12 +635,16 @@ const MEDAILLEN_ADMIN = ['🥇', '🥈', '🥉']
 const grTitel = (key) => SPIEL_NACH_KEY[key]?.titel ?? key
 
 /**
- * Hauptgames, Testslot, Zusatzpreise und der Abschluss.
+ * Hauptgames, Testslot, Rankingpreise und der Abschluss.
  *
  * Die Liste laedt erst auf Knopfdruck: sie liest alle gueltigen Laeufe der
- * fuenf Hauptgames und muss nicht bei jedem Oeffnen der Verwaltung laufen.
+ * sechs Hauptgames und muss nicht bei jedem Oeffnen der Verwaltung laufen.
  * Abschliessen geht erst, wenn sie geladen ist — dann stehen die
  * verdaechtigen Laeufe der Spitze direkt darueber.
+ *
+ * Gerechnet wird beste vier aus sechs. Welche vier das sind, bestimmt der
+ * Server; die Verwaltung sieht nur das Ergebnis — je Zeile, welche Spiele
+ * gewertet und welche gestrichen wurden.
  */
 function GesamtrankingVerwaltung({ einstellungen, laeuft, handeln, rufen }) {
   const gr = einstellungen?.gesamtranking ?? null
@@ -645,6 +654,11 @@ function GesamtrankingVerwaltung({ einstellungen, laeuft, handeln, rufen }) {
   const [laedt, setLaedt] = useState(false)
   const [preise, setPreise] = useState({ 1: '', 2: '', 3: '' })
   const [offen, setOffen] = useState(null)
+  const [alleZeigen, setAlleZeigen] = useState(false)
+
+  /* Welche Zeilen die Tabelle zeigt. `top` sind die ersten zwanzig
+     Qualifizierten, `alle` zusaetzlich die, denen noch Spiele fehlen. */
+  const zeilen = (alleZeigen ? liste?.alle : liste?.top) ?? []
 
   const preiseText = JSON.stringify(gr?.preise ?? {})
   useEffect(() => {
@@ -665,7 +679,7 @@ function GesamtrankingVerwaltung({ einstellungen, laeuft, handeln, rufen }) {
     if (!window.confirm(`${GR_WARNUNG}\n\n${grTitel(hauptgames[i])} wird durch ${grTitel(key)} ersetzt. Das Gesamtranking wird sofort neu gerechnet.`)) return
     const neu = [...hauptgames]
     /* Ist das neue Game schon an anderer Stelle Hauptgame, tauschen beide
-       die Plaetze — es bleiben immer fuenf verschiedene. */
+       die Plaetze — es bleiben immer sechs verschiedene. */
     const j = neu.indexOf(key)
     if (j >= 0) neu[j] = neu[i]
     neu[i] = key
@@ -696,8 +710,10 @@ function GesamtrankingVerwaltung({ einstellungen, laeuft, handeln, rufen }) {
         <h2 className="trm-karte__titel">GESAMTRANKING</h2>
       </div>
       <p className="trm-karte__sub">
-        Alle 5 Hauptgames zählen; wer in allen fünf einen gültigen Run hat, steht im Ranking.
-        Testslot und Practice zählen nicht. {abgeschlossen ? `Abgeschlossen am ${terminText(gr.abgeschlossenAm) ?? '—'}.` : 'Läuft.'}
+        Beste {GEWERTETE_GAMES} aus {HAUPTGAMES_ANZAHL}: gewertet wird je Person die Summe der {GEWERTETE_GAMES} besten
+        Rangpunktzahlen, die übrigen werden gestrichen. Wer mindestens {GEWERTETE_GAMES} verschiedene Hauptgames gespielt
+        hat, ist qualifiziert. Practice und Küchen-Tinder zählen nicht.{' '}
+        {abgeschlossen ? `Abgeschlossen am ${terminText(gr.abgeschlossenAm) ?? '—'}.` : 'Läuft.'}
       </p>
 
       <p className="trm-meldung" data-gr-warnung="1">
@@ -761,7 +777,10 @@ function GesamtrankingVerwaltung({ einstellungen, laeuft, handeln, rufen }) {
             <option key={s.key} value={s.key}>{s.titel}</option>
           ))}
         </select>
-        <p className="trm-feld__hilfe">Frei änderbar, ohne Einfluss auf das Gesamtranking. Leer heißt: öffentlich nur die 5 Hauptgames.</p>
+        <p className="trm-feld__hilfe">
+          Frei änderbar, ohne Einfluss auf das Gesamtranking. Leer heißt: öffentlich nur die {HAUPTGAMES_ANZAHL}{' '}
+          Hauptgames — der Normalfall, seit VIDEKO Slam reguläres Hauptgame ist.
+        </p>
       </div>
 
       <form
@@ -769,14 +788,14 @@ function GesamtrankingVerwaltung({ einstellungen, laeuft, handeln, rufen }) {
           ereignis.preventDefault()
           handeln(
             { aktion: 'einstellungen', preisGesamt1: preise[1], preisGesamt2: preise[2], preisGesamt3: preise[3] },
-            'Zusatzpreise gespeichert.',
+            'Rankingpreise gespeichert.',
           )
         }}
       >
         {[1, 2, 3].map((p) => (
           <div className="trm-feld" key={p}>
             <label className="trm-feld__label" htmlFor={`adm-preis-gesamt-${p}`}>
-              PREIS GESAMT PLATZ {p}
+              RANKINGPREIS PLATZ {p}
             </label>
             <input
               id={`adm-preis-gesamt-${p}`}
@@ -788,7 +807,10 @@ function GesamtrankingVerwaltung({ einstellungen, laeuft, handeln, rufen }) {
             />
           </div>
         ))}
-        <p className="trm-feld__hilfe">Leer heißt: kein Preis angezeigt. Ein Preis pro Person.</p>
+        <p className="trm-feld__hilfe">
+          Die einzigen Preise aus dem Spiel: Platz 1 bis 3 des Gesamtrankings. Für einzelne Spiele gibt es keine Preise.
+          Leer heißt: kein Preis angezeigt. Ein Preis pro Person. Die Deckelziehung läuft getrennt davon.
+        </p>
         <div className="trm-adm__leiste">
           <button type="submit" className="trm-cta trm-cta--klein" disabled={laeuft}>
             <Check size={15} aria-hidden="true" />
@@ -807,7 +829,8 @@ function GesamtrankingVerwaltung({ einstellungen, laeuft, handeln, rufen }) {
       {liste && (
         <>
           <p className="trm-feld__hilfe">
-            {zahl(liste.gesamtZahl)} qualifiziert · {zahl(liste.teilnehmerZahl)} mit mindestens einem Hauptgame
+            {zahl(liste.gesamtZahl)} qualifiziert · {zahl(liste.teilnehmerZahl)} mit mindestens einem Hauptgame ·
+            Höchstwert {zahl(liste.maxPunkte ?? GEWERTETE_GAMES * 1000)}
           </p>
 
           {liste.doppelt?.length > 0 && (
@@ -821,40 +844,103 @@ function GesamtrankingVerwaltung({ einstellungen, laeuft, handeln, rufen }) {
             </div>
           )}
 
-          {liste.top.length === 0 ? (
-            <p className="trm-feld__hilfe">Noch niemand in allen 5 Hauptgames gewertet.</p>
+          {zeilen.length === 0 ? (
+            <p className="trm-feld__hilfe">
+              Noch niemand mit mindestens {GEWERTETE_GAMES} Hauptgames gewertet.
+            </p>
           ) : (
-            <div className="trm-adm__rollen">
-              <table className="trm-adm__tabelle trm-adm__tabelle--stats" data-gr-tabelle="1">
-                <thead>
-                  <tr>
-                    <th scope="col">Platz</th>
-                    <th scope="col">Instagram</th>
-                    <th scope="col">Punkte</th>
-                    {liste.hauptgames.map((g) => (
-                      <th scope="col" key={g}>{grTitel(g)}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {liste.top.map((t) => (
-                    <tr key={t.platz}>
-                      <td className="trm-adm__zahl">{t.platz}</td>
-                      <td>
-                        {t.instagram ? `@${t.instagram}` : '—'}
-                        {!t.oeffentlich && <span className="trm-adm__klein"> (nicht öffentlich)</span>}
-                      </td>
-                      <td className="trm-adm__zahl">{zahl(t.punkte)}</td>
+            <>
+              {/* Top 20 oder alles. Die lange Liste enthaelt auch die noch
+                  nicht Qualifizierten — genau die Gruppe, bei der man wissen
+                  will, woran es haengt. */}
+              <div className="trm-adm__leiste">
+                <button
+                  type="button"
+                  className={alleZeigen ? 'trm-cta trm-cta--klein trm-cta--umriss' : 'trm-cta trm-cta--klein'}
+                  onClick={() => setAlleZeigen(false)}
+                  data-gr-ansicht="top"
+                >
+                  Top {Math.min(20, liste.top.length)}
+                </button>
+                <button
+                  type="button"
+                  className={alleZeigen ? 'trm-cta trm-cta--klein' : 'trm-cta trm-cta--klein trm-cta--umriss'}
+                  onClick={() => setAlleZeigen(true)}
+                  data-gr-ansicht="alle"
+                >
+                  Alle ({zahl(liste.alle?.length ?? 0)})
+                </button>
+              </div>
+
+              <div className="trm-adm__rollen">
+                <table className="trm-adm__tabelle trm-adm__tabelle--stats" data-gr-tabelle="1">
+                  <thead>
+                    <tr>
+                      <th scope="col">Platz</th>
+                      <th scope="col">Instagram</th>
+                      <th scope="col">Punkte</th>
+                      <th scope="col">Games</th>
+                      <th scope="col">Gewertet</th>
+                      <th scope="col">Gestrichen</th>
+                      {/* Drei getrennte Spalten, absichtlich nicht vermischt:
+                          das Game-Ranking haengt allein an den Spielen. */}
+                      <th scope="col">Ranking&shy;berechtigt</th>
+                      <th scope="col">Follow selbst</th>
+                      <th scope="col">Deckel</th>
                       {liste.hauptgames.map((g) => (
-                        <td className="trm-adm__zahl" key={g}>
-                          {t.spiele[g] ? `${zahl(t.spiele[g].rangpunkte)} · #${t.spiele[g].platz} · ${zahl(t.spiele[g].score)}` : '—'}
-                        </td>
+                        <th scope="col" key={g}>{grTitel(g)}</th>
                       ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {zeilen.map((t, i) => (
+                      <tr
+                        key={`${t.platz ?? 'x'}-${t.instagram ?? i}`}
+                        data-gr-quali={t.qualifiziert ? '1' : '0'}
+                      >
+                        <td className="trm-adm__zahl">
+                          {t.platz ?? '—'}
+                          {t.platz != null && t.platz <= 3 && (
+                            <span aria-hidden="true"> {MEDAILLEN_ADMIN[t.platz - 1]}</span>
+                          )}
+                        </td>
+                        <td>
+                          {t.instagram ? `@${t.instagram}` : '—'}
+                          {!t.oeffentlich && <span className="trm-adm__klein"> (nicht öffentlich)</span>}
+                        </td>
+                        <td className="trm-adm__zahl">{zahl(t.punkte)}</td>
+                        <td className="trm-adm__zahl">
+                          {zahl(t.gespielt ?? 0)}/{HAUPTGAMES_ANZAHL}
+                          {!t.qualifiziert && (
+                            <span className="trm-adm__klein"> — noch {zahl(t.fehlt ?? 0)}</span>
+                          )}
+                        </td>
+                        <td className="trm-adm__klein">
+                          {t.gewertet?.length ? t.gewertet.map(spielKurz).join(' · ') : '—'}
+                        </td>
+                        <td className="trm-adm__klein">
+                          {t.gestrichen?.length ? t.gestrichen.map(spielKurz).join(' · ') : '—'}
+                        </td>
+                        <td>{t.rankingBerechtigt ? 'ja' : 'nein'}</td>
+                        <td>{t.folgtBestaetigt ? 'ja' : 'nein'}</td>
+                        <td>{t.deckel ? 'ja' : 'nein'}</td>
+                        {liste.hauptgames.map((g) => (
+                          <td className="trm-adm__zahl" key={g} data-gr-zelle={t.gewertet?.includes(g) ? 'gewertet' : undefined}>
+                            {t.spiele[g]
+                              ? `${zahl(t.spiele[g].rangpunkte)} · #${t.spiele[g].platz} · ${zahl(t.spiele[g].score)}`
+                              : '—'}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p className="trm-feld__hilfe">
+                Je Spiel: Rangpunkte · Platz in der Einzelliste · Rohscore. Gewertete Spalten stehen in Gold. Die
+                Spalte Deckel ist reine Anzeige und beeinflusst das Game-Ranking nicht.
+              </p>
+            </>
           )}
 
           <h3 className="trm-adm__label">Verdächtige / verworfene Runs der Top 20</h3>
@@ -1300,6 +1386,394 @@ function laufzeitText(ms) {
   const wert = Number(ms)
   if (!Number.isFinite(wert) || wert <= 0) return '—'
   return `${(wert / 1000).toFixed(1)} s`
+}
+
+/* ------------------------------------------------------------------ */
+/* Datenverwaltung — physische Deckeldaten                             */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Hier wird geloescht, und zwar nur eine Sorte Daten: alles, was an einem
+ * physischen Bierdeckel haengt. Spielstaende, Konten, Einladungen und
+ * Ranglisten bleiben stehen — das ist keine Absichtserklaerung, sondern
+ * steht so in api/_terminal-deckel.js: der Reset fasst die Score-Tabelle
+ * nicht an.
+ *
+ * DER KNOPF ENTSCHEIDET NICHTS
+ * ----------------------------
+ * Das Pflichtwort prueft der Server. Wer den Browser umgeht und den Aufruf
+ * von Hand absetzt, bekommt ohne das Wort ein 400 zurueck. Die Abfrage hier
+ * ist die zweite Huerde, nicht die einzige.
+ */
+
+const DECKEL_RESET_WORT = 'DECKEL LÖSCHEN'
+
+const DECKEL_BLEIBT = [
+  'Spieler und ihre Konten',
+  'Instagram-Namen',
+  'Einladungen und Einladungsketten',
+  'Game-Scores',
+  'Einzel-Bestenlisten und Gesamtranking',
+  'Followerzahl und Instagram-Sync',
+]
+
+const DECKEL_WEG = [
+  'physische Deckelnummern',
+  'Deckelansprüche (Erstaktivierung und weiterer Besitzanspruch)',
+  'Deckel-Wiederherstellungen',
+  'bisherige Ziehungen und Deckel-Meldungen',
+]
+
+const DECKEL_FEHLER = {
+  pause: 'Schreiben ist über TERMINAL_SCHREIBEN angehalten.',
+  zugang: 'Schlüssel nicht mehr gültig. Bitte neu anmelden.',
+  bremse: 'Zu viele Versuche. Bitte später erneut.',
+  netz: 'Keine Verbindung.',
+  felder: 'Keine gültige Deckelnummer.',
+  bestaetigung: `Der Server hat das Pflichtwort „${DECKEL_RESET_WORT}“ nicht erhalten.`,
+  server: 'Die Datenbank hat nicht geantwortet.',
+}
+
+const anspruchWort = (wert) =>
+  wert === 'erstaktivierung' ? 'Erstaktivierung' : wert === 'weiterer_besitzanspruch' ? 'weiterer Besitzanspruch' : '—'
+
+function Datenverwaltung({ rufen, standLaden }) {
+  const [stand, setStand] = useState(null)
+  const [laedt, setLaedt] = useState(false)
+  const [nummer, setNummer] = useState('')
+  const [vorschau, setVorschau] = useState(null)
+  const [wort, setWort] = useState('')
+  const [frage, setFrage] = useState(false)
+  const [bericht, setBericht] = useState(null)
+  const [meldung, setMeldung] = useState('')
+  const [fehler, setFehler] = useState('')
+  const [alleZeigen, setAlleZeigen] = useState(false)
+
+  const laden = useCallback(async () => {
+    setLaedt(true)
+    const antwort = await rufen({ aktion: 'deckel-stand' })
+    setLaedt(false)
+    if (antwort?.ok) setStand(antwort.stand)
+    else setFehler(DECKEL_FEHLER[antwort?.grund] ?? 'Der Deckelstand konnte nicht gelesen werden.')
+  }, [rufen])
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    laden()
+  }, [laden])
+
+  const belegt = stand?.belegt ?? []
+  const sichtbar = alleZeigen ? belegt : belegt.slice(0, 20)
+
+  async function vorschauHolen() {
+    setMeldung('')
+    setFehler('')
+    setVorschau(null)
+    setLaedt(true)
+    const antwort = await rufen({ aktion: 'deckel-vorschau', nummer })
+    setLaedt(false)
+    if (antwort?.ok) setVorschau(antwort.vorschau)
+    else setFehler(DECKEL_FEHLER[antwort?.grund] ?? 'Die Vorschau konnte nicht geladen werden.')
+  }
+
+  async function einzelnReset() {
+    setMeldung('')
+    setFehler('')
+    setLaedt(true)
+    const antwort = await rufen({ aktion: 'deckel-reset', nummer: vorschau.nummer })
+    setLaedt(false)
+    if (!antwort?.ok) {
+      setFehler(DECKEL_FEHLER[antwort?.grund] ?? 'Das Zurücksetzen hat nicht funktioniert.')
+      return
+    }
+    setStand(antwort.stand)
+    setVorschau(null)
+    setNummer('')
+    setMeldung(
+      `Deckel ${antwort.nummer} zurückgesetzt: ${zahl(antwort.geaendert?.teilnehmer ?? 0)} Teilnehmerzeile(n) gelöst, `
+      + `${zahl(antwort.geaendert?.wiederherstellungen ?? 0)} Wiederherstellung(en), `
+      + `${zahl(antwort.geaendert?.ziehungen ?? 0)} Ziehung(en), `
+      + `${zahl(antwort.geaendert?.meldungen ?? 0)} Meldung(en) entfernt. Scores unberührt.`,
+    )
+    await standLaden()
+  }
+
+  async function allesReset() {
+    setMeldung('')
+    setFehler('')
+    setLaedt(true)
+    const antwort = await rufen({ aktion: 'deckel-reset-alle', bestaetigung: DECKEL_RESET_WORT })
+    setLaedt(false)
+    if (!antwort?.ok) {
+      setFehler(
+        DECKEL_FEHLER[antwort?.grund] ??
+        (antwort?.schritt ? `Abgebrochen bei „${antwort.schritt}“. Erneut ausführen setzt fort.` : 'Der Reset hat nicht funktioniert.'),
+      )
+      return
+    }
+    setStand(antwort.stand)
+    setBericht(antwort)
+    setFrage(false)
+    setWort('')
+    setVorschau(null)
+    setMeldung(
+      antwort.sauber
+        ? 'Alle physischen Deckeldaten sind zurückgesetzt. Aktivierte Deckel: 0, Besitzansprüche: 0.'
+        : 'Der Reset lief durch, es stehen aber noch Deckeldaten in der Datenbank. Bitte erneut ausführen.',
+    )
+    await standLaden()
+  }
+
+  return (
+    <section className="trm-karte" id="adm-datenverwaltung">
+      <div className="trm-karte__kopf">
+        <Database size={18} aria-hidden="true" />
+        <h2 className="trm-karte__titel">DATENVERWALTUNG</h2>
+      </div>
+      <p className="trm-karte__sub">
+        Physische Deckeldaten ansehen und zurücksetzen. Spielstände und Konten bleiben dabei stehen.
+      </p>
+
+      {meldung && <p className="trm-meldung" role="status">{meldung}</p>}
+      {fehler && <p className="trm-meldung trm-meldung--fehler" role="alert">{fehler}</p>}
+
+      <h3 className="trm-adm__untertitel">DECKELDATEN</h3>
+      <Zeile label="Aktivierte Deckel">{zahl(stand?.aktiviert ?? 0)}</Zeile>
+      <Zeile label="Besitzansprüche gesamt" hilfe={`${zahl(stand?.erstaktivierungen ?? 0)} Erstaktivierung, ${zahl(stand?.weitereAnsprueche ?? 0)} weiterer Anspruch`}>
+        {zahl(stand?.ansprueche ?? 0)}
+      </Zeile>
+      <Zeile label="Wiederherstellungen">{zahl(stand?.wiederherstellungen ?? 0)}</Zeile>
+      <Zeile label="Bisherige Ziehungen" hilfe={`${zahl(stand?.meldungen ?? 0)} Deckel-Meldung(en)`}>
+        {zahl(stand?.ziehungen ?? 0)}
+      </Zeile>
+      <Zeile label="Bleibt stehen" hilfe="wird vom Reset nicht angefasst">
+        {zahl(stand?.scores ?? 0)} Scores · {zahl(stand?.teilnehmerGesamt ?? 0)} Spieler
+      </Zeile>
+
+      <div className="trm-adm__leiste">
+        <button type="button" className="trm-cta trm-cta--klein trm-cta--umriss" disabled={laedt} onClick={laden}>
+          <RefreshCw size={15} aria-hidden="true" /> NEU LADEN
+        </button>
+      </div>
+
+      {belegt.length > 0 && (
+        <>
+          <h3 className="trm-adm__untertitel">BELEGTE NUMMERN</h3>
+          <div className="trm-adm__rollen" data-deckel-liste="1">
+            <table className="trm-adm__tabelle">
+              <thead>
+                <tr>
+                  <th scope="col">Nr.</th>
+                  <th scope="col">Instagram</th>
+                  <th scope="col">Anspruch</th>
+                  <th scope="col">Aktiviert</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sichtbar.map((z) => (
+                  <tr key={z.id}>
+                    <td>{z.nummer}</td>
+                    <td>{instagramAnzeige(z.instagram)}</td>
+                    <td>{anspruchWort(z.anspruch)}</td>
+                    <td>{terminText(z.aktiviertAm) ?? '—'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {belegt.length > 20 && (
+            <div className="trm-adm__leiste">
+              <button
+                type="button"
+                className="trm-cta trm-cta--klein trm-cta--umriss"
+                onClick={() => setAlleZeigen((a) => !a)}
+              >
+                {alleZeigen ? 'Nur die ersten 20' : `Alle ${zahl(belegt.length)} zeigen`}
+              </button>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* ---- A) einzelnen Deckel zuruecksetzen ---- */}
+      <h3 className="trm-adm__untertitel">EINZELNEN DECKEL ZURÜCKSETZEN</h3>
+      <div className="trm-feld">
+        <label className="trm-feld__label" htmlFor="adm-deckel-nummer">Deckelnummer</label>
+        <input
+          id="adm-deckel-nummer"
+          className="trm-eingabe"
+          type="text"
+          inputMode="numeric"
+          autoComplete="off"
+          value={nummer}
+          disabled={laedt}
+          onChange={(ereignis) => {
+            setNummer(ereignis.target.value)
+            setVorschau(null)
+          }}
+        />
+        <p className="trm-feld__hilfe">
+          Erst ansehen, was an der Nummer hängt — zurückgesetzt wird erst im zweiten Schritt.
+        </p>
+      </div>
+      <div className="trm-adm__leiste">
+        <button
+          type="button"
+          className="trm-cta trm-cta--klein"
+          disabled={laedt || !nummer.trim()}
+          onClick={vorschauHolen}
+        >
+          <Search size={15} aria-hidden="true" /> VORSCHAU
+        </button>
+      </div>
+
+      {vorschau && (
+        <div className="trm-adm__gefahr" data-deckel-vorschau={vorschau.nummer}>
+          <p className="trm-adm__gefahr-kopf">
+            <Hash size={15} aria-hidden="true" /> Deckel {vorschau.nummer}
+          </p>
+          {vorschau.gefunden === 0 ? (
+            <p className="trm-feld__hilfe">
+              Diese Nummer ist keinem Teilnehmer zugeordnet.
+              {vorschau.ziehungen > 0 || vorschau.meldungen > 0
+                ? ` Es hängen aber noch ${zahl(vorschau.ziehungen)} Ziehung(en) und ${zahl(vorschau.meldungen)} Meldung(en) daran.`
+                : ' Es gibt nichts zurückzusetzen.'}
+            </p>
+          ) : (
+            <ul className="trm-adm__liste">
+              {vorschau.teilnehmer.map((t) => (
+                <li key={t.id}>
+                  <strong>{instagramAnzeige(t.instagram)}</strong> — {anspruchWort(t.anspruch)}, Status {t.status ?? '—'}
+                  {t.aktiviertAm ? `, aktiviert ${terminText(t.aktiviertAm)}` : ''}
+                  {t.eingeladen ? ', eingeladen' : ''}
+                  {t.folgtBestaetigt ? ', Follow bestätigt' : ''}
+                </li>
+              ))}
+            </ul>
+          )}
+          <p className="trm-feld__hilfe">
+            Wird entfernt: Deckelnummer, Anspruch, {zahl(vorschau.wiederherstellungen)} Wiederherstellung(en),{' '}
+            {zahl(vorschau.ziehungen)} Ziehung(en), {zahl(vorschau.meldungen)} Meldung(en). Bleibt erhalten:
+            der Spieler selbst mit {zahl(vorschau.scores)} Score(s), Instagram-Name und Einladungen.
+          </p>
+          <div className="trm-adm__leiste">
+            <button
+              type="button"
+              className="trm-cta trm-cta--klein trm-cta--gefahr"
+              disabled={laedt || (vorschau.gefunden === 0 && vorschau.ziehungen === 0 && vorschau.meldungen === 0)}
+              onClick={einzelnReset}
+            >
+              <Trash2 size={15} aria-hidden="true" /> DECKEL ZURÜCKSETZEN
+            </button>
+            <button
+              type="button"
+              className="trm-cta trm-cta--klein trm-cta--umriss"
+              disabled={laedt}
+              onClick={() => setVorschau(null)}
+            >
+              Abbrechen
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ---- B) alles zuruecksetzen ---- */}
+      <h3 className="trm-adm__untertitel">ALLE DECKELDATEN ZURÜCKSETZEN</h3>
+      <div className="trm-adm__paar" data-deckel-folgen="1">
+        <div>
+          <p className="trm-adm__label">Bleibt erhalten:</p>
+          <ul className="trm-adm__liste">
+            {DECKEL_BLEIBT.map((t) => <li key={t}><Check size={14} aria-hidden="true" /> {t}</li>)}
+          </ul>
+        </div>
+        <div>
+          <p className="trm-adm__label">Wird gelöscht/zurückgesetzt:</p>
+          <ul className="trm-adm__liste">
+            {DECKEL_WEG.map((t) => <li key={t}><Trash2 size={14} aria-hidden="true" /> {t}</li>)}
+          </ul>
+        </div>
+      </div>
+
+      <div className="trm-adm__gefahr trm-adm__gefahr--stark">
+        <p className="trm-adm__gefahr-kopf">
+          <AlertTriangle size={16} aria-hidden="true" /> Diese Aktion lässt sich nicht rückgängig machen.
+        </p>
+        <div className="trm-feld">
+          <label className="trm-feld__label" htmlFor="adm-deckel-wort">
+            Zum Freischalten „{DECKEL_RESET_WORT}“ eintippen
+          </label>
+          <input
+            id="adm-deckel-wort"
+            className="trm-eingabe"
+            type="text"
+            autoComplete="off"
+            spellCheck="false"
+            value={wort}
+            disabled={laedt}
+            onChange={(ereignis) => {
+              setWort(ereignis.target.value)
+              setFrage(false)
+            }}
+          />
+        </div>
+
+        {!frage ? (
+          <div className="trm-adm__leiste">
+            <button
+              type="button"
+              className="trm-cta trm-cta--gefahr"
+              disabled={laedt || wort.trim() !== DECKEL_RESET_WORT}
+              onClick={() => setFrage(true)}
+              data-deckel-reset-alle="1"
+            >
+              <Trash2 size={16} aria-hidden="true" /> ALLE DECKELDATEN ZURÜCKSETZEN
+            </button>
+          </div>
+        ) : (
+          <div role="alertdialog" aria-label="Alle Deckeldaten zurücksetzen">
+            <p className="trm-adm__gefahr-kopf">Wirklich alle physischen Deckeldaten löschen?</p>
+            <div className="trm-adm__leiste">
+              <button
+                type="button"
+                className="trm-cta trm-cta--gefahr"
+                disabled={laedt}
+                onClick={allesReset}
+                data-deckel-reset-ja="1"
+              >
+                <Trash2 size={16} aria-hidden="true" /> JA, ALLES LÖSCHEN
+              </button>
+              <button
+                type="button"
+                className="trm-cta trm-cta--klein trm-cta--umriss"
+                disabled={laedt}
+                onClick={() => setFrage(false)}
+              >
+                Abbrechen
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {bericht && (
+        <>
+          <h3 className="trm-adm__untertitel">LETZTER RESET</h3>
+          <Zeile label="Vorher" hilfe="aktivierte Deckel · Ansprüche">
+            {zahl(bericht.vorher?.aktiviert ?? 0)} · {zahl(bericht.vorher?.ansprueche ?? 0)}
+          </Zeile>
+          <Zeile label="Nachher" hilfe="aktivierte Deckel · Ansprüche">
+            {zahl(bericht.stand?.aktiviert ?? 0)} · {zahl(bericht.stand?.ansprueche ?? 0)}
+          </Zeile>
+          <Zeile label="Geändert">
+            {zahl(bericht.geaendert?.teilnehmer ?? 0)} Teilnehmer, {zahl(bericht.geaendert?.reste ?? 0)} Restfelder,{' '}
+            {zahl(bericht.geaendert?.wiederherstellungen ?? 0)} Wiederherstellungen,{' '}
+            {zahl(bericht.geaendert?.ziehungen ?? 0)} Ziehungen, {zahl(bericht.geaendert?.meldungen ?? 0)} Meldungen
+          </Zeile>
+          <Zeile label="Scores unberührt">{zahl(bericht.stand?.scores ?? 0)}</Zeile>
+        </>
+      )}
+    </section>
+  )
 }
 
 /* ------------------------------------------------------------------ */
@@ -2165,6 +2639,9 @@ export default function TerminalAdmin() {
             </div>
           )}
         </section>
+
+        {/* ---------------- Datenverwaltung ---------------- */}
+        <Datenverwaltung rufen={rufen} standLaden={standLaden} />
 
         {/* ---------------- Testlabor ---------------- */}
         <section className="trm-karte">

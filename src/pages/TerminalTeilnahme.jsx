@@ -4,6 +4,7 @@ import { AlertTriangle } from 'lucide-react'
 import Seo from '../components/Seo.jsx'
 import TerminalRahmen, { Raute } from '../components/TerminalRahmen.jsx'
 import {
+  GEWERTETE_GAMES,
   HAUPTGAMES_ANZAHL,
   RANGPUNKTE_MAX,
   SPIELE_LISTE,
@@ -42,8 +43,11 @@ import { GEWINNE } from '../data/terminal-gewinne.js'
  * keine Preise" — das war schon damals nicht der Code, und heute ist es
  * schlicht falsch. Sauber getrennt sind es drei:
  *
- *   1. Ranglisten je Game und das Gesamtranking. Bedingung ist Instagram,
- *      nicht der Deckel (`rankingBerechtigt` in api/_terminal-kern.js).
+ *   1. Das Gesamtranking — beste vier aus sechs. Bedingung ist Instagram,
+ *      nicht der Deckel (`rankingBerechtigt` in api/_terminal-kern.js). Nur
+ *      hier entsteht ein Anspruch auf einen Spielpreis, und nur fuer die
+ *      Plaetze 1 bis 3. Die Einzel-Bestenlisten sind Vergleich und
+ *      Rechengrundlage — aus ihnen folgt kein eigener Gewinn.
  *   2. Die Deckelziehung. Bedingung ist ein aktivierter physischer Deckel
  *      (`ziehungBerechtigt`, `NUR_OFFIZIELLE`).
  *   3. Das anonyme Probespiel. Kein Konto, kein Score, keine Liste.
@@ -76,7 +80,7 @@ const ABSCHNITTE = [
       `Im Umlauf sind ${GESAMT} nummerierte Bierdeckel. Jeder trägt eine handschriftliche Nummer von 1 bis ${GESAMT}; jede Nummer gibt es genau einmal.`,
       'Auf dem Deckel steht ein Rätsel. Seine Lösung ist der Tresor-Code und auf allen Deckeln dieselbe.',
       'Der Code allein gewinnt nichts. Er öffnet nur die Eingabe, mit der ein Deckel aktiviert wird.',
-      'Es gibt drei voneinander unabhängige Wege: die Ranglisten der einzelnen Spiele, das Gesamtranking über alle Hauptspiele und die Deckelziehung. Für die ersten beiden braucht man keinen Deckel.',
+      `Es gibt zwei voneinander unabhängige Wege zu einem Gewinn: das Gesamtranking über die besten ${GEWERTETE_GAMES} von ${HAUPTGAMES_ANZAHL} Spielen und die Deckelziehung. Für das Gesamtranking braucht man keinen Deckel.`,
       `Aus der Deckelziehung werden mehrere Nummern gezogen — ausgeschrieben sind zurzeit ${GEWINN_ZAHL} Gewinne. Es gibt also mehrere Gewinner.`,
       'Die Teilnahme ist in allen drei Fällen kostenlos. Ein Kauf ist nicht erforderlich.',
     ],
@@ -86,7 +90,7 @@ const ABSCHNITTE = [
     punkte: [
       `Wer in den Ranglisten stehen will, legt im Tresor ein Konto an: Instagram-Name und E-Mail-Adresse angeben und selbst bestätigen, dass man @${TERMINAL_KAMPAGNE.instagramHandle} folgt.`,
       'Ein Deckel ist dafür nicht nötig. Wer ohne Deckel dabei ist, spielt dieselben Spiele, steht in denselben Ranglisten und kann dieselben Spiel-Gewinne bekommen.',
-      'Jedes Spiel hat seine eigene Bestenliste. Gewertet wird je Person der beste gültige Lauf.',
+      'Jedes Spiel hat seine eigene Bestenliste. Gewertet wird je Person der beste gültige Lauf. Einzel-Bestenlisten dienen der Wertung und dem Vergleich; daraus entsteht kein eigener Gewinnanspruch.',
       'Punktzahlen werden auf unserem Server gespeichert, damit Bestwerte und Ranglisten über Gerätewechsel hinweg erhalten bleiben. Jeder Lauf wird serverseitig auf Plausibilität geprüft; offensichtlich manipulierte Läufe werden nicht gewertet.',
       'Einzelne Spiele können zeitweise ausgeblendet werden; bereits erreichte Punktzahlen bleiben gespeichert.',
       'Der Instagram-Name erscheint nur dann in der öffentlichen Rangliste, wenn man ausdrücklich zugestimmt hat — beim Aktivieren oder später im Dashboard unter „Öffentliches Leaderboard“. Diese Zustimmung ist freiwillig und keine Bedingung für die Teilnahme.',
@@ -95,15 +99,18 @@ const ABSCHNITTE = [
     ],
   },
   {
-    titel: 'Gesamtranking',
+    titel: `Gesamtranking — beste ${GEWERTETE_GAMES} aus ${HAUPTGAMES_ANZAHL}`,
     punkte: [
-      `In das Gesamtranking zählen die ${HAUPTGAMES_ANZAHL} Hauptspiele. In der Standardaufstellung sind das: ${HAUPTSPIEL_NAMEN}.`,
+      'Für das Gesamtranking zählen deine besten vier Ergebnisse aus sechs Spielen.',
+      'Du musst mindestens vier verschiedene Spiele gespielt haben.',
+      `Die ${HAUPTGAMES_ANZAHL} Hauptspiele sind in der Standardaufstellung: ${HAUPTSPIEL_NAMEN}.`,
       'Je Person und Hauptspiel zählt nur der beste gültige Lauf.',
       `Für jedes Hauptspiel wird aus dem Platz in dessen Bestenliste eine Rangpunktzahl gebildet: Platz 1 bekommt ${zahl(RANGPUNKTE_MAX)} Punkte, der letzte gewertete Platz 0, dazwischen wird gleichmäßig verteilt. Gleichstand teilt sich den besseren Platz.`,
-      `Die Gesamtpunkte sind die Summe dieser Rangpunkte — höchstens ${zahl(HAUPTGAMES_ANZAHL * RANGPUNKTE_MAX)}. Gerechnet wird mit Rängen statt mit Rohpunkten, weil die Spiele völlig verschiedene Punktskalen haben.`,
-      `Gewertet wird nur, wer in allen ${HAUPTGAMES_ANZAHL} Hauptspielen einen gültigen Lauf hat. Bei gleichen Gesamtpunkten entscheidet, wer den Stand früher erreicht hat.`,
+      `Von diesen Rangpunktzahlen werden nur die besten ${GEWERTETE_GAMES} gewertet; die übrigen werden gestrichen. Die Gesamtpunkte sind die Summe dieser ${GEWERTETE_GAMES} — höchstens ${zahl(GEWERTETE_GAMES * RANGPUNKTE_MAX)}. Gerechnet wird mit Rängen statt mit Rohpunkten, weil die Spiele völlig verschiedene Punktskalen haben.`,
+      `Wer mehr als ${GEWERTETE_GAMES} Hauptspiele spielt, verschlechtert sich dadurch nie: ein besseres Ergebnis ersetzt ein schwächeres, ein schwächeres wird gestrichen.`,
+      `Welche ${GEWERTETE_GAMES} Ergebnisse gewertet werden, bestimmt der Server, nicht das Gerät. Bei gleichen Gesamtpunkten entscheidet, wer den Stand früher erreicht hat.`,
       'Die Verwaltung kann die Aufstellung der Hauptspiele ändern; maßgeblich ist die Aufstellung, die im Terminal angezeigt wird. Änderungen werden protokolliert.',
-      'Ein Spiel, das nur als Testplatz eingeblendet ist — derzeit betrifft das VIDEKO SLAM — zählt nicht ins Gesamtranking, solange es nicht ausdrücklich als Hauptspiel eingetragen ist.',
+      'Küchen-Tinder ist kein Hauptspiel und zählt in keiner Wertung mit.',
       'Die Verwaltung kann das Gesamtranking abschließen. Ab diesem Zeitpunkt gilt der eingefrorene Stand; spätere Läufe ändern daran nichts.',
     ],
   },
@@ -140,8 +147,9 @@ const ABSCHNITTE = [
     titel: 'Gewinne',
     punkte: [
       `In der Deckelziehung sind zurzeit ${GEWINN_ZAHL} Gewinne ausgeschrieben: ${GEWINN_NAMEN}. Maßgeblich ist die Ausschreibung auf der Aktionsseite.`,
-      'Für das Gesamtranking sind eigene Gewinne für die Plätze 1 bis 3 vorgesehen. Sie werden von VIDEKO ausgeschrieben und im Terminal angezeigt.',
-      'Ob und welche Gewinne es zusätzlich für die Bestenliste eines einzelnen Spiels gibt, richtet sich ebenfalls nach der Ausschreibung. Ein offizieller Score kann dafür zählen.',
+      'Die drei besten Spieler des Gesamtrankings gewinnen die ausgeschriebenen Rankingpreise.',
+      'Einzel-Bestenlisten dienen der Wertung und dem Vergleich; daraus entsteht kein eigener Gewinnanspruch.',
+      'Die Rankingpreise für die Plätze 1 bis 3 werden von VIDEKO ausgeschrieben und im Terminal angezeigt. Ohne Ausschreibung wird nichts zugesagt.',
       'Ein gespieltes Spiel ist keine Gewinngarantie. Aus einem guten Score entsteht ein Platz in einer Liste — und aus dem Platz ein Anspruch nur dann, wenn ein Gewinn dafür ausgeschrieben ist.',
       'Spiel-Gewinne und Deckelziehung sind getrennt. Ein guter Score hilft in der Deckelziehung nicht, und ein Deckel hilft in den Ranglisten nicht.',
       'Gewinne werden nicht in bar ausgezahlt. Einzelheiten zu Übertragbarkeit, Rechtsweg und steuerlicher Behandlung fehlen in diesem Entwurf noch (siehe Hinweis oben).',
@@ -155,7 +163,7 @@ const ABSCHNITTE = [
       'Ohne den physischen Originaldeckel wird kein Gewinn ausgegeben. Eine Nummer allein genügt nicht.',
       'Gibt es mehrere Besitzansprüche auf eine gezogene Nummer, wird keiner automatisch zugeordnet. Gewinnen kann nur, wer den Originaldeckel vorlegt.',
       `Meldet sich niemand innerhalb der ${TERMINAL_KAMPAGNE.meldefristStunden} Stunden, darf für diesen Gewinn neu gezogen werden.`,
-      'Gewinne aus den Ranglisten und aus dem Gesamtranking werden nicht gezogen, sondern nach dem Stand der jeweiligen Liste vergeben. Auch hier wird vor der Ausgabe von Hand geprüft.',
+      'Die Rankingpreise werden nicht gezogen, sondern nach dem Stand des Gesamtrankings an die Plätze 1 bis 3 vergeben. Auch hier wird vor der Ausgabe von Hand geprüft.',
     ],
   },
   {

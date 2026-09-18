@@ -1,4 +1,4 @@
-import { HAUPTGAMES_ANZAHL, RANGPUNKTE_MAX } from '../src/data/terminal.js'
+import { GEWERTETE_GAMES, HAUPTGAMES_ANZAHL, RANGPUNKTE_MAX } from '../src/data/terminal.js'
 import {
   KAMPAGNE,
   RANG_LAENGE,
@@ -22,11 +22,12 @@ import {
 } from './_terminal-kern.js'
 
 /**
- * Das Gesamtranking ueber die fuenf Hauptgames.
+ * Das Gesamtranking: die besten VIER Ergebnisse aus SECHS Hauptgames.
  *
  * Eine Wertung fuer die ganze Aktion — keine Wochen, kein Reset. Gerechnet
  * wird ausschliesslich hier im Server und ausschliesslich aus der bestehenden
  * Score-Tabelle (status = 'gueltig'). Es gibt keine zweite Score-Datenbank.
+ * Der Client bekommt das Ergebnis; er bestimmt nie, welche vier Spiele zaehlen.
  *
  * DIE FORMEL
  * ----------
@@ -37,14 +38,22 @@ import {
  * 3. Rangpunkte = round(1000 × (N − Platz) ÷ (N − 1)).
  *    Platz 1 bekommt 1000, der letzte Platz 0. Ist N = 1, bekommt die eine
  *    Person 1000.
- * 4. Gesamtpunkte = Summe der Rangpunkte der fuenf Hauptgames, hoechstens 5000.
- * 5. In der Wertung steht nur, wer in ALLEN fuenf Hauptgames einen gueltigen
- *    Lauf hat. Bei gleichen Gesamtpunkten gewinnt, wer den Stand frueher
- *    erreicht hat: massgeblich ist der spaeteste der fuenf Bestlaeufe.
+ * 4. Von den hoechstens sechs Rangpunkt-Ergebnissen einer Person zaehlen nur
+ *    die BESTEN VIER; die uebrigen werden gestrichen. Gesamtpunkte = Summe
+ *    dieser vier, hoechstens 4000.
+ * 5. In der Wertung steht, wer mindestens VIER verschiedene Hauptgames mit
+ *    einem gueltigen Lauf gespielt hat — welche vier, ist egal. Bei gleichen
+ *    Gesamtpunkten gewinnt, wer den Stand frueher erreicht hat: massgeblich
+ *    ist der spaeteste der vier GEWERTETEN Bestlaeufe.
  *
  * Warum Raenge statt Rohpunkte: die Games haben voellig verschiedene Skalen
  * (Kuechen-Tinder schafft 10.000, Leitungsfinder 450.000). Rohpunkte zu
  * addieren hiesse, ein einziges Game entscheiden zu lassen.
+ *
+ * Warum vier aus sechs: sechs Pflichtspiele sind an einem Stadtfestabend zu
+ * viel. Vier aus sechs laesst zwei Fehlgriffe zu und belohnt trotzdem, wer
+ * mehr spielt — jedes weitere Game kann ein schwaches ersetzen, nie
+ * verschlechtern.
  *
  * ABSCHLUSS
  * ---------
@@ -64,6 +73,9 @@ export const HAUPTGAME_BESTAETIGUNG = 'HAUPTGAME WIRKLICH ÄNDERN'
 /** So viele Zeilen je Abfrage und hoechstens so viele Seiten je Game. */
 const SEITE = 1000
 const MAX_SEITEN = 50
+
+/** So viele Personen zeigt die Verwaltung hoechstens — Top 20 plus Umfeld. */
+const ADMIN_LAENGE = 200
 
 /** Rangpunkte fuer einen Platz unter N Personen. Siehe Formel oben. */
 export function rangpunkte(platz, n) {
@@ -102,6 +114,40 @@ async function laeufeAlleLesen(game) {
 }
 
 /**
+ * Die besten vier Ergebnisse einer Person auswaehlen.
+ *
+ * `spiele` ist `{ game: { rangpunkte, wann? } }`. Heraus kommen die Summe der
+ * besten vier, die Keys der gewerteten und der gestrichenen Spiele sowie der
+ * spaeteste Zeitpunkt UNTER DEN GEWERTETEN — nur der entscheidet den
+ * Gleichstand, denn ein gestrichener Lauf zaehlt nirgends.
+ *
+ * Bei gleichen Rangpunkten kommt das frueher erreichte Ergebnis zuerst in die
+ * Wertung; der Spielname entscheidet zuletzt. Das ist reine Bestimmtheit: die
+ * Summe ist in dem Fall ohnehin dieselbe.
+ */
+export function besteViere(spiele) {
+  const sortiert = Object.entries(spiele ?? {}).sort(
+    (a, b) =>
+      (b[1].rangpunkte ?? 0) - (a[1].rangpunkte ?? 0)
+      || String(a[1].wann ?? '').localeCompare(String(b[1].wann ?? ''))
+      || a[0].localeCompare(b[0]),
+  )
+  const gewertet = sortiert.slice(0, GEWERTETE_GAMES)
+  let gesamt = 0
+  let wann = null
+  for (const [, w] of gewertet) {
+    gesamt += w.rangpunkte ?? 0
+    if (w.wann != null && (wann == null || String(w.wann) > String(wann))) wann = w.wann
+  }
+  return {
+    gesamt,
+    wann,
+    gewertet: gewertet.map(([k]) => k),
+    gestrichen: sortiert.slice(GEWERTETE_GAMES).map(([k]) => k),
+  }
+}
+
+/**
  * Der Kern der Rechnung, ohne Datenbank.
  *
  * `bestJeSpiel` ist `{ game: Map(id -> { punkte, wann }) }`. Heraus kommen die
@@ -125,19 +171,34 @@ export function gesamtrankingRechnen(hauptgames, bestJeSpiel) {
       if (i === 0 || e.punkte < sortiert[i - 1].punkte) platz = i + 1
       let person = personen.get(e.id)
       if (!person) {
-        person = { id: e.id, gesamt: 0, wann: null, gespielt: 0, qualifiziert: false, spiele: {} }
+        person = {
+          id: e.id,
+          gesamt: 0,
+          wann: null,
+          gespielt: 0,
+          qualifiziert: false,
+          spiele: {},
+          gewertet: [],
+          gestrichen: [],
+        }
         personen.set(e.id, person)
       }
-      const rp = rangpunkte(platz, n)
-      person.spiele[game] = { score: e.punkte, platz, rangpunkte: rp }
-      person.gesamt += rp
+      person.spiele[game] = { score: e.punkte, platz, rangpunkte: rangpunkte(platz, n), wann: e.wann }
       person.gespielt += 1
-      if (person.wann == null || String(e.wann) > String(person.wann)) person.wann = e.wann
     })
   }
 
+  /* Erst wenn ALLE Games durch sind, steht fest, welche vier die besten sind.
+     Deshalb wird die Summe nicht in der Schleife aufaddiert. */
   const teilnehmer = [...personen.values()]
-  for (const t of teilnehmer) t.qualifiziert = t.gespielt === hauptgames.length
+  for (const t of teilnehmer) {
+    const auswahl = besteViere(t.spiele)
+    t.gesamt = auswahl.gesamt
+    t.wann = auswahl.wann
+    t.gewertet = auswahl.gewertet
+    t.gestrichen = auswahl.gestrichen
+    t.qualifiziert = t.gespielt >= GEWERTETE_GAMES
+  }
   teilnehmer.sort((a, b) => {
     if (a.qualifiziert !== b.qualifiziert) return a.qualifiziert ? -1 : 1
     return (b.gesamt - a.gesamt) || String(a.wann).localeCompare(String(b.wann)) || String(a.id).localeCompare(String(b.id))
@@ -231,6 +292,8 @@ function lueckeNachOben(liste, index, punkte) {
 function eigenesAusSpielen(d, spiele, basis) {
   const fehlende = d.hauptgames.filter((g) => spiele[g] == null)
   const gespielt = d.hauptgames.length - fehlende.length
+  const auswahl = besteViere(spiele)
+  const gewertet = new Set(auswahl.gewertet)
   return {
     spiele: d.hauptgames.map((g) => ({
       key: g,
@@ -238,12 +301,18 @@ function eigenesAusSpielen(d, spiele, basis) {
       platz: spiele[g]?.platz ?? null,
       von: spiele[g]?.von ?? d.anzahl[g] ?? 0,
       rangpunkte: spiele[g]?.rangpunkte ?? 0,
+      /* Welche vier zaehlen, entscheidet der Server. Der Client zeigt es nur an. */
+      gewertet: gewertet.has(g),
     })),
     gespielt,
-    noetig: d.hauptgames.length,
-    qualifiziert: fehlende.length === 0,
+    /* `noetig` ist die Huerde (vier), nicht die Zahl der Spiele (sechs). */
+    noetig: GEWERTETE_GAMES,
+    fehlt: Math.max(0, GEWERTETE_GAMES - gespielt),
+    qualifiziert: gespielt >= GEWERTETE_GAMES,
+    gewertet: auswahl.gewertet,
+    gestrichen: auswahl.gestrichen,
     fehlende,
-    max: d.hauptgames.length * RANGPUNKTE_MAX,
+    max: GEWERTETE_GAMES * RANGPUNKTE_MAX,
     abgeschlossen: d.abgeschlossen,
     ...basis,
   }
@@ -274,7 +343,6 @@ export function eigenesBerechnen(d, id) {
  */
 export function eigenesVirtuell(d, beste) {
   const spiele = {}
-  let summe = 0
   for (const g of d.hauptgames) {
     if (beste?.[g] == null) continue
     const wert = Number(beste[g])
@@ -282,12 +350,11 @@ export function eigenesVirtuell(d, beste) {
     const besser = d.teilnehmer.filter((t) => (t.spiele?.[g]?.score ?? -1) > wert).length
     const platz = besser + 1
     const von = (d.anzahl[g] ?? 0) + 1
-    const rp = rangpunkte(platz, von)
-    spiele[g] = { score: wert, platz, von, rangpunkte: rp }
-    summe += rp
+    spiele[g] = { score: wert, platz, von, rangpunkte: rangpunkte(platz, von) }
   }
+  const summe = besteViere(spiele).gesamt
   const quali = qualifizierte(d)
-  const qualifiziert = Object.keys(spiele).length === d.hauptgames.length
+  const qualifiziert = Object.keys(spiele).length >= GEWERTETE_GAMES
   /* Bei Gleichstand steht die virtuelle Person hinten — sie hat den Stand
      "gerade eben" erreicht. */
   const index = qualifiziert ? quali.filter((t) => t.gesamt >= summe).length : -1
@@ -330,10 +397,15 @@ export async function gesamtranking(eigeneId = null, virtuell = null) {
       platz: i + 1,
       instagram: namen.get(t.id) ?? null,
       punkte: t.gesamt,
+      /* Welche vier gewertet wurden — Spielnamen, sonst nichts. Keine Scores,
+         keine Plaetze anderer Leute, keine Kennung. */
+      gewertet: Array.isArray(t.gewertet) ? t.gewertet : [],
       ich: eigeneId ? t.id === eigeneId : false,
     })),
     gesamtZahl: quali.length,
     spiele: d.hauptgames,
+    gewerteteGames: GEWERTETE_GAMES,
+    maxPunkte: GEWERTETE_GAMES * RANGPUNKTE_MAX,
     preise: d.einstellungen.preise,
     abgeschlossen: d.abgeschlossen,
     abgeschlossenAm: d.einstellungen.abgeschlossenAm,
@@ -343,6 +415,22 @@ export async function gesamtranking(eigeneId = null, virtuell = null) {
     gelistet: Boolean(eigen?.qualifiziert && einwilligung && !virtuell),
     eigen: eigen ? { ...eigen, oeffentlich: einwilligung && !virtuell, probe: Boolean(virtuell) } : null,
   }
+}
+
+/**
+ * Der Tresorkoenig: die Spitze des Gesamtrankings.
+ *
+ * Bewusst oeffentlich und ohne Beleg — er steht in jeder Zustandsantwort, auch
+ * bevor jemand aktiviert hat. Oeffentlich ist daran nur, was die Person dafuer
+ * freigegeben hat: Instagram-Name und Punktzahl. Wer nicht zugestimmt hat,
+ * steht ohne Namen in der Liste; wer nicht qualifiziert ist, gar nicht.
+ *
+ * Die alte Summe aus Truhenknacker und Goldrausch (`tresorkoenig()` im Kern)
+ * bleibt unveraendert bestehen, wird hier aber nicht mehr gelesen.
+ */
+export async function tresorkoenigGesamt() {
+  const { eintraege } = await gesamtranking(null)
+  return eintraege[0] ?? null
 }
 
 /* ------------------------------------------------------------------ */
@@ -445,7 +533,10 @@ export async function gesamtrankingAdmin() {
   const d = await gesamtrankingDaten()
   const quali = qualifizierte(d)
   const top = quali.slice(0, RANG_LAENGE)
-  const ids = top.map((t) => t.id).filter((id) => UUID_MUSTER.test(String(id)))
+  /* Die Verwaltung sieht auch, wer noch nicht qualifiziert ist — sonst fehlt
+     genau die Gruppe, bei der man wissen will, woran es haengt. */
+  const alleRoh = d.teilnehmer.slice(0, ADMIN_LAENGE)
+  const ids = alleRoh.map((t) => t.id).filter((id) => UUID_MUSTER.test(String(id)))
 
   let personen = []
   let laeufe = []
@@ -468,19 +559,34 @@ export async function gesamtrankingAdmin() {
   }
 
   const nachId = new Map(personen.map((p) => [p.id, p]))
-  const platzNachId = new Map(top.map((t, i) => [t.id, i + 1]))
+  const platzNachId = new Map(quali.map((t, i) => [t.id, i + 1]))
 
-  const liste = top.map((t, i) => {
+  /* Eine Zeile der Verwaltungsliste. Die drei Berechtigungen stehen
+     nebeneinander und werden nicht vermischt: das Game-Ranking haengt allein
+     an den Spielen, `deckel` ist reine Anzeige. */
+  const adminZeile = (t) => {
     const p = nachId.get(t.id)
     return {
-      platz: i + 1,
+      platz: platzNachId.get(t.id) ?? null,
       instagram: clean(p?.instagram_handle, 40) || null,
       oeffentlich: p?.leaderboard_ok === true,
       punkte: t.gesamt,
       wann: t.wann,
+      gespielt: t.gespielt,
+      qualifiziert: t.qualifiziert === true,
+      fehlt: Math.max(0, GEWERTETE_GAMES - (t.gespielt ?? 0)),
+      gewertet: Array.isArray(t.gewertet) ? t.gewertet : [],
+      gestrichen: Array.isArray(t.gestrichen) ? t.gestrichen : [],
       spiele: Object.fromEntries(d.hauptgames.map((g) => [g, t.spiele[g] ?? null])),
+      rankingBerechtigt: rankingBerechtigt(p),
+      folgtBestaetigt: p?.folgt_bestaetigt_von_nutzer === true,
+      /* Nur ob ueberhaupt einer da ist — die Nummer steht allein im Pruefblatt. */
+      deckel: p?.deckel_nummer != null,
     }
-  })
+  }
+
+  const liste = top.map(adminZeile)
+  const alle = alleRoh.map(adminZeile)
 
   const doppelt = doppelteTop3(
     top.slice(0, 3).map((t) => {
@@ -518,11 +624,14 @@ export async function gesamtrankingAdmin() {
       instagram: clean(p?.instagram_handle, 40) || null,
       oeffentlich: p?.leaderboard_ok === true,
       punkte: t.gesamt,
+      gewertet: Array.isArray(t.gewertet) ? t.gewertet : [],
+      gestrichen: Array.isArray(t.gestrichen) ? t.gestrichen : [],
       spiele: d.hauptgames.map((g) => ({
         key: g,
         score: t.spiele[g]?.score ?? null,
         platz: t.spiele[g]?.platz ?? null,
         rangpunkte: t.spiele[g]?.rangpunkte ?? null,
+        gewertet: Array.isArray(t.gewertet) ? t.gewertet.includes(g) : false,
       })),
       verdacht: verdacht
         .filter((v) => v.teilnehmerId === t.id)
@@ -558,7 +667,10 @@ export async function gesamtrankingAdmin() {
     gesamtZahl: quali.length,
     teilnehmerZahl: d.teilnehmer.length,
     anzahl: d.anzahl,
+    gewerteteGames: GEWERTETE_GAMES,
+    maxPunkte: GEWERTETE_GAMES * RANGPUNKTE_MAX,
     top: liste,
+    alle,
     /* Die interne teilnehmerId faellt heraus: die Admin-Antwort nennt nur den
        Platz und den Lauf, nie eine Kennung, ueber die sich eine Person
        zuordnen laesst. */
@@ -572,4 +684,4 @@ export async function gesamtrankingAdmin() {
   }
 }
 
-export { HAUPTGAMES_ANZAHL }
+export { GEWERTETE_GAMES, HAUPTGAMES_ANZAHL }

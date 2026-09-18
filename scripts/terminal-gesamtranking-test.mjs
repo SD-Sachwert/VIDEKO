@@ -1,5 +1,5 @@
 /**
- * Gesamtranking ueber die fuenf Hauptgames.
+ * Gesamtranking: beste vier aus sechs Hauptgames.
  *
  * Laeuft ohne Netz und ohne echte Zugangsdaten: die Umgebung bekommt
  * Platzhalter, fetch wird durch eine kleine PostgREST-Attrappe ersetzt, die
@@ -40,31 +40,55 @@ const C = '00000000-0000-4000-8000-00000000000c'
 const D = '00000000-0000-4000-8000-00000000000d'
 const E = '00000000-0000-4000-8000-00000000000e'
 
-const G = ['leitungsfinder', 'kuechen_merge', 'kuechen_crush', 'videko_jump', 'kuechen_fit']
+const G = ['leitungsfinder', 'kuechen_merge', 'kuechen_crush', 'videko_jump', 'kuechen_fit', 'videko_slam']
 
 const personen = [
   { id: A, instagram_handle: 'anna_test', leaderboard_ok: true, email: 'Anna@Test.invalid', deckel_nummer: 9001 },
   { id: B, instagram_handle: 'bert_test', leaderboard_ok: true, email: 'bert@test.invalid', deckel_nummer: 9002, anspruch_art: 'weiterer_besitzanspruch', besitz_status: 'bestaetigt' },
-  { id: C, instagram_handle: 'cora_test', leaderboard_ok: true, email: ' anna@test.invalid', deckel_nummer: 9003 },
-  { id: D, instagram_handle: 'dora_test', leaderboard_ok: true, email: 'dora@test.invalid', deckel_nummer: 9004 },
+  { id: C, instagram_handle: 'cora_test', leaderboard_ok: true, email: 'cora@test.invalid', deckel_nummer: 9003 },
+  { id: D, instagram_handle: 'dora_test', leaderboard_ok: true, email: ' anna@test.invalid', deckel_nummer: 9004 },
   { id: E, instagram_handle: 'emil_test', leaderboard_ok: false, email: 'emil@test.invalid', deckel_nummer: 9005 },
 ]
 
 /**
- * g1–g3: A 500, B 400, C 400, D 300, E 100  (N=5 → 1000/750/750/250/0)
- * g4–g5: A 500, B 400, C 400, E 100         (N=4 → 1000/667/667/0)
- * A = 5000, B = C = 3584 (B frueher), E = 0, D nur 3 Games.
+ * Sechs Hauptgames, gewertet werden die besten vier. Die Scores sind so
+ * gewaehlt, dass jeder der geforderten Faelle genau einmal vorkommt — und
+ * zwar mit eindeutigem Ergebnis, nicht per Zufall der Sortierung.
+ *
+ *   leitungsfinder  A 500  B 400  D 300  E 100          (N=4)
+ *   kuechen_merge   A 500  B 400  D 300  E 100          (N=4)
+ *   kuechen_crush   A 500  B 400  D 300                 (N=3)
+ *   videko_jump     A 500  B 400  C 400  D 300  E 100   (N=5)
+ *   kuechen_fit     D 300  A 250  C 200  E 100          (N=4)
+ *   videko_slam     C 200  A 150  E 100                 (N=3)
+ *
+ * Rangpunkte = 1000·(N−Platz)/(N−1), auf ganze Punkte gerundet:
+ *
+ *   A  1000 1000 1000 1000  667  500  sechs Spiele → beste vier = 4000 (Maximum),
+ *                                     gestrichen: kuechen_fit und videko_slam
+ *   B   667  667  500  750  —    —    vier Spiele → alle vier zaehlen = 2584
+ *   C   —    —    —    750  333 1000  drei Spiele → NICHT qualifiziert (2083 Zwischenstand)
+ *   D   333  333    0  250 1000  —    fuenf Spiele → kuechen_crush (0) faellt raus = 1916
+ *   E     0    0    0    0    0  —    fuenf Spiele, qualifiziert, 0 Punkte
+ *
+ * videko_slam ist dabei ein Hauptgame wie jedes andere. kuechen_tinder kommt
+ * ueberhaupt nicht vor und darf nirgends zaehlen.
  */
+const PLAN = {
+  leitungsfinder: [[A, 500, '03'], [A, 120, '01'], [B, 400, '01'], [D, 300, '05'], [E, 100, '04']],
+  kuechen_merge: [[A, 500, '03'], [A, 120, '01'], [B, 400, '01'], [D, 300, '05'], [E, 100, '04']],
+  kuechen_crush: [[A, 500, '03'], [A, 120, '01'], [B, 400, '01'], [D, 300, '05']],
+  videko_jump: [[A, 500, '03'], [B, 400, '01'], [C, 400, '02'], [D, 300, '05'], [E, 100, '04']],
+  kuechen_fit: [[A, 250, '03'], [C, 200, '02'], [D, 300, '05'], [E, 100, '04']],
+  videko_slam: [[A, 150, '03'], [C, 200, '02'], [E, 100, '04']],
+}
+
 function laeufeBauen() {
   const z = []
   G.forEach((g, i) => {
-    const t = (tag) => `2026-09-${tag}T10:0${i}:00.000Z`
-    z.push({ teilnehmer_id: A, game: g, score: 500, created_at: t('03') })
-    z.push({ teilnehmer_id: A, game: g, score: 120, created_at: t('01') })
-    z.push({ teilnehmer_id: B, game: g, score: 400, created_at: t('01') })
-    z.push({ teilnehmer_id: C, game: g, score: 400, created_at: t('02') })
-    z.push({ teilnehmer_id: E, game: g, score: 100, created_at: t('04') })
-    if (i < 3) z.push({ teilnehmer_id: D, game: g, score: 300, created_at: t('05') })
+    for (const [id, score, tag] of PLAN[g]) {
+      z.push({ teilnehmer_id: id, game: g, score, created_at: `2026-09-${tag}T10:0${i}:00.000Z` })
+    }
   })
   return z
 }
@@ -194,7 +218,8 @@ pruefe('rangpunkte ungueltig = 0', [gr.rangpunkte(0, 5), gr.rangpunkte(6, 5), gr
 pruefe('rangpunkte(1,2) = 1000, (2,2) = 0', gr.rangpunkte(1, 2) === 1000 && gr.rangpunkte(2, 2) === 0)
 pruefe('rangpunkte 100+: (1,100)=1000, (50,100)=505, (100,100)=0', gr.rangpunkte(1, 100) === 1000 && gr.rangpunkte(50, 100) === 505 && gr.rangpunkte(100, 100) === 0, String(gr.rangpunkte(50, 100)))
 
-/* 1b. Grenzfaelle ueber alle 5 Games */
+/* 1b. Grenzfaelle ueber alle 6 Games. Gedeckelt wird bei vier Wertungen,
+   deshalb ist das Maximum 4000 und nicht 6000. */
 {
   const uid = (i) => `00000000-0000-4000-9000-${String(i).padStart(12, '0')}`
   const rechnen = (scoreFuer, n) => {
@@ -209,18 +234,49 @@ pruefe('rangpunkte 100+: (1,100)=1000, (50,100)=505, (100,100)=0', gr.rangpunkte
   }
 
   const eins = rechnen(() => 10, 1)
-  pruefe('1 Spieler: je Game Platz 1 = 1000, gesamt 5000', eins[uid(0)].gesamt === 5000 && G.every((g) => eins[uid(0)].spiele[g].rangpunkte === 1000), String(eins[uid(0)].gesamt))
+  pruefe('1 Spieler: je Game Platz 1 = 1000, gesamt 4000 (nicht 6000)', eins[uid(0)].gesamt === 4000 && G.every((g) => eins[uid(0)].spiele[g].rangpunkte === 1000), String(eins[uid(0)].gesamt))
+  pruefe('1 Spieler: sechs gespielt, vier gewertet, zwei gestrichen', eins[uid(0)].gespielt === 6 && eins[uid(0)].gewertet.length === 4 && eins[uid(0)].gestrichen.length === 2)
 
   const zwei = rechnen((i) => 100 - i, 2)
-  pruefe('2 Spieler: 5000 und 0', zwei[uid(0)].gesamt === 5000 && zwei[uid(1)].gesamt === 0, `${zwei[uid(0)].gesamt}/${zwei[uid(1)].gesamt}`)
+  pruefe('2 Spieler: 4000 und 0', zwei[uid(0)].gesamt === 4000 && zwei[uid(1)].gesamt === 0, `${zwei[uid(0)].gesamt}/${zwei[uid(1)].gesamt}`)
 
   const gleich = rechnen(() => 77, 2)
-  pruefe('Gleichstand 2 Spieler: beide Platz 1, beide 5000', [uid(0), uid(1)].every((id) => gleich[id].gesamt === 5000 && gleich[id].spiele[G[0]].platz === 1))
+  pruefe('Gleichstand 2 Spieler: beide Platz 1, beide 4000', [uid(0), uid(1)].every((id) => gleich[id].gesamt === 4000 && gleich[id].spiele[G[0]].platz === 1))
 
   const viele = rechnen((i) => 1000 - i, 150)
   const werte = Object.values(viele)
-  pruefe('150 Spieler: alle Werte endlich und ganzzahlig', werte.length === 150 && werte.every((t) => Number.isInteger(t.gesamt) && t.gesamt >= 0 && t.gesamt <= 5000))
-  pruefe('150 Spieler: Erster 5000, Letzter 0', viele[uid(0)].gesamt === 5000 && viele[uid(149)].gesamt === 0, `${viele[uid(0)].gesamt}/${viele[uid(149)].gesamt}`)
+  pruefe('150 Spieler: alle Werte endlich, ganzzahlig, hoechstens 4000', werte.length === 150 && werte.every((t) => Number.isInteger(t.gesamt) && t.gesamt >= 0 && t.gesamt <= 4000))
+  pruefe('150 Spieler: Erster 4000, Letzter 0', viele[uid(0)].gesamt === 4000 && viele[uid(149)].gesamt === 0, `${viele[uid(0)].gesamt}/${viele[uid(149)].gesamt}`)
+}
+
+/* 1c. Gleichstand im Gesamtranking. Die bestehende Regel bleibt: gleiche
+   Punktzahl, dann entscheidet der fruehere Zeitpunkt. */
+{
+  const X = '00000000-0000-4000-9100-00000000000f'
+  const Y = '00000000-0000-4000-9100-000000000010'
+  const karte = {}
+  G.slice(0, 4).forEach((g, i) => {
+    karte[g] = kern.besteJePerson([
+      { teilnehmer_id: X, game: g, score: 300, created_at: `2026-09-02T10:0${i}:00.000Z` },
+      { teilnehmer_id: Y, game: g, score: 300, created_at: `2026-09-04T10:0${i}:00.000Z` },
+    ])
+  })
+  const { teilnehmer } = gr.gesamtrankingRechnen(G, karte)
+  const nach = Object.fromEntries(teilnehmer.map((t) => [t.id, t]))
+  pruefe('Tie: gleicher Score → gleicher Platz → gleiche Punkte', nach[X].gesamt === 4000 && nach[Y].gesamt === 4000, `${nach[X].gesamt}/${nach[Y].gesamt}`)
+  pruefe('Tie: genau 4 von 6 reicht zur Qualifikation', nach[X].gespielt === 4 && nach[X].qualifiziert === true && nach[X].gestrichen.length === 0)
+  pruefe('Tie: frueher erreicht steht vorne', teilnehmer[0].id === X && teilnehmer[1].id === Y)
+}
+
+/* 1d. kuechen_tinder ist kein Hauptgame und zaehlt nirgends mit. */
+{
+  const T = '00000000-0000-4000-9200-000000000001'
+  const karte = {}
+  for (const g of [...G.slice(0, 4), 'kuechen_tinder']) {
+    karte[g] = kern.besteJePerson([{ teilnehmer_id: T, game: g, score: 999, created_at: '2026-09-02T10:00:00.000Z' }])
+  }
+  const { anzahl, teilnehmer } = gr.gesamtrankingRechnen(G, karte)
+  pruefe('Tinder: Laeufe darin bleiben unberuecksichtigt', teilnehmer[0].gespielt === 4 && !('kuechen_tinder' in teilnehmer[0].spiele) && !('kuechen_tinder' in anzahl))
 }
 
 /* 2. Rechnen ohne Datenbank */
@@ -229,14 +285,17 @@ pruefe('rangpunkte 100+: (1,100)=1000, (50,100)=505, (100,100)=0', gr.rangpunkte
   for (const g of G) karte[g] = kern.besteJePerson(laeufe.filter((l) => l.game === g))
   const { anzahl, teilnehmer } = gr.gesamtrankingRechnen(G, karte)
   const nach = Object.fromEntries(teilnehmer.map((t) => [t.id, t]))
-  pruefe('Anzahl je Game', anzahl.leitungsfinder === 5 && anzahl.kuechen_fit === 4, JSON.stringify(anzahl))
-  pruefe('A: nur Bestlauf zaehlt, 5000', nach[A].gesamt === 5000 && nach[A].spiele.leitungsfinder.score === 500)
-  pruefe('Gleichstand teilt Platz', nach[B].spiele.leitungsfinder.platz === 2 && nach[C].spiele.leitungsfinder.platz === 2)
-  pruefe('B und C je 3584', nach[B].gesamt === 3584 && nach[C].gesamt === 3584, `${nach[B].gesamt}/${nach[C].gesamt}`)
-  pruefe('Frueher erreicht gewinnt Gleichstand', teilnehmer.findIndex((t) => t.id === B) < teilnehmer.findIndex((t) => t.id === C))
-  pruefe('D nicht qualifiziert (3/5)', nach[D].qualifiziert === false && nach[D].gespielt === 3)
-  pruefe('Qualifizierte zuerst', teilnehmer.slice(0, 4).every((t) => t.qualifiziert) && teilnehmer[4].id === D)
-  pruefe('Letzter Platz 0 Rangpunkte', nach[E].gesamt === 0)
+  pruefe('Anzahl je Game', anzahl.leitungsfinder === 4 && anzahl.kuechen_crush === 3 && anzahl.videko_jump === 5 && anzahl.videko_slam === 3, JSON.stringify(anzahl))
+  pruefe('A: sechs Spiele, nur Bestlauf zaehlt, beste vier = 4000', nach[A].gesamt === 4000 && nach[A].gespielt === 6 && nach[A].spiele.leitungsfinder.score === 500, String(nach[A].gesamt))
+  pruefe('A: die beiden schwachen Spiele fallen raus', nach[A].gestrichen.join() === 'kuechen_fit,videko_slam' && nach[A].gewertet.length === 4, nach[A].gestrichen.join())
+  pruefe('Gleichstand teilt Platz', nach[B].spiele.videko_jump.platz === 2 && nach[C].spiele.videko_jump.platz === 2)
+  pruefe('B: genau vier Spiele, alle vier zaehlen, 2584', nach[B].gesamt === 2584 && nach[B].gespielt === 4 && nach[B].gestrichen.length === 0, String(nach[B].gesamt))
+  pruefe('C nicht qualifiziert (3 von 6)', nach[C].qualifiziert === false && nach[C].gespielt === 3)
+  pruefe('D: fuenf Spiele, das schlechteste faellt raus, 1916', nach[D].gesamt === 1916 && nach[D].gespielt === 5 && nach[D].gestrichen.join() === 'kuechen_crush', `${nach[D].gesamt}/${nach[D].gestrichen.join()}`)
+  pruefe('videko_slam zaehlt wie jedes andere Game', nach[C].spiele.videko_slam.rangpunkte === 1000 && nach[A].spiele.videko_slam.platz === 2)
+  pruefe('Qualifizierte zuerst', teilnehmer.slice(0, 4).every((t) => t.qualifiziert) && teilnehmer[4].id === C)
+  pruefe('Reihenfolge A, B, D, E', teilnehmer.slice(0, 4).map((t) => t.id).join() === [A, B, D, E].join())
+  pruefe('Letzter Platz 0 Rangpunkte', nach[E].gesamt === 0 && nach[E].qualifiziert === true)
 }
 
 /* 3. Oeffentliche Liste */
@@ -245,9 +304,11 @@ rufe = []
 {
   const r = await gr.gesamtranking()
   pruefe('4 Qualifizierte', r.gesamtZahl === 4 && r.eintraege.length === 4, String(r.gesamtZahl))
-  pruefe('Reihenfolge A, B, C, anonym', r.eintraege.map((e) => e.instagram).join(',') === 'anna_test,bert_test,cora_test,')
+  pruefe('Reihenfolge A, B, D, anonym', r.eintraege.map((e) => e.instagram).join(',') === 'anna_test,bert_test,dora_test,')
   pruefe('Ohne Einwilligung: echter Platz, kein Name', r.eintraege[3].platz === 4 && r.eintraege[3].instagram === null)
-  pruefe('Punkte oeffentlich', r.eintraege[0].punkte === 5000 && r.eintraege[2].punkte === 3584)
+  pruefe('Punkte oeffentlich', r.eintraege[0].punkte === 4000 && r.eintraege[2].punkte === 1916, `${r.eintraege[0].punkte}/${r.eintraege[2].punkte}`)
+  pruefe('Liste nennt sechs Spiele, vier Wertungen, Maximum 4000', r.spiele.join() === G.join() && r.gewerteteGames === 4 && r.maxPunkte === 4000)
+  pruefe('Je Eintrag steht, welche vier gewertet wurden', r.eintraege[0].gewertet.join() === 'leitungsfinder,kuechen_merge,kuechen_crush,videko_jump' && r.eintraege.every((e) => e.gewertet.length === 4), r.eintraege[0].gewertet.join())
   pruefe('Keine E-Mail/Deckel/ids im JSON', !privat(r) && !JSON.stringify(r).includes(A))
   pruefe('Ohne eigene id kein eigen', r.eigen === null && r.eintraege.every((e) => e.ich === false))
   pruefe('Preise leer, nicht erfunden', r.preise[1] === null && r.preise[2] === null && r.preise[3] === null)
@@ -273,23 +334,29 @@ rufe = []
 /* 4. Eigener Stand */
 {
   frisch()
-  const c = await gr.gesamtranking(C)
-  pruefe('C: Platz 3, 3584', c.eigen.platz === 3 && c.eigen.punkte === 3584 && c.eintraege[2].ich === true)
-  pruefe('C: Luecke 1417 bis Platz 1', c.eigen.bisPlatz === 1 && c.eigen.luecke === 1417, `${c.eigen.bisPlatz}/${c.eigen.luecke}`)
-  pruefe('C: oeffentlich, 5 Games, max 5000', c.eigen.oeffentlich === true && c.eigen.gespielt === 5 && c.eigen.max === 5000 && c.gelistet === true)
-  pruefe('C: Spielzeile', c.eigen.spiele[3].key === 'videko_jump' && c.eigen.spiele[3].rangpunkte === 667 && c.eigen.spiele[3].von === 4)
-
   const d = await gr.gesamtranking(D)
-  pruefe('D: kein Platz, 3/5', d.eigen.platz === null && d.eigen.punkte === null && d.eigen.gespielt === 3 && d.gelistet === false)
-  pruefe('D: fehlende Games', d.eigen.fehlende.join(',') === 'videko_jump,kuechen_fit', d.eigen.fehlende.join(','))
-  pruefe('D: Zwischenstand 750', d.eigen.zwischenstand === 750)
+  pruefe('D: Platz 3, 1916', d.eigen.platz === 3 && d.eigen.punkte === 1916 && d.eintraege[2].ich === true, `${d.eigen.platz}/${d.eigen.punkte}`)
+  pruefe('D: Luecke 669 bis Platz 2', d.eigen.bisPlatz === 2 && d.eigen.luecke === 669, `${d.eigen.bisPlatz}/${d.eigen.luecke}`)
+  pruefe('D: oeffentlich, 5 von 6 Games, max 4000', d.eigen.oeffentlich === true && d.eigen.gespielt === 5 && d.eigen.max === 4000 && d.gelistet === true)
+  pruefe('D: Spielzeile', d.eigen.spiele[3].key === 'videko_jump' && d.eigen.spiele[3].rangpunkte === 250 && d.eigen.spiele[3].von === 5, JSON.stringify(d.eigen.spiele[3]))
+  pruefe('D: sechs Spielzeilen, vier davon gewertet', d.eigen.spiele.length === 6 && d.eigen.spiele.filter((s) => s.gewertet).length === 4)
+  pruefe('D: das gestrichene Spiel ist markiert', d.eigen.spiele.find((s) => s.key === 'kuechen_crush').gewertet === false && d.eigen.gestrichen.join() === 'kuechen_crush')
+  pruefe('D: nichts mehr offen', d.eigen.fehlt === 0 && d.eigen.noetig === 4 && d.eigen.qualifiziert === true)
+
+  const c = await gr.gesamtranking(C)
+  pruefe('C: kein Platz, 3 von 6', c.eigen.platz === null && c.eigen.punkte === null && c.eigen.gespielt === 3 && c.gelistet === false)
+  pruefe('C: fehlende Games', c.eigen.fehlende.join(',') === 'leitungsfinder,kuechen_merge,kuechen_crush', c.eigen.fehlende.join(','))
+  pruefe('C: noch ein Spiel bis zum Gesamtranking', c.eigen.fehlt === 1 && c.eigen.qualifiziert === false)
+  pruefe('C: Zwischenstand 2083', c.eigen.zwischenstand === 2083, String(c.eigen.zwischenstand))
+  pruefe('C: Einzelergebnisse bleiben sichtbar', c.eigen.spiele.filter((s) => s.score != null).length === 3)
 
   const e = await gr.gesamtranking(E)
   pruefe('E: Platz 4, nicht oeffentlich', e.eigen.platz === 4 && e.eigen.oeffentlich === false && e.gelistet === false)
-  pruefe('E: Luecke bis Platz 3', e.eigen.bisPlatz === 3 && e.eigen.luecke === 3585)
+  pruefe('E: Luecke bis Platz 3', e.eigen.bisPlatz === 3 && e.eigen.luecke === 1917, `${e.eigen.bisPlatz}/${e.eigen.luecke}`)
 
   const a = await gr.gesamtranking(A)
   pruefe('A: Spitze ohne Luecke', a.eigen.platz === 1 && a.eigen.bisPlatz === null && a.eigen.luecke === null)
+  pruefe('A: Maximum erreicht, sechs gespielt, vier gewertet', a.eigen.punkte === 4000 && a.eigen.punkte === a.eigen.max && a.eigen.gespielt === 6 && a.eigen.gewertet.length === 4)
 
   const x = await gr.gesamtranking('keine-uuid')
   pruefe('Ungueltige id: kein eigen', x.eigen === null)
@@ -298,17 +365,27 @@ rufe = []
 /* 5. Virtuell (Testlabor) */
 {
   frisch()
+  /* 450 liegt ueberall zwischen A und dem Rest: zweimal Platz 2 von 5,
+     einmal Platz 2 von 4, einmal Platz 2 von 6, zweimal Platz 1.
+     → 750, 750, 667, 800, 1000, 1000 → beste vier 3550. */
   const v = await gr.gesamtranking(null, Object.fromEntries(G.map((g) => [g, 450])))
-  pruefe('Virtuell: 3900, Platz 2 von 5', v.eigen.punkte === 3900 && v.eigen.platz === 2 && v.eigen.von === 5, `${v.eigen.punkte}/${v.eigen.platz}`)
-  pruefe('Virtuell: Luecke 1101', v.eigen.bisPlatz === 1 && v.eigen.luecke === 1101)
+  pruefe('Virtuell: 3550, Platz 2 von 5', v.eigen.punkte === 3550 && v.eigen.platz === 2 && v.eigen.von === 5, `${v.eigen.punkte}/${v.eigen.platz}/${v.eigen.von}`)
+  pruefe('Virtuell: Luecke 451', v.eigen.bisPlatz === 1 && v.eigen.luecke === 451, `${v.eigen.bisPlatz}/${v.eigen.luecke}`)
+  /* Gewertet werden 1000 (fit), 1000 (slam), 800 (jump) und einer der beiden
+     750er. Die Probe hat keinen Zeitpunkt, also entscheidet der Name —
+     kuechen_merge steht vor leitungsfinder. */
+  pruefe('Virtuell: die beiden schwaechsten fallen raus', v.eigen.gestrichen.join() === 'leitungsfinder,kuechen_crush', v.eigen.gestrichen.join())
   pruefe('Virtuell: probe, nicht gelistet, Liste unveraendert', v.eigen.probe === true && v.gelistet === false && v.gesamtZahl === 4)
 
   const teil = await gr.gesamtranking(null, { leitungsfinder: 450, kuechen_merge: 0, kuechen_crush: null })
-  pruefe('Virtuell: null = nicht gespielt, 0 = gespielt', teil.eigen.gespielt === 2 && teil.eigen.fehlende.join(',') === 'kuechen_crush,videko_jump,kuechen_fit')
-  pruefe('Virtuell: ohne alle 5 kein Platz', teil.eigen.platz === null)
+  pruefe('Virtuell: null = nicht gespielt, 0 = gespielt', teil.eigen.gespielt === 2 && teil.eigen.fehlende.join(',') === 'kuechen_crush,videko_jump,kuechen_fit,videko_slam', teil.eigen.fehlende.join(','))
+  pruefe('Virtuell: unter vier Spielen kein Platz', teil.eigen.platz === null && teil.eigen.fehlt === 2)
+
+  const vier = await gr.gesamtranking(null, { leitungsfinder: 450, kuechen_merge: 450, kuechen_crush: 450, videko_jump: 450 })
+  pruefe('Virtuell: genau vier Spiele reichen', vier.eigen.platz !== null && vier.eigen.punkte === 2967 && vier.eigen.gestrichen.length === 0, String(vier.eigen.punkte))
 
   const gleich = await gr.gesamtranking(null, Object.fromEntries(G.map((g) => [g, 500])))
-  pruefe('Virtuell: Gleichstand steht hinten', gleich.eigen.punkte === 5000 && gleich.eigen.platz === 2)
+  pruefe('Virtuell: Gleichstand steht hinten', gleich.eigen.punkte === 4000 && gleich.eigen.platz === 2, `${gleich.eigen.punkte}/${gleich.eigen.platz}`)
 }
 
 /* 6. Doppelt-Hinweis */
@@ -328,20 +405,29 @@ rufe = []
   const b = r.body
   pruefe('Admin gesamtranking 200', r.code === 200 && b?.ok === true, String(r.code))
   pruefe('Admin: Top mit Namen, auch ohne Einwilligung', b.top[3].instagram === 'emil_test' && b.top[3].oeffentlich === false)
-  pruefe('Admin: Werte je Game', b.top[0].spiele.kuechen_fit.rangpunkte === 1000)
+  pruefe('Admin: Werte je Game', b.top[0].spiele.kuechen_fit.rangpunkte === 667 && b.top[0].spiele.videko_slam.rangpunkte === 500, JSON.stringify(b.top[0].spiele.kuechen_fit))
+  pruefe('Admin: gewertet und gestrichen je Person', b.top[0].gewertet?.length === 4 && b.top[0].gestrichen?.join() === 'kuechen_fit,videko_slam' && b.top[2].gestrichen?.join() === 'kuechen_crush', `${b.top[0].gestrichen?.join()} | ${b.top[2].gestrichen?.join()}`)
   pruefe('Admin: Verdacht mit Platz', b.verdacht.length === 1 && b.verdacht[0].platz === 2 && b.verdacht[0].instagram === 'bert_test')
   pruefe('Admin: Doppelt-Hinweis ohne Adresse', b.doppelt.length === 1 && b.doppelt[0].plaetze.join() === '1,3' && b.doppelt[0].art === 'gleiche E-Mail')
   const { pruefung, ...ohnePruefung } = b
   pruefe('Admin: keine E-Mail/Deckel ausserhalb der Top-3-Pruefung', !privat(ohnePruefung), JSON.stringify(ohnePruefung).slice(0, 80))
   pruefe('Admin: Top-3-Pruefung ohne E-Mail', !/@test\.invalid|email/i.test(JSON.stringify(pruefung)))
-  pruefe('Admin: Top-3-Pruefung 3 Plaetze, je 5 Games', pruefung.length === 3 && pruefung.every((p) => p.spiele.length === 5 && p.spiele.every((s) => G.includes(s.key))))
+  pruefe('Admin: Top-3-Pruefung 3 Plaetze, je 6 Games', pruefung.length === 3 && pruefung.every((p) => p.spiele.length === 6 && p.spiele.every((s) => G.includes(s.key))))
+  /* Abschnitt 15: die Verwaltung sieht auch die Nicht-Qualifizierten — sonst
+     fehlt genau die Gruppe, bei der man wissen will, woran es haengt. */
+  pruefe('Admin: alle Spieler, auch die ohne vier Spiele', b.alle.length === 5 && b.alle.at(-1).qualifiziert === false && b.alle.at(-1).instagram === 'cora_test' && b.alle.at(-1).fehlt === 1, String(b.alle.length))
+  pruefe('Admin: Deckel und Ranking stehen getrennt nebeneinander', b.alle.every((z) => typeof z.deckel === 'boolean' && typeof z.rankingBerechtigt === 'boolean' && typeof z.folgtBestaetigt === 'boolean'))
+  /* Der Deckel darf das Game-Ranking nicht beeinflussen: A hat einen, C auch
+     — und trotzdem entscheidet allein die Zahl der gespielten Games. */
+  pruefe('Admin: Deckelbesitz aendert die Qualifikation nicht', b.alle.find((z) => z.instagram === 'cora_test').deckel === true && b.alle.find((z) => z.instagram === 'cora_test').qualifiziert === false)
   pruefe('Admin: Top-3 Deckel und Anspruch (nur Admin)', pruefung[0].deckel === 9001 && pruefung[1].deckel === 9002 && pruefung[1].anspruchArt === 'weiterer_besitzanspruch' && pruefung[1].besitzStatus === 'bestaetigt')
   pruefe('Admin: Top-3 verdaechtiger Run bei Platz 2', pruefung[1].verdacht.length === 1 && pruefung[1].verdacht[0].id === 'lauf-v1' && pruefung[0].verdacht.length === 0)
   pruefe('Admin: Top-3 Doppelung bei Platz 1 und 3', pruefung[0].doppelt[0]?.mitPlatz === 3 && pruefung[2].doppelt[0]?.mitPlatz === 1 && pruefung[1].doppelt.length === 0)
   pruefe('Admin: Testslot ohne Eintrag leer, kein Tinder-Fallback', b.testslot === null && b.hauptgames.join() === G.join())
 
   const leer = kern.spieleAktivSaeubern({}, { hauptgames: G, testslot: null })
-  pruefe('Sichtbarkeit: ohne Testslot nur 5 Hauptgames', G.every((g) => leer[g] === true) && Object.entries(leer).filter(([, an]) => an).length === 5, JSON.stringify(leer))
+  pruefe('Sichtbarkeit: ohne Testslot genau 6 Hauptgames', G.every((g) => leer[g] === true) && Object.entries(leer).filter(([, an]) => an).length === 6, JSON.stringify(leer))
+  pruefe('Sichtbarkeit: videko_slam ist regulaer, kuechen_tinder bleibt aus', leer.videko_slam === true && leer.kuechen_tinder !== true)
   const mitSlot = kern.spieleAktivSaeubern({}, { hauptgames: G, testslot: 'kuechen_tinder' })
   pruefe('Sichtbarkeit: konfigurierter Testslot sichtbar', mitSlot.kuechen_tinder === true)
   const aus = kern.spieleAktivSaeubern({ kuechen_fit: false }, { hauptgames: G, testslot: null })
@@ -353,13 +439,16 @@ rufe = []
   const posts = () => rufe.filter((x) => x.methode === 'POST' && x.pfad.endsWith('_einstellungen'))
 
   rufe = []
-  let r = await adminRuf({ aktion: 'einstellungen', hauptgames: G.slice(0, 4) })
-  pruefe('4 Hauptgames → felder', r.code === 400 && r.body.grund === 'felder' && posts().length === 0)
+  let r = await adminRuf({ aktion: 'einstellungen', hauptgames: G.slice(0, 5) })
+  pruefe('5 Hauptgames → felder', r.code === 400 && r.body.grund === 'felder' && posts().length === 0)
 
-  r = await adminRuf({ aktion: 'einstellungen', hauptgames: [...G.slice(0, 4), G[0]] })
+  r = await adminRuf({ aktion: 'einstellungen', hauptgames: [...G, G[0]] })
+  pruefe('7 Hauptgames → felder', r.code === 400 && r.body.grund === 'felder' && posts().length === 0)
+
+  r = await adminRuf({ aktion: 'einstellungen', hauptgames: [...G.slice(0, 5), G[0]] })
   pruefe('Doppeltes Hauptgame → felder', r.code === 400 && r.body.grund === 'felder')
 
-  r = await adminRuf({ aktion: 'einstellungen', hauptgames: [...G.slice(0, 4), 'gibts_nicht'] })
+  r = await adminRuf({ aktion: 'einstellungen', hauptgames: [...G.slice(0, 5), 'gibts_nicht'] })
   pruefe('Unbekanntes Game → felder', r.code === 400 && r.body.grund === 'felder')
 
   r = await adminRuf({ aktion: 'einstellungen', testslot: 'leitungsfinder' })
@@ -381,8 +470,9 @@ rufe = []
   pruefe('Testslot setzen', r.code === 200 && posts().at(-1).body.testslot_game === 'kuechen_tinder' && posts().at(-1).body.spiele_aktiv?.kuechen_tinder === true)
   pruefe('Testslot: kein Protokoll', protokolle.length === 0)
 
-  /* Testslot kuechen_tinder wird Hauptgame — es gibt schon Runs */
-  const neu = [...G.slice(0, 4), 'kuechen_tinder']
+  /* Testslot kuechen_tinder wird Hauptgame — es gibt schon Runs.
+     videko_slam weicht dafuer als sechstes Game. */
+  const neu = [...G.slice(0, 5), 'kuechen_tinder']
   frisch()
   rufe = []
   r = await adminRuf({ aktion: 'einstellungen', hauptgames: neu })
@@ -408,11 +498,11 @@ rufe = []
   const pr = protokolle.at(-1)
   pruefe('Protokoll: vorher/nachher/bestaetigt/Zahl', protokolle.length === 1 && pr.art === 'hauptgames' && pr.vorher.join() === G.join() && pr.nachher.join() === neu.join() && pr.bestaetigt === true && pr.teilnehmer_zahl === 5)
   pruefe('Protokoll ohne Personendaten', !privat(pr))
-  pruefe('Sichtbarkeit folgt: Tinder an, Fit aus', pb?.spiele_aktiv?.kuechen_tinder === true && pb?.spiele_aktiv?.kuechen_fit === false)
+  pruefe('Sichtbarkeit folgt: Tinder an, Slam aus', pb?.spiele_aktiv?.kuechen_tinder === true && pb?.spiele_aktiv?.videko_slam === false)
 
   frisch()
   r = await adminRuf({ aktion: 'einstellungen', hauptgames: G, testslot: 'kuechen_tinder', bestaetigung: W })
-  pruefe('Zurueck mit Testslot', r.code === 200 && posts().at(-1).body.testslot_game === 'kuechen_tinder' && posts().at(-1).body.spiele_aktiv?.kuechen_fit === true && posts().at(-1).body.spiele_aktiv?.kuechen_tinder === true)
+  pruefe('Zurueck mit Testslot', r.code === 200 && posts().at(-1).body.testslot_game === 'kuechen_tinder' && posts().at(-1).body.spiele_aktiv?.videko_slam === true && posts().at(-1).body.spiele_aktiv?.kuechen_tinder === true)
   pruefe('Zweiter Eintrag im Protokoll', protokolle.length === 2)
 
   /* Testslot leeren → wirklich leer und ausgeblendet */
@@ -464,18 +554,18 @@ rufe = []
   pruefe('Zweites Abschliessen → 409', r.code === 409 && r.body.grund === 'abgeschlossen' && snapshots.length === 1)
 
   /* Nach dem Abschluss: spaetere Laeufe aendern nichts */
-  laeufe.push({ teilnehmer_id: D, game: 'videko_jump', score: 9999, created_at: '2026-09-10T10:00:00.000Z' })
-  laeufe.push({ teilnehmer_id: D, game: 'kuechen_fit', score: 9999, created_at: '2026-09-10T10:00:00.000Z' })
+  laeufe.push({ teilnehmer_id: C, game: 'leitungsfinder', score: 9999, created_at: '2026-09-10T10:00:00.000Z' })
+  laeufe.push({ teilnehmer_id: C, game: 'kuechen_merge', score: 9999, created_at: '2026-09-10T10:00:00.000Z' })
   frisch()
-  const s = await gr.gesamtranking(D)
-  pruefe('Snapshot gilt: D bleibt draussen', s.abgeschlossen === true && s.gesamtZahl === 4 && s.eigen.platz === null)
-  pruefe('Snapshot gilt: Top unveraendert', s.eintraege[0].instagram === 'anna_test' && s.eintraege[0].punkte === 5000)
+  const s = await gr.gesamtranking(C)
+  pruefe('Snapshot gilt: C bleibt draussen', s.abgeschlossen === true && s.gesamtZahl === 4 && s.eigen.platz === null)
+  pruefe('Snapshot gilt: Top unveraendert', s.eintraege[0].instagram === 'anna_test' && s.eintraege[0].punkte === 4000)
   pruefe('Abgeschlossen-Zeitpunkt oeffentlich', typeof s.abgeschlossenAm === 'string')
 
   const vorProt = protokolle.length
-  r = await adminRuf({ aktion: 'einstellungen', hauptgames: [...G.slice(0, 4), 'kuechen_tinder'] })
+  r = await adminRuf({ aktion: 'einstellungen', hauptgames: [...G.slice(0, 5), 'kuechen_tinder'] })
   pruefe('Abgeschlossen + andere Hauptgames → abgeschlossen', r.code === 400 && r.body.grund === 'abgeschlossen')
-  r = await adminRuf({ aktion: 'einstellungen', hauptgames: [...G.slice(0, 4), 'kuechen_tinder'], bestaetigung: gr.HAUPTGAME_BESTAETIGUNG })
+  r = await adminRuf({ aktion: 'einstellungen', hauptgames: [...G.slice(0, 5), 'kuechen_tinder'], bestaetigung: gr.HAUPTGAME_BESTAETIGUNG })
   pruefe('Abgeschlossen: auch mit Bestaetigung gesperrt', r.code === 400 && r.body.grund === 'abgeschlossen' && protokolle.length === vorProt)
   r = await adminRuf({ aktion: 'einstellungen', hauptgames: G })
   pruefe('Abgeschlossen + gleiche Hauptgames → ok', r.code === 200)

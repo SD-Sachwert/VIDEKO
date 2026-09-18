@@ -263,8 +263,8 @@ export const TEXTE = {
     gamesLabel: 'GAMES',
     leaderboardLabel: 'LEADERBOARD',
     koenigLabel: 'AKTUELLER TRESORKÖNIG',
-    koenigLeer: 'Noch ist niemand in allen 5 Hauptgames gewertet. Der Platz ist frei.',
-    koenigPunkte: '{punkte} / 5.000 Punkte im Gesamtranking',
+    koenigLeer: 'Noch hat niemand vier Spiele abgeschlossen. Der Platz ist frei.',
+    koenigPunkte: '{punkte} / 4.000 Punkte im Gesamtranking',
     koenigFrage: 'Schlägst du ihn?',
     koenigCta: 'ZU DEN GAMES',
     zurueck: 'ZURÜCK ZUR TRUHE',
@@ -317,6 +317,10 @@ export const TEXTE = {
        niemand raten muss, wo der Ton sitzt oder wie man wieder rauskommt. */
     shellVollbild: 'VOLLBILD',
     shellVollbildAus: 'VOLLBILD BEENDEN',
+    /* Die kurze Fassung steht auf der Taste selbst — "VOLLBILD BEENDEN" waere
+       bei 390 px die halbe Zeile. Der volle Satz bleibt als `aria-label`. */
+    shellVollbildKurz: 'VOLLBILD',
+    shellVollbildKurzAus: 'BEENDEN',
     shellTonAn: 'Musik und Effekte an',
     shellTonAus: 'Musik und Effekte aus',
     shellVerlassen: 'VERLASSEN',
@@ -439,17 +443,22 @@ export const TEXTE = {
     ohneEinwilligung:
       'Dein Name erscheint nicht öffentlich: du hast der Anzeige im Leaderboard nicht zugestimmt. Deine Teilnahme an der Aktion ist davon unberührt.',
     gesamtNotiz: 'Gesamt = bester Truhenknacker-Lauf plus bester Goldrausch-Lauf.',
-    /* Gesamtranking ueber die fuenf Hauptgames */
+    /* Gesamtranking: beste vier aus sechs Hauptgames */
     grTitel: 'GESAMTRANKING',
-    grSub: 'Alle 5 Hauptgames zählen. Wer in allen fünf gewertet ist, steht im Ranking.',
-    grPreiseText: 'DIE TOP 3 DES GESAMTRANKINGS GEWINNEN ZUSATZPREISE.',
+    grBeste: 'BESTE 4 AUS 6',
+    grSub: 'Für das Gesamtranking zählen deine besten vier Ergebnisse aus sechs Spielen.',
+    grPreiseText: 'DIE DREI BESTEN SPIELER DES GESAMTRANKINGS GEWINNEN DIE AUSGESCHRIEBENEN RANKINGPREISE.',
     grPreisPlatz: 'PLATZ {platz}',
     grFormel:
-      'Je Game zählt dein bester gültiger Score. Daraus wird dein Platz in diesem Game und daraus Rangpunkte: Platz 1 = 1.000, der letzte Platz = 0, dazwischen gleichmäßig verteilt (1.000 × (N − Platz) ÷ (N − 1), N = Spieler im Game). Gleichstand teilt sich den besseren Platz. Gesamtpunkte = Summe der 5 Games, maximal 5.000. Bei gleicher Summe gewinnt, wer seinen Stand früher erreicht hat.',
+      'Je Game zählt dein bester gültiger Score. Daraus wird dein Platz in diesem Game und daraus Rangpunkte: Platz 1 = 1.000, der letzte Platz = 0, dazwischen gleichmäßig verteilt (1.000 × (N − Platz) ÷ (N − 1), N = Spieler im Game). Gleichstand teilt sich den besseren Platz. Von deinen sechs möglichen Ergebnissen zählen nur die besten vier; die übrigen werden gestrichen. Gesamtpunkte = Summe dieser vier, maximal 4.000. Bei gleicher Summe gewinnt, wer seinen Stand früher erreicht hat.',
     grAnonym: 'nicht öffentlich',
     grAbgeschlossen: 'GESAMTRANKING ABGESCHLOSSEN. Der Endstand steht fest.',
     grStand: 'GESAMTRANKING: {gespielt}/{noetig} GAMES GESPIELT',
-    grFehlt: 'Spiele noch {games}, um dich zu qualifizieren.',
+    /* Die Huerde ist eine Zahl, kein Pflichtprogramm: es zaehlt, WIE VIELE
+       verschiedene Spiele gespielt sind, nicht welche. */
+    grNochEins: 'NOCH 1 SPIEL BIS ZUM GESAMTRANKING',
+    grNochMehr: 'NOCH {fehlt} SPIELE BIS ZUM GESAMTRANKING',
+    grNochHilfe: 'Du musst mindestens vier verschiedene Spiele gespielt haben.',
     grPlatz: 'PLATZ {platz} VON {von}',
     grPunkte: '{punkte} / {max} PUNKTE',
     grBisPlatz: 'Noch {punkte} Punkte bis Platz {ziel}',
@@ -457,7 +466,19 @@ export const TEXTE = {
     grSpielZeile: '{punkte} Rangpunkte · Bestwert {score}',
     grSpielPlatz: 'Platz {platz} von {von}',
     grSpielLeer: 'noch nicht gespielt',
+    grGewertet: 'gewertet',
+    grGestrichen: 'gestrichen',
+    grGewerteteSpiele: 'GEWERTETE SPIELE',
     grOhneEinwilligung: 'Dein Name erscheint nicht öffentlich — dein Platz zählt trotzdem.',
+    /* Die oeffentliche Liste */
+    grListeSub: 'Die besten vier Ergebnisse aus sechs Spielen, zusammengezählt.',
+    grListeLeer: 'Noch hat niemand vier Spiele abgeschlossen.',
+    grSpaltePlatz: 'PLATZ',
+    grSpalteSpieler: 'SPIELER',
+    grSpaltePunkte: 'PUNKTE',
+    grQualifiziert: '{n} qualifiziert',
+    grEinzelHinweis:
+      'Einzel-Bestenlisten dienen der Wertung und dem Vergleich; daraus entsteht kein eigener Gewinnanspruch.',
     hinweis: 'Das Leaderboard ist Unterhaltung. Es hat keinen Einfluss auf die Ziehung.',
     cta: 'LEADERBOARD ANSEHEN',
     laedt: 'Lade Bestenliste …',
@@ -1294,13 +1315,31 @@ export const ANLEITUNGEN = {
 export const GESAMT_SPIELE = ['truhenknacker', 'goldrausch']
 
 /**
- * Das Gesamtranking der Aktion: die fuenf Hauptgames. Ohne Eintrag in der
- * Verwaltung gelten diese fuenf; der Testslot zaehlt nie. Server und Seite
+ * Das Gesamtranking der Aktion: die sechs Hauptgames. Ohne Eintrag in der
+ * Verwaltung gelten diese sechs; der Testslot zaehlt nie. Server und Seite
  * lesen dieselben Standards.
+ *
+ * VIDEKO Slam ist seit dem Stadtfest-Umbau kein Testslot mehr, sondern ein
+ * regulaeres Hauptgame wie jedes andere. Kuechen-Tinder bleibt draussen und
+ * zaehlt nirgends.
  */
-export const STANDARD_HAUPTGAMES = ['leitungsfinder', 'kuechen_merge', 'kuechen_crush', 'videko_jump', 'kuechen_fit']
-export const HAUPTGAMES_ANZAHL = 5
-/** Rangpunkte fuer Platz 1 eines Games. Maximum gesamt: 5 × 1.000. */
+export const STANDARD_HAUPTGAMES = [
+  'leitungsfinder', 'kuechen_merge', 'kuechen_crush', 'videko_jump', 'kuechen_fit', 'videko_slam',
+]
+export const HAUPTGAMES_ANZAHL = 6
+
+/**
+ * BESTE VIER AUS SECHS. Nur die vier staerksten Game-Ergebnisse einer Person
+ * zaehlen; die zwei schwaechsten werden gestrichen. Dieselbe Zahl ist auch
+ * die Huerde: wer vier verschiedene Hauptgames gespielt hat, ist im Ranking.
+ *
+ * Warum nicht alle sechs: sechs Pflichtspiele sind an einem Stadtfestabend
+ * zu viel. Vier aus sechs laesst zwei Fehlgriffe zu und belohnt trotzdem,
+ * wer mehr spielt — jedes weitere Game kann ein schwaches ersetzen.
+ */
+export const GEWERTETE_GAMES = 4
+
+/** Rangpunkte fuer Platz 1 eines Games. Maximum gesamt: 4 × 1.000. */
 export const RANGPUNKTE_MAX = 1000
 
 /**
@@ -1308,7 +1347,7 @@ export const RANGPUNKTE_MAX = 1000
  * anonyme Koeder vor der Anmeldung. Der Probelauf wird nicht gewertet und
  * taucht in keiner Rangliste auf. Die Verwaltung kann einen anderen Slot
  * eintragen; ohne Eintrag gilt dieser. Kuechen-Tinder ist hier bewusst
- * nicht vorgesehen: der bleibt reiner Testslot.
+ * nicht vorgesehen: der ist nur noch Altbestand.
  *
  * Seit dem Funnel-Umbau ist das VIDEKO Jump: es startet ohne Erklaerung,
  * eine Runde dauert unter zwei Minuten, und man will sofort noch einmal.
@@ -1320,11 +1359,11 @@ export const PRACTICE_STANDARD = 'videko_jump'
 /**
  * Ohne Eintrag ausgeblendet. Der Server schickt die Schalter ohnehin
  * vollstaendig (Hauptgames und ein eingetragener Testslot an); diese Liste
- * greift nur, wenn ein Eintrag fehlt. Kuechen-Tinder und VIDEKO Slam stehen
- * darin, weil der Testslot ohne Eintrag leer ist: beide sind Kandidaten fuer
- * denselben einen Platz und werden erst durch einen Eintrag sichtbar.
+ * greift nur, wenn ein Eintrag fehlt. Kuechen-Tinder steht darin, weil er
+ * nur noch Altbestand ist: er bleibt erhalten, ist aber ausgeblendet und
+ * zaehlt in keiner Wertung.
  */
-export const STANDARD_AUS = ['kuechen_stack', 'kuechen_dash', 'kuechen_balance', 'truhenknacker', 'goldrausch', 'kuechen_tinder', 'videko_slam']
+export const STANDARD_AUS = ['kuechen_stack', 'kuechen_dash', 'kuechen_balance', 'truhenknacker', 'goldrausch', 'kuechen_tinder']
 
 /** Ist ein Spiel sichtbar? Ein ausdrueckliches true/false gewinnt, sonst der Standard. */
 export const spielAktiv = (schalter, key) =>
@@ -1363,6 +1402,23 @@ export function spieleSortiert(reihenfolge = null) {
 
 /** Spielschluessel → Kartentext. Praktisch fuer die Ergebnisanzeige. */
 export const SPIEL_NACH_KEY = Object.fromEntries(SPIELE_LISTE.map((s) => [s.key, s]))
+
+/**
+ * Kurzform fuer enge Stellen — die Zeile "Jump · Slam · Fit · Crush" in der
+ * Gesamtrangliste muss auf 390 px passen. Nur wo der volle Titel zu lang ist;
+ * alles andere faellt auf den Titel zurueck.
+ */
+const SPIEL_KURZ = {
+  videko_jump: 'Jump',
+  kuechen_merge: 'Merge',
+  kuechen_crush: 'Crush',
+  kuechen_fit: 'Fit',
+  leitungsfinder: 'Leitung',
+  videko_slam: 'Slam',
+}
+
+/** Kurzes Wort fuer ein Spiel. Ohne Eintrag: der Titel, wie er ist. */
+export const spielKurz = (key) => SPIEL_KURZ[key] ?? SPIEL_NACH_KEY[key]?.titel ?? key
 
 /**
  * Goldrausch — was durch das Bild fliegt.

@@ -38,6 +38,12 @@ import {
   zaehlen,
   ziehungBerechtigt,
 } from './_terminal-kern.js'
+import {
+  deckelReset,
+  deckelResetAlle,
+  deckelStand,
+  deckelVorschau,
+} from './_terminal-deckel.js'
 import { instagramStandLesen, instagramSynchronisieren } from './_terminal-instagram.js'
 import {
   HAUPTGAME_BESTAETIGUNG,
@@ -1526,6 +1532,43 @@ export default async function handler(req, res) {
 
     if (aktion === 'stats') {
       res.status(200).json(await statistik())
+      return
+    }
+
+    /* Datenverwaltung — physische Deckeldaten.
+
+       Die beiden Leseaktionen haengen an nichts weiter als der Anmeldung;
+       die beiden schreibenden zusaetzlich an TERMINAL_SCHREIBEN, wie jeder
+       andere Eingriff in echte Daten auch. Die Pflichteingabe fuer den
+       Komplettreset prueft der Server, nicht der Browser. */
+    if (aktion === 'deckel-stand') {
+      res.status(200).json(await deckelStand())
+      return
+    }
+
+    if (aktion === 'deckel-vorschau') {
+      const ergebnis = await deckelVorschau(b.nummer)
+      res.status(ergebnis.ok ? 200 : 400).json(ergebnis)
+      return
+    }
+
+    if (aktion === 'deckel-reset') {
+      if (!schreibenErlaubt()) {
+        res.status(503).json({ ok: false, grund: 'pause' })
+        return
+      }
+      const ergebnis = await deckelReset(b.nummer)
+      res.status(ergebnis.ok ? 200 : 400).json(ergebnis)
+      return
+    }
+
+    if (aktion === 'deckel-reset-alle') {
+      if (!schreibenErlaubt()) {
+        res.status(503).json({ ok: false, grund: 'pause' })
+        return
+      }
+      const ergebnis = await deckelResetAlle(b)
+      res.status(ergebnis.ok ? 200 : 400).json(ergebnis)
       return
     }
 

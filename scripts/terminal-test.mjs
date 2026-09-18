@@ -61,14 +61,16 @@ const welt = {
   grPreise: null,
 }
 
-/* Die sieben nachgeladenen Kandidaten aus dem Game-Lab, in Standardreihenfolge
-   (Runde 2: Leitungsfinder, Merge, Crush, Jump, Fit, Tinder vorn). */
-const NEUE_GAMES = ['leitungsfinder', 'kuechen_merge', 'kuechen_crush', 'videko_jump', 'kuechen_fit', 'kuechen_tinder', 'kuechen_balance']
+/* Die acht nachgeladenen Kandidaten aus dem Game-Lab, in Standardreihenfolge
+   (Runde 2: Leitungsfinder, Merge, Crush, Jump, Fit, Slam, Tinder vorn).
+   VIDEKO Slam steht seit Pass 5 als sechstes Hauptgame mit in der Reihe. */
+const NEUE_GAMES = ['leitungsfinder', 'kuechen_merge', 'kuechen_crush', 'videko_jump', 'kuechen_fit', 'videko_slam', 'kuechen_tinder', 'kuechen_balance']
 /* Die fuer die alten Abschnitte eingeschalteten Spiele (Standard: aus). Tinder
    ist ohne eingetragenen Testslot ebenfalls aus. */
 const ALT_AN = { truhenknacker: true, goldrausch: true, kuechen_balance: true, kuechen_tinder: true }
-/* Der oeffentliche Standard: nur die fuenf Hauptgames, kein Testslot. */
-const STANDARD_GAMES = ['leitungsfinder', 'kuechen_merge', 'kuechen_crush', 'videko_jump', 'kuechen_fit']
+/* Der oeffentliche Standard: die sechs Hauptgames, kein Testslot.
+   VIDEKO Slam ist seit Pass 5 ein regulaeres Hauptgame und kein Testslot mehr. */
+const STANDARD_GAMES = ['leitungsfinder', 'kuechen_merge', 'kuechen_crush', 'videko_jump', 'kuechen_fit', 'videko_slam']
 
 function einstellungen() {
   return {
@@ -85,7 +87,9 @@ function einstellungen() {
 const WIEDER_TEXT = 'Wenn zu dieser E-Mail ein aktivierter Deckel gehört, haben wir dir einen Zugangslink geschickt.'
 const probeLinksVerbraucht = new Set()
 
-const KOENIG = { instagram: 'tresorkoenig', punkte: 42840 }
+/* Der Tresorkoenig ist seit Pass 5 die Spitze des Gesamtrankings — dieselbe
+   Zeile wie grDaten().eintraege[0], nicht mehr die alte Legacy-Summe. */
+const KOENIG = { platz: 1, instagram: 'tresorkoenig', punkte: 3870, ich: false }
 
 function liste(eigenePunkte) {
   const eintraege = [
@@ -105,37 +109,47 @@ function liste(eigenePunkte) {
   }
 }
 
-/* Gesamtranking ueber die fuenf Hauptgames. Die Attrappe rechnet nicht wie der
-   Server; sie liefert nur dieselbe Form. Gespielt ist, was in welt.beste steht. */
-const HAUPTGAMES = ['leitungsfinder', 'kuechen_merge', 'kuechen_crush', 'videko_jump', 'kuechen_fit']
+/* Gesamtranking ueber die sechs Hauptgames, gewertet werden die besten vier.
+   Die Attrappe rechnet nicht wie der Server; sie liefert nur dieselbe Form.
+   Gespielt ist, was in welt.beste steht. */
+const HAUPTGAMES = ['leitungsfinder', 'kuechen_merge', 'kuechen_crush', 'videko_jump', 'kuechen_fit', 'videko_slam']
+const GR_GEWERTET = 4
+const GR_MAX = 4000
 
 function grDaten(mitEigen, probe = false) {
   const eintraege = [
-    { platz: 1, instagram: 'tresorkoenig', punkte: 4870, ich: false },
-    { platz: 2, instagram: null, punkte: 4410, ich: false },
-    { platz: 3, instagram: 'dritte', punkte: 3990, ich: false },
+    { platz: 1, instagram: 'tresorkoenig', punkte: 3870, ich: false, gewertet: HAUPTGAMES.slice(0, 4) },
+    { platz: 2, instagram: null, punkte: 3410, ich: false, gewertet: HAUPTGAMES.slice(0, 4) },
+    { platz: 3, instagram: 'dritte', punkte: 2990, ich: false, gewertet: HAUPTGAMES.slice(1, 5) },
   ]
   let eigen = null
   if (mitEigen) {
+    /* Alle gespielten Spiele haben in der Attrappe denselben Wert; gewertet
+       sind deshalb schlicht die ersten vier davon. */
+    let offen = GR_GEWERTET
     const spiele = HAUPTGAMES.map((key) => {
       const score = probe ? null : welt.beste[key]
-      return score == null
-        ? { key, score: null, rangpunkte: null, platz: null, von: 40 }
-        : { key, score, rangpunkte: 612, platz: 16, von: 40 }
+      if (score == null) return { key, score: null, rangpunkte: null, platz: null, von: 40, gewertet: false }
+      const zaehlt = offen > 0
+      if (zaehlt) offen -= 1
+      return { key, score, rangpunkte: 612, platz: 16, von: 40, gewertet: zaehlt }
     })
     const gespielt = spiele.filter((s) => s.score != null).length
-    const qualifiziert = gespielt === 5
+    const qualifiziert = gespielt >= GR_GEWERTET
     eigen = {
       spiele,
       gespielt,
-      noetig: 5,
+      noetig: GR_GEWERTET,
+      fehlt: Math.max(0, GR_GEWERTET - gespielt),
       qualifiziert,
+      gewertet: spiele.filter((s) => s.gewertet).map((s) => s.key),
+      gestrichen: spiele.filter((s) => s.score != null && !s.gewertet).map((s) => s.key),
       fehlende: spiele.filter((s) => s.score == null).map((s) => s.key),
-      max: 5000,
+      max: GR_MAX,
       abgeschlossen: false,
       platz: qualifiziert ? 9 : null,
       punkte: qualifiziert ? 3060 : null,
-      zwischenstand: gespielt * 612,
+      zwischenstand: Math.min(gespielt, GR_GEWERTET) * 612,
       von: 31,
       bisPlatz: qualifiziert ? 8 : null,
       luecke: qualifiziert ? 145 : null,
@@ -147,6 +161,8 @@ function grDaten(mitEigen, probe = false) {
     eintraege,
     gesamtZahl: 31,
     spiele: HAUPTGAMES,
+    gewerteteGames: GR_GEWERTET,
+    maxPunkte: GR_MAX,
     preise: welt.grPreise ?? { 1: null, 2: null, 3: null },
     abgeschlossen: false,
     abgeschlossenAm: null,
@@ -183,7 +199,7 @@ function probeAntwort(b) {
         teilnehmer: aktiv ? person : null,
         spiele: aktiv
           ? {
-              beste: { truhenknacker: null, goldrausch: null, kuechen_stack: null, kuechen_dash: null, kuechen_balance: null, kuechen_fit: null, videko_jump: null, kuechen_merge: null, leitungsfinder: null, kuechen_crush: null, kuechen_tinder: null },
+              beste: { truhenknacker: null, goldrausch: null, kuechen_stack: null, kuechen_dash: null, kuechen_balance: null, kuechen_fit: null, videko_jump: null, kuechen_merge: null, leitungsfinder: null, kuechen_crush: null, videko_slam: null, kuechen_tinder: null },
               gesamt: null,
               platz: null,
               gelistet: false,
@@ -423,7 +439,10 @@ function introProtokoll() {
    Abschluss); die echten Regeln prueft scripts/terminal-gesamtranking-test.mjs. */
 const ADMIN_SCHLUESSEL = 'admin-attrappe'
 const HAUPTGAME_OK = 'HAUPTGAME WIRKLICH ÄNDERN'
-const adminWelt = { hauptgames: [...HAUPTGAMES], testslot: null, preise: {}, abgeschlossenAm: null, protokoll: [], gewertet: 5 }
+/* `gewerteteTeilnehmer` zaehlt Personen mit offiziellen Gesamtranking-Daten —
+   nicht Games. Sobald die Zahl ueber null liegt, verlangt der Wechsel eines
+   Hauptgames die zweite Bestaetigung. */
+const adminWelt = { hauptgames: [...HAUPTGAMES], testslot: null, preise: {}, abgeschlossenAm: null, protokoll: [], gewerteteTeilnehmer: 5 }
 
 function adminGr() {
   const hg = adminWelt.hauptgames
@@ -431,7 +450,9 @@ function adminGr() {
     platz, instagram, oeffentlich, punkte,
     spiele: Object.fromEntries(hg.map((g, i) => [g, { rangpunkte: basis - i * 10, platz: platz + i, score: 10000 + i }])),
   })
-  const top = [zeile(1, 'tresorkoenig', true, 4870, 990), zeile(2, 'zweiter_platz', false, 4410, 900), zeile(3, 'dritte', true, 3990, 800)]
+  /* Punkte unterhalb von 4.000 — mehr kann es seit „beste vier aus sechs"
+     nicht geben. */
+  const top = [zeile(1, 'tresorkoenig', true, 3870, 990), zeile(2, 'zweiter_platz', false, 3410, 900), zeile(3, 'dritte', true, 2990, 800)]
   const verdachtLauf = { id: 'v1', platz: 2, instagram: 'zweiter_platz', game: hg[0], score: 99999, status: 'verdacht', notiz: 'zu schnell', dauerMs: 9000 }
   return {
     ok: true,
@@ -477,8 +498,8 @@ function adminAntwort(k, schluessel) {
     case 'einstellungen':
       if (k.hauptgames) {
         if (adminWelt.abgeschlossenAm) return { ok: false, grund: 'abgeschlossen', __status: 400 }
-        if (adminWelt.gewertet > 0 && k.bestaetigung !== HAUPTGAME_OK) {
-          return { ok: false, grund: 'bestaetigung', teilnehmerZahl: adminWelt.gewertet, __status: 400 }
+        if (adminWelt.gewerteteTeilnehmer > 0 && k.bestaetigung !== HAUPTGAME_OK) {
+          return { ok: false, grund: 'bestaetigung', teilnehmerZahl: adminWelt.gewerteteTeilnehmer, __status: 400 }
         }
         adminWelt.protokoll.push({ vorher: adminWelt.hauptgames, nachher: [...k.hauptgames], bestaetigt: k.bestaetigung === HAUPTGAME_OK })
         adminWelt.hauptgames = [...k.hauptgames]
@@ -833,11 +854,11 @@ const spielKarten = await seite.$$eval('.trm-spiel', (n) => n.map((e) => e.id))
 pruefe('Truhenknacker und Goldrausch als volle Karten, Stack und Dash ausgeblendet',
   spielKarten.join(',') === 'truhenknacker,goldrausch', spielKarten.join(', '))
 const wahlKarten = await seite.$$eval('[data-spielwahl]', (n) => n.map((e) => e.dataset.spielwahl))
-pruefe('Sieben neue Games als kompakte Auswahlkarten', wahlKarten.join(',') === NEUE_GAMES.join(','), wahlKarten.join(', '))
+pruefe('Acht neue Games als kompakte Auswahlkarten', wahlKarten.join(',') === NEUE_GAMES.join(','), wahlKarten.join(', '))
 pruefe('Tresorkoenig sichtbar', /TRESORKÖNIG/i.test(t) && /tresorkoenig/.test(t))
 const koenigKarte = await seite.$eval('.trm-koenig', (n) => n.textContent)
-pruefe('Tresorkoenig kommt aus dem Gesamtranking (max 5.000), nicht aus der Legacy-Summe',
-  /4\.870 \/ 5\.000 Punkte im Gesamtranking/.test(koenigKarte) && !/42\.840|Punkte gesamt/.test(koenigKarte), koenigKarte)
+pruefe('Tresorkoenig kommt aus dem Gesamtranking (max 4.000), nicht aus der Legacy-Summe',
+  /3\.870 \/ 4\.000 Punkte im Gesamtranking/.test(koenigKarte) && !/42\.840|Punkte gesamt/.test(koenigKarte), koenigKarte)
 pruefe('Keine E-Mail-Adresse im Tresor', !/test@example\.com/.test(t))
 
 /* ================================================================== */
@@ -848,15 +869,17 @@ await warte(700)
 t = await text(seite)
 pruefe('Nach Reload wieder im Tresor', /DEIN DECKEL IST IM TRESOR/i.test(t))
 pruefe('Nach Reload keine Inszenierung noch einmal', (await seite.$('.trm-buehne')) === null)
-pruefe('Nach Reload Games weiter offen', (await seite.$$('.trm-spiel')).length === 2 && (await seite.$$('[data-spielwahl]')).length === 7)
+pruefe('Nach Reload Games weiter offen', (await seite.$$('.trm-spiel')).length === 2 && (await seite.$$('[data-spielwahl]')).length === 8)
 pruefe('Nach Reload kein Codefeld', (await seite.$('.trm-code')) === null)
 
 /* Dashboard-Karte Gesamtranking: noch nichts gespielt, also nicht qualifiziert. */
 const grKarte = await seite.$eval('#trm-gr-karte', (e) => e.innerText).catch(() => '')
 pruefe('Dashboard: Gesamtranking-Karte da', grKarte !== '')
-pruefe('Dashboard: Stand "0/5 GAMES GESPIELT"', /GESAMTRANKING: 0\/5 GAMES GESPIELT/i.test(grKarte), grKarte.slice(0, 160))
-pruefe('Dashboard: fehlende Games genannt', (await seite.$('#trm-gr-karte [data-gr-fehlt]')) !== null && /Spiele noch/.test(grKarte))
-pruefe('Dashboard: fuenf Zeilen, eine je Hauptgame',
+pruefe('Dashboard: Stand "0/4 GAMES GESPIELT"', /GESAMTRANKING: 0\/4 GAMES GESPIELT/i.test(grKarte), grKarte.slice(0, 160))
+pruefe('Dashboard: fehlende Games genannt',
+  (await seite.$('#trm-gr-karte [data-gr-fehlt]')) !== null && /NOCH 4 SPIELE BIS ZUM GESAMTRANKING/i.test(grKarte),
+  grKarte.slice(0, 200))
+pruefe('Dashboard: sechs Zeilen, eine je Hauptgame',
   (await seite.$$eval('#trm-gr-karte [data-gr-spiel]', (n) => n.map((e) => e.dataset.grSpiel))).join(',') === HAUPTGAMES.join(','))
 pruefe('Dashboard: ohne Preise kein Preisblock', (await seite.$('#trm-gr-karte [data-gr-preise]')) === null)
 pruefe('Dashboard-Karte ohne E-Mail', !/@[\w.-]+\.(de|com|net)/.test(grKarte))
@@ -1020,8 +1043,8 @@ await seite2.goto(`${BASIS}/terminal/rangliste`, { waitUntil: 'networkidle0' })
 await warte(700)
 t = await text(seite2)
 const reiter = await seite2.$$eval('.trm-reiter__taste', (n) => n.map((e) => e.textContent.trim()))
-const REITER_SOLL = ['LEITUNGSFINDER', 'MERGE', 'CRUSH', 'JUMP', 'FIT', 'TINDER', 'BALANCE', 'TRUHENKNACKER', 'GOLDRAUSCH', 'GESAMTRANKING']
-pruefe('Zehn Reiter (Stack und Dash ausgeblendet, kein alter GESAMT-Reiter)', reiter.length === 10, reiter.join(' | '))
+const REITER_SOLL = ['LEITUNGSFINDER', 'MERGE', 'CRUSH', 'JUMP', 'FIT', 'SLAM', 'TINDER', 'BALANCE', 'TRUHENKNACKER', 'GOLDRAUSCH', 'GESAMTRANKING']
+pruefe('Elf Reiter (Stack und Dash ausgeblendet, kein alter GESAMT-Reiter)', reiter.length === 11, reiter.join(' | '))
 pruefe('Alter GESAMT-Reiter oeffentlich ausgeblendet',
   (await seite2.$('#trm-reiter-gesamt')) === null && !reiter.some((r) => /^GESAMT$/i.test(r)), reiter.join(' | '))
 pruefe('Reiter heissen richtig', REITER_SOLL.every((w, i) => (reiter[i] || '').toUpperCase().includes(w)), reiter.join(' | '))
@@ -1041,12 +1064,17 @@ pruefe('Reiter GESAMTRANKING hat eine eigene Kennung', (await seite2.$('#trm-rei
 await seite2.click('#trm-reiter-gesamtranking')
 await warte(250)
 t = await text(seite2)
-pruefe('GESAMTRANKING: Kopf mit Erklaerung', (await seite2.$('[data-gr-reiter]')) !== null && /Alle 5 Hauptgames zählen/.test(t))
-pruefe('GESAMTRANKING: Formel steht da', /Gesamtpunkte = Summe der 5 Games, maximal 5\.000/.test(
+pruefe('GESAMTRANKING: Kopf mit Erklaerung',
+  (await seite2.$('[data-gr-reiter]')) !== null && /BESTE 4 AUS 6/.test(t)
+    && /besten vier Ergebnisse aus sechs Spielen/.test(t), t.slice(0, 160))
+pruefe('GESAMTRANKING: Formel steht da', /Gesamtpunkte = Summe dieser vier, maximal 4\.000/.test(
   await seite2.$eval('[data-gr-formel]', (e) => e.textContent).catch(() => '')))
-pruefe('GESAMTRANKING: Medaillen und Punkte', /🥇/.test(t) && /4\.870/.test(t))
+pruefe('GESAMTRANKING: Medaillen und Punkte', /🥇/.test(t) && /3\.870/.test(t))
+/* Im Namensfeld steht seit Pass 5 auch die Kette der gewerteten Spiele —
+   der anonyme Platzhalter ist deshalb der Anfang, nicht der ganze Text. */
 const anonym = await seite2.$eval('[data-anonym="1"]', (e) => e.textContent).catch(() => null)
-pruefe('GESAMTRANKING: ohne Einwilligung als "nicht öffentlich"', anonym === 'nicht öffentlich', String(anonym))
+pruefe('GESAMTRANKING: ohne Einwilligung als "nicht öffentlich"',
+  (anonym || '').startsWith('nicht öffentlich'), String(anonym))
 pruefe('GESAMTRANKING: ohne eingetragene Preise kein Preisblock', (await seite2.$('[data-gr-preise]')) === null)
 pruefe('GESAMTRANKING: keine E-Mail, keine Deckelnummer', !/@[\w.-]+\.(de|com|net)/.test(t) && !/Deckel\s*#?\d/i.test(t))
 
@@ -1073,7 +1101,8 @@ await seite2.click('#trm-reiter-gesamtranking')
 await warte(250)
 const preisText = await seite2.$eval('[data-gr-preise]', (e) => e.innerText).catch(() => '')
 pruefe('GESAMTRANKING: eingetragene Preise erscheinen, leere nicht',
-  /DIE TOP 3 DES GESAMTRANKINGS GEWINNEN ZUSATZPREISE\./i.test(preisText) && /PLATZ 1\s*Messerset/i.test(preisText)
+  /DIE DREI BESTEN SPIELER DES GESAMTRANKINGS GEWINNEN DIE AUSGESCHRIEBENEN RANKINGPREISE\./i.test(preisText)
+  && /PLATZ 1\s*Messerset/i.test(preisText)
   && /PLATZ 3\s*Schuerze/i.test(preisText) && !/PLATZ 2/i.test(preisText), preisText.replace(/\s+/g, ' '))
 welt.grPreise = null
 
@@ -1091,7 +1120,7 @@ await seite2.reload({ waitUntil: 'networkidle0' })
 await warte(600)
 const reiterSortiert = await seite2.$$eval('.trm-reiter__taste', (n) => n.map((e) => e.textContent.trim().toUpperCase()))
 pruefe('Reiter folgen der Reihenfolge aus der Verwaltung',
-  reiterSortiert[0]?.includes('TINDER') && reiterSortiert[1]?.includes('TRUHENKNACKER') && reiterSortiert[9] === 'GESAMTRANKING' && reiterSortiert.length === 10,
+  reiterSortiert[0]?.includes('TINDER') && reiterSortiert[1]?.includes('TRUHENKNACKER') && reiterSortiert[10] === 'GESAMTRANKING' && reiterSortiert.length === 11,
   reiterSortiert.join(' | '))
 welt.spieleReihenfolge = null
 
@@ -1107,7 +1136,7 @@ pruefe('DEIN PLATZ wird genannt', /DEIN PLATZ/i.test(t), t.match(/DEIN PLATZ[^\n
 await seite2.click('#trm-reiter-gesamtranking')
 await warte(250)
 const grEigen = await seite2.$eval('[data-gr-eigen]', (e) => e.textContent).catch(() => '')
-pruefe('GESAMTRANKING: mit Sitzung eigener Stand', /GESAMTRANKING: [0-4]\/5 GAMES GESPIELT|PLATZ 9 VON 31/.test(grEigen), grEigen)
+pruefe('GESAMTRANKING: mit Sitzung eigener Stand', /GESAMTRANKING: [0-4]\/4 GAMES GESPIELT|PLATZ 9 VON 31/.test(grEigen), grEigen)
 
 /* ================================================================== */
 console.log('\n=== 7b. Follower-Mission, Einwilligung, KÜCHEN-STACK, KÜCHEN-DASH ===')
@@ -1436,12 +1465,12 @@ await sDash.goto(`${BASIS}/terminal/rangliste`, { waitUntil: 'networkidle0' })
 await warte(600)
 const reiterAus = await sDash.$$eval('.trm-reiter__taste', (n) => n.map((e) => e.textContent.trim()))
 pruefe('AUSGEBLENDET: Reiter fehlt, GESAMTRANKING bleibt',
-  reiterAus.length === 11 && !reiterAus.some((r) => /DASH/i.test(r)) && /^GESAMTRANKING$/i.test(reiterAus[10] || ''), reiterAus.join(' | '))
+  reiterAus.length === 12 && !reiterAus.some((r) => /DASH/i.test(r)) && /^GESAMTRANKING$/i.test(reiterAus[11] || ''), reiterAus.join(' | '))
 pruefe('AUSGEBLENDET: Score bleibt erhalten', welt.beste.kuechen_dash === dashBest)
 welt.spieleAktiv = { ...ALT_AN }
 await sDash.reload({ waitUntil: 'networkidle0' })
 await warte(500)
-pruefe('STANDARD: Stack und Dash wieder ausgeblendet', (await sDash.$$('.trm-reiter__taste')).length === 10)
+pruefe('STANDARD: Stack und Dash wieder ausgeblendet', (await sDash.$$('.trm-reiter__taste')).length === 11)
 await sDash.goto(`${BASIS}/terminal/ziehung`, { waitUntil: 'networkidle0' })
 await warte(500)
 const ziehFollower = await sDash.$$eval('.trm-metrik__zahl', (l) => (l[1]?.textContent || '').replace(/\s+/g, ' ').trim())
@@ -1505,7 +1534,7 @@ for (const breite of [320, 360, 390, 430]) {
   await s.goto(`${BASIS}/terminal`, { waitUntil: 'networkidle0' })
   await warte(600)
   const wahl = await s.$$eval('[data-spielwahl]', (l) => l.map((e) => e.dataset.spielwahl))
-  pruefe(`${breite} px: sieben Auswahlkarten`, wahl.join(',') === NEUE_GAMES.join(','), wahl.join(', '))
+  pruefe(`${breite} px: acht Auswahlkarten`, wahl.join(',') === NEUE_GAMES.join(','), wahl.join(', '))
   const wahlHoehe = await s.$$eval('[data-spielwahl]', (l) => Math.max(0, ...l.map((e) => e.getBoundingClientRect().height)))
   pruefe(`${breite} px: Auswahlkarten bleiben kompakt`, wahlHoehe > 0 && wahlHoehe <= 140, String(Math.round(wahlHoehe)))
   const skripteVorher = await s.evaluate(() => performance.getEntriesByType('resource').filter((r) => /\.js/.test(r.name)).length)
@@ -2153,7 +2182,7 @@ pruefe('Testmodus zeigt nicht das echte Dashboard', (await sLab.$('.trm-code')) 
 
 await sLab.click('.trm-probe__knopf')
 await warte(200)
-pruefe('Testlabor: 24 Zustaende + Game Over + Reset + Verlassen', (await sLab.$$('.trm-probe__tat')).length === 27,
+pruefe('Testlabor: 25 Zustaende + Game Over + Reset + Verlassen', (await sLab.$$('.trm-probe__tat')).length === 28,
   String((await sLab.$$('.trm-probe__tat')).length))
 pruefe('Testlabor nennt @videko_test · Deckel TEST',
   /@videko_test/.test(await sLab.$eval('.trm-probe__person', (e) => e.textContent).catch(() => '')))
@@ -2209,11 +2238,11 @@ pruefe('DECKEL AKTIVIEREN: Formular', (await sLab.$('#trm-deckel')) !== null)
 
 await laborTat(sLab, 'AKTIVIERTES DASHBOARD')
 const dashDa = await sLab
-  .waitForFunction(() => document.querySelectorAll('.trm-spiel').length === 2 && document.querySelectorAll('[data-spielwahl]').length === 7, { timeout: 4000 })
+  .waitForFunction(() => document.querySelectorAll('.trm-spiel').length === 2 && document.querySelectorAll('[data-spielwahl]').length === 8, { timeout: 4000 })
   .then(() => true)
   .catch(() => false)
 t = await text(sLab)
-pruefe('AKTIVIERTES DASHBOARD: zwei Games + sieben Auswahlkarten', dashDa)
+pruefe('AKTIVIERTES DASHBOARD: zwei Games + acht Auswahlkarten', dashDa)
 pruefe('AKTIVIERTES DASHBOARD: Deckel TEST, nicht der echte', /TEST/.test(t) && !/4711/.test(t) && !/@testlauf/.test(t))
 
 for (const [wort, id] of [
@@ -2578,11 +2607,14 @@ await warte(300)
 const practiceKey = await sP.$eval('[data-practice]', (e) => e.dataset.practice).catch(() => null)
 pruefe('Ohne Deckel: Practice-Game ist Leitungsfinder', practiceKey === 'leitungsfinder', String(practiceKey))
 const gesperrtListe = await sP.$$eval('[data-gesperrt]', (n) => n.map((e) => e.dataset.gesperrt))
-pruefe('Ohne Deckel: die anderen vier Hauptgames gesperrt, kein Tinder',
+pruefe('Ohne Deckel: die anderen fuenf Hauptgames gesperrt, kein Tinder',
   gesperrtListe.join(',') === STANDARD_GAMES.slice(1).join(','), gesperrtListe.join(', '))
 const gesperrtText = await sP.$$eval('[data-gesperrt]', (n) => n.map((e) => e.innerText))
-pruefe('Gesperrte Games: NUR MIT AKTIVIERTEM DECKEL',
-  gesperrtText.length === 4 &&gesperrtText.every((x) => /NUR MIT AKTIVIERTEM DECKEL/i.test(x)))
+/* Der Sperrhinweis heisst seit dem Funnel-Umbau ERST ANMELDEN — kuerzer und
+   ohne Vorgriff darauf, wie jemand hereinkommt (Deckel oder Einladung). */
+pruefe('Gesperrte Games: ERST ANMELDEN',
+  gesperrtText.length === 5 && gesperrtText.every((x) => /ERST ANMELDEN/i.test(x)),
+  `${gesperrtText.length} — ${gesperrtText.join(' | ').replace(/\s+/g, ' ').slice(0, 120)}`)
 pruefe('Gesperrte Games sind nicht startbar',
   (await sP.$$('[data-gesperrt] button, [data-gesperrt] .trm-cta')).length === 0)
 pruefe('Ohne Deckel: noch keine gewertete Spielkarte', (await sP.$('.trm-spiel')) === null)
@@ -2602,9 +2634,11 @@ await sP.waitForSelector('#leitungsfinder [data-practice-cta]', { timeout: 8000 
 const ergP = await sP.$eval('#leitungsfinder .trm-spiel__mitte--ergebnis', (e) => e.innerText).catch(() => '')
 pruefe('Practice: DEIN SCORE nach Game Over', /DEIN SCORE/i.test(ergP), ergP.slice(0, 80))
 pruefe('Practice: Score steht da', (await sP.$('#leitungsfinder [data-practice-score]')) !== null)
-/* Seit dem Funnel-Umbau heisst der Weg weiter „SCORE OFFIZIELL MACHEN" —
-   der Knopf verspricht das Ergebnis, nicht den Verwaltungsschritt. */
-pruefe('Practice: CTA SCORE OFFIZIELL MACHEN', /SCORE OFFIZIELL MACHEN/i.test(ergP), ergP.slice(0, 200))
+/* Ohne Deckel fuehrt der Weg weiter nicht ins Codefeld, sondern nennt beide
+   Eingaenge. „SCORE OFFIZIELL MACHEN" steht nur im Probelauf mit Zugang. */
+pruefe('Practice ohne Deckel: CTA nennt Einladung und Deckel',
+  /HOL DIR EINE EINLADUNG ODER AKTIVIERE DEINEN DECKEL/i.test(ergP),
+  ergP.replace(/\s+/g, ' ').slice(0, 200))
 pruefe('Practice: kein Platz, keine Bestwerte',
   (await sP.$('#leitungsfinder .trm-spiel__marken')) === null && (await sP.$('#leitungsfinder .trm-spiel__platz')) === null)
 const rufeP = sP.__rufe.slice(rufeVorPractice)
@@ -2663,20 +2697,21 @@ pruefe('Keine E-Mail-Adresse sichtbar', !/zweit@example\.com/.test(t))
 await sP.reload({ waitUntil: 'networkidle0' })
 await warte(700)
 const standardWahl = await sP.$$eval('[data-spielwahl]', (n) => n.map((e) => e.dataset.spielwahl))
-pruefe('Standard: genau die fuenf Hauptgames, kein Tinder, in dieser Reihenfolge',
+pruefe('Standard: genau die sechs Hauptgames, kein Tinder, in dieser Reihenfolge',
   standardWahl.join(',') === STANDARD_GAMES.join(','), standardWahl.join(', '))
 pruefe('Standard ohne Testslot: keine Tinder-Karte', (await sP.$('[data-spielwahl="kuechen_tinder"], #kuechen_tinder')) === null)
 pruefe('Standard: Truhenknacker, Goldrausch, Balance, Stack, Dash ausgeblendet',
   (await sP.$$('.trm-spiel')).length === 0 && (await sP.$$('#truhenknacker, #goldrausch, #kuechen_balance, #kuechen_stack, #kuechen_dash')).length === 0)
 /* Die 409 ist hier gewollt: so meldet der Server eine bereits aktivierte Nummer. */
-/* Alle fuenf Hauptgames gewertet: Platz, Punkte von 5.000, Luecke zum naechsten Platz. */
+/* Alle sechs Hauptgames gespielt, vier davon gewertet: Platz, Punkte von
+   4.000, Luecke zum naechsten Platz. */
 const besteVorGr = { ...welt.beste }
 for (const k of HAUPTGAMES) welt.beste[k] = welt.beste[k] ?? 1234
 await sP.reload({ waitUntil: 'networkidle0' })
 await sP.waitForSelector('#trm-gr-karte', { timeout: 5000 }).catch(() => null)
 const grQuali = await sP.$eval('#trm-gr-karte', (e) => e.innerText).catch(() => '')
-pruefe('Dashboard qualifiziert: PLATZ 9 VON 31 und 3.060 / 5.000 PUNKTE',
-  /PLATZ 9 VON 31/i.test(grQuali) && /3\.060 \/ 5\.000 PUNKTE/i.test(grQuali), grQuali.slice(0, 160))
+pruefe('Dashboard qualifiziert: PLATZ 9 VON 31 und 3.060 / 4.000 PUNKTE',
+  /PLATZ 9 VON 31/i.test(grQuali) && /3\.060 \/ 4\.000 PUNKTE/i.test(grQuali), grQuali.slice(0, 160))
 pruefe('Dashboard qualifiziert: Noch 145 Punkte bis Platz 8',
   /Noch 145 Punkte bis Platz 8/.test(await sP.$eval('#trm-gr-karte [data-gr-luecke]', (e) => e.textContent).catch(() => '')))
 pruefe('Dashboard qualifiziert: Rangpunkte und Bestwert je Game',
@@ -2702,7 +2737,7 @@ await sQ.waitForSelector('[data-practice]', { timeout: 5000 }).catch(() => null)
 const practiceFit = await sQ.$eval('[data-practice]', (e) => e.dataset.practice).catch(() => null)
 const gesperrtFit = await sQ.$$eval('[data-gesperrt]', (n) => n.map((e) => e.dataset.gesperrt))
 pruefe('Admin-Einstellung: Practice-Game folgt guest_practice_game',
-  practiceFit === 'kuechen_fit' && gesperrtFit.length === 4 && !gesperrtFit.includes('kuechen_fit') && gesperrtFit.includes('leitungsfinder'),
+  practiceFit === 'kuechen_fit' && gesperrtFit.length === 5 && !gesperrtFit.includes('kuechen_fit') && gesperrtFit.includes('leitungsfinder'),
   `${practiceFit} / ${gesperrtFit.join(', ')}`)
 await sQ.close()
 welt.guestPracticeGame = 'leitungsfinder'
@@ -2719,7 +2754,7 @@ await sT.goto(`${BASIS}/terminal`, { waitUntil: 'networkidle0' })
 await sT.waitForSelector('[data-practice]', { timeout: 5000 }).catch(() => null)
 const gesperrtTinder = await sT.$$eval('[data-gesperrt]', (n) => n.map((e) => e.dataset.gesperrt))
 pruefe('Testslot eingetragen: Tinder erscheint zusaetzlich',
-  gesperrtTinder.length === 5 && gesperrtTinder.at(-1) === 'kuechen_tinder', gesperrtTinder.join(', '))
+  gesperrtTinder.length === 6 && gesperrtTinder.at(-1) === 'kuechen_tinder', gesperrtTinder.join(', '))
 await sT.close()
 welt.spieleAktiv = { ...ALT_AN }
 
@@ -2826,8 +2861,8 @@ pruefe('Vorschau: Doppelung markiert', (await sA.$('[data-gr-doppelt]')) !== nul
 pruefe('Top-3: drei Pruefbloecke', (await sA.$$('[data-gr-top3-platz]')).length === 3)
 pruefe('Top-3: Hinweis zur manuellen Pruefung',
   /Noch keine automatische Disqualifikation\. Wir prüfen die Gewinner vor Preisvergabe manuell\./.test(grAdmin))
-pruefe('Top-3: je Platz fuenf Games',
-  await sA.$$eval('[data-gr-top3-platz]', (n) => n.every((e) => e.querySelectorAll('li').length === 5)))
+pruefe('Top-3: je Platz sechs Games',
+  await sA.$$eval('[data-gr-top3-platz]', (n) => n.every((e) => e.querySelectorAll('li').length === 6)))
 pruefe('Top-3: verdaechtiger Run bei Platz 2, keiner bei Platz 1',
   (await sA.$eval('[data-gr-top3-platz="2"] [data-gr-top3-verdacht]', (e) => e.dataset.grTop3Verdacht).catch(() => null)) === '1'
   && /Keine verdächtigen Runs\./.test(await sA.$eval('[data-gr-top3-platz="1"]', (e) => e.innerText).catch(() => '')))
@@ -2841,15 +2876,15 @@ await sA.click('[data-gr-abschliessen]')
 await bis(() => adminWelt.abgeschlossenAm != null)
 await warte(600)
 pruefe('Abschluss: Sicherheitsabfrage', dialoge.slice(dialogeVorAbschluss).some((m) => /GESAMTRANKING ABSCHLIESSEN\?/.test(m)))
-pruefe('Abschluss: alle fuenf Hauptgame-Auswahlen gesperrt',
-  await sA.$$eval('[id^="adm-hauptgame-"]', (n) => n.length === 5 && n.every((e) => e.disabled)))
+pruefe('Abschluss: alle sechs Hauptgame-Auswahlen gesperrt',
+  await sA.$$eval('[id^="adm-hauptgame-"]', (n) => n.length === 6 && n.every((e) => e.disabled)))
 pruefe('Abschluss: Knopf zeigt ABGESCHLOSSEN',
   /ABGESCHLOSSEN/.test(await sA.$eval('[data-gr-abschliessen]', (e) => e.textContent).catch(() => '')))
 const nachAbschluss = await sA.evaluate(async (schluessel, ok) => {
   const r = await fetch('/api/terminal-admin', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'x-terminal-admin': schluessel },
-    body: JSON.stringify({ aktion: 'einstellungen', hauptgames: ['kuechen_tinder', 'kuechen_merge', 'kuechen_crush', 'videko_jump', 'kuechen_fit'], bestaetigung: ok }),
+    body: JSON.stringify({ aktion: 'einstellungen', hauptgames: ['kuechen_tinder', 'kuechen_merge', 'kuechen_crush', 'videko_jump', 'kuechen_fit', 'videko_slam'], bestaetigung: ok }),
   })
   return { status: r.status, grund: (await r.json()).grund }
 }, ADMIN_SCHLUESSEL, HAUPTGAME_OK)
