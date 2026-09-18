@@ -190,17 +190,17 @@ export const TEILNAHMEBEDINGUNGEN = {
         + 'Registrierung dient dazu, den Ablauf am Aktionsstand zu beschleunigen.',
         'Nach dem Absenden wird auf dem Gerät eine Bestätigung mit einem Registrierungscode '
         + 'angezeigt. Dieser Code wird am Aktionsstand vorgezeigt.',
-        'Gegen Vorzeigen des Codes wird am Stand ein Stempel vergeben. Die Ausgabe des Stempels '
-        + 'wird vom Standpersonal im internen System bestätigt.',
-        'Die Teilnahme am Gewinnspiel entsteht erst dadurch, dass die Person während des '
-        + 'Aktionszeitraums persönlich am Stand ist und das Standpersonal die Drehung am '
-        + 'Glücksrad bestätigt.',
+        'Mit dem Vorzeigen des Codes am Stand kann die Person direkt am Glücksrad teilnehmen. '
+        + 'Ein weiterer Zwischenschritt ist nicht erforderlich.',
+        'Die Teilnahme am Gewinnspiel entsteht dadurch, dass die Person während des '
+        + 'Aktionszeitraums persönlich am Stand den Code zeigt und das Standpersonal die Drehung '
+        + 'am Glücksrad bestätigt.',
       ],
     },
     {
       titel: '9. So funktioniert das Glücksrad',
       absaetze: [
-        'Nach dem bestätigten Stempel wird am physischen Glücksrad am Aktionsstand gedreht. '
+        'Nach dem Vorzeigen des Codes wird direkt am physischen Glücksrad am Aktionsstand gedreht. '
         + 'Gedreht wird so lange, bis ein Sofortgewinn fällt.',
         'Die Drehung ist nur während der Aktionszeiten und nur persönlich am Stand möglich.',
         'Die Drehungen werden vom Standpersonal begleitet und bestätigt. Mit dieser Bestätigung '
@@ -378,12 +378,12 @@ export const TEILNAHMEBEDINGUNGEN = {
 export const SPIELREGELN_KURZ = {
   titel: 'So funktioniert das Glücksrad',
   schritte: [
-    'Hier eintragen und Code erhalten.',
-    'Code am Stand zeigen und Stempel holen.',
-    'Am Glücksrad drehen.',
-    'Das erste Hauptpreisfeld qualifiziert dich für diesen Hauptpreis-Lostopf.',
-    'Das Hauptpreisfeld ist noch KEIN Hauptpreisgewinn.',
-    'Danach weiterdrehen bis zu deinem Sofortgewinn.',
+    'Code holen.',
+    'Code am Stand zeigen.',
+    'Drehen.',
+    'Das erste Hauptpreisfeld qualifiziert dich für den entsprechenden Lostopf.',
+    'Das Hauptpreisfeld ist noch KEIN direkter Hauptpreisgewinn.',
+    'Danach weiterdrehen bis zum Sofortgewinn.',
     'Weitere Hauptpreisfelder zählen nicht zusätzlich.',
   ],
   fuss: 'Teilnahme ab 18 Jahren · kostenlos · kein Kauf erforderlich',
@@ -442,8 +442,8 @@ export const DATENSCHUTZ_EVENT = {
         'Findet die Registrierung nach dem Stadtfest statt, werden keine Bestätigung der '
         + 'Teilnahmebedingungen und keine Altersbestätigung erhoben, weil dann kein Gewinnspiel '
         + 'mehr stattfindet.',
-        'Zusätzlich wird für Personen, die am Aktionsstand waren, gespeichert: die Ausgabe des '
-        + 'Stempels, die bestätigte Drehung am Glücksrad und, falls am Glücksrad das Feld '
+        'Zusätzlich wird für Personen, die am Aktionsstand waren, gespeichert: die Bestätigung '
+        + 'des am Stand vorgezeigten Codes, die bestätigte Drehung am Glücksrad und, falls am Glücksrad das Feld '
         + 'HAUPTPREIS erreicht wurde, die Qualifikation für die Verlosung — jeweils mit '
         + 'Zeitpunkt und bestätigender Person. Diese Angaben werden ausschließlich vom '
         + 'Standpersonal im geschützten internen System gesetzt, nie über die öffentliche '

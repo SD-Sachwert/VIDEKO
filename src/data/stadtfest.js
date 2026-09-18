@@ -57,8 +57,13 @@ export const STADTFEST_EVENT = {
 
   /* Versionsstände der Texte. Werden pro Teilnahme mitgespeichert, damit
      später belegbar ist, welcher Wortlaut zugestimmt wurde. */
-  termsVersion: 'stadtfest-teilnahme-und-gewinnbedingungen-2026-09-v1',
-  privacyVersion: 'stadtfest-datenschutz-2026-09-entwurf-1',
+  /* v2 (18.09.2026): Stempel als Teilnahmevoraussetzung entfällt; Ablauf ist
+     Registrierung → Code → Code am Stand zeigen → Glücksrad. Gewinnmechanik
+     unverändert. v1 war produktiv, daher neue Version statt Überschreiben. */
+  termsVersion: 'stadtfest-teilnahme-und-gewinnbedingungen-2026-09-v2',
+  /* entwurf-2 (18.09.2026): „Ausgabe des Stempels" ersetzt durch „Bestätigung
+     des am Stand vorgezeigten Codes". Sonst unverändert. */
+  privacyVersion: 'stadtfest-datenschutz-2026-09-entwurf-2',
   consentVersion: 'stadtfest-einwilligung-2026-09-entwurf-2',
 
   /* Herkunft. Der Slug ist ein VORSCHLAG für den Event-QR-Code im bestehenden
@@ -78,7 +83,7 @@ export const STADTFEST_EVENT = {
  * Die drei Betriebsmodi der Seite. Die Route /stadtfest ist in allen drei
  * Modi erreichbar — es gibt keinen Zustand, in dem der QR ins Leere läuft.
  *
- *   PHASE_VORHER  (PRE)   Eventvorschau. Kein Gewinnspiel, kein Stempel,
+ *   PHASE_VORHER  (PRE)   Eventvorschau. Kein Gewinnspiel, keine Drehung,
  *                         keine Hauptpreisqualifikation, kein Lostopf.
  *   PHASE_LAEUFT  (EVENT) Voller Gewinnspielflow am Stand.
  *   PHASE_NACHHER (POST)  Gewinnspiel beendet, Seite bleibt als kurze
@@ -212,7 +217,11 @@ export function zeitraumText(event = STADTFEST_EVENT) {
  */
 export const STADTFEST_INTERESSEN = [
   /* Innenraum */
-  { key: 'kueche_bad', label: 'Küche & Bad' },
+  /* Küche und Bad sind seit dem Stadtfest-Betrieb (18.09.2026) zwei getrennte
+     Chips. Der frühere Sammelschlüssel `kueche_bad` wird für neue
+     Registrierungen nicht mehr angenommen; Altbestände bleiben Studio-Sache. */
+  { key: 'kueche', label: 'Küche' },
+  { key: 'bad', label: 'Bad' },
   { key: 'innenausbau', label: 'Innenausbau' },
   { key: 'interior_design', label: 'Interior Design' },
   { key: 'spanndecke', label: 'Spanndecke' },
@@ -644,45 +653,41 @@ export function freigabeMoeglich(event = STADTFEST_EVENT) {
 export const PHASEN_TEXTE = {
   vorher: {
     mitGewinnspiel: true,
-    titel: 'Hol dir deinen Stempel.',
-    subline: 'Eintragen. Vorzeigen. Stempel holen. Drehen.',
+    titel: 'Eintragen. Code zeigen. Drehen.',
+    subline: '',
     formularTitel: 'Deine Daten.',
-    formularText: 'Eintragen, Bildschirm zeigen, Stempel holen und am Glücksrad drehen.',
-    teilnahmeHinweis:
-      'Die Gewinnspielteilnahme entsteht erst mit dem bestätigten Dreh am Stand.',
-    cta: 'STEMPEL FREISCHALTEN',
-    ctaLaeuft: 'WIRD FREIGESCHALTET ...',
-    erfolgTitel: 'Stempel freigegeben. ✓',
-    erfolgText: 'Zeig diesen Bildschirm unserem Team.',
-    erfolgHinweis:
-      'Die Teilnahme am Gewinnspiel entsteht erst mit dem bestätigten Dreh am Glücksrad.',
+    formularText: 'Eintragen, Code holen, am Stand zeigen.',
+    teilnahmeHinweis: '',
+    cta: 'CODE HOLEN',
+    ctaLaeuft: 'CODE KOMMT ...',
+    erfolgTitel: 'GESCHAFFT',
+    erfolgText: 'Zeig uns diesen Code am Stand.',
+    erfolgHinweis: 'Danach kannst du direkt drehen.',
     duplikatTitel: 'Dich kennen wir doch.',
     duplikatText: 'Du bist schon eingetragen. Zeig einfach diesen Code.',
     microcopy: [
       'Kein Kauf. Kein Abo. Kein Vertreterbesuch.',
-      'Der Stempel ist analog. Alles andere nicht.',
+      'Code zeigen, drehen, fertig.',
       'Der Haken unten ist freiwillig. Wirklich.',
     ],
   },
   event: {
     mitGewinnspiel: true,
-    titel: 'Hol dir deinen Stempel.',
-    subline: 'Eintragen. Vorzeigen. Stempel holen. Drehen.',
+    titel: 'Eintragen. Code zeigen. Drehen.',
+    subline: '',
     formularTitel: 'Deine Daten.',
-    formularText: 'Eintragen, Bildschirm zeigen, Stempel holen und am Glücksrad drehen.',
-    teilnahmeHinweis:
-      'Die Gewinnspielteilnahme entsteht erst mit dem bestätigten Dreh am Stand.',
-    cta: 'STEMPEL FREISCHALTEN',
-    ctaLaeuft: 'WIRD FREIGESCHALTET ...',
-    erfolgTitel: 'Stempel freigegeben. ✓',
-    erfolgText: 'Zeig diesen Bildschirm unserem Team.',
-    erfolgHinweis:
-      'Die Teilnahme am Gewinnspiel entsteht erst mit dem bestätigten Dreh am Glücksrad.',
+    formularText: 'Eintragen, Code holen, am Stand zeigen.',
+    teilnahmeHinweis: '',
+    cta: 'CODE HOLEN',
+    ctaLaeuft: 'CODE KOMMT ...',
+    erfolgTitel: 'GESCHAFFT',
+    erfolgText: 'Zeig uns diesen Code am Stand.',
+    erfolgHinweis: 'Danach kannst du direkt drehen.',
     duplikatTitel: 'Dich kennen wir doch.',
     duplikatText: 'Du bist schon eingetragen. Zeig einfach diesen Code.',
     microcopy: [
       'Kein Kauf. Kein Abo. Kein Vertreterbesuch.',
-      'Der Stempel ist analog. Alles andere nicht.',
+      'Code zeigen, drehen, fertig.',
       'Der Haken unten ist freiwillig. Wirklich.',
     ],
   },
@@ -691,7 +696,7 @@ export const PHASEN_TEXTE = {
     titel: 'Das Stadtfest ist vorbei.',
     subline: 'Der QR funktioniert trotzdem noch. Praktisch.',
     hinweis:
-      'Das Gewinnspiel ist beendet. Stempel, Drehungen und Lose gibt es dafür nicht mehr.',
+      'Das Gewinnspiel ist beendet. Drehungen und Lose gibt es dafür nicht mehr.',
     formularTitel: 'Wenn wir uns bei dir melden dürfen, lass uns kurz deine Daten da.',
     formularText: 'Kurz. Freiwillig. Ohne Gewinnspiel.',
     cta: 'DATEN DALASSEN',
@@ -712,8 +717,8 @@ export const PHASEN_TEXTE = {
 /**
  * Welcher Textblock gilt gerade?
  *
- * Der Kalender allein entscheidet das nicht. Die Eventtexte versprechen einen
- * Stempel am Stand; dieses Versprechen darf erst stehen, wenn neben dem
+ * Der Kalender allein entscheidet das nicht. Die Eventtexte versprechen eine
+ * Drehung am Stand; dieses Versprechen darf erst stehen, wenn neben dem
  * Zeitfenster auch die fachliche Freigabe steht. Fehlt sie, bleibt es bei den
  * zurückhaltenden Vorher-Texten — eintragen darf man sich trotzdem.
  *

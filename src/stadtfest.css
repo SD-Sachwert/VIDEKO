@@ -139,13 +139,13 @@
 /* Der ganze Hero ist eine Flaeche, kein Stapel: Headline links, Glücksrad
    rechts, beides im selben Feld und bewusst ineinander verzahnt. Genau das
    macht aus der Seite ein Plakat statt einer Liste aus Bloecken — und haelt
-   den Kopf so kurz, dass das Formular schon nach rund 670 px beginnt.
+   den Kopf so kurz, dass das Formular schon nach rund 560 px beginnt.
 
    Die Kinder sitzen absolut. Das ist hier kein Selbstzweck: nur so lassen
    sich Ueberlappungen fuehren, ohne dass ein Block den naechsten schiebt.
    Die Hoehe traegt deshalb der Container, nicht der Inhalt. */
 .stf-held {
-  --held-h: clamp(636px, 171vw, 706px);
+  --held-h: clamp(540px, 142vw, 600px);
   --held-rand: clamp(20px, 5.6vw, 26px);
 
   position: relative;
@@ -317,10 +317,14 @@
   z-index: 4;
   left: var(--held-rand);
   top: clamp(58px, 16.6vw, 76px);
-  width: clamp(205px, 56vw, 246px);
+  /* min-content: die Box ist so breit wie das laengste Wort. Sonst ragen
+     Glyphen ueber die Box hinaus und werden durch background-clip:text
+     unsichtbar. */
+  width: min-content;
+  max-width: calc(100% - 2 * var(--held-rand));
   margin: 0;
   font-family: var(--serif);
-  font-size: clamp(50px, 13.7vw, 60px);
+  font-size: clamp(42px, 11.6vw, 50px);
   font-weight: 300;
   line-height: 0.9;
   letter-spacing: -0.012em;
@@ -379,21 +383,11 @@
   opacity: 0.15;
 }
 
-/* Die Eckdaten sitzen im Hero, nicht darunter — sie gehoeren zum Plakat. */
-.stf-held .stf-eck {
-  position: absolute;
-  z-index: 4;
-  left: var(--held-rand);
-  top: clamp(430px, 114vw, 482px);
-  width: clamp(300px, 84vw, 336px);
-  margin: 0;
-}
-
 .stf-held__gruss {
   position: absolute;
   z-index: 4;
   left: clamp(22px, 6.6vw, 35px);
-  top: clamp(545px, 143vw, 600px);
+  top: clamp(430px, 113vw, 475px);
   width: clamp(158px, 44vw, 192px);
   margin: 0;
   font-family: var(--serif);
@@ -417,7 +411,7 @@
   position: absolute;
   z-index: 4;
   right: clamp(12px, 4.2vw, 20px);
-  top: clamp(535px, 141vw, 595px);
+  top: clamp(424px, 111vw, 468px);
   width: clamp(115px, 33vw, 145px);
   margin: 0;
   padding: 9px 8px 10px;
@@ -519,11 +513,6 @@
     top: clamp(356px, 34vw, 470px);
     width: min(44%, 440px);
     font-size: 13px;
-  }
-
-  .stf-held .stf-eck {
-    top: clamp(410px, 39vw, 540px);
-    width: min(46%, 470px);
   }
 
   .stf-rad {
@@ -1013,6 +1002,40 @@
   text-shadow: 0 1px 12px rgba(6, 5, 4, 0.95);
 }
 
+/* Der Code. Das Team liest ihn aus ein, zwei Metern ab: helle Flaeche,
+   fast schwarze Ziffern, so gross wie die Breite es erlaubt. Umbrechen
+   darf er nur im Notfall, ueberlaufen nie. */
+.stf-code {
+  padding: clamp(14px, 4vw, 20px) clamp(12px, 4vw, 20px) clamp(16px, 4.6vw, 22px);
+  border-radius: 14px;
+  background: #f4efe4;
+  color: #0b0a08;
+  text-align: center;
+  box-shadow:
+    0 0 0 2px var(--stf-gold),
+    0 26px 60px -28px rgba(0, 0, 0, 0.9);
+}
+
+.stf-code__label {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #5c4a26;
+}
+
+.stf-code__wert {
+  margin: 4px 0 0;
+  max-width: 100%;
+  font-size: clamp(72px, 22vw, 88px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
 /* Die Nachweisplatte. Sie bewegt sich sichtbar — ein Standbild sieht
    anders aus als dieser Schirm. */
 .stf-platte {
@@ -1162,77 +1185,6 @@
   line-height: 1.6;
   color: var(--stf-creme-weich);
   text-shadow: 0 1px 10px rgba(6, 5, 4, 0.85);
-}
-
-/* Die Eckdaten stehen als Liste, nicht im Fliesstext: sie werden im
-   Vorbeigehen gesucht, nicht gelesen. */
-/* Kein eigener Oberstrich mehr: direkt darueber sitzt bereits der goldene
-   Trenner des Kopfes. Zwei Linien mit nichts dazwischen sahen aus, als
-   waere an der Stelle Inhalt verloren gegangen. */
-.stf-eck {
-  margin: clamp(18px, 4.5vw, 24px) 0 0;
-  padding: clamp(12px, 3.2vw, 15px) clamp(13px, 3.4vw, 16px) clamp(13px, 3.4vw, 16px);
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-  border: 1px solid rgba(201, 160, 80, 0.26);
-  border-radius: 12px;
-  background: rgba(10, 9, 8, 0.5);
-}
-
-@supports (backdrop-filter: blur(8px)) or (-webkit-backdrop-filter: blur(8px)) {
-  .stf-eck {
-    background: rgba(10, 9, 8, 0.34);
-    -webkit-backdrop-filter: blur(9px);
-    backdrop-filter: blur(9px);
-  }
-}
-
-/* Drei Spalten: Zeichen, Bezeichnung, Wert. Die Bezeichnung behaelt ihre
-   feste Breite, damit die drei Werte untereinander auf einer Kante starten
-   — genau das macht die Liste im Vorbeigehen scanbar. */
-.stf-eck__zeile {
-  display: grid;
-  grid-template-columns: 17px 54px 1fr;
-  gap: 9px;
-  align-items: center;
-}
-
-/* Rein dekorativ, also bewusst zurueckgenommen: das Zeichen soll die Zeile
-   auffindbar machen, nicht mit dem Wert um Aufmerksamkeit streiten. */
-.stf-eck__icon {
-  width: 17px;
-  height: 17px;
-  color: var(--stf-gold);
-  opacity: 0.85;
-}
-
-@media (max-width: 399px) {
-  .stf-eck__zeile {
-    grid-template-columns: 16px 50px 1fr;
-    gap: 9px;
-  }
-
-  .stf-eck__icon {
-    width: 16px;
-    height: 16px;
-  }
-}
-
-.stf-eck__dt {
-  margin: 0;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--stf-gold);
-}
-
-.stf-eck__dd {
-  margin: 0;
-  font-size: 13.5px;
-  line-height: 1.4;
-  color: var(--stf-creme);
 }
 
 /* ---------------------------------------------------------------- */
@@ -1454,12 +1406,11 @@
 /* Kurz-Spielregeln im Formular                                      */
 /* ---------------------------------------------------------------- */
 
-/* Der Pflichthinweis vor dem Formular. Er erklaert in sieben Zeilen, was am
-   Rad passiert — vor allem, dass ein Hauptpreisfeld noch kein Hauptpreis
-   ist. Deshalb steht er ueber den Feldern und nicht in einem Sheet, das man
-   erst oeffnen muss. */
+/* Die Spielregeln unter dem Formular. Sie erklaeren in sieben Zeilen, was
+   am Rad passiert — vor allem, dass ein Hauptpreisfeld noch kein Hauptpreis
+   ist. Offen auf der Seite statt in einem Sheet, das man erst oeffnen muss. */
 .stf-regeln {
-  margin: 0 0 22px;
+  margin: 22px 0 0;
   padding: 16px 16px 14px;
   border: 1px solid var(--stf-linie);
   border-radius: 2px;

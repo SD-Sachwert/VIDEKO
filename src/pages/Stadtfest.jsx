@@ -9,7 +9,6 @@ import {
   eventTagText,
   interessenFuer,
   phasenSchluessel,
-  uhrzeitText,
 } from '../data/stadtfest.js'
 import {
   DATENSCHUTZ_EVENT,
@@ -71,43 +70,6 @@ const LEERE_MICROCOPY = []
 function kurzName(vorname, nachname) {
   const initial = (nachname || '').trim().slice(0, 1)
   return `${(vorname || '').trim()} ${initial ? `${initial}.` : ''}`.trim()
-}
-
-/* ------------------------------------------------------------------ */
-/* Eckdaten-Icons                                                      */
-/* ------------------------------------------------------------------ */
-
-/* Drei Strichzeichnungen fuer Was/Wann/Wo. Bewusst inline und bewusst
-   winzig: ein Icon-Paket waere fuer drei Pfade eine ganze Abhaengigkeit,
-   und Emojis sehen auf jedem Geraet anders aus. Sie erben die Farbe aus
-   dem CSS und sind rein dekorativ — die Bedeutung steht im dt daneben. */
-const ECK_PFADE = {
-  was: <path d="M4 9.4V7a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2.4a2.6 2.6 0 0 0 0 5.2V17a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-2.4a2.6 2.6 0 0 0 0-5.2ZM14 6v12" />,
-  wann: <path d="M5 6h14a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1ZM4 10.5h16M8 3.5V6M16 3.5V6" />,
-  wo: (
-    <>
-      <path d="M12 21s6.8-5.6 6.8-11.1A6.8 6.8 0 0 0 5.2 9.9C5.2 15.4 12 21 12 21Z" />
-      <circle cx="12" cy="9.9" r="2.5" />
-    </>
-  ),
-}
-
-function EckIcon({ art }) {
-  return (
-    <svg
-      className="stf-eck__icon"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.4"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      focusable="false"
-    >
-      {ECK_PFADE[art]}
-    </svg>
-  )
 }
 
 /* ------------------------------------------------------------------ */
@@ -224,7 +186,6 @@ export default function Stadtfest() {
   const [sheet, setSheet] = useState(null)
   const [microIndex, setMicroIndex] = useState(0)
   const [microWechsel, setMicroWechsel] = useState(false)
-  const [jetzt, setJetzt] = useState(null)
 
   const laeuftRef = useRef(false)
   /* Zum Scrollen bei fehlender Interessenauswahl: der Block liegt weit
@@ -267,7 +228,6 @@ export default function Stadtfest() {
         code: '4827',
         zeitpunkt: Date.now(),
       })
-      setJetzt(Date.now())
       setAnsicht(vorschau === 'duplikat' ? 'duplikat' : 'erfolg')
     }
     if (vorschau === 'fehler') {
@@ -293,15 +253,6 @@ export default function Stadtfest() {
     }, 5200)
     return () => clearInterval(takt)
   }, [ansicht, microAnzahl])
-
-  /* --- Laufende Uhr auf dem Erfolgsschirm --------------------------- */
-  useEffect(() => {
-    if (ansicht !== 'erfolg' && ansicht !== 'duplikat') return undefined
-    /* Die Startzeit wird dort gesetzt, wo auf den Erfolgsschirm gewechselt
-       wird. Hier laeuft nur noch der Sekundentakt weiter. */
-    const takt = setInterval(() => setJetzt(Date.now()), 1000)
-    return () => clearInterval(takt)
-  }, [ansicht])
 
   const setzeWert = useCallback((feld, wert) => {
     setWerte((w) => ({ ...w, [feld]: wert }))
@@ -440,7 +391,6 @@ export default function Stadtfest() {
         code: daten.code,
         zeitpunkt: daten.zeitpunkt ? Date.parse(daten.zeitpunkt) : jetztMs,
       })
-      setJetzt(Date.now())
       setAnsicht(daten.status === 'bekannt' ? 'duplikat' : 'erfolg')
     } catch {
       setSammelfehler('Keine Verbindung. Netz kurz prüfen und noch einmal antippen.')
@@ -483,29 +433,8 @@ export default function Stadtfest() {
   }
 
   const formular = texte ? (
+    <>
     <form className="stf-form" onSubmit={absenden} noValidate>
-      {/* Pflichthinweis zum Gluecksrad. Steht vor den Feldern, damit niemand
-          ein Hauptpreisfeld fuer einen gewonnenen Hauptpreis haelt. Ohne
-          Gewinnspiel gibt es kein Rad und damit nichts zu erklaeren. */}
-      {gewinnspiel && (
-        <section className="stf-regeln" aria-label={SPIELREGELN_KURZ.titel}>
-          <p className="stf-regeln__titel">{SPIELREGELN_KURZ.titel}</p>
-          <ol className="stf-regeln__liste">
-            {SPIELREGELN_KURZ.schritte.map((schritt) => (
-              <li className="stf-regeln__schritt" key={schritt}>
-                {schritt}
-              </li>
-            ))}
-          </ol>
-          <p className="stf-regeln__fuss">{SPIELREGELN_KURZ.fuss}</p>
-          <p className="stf-regeln__link">
-            <a className="stf-link" href={BEDINGUNGEN_PFAD} target="_blank" rel="noopener">
-              {SPIELREGELN_KURZ.linkText}
-            </a>
-          </p>
-        </section>
-      )}
-
       <div>
         <p className="stf-gruppe__titel">{texte.formularTitel}</p>
         <p className="stf-gruppe__text">{texte.formularText}</p>
@@ -731,14 +660,67 @@ export default function Stadtfest() {
           : `${STADTFEST_EVENT.name} · Registrierung ohne Gewinnspiel`}
       </p>
     </form>
+
+    {/* Spielregeln zum Gluecksrad. Stehen unter dem Formular, damit man
+        zuerst den Code holt; Pflichthaken und Bedingungslinks bleiben oben
+        direkt am Formular. Ohne Gewinnspiel gibt es kein Rad und damit
+        nichts zu erklaeren. */}
+    {gewinnspiel && (
+      <section className="stf-regeln" aria-label={SPIELREGELN_KURZ.titel}>
+        <p className="stf-regeln__titel">{SPIELREGELN_KURZ.titel}</p>
+        <ol className="stf-regeln__liste">
+          {SPIELREGELN_KURZ.schritte.map((schritt) => (
+            <li className="stf-regeln__schritt" key={schritt}>
+              {schritt}
+            </li>
+          ))}
+        </ol>
+        <p className="stf-regeln__fuss">{SPIELREGELN_KURZ.fuss}</p>
+        <p className="stf-regeln__link">
+          <a className="stf-link" href={BEDINGUNGEN_PFAD} target="_blank" rel="noopener">
+            {SPIELREGELN_KURZ.linkText}
+          </a>
+        </p>
+      </section>
+    )}
+    </>
   ) : null
 
-  /* Der Beleg. Er bestaetigt genau eine Sache: die Registrierung ist
-     gespeichert. Ob daraus eine Gewinnspielteilnahme wird, entscheidet
-     spaeter der bestaetigte Dreh am Stand — deshalb steht das auch dort,
-     wo man es sonst ueberlesen wuerde. */
-  const erfolg =
+  /* Der Beleg im Gewinnspiel. Am Stand wird er auf Armeslaenge vorgezeigt,
+     deshalb steht zwischen Ueberschrift und Code nichts: GESCHAFFT, DEIN
+     CODE, dann der Code so gross, dass das Team ihn aus ein, zwei Metern
+     abliest. Darunter nur, was als Naechstes passiert. */
+  const erfolgGewinnspiel =
     beleg && texte ? (
+      <section className="stf-erfolg">
+        <h1 className="stf-erfolg__haken">
+          {ansicht === 'duplikat' ? texte.duplikatTitel : texte.erfolgTitel}
+        </h1>
+
+        <div className="stf-code">
+          <p className="stf-code__label">Dein Code</p>
+          <p className="stf-code__wert">{beleg.code}</p>
+        </div>
+
+        <p className="stf-erfolg__zeig">{texte.erfolgText}</p>
+        {texte.erfolgHinweis ? (
+          <p className="stf-erfolg__zeig">{texte.erfolgHinweis}</p>
+        ) : null}
+
+        <div className="stf-linkreihe">
+          <a className="stf-link" href={BEDINGUNGEN_PFAD} target="_blank" rel="noopener">
+            Spielregeln &amp; Teilnahmebedingungen
+          </a>
+          <button type="button" className="stf-link" onClick={() => setSheet('datenschutz')}>
+            Datenschutzhinweise
+          </button>
+        </div>
+      </section>
+    ) : null
+
+  /* Der Beleg nach dem Fest. Er bestaetigt nur, dass die Registrierung
+     gespeichert ist — ein Gewinnspiel gibt es dann nicht mehr. */
+  const erfolg = gewinnspiel ? erfolgGewinnspiel : beleg && texte ? (
       <section className="stf-erfolg">
         <h1 className="stf-erfolg__haken">
           {ansicht === 'duplikat' ? texte.duplikatTitel : texte.erfolgTitel}
@@ -747,21 +729,10 @@ export default function Stadtfest() {
           {ansicht === 'duplikat' ? texte.duplikatText : texte.erfolgText}
         </p>
 
-        {/* Die Platte ist das, was am Stand vorgezeigt wird. Sie sieht vor
-            und waehrend des Fests gleich aus — der Stempel wird schliesslich
-            genauso gestempelt. Nur nach dem Fest faellt die laufende Uhr weg,
-            weil es dann nichts mehr live zu zeigen gibt. */}
+        {/* Nach dem Fest gibt es nichts mehr live zu zeigen: keine Uhr,
+            nur Name, Tag und Code. */}
         <div className="stf-platte">
-          {phasenKey !== 'nachher' && (
-            <span className="stf-platte__live">
-              <span className="stf-platte__punkt" />
-              Live
-            </span>
-          )}
           <p className="stf-platte__name">{beleg.name}</p>
-          {phasenKey !== 'nachher' && (
-            <p className="stf-platte__uhr">{uhrzeitText(jetzt ?? beleg.zeitpunkt)}</p>
-          )}
           <p className="stf-platte__zeile">
             {eventTagText(beleg.zeitpunkt)} ·{' '}
             <span className="stf-platte__code">Code {beleg.code}</span>
@@ -772,23 +743,7 @@ export default function Stadtfest() {
           <p className="stf-phase__text">{texte.erfolgHinweis}</p>
         ) : null}
 
-        {gewinnspiel && (
-          <p className="stf-phase__text">
-            Deine Registrierung ist geschafft. Die Gewinnspielteilnahme entsteht erst mit dem
-            bestätigten Besuch am Stadtfest-Stand.
-          </p>
-        )}
-
-        {gewinnspiel && (
-          <p className="stf-erfolg__fuss">Screenshot zählt nicht. Wahrscheinlich.</p>
-        )}
-
         <div className="stf-linkreihe">
-          {gewinnspiel && (
-            <a className="stf-link" href={BEDINGUNGEN_PFAD} target="_blank" rel="noopener">
-              Spielregeln &amp; Teilnahmebedingungen
-            </a>
-          )}
           <button type="button" className="stf-link" onClick={() => setSheet('datenschutz')}>
             Datenschutzhinweise
           </button>
@@ -798,9 +753,7 @@ export default function Stadtfest() {
 
   /* Was die Phase zusaetzlich zum Formular sagt.
 
-     Vorher: die Eckdaten, damit klar ist, wohin man den Code mitbringt.
-     Nachher: der Hinweis, dass das Gewinnspiel vorbei ist.
-     Waehrend des Fests braucht es beides nicht — da steht man davor. */
+     Nur nach dem Fest: der Hinweis, dass das Gewinnspiel vorbei ist. */
   const phasenBlock =
     phasenKey === 'nachher' ? (
       <section className="stf-phase">
@@ -809,7 +762,7 @@ export default function Stadtfest() {
     ) : null
 
   /* Der vorgerenderte Stand: Name, Termin, Ort. Alles drei gilt vor, waehrend
-     und nach dem Fest. Was nicht gilt, steht hier auch nicht — kein Stempel,
+     und nach dem Fest. Was nicht gilt, steht hier auch nicht — kein Code,
      kein Lostopf, keine Absage. */
   const stillstand = (
     <section className="stf-phase">
@@ -869,8 +822,8 @@ export default function Stadtfest() {
                unten. Jetzt liegt alles in einem Feld, und die Card beginnt
                schon nach rund 670 px.
 
-               Die Eckdaten stehen mit im Bild statt als eigener Block
-               darunter. Inhaltlich aendert das nichts, nur die Anordnung.
+               Die Eckdaten (Was/Wann/Wo) sind ganz entfallen: wer vor dem
+               Stand steht, braucht sie nicht, und das Formular rueckt hoch.
 
                Das Rad traegt keine Information, die nicht auch im Text
                steht — deshalb leeres alt und aria-hidden. */
@@ -900,7 +853,7 @@ export default function Stadtfest() {
               </div>
 
               <h1 className="stf-held__titel">{texte.titel}</h1>
-              <p className="stf-held__sub">{texte.subline}</p>
+              {texte.subline ? <p className="stf-held__sub">{texte.subline}</p> : null}
 
               {texte.teilnahmeHinweis ? (
                 <p className="stf-held__fein">{texte.teilnahmeHinweis}</p>
@@ -909,26 +862,6 @@ export default function Stadtfest() {
               <p className="stf-held__micro" data-wechsel={microWechsel ? '1' : '0'}>
                 {microcopy[microIndex] ?? ''}
               </p>
-
-              {phasenKey === 'vorher' ? (
-                <dl className="stf-eck">
-                  <div className="stf-eck__zeile">
-                    <EckIcon art="was" />
-                    <dt className="stf-eck__dt">Was</dt>
-                    <dd className="stf-eck__dd">{STADTFEST_EVENT.name}</dd>
-                  </div>
-                  <div className="stf-eck__zeile">
-                    <EckIcon art="wann" />
-                    <dt className="stf-eck__dt">Wann</dt>
-                    <dd className="stf-eck__dd">{eventDatumKurz()}</dd>
-                  </div>
-                  <div className="stf-eck__zeile">
-                    <EckIcon art="wo" />
-                    <dt className="stf-eck__dt">Wo</dt>
-                    <dd className="stf-eck__dd">{STADTFEST_EVENT.ort}</dd>
-                  </div>
-                </dl>
-              ) : null}
 
               <p className="stf-held__gruss">
                 Wir sehen uns am Stand!{' '}
