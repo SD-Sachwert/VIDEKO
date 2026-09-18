@@ -63,25 +63,115 @@ export const TERMINAL_KAMPAGNE = {
 /* ------------------------------------------------------------------ */
 
 /**
- * Die Stufen der Follower-Mission. Bei jeder kommt ein Zusatzgewinn in die
- * Truhe. Welcher, pflegt der Betrieb in der Verwaltung (Spalte
- * meilenstein_gewinne) — steht dort nichts, heisst er MEILENSTEIN_LEER.
- * Kein Preis wird hier erfunden.
+ * Die Stufen der Follower-Mission. Bei jeder kommt genau ein Zusatzgewinn in
+ * die Truhe, und jede freigeschaltete Stufe bekommt ihre eigene Ziehung.
+ * Welcher Gewinn an welcher Stufe haengt, pflegt der Betrieb in der
+ * Verwaltung (Spalte meilenstein_gewinne) — steht dort nichts, heisst er
+ * MEILENSTEIN_LEER. Kein Preis wird hier erfunden.
  *
- * Getaktet in 500er-Schritten ab 1.500: darunter liegt der Kanal laengst,
+ * Getaktet in 250er-Schritten ab 1.250: darunter liegt der Kanal laengst,
  * eine schon erreichte Stufe ist kein Ziel. Die letzte Stufe ist keine
  * weitere unter vielen, sondern das Ende der Fahnenstange — sie heisst
  * MEGA_MEILENSTEIN und wird ueberall anders behandelt als die Stufen davor.
  */
-export const MEILENSTEINE = [1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
+export const MEILENSTEIN_SCHRITT = 250
+export const MEILENSTEINE = [
+  1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000,
+  3250, 3500, 3750, 4000, 4250, 4500, 4750, 5000,
+]
 export const MEGA_MEILENSTEIN = 5000
 export const MEILENSTEIN_LEER = 'ZUSATZGEWINN'
 export const MEGA_LEER = 'MEGA-PREIS'
+
+/** Die Artikel, die als Zusatzgewinn in Frage kommen. Die Zuordnung zur
+ *  Stufe trifft ausschliesslich der Betrieb in der Verwaltung. */
+export const MEILENSTEIN_ARTIKEL = ['Shirt', 'Pullover', 'Schürze']
+
+/**
+ * Der gespeicherte Stand der Follower-Mission, aus der jsonb-Spalte
+ * `meilenstein_gewinne` gelesen. Zwei Formate muessen hier durch dieselbe
+ * Tuer:
+ *
+ *   alt  { "1500": "Shirt" }                       — nur der Gewinnname
+ *   neu  { stufen: { "1250": { gewinn, beschreibung, freiAm, gezogen } },
+ *          ranking: { "1": { beschreibung, wert } }, log: [ … ] }
+ *
+ * Das alte Format wird still in das neue gehoben, damit ein bereits
+ * eingetragener Gewinn beim ersten Speichern nicht verloren geht. Gelesen
+ * wird nie mehr als die bekannten Stufen; alles Unbekannte faellt weg.
+ *
+ * `freiAm` ist der Zeitpunkt der Erstfreischaltung. Er wird nur gesetzt,
+ * nie geloescht — eine einmal erreichte Stufe bleibt frei, auch wenn die
+ * Followerzahl spaeter wieder faellt.
+ */
+export const MEILENSTEIN_LOG_MAX = 60
+
+function text(wert, max) {
+  return String(wert ?? '').replace(/\s+/g, ' ').trim().slice(0, max)
+}
+
+export function meilensteinStand(roh) {
+  const aus = { stufen: {}, ranking: {}, log: [] }
+  if (!roh || typeof roh !== 'object') return aus
+
+  const altesFormat = !roh.stufen && !roh.ranking && !roh.log
+  const quelle = altesFormat ? roh : (roh.stufen ?? {})
+
+  for (const ziel of MEILENSTEINE) {
+    const eintrag = quelle?.[ziel] ?? quelle?.[String(ziel)]
+    if (eintrag == null) continue
+    const stufe = typeof eintrag === 'string' || typeof eintrag === 'number'
+      ? { gewinn: eintrag }
+      : eintrag
+    const gewinn = text(stufe.gewinn, 80)
+    const beschreibung = text(stufe.beschreibung, 200)
+    const freiAm = text(stufe.freiAm, 40) || null
+    const g = stufe.gezogen
+    const gezogen = g && Number.isInteger(Number(g.nummer))
+      ? {
+        nummer: Number(g.nummer),
+        spieler: text(g.spieler, 60) || null,
+        am: text(g.am, 40) || null,
+      }
+      : null
+    if (!gewinn && !beschreibung && !freiAm && !gezogen) continue
+    aus.stufen[String(ziel)] = { gewinn, beschreibung, freiAm, gezogen }
+  }
+
+  for (const platz of [1, 2, 3]) {
+    const e = roh.ranking?.[platz] ?? roh.ranking?.[String(platz)]
+    if (!e || typeof e !== 'object') continue
+    const beschreibung = text(e.beschreibung, 200)
+    const wert = text(e.wert, 60)
+    if (!beschreibung && !wert) continue
+    aus.ranking[String(platz)] = { beschreibung, wert }
+  }
+
+  if (Array.isArray(roh.log)) {
+    aus.log = roh.log
+      .filter((e) => e && typeof e === 'object')
+      .map((e) => ({ am: text(e.am, 40), art: text(e.art, 40), text: text(e.text, 200) }))
+      .filter((e) => e.am && e.text)
+      .slice(0, MEILENSTEIN_LOG_MAX)
+  }
+  return aus
+}
+
+/** Die Stufe eines Ziels aus dem gespeicherten Stand, immer vollstaendig. */
+export function meilensteinStufe(stand, ziel) {
+  return stand?.stufen?.[String(ziel)] ?? { gewinn: '', beschreibung: '', freiAm: null, gezogen: null }
+}
 
 /**
  * Die Mission zu einer Followerzahl: welche Stufen offen sind, welche als
  * naechste kommt und wie weit es bis dahin ist. Gerechnet wird immer aus der
  * echten Zahl — es gibt keinen festen Text „noch 439".
+ *
+ * Freigeschaltet ist eine Stufe, sobald sie einmal erreicht war: entweder
+ * steht ein `freiAm` im gespeicherten Stand, oder die aktuelle Zahl liegt
+ * schon darueber (dann holt der Server das `freiAm` beim naechsten Abgleich
+ * nach). Eine Stufe faellt so nie wieder zu, auch nicht bei sinkender
+ * Followerzahl.
  *
  * `megaFrei` sagt, ob die letzte Stufe schon steht; `megaNaechste`, ob der
  * naechste Schritt bereits der MEGA-PREIS ist. Beide bestimmen nur den
@@ -90,15 +180,19 @@ export const MEGA_LEER = 'MEGA-PREIS'
  */
 export function missionStand(followerRoh, gewinne = {}) {
   const follower = Math.max(0, Math.trunc(Number(followerRoh) || 0))
+  const stand = meilensteinStand(gewinne)
   const stufen = MEILENSTEINE.map((ziel) => {
     const mega = ziel === MEGA_MEILENSTEIN
-    const name = String(gewinne?.[ziel] ?? gewinne?.[String(ziel)] ?? '').trim()
+    const s = meilensteinStufe(stand, ziel)
     return {
       ziel,
       mega,
-      frei: follower >= ziel,
-      gewinn: name || (mega ? MEGA_LEER : MEILENSTEIN_LEER),
-      benannt: Boolean(name),
+      frei: Boolean(s.freiAm) || follower >= ziel,
+      freiAm: s.freiAm,
+      gewinn: s.gewinn || (mega ? MEGA_LEER : MEILENSTEIN_LEER),
+      beschreibung: s.beschreibung,
+      benannt: Boolean(s.gewinn),
+      gezogen: s.gezogen,
     }
   })
   const naechste = stufen.find((st) => !st.frei) ?? null
@@ -112,12 +206,24 @@ export function missionStand(followerRoh, gewinne = {}) {
   return {
     follower,
     stufen,
+    stand,
     naechste,
     fehlt: naechste ? Math.max(0, naechste.ziel - follower) : 0,
     anteil,
-    megaFrei: follower >= MEGA_MEILENSTEIN,
+    megaFrei: Boolean(stufen[stufen.length - 1]?.frei),
     megaNaechste: Boolean(naechste?.mega),
   }
+}
+
+/**
+ * Welche Stufen bei dieser Followerzahl neu freigeschaltet werden muessen.
+ * Liefert alle Ziele, die erreicht sind und noch kein `freiAm` tragen —
+ * bei einem Sprung von 1.490 auf 1.770 also 1.250, 1.500 und 1.750 auf
+ * einmal. Keine uebersprungene Stufe, keine doppelte Freischaltung.
+ */
+export function offeneFreischaltungen(follower, stand) {
+  const zahl = Math.max(0, Math.trunc(Number(follower) || 0))
+  return MEILENSTEINE.filter((ziel) => zahl >= ziel && !meilensteinStufe(stand, ziel).freiAm)
 }
 
 /** Feldlaengen. Gelten im Browser als maxLength und im Server als harte Grenze. */
@@ -499,7 +605,7 @@ export const TEXTE = {
     countdownNotiz: 'Bis sich ein weiterer Deckel öffnet.',
     countdownOffen: 'Termin wird hier bekannt gegeben.',
     deckelNotiz: 'Gemeinsam näher an die nächste Ziehung.',
-    followerNotiz: 'Bei {ziel} Followern kommt ein weiterer Gewinn in die Truhe.',
+    followerNotiz: 'Bei {ziel} Followern schalten wir eine weitere Ziehung frei.',
     followerNotizMega: 'Bei {ziel} Followern öffnet sich der MEGA-PREIS.',
     /* Die Follower-Mission im Dashboard.
        Kein Satz nennt hier eine feste Zahl: `fehlt` und die Stufen kommen
@@ -511,7 +617,7 @@ export const TEXTE = {
       fehlt: 'Noch {fehlt} bis zum nächsten Zusatzgewinn.',
       fehltMega: 'Noch {fehlt} bis zum MEGA-PREIS.',
       alle: 'MEGA-PREIS FREIGESCHALTET.',
-      takt: 'Alle 500 neuen Follower knacken wir den nächsten Zusatzgewinn.',
+      takt: 'ALLE 250 FOLLOWER SCHALTEN WIR EINE WEITERE ZIEHUNG FREI.',
       megaZeile: '{zahl} FOLLOWER = MEGA-PREIS',
       frei: 'FREIGESCHALTET',
       zu: 'Gesperrt',

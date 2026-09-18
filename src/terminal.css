@@ -4686,6 +4686,21 @@ textarea.trm-eingabe {
   padding: 3px 0;
 }
 
+/* Wert und Beschreibung eines Preises: der Wert bleibt in der Zeile, die
+   Beschreibung bekommt eine eigene darunter. Beide nur, wenn gepflegt. */
+.trm-gr__preisWert {
+  color: var(--trm-gold-hell);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.trm-gr__preisText {
+  display: block;
+  font-size: clamp(11px, 3vw, 12px);
+  line-height: 1.45;
+  color: var(--trm-creme-leise);
+}
+
 /* "BESTE 4 AUS 6" — die Bedingung steht direkt unter dem Titel, damit
    niemand erst die Erklaerung suchen muss. */
 .trm-gr__beste,
@@ -5390,15 +5405,103 @@ textarea.trm-eingabe {
   opacity: 0.62;
 }
 
-.trm-adm__gewinne {
+/* Follower-Meilensteine: je Schwelle eine eigene Kachel. Auf dem Telefon
+   untereinander, ab 760px zwei nebeneinander — eine echte Tabelle mit sechs
+   Spalten waere bei 390px nicht lesbar. */
+.trm-adm__stufen {
   display: grid;
-  gap: 0 14px;
+  gap: 14px;
+  margin: 16px 0;
 }
 
-@media (min-width: 620px) {
-  .trm-adm__gewinne {
+@media (min-width: 760px) {
+  .trm-adm__stufen {
     grid-template-columns: 1fr 1fr;
   }
+}
+
+.trm-adm__stufe {
+  padding: 14px;
+  border: 1px solid rgba(212, 162, 76, 0.22);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Die 5.000er-Stufe ist der Mega-Preis und darf nicht aussehen wie eine
+   der 250er-Stufen. */
+.trm-adm__stufe--mega {
+  grid-column: 1 / -1;
+  border-color: var(--trm-gold, #d4a24c);
+  border-width: 2px;
+  background: rgba(212, 162, 76, 0.07);
+}
+
+.trm-adm__stufeKopf {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  margin-bottom: 10px;
+}
+
+.trm-adm__stufeZiel {
+  color: var(--trm-gold-hell);
+  font-size: 1.15rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.trm-adm__stufe--mega .trm-adm__stufeZiel {
+  font-size: 1.5rem;
+}
+
+.trm-adm__stufeStatus {
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
+  opacity: 0.7;
+}
+
+.trm-adm__stufeStatus--frei {
+  color: var(--trm-gold, #d4a24c);
+  opacity: 1;
+}
+
+.trm-adm__stufeZiehung {
+  margin: 10px 0 8px;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+/* Preisfelder je Rankingplatz als zusammengehoeriger Block. */
+.trm-adm__preis {
+  margin-bottom: 14px;
+  padding-left: 12px;
+  border-left: 2px solid rgba(212, 162, 76, 0.28);
+}
+
+.trm-adm__log {
+  margin-top: 18px;
+  font-size: 0.8rem;
+}
+
+.trm-adm__log summary {
+  cursor: pointer;
+  color: var(--trm-gold, #d4a24c);
+  letter-spacing: 0.06em;
+}
+
+.trm-adm__log ul {
+  margin: 10px 0 0;
+  padding-left: 18px;
+  line-height: 1.5;
+}
+
+.trm-adm__logZeit {
+  color: var(--trm-gold-hell);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .trm-adm__zahl {
@@ -7038,10 +7141,19 @@ textarea.trm-eingabe {
   color: var(--trm-creme-leise);
 }
 
-/* Die Stufen liegen im Flex-Fluss, nicht im Raster: die Reihe hat sieben
-   normale Stufen und danach die achte, die allein eine ganze Zeile fuellt.
-   In einem Raster mit gerader Spaltenzahl bliebe dabei eine halbe Zeile
-   leer; hier rutscht die letzte angefangene Reihe einfach in die Mitte. */
+/* Die zweite Zeile nennt das grosse Ziel und darf etwas heller stehen —
+   dieselbe Schriftgroesse, nur nicht dieselbe Zurueckhaltung. */
+.trm-mission__takt--mega {
+  margin-top: 2px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--trm-gold-hell);
+}
+
+/* Die Stufen liegen im Flex-Fluss, nicht im Raster: fuenfzehn 250er-Stufen
+   und danach die 5.000, die allein eine ganze Zeile fuellt. In einem Raster
+   mit fester Spaltenzahl bliebe dabei eine halbe Zeile leer; hier rutscht
+   die letzte angefangene Reihe einfach in die Mitte. */
 .trm-mission__stufen {
   display: flex;
   flex-wrap: wrap;

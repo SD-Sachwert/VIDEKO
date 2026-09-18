@@ -19,18 +19,25 @@ export const spielTitel = (key) => SPIEL_NACH_KEY[key]?.titel ?? key
  * Die Rankingpreise. Steht nur da, wenn in der Verwaltung mindestens ein Preis
  * eingetragen ist — ohne Eintrag wird nichts versprochen.
  */
-export function GesamtPreise({ preise }) {
+export function GesamtPreise({ preise, texte }) {
   const gesetzt = [1, 2, 3].filter((p) => preise?.[p])
   if (gesetzt.length === 0) return null
   return (
     <div className="trm-gr__preise" data-gr-preise="1">
       <p className="trm-gr__preise-titel">{T.grPreiseText}</p>
       <ul className="trm-gr__preisliste">
-        {gesetzt.map((p) => (
-          <li key={p}>
-            <strong>{fuelle(T.grPreisPlatz, { platz: p })}</strong> {preise[p]}
-          </li>
-        ))}
+        {gesetzt.map((p) => {
+          /* Beschreibung und Wert sind optional und werden nur gezeigt, wenn
+             sie in der Verwaltung stehen — hier wird nichts ergaenzt. */
+          const t = texte?.[p] ?? {}
+          return (
+            <li key={p}>
+              <strong>{fuelle(T.grPreisPlatz, { platz: p })}</strong> {preise[p]}
+              {t.wert ? <span className="trm-gr__preisWert"> · {t.wert}</span> : null}
+              {t.beschreibung ? <span className="trm-gr__preisText">{t.beschreibung}</span> : null}
+            </li>
+          )
+        })}
       </ul>
     </div>
   )
@@ -142,7 +149,7 @@ export function GesamtListe({ daten }) {
         {T.grEinzelHinweis}
       </p>
 
-      <GesamtPreise preise={daten?.preise} />
+      <GesamtPreise preise={daten?.preise} texte={daten?.preisTexte} />
     </section>
   )
 }

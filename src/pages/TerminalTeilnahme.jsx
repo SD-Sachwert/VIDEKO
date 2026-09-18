@@ -6,6 +6,10 @@ import TerminalRahmen, { Raute } from '../components/TerminalRahmen.jsx'
 import {
   GEWERTETE_GAMES,
   HAUPTGAMES_ANZAHL,
+  MEGA_MEILENSTEIN,
+  MEILENSTEINE,
+  MEILENSTEIN_ARTIKEL,
+  MEILENSTEIN_SCHRITT,
   RANGPUNKTE_MAX,
   SPIELE_LISTE,
   STANDARD_HAUPTGAMES,
@@ -31,17 +35,19 @@ import { GEWINNE } from '../data/terminal-gewinne.js'
  *   - Rechtsweg, Barauszahlung, Uebertragbarkeit des Gewinns
  *   - Steuerliche Behandlung der Sachpreise
  *   - Widerruf, Loeschfristen, Rechtsgrundlage der Verarbeitung
- *   - Der Hinweis, dass die Aktion nicht von Instagram/Meta gesponsert,
- *     unterstuetzt oder organisiert wird (Meta verlangt ihn)
+ *
+ * Der Plattformhinweis, den Meta fuer Gewinnspiele verlangt, steht seit dem
+ * Launch-Pass im eigenen Abschnitt „Hinweis zu Instagram" — er fehlt also
+ * nicht mehr.
  *
  * Der Hinweiskasten oben auf der Seite sagt dasselbe auch den Besuchern.
  * Er bleibt stehen, bis ein freigegebener Text vorliegt.
  *
- * DREI GETRENNTE DINGE
+ * VIER GETRENNTE DINGE
  * --------------------
  * Die alte Fassung warf sie zusammen und endete bei „Fuer die Spiele gibt es
  * keine Preise" — das war schon damals nicht der Code, und heute ist es
- * schlicht falsch. Sauber getrennt sind es drei:
+ * schlicht falsch. Sauber getrennt sind es vier:
  *
  *   1. Das Gesamtranking — beste vier aus sechs. Bedingung ist Instagram,
  *      nicht der Deckel (`rankingBerechtigt` in api/_terminal-kern.js). Nur
@@ -50,16 +56,23 @@ import { GEWINNE } from '../data/terminal-gewinne.js'
  *      Rechengrundlage — aus ihnen folgt kein eigener Gewinn.
  *   2. Die Deckelziehung. Bedingung ist ein aktivierter physischer Deckel
  *      (`ziehungBerechtigt`, `NUR_OFFIZIELLE`).
- *   3. Das anonyme Probespiel. Kein Konto, kein Score, keine Liste.
+ *   3. Die Follower-Zusatzziehungen. Je freigeschalteter Followerschwelle
+ *      genau eine eigene Ziehung um einen Merchandise-Artikel, aus demselben
+ *      Kreis gueltig aktivierter Deckel, aber in einem eigenen Topf
+ *      (`followerZiehen` in api/terminal-admin.js). Eine in der grossen
+ *      Deckelziehung gezogene Nummer bleibt hier im Rennen und umgekehrt.
+ *   4. Das anonyme Probespiel. Kein Konto, kein Score, keine Liste.
  *
- * Keiner der drei Wege haengt an einem anderen. Genauso steht es im Server,
+ * Keiner der vier Wege haengt an einem anderen. Genauso steht es im Server,
  * und genauso steht es hier.
  *
  * Alle Zahlen dieser Seite kommen aus der Konfiguration: die Deckelzahl aus
- * TERMINAL_KAMPAGNE, die Zahl der Hauptspiele und die Rangpunkte aus
- * data/terminal.js, die ausgeschriebenen Gewinne aus terminal-gewinne.js.
- * Eine hier hineingeschriebene Zahl waere beim naechsten Aendern eine falsche
- * Zusage.
+ * TERMINAL_KAMPAGNE, die Zahl der Hauptspiele, die Rangpunkte und die
+ * Followerschwellen aus data/terminal.js, die ausgeschriebenen Gewinne aus
+ * terminal-gewinne.js. Eine hier hineingeschriebene Zahl waere beim naechsten
+ * Aendern eine falsche Zusage. Deshalb steht hier auch kein konkreter
+ * Followerpreis und kein konkreter Rankingpreis: beides pflegt die Verwaltung,
+ * und angezeigt wird, was dort steht.
  */
 
 const GESAMT = zahl(TERMINAL_KAMPAGNE.deckelGesamt)
@@ -72,6 +85,16 @@ const HAUPTSPIEL_NAMEN = STANDARD_HAUPTGAMES
   .map((key) => SPIELE_LISTE.find((s) => s.key === key)?.titel ?? key)
   .join(', ')
 
+/* Die Followerstaffel — abgeleitet, nicht abgeschrieben. Aendert sich die
+   Liste in data/terminal.js, aendert sich dieser Text mit. */
+const NORMALE_STUFEN = MEILENSTEINE.filter((ziel) => ziel !== MEGA_MEILENSTEIN)
+const ERSTE_STUFE = zahl(NORMALE_STUFEN[0])
+const LETZTE_STUFE = zahl(NORMALE_STUFEN[NORMALE_STUFEN.length - 1])
+const STUFEN_ZAHL = NORMALE_STUFEN.length
+const SCHRITT = zahl(MEILENSTEIN_SCHRITT)
+const MEGA = zahl(MEGA_MEILENSTEIN)
+const ARTIKEL_NAMEN = MEILENSTEIN_ARTIKEL.join(', ')
+
 /** Die Abschnitte. Reine Mechanik — jeder Satz beschreibt, was der Code tut. */
 const ABSCHNITTE = [
   {
@@ -80,9 +103,10 @@ const ABSCHNITTE = [
       `Im Umlauf sind ${GESAMT} nummerierte Bierdeckel. Jeder trägt eine handschriftliche Nummer von 1 bis ${GESAMT}; jede Nummer gibt es genau einmal.`,
       'Auf dem Deckel steht ein Rätsel. Seine Lösung ist der Tresor-Code und auf allen Deckeln dieselbe.',
       'Der Code allein gewinnt nichts. Er öffnet nur die Eingabe, mit der ein Deckel aktiviert wird.',
-      `Es gibt zwei voneinander unabhängige Wege zu einem Gewinn: das Gesamtranking über die besten ${GEWERTETE_GAMES} von ${HAUPTGAMES_ANZAHL} Spielen und die Deckelziehung. Für das Gesamtranking braucht man keinen Deckel.`,
+      `Es gibt drei voneinander unabhängige Wege zu einem Gewinn: das Gesamtranking über die besten ${GEWERTETE_GAMES} von ${HAUPTGAMES_ANZAHL} Spielen, die Deckelziehung und die zusätzlichen Follower-Ziehungen. Für das Gesamtranking braucht man keinen Deckel.`,
       `Aus der Deckelziehung werden mehrere Nummern gezogen — ausgeschrieben sind zurzeit ${GEWINN_ZAHL} Gewinne. Es gibt also mehrere Gewinner.`,
-      'Die Teilnahme ist in allen drei Fällen kostenlos. Ein Kauf ist nicht erforderlich.',
+      `Erreicht der Instagram-Kanal @${TERMINAL_KAMPAGNE.instagramHandle} eine Followerschwelle, kommt je Schwelle eine weitere, eigene Ziehung um einen Merchandise-Artikel dazu. Sie ändert nichts an den anderen beiden Wegen.`,
+      'Die Teilnahme ist in allen Fällen kostenlos. Ein Kauf ist nicht erforderlich.',
     ],
   },
   {
@@ -112,6 +136,7 @@ const ABSCHNITTE = [
       'Die Verwaltung kann die Aufstellung der Hauptspiele ändern; maßgeblich ist die Aufstellung, die im Terminal angezeigt wird. Änderungen werden protokolliert.',
       'Küchen-Tinder ist kein Hauptspiel und zählt in keiner Wertung mit.',
       'Die Verwaltung kann das Gesamtranking abschließen. Ab diesem Zeitpunkt gilt der eingefrorene Stand; spätere Läufe ändern daran nichts.',
+      'Einen Rankingpreis gewinnen ausschließlich die Gesamtplätze 1, 2 und 3. Welche Preise das sind, steht in der Ausschreibung im Terminal; aus den Einzel-Bestenlisten entsteht kein eigener Gewinnanspruch.',
     ],
   },
   {
@@ -124,6 +149,23 @@ const ABSCHNITTE = [
       'Gezogen wird mehrfach, nacheinander. Eine bereits gezogene Nummer kommt nicht erneut in den Topf. Eine neue Ziehung startet erst, wenn die vorherige zugeordnet ist oder ihre Frist abgelaufen ist.',
       'Jede gezogene Nummer wird auf der Seite „Live-Ziehung“ veröffentlicht. Veröffentlicht wird die Nummer — keine Namen, keine E-Mail-Adressen.',
       'Wer keinen Deckel hat, kann trotzdem spielen, in den Ranglisten stehen und Spiel-Gewinne bekommen. Nur an der Deckelziehung nimmt er nicht teil.',
+      'Die Deckelziehung und die zusätzlichen Follower-Ziehungen sind getrennte Ziehungen mit getrennten Töpfen. Eine hier gezogene Nummer bleibt bei den Follower-Ziehungen im Rennen — und umgekehrt.',
+    ],
+  },
+  {
+    titel: 'Follower-Aktion auf Instagram',
+    punkte: [
+      `Erreicht der Instagram-Kanal @${TERMINAL_KAMPAGNE.instagramHandle} ${ERSTE_STUFE} Follower, wird eine zusätzliche Ziehung um einen Merchandise-Artikel freigeschaltet. Danach kommt bei jeder weiteren Schwelle im Abstand von ${SCHRITT} Followern genau eine weitere Ziehung dazu — bis ${LETZTE_STUFE}. Das sind ${STUFEN_ZAHL} mögliche Zusatzziehungen.`,
+      `Mögliche Gewinne sind die Merchandise-Artikel: ${ARTIKEL_NAMEN}. Welcher Artikel bei welcher Schwelle ausgespielt wird, legt VIDEKO fest und veröffentlicht es im Terminal. Maßgeblich ist die dort angezeigte Ausschreibung.`,
+      'Jede freigeschaltete Schwelle wird einzeln gezogen und hat einen eigenen Gewinner. Drei freigeschaltete Schwellen bedeuten drei zusätzliche Gewinner — nicht einen gemeinsamen Gewinn.',
+      'An jeder freigeschalteten Zusatzziehung nehmen die zum Ziehungszeitpunkt gültig aktivierten Deckel teil. Ein aktivierter physischer Deckel ist eine Chance je Ziehung; weitere Besitzansprüche auf dieselbe Nummer erhöhen die Chance nicht.',
+      'Innerhalb der Follower-Ziehungen wird eine bereits gezogene Nummer nicht erneut gezogen. Gegenüber der großen Deckelziehung sind es getrennte Töpfe.',
+      'Eine einmal erreichte Schwelle bleibt dauerhaft freigeschaltet. Sinkt die Followerzahl später wieder, wird eine freigeschaltete Zusatzziehung nicht zurückgenommen.',
+      'Werden mehrere Schwellen zugleich übersprungen, werden alle dazwischenliegenden Schwellen freigeschaltet. Es fällt keine Zusatzziehung aus.',
+      `Bei ${MEGA} Followern kommt statt einer weiteren Merchandise-Ziehung ein gesondert ausgeschriebener Mega-Preis dazu. Er wird im Terminal bekanntgegeben.`,
+      'Die Followerzahl stammt aus der offiziellen Instagram/Meta-Schnittstelle. Maßgeblich ist der Wert, den diese Schnittstelle zum Zeitpunkt der Freischaltung liefert.',
+      'Ein noch nicht freigeschalteter Zusatzgewinn kann vor seiner Freischaltung geändert werden. Ein bereits freigeschalteter und öffentlich angezeigter Gewinn wird nicht nachträglich entfernt; eine Änderung wird protokolliert.',
+      'Die Follower-Aktion ist von Gesamtranking und Deckelziehung unabhängig. Ein guter Score hilft hier nicht, und eine Zusatzziehung ändert nichts am Ranking.',
     ],
   },
   {
@@ -146,12 +188,13 @@ const ABSCHNITTE = [
   {
     titel: 'Gewinne',
     punkte: [
-      `In der Deckelziehung sind zurzeit ${GEWINN_ZAHL} Gewinne ausgeschrieben: ${GEWINN_NAMEN}. Maßgeblich ist die Ausschreibung auf der Aktionsseite.`,
-      'Die drei besten Spieler des Gesamtrankings gewinnen die ausgeschriebenen Rankingpreise.',
+      'Es gibt drei getrennte Arten von Gewinnen, die nicht vermischt werden: die Rankingpreise für die Gesamtplätze 1 bis 3, die Gewinne der Deckelziehung und die zusätzlichen Gewinne aus den freigeschalteten Follower-Ziehungen.',
+      'Die drei besten Spieler des Gesamtrankings gewinnen die ausgeschriebenen Rankingpreise. Die Rankingpreise für die Plätze 1 bis 3 werden von VIDEKO ausgeschrieben und im Terminal angezeigt; ohne Ausschreibung wird nichts zugesagt.',
       'Einzel-Bestenlisten dienen der Wertung und dem Vergleich; daraus entsteht kein eigener Gewinnanspruch.',
-      'Die Rankingpreise für die Plätze 1 bis 3 werden von VIDEKO ausgeschrieben und im Terminal angezeigt. Ohne Ausschreibung wird nichts zugesagt.',
+      `In der Deckelziehung sind zurzeit ${GEWINN_ZAHL} Gewinne ausgeschrieben: ${GEWINN_NAMEN}. Maßgeblich ist die Ausschreibung auf der Aktionsseite.`,
+      `Aus jeder freigeschalteten Followerschwelle kommt ein zusätzlicher Merchandise-Gewinn dazu (${ARTIKEL_NAMEN}), bei ${MEGA} Followern ein gesondert ausgeschriebener Mega-Preis. Welcher Gewinn zu welcher Schwelle gehört, steht im Terminal.`,
       'Ein gespieltes Spiel ist keine Gewinngarantie. Aus einem guten Score entsteht ein Platz in einer Liste — und aus dem Platz ein Anspruch nur dann, wenn ein Gewinn dafür ausgeschrieben ist.',
-      'Spiel-Gewinne und Deckelziehung sind getrennt. Ein guter Score hilft in der Deckelziehung nicht, und ein Deckel hilft in den Ranglisten nicht.',
+      'Spiel-Gewinne, Deckelziehung und Follower-Ziehungen sind getrennt. Ein guter Score hilft in der Deckelziehung nicht, und ein Deckel hilft in den Ranglisten nicht.',
       'Gewinne werden nicht in bar ausgezahlt. Einzelheiten zu Übertragbarkeit, Rechtsweg und steuerlicher Behandlung fehlen in diesem Entwurf noch (siehe Hinweis oben).',
     ],
   },
@@ -164,6 +207,7 @@ const ABSCHNITTE = [
       'Gibt es mehrere Besitzansprüche auf eine gezogene Nummer, wird keiner automatisch zugeordnet. Gewinnen kann nur, wer den Originaldeckel vorlegt.',
       `Meldet sich niemand innerhalb der ${TERMINAL_KAMPAGNE.meldefristStunden} Stunden, darf für diesen Gewinn neu gezogen werden.`,
       'Die Rankingpreise werden nicht gezogen, sondern nach dem Stand des Gesamtrankings an die Plätze 1 bis 3 vergeben. Auch hier wird vor der Ausgabe von Hand geprüft.',
+      'Auch die Follower-Zusatzziehungen ziehen eine Deckelnummer. Das Ergebnis wird im Terminal bekanntgegeben; die Zuordnung erfolgt von Hand, und ohne den physischen Originaldeckel wird auch hier kein Gewinn ausgegeben.',
     ],
   },
   {
@@ -174,7 +218,15 @@ const ABSCHNITTE = [
       'Zur Abwehr von Massenabsendungen wird die IP-Adresse nicht gespeichert, sondern nur ein gesalzener Hashwert daraus.',
       'E-Mail-Adressen und Deckelnummern erscheinen auf keiner öffentlichen Seite. Die Ranglisten zeigen ausschließlich Platz, Instagram-Name und Punktzahl.',
       'Das Probespiel ohne Konto speichert keinen Score.',
+      `Für die Follower-Aktion wird ausschließlich die Followerzahl des Kanals @${TERMINAL_KAMPAGNE.instagramHandle} über die offizielle Instagram/Meta-Schnittstelle abgerufen. Daten einzelner Follower werden dabei nicht verarbeitet.`,
       'Einzelheiten zur Verarbeitung stehen in der Datenschutzerklärung.',
+    ],
+  },
+  {
+    titel: 'Hinweis zu Instagram',
+    punkte: [
+      'Die Aktion wird nicht von Instagram gesponsert, unterstützt oder organisiert und steht in keiner Verbindung zu Instagram. Instagram ist nicht Veranstalter.',
+      'Veranstalter ist VIDEKO Küchen. Ansprechpartner und Kontaktdaten stehen im Impressum.',
     ],
   },
 ]
@@ -206,10 +258,10 @@ export default function TerminalTeilnahme() {
             Die folgenden Punkte beschreiben den tatsächlichen Ablauf der Aktion. Sie sind
             noch keine abschließenden, rechtlich geprüften Teilnahmebedingungen. Es fehlen
             unter anderem Angaben zu Teilnahmealter, Ausschlüssen, Rechtsweg, Übertragbarkeit
-            und steuerlicher Behandlung der Gewinne sowie der von Instagram geforderte Hinweis
-            zur Plattform. Das gilt für die Deckelziehung und für die Gewinne aus den
-            Ranglisten gleichermaßen. Eine rechtliche Endprüfung vor dem Start der Aktion
-            ist erforderlich; dieser Text muss dabei geprüft und ersetzt werden.
+            und steuerlicher Behandlung der Gewinne. Das gilt für die Deckelziehung, für die
+            Follower-Zusatzziehungen und für die Gewinne aus den Ranglisten gleichermaßen.
+            Eine rechtliche Endprüfung vor dem Start der Aktion ist erforderlich; dieser Text
+            muss dabei geprüft und ersetzt werden.
           </p>
         </section>
 

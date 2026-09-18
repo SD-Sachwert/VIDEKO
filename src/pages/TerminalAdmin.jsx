@@ -31,6 +31,7 @@ import {
   MEGA_LEER,
   MEGA_MEILENSTEIN,
   MEILENSTEINE,
+  MEILENSTEIN_ARTIKEL,
   MEILENSTEIN_LEER,
   PRACTICE_STANDARD,
   SPIELE_LISTE,
@@ -40,6 +41,7 @@ import {
   TEXTE,
   deckelText,
   instagramAnzeige,
+  meilensteinStufe,
   missionStand,
   spielAktiv,
   spielKurz,
@@ -459,60 +461,277 @@ function Einstellungen({ einstellungen, speichern, laeuft, instagramSync, synchr
 /* Follower-Mission: Preisnamen je Meilenstein                         */
 /* ------------------------------------------------------------------ */
 
-function leereGewinne(gewinne) {
-  return Object.fromEntries(MEILENSTEINE.map((ziel) => [String(ziel), gewinne?.[String(ziel)] ?? '']))
+/* Muessen woertlich zu MEILENSTEIN_BESTAETIGUNG und
+   FOLLOWER_RESET_BESTAETIGUNG in api/terminal-admin.js passen. */
+const MEILENSTEIN_BESTAETIGUNG = 'GEWINN ÄNDERN'
+const FOLLOWER_RESET_BESTAETIGUNG = 'ZIEHUNG ZURÜCKSETZEN'
+
+/** „Shirt" steht im Dropdown, alles andere landet im freien Textfeld. */
+function gewinnArt(gewinn) {
+  return MEILENSTEIN_ARTIKEL.includes(gewinn) ? gewinn : (gewinn ? 'eigen' : '')
 }
 
-function MissionGewinne({ einstellungen, speichern, laeuft }) {
-  const [felder, setFelder] = useState(() => leereGewinne(einstellungen?.meilensteinGewinne))
+/**
+ * Eine Stufe: Gewinn eintragen, Stand ablesen, Gewinner ziehen.
+ *
+ * Die Ziehung erscheint erst, wenn die Schwelle wirklich gefallen ist — die
+ * Freischaltung kommt aus dem gespeicherten Stand, nicht aus einem Vergleich
+ * mit der aktuellen Followerzahl. Einmal freigeschaltet bleibt freigeschaltet,
+ * auch wenn Instagram spaeter weniger meldet.
+ */
+function MeilensteinZeile({ ziel, stufe, follower, handeln, laeuft }) {
+  const mega = ziel === MEGA_MEILENSTEIN
+  const frei = Boolean(stufe.freiAm)
+  const [art, setArt] = useState(() => gewinnArt(stufe.gewinn))
+  const [gewinn, setGewinn] = useState(stufe.gewinn ?? '')
+  const [beschreibung, setBeschreibung] = useState(stufe.beschreibung ?? '')
+  const [warnung, setWarnung] = useState(false)
+  const [offenText, setOffenText] = useState(false)
 
+  const gespeichert = `${stufe.gewinn ?? ''} ${stufe.beschreibung ?? ''}`
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setFelder(leereGewinne(einstellungen?.meilensteinGewinne))
-  }, [einstellungen])
+    const [g, b] = gespeichert.split(' ')
+    /* eslint-disable react-hooks/set-state-in-effect */
+    setArt(gewinnArt(g))
+    setGewinn(g)
+    setBeschreibung(b)
+    setWarnung(false)
+    /* eslint-enable react-hooks/set-state-in-effect */
+  }, [gespeichert])
+
+  const geaendert = gewinn !== (stufe.gewinn ?? '') || beschreibung !== (stufe.beschreibung ?? '')
+
+  async function sichern(bestaetigt) {
+    const antwort = await handeln(
+      {
+        aktion: 'meilenstein-preis',
+        ziel,
+        gewinn,
+        beschreibung,
+        ...(bestaetigt ? { bestaetigung: MEILENSTEIN_BESTAETIGUNG } : {}),
+      },
+      `Gewinn für ${zahl(ziel)} Follower gespeichert.`,
+    )
+    if (antwort?.grund === 'bestaetigung') setWarnung(true)
+    else if (antwort?.ok) setWarnung(false)
+  }
+
+  async function ziehen() {
+    if (!window.confirm(`GEWINNER ZIEHEN für ${zahl(ziel)} Follower?\n\nGezogen wird einmalig aus allen aktivierten Deckeln. Eine zweite Ziehung derselben Stufe geht nur nach ausdrücklichem Zurücksetzen.`)) return
+    await handeln({ aktion: 'follower-ziehen', ziel }, `Gewinner für ${zahl(ziel)} Follower gezogen.`)
+  }
+
+  async function zuruecksetzen() {
+    if (!window.confirm(`ZIEHUNG ZURÜCKSETZEN für ${zahl(ziel)} Follower?\n\nDer gezogene Gewinner wird verworfen und protokolliert. Die Freischaltung der Schwelle bleibt bestehen.`)) return
+    await handeln(
+      { aktion: 'follower-reset', ziel, bestaetigung: FOLLOWER_RESET_BESTAETIGUNG },
+      `Ziehung für ${zahl(ziel)} Follower zurückgesetzt.`,
+    )
+  }
+
+  return (
+    <div
+      className={mega ? 'trm-adm__stufe trm-adm__stufe--mega' : 'trm-adm__stufe'}
+      data-meilenstein={ziel}
+      data-frei={frei ? '1' : '0'}
+    >
+      <div className="trm-adm__stufeKopf">
+        <span className="trm-adm__stufeZiel">{zahl(ziel)}</span>
+        <span className={frei ? 'trm-adm__stufeStatus trm-adm__stufeStatus--frei' : 'trm-adm__stufeStatus'}>
+          {frei
+            ? `✓ FREIGESCHALTET${stufe.freiAm ? ` · ${terminText(stufe.freiAm) ?? ''}` : ''}`
+            : `🔒 Noch ${zahl(Math.max(0, ziel - follower))} Follower`}
+        </span>
+      </div>
+
+      <div className="trm-feld">
+        <label className="trm-feld__label" htmlFor={`adm-meilenstein-${ziel}`}>
+          {mega ? MEGA_LEER : 'Gewinn'}
+        </label>
+        <select
+          id={`adm-meilenstein-${ziel}`}
+          className="trm-eingabe"
+          value={art}
+          disabled={laeuft}
+          onChange={(ereignis) => {
+            const neu = ereignis.target.value
+            setArt(neu)
+            setOffenText(neu === 'eigen')
+            setGewinn(neu === 'eigen' ? '' : (neu === '' ? '' : neu))
+          }}
+        >
+          <option value="">— {mega ? MEGA_LEER : MEILENSTEIN_LEER} —</option>
+          {MEILENSTEIN_ARTIKEL.map((a) => (
+            <option key={a} value={a}>{a}</option>
+          ))}
+          <option value="eigen">Eigener Gewinn …</option>
+        </select>
+      </div>
+
+      {(art === 'eigen' || offenText) && (
+        <div className="trm-feld">
+          <label className="trm-feld__label" htmlFor={`adm-meilenstein-text-${ziel}`}>
+            Eigener Gewinn
+          </label>
+          <input
+            id={`adm-meilenstein-text-${ziel}`}
+            className="trm-eingabe"
+            maxLength={80}
+            value={gewinn}
+            disabled={laeuft}
+            onChange={(ereignis) => setGewinn(ereignis.target.value)}
+          />
+        </div>
+      )}
+
+      <div className="trm-feld">
+        <label className="trm-feld__label" htmlFor={`adm-meilenstein-besch-${ziel}`}>
+          Beschreibung (optional)
+        </label>
+        <input
+          id={`adm-meilenstein-besch-${ziel}`}
+          className="trm-eingabe"
+          maxLength={200}
+          value={beschreibung}
+          disabled={laeuft}
+          onChange={(ereignis) => setBeschreibung(ereignis.target.value)}
+        />
+      </div>
+
+      {warnung && (
+        <div className="trm-meldung trm-meldung--fehler" role="alertdialog" aria-label="Gewinn ändern">
+          <p>
+            <AlertTriangle size={15} aria-hidden="true" /> Diese Schwelle ist bereits freigeschaltet — der Gewinn
+            steht öffentlich im Terminal. Eine Änderung wird protokolliert. Einen zugesagten Gewinn nicht
+            verschlechtern.
+          </p>
+          <div className="trm-adm__leiste">
+            <button type="button" className="trm-cta trm-cta--klein" disabled={laeuft} onClick={() => sichern(true)}>
+              <AlertTriangle size={15} aria-hidden="true" />
+              {MEILENSTEIN_BESTAETIGUNG}
+            </button>
+            <button
+              type="button"
+              className="trm-cta trm-cta--klein trm-cta--umriss"
+              disabled={laeuft}
+              onClick={() => setWarnung(false)}
+            >
+              Abbrechen
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="trm-adm__leiste">
+        <button
+          type="button"
+          className="trm-cta trm-cta--klein"
+          disabled={laeuft || !geaendert}
+          onClick={() => sichern(false)}
+          data-meilenstein-speichern={ziel}
+        >
+          <Check size={15} aria-hidden="true" />
+          Gewinn speichern
+        </button>
+      </div>
+
+      <p className="trm-adm__stufeZiehung">
+        {stufe.gezogen
+          ? `GEWINNER: Deckel ${deckelText(stufe.gezogen.nummer)}${stufe.gezogen.spieler ? ` / ${instagramAnzeige(stufe.gezogen.spieler)}` : ''}${stufe.gezogen.am ? ` · ${terminText(stufe.gezogen.am) ?? ''}` : ''}`
+          : frei
+            ? 'Noch nicht gezogen.'
+            : 'Ziehung erst nach Freischaltung.'}
+      </p>
+
+      <div className="trm-adm__leiste">
+        {frei && !stufe.gezogen && (
+          <button
+            type="button"
+            className="trm-cta trm-cta--klein"
+            disabled={laeuft}
+            onClick={ziehen}
+            data-meilenstein-ziehen={ziel}
+          >
+            <Dices size={15} aria-hidden="true" />
+            GEWINNER ZIEHEN
+          </button>
+        )}
+        {stufe.gezogen && (
+          <button
+            type="button"
+            className="trm-cta trm-cta--klein trm-cta--umriss"
+            disabled={laeuft}
+            onClick={zuruecksetzen}
+            data-meilenstein-reset={ziel}
+          >
+            <RefreshCw size={15} aria-hidden="true" />
+            Ziehung zurücksetzen
+          </button>
+        )}
+      </div>
+    </div>
+  )
+}
+
+/**
+ * Follower-Meilensteine: Gewinne, Freischaltungen, Zusatzziehungen.
+ *
+ * Alle 250 Follower eine eigene Ziehung — getrennt von der grossen
+ * Deckelziehung und getrennt vom Gesamtranking. Der volle Stand samt
+ * Gewinnernamen und Protokoll kommt aus der Verwaltungsantwort; oeffentlich
+ * sind nur Gewinn, Freischaltung und die gezogene Nummer.
+ */
+function MissionGewinne({ einstellungen, mission, handeln, laeuft }) {
+  const follower = einstellungen?.followerZahl ?? TERMINAL_KAMPAGNE.followerStart
+  const stand = mission ?? { stufen: {}, ranking: {}, log: [] }
+  const offen = MEILENSTEINE.filter(
+    (ziel) => meilensteinStufe(stand, ziel).freiAm && !meilensteinStufe(stand, ziel).gezogen,
+  )
 
   return (
     <section className="trm-karte" id="adm-mission">
       <div className="trm-karte__kopf">
         <Ikon name="instagram" />
-        <h2 className="trm-karte__titel">FOLLOWER-MISSION</h2>
+        <h2 className="trm-karte__titel">FOLLOWER-MEILENSTEINE</h2>
       </div>
       <p className="trm-karte__sub">
-        Aktuell {zahl(einstellungen?.followerZahl ?? TERMINAL_KAMPAGNE.followerStart)} Follower.
-        Je Meilenstein ein Preisname — leer bleibt „{MEILENSTEIN_LEER}“, bei{' '}
-        {zahl(MEGA_MEILENSTEIN)} „{MEGA_LEER}“.
+        Aktuell {zahl(follower)} Follower. Jede erreichte Schwelle schaltet genau eine zusätzliche Ziehung frei —
+        mögliche Gewinne: {MEILENSTEIN_ARTIKEL.join(', ')}. Bei {zahl(MEGA_MEILENSTEIN)} der {MEGA_LEER}. Einmal
+        freigeschaltet bleibt freigeschaltet. Gezogen wird unter allen aktivierten Deckeln, ein Deckel ist ein Los;
+        die große Deckelziehung und das Gesamtranking bleiben davon unberührt.
       </p>
+      {offen.length > 0 && (
+        <p className="trm-meldung">
+          <Dices size={15} aria-hidden="true" /> {offen.length === 1 ? 'Eine freigeschaltete Ziehung ist' : `${offen.length} freigeschaltete Ziehungen sind`}
+          {' '}noch offen: {offen.map((z) => zahl(z)).join(', ')}.
+        </p>
+      )}
 
-      <form
-        onSubmit={(ereignis) => {
-          ereignis.preventDefault()
-          speichern({ meilensteinGewinne: felder })
-        }}
-      >
-        <div className="trm-adm__gewinne">
-          {MEILENSTEINE.map((ziel) => (
-            <div className="trm-feld" key={ziel}>
-              <label className="trm-feld__label" htmlFor={`adm-meilenstein-${ziel}`}>
-                {zahl(ziel)} Follower
-              </label>
-              <input
-                id={`adm-meilenstein-${ziel}`}
-                className="trm-eingabe"
-                type="text"
-                maxLength={80}
-                placeholder={ziel === MEGA_MEILENSTEIN ? MEGA_LEER : MEILENSTEIN_LEER}
-                value={felder[String(ziel)]}
-                onChange={(ereignis) =>
-                  setFelder((alt) => ({ ...alt, [String(ziel)]: ereignis.target.value }))
-                }
-              />
-            </div>
-          ))}
-        </div>
-        <button type="submit" className="trm-cta" disabled={laeuft}>
-          {laeuft ? 'Wird gespeichert …' : 'MEILENSTEINE SPEICHERN'}
-        </button>
-      </form>
+      <div className="trm-adm__stufen">
+        {MEILENSTEINE.map((ziel) => (
+          <MeilensteinZeile
+            key={ziel}
+            ziel={ziel}
+            stufe={meilensteinStufe(stand, ziel)}
+            follower={follower}
+            handeln={handeln}
+            laeuft={laeuft}
+          />
+        ))}
+      </div>
+
+      {stand.log?.length > 0 && (
+        <details className="trm-adm__log">
+          <summary>ADMIN-LOG ({stand.log.length})</summary>
+          <ul>
+            {stand.log.map((e, i) => (
+              <li key={`${e.am}-${i}`}>
+                <span className="trm-adm__logZeit">{terminText(e.am) ?? e.am}</span> {e.text}
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
     </section>
   )
 }
@@ -653,6 +872,9 @@ function GesamtrankingVerwaltung({ einstellungen, laeuft, handeln, rufen }) {
   const [liste, setListe] = useState(null)
   const [laedt, setLaedt] = useState(false)
   const [preise, setPreise] = useState({ 1: '', 2: '', 3: '' })
+  const [texte, setTexte] = useState(() =>
+    Object.fromEntries([1, 2, 3].map((p) => [p, { beschreibung: '', wert: '' }])),
+  )
   const [offen, setOffen] = useState(null)
   const [alleZeigen, setAlleZeigen] = useState(false)
 
@@ -666,6 +888,18 @@ function GesamtrankingVerwaltung({ einstellungen, laeuft, handeln, rufen }) {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setPreise({ 1: p[1] ?? '', 2: p[2] ?? '', 3: p[3] ?? '' })
   }, [preiseText])
+
+  /* Beschreibung und Wert liegen neben dem Titel im Meilensteinstand, damit
+     fuer die Rankingpreise keine neuen Spalten noetig waren. */
+  const texteText = JSON.stringify(gr?.preisTexte ?? {})
+  useEffect(() => {
+    const t = JSON.parse(texteText)
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setTexte(Object.fromEntries([1, 2, 3].map((p) => [p, {
+      beschreibung: t[p]?.beschreibung ?? '',
+      wert: t[p]?.wert ?? '',
+    }])))
+  }, [texteText])
 
   async function laden() {
     setLaedt(true)
@@ -787,29 +1021,69 @@ function GesamtrankingVerwaltung({ einstellungen, laeuft, handeln, rufen }) {
         onSubmit={(ereignis) => {
           ereignis.preventDefault()
           handeln(
-            { aktion: 'einstellungen', preisGesamt1: preise[1], preisGesamt2: preise[2], preisGesamt3: preise[3] },
+            {
+              aktion: 'einstellungen',
+              preisGesamt1: preise[1],
+              preisGesamt2: preise[2],
+              preisGesamt3: preise[3],
+              preisTexte: texte,
+            },
             'Rankingpreise gespeichert.',
           )
         }}
       >
         {[1, 2, 3].map((p) => (
-          <div className="trm-feld" key={p}>
-            <label className="trm-feld__label" htmlFor={`adm-preis-gesamt-${p}`}>
-              RANKINGPREIS PLATZ {p}
-            </label>
-            <input
-              id={`adm-preis-gesamt-${p}`}
-              className="trm-eingabe"
-              maxLength={80}
-              value={preise[p]}
-              disabled={laeuft}
-              onChange={(ereignis) => setPreise((alt) => ({ ...alt, [p]: ereignis.target.value }))}
-            />
+          <div className="trm-adm__preis" key={p}>
+            <div className="trm-feld">
+              <label className="trm-feld__label" htmlFor={`adm-preis-gesamt-${p}`}>
+                RANKINGPREIS PLATZ {p} — Titel
+              </label>
+              <input
+                id={`adm-preis-gesamt-${p}`}
+                className="trm-eingabe"
+                maxLength={80}
+                value={preise[p]}
+                disabled={laeuft}
+                onChange={(ereignis) => setPreise((alt) => ({ ...alt, [p]: ereignis.target.value }))}
+              />
+            </div>
+            <div className="trm-feld">
+              <label className="trm-feld__label" htmlFor={`adm-preis-text-${p}`}>
+                Beschreibung
+              </label>
+              <input
+                id={`adm-preis-text-${p}`}
+                className="trm-eingabe"
+                maxLength={200}
+                value={texte[p]?.beschreibung ?? ''}
+                disabled={laeuft}
+                onChange={(ereignis) =>
+                  setTexte((alt) => ({ ...alt, [p]: { ...alt[p], beschreibung: ereignis.target.value } }))
+                }
+              />
+            </div>
+            <div className="trm-feld">
+              <label className="trm-feld__label" htmlFor={`adm-preis-wert-${p}`}>
+                Wert (optional)
+              </label>
+              <input
+                id={`adm-preis-wert-${p}`}
+                className="trm-eingabe"
+                maxLength={60}
+                placeholder="z. B. 1.000 €"
+                value={texte[p]?.wert ?? ''}
+                disabled={laeuft}
+                onChange={(ereignis) =>
+                  setTexte((alt) => ({ ...alt, [p]: { ...alt[p], wert: ereignis.target.value } }))
+                }
+              />
+            </div>
           </div>
         ))}
         <p className="trm-feld__hilfe">
           Die einzigen Preise aus dem Spiel: Platz 1 bis 3 des Gesamtrankings. Für einzelne Spiele gibt es keine Preise.
-          Leer heißt: kein Preis angezeigt. Ein Preis pro Person. Die Deckelziehung läuft getrennt davon.
+          Leer heißt: kein Preis angezeigt. Ein Preis pro Person. Die Deckelziehung und die Follower-Zusatzziehungen
+          laufen getrennt davon.
         </p>
         <div className="trm-adm__leiste">
           <button type="submit" className="trm-cta trm-cta--klein" disabled={laeuft}>
@@ -1959,10 +2233,16 @@ export default function TerminalAdmin() {
       await standLaden()
       return antwort
     }
+    /* Die Meilenstein-Zeile zeigt ihre Warnung selbst — hier kein zweiter,
+       hauptgame-bezogener Fehlertext quer über die Seite. */
+    if (antwort.grund === 'bestaetigung' && nutzlast.aktion === 'meilenstein-preis') return antwort
+
     setFehler(
       {
         offen: 'Es läuft noch eine Ziehung. Erst abschließen, dann neu ziehen.',
         leer: 'Es gibt keine ziehbare Nummer mehr.',
+        gesperrt: 'Diese Schwelle ist noch nicht freigeschaltet.',
+        gezogen: 'Für diese Schwelle wurde bereits gezogen. Erst zurücksetzen.',
         pause: 'Schreiben ist über TERMINAL_SCHREIBEN angehalten.',
         zugang: 'Schlüssel nicht mehr gültig. Bitte neu anmelden.',
         bremse: 'Zu viele Versuche. Bitte später erneut.',
@@ -2266,10 +2546,9 @@ export default function TerminalAdmin() {
 
         <MissionGewinne
           einstellungen={einstellungen}
+          mission={daten?.mission}
           laeuft={laeuft}
-          speichern={(felder) =>
-            handeln({ aktion: 'einstellungen', ...felder }, 'Meilensteine gespeichert.')
-          }
+          handeln={handeln}
         />
 
         <SpielSchalter

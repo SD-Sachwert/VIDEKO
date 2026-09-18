@@ -535,13 +535,11 @@ function Mission({ follower, gewinne, className = '' }) {
     ? fuelle(stand.megaNaechste ? M.fehltMega : M.fehlt, { fehlt: zahl(stand.fehlt) })
     : M.alle
 
-  /* Darunter eine Zeile, die den Takt erklaert — und kurz vor Schluss
-     stattdessen sagt, worum es dann noch geht. Ist alles frei, schweigt sie. */
-  const untenText = stand.megaFrei
-    ? null
-    : stand.megaNaechste
-      ? fuelle(M.megaZeile, { zahl: zahl(MEGA_MEILENSTEIN) })
-      : M.takt
+  /* Darunter zwei Zeilen: der Takt der Zusatzziehungen und das grosse Ziel
+     darueber. Sind alle 250er-Stufen durch, bleibt nur noch der MEGA-PREIS;
+     ist auch der erreicht, schweigen beide. */
+  const taktText = stand.megaFrei || stand.megaNaechste ? null : M.takt
+  const megaText = stand.megaFrei ? null : fuelle(M.megaZeile, { zahl: zahl(MEGA_MEILENSTEIN) })
 
   return (
     <section
@@ -575,7 +573,8 @@ function Mission({ follower, gewinne, className = '' }) {
         {fehltText}
       </p>
 
-      {untenText ? <p className="trm-mission__takt">{untenText}</p> : null}
+      {taktText ? <p className="trm-mission__takt">{taktText}</p> : null}
+      {megaText ? <p className="trm-mission__takt trm-mission__takt--mega">{megaText}</p> : null}
 
       <ol className="trm-mission__stufen">
         {stand.stufen.map((st) => (

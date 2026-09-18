@@ -3,6 +3,7 @@ import {
   TABELLE_EINSTELLUNGEN,
   einstellungenSchreiben,
   lesen,
+  meilensteineFreischalten,
 } from './_terminal-kern.js'
 
 /**
@@ -103,6 +104,21 @@ export async function instagramFollowerHolen({ zeitlimitMs = ZEITLIMIT_MS } = {}
  *
  * Rueckgabe: `{ ok, wert?, grund?, hinweis?, am }`.
  */
+/**
+ * Die Meilensteine zur frisch gelesenen Zahl dauerhaft freischalten.
+ * Scheitert das, bleibt der Sync trotzdem erfolgreich — die Zahl steht dann,
+ * und der naechste Durchlauf holt die Freischaltung nach. Genau dafuer ist
+ * sie idempotent: nachgetragen wird nur, was noch kein `freiAm` hat.
+ */
+async function freischalten(wert) {
+  try {
+    const { neu } = await meilensteineFreischalten(wert)
+    return neu
+  } catch {
+    return []
+  }
+}
+
 export async function instagramSynchronisieren(optionen = {}) {
   const am = new Date().toISOString()
   try {
@@ -125,11 +141,11 @@ export async function instagramSynchronisieren(optionen = {}) {
       instagram_sync_am: am,
       instagram_sync_fehler: null,
     }).catch(() => false)
-    if (komplett) return { ok: true, wert, am }
+    if (komplett) return { ok: true, wert, am, neu: await freischalten(wert) }
 
     /* Rueckfall: nur die Spalte, die es sicher gibt. */
     const nurZahl = await einstellungenSchreiben({ follower_zahl: wert }).catch(() => false)
-    if (nurZahl) return { ok: true, wert, am, hinweis: 'schema-fehlt' }
+    if (nurZahl) return { ok: true, wert, am, hinweis: 'schema-fehlt', neu: await freischalten(wert) }
     return { ok: false, grund: 'server', wert, am }
   } catch {
     return { ok: false, grund: 'server', am }

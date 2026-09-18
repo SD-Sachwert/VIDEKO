@@ -1,6 +1,11 @@
 import crypto from 'node:crypto'
 
-import { TERMINAL_KAMPAGNE, deckelNummer } from '../src/data/terminal.js'
+import {
+  MEILENSTEINE,
+  TERMINAL_KAMPAGNE,
+  deckelNummer,
+  meilensteinStufe,
+} from '../src/data/terminal.js'
 import {
   ANSPRUCH_ERST,
   EINLADUNGEN_MAX,
@@ -28,7 +33,10 @@ import {
   konfiguriert,
   kopfzeilen,
   lesen,
-  meilensteineSaeubern,
+  meilensteinStandLesen,
+  meilensteinStandSchreiben,
+  meilensteineFreischalten,
+  protokollieren,
   rangSpeicherLeeren,
   rankingBerechtigt,
   readBody,
@@ -456,13 +464,16 @@ async function stand() {
   /* Die Einstellungen zuerst: die Teilnehmerliste braucht die Slotzahl, und
      zweimal dieselbe kleine Zeile zu lesen waere Verschwendung. */
   const einstellungen = await einstellungenLesen()
-  const [aktiviert, eintraege, lose, gemeldet, instagramSync] = await Promise.all([
+  const [aktiviert, eintraege, lose, gemeldet, instagramSync, mission] = await Promise.all([
     aktivierteZaehlen(),
     liste({}, einstellungen.einladungenProTeilnehmer),
     ziehungen(),
     meldungen(),
     /* Wirft nie: fehlen die Sync-Spalten, kommen Nullwerte. */
     instagramStandLesen(),
+    /* Der volle Meilensteinstand samt Gewinnernamen und Protokoll — die
+       oeffentliche Antwort in api/terminal.js zeigt beides nicht. */
+    missionAdmin(),
   ])
   return {
     ok: true,
@@ -472,6 +483,7 @@ async function stand() {
     ziehungen: lose,
     meldungen: gemeldet,
     instagramSync,
+    mission,
     schreiben: schreibenErlaubt(),
   }
 }
@@ -583,12 +595,6 @@ async function einstellungen(b) {
     felder.follower_ziel = n
   }
   if ('live' in b) felder.live_modus = b.live === true
-  if ('meilensteinGewinne' in b) {
-    /* Preisnamen je Meilenstein. Leer gelassen heisst schlicht ZUSATZGEWINN,
-       auf der letzten Stufe MEGA-PREIS. Unbekannte Stufen und ueberlange
-       Texte fallen beim Saeubern weg. */
-    felder.meilenstein_gewinne = meilensteineSaeubern(b.meilensteinGewinne)
-  }
   if ('spieleAktiv' in b) {
     /* Nur bekannte Spiele, nur ja/nein. Gespeichert wird beides ausdruecklich:
        Stack und Dash stehen ohne Eintrag auf AUS, die anderen auf AN — ein
@@ -621,7 +627,7 @@ async function einstellungen(b) {
 
   /* Gesamtranking. Die Warnung „Dieses Game ist Bestandteil des
      Gesamtrankings" zeigt die Oberflaeche; hier wird nur geprueft. */
-  const grFelder = ['hauptgames', 'testslot', 'preisGesamt1', 'preisGesamt2', 'preisGesamt3']
+  const grFelder = ['hauptgames', 'testslot', 'preisGesamt1', 'preisGesamt2', 'preisGesamt3', 'preisTexte']
   let protokoll = null
   if (grFelder.some((k) => k in b)) {
     const aktuell = await gesamtrankingEinstellungenLesen()
@@ -664,6 +670,33 @@ async function einstellungen(b) {
       if (`preisGesamt${platz}` in b) felder[`preis_gesamt_${platz}`] = preisSaeubern(b[`preisGesamt${platz}`])
     }
 
+    /* Beschreibung und Wert eines Rankingpreises. Der Titel hat seine eigene
+       Spalte, diese beiden liegen im jsonb daneben — geschrieben wird der
+       ganze Stand, damit Meilensteine und Protokoll darin erhalten bleiben. */
+    const preisFelder = [1, 2, 3].filter((p) => `preisGesamt${p}` in b)
+    if ('preisTexte' in b || preisFelder.length) {
+      const stand = await meilensteinStandLesen()
+      if ('preisTexte' in b) {
+        const roh = b.preisTexte && typeof b.preisTexte === 'object' ? b.preisTexte : null
+        if (!roh) return { ok: false, grund: 'felder' }
+        for (const platz of [1, 2, 3]) {
+          const e = roh[platz] ?? roh[String(platz)]
+          if (!e || typeof e !== 'object') continue
+          stand.ranking[String(platz)] = {
+            beschreibung: clean(e.beschreibung, 200),
+            wert: clean(e.wert, 60),
+          }
+        }
+      }
+      const genannt = [...new Set([...preisFelder, ...(
+        'preisTexte' in b ? [1, 2, 3].filter((p) => (b.preisTexte?.[p] ?? b.preisTexte?.[String(p)])) : []
+      )])].sort()
+      if (genannt.length) {
+        protokollieren(stand, 'rankingpreis', `Rankingpreis geändert: Platz ${genannt.join(', ')}`)
+      }
+      felder.meilenstein_gewinne = stand
+    }
+
     /* Sichtbarkeit folgt der Auswahl: was neu Hauptgame oder Testslot wird,
        geht an; was aus beidem herausfaellt, geht aus. Andere Schalter bleiben,
        wie sie sind. */
@@ -684,9 +717,18 @@ async function einstellungen(b) {
   if (protokoll && !(await hauptgamesProtokollieren(protokoll))) return { ok: false, grund: 'server' }
   const geschrieben = await einstellungenSchreiben(felder)
   if (!geschrieben) return { ok: false, grund: 'server' }
+
+  /* Wird die Followerzahl von Hand gesetzt, gilt dieselbe Regel wie beim
+     Instagram-Abgleich: jede damit erreichte Schwelle wird dauerhaft
+     freigeschaltet — auch mehrere auf einmal. Das passiert nach dem
+     Schreiben, damit der frische Wert und der frische Stand zusammenpassen. */
+  if ('follower_zahl' in felder) {
+    await meilensteineFreischalten(felder.follower_zahl).catch(() => null)
+  }
+
   /* Neue Hauptgames aendern das Gesamtranking sofort, nicht erst in 20 s. */
   rangSpeicherLeeren()
-  return { ok: true, einstellungen: await einstellungenLesen() }
+  return { ok: true, einstellungen: await einstellungenLesen(), mission: await missionAdmin() }
 }
 
 /* ------------------------------------------------------------------ */
@@ -769,6 +811,166 @@ async function ziehen() {
   })
 
   return { ok: true, ziehung: zeile, einstellungen: await einstellungenLesen() }
+}
+
+/* ------------------------------------------------------------------ */
+/* Follower-Meilensteine und ihre Zusatzziehungen                      */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Die drei Ziehungen dieser Aktion sind drei verschiedene Dinge und werden
+ * nirgends vermischt:
+ *
+ *   A  Gesamtranking Top 3   — kein Los, kein Zufall. Wer vorne steht,
+ *                              gewinnt; gerechnet wird in _terminal-gesamtranking.js.
+ *   B  Deckelziehung         — die grosse Ziehung um die Truhenpreise,
+ *                              ziehen() weiter oben, mit Aushang und Meldefrist.
+ *   C  Follower-Zusatzziehung — pro freigeschalteter Followerschwelle genau
+ *                              eine eigene Ziehung um einen Merchandise-Artikel.
+ *
+ * C benutzt denselben Lostopf wie B — alle gueltig aktivierten Deckelnummern,
+ * eine Nummer ist ein Los, egal wie viele Besitzansprueche darauf liegen —
+ * aber es ist ein eigener Topf: eine bei B gezogene Nummer bleibt bei C im
+ * Rennen und umgekehrt. Innerhalb von C wird jede Nummer nur einmal gezogen,
+ * damit drei Meilensteine auch drei verschiedene Gewinner haben. C hat keine
+ * Meldefrist und keinen Aushang; das Ergebnis steht in der Verwaltung.
+ */
+
+/** Die Deckelnummern, die in den Follower-Zusatzziehungen schon gewonnen haben. */
+function followerGezogeneNummern(stand) {
+  return new Set(
+    Object.values(stand.stufen ?? {})
+      .map((s) => s.gezogen?.nummer)
+      .filter((n) => Number.isInteger(n)),
+  )
+}
+
+/** Ein Ziel aus der Eingabe, nur bekannte Schwellen. */
+function meilensteinZiel(roh) {
+  const n = Number(roh)
+  return MEILENSTEINE.includes(n) ? n : null
+}
+
+/**
+ * Der Stand der Mission fuer die Verwaltung: voller Stufenstand samt
+ * Gewinnernamen und Protokoll. Die oeffentliche Antwort zeigt beides nicht.
+ */
+async function missionAdmin() {
+  try {
+    return await meilensteinStandLesen()
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Den Gewinn einer Schwelle eintragen oder aendern.
+ *
+ * Solange die Schwelle noch nicht freigeschaltet ist, ist das eine normale
+ * Aenderung. Ist sie freigeschaltet, steht der Gewinn oeffentlich — dann
+ * braucht die Aenderung die ausdrueckliche Bestaetigung aus der Oberflaeche
+ * und wird protokolliert. Entfernt wird ein freigeschalteter Gewinn nie
+ * stillschweigend: auch das Leeren ist eine bestaetigungspflichtige Aenderung.
+ */
+export const MEILENSTEIN_BESTAETIGUNG = 'GEWINN ÄNDERN'
+
+async function meilensteinPreis(b) {
+  const ziel = meilensteinZiel(b.ziel)
+  if (ziel == null) return { ok: false, grund: 'felder' }
+
+  const gewinn = clean(b.gewinn, 80)
+  const beschreibung = clean(b.beschreibung, 200)
+
+  const stand = await meilensteinStandLesen()
+  const alt = meilensteinStufe(stand, ziel)
+  const geaendert = alt.gewinn !== gewinn || alt.beschreibung !== beschreibung
+  if (!geaendert) return { ok: true, mission: stand }
+
+  if (alt.freiAm && b.bestaetigung !== MEILENSTEIN_BESTAETIGUNG) {
+    return { ok: false, grund: 'bestaetigung', frei: true, ziel }
+  }
+
+  stand.stufen[String(ziel)] = { ...alt, gewinn, beschreibung }
+  protokollieren(
+    stand,
+    'meilenstein-gewinn',
+    `Schwelle ${ziel}: Gewinn „${alt.gewinn || '—'}" → „${gewinn || '—'}"${alt.freiAm ? ' (war freigeschaltet)' : ''}`,
+  )
+  if (!(await meilensteinStandSchreiben(stand))) return { ok: false, grund: 'server' }
+  return { ok: true, mission: stand }
+}
+
+/**
+ * Den Gewinner einer freigeschalteten Schwelle ziehen.
+ *
+ * Gezogen wird wie in der grossen Ziehung: aus den tatsaechlich aktivierten,
+ * eindeutigen Deckelnummern, mit crypto.randomInt, nie aus 1..5000. Eine
+ * gesperrte Schwelle wird abgelehnt, eine bereits gezogene ebenfalls — die
+ * zweite Ziehung derselben Stufe gibt es nur nach ausdruecklichem Reset.
+ */
+async function followerZiehen(b) {
+  const ziel = meilensteinZiel(b.ziel)
+  if (ziel == null) return { ok: false, grund: 'felder' }
+
+  const stand = await meilensteinStandLesen()
+  const stufe = meilensteinStufe(stand, ziel)
+  if (!stufe.freiAm) return { ok: false, grund: 'gesperrt', ziel }
+  if (stufe.gezogen) return { ok: false, grund: 'gezogen', ziel, gezogen: stufe.gezogen }
+
+  const teilnehmer = await alleLesen(
+    `${TABELLE_TEILNEHMER}?select=deckel_nummer,teilnahme_status,instagram_handle,anspruch_art`
+    + `&kampagne=eq.${encodeURIComponent(KAMPAGNE)}${NUR_OFFIZIELLE}&order=id.asc`,
+  )
+  /* Eigener Topf: die Nummern der grossen Deckelziehung bleiben hier drin,
+     nur die eigenen Zusatzgewinner fallen heraus. */
+  const schon = followerGezogeneNummern(stand)
+  const topf = [...new Set(
+    teilnehmer
+      .filter((t) => t.teilnahme_status == null || t.teilnahme_status === STATUS_OFFIZIELL)
+      .map((t) => t.deckel_nummer),
+  )].filter((n) => Number.isInteger(n) && !schon.has(n))
+
+  if (topf.length === 0) return { ok: false, grund: 'leer', ziel }
+
+  const nummer = topf[crypto.randomInt(0, topf.length)]
+  /* Der Name dient nur der Verwaltung. Liegen mehrere Ansprueche auf der
+     Nummer, zaehlt der Erstanspruch — er hat den Deckel aktiviert. */
+  const spieler = teilnehmer.find((t) => t.deckel_nummer === nummer && t.anspruch_art === ANSPRUCH_ERST)
+    ?? teilnehmer.find((t) => t.deckel_nummer === nummer)
+
+  const gezogen = {
+    nummer,
+    spieler: clean(spieler?.instagram_handle, 60) || null,
+    am: new Date().toISOString(),
+  }
+  stand.stufen[String(ziel)] = { ...stufe, gezogen }
+  protokollieren(stand, 'follower-ziehung', `Schwelle ${ziel}: Deckel #${nummer} gezogen (${topf.length} Lose)`)
+  if (!(await meilensteinStandSchreiben(stand))) return { ok: false, grund: 'server' }
+  return { ok: true, ziel, gezogen, lose: topf.length, mission: stand }
+}
+
+/**
+ * Eine Follower-Zusatzziehung zuruecksetzen.
+ *
+ * Nur mit ausdruecklicher Bestaetigung, und immer mit Protokolleintrag: die
+ * geloeschte Ziehung war ein oeffentlich zugesagter Gewinn. Die Freischaltung
+ * der Schwelle bleibt in jedem Fall bestehen.
+ */
+export const FOLLOWER_RESET_BESTAETIGUNG = 'ZIEHUNG ZURÜCKSETZEN'
+
+async function followerZiehungReset(b) {
+  const ziel = meilensteinZiel(b.ziel)
+  if (ziel == null) return { ok: false, grund: 'felder' }
+  if (b.bestaetigung !== FOLLOWER_RESET_BESTAETIGUNG) return { ok: false, grund: 'bestaetigung', ziel }
+
+  const stand = await meilensteinStandLesen()
+  const stufe = meilensteinStufe(stand, ziel)
+  if (!stufe.gezogen) return { ok: false, grund: 'felder', ziel }
+
+  stand.stufen[String(ziel)] = { ...stufe, gezogen: null }
+  protokollieren(stand, 'follower-reset', `Schwelle ${ziel}: Ziehung zurückgesetzt (war Deckel #${stufe.gezogen.nummer})`)
+  if (!(await meilensteinStandSchreiben(stand))) return { ok: false, grund: 'server' }
+  return { ok: true, ziel, mission: stand }
 }
 
 /**
@@ -1584,6 +1786,38 @@ export default async function handler(req, res) {
       }
       const { status, ...ergebnis } = await gesamtrankingAbschliessen()
       res.status(ergebnis.ok ? 200 : (status ?? 409)).json(ergebnis)
+      return
+    }
+
+    /* Follower-Meilensteine. Der Gewinn einer noch gesperrten Stufe ist eine
+       harmlose Konfiguration; ab der Freischaltung steht er oeffentlich und
+       braucht die Bestaetigung aus der Oberflaeche.
+
+       Ziehung und Reset haengen wie jeder Eingriff in echte Daten an
+       TERMINAL_SCHREIBEN. */
+    if (aktion === 'meilenstein-preis') {
+      const ergebnis = await meilensteinPreis(b)
+      res.status(ergebnis.ok ? 200 : 400).json(ergebnis)
+      return
+    }
+
+    if (aktion === 'follower-ziehen') {
+      if (!schreibenErlaubt()) {
+        res.status(503).json({ ok: false, grund: 'pause' })
+        return
+      }
+      const ergebnis = await followerZiehen(b)
+      res.status(ergebnis.ok ? 200 : 409).json(ergebnis)
+      return
+    }
+
+    if (aktion === 'follower-reset') {
+      if (!schreibenErlaubt()) {
+        res.status(503).json({ ok: false, grund: 'pause' })
+        return
+      }
+      const ergebnis = await followerZiehungReset(b)
+      res.status(ergebnis.ok ? 200 : 400).json(ergebnis)
       return
     }
 

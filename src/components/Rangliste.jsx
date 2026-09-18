@@ -117,7 +117,7 @@ export default function Rangliste({ sitzung = null, leaderboardOk = true }) {
             <p className="trm-karte__sub">{T.grSub}</p>
             <p className="trm-feld__hilfe">{T.grNochHilfe}</p>
             {liste.abgeschlossen && <p className="trm-gr__hinweis">{T.grAbgeschlossen}</p>}
-            <GesamtPreise preise={liste.preise} />
+            <GesamtPreise preise={liste.preise} texte={liste.preisTexte} />
           </div>
         )}
         {fehler && <p className="trm-meldung trm-meldung--fehler">{T.fehler}</p>}

@@ -3,7 +3,9 @@ import crypto from 'node:crypto'
 import {
   GESAMT_SPIELE,
   HAUPTGAMES_ANZAHL,
-  MEILENSTEINE,
+  MEILENSTEIN_LOG_MAX,
+  meilensteinStand,
+  offeneFreischaltungen,
   STANDARD_HAUPTGAMES,
   STANDARD_REIHENFOLGE,
   TERMINAL_KAMPAGNE,
@@ -387,7 +389,9 @@ export async function einstellungenLesen() {
     gezogeneNummer: z.gezogene_nummer ?? null,
     meldefristBis: z.meldefrist_bis ?? null,
     meldefristStunden: z.meldefrist_stunden ?? TERMINAL_KAMPAGNE.meldefristStunden,
-    meilensteinGewinne: meilensteineSaeubern(z.meilenstein_gewinne),
+    /* Oeffentlich ist der ausgelobte Gewinn je Stufe und ob sie steht —
+       nicht der Name des gezogenen Spielers und nicht das Protokoll. */
+    meilensteinGewinne: meilensteineOeffentlich(z.meilenstein_gewinne),
     spieleAktiv: spieleAktivSaeubern(z.spiele_aktiv, gesamtranking),
     spieleReihenfolge: reihenfolgeSaeubern(z.spiele_reihenfolge),
     guestPracticeGame: practiceSaeubern(z.guest_practice_game),
@@ -398,7 +402,8 @@ export async function einstellungenLesen() {
 /* --- Gesamtranking: Einstellungen --------------------------------- */
 
 export const GESAMTRANKING_SPALTEN =
-  'gesamtranking_spiele,testslot_game,preis_gesamt_1,preis_gesamt_2,preis_gesamt_3,gesamtranking_abgeschlossen_am'
+  'gesamtranking_spiele,testslot_game,preis_gesamt_1,preis_gesamt_2,preis_gesamt_3,'
+  + 'gesamtranking_abgeschlossen_am,meilenstein_gewinne'
 
 /**
  * Die sechs Hauptgames. Gilt nur eine Liste aus genau sechs verschiedenen,
@@ -436,6 +441,11 @@ export async function gesamtrankingEinstellungenLesen() {
   )
   const z = zeilen[0] ?? {}
   const hauptgames = hauptgamesSaeubern(z.gesamtranking_spiele)
+  /* Titel, Beschreibung und Wert eines Rankingpreises gehoeren zusammen,
+     liegen aber an zwei Orten: der Titel in seiner eigenen Spalte (so war es
+     immer), Beschreibung und Wert im jsonb daneben. Zusammengesetzt wird
+     hier, damit jede Anzeigestelle denselben Preis sieht. */
+  const zusatz = meilensteinStand(z.meilenstein_gewinne).ranking
   return {
     hauptgames,
     testslot: testslotSaeubern(z.testslot_game, hauptgames),
@@ -444,23 +454,99 @@ export async function gesamtrankingEinstellungenLesen() {
       2: preisSaeubern(z.preis_gesamt_2),
       3: preisSaeubern(z.preis_gesamt_3),
     },
+    preisTexte: {
+      1: zusatz['1'] ?? { beschreibung: '', wert: '' },
+      2: zusatz['2'] ?? { beschreibung: '', wert: '' },
+      3: zusatz['3'] ?? { beschreibung: '', wert: '' },
+    },
     abgeschlossenAm: z.gesamtranking_abgeschlossen_am ?? null,
   }
 }
 
 /**
- * Preisnamen je Meilenstein. Nur bekannte Stufen, nur kurzer Text — was
- * darueber hinausgeht, faellt weg. Eine leere Stufe zeigt die Seite als
- * ZUSATZGEWINN, die letzte als MEGA-PREIS — erfunden wird nirgends etwas.
+ * Der Stand der Follower-Mission, gesaeubert. Eine Stufe traegt ihren
+ * Gewinnnamen, eine Beschreibung, den Zeitpunkt der Erstfreischaltung und
+ * das Ziehungsergebnis. Eine leere Stufe zeigt die Seite als ZUSATZGEWINN,
+ * die letzte als MEGA-PREIS — erfunden wird nirgends etwas.
+ *
+ * Das Format steht in src/data/terminal.js, weil Browser und Server
+ * dieselbe Lesart brauchen. Das alte flache Format {"1500":"Shirt"} wird
+ * dort still uebernommen.
  */
 export function meilensteineSaeubern(roh) {
-  const aus = {}
-  if (!roh || typeof roh !== 'object') return aus
-  for (const ziel of MEILENSTEINE) {
-    const name = clean(roh[ziel] ?? roh[String(ziel)], 80)
-    if (name) aus[String(ziel)] = name
+  return meilensteinStand(roh)
+}
+
+/**
+ * Die oeffentliche Sicht auf denselben Stand: was an Gewinnen ausgelobt und
+ * was freigeschaltet ist, plus die gezogene Deckelnummer. Nicht oeffentlich
+ * sind der Name des gezogenen Spielers und das Verwaltungsprotokoll — beides
+ * geht nur den Betrieb etwas an.
+ */
+export function meilensteineOeffentlich(roh) {
+  const stand = meilensteinStand(roh)
+  const stufen = {}
+  for (const [ziel, s] of Object.entries(stand.stufen)) {
+    stufen[ziel] = {
+      gewinn: s.gewinn,
+      beschreibung: s.beschreibung,
+      freiAm: s.freiAm,
+      gezogen: s.gezogen ? { nummer: s.gezogen.nummer, am: s.gezogen.am } : null,
+    }
   }
-  return aus
+  return { stufen, ranking: stand.ranking, log: [] }
+}
+
+/** Den vollen Stand direkt aus der Spalte lesen — nur fuer die Verwaltung. */
+export async function meilensteinStandLesen() {
+  const zeilen = await lesen(
+    `${TABELLE_EINSTELLUNGEN}?select=meilenstein_gewinne`
+    + `&kampagne=eq.${encodeURIComponent(KAMPAGNE)}&limit=1`,
+  )
+  return meilensteinStand(zeilen[0]?.meilenstein_gewinne)
+}
+
+/** Den vollen Stand zurueckschreiben. */
+export async function meilensteinStandSchreiben(stand) {
+  return einstellungenSchreiben({ meilenstein_gewinne: meilensteinStand(stand) })
+}
+
+/**
+ * Ein Protokolleintrag im Stand. Zeitpunkt und Klartext, neueste zuerst,
+ * gedeckelt auf MEILENSTEIN_LOG_MAX. Kein eigenes Audit-System, kein
+ * zusaetzlicher Tabellenbedarf — nur eine nachvollziehbare Spur fuer die
+ * Handgriffe an Preisen und Ziehungen.
+ */
+export function protokollieren(stand, art, text) {
+  const eintrag = { am: new Date().toISOString(), art: clean(art, 40), text: clean(text, 200) }
+  stand.log = [eintrag, ...(stand.log ?? [])].slice(0, MEILENSTEIN_LOG_MAX)
+  return stand
+}
+
+/**
+ * Erreichte Stufen dauerhaft freischalten.
+ *
+ * Eine Stufe gilt als freigeschaltet, sobald die Followerzahl sie einmal
+ * erreicht hat — von da an traegt sie ihren Zeitpunkt und faellt nie wieder
+ * zu, auch wenn die Zahl sinkt. Ein Sprung ueber mehrere Schwellen schaltet
+ * alle dazwischen frei; uebersprungen wird keine.
+ *
+ * Schreibt nur, wenn wirklich etwas offen war. Gibt die neu freigeschalteten
+ * Ziele zurueck.
+ */
+export async function meilensteineFreischalten(follower, standRoh = null) {
+  const stand = standRoh ? meilensteinStand(standRoh) : await meilensteinStandLesen()
+  const offen = offeneFreischaltungen(follower, stand)
+  if (offen.length === 0) return { neu: [], stand }
+
+  const am = new Date().toISOString()
+  for (const ziel of offen) {
+    const vorher = stand.stufen[String(ziel)] ?? { gewinn: '', beschreibung: '', freiAm: null, gezogen: null }
+    stand.stufen[String(ziel)] = { ...vorher, freiAm: am }
+    protokollieren(stand, 'meilenstein-frei', `Schwelle ${ziel} freigeschaltet (${follower} Follower)`)
+  }
+  const ok = await meilensteinStandSchreiben(stand)
+  return { neu: ok ? offen : [], stand }
 }
 
 /**
