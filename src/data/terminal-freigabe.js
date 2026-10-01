@@ -1,43 +1,46 @@
 /**
  * Oeffentliche Freigabe des Tresor-Terminals.
  *
- * Temporaer deaktiviert nach Stadtfest 2026. Fuer zukuenftiges VIDEKO
- * Community Game vorgesehen.
+ * Nach dem Stadtfest 2026 war der Terminal voruebergehend abgeschaltet.
+ * Seit 01.10.2026 ist er wieder bewusst oeffentlich erreichbar, damit wir
+ * auf dem bestehenden Stand weiterbauen koennen.
  *
  * WAS DER SCHALTER TUT
  * --------------------
- * Die Umgebungsvariable TERMINAL_PUBLIC_ENABLED steuert, ob das Terminal nach
- * aussen existiert. Nur der Wert `true` schaltet es frei; fehlt die Variable
- * oder steht etwas anderes darin, ist es zu. Gesperrt heisst:
+ * TERMINAL_CODE_ENABLED ist die lokale, versionierte Betriebsfreigabe.
+ * Solange sie true ist, ist der Terminal oeffentlich aktiv - unabhaengig davon,
+ * ob in Vercel noch ein alter TERMINAL_PUBLIC_ENABLED-Wert fehlt oder auf false
+ * steht. Das ist absichtlich so, weil die Wiederinbetriebnahme ueber Code und
+ * nicht ueber eine Vercel-ENV erfolgt.
  *
- *   - /terminal und alle Unterseiten (Rangliste, Ziehung, Admin,
- *     Teilnahmebedingungen, Einladungen) liefern die normale 404-Seite.
- *     Der Prerender schreibt fuer sie kein HTML, die App kennt die Routen
- *     nicht (auch nicht bei Navigation innerhalb der SPA).
- *   - /api/terminal, /api/terminal-admin und /api/terminal-instagram
- *     antworten mit 404, bevor sie irgendetwas lesen oder schreiben. Damit
- *     entstehen keine neuen Teilnehmer, Scores, Deckelaktivierungen,
- *     Einladungen oder Ziehungen.
+ * Wenn TERMINAL_CODE_ENABLED spaeter wieder auf false gesetzt wird, greift
+ * erneut die Umgebungsvariable TERMINAL_PUBLIC_ENABLED: nur deren Wert `true`
+ * schaltet den Terminal dann frei.
  *
- * WAS ER NICHT TUT
- * ----------------
- * Nichts wird geloescht: Datenbank (videko-core-pilot), Migrationen, Games,
- * Admin, Ranking, Ziehung, Instagram-Sync und alle Umgebungsvariablen
- * (INSTAGRAM_ACCESS_TOKEN, INSTAGRAM_USER_ID, CRON_SECRET, TERMINAL_*) bleiben
- * unveraendert erhalten.
+ * Aktiv bedeutet:
+ *   - /terminal und die Unterseiten sind wieder als Routen vorhanden.
+ *   - Prerender schreibt die statischen Terminal-Seiten wieder.
+ *   - /api/terminal, /api/terminal-admin und /api/terminal-instagram laufen
+ *     wieder durch ihre normalen Auth-/Konfigurationspruefungen statt am
+ *     vorgelagerten 404-Gate zu enden.
  *
- * WIEDER AKTIVIEREN
- * -----------------
- * 1. In Vercel (Production) TERMINAL_PUBLIC_ENABLED=true setzen.
- * 2. Den Instagram-Cron wieder in vercel.json eintragen:
- *      "crons": [{ "path": "/api/terminal-instagram", "schedule": "0 * * * *" }]
- * 3. Neu deployen. Der Wert wird zur Build-Zeit ins Frontend uebernommen —
- *    ein reines Umstellen der Variable ohne neuen Build reicht fuer die
- *    Seiten nicht, fuer die APIs schon.
+ * Unveraendert:
+ *   - Es wird nichts an Datenbank, Scores, Teilnehmern oder Ziehungen geaendert.
+ *   - Admin-Schutz, Rate-Limits und alle bestehenden Terminal-Regeln bleiben.
+ *   - Der Instagram-Cron wird hierdurch NICHT aktiviert.
  */
 
-/** Liest den Schalter aus einem Umgebungswert (Server, Build, Prerender). */
+/**
+ * Versionierte Betriebsfreigabe.
+ *
+ * true  = Terminal ist bewusst wieder live.
+ * false = Vercel-ENV TERMINAL_PUBLIC_ENABLED entscheidet wieder.
+ */
+export const TERMINAL_CODE_ENABLED = true
+
+/** Liest den effektiven Schalter fuer Server, Build und Prerender. */
 export function terminalFreigabeAus(wert) {
+  if (TERMINAL_CODE_ENABLED) return true
   return String(wert ?? '').trim().toLowerCase() === 'true'
 }
 
