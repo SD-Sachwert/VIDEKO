@@ -4,6 +4,8 @@
 /* Aktionsseite /stadtfest. Eigene Datei, alle Klassen mit sf- praefixiert.
    @import muss vor allen Regeln stehen, deshalb direkt hier. */
 @import './stadtfest.css';
+/* Live-Ziehungsbuehne Stadtfest. */
+@import './stadtfest-ziehung.css';
 /* Aktionsseite /terminal (Bierdeckel). Gleiches Muster, Praefix trm-. */
 @import './terminal.css';
 
