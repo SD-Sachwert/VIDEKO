@@ -54,6 +54,8 @@ const Entdecken = lazy(() => import('./pages/Entdecken.jsx'))
 // Aktionsseite zum Stadtfest. Bewusst ausserhalb von <Layout> — siehe Route unten.
 const Stadtfest = lazy(() => import('./pages/Stadtfest.jsx'))
 const StadtfestTeilnahme = lazy(() => import('./pages/StadtfestTeilnahme.jsx'))
+const StadtfestZiehung = lazy(() => import('./pages/StadtfestZiehung.jsx'))
+const StadtfestZiehungShow = lazy(() => import('./pages/StadtfestZiehungShow.jsx'))
 // Bierdeckel-Aktion. Sechs Seiten, alle ausserhalb von <Layout> — siehe Routen unten.
 const Terminal = lazy(() => import('./pages/Terminal.jsx'))
 const TerminalZiehung = lazy(() => import('./pages/TerminalZiehung.jsx'))
@@ -73,6 +75,9 @@ export default function App() {
           verlinkbare und druckbare Seite. Oeffentlich, ohne Login, ebenfalls
           ausserhalb des Layouts und ebenfalls noindex/nofollow. */}
       <Route path="/stadtfest/teilnahmebedingungen" element={<StadtfestTeilnahme />} />
+      {/* Live-Ziehung: Zuschaueransicht und identische 16:9-Buehne fuer OBS/Beamer. */}
+      <Route path="/stadtfest/ziehung" element={<StadtfestZiehung />} />
+      <Route path="/stadtfest/ziehung/show" element={<StadtfestZiehungShow />} />
 
       {/* Bierdeckel-Aktion: Ziel der gedruckten QR-Codes. Eigener schwarzer
           Rahmen mit eigenem Kopf und Fuss, deshalb ebenfalls ausserhalb des
