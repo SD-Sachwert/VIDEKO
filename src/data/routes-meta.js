@@ -362,6 +362,25 @@ const ALLE_STATISCHEN_ROUTEN = [
     inSitemap: false,
   },
 
+  {
+    path: '/stadtfest/ziehung',
+    title: 'Live-Ziehung Stadtfest 2026 | VIDEKO Küchen',
+    description:
+      'Live-Stand der VIDEKO Hauptpreis-Ziehung zum Würzburger Stadtfest 2026.',
+    noindex: true,
+    nofollow: true,
+    inSitemap: false,
+  },
+  {
+    path: '/stadtfest/ziehung/show',
+    title: 'Live-Bühne Stadtfest-Ziehung | VIDEKO Küchen',
+    description:
+      '16:9 Live-Bühne der VIDEKO Hauptpreis-Ziehung für Stream und Beamer.',
+    noindex: true,
+    nofollow: true,
+    inSitemap: false,
+  },
+
   /* Bierdeckel-Aktion. Der gedruckte QR-Code zeigt auf /terminal; die vier
      Unterseiten sind von dort aus verlinkt. Alle fuenf bleiben aus dem Index
      und aus der Sitemap: die Aktion ist zeitlich begrenzt, und eine
