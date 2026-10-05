@@ -175,22 +175,77 @@ function LiveMarke() {
   )
 }
 
-function PotLeiste({ pots = [], winners = [] }) {
+function PotLeiste({ pots = [], winners = [], aktiverKey = null }) {
   return (
     <div className="stz-pots" aria-label="Lostöpfe">
       {pots.map((pot) => {
         const gezogen = winners.filter((w) => w.prizeKey === pot.key).length
+        const fertig = gezogen >= pot.slots
+        const aktiv = pot.key === aktiverKey
         return (
-          <div className="stz-pot" key={pot.key}>
+          <div
+            className={`stz-pot${aktiv ? ' stz-pot--aktiv' : ''}${fertig ? ' stz-pot--fertig' : ''}`}
+            key={pot.key}
+          >
             <span className="stz-pot__name">{pot.short}</span>
-            <strong className="stz-pot__zahl">{pot.total}</strong>
-            <span className="stz-pot__meta">
-              Lose · {gezogen}/{pot.slots} gezogen
+            <span className="stz-pot__zeile">
+              <strong className="stz-pot__zahl">{pot.total}</strong>
+              <span className="stz-pot__meta">
+                Lose · {gezogen}/{pot.slots} gezogen
+              </span>
+            </span>
+            {/* Füllstand kommt aus denselben Gewinnerzeilen wie die Zahl rechts
+                daneben — keine zweite Quelle, keine gemalte Kurve. */}
+            <span className="stz-pot__balken" aria-hidden="true">
+              <i style={{ width: `${Math.min(100, (gezogen / Math.max(pot.slots, 1)) * 100)}%` }} />
             </span>
           </div>
         )
       })}
     </div>
+  )
+}
+
+/**
+ * Rechte Spalte der Show-Bühne: die bereits aufgedeckten Hauptpreise.
+ *
+ * Liest ausschliesslich die Gewinnerliste, die der Server schon auf
+ * "Vorname N." + Teilnahme-Code gekürzt hat. Hier wird nichts nachgeladen
+ * und nichts ergänzt. Die Zuschauerseite zeigt dieselben Zeilen ausführlich
+ * in GewinnerListe; auf der kompakten Bühne bleibt diese Spalte deshalb aus.
+ */
+function GewinnerTafel({ winners = [], gesamt = 9, aktuellerDrawId = null }) {
+  const neueste = [...winners].reverse()
+  return (
+    <aside className={`stz-tafel${winners.length >= 7 ? ' stz-tafel--eng' : ''}`} aria-label="Bisherige Gewinner">
+      <div className="stz-tafel__kopf">
+        <span>BISHERIGE GEWINNER</span>
+        <strong>
+          {winners.length}<i>/{gesamt}</i>
+        </strong>
+      </div>
+
+      {neueste.length === 0 ? (
+        <p className="stz-tafel__leer">Noch kein Hauptpreis aufgedeckt.</p>
+      ) : (
+        <ol className="stz-tafel__liste">
+          {neueste.map((w) => (
+            <li
+              className={`stz-tafel__zeile${w.drawId === aktuellerDrawId ? ' stz-tafel__zeile--frisch' : ''}`}
+              key={w.drawId}
+            >
+              <span className="stz-tafel__name">{w.name}</span>
+              <span className="stz-tafel__preis">{preisTitel(w)}</span>
+              <span className="stz-tafel__code">CODE {w.code}</span>
+            </li>
+          ))}
+        </ol>
+      )}
+
+      <p className="stz-tafel__fuss">
+        Öffentlich nur Vorname, Nachnamensinitial und Teilnahme-Code.
+      </p>
+    </aside>
   )
 }
 
@@ -267,7 +322,7 @@ function GewinnerBild({ current }) {
   return (
     <div className="stz-stage__mitte stz-stage__mitte--gewinner" key={current.drawId}>
       <div className="stz-konfetti" aria-hidden="true">
-        {Array.from({ length: 28 }, (_, i) => <i key={i} style={{ '--i': i }} />)}
+        {Array.from({ length: 28 }, (_, i) => <i key={i} style={{ '--i': i, '--x': (i * 37) % 100 }} />)}
       </div>
       <Trophy className="stz-pokal" size={42} strokeWidth={1.5} aria-hidden="true" />
       <p className="stz-kicker">UND DER GEWINN GEHT AN</p>
@@ -315,10 +370,25 @@ export function ZiehungsBuehne({ kompakt = false }) {
   )
   const pot = current ? daten?.pots?.find((p) => p.key === current.prizeKey) : null
 
+  /* Nur fuer Styling und die optische Abnahme: welches Bild steht gerade auf
+     der Buehne. Steuert keinen Ablauf und deckt nichts auf. */
+  let art = 'laden'
+  if (daten && fertig) art = 'ende'
+  else if (daten && current?.status === 'revealed') art = 'reveal'
+  else if (daten && current?.status === 'spinning') art = 'ziehen'
+  else if (daten) art = 'start'
+  else if (fehler) art = 'fehler'
+
   return (
-    <section className={`stz-stage${kompakt ? ' stz-stage--kompakt' : ''}`}>
+    <section
+      className={`stz-stage${kompakt ? ' stz-stage--kompakt' : ''}${kompakt ? '' : ' stz-stage--show'}`}
+      data-art={art}
+    >
       <div className="stz-stage__noise" aria-hidden="true" />
       <div className="stz-stage__glow" aria-hidden="true" />
+      <div className="stz-stage__spot" aria-hidden="true" />
+      <div className="stz-stage__boden" aria-hidden="true" />
+      <div className="stz-stage__vignette" aria-hidden="true" />
 
       <header className="stz-stage__kopf">
         <img className="stz-logo" src={logo} alt="VIDEKO Küchen" />
@@ -354,6 +424,14 @@ export function ZiehungsBuehne({ kompakt = false }) {
         </div>
       )}
 
+      {!kompakt && daten && (
+        <GewinnerTafel
+          winners={winners}
+          gesamt={gesamt}
+          aktuellerDrawId={current?.status === 'revealed' ? current.drawId : null}
+        />
+      )}
+
       <footer className="stz-stage__fuss">
         <div className="stz-fortschritt">
           <span className="stz-fortschritt__linie">
@@ -362,7 +440,7 @@ export function ZiehungsBuehne({ kompakt = false }) {
           <strong>{winners.length} / {daten?.hauptpreiseGesamt ?? 9}</strong>
           <span>HAUPTPREISE AUFGEDECKT</span>
         </div>
-        {daten && <PotLeiste pots={daten.pots} winners={winners} />}
+        {daten && <PotLeiste pots={daten.pots} winners={winners} aktiverKey={current?.prizeKey ?? null} />}
         <span
           className={`stz-sync${fehler ? ' stz-sync--offline' : ''}`}
           title={letztesUpdate ? new Date(letztesUpdate).toLocaleTimeString('de-DE') : ''}
