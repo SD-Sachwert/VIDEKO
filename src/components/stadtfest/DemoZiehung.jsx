@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Check, LockKeyhole, Trophy } from 'lucide-react'
+import { Check, Trophy } from 'lucide-react'
 import logo from '../../assets/brand/logo-web-auf-dunkel.webp'
 
 const DRAW_MS = 15000
 const POLL_MS = 700
-const SESSION_KEY = 'videko-stadtfest-simulation-admin'
 
 const POTS = [
   { key: 'gold_2_5g', label: '2,5 g Gold', short: 'GOLD', total: 137, slots: 2 },
@@ -14,7 +13,7 @@ const POTS = [
 ]
 
 const HAUPT_LOSE_GESAMT = POTS.reduce((summe, pot) => summe + pot.total, 0)
-const BONUS_POT = { key: 'bonus', label: 'Bonus-Runde', short: 'BONUS', total: 2202, slots: 16 }
+const BONUS_POT = { key: 'bonus', label: 'Bonus-Runde', short: 'BONUS', total: 1202, slots: 16 }
 
 const GEWINNER = [
   { drawId: 'sim-gutschein-1', prizeKey: 'kuechengutschein_1000', prizeTitle: '1.000 € Küchengutschein', prizeNumber: 1, name: 'Felix Bauer', code: '1734' },
@@ -405,16 +404,9 @@ function naechsterText(phase, index) {
 
 export function DemoRegie() {
   const { stand, fehler, geladen, uebernehmen } = useSimulationState()
-  const [schluessel, setSchluessel] = useState('')
-  const [eingabe, setEingabe] = useState('')
-  const [authFehler, setAuthFehler] = useState('')
   const [laeuft, setLaeuft] = useState(false)
+  const [regieFehler, setRegieFehler] = useState('')
   const [, setTakt] = useState(0)
-
-  useEffect(() => {
-    const gespeichert = window.sessionStorage.getItem(SESSION_KEY) || ''
-    if (gespeichert) setEingabe(gespeichert)
-  }, [])
 
   useEffect(() => {
     const timer = window.setInterval(() => setTakt((wert) => wert + 1), 250)
@@ -428,71 +420,30 @@ export function DemoRegie() {
   const ziehenGesperrt = phase.art === 'ziehen' && elapsed < DRAW_MS
   const rest = ziehenGesperrt ? Math.max(1, Math.ceil((DRAW_MS - elapsed) / 1000)) : 0
 
-  const posten = async (body, token = schluessel) => {
-    const antwort = await fetch('/api/stadtfest-simulation', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-terminal-admin': token,
-      },
-      body: JSON.stringify(body),
-    })
-    const json = await antwort.json().catch(() => ({}))
-    if (!antwort.ok || !json.ok) throw new Error(json.meldung || 'Regie konnte nicht aktualisiert werden')
-    uebernehmen(json)
-    return json
-  }
-
-  const anmelden = async (event) => {
-    event.preventDefault()
-    const token = eingabe.trim()
-    if (!token) return
-    setLaeuft(true)
-    setAuthFehler('')
-    try {
-      await posten({ aktion: 'pruefen' }, token)
-      window.sessionStorage.setItem(SESSION_KEY, token)
-      setSchluessel(token)
-    } catch (error) {
-      setAuthFehler(error?.message || 'Anmeldung fehlgeschlagen')
-    } finally {
-      setLaeuft(false)
-    }
-  }
-
   const setzen = async (neu) => {
-    if (!schluessel || laeuft) return
+    if (laeuft) return
     setLaeuft(true)
-    setAuthFehler('')
+    setRegieFehler('')
     try {
-      await posten({ schritt: begrenzen(neu) })
+      const antwort = await fetch('/api/stadtfest-simulation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ schritt: begrenzen(neu) }),
+      })
+      const json = await antwort.json().catch(() => ({}))
+      if (!antwort.ok || !json.ok) {
+        if (antwort.status === 401) {
+          throw new Error('Privater Regie-Zugang fehlt. Bitte den Regie-Link erneut öffnen.')
+        }
+        throw new Error(json.meldung || 'Regie konnte nicht aktualisiert werden')
+      }
+      uebernehmen(json)
     } catch (error) {
-      setAuthFehler(error?.message || 'Regie konnte nicht aktualisiert werden')
+      setRegieFehler(error?.message || 'Regie konnte nicht aktualisiert werden')
     } finally {
       setLaeuft(false)
     }
-  }
-
-  if (!schluessel) {
-    return (
-      <div className="stz-regie-login">
-        <LockKeyhole size={28} aria-hidden="true" />
-        <strong>SIMULATION · INTERNE REGIE</strong>
-        <p>Mit dem bestehenden Verwaltungsschlüssel anmelden. Die Show-Seite kann nur hier gesteuert werden.</p>
-        <form onSubmit={anmelden}>
-          <input
-            type="password"
-            autoComplete="current-password"
-            placeholder="Verwaltungsschlüssel"
-            value={eingabe}
-            onChange={(event) => setEingabe(event.target.value)}
-          />
-          <button type="submit" disabled={laeuft}>{laeuft ? 'PRÜFE …' : 'REGIE ÖFFNEN'}</button>
-        </form>
-        {authFehler && <span className="stz-regie-fehler">{authFehler}</span>}
-        {fehler && <span className="stz-regie-fehler">{fehler}</span>}
-      </div>
-    )
   }
 
   return (
@@ -509,20 +460,10 @@ export function DemoRegie() {
           {ziehenGesperrt ? `NOCH ${rest} S` : naechsterText(phase, index)}
         </button>
         <button type="button" disabled={laeuft || index === 0} onClick={() => void setzen(0)}>NEU STARTEN</button>
-        <button
-          type="button"
-          onClick={() => {
-            window.sessionStorage.removeItem(SESSION_KEY)
-            setSchluessel('')
-            setEingabe('')
-          }}
-        >
-          REGIE SPERREN
-        </button>
         <span>
           Schritt {index + 1}/{PHASEN.length} · {fehler ? 'Verbindung gestört' : 'Show verbunden'}
         </span>
-        {authFehler && <span className="stz-regie-fehler">{authFehler}</span>}
+        {regieFehler && <span className="stz-regie-fehler">{regieFehler}</span>}
       </div>
 
       {!geladen && <div className="stz-regie-laden">REGIESTAND WIRD GELADEN …</div>}

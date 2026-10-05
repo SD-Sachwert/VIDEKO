@@ -6,7 +6,7 @@ const {
   STADTFEST_COMPANY_ID,
   TERMINAL_SUPABASE_URL,
   TERMINAL_SUPABASE_SERVICE_KEY,
-  TERMINAL_ADMIN_TOKEN = '',
+  STADTFEST_SIMULATION_SESSION_SECRET = '',
 } = process.env
 
 const SUPABASE_URL = STADTFEST_SUPABASE_URL || TERMINAL_SUPABASE_URL
@@ -34,9 +34,26 @@ function gleichSicher(a, b) {
   return crypto.timingSafeEqual(links, rechts)
 }
 
+function cookies(req) {
+  return Object.fromEntries(
+    String(req.headers.cookie || '')
+      .split(';')
+      .map((teil) => teil.trim())
+      .filter(Boolean)
+      .map((teil) => {
+        const index = teil.indexOf('=')
+        return index < 0 ? [teil, ''] : [teil.slice(0, index), decodeURIComponent(teil.slice(index + 1))]
+      }),
+  )
+}
+
 function angemeldet(req) {
-  const mitgebracht = String(req.headers['x-terminal-admin'] || '').trim()
-  return Boolean(TERMINAL_ADMIN_TOKEN && mitgebracht && gleichSicher(TERMINAL_ADMIN_TOKEN, mitgebracht))
+  const mitgebracht = cookies(req).stadtfest_sim_control || ''
+  return Boolean(
+    STADTFEST_SIMULATION_SESSION_SECRET
+    && mitgebracht
+    && gleichSicher(STADTFEST_SIMULATION_SESSION_SECRET, mitgebracht)
+  )
 }
 
 async function lesen() {
@@ -99,15 +116,11 @@ export default async function handler(req, res) {
 
     if (req.method === 'POST') {
       if (!angemeldet(req)) {
-        res.status(401).json({ ok: false, meldung: 'Verwaltungsschlüssel ungültig.' })
+        res.status(401).json({ ok: false, meldung: 'Regie-Zugang fehlt.' })
         return
       }
 
       const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {})
-      if (body.aktion === 'pruefen') {
-        res.status(200).json({ ok: true, ...(await lesen()) })
-        return
-      }
 
       const schritt = Number(body.schritt)
       if (!Number.isInteger(schritt) || schritt < 0 || schritt > 100) {
