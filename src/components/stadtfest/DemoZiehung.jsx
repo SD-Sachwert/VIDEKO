@@ -14,7 +14,7 @@ const POTS = [
 ]
 
 const HAUPT_LOSE_GESAMT = POTS.reduce((summe, pot) => summe + pot.total, 0)
-const BONUS_POT = { key: 'bonus', label: 'Bonus-Runde', short: 'BONUS', total: 2202, slots: 16 }
+const BONUS_POT = { key: 'bonus', label: 'Bonus-Runde', short: 'BONUS', total: 1202, slots: 16 }
 
 const GEWINNER = [
   { drawId: 'sim-gutschein-1', prizeKey: 'kuechengutschein_1000', prizeTitle: '1.000 € Küchengutschein', prizeNumber: 1, name: 'Felix Bauer', code: '1734' },
