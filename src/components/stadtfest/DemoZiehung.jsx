@@ -13,35 +13,30 @@ const POTS = [
 ]
 
 const HAUPT_LOSE_GESAMT = POTS.reduce((summe, pot) => summe + pot.total, 0)
-const BONUS_POT = { key: 'bonus', label: 'Bonus-Runde', short: 'BONUS', total: 1202, slots: 16 }
+const BONUS_POT = { key: 'bonus', label: 'Bonus-Runde', short: 'BONUS', total: 1202, slots: 11 }
 
 const GEWINNER = [
-  { drawId: 'sim-gutschein-1', prizeKey: 'kuechengutschein_1000', prizeTitle: '1.000 € Küchengutschein', prizeNumber: 1, name: 'Felix Bauer', code: '1734' },
-  { drawId: 'sim-gutschein-2', prizeKey: 'kuechengutschein_1000', prizeTitle: '1.000 € Küchengutschein', prizeNumber: 2, name: 'Anna Keller', code: '9051' },
+  { drawId: 'sim-gutschein-1', prizeKey: 'kuechengutschein_1000', prizeTitle: '1.000 € Küchengutschein', prizeNumber: 1, name: 'Olga Posunko', code: '2841' },
+  { drawId: 'sim-gutschein-2', prizeKey: 'kuechengutschein_1000', prizeTitle: '1.000 € Küchengutschein', prizeNumber: 2, name: 'Irene González', code: '7356' },
+  { drawId: 'sim-gutschein-3', prizeKey: 'kuechengutschein_1000', prizeTitle: '1.000 € Küchengutschein', prizeNumber: 3, name: 'Veronika Pfeiff', code: '4193' },
+  { drawId: 'sim-gutschein-4', prizeKey: 'kuechengutschein_1000', prizeTitle: '1.000 € Küchengutschein', prizeNumber: 4, name: 'Sophia Sennewal', code: '8627' },
+  { drawId: 'sim-gutschein-5', prizeKey: 'kuechengutschein_1000', prizeTitle: '1.000 € Küchengutschein', prizeNumber: 5, name: 'Kristina Dörschner', code: '5318' },
   { drawId: 'sim-gold-1', prizeKey: 'gold_2_5g', prizeTitle: '2,5 g Gold', prizeNumber: 1, name: 'Vera Bylinski', code: '4827' },
-  { drawId: 'sim-gutschein-3', prizeKey: 'kuechengutschein_1000', prizeTitle: '1.000 € Küchengutschein', prizeNumber: 3, name: 'Jonas Fischer', code: '7520' },
+  { drawId: 'sim-gold-2', prizeKey: 'gold_2_5g', prizeTitle: '2,5 g Gold', prizeNumber: 2, name: 'Theresia Brüning', code: '6942' },
+  { drawId: 'sim-wellness', prizeKey: 'wellness_2n_2p', prizeTitle: 'Wellnessurlaub – 2 Nächte / 2 Personen', prizeNumber: 1, name: 'Inge Frank', code: '3175' },
   { drawId: 'sim-spanndecke', prizeKey: 'spanndecke_20qm', prizeTitle: 'Spanndecke bis 20 m²', prizeNumber: 1, name: 'Michael Wimmer', code: '6612' },
-  { drawId: 'sim-gutschein-4', prizeKey: 'kuechengutschein_1000', prizeTitle: '1.000 € Küchengutschein', prizeNumber: 4, name: 'Sabrina Hofmann', code: '1149' },
-  { drawId: 'sim-wellness', prizeKey: 'wellness_2n_2p', prizeTitle: 'Wellnessurlaub – 2 Nächte / 2 Personen', prizeNumber: 1, name: 'Thomas Schmitt', code: '2408' },
-  { drawId: 'sim-gutschein-5', prizeKey: 'kuechengutschein_1000', prizeTitle: '1.000 € Küchengutschein', prizeNumber: 5, name: 'Lea Wagner', code: '5377' },
-  { drawId: 'sim-gold-2', prizeKey: 'gold_2_5g', prizeTitle: '2,5 g Gold', prizeNumber: 2, name: 'Anton Danner', code: '3186' },
 
-  { drawId: 'sim-bonus-schuerze-1', drawType: 'bonus', prizeKey: 'bonus_kochschuerze', prizeTitle: 'VIDEKO Kochschürze', prizeNumber: 1, name: 'Mia Schneider', code: '2194' },
-  { drawId: 'sim-bonus-schuerze-2', drawType: 'bonus', prizeKey: 'bonus_kochschuerze', prizeTitle: 'VIDEKO Kochschürze', prizeNumber: 2, name: 'Jan Weber', code: '6831' },
-  { drawId: 'sim-bonus-dinner', drawType: 'bonus', prizeKey: 'bonus_dinner_2_wuerzburg', prizeTitle: 'Dinner für zwei in Würzburg', prizeNumber: 1, name: 'Paul Berger', code: '4602' },
-  { drawId: 'sim-bonus-schuerze-3', drawType: 'bonus', prizeKey: 'bonus_kochschuerze', prizeTitle: 'VIDEKO Kochschürze', prizeNumber: 3, name: 'Laura Seidel', code: '5274' },
-  { drawId: 'sim-bonus-gutschein-1', drawType: 'bonus', prizeKey: 'bonus_kuechengutschein_1000', prizeTitle: '1.000 € Küchengutschein – Bonuspreis', prizeNumber: 1, name: 'Daniel König', code: '6421' },
-  { drawId: 'sim-bonus-schuerze-4', drawType: 'bonus', prizeKey: 'bonus_kochschuerze', prizeTitle: 'VIDEKO Kochschürze', prizeNumber: 4, name: 'Stefan Krüger', code: '1468' },
-  { drawId: 'sim-bonus-vorrat', drawType: 'bonus', prizeKey: 'bonus_jahresvorrat_tabs_nudeln', prizeTitle: 'Jahresvorrat Spülmaschinentabs + Nudeln', prizeNumber: 1, name: 'Clara Hoffmann', code: '8081' },
-  { drawId: 'sim-bonus-schuerze-5', drawType: 'bonus', prizeKey: 'bonus_kochschuerze', prizeTitle: 'VIDEKO Kochschürze', prizeNumber: 5, name: 'Katharina Wolf', code: '9340' },
-  { drawId: 'sim-bonus-schuerze-6', drawType: 'bonus', prizeKey: 'bonus_kochschuerze', prizeTitle: 'VIDEKO Kochschürze', prizeNumber: 6, name: 'Marco Neumann', code: '2753' },
-  { drawId: 'sim-bonus-wellness', drawType: 'bonus', prizeKey: 'bonus_wellness_2n_2p', prizeTitle: 'Wellnesswochenende für 2 – Bonuspreis', prizeNumber: 1, name: 'Max Richter', code: '3505' },
-  { drawId: 'sim-bonus-schuerze-7', drawType: 'bonus', prizeKey: 'bonus_kochschuerze', prizeTitle: 'VIDEKO Kochschürze', prizeNumber: 7, name: 'Lisa Hartmann', code: '7016' },
-  { drawId: 'sim-bonus-gutschein-2', drawType: 'bonus', prizeKey: 'bonus_kuechengutschein_1000', prizeTitle: '1.000 € Küchengutschein – Bonuspreis', prizeNumber: 2, name: 'Julia Beck', code: '8950' },
-  { drawId: 'sim-bonus-schuerze-8', drawType: 'bonus', prizeKey: 'bonus_kochschuerze', prizeTitle: 'VIDEKO Kochschürze', prizeNumber: 8, name: 'Tobias Frank', code: '4137' },
-  { drawId: 'sim-bonus-schuerze-9', drawType: 'bonus', prizeKey: 'bonus_kochschuerze', prizeTitle: 'VIDEKO Kochschürze', prizeNumber: 9, name: 'Sarah Lang', code: '5682' },
-  { drawId: 'sim-bonus-schuerze-10', drawType: 'bonus', prizeKey: 'bonus_kochschuerze', prizeTitle: 'VIDEKO Kochschürze', prizeNumber: 10, name: 'Martin Schuster', code: '3269' },
-  { drawId: 'sim-bonus-gold', drawType: 'bonus', prizeKey: 'bonus_gold_2_5g', prizeTitle: '2,5 g Gold – Bonuspreis', prizeNumber: 1, name: 'Rosemarie Minje', code: '7712' },
+  { drawId: 'sim-bonus-schuerze-1', drawType: 'bonus', prizeKey: 'bonus_kochschuerze', prizeTitle: 'VIDEKO Kochschürze', prizeNumber: 1, name: 'Katja Wagner', code: '2084' },
+  { drawId: 'sim-bonus-schuerze-2', drawType: 'bonus', prizeKey: 'bonus_kochschuerze', prizeTitle: 'VIDEKO Kochschürze', prizeNumber: 2, name: 'Stefanie Griebsch', code: '7461' },
+  { drawId: 'sim-bonus-schuerze-3', drawType: 'bonus', prizeKey: 'bonus_kochschuerze', prizeTitle: 'VIDEKO Kochschürze', prizeNumber: 3, name: 'Sabrina Groß', code: '3957' },
+  { drawId: 'sim-bonus-schuerze-4', drawType: 'bonus', prizeKey: 'bonus_kochschuerze', prizeTitle: 'VIDEKO Kochschürze', prizeNumber: 4, name: 'Simone Sauer', code: '8243' },
+  { drawId: 'sim-bonus-schuerze-5', drawType: 'bonus', prizeKey: 'bonus_kochschuerze', prizeTitle: 'VIDEKO Kochschürze', prizeNumber: 5, name: 'Florian Cording', code: '9136' },
+  { drawId: 'sim-bonus-gutschein-1', drawType: 'bonus', prizeKey: 'bonus_kuechengutschein_1000', prizeTitle: '1.000 € Küchengutschein – Bonuspreis', prizeNumber: 1, name: 'Benke Natalia', code: '5726' },
+  { drawId: 'sim-bonus-gutschein-2', drawType: 'bonus', prizeKey: 'bonus_kuechengutschein_1000', prizeTitle: '1.000 € Küchengutschein – Bonuspreis', prizeNumber: 2, name: 'Hasib Khan', code: '9431' },
+  { drawId: 'sim-bonus-dinner', drawType: 'bonus', prizeKey: 'bonus_dinner_2_wuerzburg', prizeTitle: 'Abendessen für zwei Personen', prizeNumber: 1, name: 'Laurin Deimann', code: '1658' },
+  { drawId: 'sim-bonus-vorrat', drawType: 'bonus', prizeKey: 'bonus_jahresvorrat_tabs_nudeln', prizeTitle: 'Jahresvorrat Spülmaschinentabs + Nudeln', prizeNumber: 1, name: 'Mika Krail', code: '6083' },
+  { drawId: 'sim-bonus-wellness', drawType: 'bonus', prizeKey: 'bonus_wellness_2n_2p', prizeTitle: 'Wellnesswochenende für 2 – Bonuspreis', prizeNumber: 1, name: 'Vivien Lausch', code: '3514' },
+  { drawId: 'sim-bonus-gold', drawType: 'bonus', prizeKey: 'bonus_gold_2_5g', prizeTitle: '2,5 g Gold – Bonuspreis', prizeNumber: 1, name: 'Sibylle Hiebsch', code: '7796' },
 ]
 
 const PHASEN = [
@@ -298,7 +293,7 @@ function EndeBild() {
     <div className="stz-stage__mitte stz-stage__mitte--ende">
       <Check className="stz-ende__check" size={54} strokeWidth={1.4} aria-hidden="true" />
       <p className="stz-kicker">ALLE ZIEHUNGEN ABGESCHLOSSEN</p>
-      <h1 className="stz-title">9 HAUPTPREISE.<span>16 BONUSPREISE.</span></h1>
+      <h1 className="stz-title">9 HAUPTPREISE.<span>11 BONUSPREISE.</span></h1>
       <p className="stz-lead">Danke fürs Mitfiebern. Alle Gewinner bleiben rechts im Überblick sichtbar.</p>
     </div>
   )
