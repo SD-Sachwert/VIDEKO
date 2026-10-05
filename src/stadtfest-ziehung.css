@@ -859,3 +859,90 @@
     animation-iteration-count: 1 !important;
   }
 }
+
+
+/* Demo-Auslosung ---------------------------------------------------------- */
+.stz-page--demo {
+  padding-top: clamp(54px, 6vw, 86px);
+}
+
+.stz-demo-ribbon {
+  position: absolute;
+  z-index: 20;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 7px 16px 8px;
+  border: 1px solid rgba(240, 213, 140, 0.42);
+  border-top: 0;
+  border-radius: 0 0 10px 10px;
+  background: rgba(128, 22, 22, 0.92);
+  color: #fff6e8;
+  font-size: clamp(8px, 0.72vw, 11px);
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  white-space: nowrap;
+  box-shadow: 0 10px 35px rgba(0,0,0,.4);
+}
+
+.stz-demo-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  width: min(1440px, 100%);
+  margin: 0 auto 14px;
+  padding: 12px;
+  border: 1px solid rgba(201,160,80,.28);
+  border-radius: 14px;
+  background: rgba(8,7,6,.96);
+}
+
+.stz-demo-controls button {
+  min-height: 42px;
+  padding: 0 16px;
+  border: 1px solid rgba(201,160,80,.32);
+  border-radius: 10px;
+  background: rgba(201,160,80,.08);
+  color: var(--stz-creme);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  cursor: pointer;
+}
+
+.stz-demo-controls button:hover,
+.stz-demo-controls button.is-active {
+  background: rgba(201,160,80,.2);
+  border-color: rgba(240,213,140,.65);
+}
+
+.stz-demo-controls span {
+  margin-left: auto;
+  color: rgba(244,239,228,.5);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+@media (max-width: 760px) {
+  .stz-page--demo {
+    padding-top: 48px;
+  }
+
+  .stz-demo-controls {
+    margin: 0;
+    border-width: 0 0 1px;
+    border-radius: 0;
+  }
+
+  .stz-demo-controls button {
+    flex: 1 1 calc(50% - 10px);
+  }
+
+  .stz-demo-controls span {
+    width: 100%;
+    margin-left: 0;
+    text-align: center;
+  }
+}
