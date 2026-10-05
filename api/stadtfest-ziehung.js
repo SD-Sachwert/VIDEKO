@@ -12,12 +12,37 @@ const {
   STADTFEST_SUPABASE_URL,
   STADTFEST_SUPABASE_SERVICE_KEY,
   STADTFEST_COMPANY_ID,
+  TERMINAL_SUPABASE_URL,
+  TERMINAL_SUPABASE_SERVICE_KEY,
 } = process.env
+
+const SUPABASE_URL = STADTFEST_SUPABASE_URL || TERMINAL_SUPABASE_URL
+const SUPABASE_SERVICE_KEY = STADTFEST_SUPABASE_SERVICE_KEY || TERMINAL_SUPABASE_SERVICE_KEY
 
 const EVENT_ID = 'wuerzburger-stadtfest-2026'
 
 function konfiguriert() {
-  return Boolean(STADTFEST_SUPABASE_URL && STADTFEST_SUPABASE_SERVICE_KEY && STADTFEST_COMPANY_ID)
+  return Boolean(SUPABASE_URL && SUPABASE_SERVICE_KEY)
+}
+
+function kopfzeilen(extra = {}) {
+  return {
+    apikey: SUPABASE_SERVICE_KEY,
+    Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+    'Content-Type': 'application/json',
+    ...extra,
+  }
+}
+
+async function companyIdAufloesen() {
+  if (STADTFEST_COMPANY_ID) return STADTFEST_COMPANY_ID
+  const antwort = await fetch(
+    `${SUPABASE_URL}/rest/v1/companies?select=id&slug=eq.videko&limit=1`,
+    { headers: kopfzeilen() },
+  )
+  if (!antwort.ok) return null
+  const daten = await antwort.json().catch(() => [])
+  return Array.isArray(daten) ? daten[0]?.id ?? null : null
 }
 
 export default async function handler(req, res) {
@@ -36,15 +61,19 @@ export default async function handler(req, res) {
   }
 
   try {
-    const antwort = await fetch(`${STADTFEST_SUPABASE_URL}/rest/v1/rpc/stadtfest_live_public`, {
+    const companyId = await companyIdAufloesen()
+    if (!companyId) {
+      res.status(503).json({ ok: false, meldung: 'Die Live-Ziehung ist gerade nicht erreichbar.' })
+      return
+    }
+
+    const antwort = await fetch(`${SUPABASE_URL}/rest/v1/rpc/stadtfest_live_public`, {
       method: 'POST',
       headers: {
-        apikey: STADTFEST_SUPABASE_SERVICE_KEY,
-        Authorization: `Bearer ${STADTFEST_SUPABASE_SERVICE_KEY}`,
-        'Content-Type': 'application/json',
+        ...kopfzeilen(),
       },
       body: JSON.stringify({
-        p_company_id: STADTFEST_COMPANY_ID,
+        p_company_id: companyId,
         p_event_id: EVENT_ID,
       }),
     })
