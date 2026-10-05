@@ -243,12 +243,22 @@ function StartBild({ daten }) {
 }
 
 function ZiehBild({ current, pot }) {
+  const start = current?.startedAt ? Date.parse(current.startedAt) : Number.NaN
+  const rest = Number.isFinite(start)
+    ? Math.max(0, Math.ceil((start + 15000 - Date.now()) / 1000))
+    : 15
+
   return (
     <div className="stz-stage__mitte stz-stage__mitte--ziehen" key={current.drawId}>
       <p className="stz-kicker stz-kicker--puls">JETZT WIRD GEZOGEN</p>
       <h1 className="stz-preis">{preisTitel(current)}</h1>
       <MischAnimation total={pot?.total ?? 0} />
       <p className="stz-warten">DER LOSTOPF WIRD GEMISCHT …</p>
+      <div className="stz-countdown" aria-label={`Aufdeckung in ${rest} Sekunden`}>
+        <span>AUFDECKUNG IN</span>
+        <strong>{rest}</strong>
+        <span>SEKUNDEN</span>
+      </div>
     </div>
   )
 }
