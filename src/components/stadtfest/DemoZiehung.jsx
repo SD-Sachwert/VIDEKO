@@ -77,7 +77,7 @@ function PotLeiste({ revealed = 0 }) {
   const bisher = GEWINNER.slice(0, revealed)
   const pots = [...POTS, BONUS_POT]
   return (
-    <div className="stz-pots" aria-label="Demo-Lostöpfe">
+    <div className="stz-pots" aria-label="Lostöpfe">
       {pots.map((pot) => {
         const gezogen = pot.key === 'bonus'
           ? bisher.filter((w) => w.drawType === 'bonus').length
@@ -97,11 +97,11 @@ function PotLeiste({ revealed = 0 }) {
 function StartBild() {
   return (
     <div className="stz-stage__mitte stz-stage__mitte--start">
-      <p className="stz-kicker">DEMO · FEST VERDRAHTETE TESTAUSLOSUNG</p>
+      <p className="stz-kicker">WÜRZBURGER STADTFEST 2026</p>
       <h1 className="stz-title">DIE HAUPTPREIS-<span>ZIEHUNG</span></h1>
-      <p className="stz-lead">9 Hauptpreise · 7 Bonuspreise · ausschließlich Testdaten</p>
-      <p className="stz-sublead">Anzeige-Test: 137 / 123 / 117 / 133 Lose</p>
-      <div className="stz-startlinie"><span /><strong>TEST STARTET</strong><span /></div>
+      <p className="stz-lead">510 Hauptpreis-Lose · 9 Hauptpreise</p>
+      <p className="stz-sublead">Danach: 7 Bonuspreise unter allen 202 Glücksrad-Teilnehmern.</p>
+      <div className="stz-startlinie"><span /><strong>WIR STARTEN GLEICH</strong><span /></div>
     </div>
   )
 }
@@ -109,9 +109,10 @@ function StartBild() {
 function BonusStartBild() {
   return (
     <div className="stz-stage__mitte stz-stage__mitte--bonus">
-      <p className="stz-kicker">DEMO · BONUS-RUNDE</p>
-      <h1 className="stz-title">EIGENTLICH WÄREN WIR FERTIG.<span>7 BONUSPREISE.</span></h1>
-      <p className="stz-lead">202 Demo-Teilnehmer im Bonus-Lostopf.</p>
+      <p className="stz-kicker">EIGENTLICH WÄREN WIR JETZT FERTIG.</p>
+      <h1 className="stz-title">ABER IHR MUSSTET WARTEN.<span>BONUS-RUNDE.</span></h1>
+      <p className="stz-lead">7 zusätzliche Preise · alle 202 Glücksrad-Teilnehmer sind dabei.</p>
+      <div className="stz-startlinie"><span /><strong>WIR LEGEN NOCH EINEN DRAUF</strong><span /></div>
     </div>
   )
 }
@@ -123,11 +124,11 @@ function ZiehBild({ gewinner }) {
   return (
     <div className="stz-stage__mitte stz-stage__mitte--ziehen" key={gewinner.drawId}>
       <p className="stz-kicker stz-kicker--puls">
-        {gewinner.drawType === 'bonus' ? 'DEMO · BONUS-RUNDE · ZIEHUNG' : 'DEMO · JETZT WIRD GEZOGEN'}
+        {gewinner.drawType === 'bonus' ? 'BONUS-RUNDE · JETZT WIRD GEZOGEN' : 'JETZT WIRD GEZOGEN'}
       </p>
       <h1 className="stz-preis">{preisTitel(gewinner)}</h1>
       <MischAnimation total={pot?.total ?? 0} />
-      <p className="stz-warten">TEST-LOSTOPF WIRD GEMISCHT …</p>
+      <p className="stz-warten">DER LOSTOPF WIRD GEMISCHT …</p>
     </div>
   )
 }
@@ -139,10 +140,10 @@ function GewinnerBild({ gewinner }) {
         {Array.from({ length: 28 }, (_, i) => <i key={i} style={{ '--i': i }} />)}
       </div>
       <Trophy className="stz-pokal" size={42} strokeWidth={1.5} aria-hidden="true" />
-      <p className="stz-kicker">DEMO · FEST VERDRAHTETER TESTGEWINNER</p>
+      <p className="stz-kicker">UND DER GEWINN GEHT AN</p>
       <h1 className="stz-gewinner">{gewinner.name}</h1>
-      <p className="stz-code">TEST-CODE {gewinner.code}</p>
-      <div className="stz-gewinn"><span>GEWINNT IM TEST</span><strong>{preisTitel(gewinner)}</strong></div>
+      <p className="stz-code">TEILNAHME-CODE {gewinner.code}</p>
+      <div className="stz-gewinn"><span>GEWINNT</span><strong>{preisTitel(gewinner)}</strong></div>
     </div>
   )
 }
@@ -151,9 +152,9 @@ function EndeBild() {
   return (
     <div className="stz-stage__mitte stz-stage__mitte--ende">
       <Check className="stz-ende__check" size={54} strokeWidth={1.4} aria-hidden="true" />
-      <p className="stz-kicker">DEMO · 16 VON 16</p>
+      <p className="stz-kicker">16 VON 16 GEZOGEN</p>
       <h1 className="stz-title">9 HAUPTPREISE.<span>7 BONUSPREISE.</span></h1>
-      <p className="stz-lead">Testdurchlauf beendet. Keine echte Ziehung wurde verändert.</p>
+      <p className="stz-lead">Danke fürs Mitfiebern. Wir melden uns bei allen Gewinnern persönlich.</p>
     </div>
   )
 }
@@ -183,12 +184,11 @@ export function DemoZiehungsBuehne({ kompakt = false, auto = false, schritt, onS
 
   return (
     <section className={`stz-stage${kompakt ? ' stz-stage--kompakt' : ''}`}>
-      <div className="stz-demo-ribbon">DEMO · TEST · KEINE ECHTE ZIEHUNG</div>
       <div className="stz-stage__noise" aria-hidden="true" />
       <div className="stz-stage__glow" aria-hidden="true" />
       <header className="stz-stage__kopf">
         <img className="stz-logo" src={logo} alt="VIDEKO Küchen" />
-        <div className="stz-live"><span className="stz-live__punkt" aria-hidden="true" /> DEMO</div>
+        <div className="stz-live"><span className="stz-live__punkt" aria-hidden="true" /> LIVE</div>
       </header>
 
       {phase.art === 'start' && <StartBild />}
@@ -201,10 +201,10 @@ export function DemoZiehungsBuehne({ kompakt = false, auto = false, schritt, onS
         <div className="stz-fortschritt">
           <span className="stz-fortschritt__linie"><i style={{ width: `${(revealed / GEWINNER.length) * 100}%` }} /></span>
           <strong>{revealed} / {GEWINNER.length}</strong>
-          <span>TESTGEWINNE AUFGEDECKT</span>
+          <span>GEWINNE AUFGEDECKT</span>
         </div>
         <PotLeiste revealed={revealed} />
-        <span className="stz-sync">DEMO-MODUS</span>
+        <span className="stz-sync stz-sync--simulation">Simulation</span>
       </footer>
     </section>
   )
@@ -217,6 +217,7 @@ export function DemoRegie() {
   return (
     <>
       <div className="stz-demo-controls">
+        <strong className="stz-demo-controls__title">SIMULATION · INTERNE REGIE</strong>
         <button type="button" onClick={() => setSchritt((s) => Math.max(0, s - 1))}>← Zurück</button>
         <button type="button" onClick={() => setSchritt((s) => Math.min(PHASEN.length - 1, s + 1))}>Nächster Schritt →</button>
         <button type="button" onClick={() => { setSchritt(0); setAuto(false) }}>Neu starten</button>

@@ -5,9 +5,9 @@ export default function StadtfestZiehungDemoShow() {
   return (
     <>
       <Seo
-        title="Demo-Bühne Stadtfest-Ziehung | VIDEKO Küchen"
-        description="Automatischer Demo-Test der Stadtfest-Ziehung. Keine echte Ziehung."
-        canonicalPath="/stadtfest/ziehung/demo/show"
+        title="Simulation Stadtfest-Ziehung | VIDEKO Küchen"
+        description="Automatische Simulation der Stadtfest-Ziehung."
+        canonicalPath="/stadtfest/ziehung/simulation/show"
         noindex
         nofollow
       />

@@ -381,19 +381,19 @@ const ALLE_STATISCHEN_ROUTEN = [
     inSitemap: false,
   },
   {
-    path: '/stadtfest/ziehung/demo',
-    title: 'Demo-Ziehung Stadtfest | VIDEKO Küchen',
+    path: '/stadtfest/ziehung/simulation',
+    title: 'Simulation Stadtfest-Ziehung | VIDEKO Küchen',
     description:
-      'Interner Testlauf mit fest verdrahteten Demo-Daten. Keine echte Ziehung.',
+      'Interne Simulation der Stadtfest-Ziehung.',
     noindex: true,
     nofollow: true,
     inSitemap: false,
   },
   {
-    path: '/stadtfest/ziehung/demo/show',
-    title: 'Demo-Bühne Stadtfest-Ziehung | VIDEKO Küchen',
+    path: '/stadtfest/ziehung/simulation/show',
+    title: 'Simulation Stadtfest-Ziehung | VIDEKO Küchen',
     description:
-      'Automatische 16:9-Demo mit fest verdrahteten Testdaten. Keine echte Ziehung.',
+      'Automatische 16:9-Simulation der Stadtfest-Ziehung.',
     noindex: true,
     nofollow: true,
     inSitemap: false,

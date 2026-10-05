@@ -861,28 +861,9 @@
 }
 
 
-/* Demo-Auslosung ---------------------------------------------------------- */
+/* Interne Simulations-Regie ----------------------------------------------- */
 .stz-page--demo {
   padding-top: clamp(54px, 6vw, 86px);
-}
-
-.stz-demo-ribbon {
-  position: absolute;
-  z-index: 20;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 7px 16px 8px;
-  border: 1px solid rgba(240, 213, 140, 0.42);
-  border-top: 0;
-  border-radius: 0 0 10px 10px;
-  background: rgba(128, 22, 22, 0.92);
-  color: #fff6e8;
-  font-size: clamp(8px, 0.72vw, 11px);
-  font-weight: 900;
-  letter-spacing: 0.18em;
-  white-space: nowrap;
-  box-shadow: 0 10px 35px rgba(0,0,0,.4);
 }
 
 .stz-demo-controls {
@@ -896,6 +877,15 @@
   border: 1px solid rgba(201,160,80,.28);
   border-radius: 14px;
   background: rgba(8,7,6,.96);
+}
+
+.stz-demo-controls__title {
+  flex: 1 0 100%;
+  margin-bottom: 2px;
+  color: rgba(240,213,140,.82);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .16em;
 }
 
 .stz-demo-controls button {
@@ -925,6 +915,14 @@
   font-weight: 700;
 }
 
+.stz-sync--simulation {
+  color: rgba(244,239,228,.18);
+  font-size: clamp(5px, .48vw, 7px);
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
 @media (max-width: 760px) {
   .stz-page--demo {
     padding-top: 48px;
@@ -944,5 +942,9 @@
     width: 100%;
     margin-left: 0;
     text-align: center;
+  }
+
+  .stz-sync--simulation {
+    font-size: 5px;
   }
 }
