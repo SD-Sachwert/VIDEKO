@@ -364,6 +364,30 @@
   letter-spacing: 0.22em;
 }
 
+.stz-countdown {
+  display: inline-grid;
+  grid-template-columns: auto auto auto;
+  align-items: baseline;
+  gap: clamp(7px, 0.8vw, 12px);
+  margin-top: clamp(10px, 1.2vw, 18px);
+  color: rgba(244, 239, 228, 0.48);
+  font-size: clamp(8px, 0.72vw, 11px);
+  font-weight: 800;
+  letter-spacing: 0.18em;
+}
+
+.stz-countdown strong {
+  min-width: 1.6ch;
+  color: var(--stz-gold-hell);
+  font-family: var(--serif, Georgia, serif);
+  font-size: clamp(30px, 3.2vw, 58px);
+  font-weight: 500;
+  line-height: 0.8;
+  letter-spacing: -0.04em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
 .stz-stage__mitte--gewinner {
   animation: stz-reveal 0.72s cubic-bezier(.16,1,.3,1) both;
 }
