@@ -12,6 +12,8 @@ const PROBE_POTS = [
   { key: 'wellness_2n_2p', label: 'Wellnessurlaub – 2 Nächte / 2 Personen', short: 'WELLNESS', total: 33, slots: 1 },
 ]
 
+const PROBE_BONUS_POT = { key: 'bonus', label: 'Bonus-Runde', short: 'BONUS', total: 202, slots: 5 }
+
 const PROBE_GEWONNEN = [
   { drawId: 'probe-gold-1', prizeKey: 'gold_2_5g', prizeTitle: '2,5 g Gold', prizeNumber: 1, name: 'Sophie M.', code: '4827' },
   { drawId: 'probe-gutschein-1', prizeKey: 'kuechengutschein_1000', prizeTitle: '1.000 € Küchengutschein', prizeNumber: 1, name: 'Lukas B.', code: '1734' },
@@ -22,6 +24,11 @@ const PROBE_GEWONNEN = [
   { drawId: 'probe-gutschein-3', prizeKey: 'kuechengutschein_1000', prizeTitle: '1.000 € Küchengutschein', prizeNumber: 3, name: 'Anna W.', code: '7520' },
   { drawId: 'probe-gutschein-4', prizeKey: 'kuechengutschein_1000', prizeTitle: '1.000 € Küchengutschein', prizeNumber: 4, name: 'Jonas F.', code: '1149' },
   { drawId: 'probe-gutschein-5', prizeKey: 'kuechengutschein_1000', prizeTitle: '1.000 € Küchengutschein', prizeNumber: 5, name: 'Lea P.', code: '5377' },
+  { drawId: 'probe-bonus-merch', drawType: 'bonus', prizeKey: 'bonus_merchpaket', prizeTitle: 'VIDEKO Merchpaket', prizeNumber: 1, name: 'Mia S.', code: '2194' },
+  { drawId: 'probe-bonus-dinner', drawType: 'bonus', prizeKey: 'bonus_dinner_2_wuerzburg', prizeTitle: 'Dinner für zwei in Würzburg', prizeNumber: 1, name: 'Paul G.', code: '4602' },
+  { drawId: 'probe-bonus-vorrat', drawType: 'bonus', prizeKey: 'bonus_jahresvorrat_tabs_nudeln', prizeTitle: 'Jahresvorrat Spülmaschinentabs + Nudeln', prizeNumber: 1, name: 'Clara H.', code: '8081' },
+  { drawId: 'probe-bonus-wellness', drawType: 'bonus', prizeKey: 'bonus_wellness_2n_2p', prizeTitle: 'Wellnesswochenende für 2 – Bonuspreis', prizeNumber: 1, name: 'Max R.', code: '3505' },
+  { drawId: 'probe-bonus-gold', drawType: 'bonus', prizeKey: 'bonus_gold_2_5g', prizeTitle: '2,5 g Gold – Bonuspreis', prizeNumber: 1, name: 'Eva L.', code: '7712' },
 ]
 
 function probeErlaubt() {
@@ -35,8 +42,12 @@ function probeDaten(zustand) {
     ok: true,
     eventId: 'wuerzburger-stadtfest-2026',
     lostopfGesamt: 110,
+    bonusTopfGesamt: 202,
     hauptpreiseGesamt: 9,
+    bonuspreiseGesamt: 5,
+    preiseGesamt: 14,
     pots: PROBE_POTS,
+    bonusPot: PROBE_BONUS_POT,
     current: null,
     winners: [],
   }
@@ -76,6 +87,25 @@ function probeDaten(zustand) {
     }
   }
 
+  if (zustand === 'bonus') {
+    const gewinner = PROBE_GEWONNEN[9]
+    return {
+      ...basis,
+      winners: PROBE_GEWONNEN.slice(0, 9),
+      current: {
+        status: 'spinning',
+        drawId: gewinner.drawId,
+        drawType: 'bonus',
+        prizeKey: gewinner.prizeKey,
+        prizeTitle: gewinner.prizeTitle,
+        prizeNumber: 1,
+        startedAt: new Date().toISOString(),
+        revealedAt: null,
+        winner: null,
+      },
+    }
+  }
+
   if (zustand === 'ende') {
     return { ...basis, winners: PROBE_GEWONNEN }
   }
@@ -86,7 +116,7 @@ function probeDaten(zustand) {
 function probeZustandAusAdresse() {
   if (!probeErlaubt()) return null
   const wert = new URLSearchParams(window.location.search).get('probe')
-  if (['start', 'ziehen', 'gewinner', 'ende', 'auto'].includes(wert)) return wert
+  if (['start', 'ziehen', 'gewinner', 'bonus', 'ende', 'auto'].includes(wert)) return wert
   return null
 }
 
@@ -107,7 +137,7 @@ function useLiveZiehung() {
     if (probe) {
       const setzen = () => {
         const zustand = probe === 'auto'
-          ? ['start', 'ziehen', 'gewinner', 'start', 'ziehen', 'gewinner', 'ende'][
+          ? ['start', 'ziehen', 'gewinner', 'bonus', 'gewinner', 'bonus', 'ende'][
               Math.floor(Date.now() / PROBE_TAKT_MS) % 7
             ]
           : probe
@@ -179,7 +209,9 @@ function PotLeiste({ pots = [], winners = [] }) {
   return (
     <div className="stz-pots" aria-label="Lostöpfe">
       {pots.map((pot) => {
-        const gezogen = winners.filter((w) => w.prizeKey === pot.key).length
+        const gezogen = pot.key === 'bonus'
+          ? winners.filter((w) => w.drawType === 'bonus' || w.prizeKey?.startsWith('bonus_')).length
+          : winners.filter((w) => w.prizeKey === pot.key).length
         return (
           <div className="stz-pot" key={pot.key}>
             <span className="stz-pot__name">{pot.short}</span>
@@ -231,11 +263,35 @@ function StartBild({ daten }) {
         <span>ZIEHUNG</span>
       </h1>
       <p className="stz-lead">
-        {daten?.lostopfGesamt ?? 110} Lose. 9 Hauptpreise. Eine Ziehung.
+        {daten?.lostopfGesamt ?? 110} echte Hauptpreis-Lose · 9 Hauptpreise
+      </p>
+      <p className="stz-sublead">
+        Danach: 5 Bonuspreise unter allen {daten?.bonusTopfGesamt ?? 202} Glücksrad-Teilnehmern.
       </p>
       <div className="stz-startlinie">
         <span />
         <strong>WIR STARTEN GLEICH</strong>
+        <span />
+      </div>
+    </div>
+  )
+}
+
+
+function BonusStartBild({ daten }) {
+  return (
+    <div className="stz-stage__mitte stz-stage__mitte--bonus">
+      <p className="stz-kicker">EIGENTLICH WÄREN WIR JETZT FERTIG.</p>
+      <h1 className="stz-title">
+        ABER IHR MUSSTET WARTEN.
+        <span>BONUS-RUNDE.</span>
+      </h1>
+      <p className="stz-lead">
+        5 zusätzliche Preise · alle {daten?.bonusTopfGesamt ?? 202} bestätigten Glücksrad-Teilnehmer sind dabei.
+      </p>
+      <div className="stz-startlinie">
+        <span />
+        <strong>WIR LEGEN NOCH EINEN DRAUF</strong>
         <span />
       </div>
     </div>
@@ -250,7 +306,9 @@ function ZiehBild({ current, pot }) {
 
   return (
     <div className="stz-stage__mitte stz-stage__mitte--ziehen" key={current.drawId}>
-      <p className="stz-kicker stz-kicker--puls">JETZT WIRD GEZOGEN</p>
+      <p className="stz-kicker stz-kicker--puls">
+        {current?.drawType === 'bonus' ? 'BONUS-RUNDE · JETZT WIRD GEZOGEN' : 'JETZT WIRD GEZOGEN'}
+      </p>
       <h1 className="stz-preis">{preisTitel(current)}</h1>
       <MischAnimation total={pot?.total ?? 0} />
       <p className="stz-warten">DER LOSTOPF WIRD GEMISCHT …</p>
@@ -285,10 +343,10 @@ function EndeBild() {
   return (
     <div className="stz-stage__mitte stz-stage__mitte--ende">
       <Check className="stz-ende__check" size={54} strokeWidth={1.4} aria-hidden="true" />
-      <p className="stz-kicker">9 VON 9 GEZOGEN</p>
+      <p className="stz-kicker">14 VON 14 GEZOGEN</p>
       <h1 className="stz-title">
-        DAS WAREN UNSERE
-        <span>GEWINNER</span>
+        9 HAUPTPREISE.
+        <span>5 BONUSPREISE.</span>
       </h1>
       <p className="stz-lead">Danke fürs Mitfiebern. Wir melden uns bei allen Gewinnern persönlich.</p>
     </div>
@@ -299,7 +357,8 @@ export function ZiehungsBuehne({ kompakt = false }) {
   const { daten, fehler, letztesUpdate } = useLiveZiehung()
   const current = daten?.current ?? null
   const winners = daten?.winners ?? []
-  const gesamt = daten?.hauptpreiseGesamt ?? 9
+  const gesamt = daten?.preiseGesamt ?? 14
+  const hauptGesamt = daten?.hauptpreiseGesamt ?? 9
   const revealZeit = current?.status === 'revealed' && current.revealedAt
     ? Date.parse(current.revealedAt)
     : Number.NaN
@@ -308,12 +367,26 @@ export function ZiehungsBuehne({ kompakt = false }) {
     && current?.status === 'revealed'
     && Number.isFinite(revealZeit)
     && Date.now() - revealZeit >= 15000
+  const hauptGewinner = winners.filter((w) => w.drawType !== 'bonus' && !w.prizeKey?.startsWith('bonus_')).length
+  const bonusBereit = Boolean(
+    daten
+    && hauptGewinner >= hauptGesamt
+    && winners.length < gesamt
+    && current?.status === 'revealed'
+    && current?.drawType !== 'bonus'
+    && Number.isFinite(revealZeit)
+    && Date.now() - revealZeit >= 15000
+  )
   const fertig = Boolean(
     daten
     && winners.length >= gesamt
     && (current?.status !== 'revealed' || revealVorbei),
   )
-  const pot = current ? daten?.pots?.find((p) => p.key === current.prizeKey) : null
+  const pot = current
+    ? current.drawType === 'bonus' || current.prizeKey?.startsWith('bonus_')
+      ? daten?.bonusPot
+      : daten?.pots?.find((p) => p.key === current.prizeKey)
+    : null
 
   return (
     <section className={`stz-stage${kompakt ? ' stz-stage--kompakt' : ''}`}>
@@ -343,8 +416,9 @@ export function ZiehungsBuehne({ kompakt = false }) {
       )}
 
       {daten && !fertig && !current && <StartBild daten={daten} />}
-      {daten && !fertig && current?.status === 'spinning' && <ZiehBild current={current} pot={pot} />}
-      {daten && !fertig && current?.status === 'revealed' && <GewinnerBild current={current} />}
+      {daten && !fertig && bonusBereit && <BonusStartBild daten={daten} />}
+      {daten && !fertig && !bonusBereit && current?.status === 'spinning' && <ZiehBild current={current} pot={pot} />}
+      {daten && !fertig && !bonusBereit && current?.status === 'revealed' && <GewinnerBild current={current} />}
       {daten && fertig && <EndeBild />}
 
       {fehler && !daten && (
@@ -359,10 +433,10 @@ export function ZiehungsBuehne({ kompakt = false }) {
           <span className="stz-fortschritt__linie">
             <i style={{ width: `${Math.min(100, ((winners.length || 0) / (daten?.hauptpreiseGesamt || 9)) * 100)}%` }} />
           </span>
-          <strong>{winners.length} / {daten?.hauptpreiseGesamt ?? 9}</strong>
-          <span>HAUPTPREISE AUFGEDECKT</span>
+          <strong>{winners.length} / {daten?.preiseGesamt ?? 14}</strong>
+          <span>GEWINNE AUFGEDECKT</span>
         </div>
-        {daten && <PotLeiste pots={daten.pots} winners={winners} />}
+        {daten && <PotLeiste pots={[...(daten.pots || []), ...(daten.bonusPot ? [daten.bonusPot] : [])]} winners={winners} />}
         <span
           className={`stz-sync${fehler ? ' stz-sync--offline' : ''}`}
           title={letztesUpdate ? new Date(letztesUpdate).toLocaleTimeString('de-DE') : ''}
@@ -385,12 +459,12 @@ export function GewinnerListe() {
           <p className="stz-kicker">LIVE-STAND</p>
           <h2>Bisherige Gewinner</h2>
         </div>
-        <strong>{winners.length} / {daten?.hauptpreiseGesamt ?? 9}</strong>
+        <strong>{winners.length} / {daten?.preiseGesamt ?? 14}</strong>
       </div>
 
       {winners.length === 0 ? (
         <p className="stz-ergebnisse__leer">
-          Noch ist kein Hauptpreis aufgedeckt. Gleich geht’s los.
+          Noch ist kein Gewinn aufgedeckt. Gleich geht’s los.
         </p>
       ) : (
         <ol className="stz-ergebnisliste">
@@ -402,7 +476,7 @@ export function GewinnerListe() {
                 <span>Code {w.code}</span>
               </div>
               <div className="stz-ergebnis__preis">
-                <span>{w.prizeNumber > 1 ? `Platz ${w.prizeNumber}` : 'Gewinn'}</span>
+                <span>{w.drawType === 'bonus' || w.prizeKey?.startsWith('bonus_') ? 'Bonuspreis' : (w.prizeNumber > 1 ? `Platz ${w.prizeNumber}` : 'Hauptpreis')}</span>
                 <strong>{w.prizeTitle}</strong>
               </div>
             </li>
