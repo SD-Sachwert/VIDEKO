@@ -312,6 +312,17 @@ export function ZiehungsBuehne({ kompakt = false }) {
 
       <header className="stz-stage__kopf">
         <img className="stz-logo" src={logo} alt="VIDEKO Küchen" />
+        {kompakt && daten?.stream?.url && (
+          <a
+            className="stz-stream-link"
+            href={daten.stream.url}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <span aria-hidden="true">▶</span>
+            {daten.stream.label || 'ZUM LIVESTREAM'}
+          </a>
+        )}
         <LiveMarke />
       </header>
 
