@@ -289,7 +289,20 @@ export function ZiehungsBuehne({ kompakt = false }) {
   const { daten, fehler, letztesUpdate } = useLiveZiehung()
   const current = daten?.current ?? null
   const winners = daten?.winners ?? []
-  const fertig = Boolean(daten && winners.length >= (daten.hauptpreiseGesamt ?? 9))
+  const gesamt = daten?.hauptpreiseGesamt ?? 9
+  const revealZeit = current?.status === 'revealed' && current.revealedAt
+    ? Date.parse(current.revealedAt)
+    : Number.NaN
+  const revealVorbei =
+    winners.length >= gesamt
+    && current?.status === 'revealed'
+    && Number.isFinite(revealZeit)
+    && Date.now() - revealZeit >= 15000
+  const fertig = Boolean(
+    daten
+    && winners.length >= gesamt
+    && (current?.status !== 'revealed' || revealVorbei),
+  )
   const pot = current ? daten?.pots?.find((p) => p.key === current.prizeKey) : null
 
   return (
