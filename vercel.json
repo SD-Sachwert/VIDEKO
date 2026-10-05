@@ -4,14 +4,42 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "installCommand": "npm install",
-
   "trailingSlash": false,
-
   "redirects": [
-    { "source": "/materialien", "destination": "/inspiration", "permanent": true },
-    { "source": "/kontakt", "destination": "/beratung", "permanent": true },
-    { "source": "/ueber-videko", "destination": "/ueber-uns", "permanent": true },
-    { "source": "/kuechenwelten", "destination": "/stylefinder", "permanent": true },
-    { "source": "/showroom", "destination": "/studio", "permanent": true }
+    {
+      "source": "/materialien",
+      "destination": "/inspiration",
+      "permanent": true
+    },
+    {
+      "source": "/kontakt",
+      "destination": "/beratung",
+      "permanent": true
+    },
+    {
+      "source": "/ueber-videko",
+      "destination": "/ueber-uns",
+      "permanent": true
+    },
+    {
+      "source": "/kuechenwelten",
+      "destination": "/stylefinder",
+      "permanent": true
+    },
+    {
+      "source": "/showroom",
+      "destination": "/studio",
+      "permanent": true
+    },
+    {
+      "source": "/stadtfest/ziehung/demo",
+      "destination": "/stadtfest/ziehung/simulation",
+      "permanent": false
+    },
+    {
+      "source": "/stadtfest/ziehung/demo/show",
+      "destination": "/stadtfest/ziehung/simulation/show",
+      "permanent": false
+    }
   ]
 }
