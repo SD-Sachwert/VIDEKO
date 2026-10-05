@@ -767,6 +767,10 @@ export default function Stadtfest() {
     phasenKey === 'nachher' ? (
       <section className="stf-phase">
         <p className="stf-phase__text">{texte?.hinweis}</p>
+        <a className="stf-cta stf-cta--link" href="/stadtfest/ziehung">
+          LIVE-ZIEHUNG &amp; ERGEBNISSE
+          <span className="stf-cta__pfeil" aria-hidden="true">&rarr;</span>
+        </a>
       </section>
     ) : null
 

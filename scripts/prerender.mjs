@@ -168,6 +168,8 @@ const SEITEN_MODUL = {
   '/entdecken': 'src/pages/Entdecken.jsx',
   '/stadtfest': 'src/pages/Stadtfest.jsx',
   '/stadtfest/teilnahmebedingungen': 'src/pages/StadtfestTeilnahme.jsx',
+  '/stadtfest/ziehung': 'src/pages/StadtfestZiehung.jsx',
+  '/stadtfest/ziehung/show': 'src/pages/StadtfestZiehungShow.jsx',
   '/terminal': 'src/pages/Terminal.jsx',
   '/terminal/ziehung': 'src/pages/TerminalZiehung.jsx',
   '/terminal/admin': 'src/pages/TerminalAdmin.jsx',

@@ -566,7 +566,7 @@ export const LOSTOEPFE_GESAMT = STADTFEST_HAUPTPREISE.length
 export const STADTFEST_ZIEHUNG = {
   art: 'online-livestream',
   terminAt: null,
-  zeitfensterText: 'am Wochenende 26./27. September 2026',
+  zeitfensterText: 'am 6. Oktober 2026 am Abend – verschoben vom ursprünglich angekündigten Wochenende 26./27. September 2026',
   bekanntgabeText:
     'Der genaue Zeitpunkt und der VIDEKO-Kanal werden über die offiziellen VIDEKO-Kanäle '
     + 'bekanntgegeben.',
@@ -696,7 +696,9 @@ export const PHASEN_TEXTE = {
     titel: 'Das Stadtfest ist vorbei.',
     subline: 'Der QR funktioniert trotzdem noch. Praktisch.',
     hinweis:
-      'Das Gewinnspiel ist beendet. Drehungen und Lose gibt es dafür nicht mehr.',
+      'Das Stadtfest ist vorbei. Die Hauptpreise werden am 6. Oktober 2026 am Abend live gezogen. '
+      + 'Der Termin wurde vom ursprünglich angekündigten Wochenende 26./27. September verschoben. '
+      + 'Drehungen und neue Lostopf-Qualifikationen gibt es nicht mehr.',
     formularTitel: 'Wenn wir uns bei dir melden dürfen, lass uns kurz deine Daten da.',
     formularText: 'Kurz. Freiwillig. Ohne Gewinnspiel.',
     cta: 'DATEN DALASSEN',
