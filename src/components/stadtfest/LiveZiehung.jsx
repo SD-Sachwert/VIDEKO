@@ -130,7 +130,7 @@ function useLiveZiehung() {
       if (laeuft || !aktiv) return
       laeuft = true
       try {
-        const antwort = await fetch('/api/stadtfest-ziehung', { cache: 'no-store' })
+        const antwort = await fetch('/api/stadtfest-ziehung')
         const json = await antwort.json().catch(() => ({}))
         if (!antwort.ok || !json.ok) throw new Error(json.meldung || 'Live-Stand nicht erreichbar')
         if (!aktiv) return
