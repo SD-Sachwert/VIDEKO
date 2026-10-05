@@ -2,7 +2,11 @@ import { useEffect, useMemo, useState } from 'react'
 import { Check, Trophy } from 'lucide-react'
 import logo from '../../assets/brand/logo-web-auf-dunkel.webp'
 
-const TAKT_MS = 5200
+const START_MS = 9000
+const DRAW_MS = 15000
+const WINNER_MS = 10000
+const BONUS_INTRO_MS = 12000
+const END_MS = 20000
 
 const POTS = [
   { key: 'gold_2_5g', label: '2,5 g Gold', short: 'GOLD', total: 137, slots: 2 },
@@ -11,6 +15,7 @@ const POTS = [
   { key: 'wellness_2n_2p', label: 'Wellnessurlaub – 2 Nächte / 2 Personen', short: 'WELLNESS', total: 133, slots: 1 },
 ]
 
+const HAUPT_LOSE_GESAMT = POTS.reduce((summe, pot) => summe + pot.total, 0)
 const BONUS_POT = { key: 'bonus', label: 'Bonus-Runde', short: 'BONUS', total: 202, slots: 7 }
 
 const GEWINNER = [
@@ -44,24 +49,54 @@ const PHASEN = [
   { art: 'ende' },
 ]
 
+function phaseDauer(phase) {
+  if (!phase) return WINNER_MS
+  if (phase.art === 'start') return START_MS
+  if (phase.art === 'ziehen') return DRAW_MS
+  if (phase.art === 'bonusIntro') return BONUS_INTRO_MS
+  if (phase.art === 'ende') return END_MS
+  return WINNER_MS
+}
+
 function preisTitel(preis) {
   if (!preis) return ''
   return preis.prizeNumber > 1 ? `${preis.prizeTitle} · Platz ${preis.prizeNumber}` : preis.prizeTitle
 }
 
+function preisKurz(preis) {
+  if (!preis) return ''
+  if (preis.prizeKey === 'kuechengutschein_1000' || preis.prizeKey === 'bonus_kuechengutschein_1000') {
+    return '1.000 € Küchengutschein'
+  }
+  if (preis.prizeKey === 'spanndecke_20qm') return 'Spanndecke'
+  if (preis.prizeKey === 'wellness_2n_2p' || preis.prizeKey === 'bonus_wellness_2n_2p') return 'Wellness'
+  if (preis.prizeKey === 'gold_2_5g' || preis.prizeKey === 'bonus_gold_2_5g') return '2,5 g Gold'
+  if (preis.prizeKey === 'bonus_dinner_2_wuerzburg') return 'Dinner für zwei'
+  if (preis.prizeKey === 'bonus_jahresvorrat_tabs_nudeln') return 'Jahresvorrat Tabs + Nudeln'
+  if (preis.prizeKey === 'bonus_merchpaket') return 'VIDEKO Merchpaket'
+  return preis.prizeTitle
+}
+
 function MischAnimation({ total = 0 }) {
-  const lose = useMemo(() => Array.from({ length: 20 }, (_, i) => i), [])
+  const lose = useMemo(() => Array.from({ length: 30 }, (_, i) => i), [])
   return (
-    <div className="stz-mischer" aria-hidden="true">
+    <div className="stz-mischer stz-mischer--intensiv" aria-hidden="true">
+      <div className="stz-mischer__strahl stz-mischer__strahl--a" />
+      <div className="stz-mischer__strahl stz-mischer__strahl--b" />
       <div className="stz-mischer__halo stz-mischer__halo--a" />
       <div className="stz-mischer__halo stz-mischer__halo--b" />
       {lose.map((i) => (
         <span
           className="stz-los"
           key={i}
-          style={{ '--i': i, '--winkel': `${i * 18}deg`, '--delay': `${-(i * 0.17)}s` }}
+          style={{
+            '--i': i,
+            '--winkel': `${i * 12}deg`,
+            '--delay': `${-(i * 0.13)}s`,
+            '--tempo': `${2.5 + (i % 6) * 0.18}s`,
+          }}
         >
-          {String((i * 7 + 11) % Math.max(total, 1) + 1).padStart(2, '0')}
+          {String((i * 17 + 11) % Math.max(total, 1) + 1).padStart(3, '0')}
         </span>
       ))}
       <div className="stz-mischer__kern">
@@ -73,15 +108,26 @@ function MischAnimation({ total = 0 }) {
   )
 }
 
-function PotLeiste({ revealed = 0 }) {
+function PotLeiste({ runde, revealed = 0 }) {
   const bisher = GEWINNER.slice(0, revealed)
-  const pots = [...POTS, BONUS_POT]
+
+  if (runde === 'bonus') {
+    const gezogen = bisher.filter((w) => w.drawType === 'bonus').length
+    return (
+      <div className="stz-pots stz-pots--bonus" aria-label="Bonus-Lostopf">
+        <div className="stz-pot stz-pot--bonus">
+          <span className="stz-pot__name">BONUS-RUNDE · ALLE GLÜCKSRAD-TEILNEHMER</span>
+          <strong className="stz-pot__zahl">{BONUS_POT.total}</strong>
+          <span className="stz-pot__meta">Teilnehmer · {gezogen}/{BONUS_POT.slots} Bonuspreise gezogen</span>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div className="stz-pots" aria-label="Lostöpfe">
-      {pots.map((pot) => {
-        const gezogen = pot.key === 'bonus'
-          ? bisher.filter((w) => w.drawType === 'bonus').length
-          : bisher.filter((w) => w.prizeKey === pot.key).length
+    <div className="stz-pots stz-pots--haupt" aria-label="Hauptpreis-Lostöpfe">
+      {POTS.map((pot) => {
+        const gezogen = bisher.filter((w) => w.prizeKey === pot.key).length
         return (
           <div className="stz-pot" key={pot.key}>
             <span className="stz-pot__name">{pot.short}</span>
@@ -94,13 +140,41 @@ function PotLeiste({ revealed = 0 }) {
   )
 }
 
+function GewinnerBoard({ revealed = 0 }) {
+  const bisher = GEWINNER.slice(0, revealed)
+  if (bisher.length === 0) return null
+
+  return (
+    <aside className="stz-winnerboard" aria-label="Bisherige Gewinner">
+      <div className="stz-winnerboard__kopf">
+        <span>BISHERIGE GEWINNER</span>
+        <strong>{bisher.length}</strong>
+      </div>
+      <ol>
+        {bisher.map((winner, index) => (
+          <li
+            key={winner.drawId}
+            className={index === bisher.length - 1 ? 'stz-winnerboard__item stz-winnerboard__item--neu' : 'stz-winnerboard__item'}
+          >
+            <span className="stz-winnerboard__nr">{String(index + 1).padStart(2, '0')}</span>
+            <div>
+              <strong>{winner.name}</strong>
+              <span>{preisKurz(winner)}</span>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </aside>
+  )
+}
+
 function StartBild() {
   return (
     <div className="stz-stage__mitte stz-stage__mitte--start">
       <p className="stz-kicker">WÜRZBURGER STADTFEST 2026</p>
       <h1 className="stz-title">DIE HAUPTPREIS-<span>ZIEHUNG</span></h1>
-      <p className="stz-lead">510 Hauptpreis-Lose · 9 Hauptpreise</p>
-      <p className="stz-sublead">Danach: 7 Bonuspreise unter allen 202 Glücksrad-Teilnehmern.</p>
+      <p className="stz-lead">{HAUPT_LOSE_GESAMT} Hauptpreis-Lose · 9 Hauptpreise</p>
+      <p className="stz-sublead">Vier getrennte Lostöpfe. Die Bonus-Runde folgt danach separat.</p>
       <div className="stz-startlinie"><span /><strong>WIR STARTEN GLEICH</strong><span /></div>
     </div>
   )
@@ -109,26 +183,44 @@ function StartBild() {
 function BonusStartBild() {
   return (
     <div className="stz-stage__mitte stz-stage__mitte--bonus">
-      <p className="stz-kicker">EIGENTLICH WÄREN WIR JETZT FERTIG.</p>
-      <h1 className="stz-title">ABER IHR MUSSTET WARTEN.<span>BONUS-RUNDE.</span></h1>
-      <p className="stz-lead">7 zusätzliche Preise · alle 202 Glücksrad-Teilnehmer sind dabei.</p>
-      <div className="stz-startlinie"><span /><strong>WIR LEGEN NOCH EINEN DRAUF</strong><span /></div>
+      <p className="stz-kicker">9 VON 9 HAUPTPREISEN GEZOGEN.</p>
+      <h1 className="stz-title">UND JETZT KOMMT DIE<span>BONUS-RUNDE.</span></h1>
+      <p className="stz-lead">7 zusätzliche Preise · eigener Lostopf mit {BONUS_POT.total} Glücksrad-Teilnehmern.</p>
+      <div className="stz-startlinie"><span /><strong>EXKLUSIV · ZUSÄTZLICH · DANACH</strong><span /></div>
     </div>
   )
 }
 
 function ZiehBild({ gewinner }) {
+  const [rest, setRest] = useState(Math.ceil(DRAW_MS / 1000))
   const pot = gewinner.drawType === 'bonus'
     ? BONUS_POT
     : POTS.find((p) => p.key === gewinner.prizeKey)
+
+  useEffect(() => {
+    const ende = Date.now() + DRAW_MS
+    const aktualisieren = () => {
+      setRest(Math.max(0, Math.ceil((ende - Date.now()) / 1000)))
+    }
+    aktualisieren()
+    const timer = window.setInterval(aktualisieren, 120)
+    return () => window.clearInterval(timer)
+  }, [gewinner.drawId])
+
   return (
     <div className="stz-stage__mitte stz-stage__mitte--ziehen" key={gewinner.drawId}>
+      <div className="stz-zieh-energie" aria-hidden="true" />
       <p className="stz-kicker stz-kicker--puls">
         {gewinner.drawType === 'bonus' ? 'BONUS-RUNDE · JETZT WIRD GEZOGEN' : 'JETZT WIRD GEZOGEN'}
       </p>
       <h1 className="stz-preis">{preisTitel(gewinner)}</h1>
       <MischAnimation total={pot?.total ?? 0} />
       <p className="stz-warten">DER LOSTOPF WIRD GEMISCHT …</p>
+      <div className="stz-countdown" aria-label={`Aufdeckung in ${rest} Sekunden`}>
+        <span>AUFDECKUNG IN</span>
+        <strong>{rest}</strong>
+        <span>SEKUNDEN</span>
+      </div>
     </div>
   )
 }
@@ -136,8 +228,10 @@ function ZiehBild({ gewinner }) {
 function GewinnerBild({ gewinner }) {
   return (
     <div className="stz-stage__mitte stz-stage__mitte--gewinner" key={gewinner.drawId}>
+      <div className="stz-reveal-ring stz-reveal-ring--a" aria-hidden="true" />
+      <div className="stz-reveal-ring stz-reveal-ring--b" aria-hidden="true" />
       <div className="stz-konfetti" aria-hidden="true">
-        {Array.from({ length: 28 }, (_, i) => <i key={i} style={{ '--i': i }} />)}
+        {Array.from({ length: 36 }, (_, i) => <i key={i} style={{ '--i': i }} />)}
       </div>
       <Trophy className="stz-pokal" size={42} strokeWidth={1.5} aria-hidden="true" />
       <p className="stz-kicker">UND DER GEWINN GEHT AN</p>
@@ -152,9 +246,9 @@ function EndeBild() {
   return (
     <div className="stz-stage__mitte stz-stage__mitte--ende">
       <Check className="stz-ende__check" size={54} strokeWidth={1.4} aria-hidden="true" />
-      <p className="stz-kicker">16 VON 16 GEZOGEN</p>
+      <p className="stz-kicker">ALLE ZIEHUNGEN ABGESCHLOSSEN</p>
       <h1 className="stz-title">9 HAUPTPREISE.<span>7 BONUSPREISE.</span></h1>
-      <p className="stz-lead">Danke fürs Mitfiebern. Wir melden uns bei allen Gewinnern persönlich.</p>
+      <p className="stz-lead">Danke fürs Mitfiebern. Alle Gewinner bleiben rechts im Überblick sichtbar.</p>
     </div>
   )
 }
@@ -163,27 +257,38 @@ export function DemoZiehungsBuehne({ kompakt = false, auto = false, schritt, onS
   const [intern, setIntern] = useState(0)
   const index = typeof schritt === 'number' ? schritt : intern
   const setzen = onSchritt || setIntern
+  const phase = PHASEN[Math.max(0, Math.min(index, PHASEN.length - 1))]
 
   useEffect(() => {
     if (!auto) return undefined
-    const timer = window.setInterval(() => {
+    const timer = window.setTimeout(() => {
       setzen((index + 1) % PHASEN.length)
-    }, TAKT_MS)
-    return () => window.clearInterval(timer)
-  }, [auto, index, setzen])
+    }, phaseDauer(phase))
+    return () => window.clearTimeout(timer)
+  }, [auto, index, phase, setzen])
 
-  const phase = PHASEN[Math.max(0, Math.min(index, PHASEN.length - 1))]
   const gewinner = typeof phase.index === 'number' ? GEWINNER[phase.index] : null
   const revealed = phase.art === 'ende'
     ? GEWINNER.length
-    : typeof phase.index === 'number'
-      ? phase.index + (phase.art === 'gewinner' ? 1 : 0)
-      : 0
+    : phase.art === 'bonusIntro'
+      ? 9
+      : typeof phase.index === 'number'
+        ? phase.index + (phase.art === 'gewinner' ? 1 : 0)
+        : 0
 
-  const bonusIntro = phase.art === 'bonusIntro'
+  const bonusRunde = phase.art === 'bonusIntro'
+    || phase.art === 'ende'
+    || (typeof phase.index === 'number' && phase.index >= 9)
+
+  const runde = bonusRunde ? 'bonus' : 'haupt'
+  const rundenGezogen = runde === 'bonus'
+    ? Math.max(0, revealed - 9)
+    : Math.min(revealed, 9)
+  const rundenGesamt = runde === 'bonus' ? 7 : 9
+  const fortschritt = (rundenGezogen / rundenGesamt) * 100
 
   return (
-    <section className={`stz-stage${kompakt ? ' stz-stage--kompakt' : ''}`}>
+    <section className={`stz-stage${kompakt ? ' stz-stage--kompakt' : ''}${revealed > 0 ? ' stz-stage--mit-winnerboard' : ''}`}>
       <div className="stz-stage__noise" aria-hidden="true" />
       <div className="stz-stage__glow" aria-hidden="true" />
       <header className="stz-stage__kopf">
@@ -191,19 +296,21 @@ export function DemoZiehungsBuehne({ kompakt = false, auto = false, schritt, onS
         <div className="stz-live"><span className="stz-live__punkt" aria-hidden="true" /> LIVE</div>
       </header>
 
+      <GewinnerBoard revealed={revealed} />
+
       {phase.art === 'start' && <StartBild />}
-      {bonusIntro && <BonusStartBild />}
+      {phase.art === 'bonusIntro' && <BonusStartBild />}
       {phase.art === 'ziehen' && gewinner && <ZiehBild gewinner={gewinner} />}
       {phase.art === 'gewinner' && gewinner && <GewinnerBild gewinner={gewinner} />}
       {phase.art === 'ende' && <EndeBild />}
 
       <footer className="stz-stage__fuss">
         <div className="stz-fortschritt">
-          <span className="stz-fortschritt__linie"><i style={{ width: `${(revealed / GEWINNER.length) * 100}%` }} /></span>
-          <strong>{revealed} / {GEWINNER.length}</strong>
-          <span>GEWINNE AUFGEDECKT</span>
+          <span className="stz-fortschritt__linie"><i style={{ width: `${fortschritt}%` }} /></span>
+          <strong>{rundenGezogen} / {rundenGesamt}</strong>
+          <span>{runde === 'bonus' ? 'BONUSPREISE AUFGEDECKT' : 'HAUPTPREISE AUFGEDECKT'}</span>
         </div>
-        <PotLeiste revealed={revealed} />
+        <PotLeiste runde={runde} revealed={revealed} />
         <span className="stz-sync stz-sync--simulation">Simulation</span>
       </footer>
     </section>
@@ -224,7 +331,9 @@ export function DemoRegie() {
         <button type="button" className={auto ? 'is-active' : ''} onClick={() => setAuto((v) => !v)}>
           {auto ? 'Autoplay stoppen' : 'Autoplay'}
         </button>
-        <span>Schritt {schritt + 1}/{PHASEN.length}</span>
+        <span>
+          Schritt {schritt + 1}/{PHASEN.length} · Ziehung 15 s · Gewinner 10 s
+        </span>
       </div>
       <DemoZiehungsBuehne kompakt schritt={schritt} onSchritt={setSchritt} auto={auto} />
     </>
