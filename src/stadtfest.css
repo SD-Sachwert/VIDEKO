@@ -1019,6 +1019,14 @@
   outline-offset: 3px;
 }
 
+.stf-cta--link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 18px;
+  text-decoration: none;
+}
+
 .stf-hinweis {
   margin: 0;
   font-size: 12px;
