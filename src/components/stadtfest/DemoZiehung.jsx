@@ -255,18 +255,8 @@ function BonusStartBild() {
   )
 }
 
-function ZiehBild({ gewinner, startedAt, clockOffset = 0 }) {
-  const [jetzt, setJetzt] = useState(() => Date.now() + clockOffset)
+function ZiehBild({ gewinner }) {
   const pot = gewinner.drawType === 'bonus' ? BONUS_POT : POTS.find((p) => p.key === gewinner.prizeKey)
-  const start = startedAt ? Date.parse(startedAt) : Number.NaN
-  const rest = Number.isFinite(start)
-    ? Math.max(0, Math.ceil((start + DRAW_MS - jetzt) / 1000))
-    : Math.ceil(DRAW_MS / 1000)
-
-  useEffect(() => {
-    const timer = window.setInterval(() => setJetzt(Date.now() + clockOffset), 100)
-    return () => window.clearInterval(timer)
-  }, [clockOffset, gewinner.drawId])
 
   return (
     <div className="stz-stage__mitte stz-stage__mitte--ziehen" key={gewinner.drawId}>
@@ -276,12 +266,7 @@ function ZiehBild({ gewinner, startedAt, clockOffset = 0 }) {
       </p>
       <h1 className="stz-preis">{preisTitel(gewinner)}</h1>
       <MischAnimation total={pot?.total ?? 0} />
-      <p className="stz-warten">{rest > 0 ? 'DER LOSTOPF WIRD GEMISCHT …' : 'BEREIT ZUM AUFDECKEN'}</p>
-      <div className="stz-countdown" aria-label={`Aufdeckung frühestens in ${rest} Sekunden`}>
-        <span>{rest > 0 ? 'AUFDECKUNG FRÜHESTENS IN' : 'AUFDECKUNG'}</span>
-        <strong>{rest}</strong>
-        <span>{rest > 0 ? 'SEKUNDEN' : 'BEREIT'}</span>
-      </div>
+      <p className="stz-warten">DER LOSTOPF WIRD GEMISCHT …</p>
     </div>
   )
 }
@@ -359,9 +344,7 @@ export function DemoZiehungsBuehne({
 
       {phase.art === 'start' && <StartBild />}
       {phase.art === 'bonusIntro' && <BonusStartBild />}
-      {phase.art === 'ziehen' && gewinner && (
-        <ZiehBild gewinner={gewinner} startedAt={updatedAt} clockOffset={clockOffset} />
-      )}
+      {phase.art === 'ziehen' && gewinner && <ZiehBild gewinner={gewinner} />}
       {phase.art === 'gewinner' && gewinner && <GewinnerBild gewinner={gewinner} />}
       {phase.art === 'ende' && <EndeBild />}
 
@@ -394,7 +377,7 @@ export function DemoRemoteShow() {
 
 function naechsterText(phase, index) {
   if (phase.art === 'start') return 'HAUPTZIEHUNG STARTEN'
-  if (phase.art === 'ziehen') return 'GEWINNER AUFDECKEN'
+  if (phase.art === 'ziehen') return 'ZIEHUNG LÄUFT'
   if (phase.art === 'gewinner' && index === 18) return 'BONUS-RUNDE EINBLENDEN'
   if (phase.art === 'bonusIntro') return 'BONUS-RUNDE STARTEN'
   if (phase.art === 'gewinner' && index === PHASEN.length - 2) return 'ABSCHLUSS EINBLENDEN'
@@ -417,8 +400,8 @@ export function DemoRegie() {
   const phase = PHASEN[index]
   const start = stand.updatedAt ? Date.parse(stand.updatedAt) : Number.NaN
   const elapsed = Number.isFinite(start) ? Date.now() + stand.clockOffset - start : DRAW_MS
-  const ziehenGesperrt = phase.art === 'ziehen' && elapsed < DRAW_MS
-  const rest = ziehenGesperrt ? Math.max(1, Math.ceil((DRAW_MS - elapsed) / 1000)) : 0
+  const zieht = phase.art === 'ziehen'
+  const rest = zieht ? Math.max(0, Math.ceil((DRAW_MS - elapsed) / 1000)) : 0
 
   const setzen = async (neu) => {
     if (laeuft) return
@@ -454,10 +437,10 @@ export function DemoRegie() {
         <button
           type="button"
           className="is-primary"
-          disabled={laeuft || index >= PHASEN.length - 1 || ziehenGesperrt}
+          disabled={laeuft || index >= PHASEN.length - 1 || zieht}
           onClick={() => void setzen(index + 1)}
         >
-          {ziehenGesperrt ? `NOCH ${rest} S` : naechsterText(phase, index)}
+          {zieht ? (rest > 0 ? `ZIEHUNG LÄUFT · ${rest} S` : 'GEWINNER WIRD AUFGEDECKT …') : naechsterText(phase, index)}
         </button>
         <button type="button" disabled={laeuft || index === 0} onClick={() => void setzen(0)}>NEU STARTEN</button>
         <span>

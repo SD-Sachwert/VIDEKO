@@ -13,6 +13,7 @@ const SUPABASE_URL = STADTFEST_SUPABASE_URL || TERMINAL_SUPABASE_URL
 const SUPABASE_KEY = STADTFEST_SUPABASE_SERVICE_KEY || TERMINAL_SUPABASE_SERVICE_KEY
 const EVENT_ID = 'wuerzburger-stadtfest-2026-simulation'
 const TABELLE = 'stadtfest_simulation_regie'
+const DRAW_MS = 15000
 
 function konfiguriert() {
   return Boolean(SUPABASE_URL && SUPABASE_KEY && STADTFEST_COMPANY_ID)
@@ -78,6 +79,12 @@ async function lesen() {
   }
 }
 
+function istZiehphase(schritt) {
+  const n = Number(schritt)
+  return (n >= 1 && n <= 17 && n % 2 === 1)
+    || (n >= 20 && n <= 50 && n % 2 === 0)
+}
+
 async function schreiben(schritt) {
   const params = new URLSearchParams({
     company_id: `eq.${STADTFEST_COMPANY_ID}`,
@@ -110,7 +117,17 @@ export default async function handler(req, res) {
 
   try {
     if (req.method === 'GET') {
-      res.status(200).json({ ok: true, ...(await lesen()) })
+      let stand = await lesen()
+
+      if (istZiehphase(stand.schritt)) {
+        const gestartet = Date.parse(stand.updatedAt)
+        const abgelaufen = Number.isFinite(gestartet) && Date.now() - gestartet >= DRAW_MS
+        if (abgelaufen) {
+          stand = await schreiben(stand.schritt + 1)
+        }
+      }
+
+      res.status(200).json({ ok: true, ...stand })
       return
     }
 
