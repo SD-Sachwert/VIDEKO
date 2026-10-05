@@ -1,5 +1,5 @@
 import Seo from '../components/Seo.jsx'
-import { DemoZiehungsBuehne } from '../components/stadtfest/DemoZiehung.jsx'
+import { DemoRemoteShow } from '../components/stadtfest/DemoZiehung.jsx'
 
 export default function StadtfestZiehungDemoShow() {
   return (
@@ -12,7 +12,7 @@ export default function StadtfestZiehungDemoShow() {
         nofollow
       />
       <main className="stz-show">
-        <DemoZiehungsBuehne auto />
+        <DemoRemoteShow />
       </main>
     </>
   )
