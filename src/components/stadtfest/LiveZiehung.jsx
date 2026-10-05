@@ -3,6 +3,92 @@ import { Check, Radio, Trophy } from 'lucide-react'
 import logo from '../../assets/brand/logo-web-auf-dunkel.webp'
 
 const POLL_MS = 1200
+const PROBE_TAKT_MS = 5200
+
+const PROBE_POTS = [
+  { key: 'gold_2_5g', label: '2,5 g Gold', short: 'GOLD', total: 37, slots: 2 },
+  { key: 'kuechengutschein_1000', label: '1.000 € Küchengutschein', short: 'KÜCHENGUTSCHEIN', total: 23, slots: 5 },
+  { key: 'spanndecke_20qm', label: 'Spanndecke bis 20 m²', short: 'SPANNDECKE', total: 17, slots: 1 },
+  { key: 'wellness_2n_2p', label: 'Wellnessurlaub – 2 Nächte / 2 Personen', short: 'WELLNESS', total: 33, slots: 1 },
+]
+
+const PROBE_GEWONNEN = [
+  { drawId: 'probe-gold-1', prizeKey: 'gold_2_5g', prizeTitle: '2,5 g Gold', prizeNumber: 1, name: 'Sophie M.', code: '4827' },
+  { drawId: 'probe-gutschein-1', prizeKey: 'kuechengutschein_1000', prizeTitle: '1.000 € Küchengutschein', prizeNumber: 1, name: 'Lukas B.', code: '1734' },
+  { drawId: 'probe-gutschein-2', prizeKey: 'kuechengutschein_1000', prizeTitle: '1.000 € Küchengutschein', prizeNumber: 2, name: 'Mara K.', code: '9051' },
+  { drawId: 'probe-spanndecke', prizeKey: 'spanndecke_20qm', prizeTitle: 'Spanndecke bis 20 m²', prizeNumber: 1, name: 'Daniel R.', code: '6612' },
+  { drawId: 'probe-wellness', prizeKey: 'wellness_2n_2p', prizeTitle: 'Wellnessurlaub – 2 Nächte / 2 Personen', prizeNumber: 1, name: 'Nina S.', code: '2408' },
+  { drawId: 'probe-gold-2', prizeKey: 'gold_2_5g', prizeTitle: '2,5 g Gold', prizeNumber: 2, name: 'Tobias H.', code: '3186' },
+  { drawId: 'probe-gutschein-3', prizeKey: 'kuechengutschein_1000', prizeTitle: '1.000 € Küchengutschein', prizeNumber: 3, name: 'Anna W.', code: '7520' },
+  { drawId: 'probe-gutschein-4', prizeKey: 'kuechengutschein_1000', prizeTitle: '1.000 € Küchengutschein', prizeNumber: 4, name: 'Jonas F.', code: '1149' },
+  { drawId: 'probe-gutschein-5', prizeKey: 'kuechengutschein_1000', prizeTitle: '1.000 € Küchengutschein', prizeNumber: 5, name: 'Lea P.', code: '5377' },
+]
+
+function probeErlaubt() {
+  if (typeof window === 'undefined') return false
+  const host = window.location.hostname
+  return host === 'localhost' || host === '127.0.0.1' || host.endsWith('.vercel.app')
+}
+
+function probeDaten(zustand) {
+  const basis = {
+    ok: true,
+    eventId: 'wuerzburger-stadtfest-2026',
+    lostopfGesamt: 110,
+    hauptpreiseGesamt: 9,
+    pots: PROBE_POTS,
+    current: null,
+    winners: [],
+  }
+
+  if (zustand === 'ziehen') {
+    return {
+      ...basis,
+      winners: PROBE_GEWONNEN.slice(0, 2),
+      current: {
+        status: 'spinning',
+        drawId: 'probe-spanndecke',
+        prizeKey: 'spanndecke_20qm',
+        prizeTitle: 'Spanndecke bis 20 m²',
+        prizeNumber: 1,
+        startedAt: new Date().toISOString(),
+        revealedAt: null,
+        winner: null,
+      },
+    }
+  }
+
+  if (zustand === 'gewinner') {
+    const gewinner = PROBE_GEWONNEN[3]
+    return {
+      ...basis,
+      winners: PROBE_GEWONNEN.slice(0, 4),
+      current: {
+        status: 'revealed',
+        drawId: gewinner.drawId,
+        prizeKey: gewinner.prizeKey,
+        prizeTitle: gewinner.prizeTitle,
+        prizeNumber: gewinner.prizeNumber,
+        startedAt: new Date().toISOString(),
+        revealedAt: new Date().toISOString(),
+        winner: { name: gewinner.name, code: gewinner.code },
+      },
+    }
+  }
+
+  if (zustand === 'ende') {
+    return { ...basis, winners: PROBE_GEWONNEN }
+  }
+
+  return basis
+}
+
+function probeZustandAusAdresse() {
+  if (!probeErlaubt()) return null
+  const wert = new URLSearchParams(window.location.search).get('probe')
+  if (['start', 'ziehen', 'gewinner', 'ende', 'auto'].includes(wert)) return wert
+  return null
+}
 
 function preisTitel(preis) {
   if (!preis) return ''
@@ -17,6 +103,25 @@ function useLiveZiehung() {
   const [letztesUpdate, setLetztesUpdate] = useState(null)
 
   useEffect(() => {
+    const probe = probeZustandAusAdresse()
+    if (probe) {
+      const setzen = () => {
+        const zustand = probe === 'auto'
+          ? ['start', 'ziehen', 'gewinner', 'start', 'ziehen', 'gewinner', 'ende'][
+              Math.floor(Date.now() / PROBE_TAKT_MS) % 7
+            ]
+          : probe
+        setDaten(probeDaten(zustand))
+        setFehler('')
+        setLetztesUpdate(Date.now())
+      }
+
+      setzen()
+      if (probe !== 'auto') return undefined
+      const timer = window.setInterval(setzen, 350)
+      return () => window.clearInterval(timer)
+    }
+
     let aktiv = true
     let timer = null
     let laeuft = false
@@ -224,8 +329,11 @@ export function ZiehungsBuehne({ kompakt = false }) {
           <span>HAUPTPREISE AUFGEDECKT</span>
         </div>
         {daten && <PotLeiste pots={daten.pots} winners={winners} />}
-        <span className="stz-sync" title={letztesUpdate ? new Date(letztesUpdate).toLocaleTimeString('de-DE') : ''}>
-          LIVE SYNCHRONISIERT
+        <span
+          className={`stz-sync${fehler ? ' stz-sync--offline' : ''}`}
+          title={letztesUpdate ? new Date(letztesUpdate).toLocaleTimeString('de-DE') : ''}
+        >
+          {fehler ? 'VERBINDUNG WIRD NEU AUFGEBAUT' : 'LIVE SYNCHRONISIERT'}
         </span>
       </footer>
     </section>
