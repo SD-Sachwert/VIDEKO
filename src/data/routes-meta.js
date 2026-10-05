@@ -380,6 +380,24 @@ const ALLE_STATISCHEN_ROUTEN = [
     nofollow: true,
     inSitemap: false,
   },
+  {
+    path: '/stadtfest/ziehung/demo',
+    title: 'Demo-Ziehung Stadtfest | VIDEKO Küchen',
+    description:
+      'Interner Testlauf mit fest verdrahteten Demo-Daten. Keine echte Ziehung.',
+    noindex: true,
+    nofollow: true,
+    inSitemap: false,
+  },
+  {
+    path: '/stadtfest/ziehung/demo/show',
+    title: 'Demo-Bühne Stadtfest-Ziehung | VIDEKO Küchen',
+    description:
+      'Automatische 16:9-Demo mit fest verdrahteten Testdaten. Keine echte Ziehung.',
+    noindex: true,
+    nofollow: true,
+    inSitemap: false,
+  },
 
   /* Bierdeckel-Aktion. Der gedruckte QR-Code zeigt auf /terminal; die vier
      Unterseiten sind von dort aus verlinkt. Alle fuenf bleiben aus dem Index
