@@ -555,7 +555,7 @@
 
 .stz-pots {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: clamp(5px, 0.75vw, 12px);
 }
 
@@ -565,6 +565,17 @@
   border: 1px solid rgba(201, 160, 80, 0.17);
   border-radius: 9px;
   background: rgba(244, 239, 228, 0.025);
+}
+
+.stz-pot:last-child {
+  border-color: rgba(240, 213, 140, 0.38);
+  background: linear-gradient(145deg, rgba(201, 160, 80, 0.11), rgba(244, 239, 228, 0.02));
+  box-shadow: inset 0 0 24px rgba(201, 160, 80, 0.05);
+}
+
+.stz-pot:last-child .stz-pot__name,
+.stz-pot:last-child .stz-pot__zahl {
+  color: var(--stz-gold-hell);
 }
 
 .stz-pot__name,
