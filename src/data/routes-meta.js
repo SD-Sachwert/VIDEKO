@@ -393,7 +393,7 @@ const ALLE_STATISCHEN_ROUTEN = [
     path: '/stadtfest/ziehung/simulation/show',
     title: 'Simulation Stadtfest-Ziehung | VIDEKO Küchen',
     description:
-      'Automatische 16:9-Simulation der Stadtfest-Ziehung.',
+      'Gesteuerte 16:9-Simulation der Stadtfest-Ziehung.',
     noindex: true,
     nofollow: true,
     inSitemap: false,
