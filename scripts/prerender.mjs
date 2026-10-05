@@ -170,6 +170,8 @@ const SEITEN_MODUL = {
   '/stadtfest/teilnahmebedingungen': 'src/pages/StadtfestTeilnahme.jsx',
   '/stadtfest/ziehung': 'src/pages/StadtfestZiehung.jsx',
   '/stadtfest/ziehung/show': 'src/pages/StadtfestZiehungShow.jsx',
+  '/stadtfest/ziehung/demo': 'src/pages/StadtfestZiehungDemo.jsx',
+  '/stadtfest/ziehung/demo/show': 'src/pages/StadtfestZiehungDemoShow.jsx',
   '/terminal': 'src/pages/Terminal.jsx',
   '/terminal/ziehung': 'src/pages/TerminalZiehung.jsx',
   '/terminal/admin': 'src/pages/TerminalAdmin.jsx',
