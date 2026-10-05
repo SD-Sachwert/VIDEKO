@@ -80,8 +80,8 @@ export default function App() {
       {/* Live-Ziehung: Zuschaueransicht und identische 16:9-Buehne fuer OBS/Beamer. */}
       <Route path="/stadtfest/ziehung" element={<StadtfestZiehung />} />
       <Route path="/stadtfest/ziehung/show" element={<StadtfestZiehungShow />} />
-      <Route path="/stadtfest/ziehung/demo" element={<StadtfestZiehungDemo />} />
-      <Route path="/stadtfest/ziehung/demo/show" element={<StadtfestZiehungDemoShow />} />
+      <Route path="/stadtfest/ziehung/simulation" element={<StadtfestZiehungDemo />} />
+      <Route path="/stadtfest/ziehung/simulation/show" element={<StadtfestZiehungDemoShow />} />
 
       {/* Bierdeckel-Aktion: Ziel der gedruckten QR-Codes. Eigener schwarzer
           Rahmen mit eigenem Kopf und Fuss, deshalb ebenfalls ausserhalb des
