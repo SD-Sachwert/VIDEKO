@@ -35,7 +35,12 @@ const GEWINNER = [
 
 const PHASEN = [
   { art: 'start' },
-  ...GEWINNER.flatMap((_, index) => [{ art: 'ziehen', index }, { art: 'gewinner', index }]),
+  ...GEWINNER.slice(0, 9).flatMap((_, index) => [{ art: 'ziehen', index }, { art: 'gewinner', index }]),
+  { art: 'bonusIntro' },
+  ...GEWINNER.slice(9).flatMap((_, offset) => {
+    const index = offset + 9
+    return [{ art: 'ziehen', index }, { art: 'gewinner', index }]
+  }),
   { art: 'ende' },
 ]
 
@@ -174,7 +179,7 @@ export function DemoZiehungsBuehne({ kompakt = false, auto = false, schritt, onS
       ? phase.index + (phase.art === 'gewinner' ? 1 : 0)
       : 0
 
-  const bonusIntro = phase.art === 'ziehen' && phase.index === 9 && revealed === 9
+  const bonusIntro = phase.art === 'bonusIntro'
 
   return (
     <section className={`stz-stage${kompakt ? ' stz-stage--kompakt' : ''}`}>
@@ -188,7 +193,7 @@ export function DemoZiehungsBuehne({ kompakt = false, auto = false, schritt, onS
 
       {phase.art === 'start' && <StartBild />}
       {bonusIntro && <BonusStartBild />}
-      {!bonusIntro && phase.art === 'ziehen' && gewinner && <ZiehBild gewinner={gewinner} />}
+      {phase.art === 'ziehen' && gewinner && <ZiehBild gewinner={gewinner} />}
       {phase.art === 'gewinner' && gewinner && <GewinnerBild gewinner={gewinner} />}
       {phase.art === 'ende' && <EndeBild />}
 
