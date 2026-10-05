@@ -45,8 +45,10 @@ export default async function handler(req, res) {
     return
   }
 
-  res.setHeader('Cache-Control', 'no-store, max-age=0')
-  res.setHeader('Pragma', 'no-cache')
+  // Browser immer frisch, Vercel-CDN darf denselben Live-Stand für maximal
+  // eine Sekunde teilen. So erzeugen 200 Zuschauer nicht 200 identische
+  // Supabase-Abfragen pro Poll-Takt.
+  res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=1, stale-while-revalidate=1')
 
   if (!konfiguriert()) {
     res.status(503).json({ ok: false, meldung: 'Die Live-Ziehung ist gerade nicht erreichbar.' })
