@@ -58,8 +58,22 @@
 }
 
 .stz-stage--kompakt {
-  aspect-ratio: 16 / 9;
-  min-height: auto;
+  /* 16:9 ist die Wunschgroesse der Kachel, nicht ihre Obergrenze.
+     Mit aspect-ratio war es eine Obergrenze: bei definierter Breite
+     rechnet der Browser auch min-height: fit-content aus dem
+     Seitenverhaeltnis, die Kachel wuchs also nie mit. Gemessen lief die
+     Buehne dadurch in jedem Zustand aus der Kachel heraus - bei
+     1920x1080 im Startbild 205px je Seite, auf dem Handy 131px. Logo,
+     Gewinnername und Fortschrittsleiste lagen uebereinander.
+     Darum 16:9 nur noch als Mindesthoehe: die Kachel ist
+     min(1440px, Fensterbreite minus Seitenabstand) breit, 16:9 davon
+     sind 0.5625 der Breite, hoechstens 810px. Passt der Inhalt, ist die
+     Kachel exakt 16:9; braucht er mehr, waechst sie statt zu
+     ueberlappen. Unterhalb von 760px laeuft die Kachel randlos, dort
+     liegt die Rechnung rund 20px zu niedrig - ohne Rahmen faellt das
+     nicht auf, und der Inhalt bestimmt dort ohnehin die Hoehe. */
+  min-height: min(810px, calc((100vw - 2 * clamp(12px, 2.5vw, 28px)) * 0.5625));
+  height: auto;
   max-height: none;
   border: 1px solid rgba(201, 160, 80, 0.34);
   border-radius: clamp(14px, 2vw, 28px);
@@ -180,7 +194,7 @@
 .stz-kicker {
   margin: 0 0 clamp(8px, 1.1vw, 18px);
   color: var(--stz-gold-hell);
-  font-size: clamp(10px, 0.95vw, 15px);
+  font-size: clamp(11px, 1.05vw, 17px);
   font-weight: 800;
   letter-spacing: 0.3em;
   text-transform: uppercase;
@@ -200,7 +214,7 @@
   max-width: 11ch;
   font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
   font-size: clamp(44px, 7.7vw, 138px);
-  font-weight: 300;
+  font-weight: 400;
   line-height: 0.8;
   letter-spacing: -0.045em;
   text-transform: uppercase;
@@ -248,144 +262,403 @@
   margin: 0;
   font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
   font-size: clamp(30px, 4vw, 72px);
-  font-weight: 400;
+  font-weight: 500;
   line-height: 0.96;
   letter-spacing: -0.025em;
 }
 
-.stz-mischer {
+/* --------------------------------------------------------------------------
+   Der Lostopf: die grosse Glaskugel, die auf der Show-Bühne alles andere
+   überragt. Bei 1920x1080 ergibt min(44vw, 58vh) rund 626 px Durchmesser,
+   bei 2560x1440 läuft sie in die Obergrenze von 700 px.
+
+   Alles hier ist Bühne. Die Nummern auf den Losen sind Papierschnipsel,
+   kein Ziehungsergebnis — gezogen wird serverseitig.
+   ------------------------------------------------------------------------ */
+
+.stz-topf {
   position: relative;
-  width: clamp(190px, 24vw, 430px);
+  width: clamp(260px, min(44vw, 58vh), 700px);
   aspect-ratio: 1;
-  margin: clamp(10px, 1.3vw, 20px) 0 0;
+  margin: 0;
+  perspective: 1400px;
+  pointer-events: none;
 }
 
-.stz-mischer__halo {
+/* Lichthof: die Kugel leuchtet in die Bühne hinein, nicht nur auf sich selbst. */
+.stz-topf__aura {
   position: absolute;
-  inset: 12%;
+  inset: -24%;
   border-radius: 50%;
-  border: 1px solid rgba(201, 160, 80, 0.26);
+  background: radial-gradient(
+    closest-side,
+    rgba(240, 213, 140, 0.22),
+    rgba(201, 160, 80, 0.09) 46%,
+    transparent 74%
+  );
+  filter: blur(22px);
+  animation: stz-aura 4.6s ease-in-out infinite;
 }
 
-.stz-mischer__halo--a {
-  animation: stz-ring 7s linear infinite;
+@keyframes stz-aura {
+  0%, 100% { opacity: 0.72; transform: scale(0.97); }
+  50% { opacity: 1; transform: scale(1.04); }
+}
+
+/* Vier Reife um die Kugel. Jede Neigung braucht ihre eigene Keyframe-Regel:
+   eine reine rotate()-Animation würde die Neigung sonst überschreiben. */
+.stz-topf__ring {
+  position: absolute;
+  inset: -3%;
+  border-radius: 50%;
+  border: 1px solid rgba(201, 160, 80, 0.3);
+  transform-style: preserve-3d;
+}
+
+.stz-topf__ring--a {
+  border-color: rgba(240, 213, 140, 0.42);
+  border-top-color: rgba(240, 213, 140, 0.85);
+  animation: stz-reif-a 11s linear infinite;
+}
+
+.stz-topf__ring--b {
+  inset: -11%;
   border-style: dashed;
+  border-color: rgba(201, 160, 80, 0.3);
+  animation: stz-reif-b 8s linear infinite reverse;
 }
 
-.stz-mischer__halo--b {
-  inset: 25%;
-  border-color: rgba(240, 213, 140, 0.16);
-  animation: stz-ring 5s linear infinite reverse;
+.stz-topf__ring--c {
+  inset: 4%;
+  border-color: rgba(240, 213, 140, 0.22);
+  border-left-color: rgba(240, 213, 140, 0.6);
+  animation: stz-reif-c 13s linear infinite;
+}
+
+.stz-topf__ring--d {
+  inset: -18%;
+  border-style: dotted;
+  border-color: rgba(201, 160, 80, 0.2);
+  animation: stz-ring 26s linear infinite reverse;
+}
+
+@keyframes stz-reif-a {
+  to { transform: rotateX(74deg) rotate(360deg); }
+}
+
+@keyframes stz-reif-b {
+  to { transform: rotateX(58deg) rotate(360deg); }
+}
+
+@keyframes stz-reif-c {
+  to { transform: rotateY(72deg) rotate(360deg); }
 }
 
 @keyframes stz-ring {
   to { transform: rotate(360deg); }
 }
 
-.stz-mischer__kern {
+/* Die umlaufenden Lose sitzen auf einer Scheibe in Kugelgrösse und werden
+   von ihr herumgetragen. Das umgeht die alte Falle, dass ein prozentuales
+   translateX() auf die eigene Breite des Loses rechnet. */
+.stz-topf__orbit {
+  position: absolute;
+  inset: -9%;
+  animation: stz-umlauf 17s linear infinite;
+  animation-delay: var(--d);
+  transform: rotate(var(--w));
+}
+
+.stz-topf__orbit::before {
+  content: '';
   position: absolute;
   left: 50%;
-  top: 50%;
-  display: flex;
-  width: 42%;
-  aspect-ratio: 1;
-  transform: translate(-50%, -50%);
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(240, 213, 140, 0.38);
+  top: -1.4%;
+  width: 7.5%;
+  aspect-ratio: 1.5;
+  transform: translateX(-50%);
+  border: 1px solid rgba(240, 213, 140, 0.55);
+  border-radius: 4px;
+  background: linear-gradient(145deg, rgba(240, 213, 140, 0.34), rgba(16, 14, 11, 0.9));
+  box-shadow: 0 0 16px rgba(201, 160, 80, 0.5);
+}
+
+@keyframes stz-umlauf {
+  to { transform: rotate(calc(var(--w) + 360deg)); }
+}
+
+/* Das Glas selbst. */
+.stz-topf__kugel {
+  position: absolute;
+  inset: 9%;
+  overflow: hidden;
   border-radius: 50%;
   background:
-    radial-gradient(circle at 38% 28%, rgba(240, 213, 140, 0.14), transparent 38%),
-    #0c0b09;
+    radial-gradient(circle at 34% 24%, rgba(255, 252, 244, 0.2), transparent 34%),
+    radial-gradient(circle at 70% 78%, rgba(201, 160, 80, 0.22), transparent 52%),
+    radial-gradient(circle at 50% 50%, rgba(22, 18, 13, 0.46), rgba(6, 6, 5, 0.9) 78%);
   box-shadow:
-    0 0 80px rgba(201, 160, 80, 0.18),
-    inset 0 0 34px rgba(201, 160, 80, 0.07);
+    inset 0 0 70px rgba(201, 160, 80, 0.16),
+    inset 0 -24px 60px rgba(0, 0, 0, 0.72),
+    0 0 120px rgba(201, 160, 80, 0.2),
+    0 50px 110px -50px rgba(0, 0, 0, 0.95);
 }
 
-.stz-mischer__kern strong {
-  color: var(--stz-gold-hell);
-  font-family: var(--serif, Georgia, serif);
-  font-size: clamp(34px, 4.2vw, 76px);
-  font-weight: 400;
-  line-height: 0.9;
+/* Glaskante und Spiegelung: zwei Schichten über den Losen. */
+.stz-topf__kante {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(240, 213, 140, 0.5);
+  box-shadow: inset 0 0 0 1px rgba(255, 252, 244, 0.07);
 }
 
-.stz-mischer__klein {
-  color: rgba(244, 239, 228, 0.5);
-  font-size: clamp(7px, 0.68vw, 11px);
-  font-weight: 700;
-  letter-spacing: 0.16em;
+.stz-topf__glanz {
+  position: absolute;
+  left: 13%;
+  top: 9%;
+  width: 44%;
+  height: 30%;
+  border-radius: 50%;
+  background: linear-gradient(150deg, rgba(255, 252, 244, 0.3), transparent 62%);
+  filter: blur(7px);
 }
 
-.stz-los {
-  --radius: 42%;
+/* Die Lose in der Kugel. Plätze kommen aus dem Markup, damit nichts
+   übereinander liegt und die Füllung nach unten hin dichter wird. */
+.stz-topf__los {
+  position: absolute;
+  left: calc(var(--x) * 1%);
+  top: calc(var(--y) * 1%);
+  display: grid;
+  width: 14%;
+  aspect-ratio: 1.42;
+  place-items: center;
+  border: 1px solid rgba(240, 213, 140, 0.58);
+  border-radius: 5px;
+  background: linear-gradient(150deg, rgba(243, 222, 161, 0.95), rgba(176, 134, 58, 0.9) 58%, rgba(28, 22, 13, 0.95));
+  color: #15120c;
+  font-size: clamp(9px, min(1.15vw, 1.5vh), 19px);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  animation: stz-schwappen 5.2s ease-in-out infinite;
+  animation-delay: var(--d);
+}
+
+@keyframes stz-schwappen {
+  0%, 100% { transform: translate(-50%, -50%) rotate(var(--dreh)); }
+  50% { transform: translate(-50%, calc(-50% - 7%)) rotate(calc(var(--dreh) + 7deg)); }
+}
+
+/* Funken um die Kugel. */
+.stz-topf__funke {
+  position: absolute;
+  left: calc(var(--x) * 1%);
+  top: calc(var(--y) * 1%);
+  width: var(--gr);
+  height: var(--gr);
+  border-radius: 50%;
+  background: #f3dea1;
+  box-shadow: 0 0 12px rgba(240, 213, 140, 0.9);
+  animation: stz-funkeln var(--dauer) ease-in-out infinite;
+  animation-delay: var(--d);
+}
+
+@keyframes stz-funkeln {
+  0%, 100% { opacity: 0.12; transform: scale(0.6); }
+  50% { opacity: 1; transform: scale(1.35); }
+}
+
+/* Der Lichtteller, auf dem die Kugel zu stehen scheint. */
+.stz-topf__sockel {
   position: absolute;
   left: 50%;
-  top: 50%;
-  display: grid;
-  width: clamp(30px, 3.4vw, 60px);
-  aspect-ratio: 1.35;
-  place-items: center;
-  border: 1px solid rgba(240, 213, 140, 0.48);
-  border-radius: 5px;
-  background: linear-gradient(145deg, rgba(201, 160, 80, 0.22), rgba(16, 14, 11, 0.96));
-  color: var(--stz-gold-hell);
-  font-size: clamp(8px, 0.75vw, 12px);
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  transform-origin: 0 0;
-  animation: stz-losflug 3.4s cubic-bezier(.54,.01,.43,.99) infinite;
-  animation-delay: var(--delay);
-  box-shadow: 0 9px 24px rgba(0, 0, 0, 0.38);
+  bottom: -9%;
+  width: 78%;
+  height: 13%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(240, 213, 140, 0.4), transparent 72%);
+  filter: blur(11px);
 }
 
-@keyframes stz-losflug {
-  0% {
-    transform: rotate(var(--winkel)) translateX(64%) rotate(calc(var(--winkel) * -1)) scale(0.72);
-    opacity: 0.15;
-  }
-  26% { opacity: 1; }
-  55% {
-    transform: rotate(calc(var(--winkel) + 168deg)) translateX(150%) rotate(calc((var(--winkel) + 168deg) * -1)) scale(1);
-    opacity: 0.9;
-  }
-  100% {
-    transform: rotate(calc(var(--winkel) + 360deg)) translateX(64%) rotate(calc((var(--winkel) + 360deg) * -1)) scale(0.72);
-    opacity: 0.15;
-  }
+/* Die Spannung über die Haltezeit: die Kugel wird sichtbar enger und heller.
+   Kein Timer, keine Zahl — das Bild startet neu, weil die Mitte bei jedem
+   Draw über key={drawId} neu aufgebaut wird. */
+.stz-stage__mitte--ziehen .stz-topf {
+  animation: stz-anspannung 15s cubic-bezier(.3, 0, .7, 1) both;
+}
+
+@keyframes stz-anspannung {
+  0% { transform: scale(0.93); filter: saturate(0.9) brightness(0.88); }
+  70% { transform: scale(1.01); filter: saturate(1.05) brightness(1.04); }
+  100% { transform: scale(1.05); filter: saturate(1.25) brightness(1.18); }
+}
+
+/* Lichtstaub über der ganzen Bühne. Bahnen kommen aus dem Markup. */
+.stz-staub {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.stz-staub i {
+  position: absolute;
+  left: calc(var(--x) * 1%);
+  bottom: -4%;
+  width: var(--gr);
+  height: var(--gr);
+  border-radius: 50%;
+  background: rgba(240, 213, 140, 0.75);
+  box-shadow: 0 0 8px rgba(240, 213, 140, 0.55);
+  opacity: 0;
+  animation: stz-staubflug var(--dauer) linear infinite;
+  animation-delay: var(--d);
+}
+
+@keyframes stz-staubflug {
+  0% { opacity: 0; transform: translate(0, 0); }
+  14% { opacity: 0.8; }
+  78% { opacity: 0.5; }
+  100% { opacity: 0; transform: translate(var(--seite), calc(var(--hoch) * -1vh)); }
+}
+
+/* --------------------------------------------------------------------------
+   Das Schild unter der Kugel: Zustand, Preis, Losanzahl.
+
+   Hier stand früher ein Countdown "AUFDECKUNG IN 15 SEKUNDEN". Er ist
+   ersatzlos entfallen: die interne Haltezeit ist nichts, was das Publikum
+   sehen soll. Die Spannung macht die Animation.
+   ------------------------------------------------------------------------ */
+
+.stz-schild {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  max-width: min(760px, 100%);
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(9px, 1vw, 17px);
 }
 
 .stz-warten {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(7px, 0.7vw, 11px);
   margin: 0;
-  color: rgba(244, 239, 228, 0.54);
-  font-size: clamp(9px, 0.85vw, 13px);
-  font-weight: 700;
-  letter-spacing: 0.22em;
-}
-
-.stz-countdown {
-  display: inline-grid;
-  grid-template-columns: auto auto auto;
-  align-items: baseline;
-  gap: clamp(7px, 0.8vw, 12px);
-  margin-top: clamp(10px, 1.2vw, 18px);
-  color: rgba(244, 239, 228, 0.48);
-  font-size: clamp(8px, 0.72vw, 11px);
+  padding: clamp(5px, 0.5vw, 9px) clamp(13px, 1.3vw, 22px);
+  border: 1px solid rgba(201, 160, 80, 0.4);
+  border-radius: 999px;
+  background: rgba(10, 9, 7, 0.72);
+  color: rgba(244, 239, 228, 0.86);
+  font-size: clamp(10px, 0.95vw, 15px);
   font-weight: 800;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.24em;
+  backdrop-filter: blur(5px);
 }
 
-.stz-countdown strong {
-  min-width: 1.6ch;
+.stz-warten__punkt {
+  width: clamp(6px, 0.5vw, 9px);
+  height: clamp(6px, 0.5vw, 9px);
+  border-radius: 50%;
+  background: var(--stz-gold-hell);
+  box-shadow: 0 0 12px rgba(240, 213, 140, 0.9);
+  animation: stz-live-puls 1.3s ease-in-out infinite;
+}
+
+.stz-warten__drei {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.stz-warten__drei i {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--stz-gold-hell);
+  animation: stz-drei 1.2s ease-in-out infinite;
+}
+
+.stz-warten__drei i:nth-child(2) { animation-delay: 0.16s; }
+.stz-warten__drei i:nth-child(3) { animation-delay: 0.32s; }
+
+@keyframes stz-drei {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+
+/* Der laufende Preis als Tafel, nicht als Webseitenüberschrift. */
+.stz-schild__preis {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 1.4vw, 26px);
+  padding: clamp(11px, 1.15vw, 21px) clamp(18px, 2.1vw, 40px);
+  border: 1px solid rgba(240, 213, 140, 0.5);
+  border-radius: 15px;
+  background: linear-gradient(104deg, rgba(10, 9, 7, 0.93), rgba(43, 32, 16, 0.86));
+  box-shadow:
+    inset 0 1px 0 rgba(240, 213, 140, 0.16),
+    0 0 0 1px rgba(240, 213, 140, 0.1),
+    0 40px 90px -46px rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(6px);
+  text-align: left;
+}
+
+.stz-schild__motiv {
+  flex: none;
   color: var(--stz-gold-hell);
-  font-family: var(--serif, Georgia, serif);
-  font-size: clamp(30px, 3.2vw, 58px);
-  font-weight: 500;
-  line-height: 0.8;
-  letter-spacing: -0.04em;
-  text-align: center;
-  font-variant-numeric: tabular-nums;
+  filter: drop-shadow(0 0 16px rgba(201, 160, 80, 0.55));
+}
+
+.stz-schild__text {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: clamp(3px, 0.4vw, 7px);
+}
+
+.stz-schild__text .stz-kicker {
+  margin: 0;
+}
+
+.stz-schild__lose {
+  margin: 0;
+  color: rgba(244, 239, 228, 0.52);
+  font-size: clamp(9px, 0.82vw, 14px);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+
+/* Beim Mischen liegt das Schild über dem unteren Teil der Kugel — so wie im
+   Referenzbild. Dafür bekommt die Mitte genau eine Zelle. */
+.stz-stage__mitte--ziehen {
+  display: grid;
+  place-items: center;
+}
+
+.stz-stage__mitte--ziehen > * {
+  grid-area: 1 / 1;
+}
+
+.stz-stage__mitte--ziehen .stz-schild {
+  align-self: end;
+  transform: translateY(13%);
+}
+
+/* Startbild: Titel oben, Kugel darunter, Schild zuletzt. */
+.stz-startkopf {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stz-stage__mitte--start .stz-topf {
+  width: clamp(190px, min(27vw, 34vh), 420px);
+  margin: clamp(6px, 0.8vw, 16px) 0;
 }
 
 .stz-stage__mitte--gewinner {
@@ -412,7 +685,7 @@
   background-clip: text;
   font-family: var(--serif, 'Cormorant Garamond', Georgia, serif);
   font-size: clamp(52px, 9vw, 164px);
-  font-weight: 500;
+  font-weight: 600;
   line-height: 0.82;
   letter-spacing: -0.045em;
   text-shadow: none;
@@ -428,24 +701,43 @@
 }
 
 .stz-gewinn {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  margin-top: clamp(18px, 2vw, 30px);
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(11px, 1.2vw, 20px);
+  margin-top: clamp(18px, 2vw, 32px);
+  padding: clamp(9px, 0.95vw, 17px) clamp(16px, 1.8vw, 32px);
+  border: 1px solid rgba(240, 213, 140, 0.4);
+  border-radius: 14px;
+  background: linear-gradient(104deg, rgba(10, 9, 7, 0.9), rgba(43, 32, 16, 0.8));
+  text-align: left;
 }
 
-.stz-gewinn span {
-  color: rgba(244, 239, 228, 0.42);
-  font-size: clamp(8px, 0.72vw, 11px);
-  font-weight: 700;
-  letter-spacing: 0.22em;
+.stz-gewinn__motiv {
+  flex: none;
+  color: var(--stz-gold-hell);
+  filter: drop-shadow(0 0 14px rgba(201, 160, 80, 0.5));
+}
+
+.stz-gewinn__text {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.stz-gewinn small {
+  color: rgba(244, 239, 228, 0.46);
+  font-size: clamp(8px, 0.72vw, 12px);
+  font-weight: 800;
+  letter-spacing: 0.24em;
 }
 
 .stz-gewinn strong {
   color: var(--stz-creme);
   font-family: var(--serif, Georgia, serif);
-  font-size: clamp(22px, 2.3vw, 40px);
-  font-weight: 500;
+  font-size: clamp(24px, 2.5vw, 44px);
+  font-weight: 600;
+  line-height: 1.02;
 }
 
 .stz-konfetti {
@@ -484,71 +776,118 @@
   position: relative;
   z-index: 5;
   display: grid;
-  grid-template-columns: minmax(190px, .85fr) minmax(0, 2.6fr) auto;
-  align-items: end;
-  gap: clamp(14px, 2vw, 32px);
-  padding: 0 clamp(20px, 3.5vw, 64px) clamp(18px, 2.5vw, 38px);
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(9px, 1.1vw, 18px);
+  padding: 0 clamp(20px, 3.5vw, 64px) clamp(16px, 2.2vw, 34px);
 }
 
 .stz-fortschritt {
   display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 6px 12px;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
   align-items: center;
+  gap: clamp(10px, 1.4vw, 24px);
 }
 
-.stz-fortschritt__linie {
-  grid-column: 1 / -1;
-  height: 2px;
-  overflow: hidden;
+.stz-fortschritt__titel {
+  color: var(--stz-gold-hell);
+  font-size: clamp(8px, 0.7vw, 13px);
+  font-weight: 800;
+  letter-spacing: 0.24em;
+}
+
+/* Eine Marke je Hauptpreis. Gefüllt wird nur, was wirklich gezogen ist. */
+.stz-fortschritt__punkte {
+  display: flex;
+  min-width: 0;
+  gap: clamp(4px, 0.45vw, 9px);
+}
+
+.stz-fortschritt__punkte i {
+  flex: 1;
+  height: clamp(3px, 0.3vw, 5px);
+  border-radius: 999px;
   background: rgba(244, 239, 228, 0.1);
+  transition: background .5s ease, box-shadow .5s ease;
 }
 
-.stz-fortschritt__linie i {
-  display: block;
-  height: 100%;
+.stz-fortschritt__punkte i.stz-ist {
   background: linear-gradient(90deg, #9c6d28, #f0d58c);
-  box-shadow: 0 0 18px rgba(240, 213, 140, 0.5);
-  transition: width 0.65s cubic-bezier(.16,1,.3,1);
+  box-shadow: 0 0 14px rgba(240, 213, 140, 0.55);
 }
 
 .stz-fortschritt strong {
+  display: inline-flex;
+  align-items: baseline;
+  gap: clamp(6px, 0.6vw, 11px);
   color: var(--stz-gold-hell);
-  font-size: clamp(12px, 1.05vw, 17px);
+  font-family: var(--serif, Georgia, serif);
+  font-size: clamp(19px, 1.7vw, 32px);
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
-.stz-fortschritt > span:last-child {
-  color: rgba(244, 239, 228, 0.4);
-  font-size: clamp(7px, 0.65vw, 10px);
-  font-weight: 700;
-  letter-spacing: 0.12em;
+.stz-fortschritt strong span {
+  color: rgba(244, 239, 228, 0.44);
+  font-family: var(--sans, 'Inter', system-ui, sans-serif);
+  font-size: clamp(7px, 0.62vw, 11px);
+  font-weight: 800;
+  letter-spacing: 0.2em;
 }
 
 .stz-pots {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(6px, 0.8vw, 14px);
+  gap: clamp(8px, 1vw, 18px);
 }
 
+/* Event-Kacheln, keine Dashboard-Karten: Motiv links, Zahlen gross,
+   aktiver Topf mit Goldkante. */
 .stz-pot {
   position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 2px clamp(10px, 1.1vw, 18px);
   min-width: 0;
-  padding: clamp(8px, 0.85vw, 15px) clamp(10px, 1.05vw, 18px) clamp(9px, 0.95vw, 16px);
-  border: 1px solid rgba(201, 160, 80, 0.16);
-  border-radius: 11px;
+  padding: clamp(10px, 1vw, 18px) clamp(12px, 1.2vw, 22px);
+  overflow: hidden;
+  border: 1px solid rgba(201, 160, 80, 0.2);
+  border-radius: 14px;
   background:
-    linear-gradient(170deg, rgba(244, 239, 228, 0.045), rgba(244, 239, 228, 0.012));
+    radial-gradient(120% 140% at 0% 0%, rgba(201, 160, 80, 0.1), transparent 58%),
+    linear-gradient(170deg, rgba(244, 239, 228, 0.05), rgba(244, 239, 228, 0.014));
   transition: border-color .4s ease, background .4s ease, box-shadow .4s ease;
+}
+
+.stz-pot__motiv {
+  grid-row: 1 / span 3;
+  display: grid;
+  width: clamp(36px, 3.1vw, 56px);
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid rgba(201, 160, 80, 0.26);
+  border-radius: 12px;
+  background: radial-gradient(circle at 36% 28%, rgba(201, 160, 80, 0.2), rgba(12, 11, 9, 0.9));
+  color: rgba(240, 213, 140, 0.78);
+  transition: color .4s ease, border-color .4s ease, background .4s ease;
 }
 
 /* Der Topf, aus dem gerade gezogen wird, bekommt die Goldkante. Genau einer. */
 .stz-pot--aktiv {
-  border-color: rgba(240, 213, 140, 0.62);
+  border-color: rgba(240, 213, 140, 0.66);
   background:
-    linear-gradient(170deg, rgba(201, 160, 80, 0.17), rgba(201, 160, 80, 0.04));
+    radial-gradient(120% 140% at 0% 0%, rgba(201, 160, 80, 0.26), transparent 62%),
+    linear-gradient(170deg, rgba(201, 160, 80, 0.18), rgba(201, 160, 80, 0.045));
   box-shadow:
-    0 0 0 1px rgba(240, 213, 140, 0.14),
-    0 16px 40px -28px rgba(201, 160, 80, 0.75);
+    0 0 0 1px rgba(240, 213, 140, 0.16),
+    0 22px 50px -28px rgba(201, 160, 80, 0.8);
+}
+
+.stz-pot--aktiv .stz-pot__motiv {
+  border-color: rgba(240, 213, 140, 0.6);
+  background: radial-gradient(circle at 36% 28%, rgba(240, 213, 140, 0.32), rgba(26, 20, 12, 0.92));
+  color: var(--stz-gold-hell);
 }
 
 .stz-pot--fertig {
@@ -561,15 +900,21 @@
   color: rgba(244, 239, 228, 0.34);
 }
 
+.stz-pot--fertig .stz-pot__motiv {
+  border-color: rgba(244, 239, 228, 0.08);
+  background: rgba(244, 239, 228, 0.02);
+  color: rgba(244, 239, 228, 0.26);
+}
+
 .stz-pot__name {
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: rgba(244, 239, 228, 0.6);
-  font-size: clamp(8px, 0.62vw, 13px);
+  color: rgba(244, 239, 228, 0.66);
+  font-size: clamp(9px, 0.74vw, 15px);
   font-weight: 800;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
 }
 
 .stz-pot--aktiv .stz-pot__name {
@@ -579,17 +924,22 @@
 .stz-pot__zeile {
   display: flex;
   align-items: baseline;
-  gap: clamp(5px, 0.5vw, 9px);
+  gap: clamp(5px, 0.5vw, 10px);
   min-width: 0;
-  margin-top: 2px;
 }
 
 .stz-pot__zahl {
   color: var(--stz-creme);
   font-family: var(--serif, Georgia, serif);
-  font-size: clamp(19px, 1.85vw, 34px);
-  font-weight: 500;
-  line-height: 1.05;
+  font-size: clamp(21px, 2.05vw, 38px);
+  font-weight: 600;
+  line-height: 1.02;
+  font-variant-numeric: tabular-nums;
+}
+
+.stz-pot__zahl--zwei {
+  color: var(--stz-gold-hell);
+  font-size: clamp(16px, 1.5vw, 28px);
 }
 
 .stz-pot__meta {
@@ -598,15 +948,17 @@
   white-space: nowrap;
   color: rgba(244, 239, 228, 0.42);
   font-size: clamp(8px, 0.6vw, 12px);
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.08em;
 }
 
 .stz-pot__balken {
+  grid-column: 2;
   display: block;
-  height: 2px;
-  margin-top: clamp(6px, 0.7vw, 11px);
+  height: clamp(2px, 0.22vw, 4px);
+  margin-top: clamp(5px, 0.6vw, 10px);
   overflow: hidden;
-  border-radius: 2px;
+  border-radius: 999px;
   background: rgba(244, 239, 228, 0.08);
 }
 
@@ -619,6 +971,13 @@
 
 .stz-pot--fertig .stz-pot__balken i {
   background: rgba(244, 239, 228, 0.3);
+}
+
+.stz-pot__haken {
+  position: absolute;
+  right: clamp(9px, 0.9vw, 15px);
+  top: clamp(9px, 0.9vw, 15px);
+  color: rgba(244, 239, 228, 0.4);
 }
 
 .stz-sync {
@@ -811,8 +1170,12 @@
     font-size: clamp(22px, 7vw, 34px);
   }
 
-  .stz-mischer {
-    width: clamp(125px, 37vw, 170px);
+  .stz-topf {
+    width: clamp(150px, 54vw, 230px);
+  }
+
+  .stz-stage__mitte--start .stz-topf {
+    width: clamp(120px, 38vw, 170px);
   }
 
   .stz-gewinner {
@@ -826,9 +1189,22 @@
   }
 
   .stz-stage__fuss {
-    grid-template-columns: 1fr auto;
-    align-items: center;
+    grid-template-columns: minmax(0, 1fr);
     padding: 0 14px 10px;
+  }
+
+  .stz-fortschritt {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6px 10px;
+  }
+
+  .stz-fortschritt__titel {
+    font-size: 7px;
+  }
+
+  .stz-fortschritt__punkte {
+    grid-column: 1 / -1;
+    grid-row: 2;
   }
 
   .stz-pots {
@@ -839,7 +1215,7 @@
     font-size: 6px;
   }
 
-  .stz-fortschritt > span:last-child {
+  .stz-fortschritt strong span {
     font-size: 6px;
   }
 
@@ -863,8 +1239,15 @@
 @media (prefers-reduced-motion: reduce) {
   .stz-live__punkt,
   .stz-kicker--puls,
-  .stz-mischer__halo,
-  .stz-los,
+  .stz-warten__punkt,
+  .stz-warten__drei i,
+  .stz-topf__aura,
+  .stz-topf__ring,
+  .stz-topf__orbit,
+  .stz-topf__los,
+  .stz-topf__funke,
+  .stz-staub i,
+  .stz-stage__mitte--ziehen .stz-topf,
   .stz-konfetti i,
   .stz-lader {
     animation-duration: 0.001ms !important;
@@ -931,10 +1314,48 @@
     linear-gradient(180deg, rgba(0, 0, 0, 0.42) 0%, transparent 22%, transparent 74%, rgba(0, 0, 0, 0.5) 100%);
 }
 
+/* Lichtbahnen: schmale Goldkeile, die langsam über die Bühne wandern. */
+.stz-stage__strahlen {
+  position: absolute;
+  inset: -30% -10%;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.5;
+  background: repeating-conic-gradient(
+    from 0deg at 50% 8%,
+    rgba(240, 213, 140, 0.075) 0deg 1.6deg,
+    transparent 1.6deg 11deg
+  );
+  mask-image: radial-gradient(68% 58% at 50% 12%, #000 10%, transparent 72%);
+  animation: stz-strahlen 46s linear infinite;
+}
+
+@keyframes stz-strahlen {
+  to { transform: rotate(8deg); }
+}
+
+/* Bühnenboden: eine liegende Gitterfläche, die nach hinten ausläuft. */
+.stz-stage__gitter {
+  position: absolute;
+  left: -20%;
+  right: -20%;
+  bottom: 0;
+  height: 42%;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.4;
+  background:
+    repeating-linear-gradient(90deg, rgba(201, 160, 80, 0.16) 0 1px, transparent 1px 88px),
+    repeating-linear-gradient(0deg, rgba(201, 160, 80, 0.13) 0 1px, transparent 1px 34px);
+  transform: perspective(620px) rotateX(74deg);
+  transform-origin: 50% 100%;
+  mask-image: linear-gradient(180deg, transparent, #000 58%, rgba(0, 0, 0, 0.35));
+}
+
 /* --- Show-Bühne: Mitte + rechte Spalte ----------------------------------- */
 
 .stz-stage--show {
-  grid-template-columns: minmax(0, 1fr) clamp(252px, 20.5vw, 430px);
+  grid-template-columns: minmax(0, 1fr) clamp(318px, 20vw, 384px);
   grid-template-rows: auto minmax(0, 1fr) auto;
 }
 
@@ -955,8 +1376,8 @@
   grid-row: 2;
 }
 
-/* Die Mitte ist jetzt schmaler als die ganze Bühne — die grossen Grade
-   brauchen deshalb einen kleineren vw-Faktor, sonst reisst der Name aus. */
+/* Die Mitte ist schmaler als die ganze Bühne — die grossen Grade brauchen
+   deshalb einen kleineren vw-Faktor, sonst reisst der Name aus. */
 .stz-stage--show .stz-title {
   font-size: clamp(44px, 6.3vw, 122px);
 }
@@ -965,12 +1386,71 @@
   font-size: clamp(52px, 7.4vw, 142px);
 }
 
+@media (min-width: 1101px) {
+  /* Startbild: es lief aus seiner Buehnenzeile heraus und ueberlappte oben die
+     Kopfzeile, unten die Lostopf-Kacheln (gemessen 97px je Seite bei
+     1920x1080, 90px bei 1366x768). Hier wird Hoehe geholt:
+       - der Kicker wiederholte wortgleich den Untertitel der Kopfzeile,
+       - der Titel darf breiter laufen und bricht zweizeilig statt dreizeilig,
+       - die Startkugel bekommt eine Hoehengrenze,
+       - Lead, Startlinie und Innenabstand werden ruhiger.
+     Die Ziehung selbst wird nicht angetastet. */
+  .stz-stage--show .stz-stage__mitte--start .stz-kicker {
+    display: none;
+  }
+
+  .stz-stage--show .stz-stage__mitte--start .stz-title {
+    max-width: 20ch;
+  }
+
+  .stz-stage--show .stz-stage__mitte--start .stz-topf {
+    width: clamp(190px, min(26vw, 24vh), 420px);
+  }
+
+  .stz-stage--show .stz-stage__mitte--start .stz-lead {
+    margin-top: clamp(10px, 1.2vw, 18px);
+  }
+
+  .stz-stage--show .stz-stage__mitte--start .stz-startlinie {
+    margin-top: clamp(14px, 1.6vw, 28px);
+  }
+
+  .stz-stage--show .stz-stage__mitte--start {
+    padding-top: clamp(6px, 0.6vw, 12px);
+    padding-bottom: clamp(6px, 0.6vw, 12px);
+  }
+}
+
 .stz-stage--show .stz-preis {
   font-size: clamp(30px, 3.4vw, 64px);
 }
 
-.stz-stage--show .stz-mischer {
-  width: clamp(190px, 20.5vw, 396px);
+/* Veranstaltungstitel im Kopf, wie im Referenzbild zwischen Logo und
+   Live-Marke. Nur auf der Show-Bühne; die Zuschauerseite hat eine
+   eigene Überschrift. */
+.stz-stage__titel {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  text-align: center;
+}
+
+.stz-stage__titel strong {
+  color: var(--stz-creme);
+  font-size: clamp(11px, 1.05vw, 19px);
+  font-weight: 800;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.stz-stage__titel small {
+  color: rgba(244, 239, 228, 0.46);
+  font-family: var(--serif, Georgia, serif);
+  font-size: clamp(11px, 1vw, 18px);
+  letter-spacing: 0.06em;
 }
 
 /* --- Gewinnertafel -------------------------------------------------------- */
@@ -981,36 +1461,45 @@
   display: flex;
   min-height: 0;
   flex-direction: column;
-  margin: clamp(10px, 1.2vw, 24px) clamp(20px, 3.5vw, 64px) 0 0;
-  padding: clamp(14px, 1.3vw, 26px) clamp(14px, 1.3vw, 26px) clamp(12px, 1.1vw, 20px) clamp(16px, 1.5vw, 30px);
+  /* Gemessen: mit dem alten Aussenrand von 64px blieben der Tafel bei
+     1920x1080 nur 288px statt der gewuenschten 300-350px. Der Name wurde
+     dadurch mit Ellipse gekuerzt und der Preis mitten im Wort getrennt. */
+  margin: clamp(10px, 1.2vw, 24px) clamp(12px, 1.4vw, 34px) 0 0;
+  padding: clamp(14px, 1.3vw, 24px) clamp(13px, 1.2vw, 22px) clamp(12px, 1.1vw, 20px) clamp(15px, 1.4vw, 26px);
   overflow: hidden;
   /* Eine Goldlinie, kein Goldrahmen. */
-  border-left: 1px solid rgba(201, 160, 80, 0.42);
+  border-left: 1px solid rgba(201, 160, 80, 0.5);
   border-radius: 0 14px 14px 0;
-  background: linear-gradient(100deg, rgba(201, 160, 80, 0.07), rgba(244, 239, 228, 0.012) 42%, transparent);
+  background: linear-gradient(100deg, rgba(201, 160, 80, 0.1), rgba(8, 8, 6, 0.86) 34%, rgba(5, 5, 4, 0.78));
+  box-shadow: inset 1px 0 0 rgba(240, 213, 140, 0.14);
 }
 
 .stz-tafel__kopf {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(7px, 0.7vw, 12px);
   padding-bottom: clamp(9px, 0.9vw, 15px);
-  border-bottom: 1px solid rgba(244, 239, 228, 0.09);
+  border-bottom: 1px solid rgba(240, 213, 140, 0.22);
+}
+
+.stz-tafel__kopf > svg {
+  color: var(--stz-gold-hell);
+  filter: drop-shadow(0 0 10px rgba(201, 160, 80, 0.5));
 }
 
 .stz-tafel__kopf > span {
   color: var(--stz-gold-hell);
-  font-size: clamp(8px, 0.62vw, 12px);
+  font-size: clamp(9px, 0.7vw, 14px);
   font-weight: 800;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.2em;
 }
 
 .stz-tafel__kopf > strong {
   color: var(--stz-creme);
   font-family: var(--serif, Georgia, serif);
   font-size: clamp(20px, 1.7vw, 32px);
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
@@ -1026,20 +1515,27 @@
   min-height: 0;
   flex: 1;
   flex-direction: column;
-  gap: clamp(4px, 0.45vw, 9px);
+  gap: clamp(3px, 0.35vw, 7px);
   margin: clamp(8px, 0.8vw, 14px) 0 0;
   padding: 0;
   overflow: hidden;
   list-style: none;
+  counter-reset: none;
 }
 
-/* Neueste oben. Je weiter unten, desto ruhiger — die Reihenfolge erzeugt
-   die Tiefe, nicht neun gleich laute Kästen. */
+/* Reihenfolge der Ziehung, oben 01. Die Nummer links trägt die Zeile, der
+   letzte Gewinner bleibt hervorgehoben — auch wenn die Bühne längst weiter
+   ist. Bis neun Zeilen ohne Scrollen, siehe --eng weiter unten. */
 .stz-tafel__zeile {
+  position: relative;
   display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: clamp(8px, 0.8vw, 14px);
   min-width: 0;
-  padding: clamp(5px, 0.5vw, 10px) 0 clamp(6px, 0.55vw, 11px);
-  border-bottom: 1px solid rgba(244, 239, 228, 0.06);
+  padding: clamp(5px, 0.5vw, 9px) clamp(7px, 0.6vw, 11px) clamp(6px, 0.55vw, 10px) clamp(6px, 0.5vw, 9px);
+  border-radius: 8px;
+  border-bottom: 1px solid rgba(244, 239, 228, 0.07);
   row-gap: 1px;
 }
 
@@ -1047,31 +1543,76 @@
   border-bottom: 0;
 }
 
+.stz-tafel__nr {
+  grid-row: 1 / span 2;
+  min-width: 2.1ch;
+  color: rgba(201, 160, 80, 0.72);
+  font-family: var(--serif, Georgia, serif);
+  font-size: clamp(16px, 1.3vw, 26px);
+  font-weight: 600;
+  line-height: 1;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
 .stz-tafel__name {
+  grid-column: 2;
+  grid-row: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   color: var(--stz-gold-hell);
   font-family: var(--serif, Georgia, serif);
-  font-size: clamp(17px, 1.35vw, 27px);
-  font-weight: 500;
-  line-height: 1.12;
+  font-size: clamp(17px, 1.4vw, 28px);
+  font-weight: 600;
+  line-height: 1.1;
 }
 
 .stz-tafel__preis {
+  grid-column: 2 / span 2;
+  grid-row: 2;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: 5px;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  color: rgba(244, 239, 228, 0.76);
-  font-size: clamp(10px, 0.72vw, 14px);
-  font-weight: 500;
+  color: rgba(244, 239, 228, 0.82);
+  font-size: clamp(10px, 0.76vw, 15px);
+  font-weight: 700;
+  /* Ohne eigene Zeilenhoehe erbte die Preiszeile 1.5 - das allein kostete
+     die Tafel bei neun Gewinnern rund vier Zeilenhoehen. */
+  line-height: 1.25;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.stz-tafel__preis svg {
+  flex: none;
+  color: rgba(240, 213, 140, 0.7);
 }
 
 .stz-tafel__code {
+  grid-column: 3;
+  grid-row: 1;
+  align-self: baseline;
+  white-space: nowrap;
   color: rgba(244, 239, 228, 0.3);
   font-size: clamp(8px, 0.56vw, 11px);
   font-weight: 700;
+  line-height: 1.3;
   letter-spacing: 0.14em;
+}
+
+/* Der zuletzt gezogene Gewinner bleibt sichtbar der letzte. */
+.stz-tafel__zeile--neu {
+  border-bottom-color: transparent;
+  background: linear-gradient(100deg, rgba(201, 160, 80, 0.2), rgba(201, 160, 80, 0.04));
+  box-shadow: inset 2px 0 0 var(--stz-gold-hell);
+}
+
+.stz-tafel__zeile--neu .stz-tafel__nr {
+  color: var(--stz-gold-hell);
 }
 
 /* Die gerade aufgedeckte Zeile: einmal hell anlaufen, dann ruhig bleiben. */
@@ -1080,8 +1621,8 @@
 }
 
 @keyframes stz-tafel-frisch {
-  0% { background: rgba(201, 160, 80, 0.3); }
-  100% { background: transparent; }
+  0% { background: rgba(240, 213, 140, 0.44); }
+  100% { background: rgba(201, 160, 80, 0.12); }
 }
 
 .stz-tafel__leer {
@@ -1155,11 +1696,24 @@
 }
 
 .stz-tafel--eng .stz-tafel__zeile {
-  padding: clamp(2px, 0.35vh, 6px) 0 clamp(3px, 0.4vh, 7px);
+  padding: clamp(1px, 0.28vh, 5px) 0 clamp(2px, 0.32vh, 6px);
+}
+
+.stz-tafel--eng .stz-tafel__zeile {
+  border-radius: 6px;
+  /* Ab sieben Zeilen verteilt sich die Liste auf die volle Tafelhoehe,
+     statt oben zu kleben und darunter eine leere Flaeche zu lassen.
+     Wachsen ja, schrumpfen nein - sonst koennte wieder Text verschwinden. */
+  flex: 1 0 auto;
+}
+
+.stz-tafel--eng .stz-tafel__nr {
+  font-size: clamp(12px, min(0.95vw, 1.75vh), 20px);
 }
 
 .stz-tafel--eng .stz-tafel__name {
-  font-size: clamp(13px, min(1.02vw, 1.9vh), 21px);
+  font-size: clamp(13px, min(1.06vw, 1.95vh), 22px);
+  line-height: 1.05;
 }
 
 .stz-tafel--eng .stz-tafel__preis {
@@ -1174,6 +1728,51 @@
   margin-top: clamp(5px, 0.6vh, 12px);
   padding-top: clamp(5px, 0.6vh, 12px);
   line-height: 1.3;
+}
+
+/* Flache Fenster (1366x768, 1280x720): dort reicht die Buehnenhoehe fuer
+   neun Zeilen in normaler Groesse nicht. Gemessen fehlten 81px. Die Tafel
+   rechnet sich hier enger, damit alle neun Gewinner vollstaendig lesbar
+   bleiben - die Auslaufmaske darf keine Zeile verschlucken. */
+@media (max-height: 900px) {
+  .stz-tafel--eng {
+    padding-top: 8px;
+    padding-bottom: 6px;
+  }
+
+  .stz-tafel--eng .stz-tafel__kopf {
+    padding-bottom: 4px;
+  }
+
+  .stz-tafel--eng .stz-tafel__liste {
+    gap: 1px;
+    margin-top: 3px;
+  }
+
+  .stz-tafel--eng .stz-tafel__zeile {
+    padding: 2px 0 3px;
+  }
+
+  .stz-tafel--eng .stz-tafel__nr {
+    font-size: clamp(12px, 1.75vh, 18px);
+  }
+
+  .stz-tafel--eng .stz-tafel__name {
+    font-size: clamp(13px, 1.95vh, 19px);
+  }
+
+  .stz-tafel--eng .stz-tafel__preis {
+    font-size: clamp(9px, 1.35vh, 12px);
+  }
+
+  .stz-tafel--eng .stz-tafel__code {
+    font-size: clamp(8px, 1vh, 10px);
+  }
+
+  .stz-tafel--eng .stz-tafel__fuss {
+    margin-top: 4px;
+    padding-top: 4px;
+  }
 }
 
 /* Sollte es trotzdem einmal nicht aufgehen, läuft die Liste unten weich aus
@@ -1200,4 +1799,71 @@
 
 .stz-pot--aktiv.stz-pot--fertig .stz-pot__balken i {
   background: linear-gradient(90deg, #9c6d28, #f0d58c);
+}
+
+/* --- Zuschauerseite ------------------------------------------------------
+
+   Dort ist die Bühne eine 16:9-Kachel in der Seite, keine Fensterfläche:
+   die Kugel muss deshalb an der Kachelbreite hängen, nicht an vh.
+   ------------------------------------------------------------------------ */
+
+.stz-stage--kompakt .stz-topf {
+  width: clamp(150px, 27vw, 430px);
+}
+
+.stz-stage--kompakt .stz-stage__mitte--start .stz-topf {
+  width: clamp(120px, 18vw, 280px);
+}
+
+.stz-stage--kompakt .stz-schild__preis {
+  padding: clamp(8px, 0.8vw, 14px) clamp(12px, 1.4vw, 24px);
+}
+
+/* Die Lostopf-Kacheln hörten auf der Zuschauerseite ab etwa 1500px Fenster-
+   breite auf, lesbar zu sein: gemessen stand dort "L…" statt "LOSE" und
+   "GEWIN…" statt "GEWINNER", in allen vier Bildern und in allen vier
+   Kacheln. Grund ist kein Platzmangel, sondern ein Maßstabsfehler — die
+   Bühne ist ab 1496px Fensterbreite konstant 1440px breit, die Schrift
+   darin wuchs aber weiter mit vw. Ab da wurde die Kachel also enger statt
+   großzügiger. Darum hier dieselben Formeln mit dem Wert, den sie bei
+   1440px Bühnenbreite haben, als Obergrenze: unterhalb ändert sich nichts,
+   oberhalb sieht die Kachel aus wie bei 1496px — dort passt alles.
+   Die Showseite rechnet mit der vollen Fensterbreite und bleibt unberührt. */
+
+.stz-stage--kompakt .stz-pots {
+  gap: clamp(8px, 1vw, 15px);
+}
+
+.stz-stage--kompakt .stz-pot {
+  gap: 2px clamp(10px, 1.1vw, 16px);
+  padding: clamp(10px, 1vw, 15px) clamp(12px, 1.2vw, 18px);
+}
+
+.stz-stage--kompakt .stz-pot__motiv {
+  width: clamp(36px, 3.1vw, 46px);
+}
+
+.stz-stage--kompakt .stz-pot__name {
+  font-size: clamp(9px, 0.74vw, 11px);
+}
+
+.stz-stage--kompakt .stz-pot__zeile {
+  gap: clamp(5px, 0.5vw, 7px);
+}
+
+.stz-stage--kompakt .stz-pot__zahl {
+  font-size: clamp(21px, 2.05vw, 30px);
+}
+
+.stz-stage--kompakt .stz-pot__zahl--zwei {
+  font-size: clamp(16px, 1.5vw, 22px);
+}
+
+.stz-stage--kompakt .stz-pot__meta {
+  font-size: clamp(8px, 0.6vw, 9px);
+}
+
+.stz-stage--kompakt .stz-pot__balken {
+  height: clamp(2px, 0.22vw, 3px);
+  margin-top: clamp(5px, 0.6vw, 9px);
 }
