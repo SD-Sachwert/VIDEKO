@@ -697,6 +697,7 @@ export const PHASEN_TEXTE = {
     subline: 'Der QR funktioniert trotzdem noch. Praktisch.',
     hinweis:
       'Das Stadtfest ist vorbei. Die Hauptpreise werden am 6. Oktober 2026 am Abend live gezogen. '
+      + 'Der Termin wurde vom ursprünglich angekündigten Wochenende 26./27. September verschoben. '
       + 'Drehungen und neue Lostopf-Qualifikationen gibt es nicht mehr.',
     formularTitel: 'Wenn wir uns bei dir melden dürfen, lass uns kurz deine Daten da.',
     formularText: 'Kurz. Freiwillig. Ohne Gewinnspiel.',
