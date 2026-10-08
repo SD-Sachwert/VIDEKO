@@ -18,7 +18,15 @@
  * Alles Unternehmensbezogene kommt aus data/company.js (Single Source of
  * Truth), alles Eventbezogene aus data/stadtfest.js.
  */
-import { ACTIVE_OPERATOR, BRAND, OPERATOR_NOTICE } from './company.js'
+import { BRAND, SD_SACHWERT } from './company.js'
+
+/**
+ * Das Stadtfest 2026 (18./19.09.) lief unter der Süddeutsche Sachwert eG; VIDEKO Küchen war damals
+ * ihr Geschäftsbereich. Teilnahmebedingungen und Einwilligungen bleiben deshalb fest auf der SDS,
+ * auch nachdem die Website am 08.10.2026 auf die VIDEKO Küchen eG umgestellt wurde.
+ */
+const ACTIVE_OPERATOR = SD_SACHWERT
+const OPERATOR_NOTICE = `${BRAND.name} war zum Zeitpunkt des Stadtfests ein Geschäftsbereich bzw. eine Marke der ${SD_SACHWERT.legalName}.`
 import {
   ATLAS_RECHTSDATEN,
   GOLD_BEDINGUNGEN,

@@ -41,17 +41,17 @@ Wenn Sie diese Website benutzen, werden verschiedene personenbezogene Daten erho
 Wir weisen darauf hin, dass die Datenübertragung im Internet (z. B. bei der Kommunikation per E-Mail) Sicherheitslücken aufweisen kann. Ein lückenloser Schutz der Daten vor dem Zugriff durch Dritte ist nicht möglich.
 
 Hinweis zur verantwortlichen Stelle
-Diese Datenschutzerklärung gilt für die Website videko-kuechen.de. „VIDEKO Küchen" ist derzeit ein Geschäftsbereich bzw. eine Marke der Süddeutsche Sachwert eG. Datenschutzrechtlich verantwortliche Stelle für die Datenverarbeitung auf dieser Website ist daher:
+Diese Datenschutzerklärung gilt für die Website videko-kuechen.de. Datenschutzrechtlich verantwortliche Stelle für die Datenverarbeitung auf dieser Website ist:
 
-Süddeutsche Sachwert eG
+VIDEKO Küchen eG
 
-Grubenweg 4b
-82327 Tutzing
+Hertzstraße 4
+97076 Würzburg
 
-Telefon: +49 8158 9259945
-E-Mail: info@sd-sachwert.de
+Telefon: 0931 29764861
+E-Mail: info@videko-kuechen.de
 
-Bei Anliegen, die konkret den Geschäftsbereich VIDEKO Küchen betreffen, erreichen Sie uns außerdem unter info@videko-kuechen.de sowie telefonisch unter 0160 5545818.
+Vertreten durch die Vorstände Vitali Freisinger, Dennis Himmel und Heiko Himmel.
 
 Verantwortliche Stelle ist die natürliche oder juristische Person, die allein oder gemeinsam mit anderen über die Zwecke und Mittel der Verarbeitung von personenbezogenen Daten (z. B. Namen, E-Mail-Adressen o. Ä.) entscheidet.
 
@@ -108,7 +108,7 @@ Anfrage per E-Mail
 Auf den Produktseiten unseres Merch-Bereichs können Sie über die Schaltfläche „Unverbindliche Anfrage per E-Mail senden“ eine vorbereitete E-Mail an uns öffnen. Diese Anfrage ist unverbindlich und löst keine Bestellung aus. Die E-Mail wird über Ihr eigenes E-Mail-Programm versendet; wir erhalten dabei die von Ihnen mitgeteilten Angaben (z. B. Produkt, Farbe, Größe, Logoausführung, Anzahl, Ihre E-Mail-Adresse sowie eine etwaige Nachricht). Wir verarbeiten diese Angaben ausschließlich zur Bearbeitung Ihrer Anfrage und für ein anschließendes individuelles Angebot. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen) bzw. Art. 6 Abs. 1 lit. f DSGVO. Ihre Angaben verbleiben bei uns, bis der Zweck entfällt und keine gesetzlichen Aufbewahrungsfristen entgegenstehen.
 
 Produktvormerkung „Benachrichtige mich" (Verfügbarkeits-Benachrichtigung)
-Bei noch nicht verfügbaren Produkten können Sie sich über die Schaltfläche „Benachrichtige mich" für eine einmalige Verfügbarkeits-Benachrichtigung vormerken. Dazu geben Sie Ihre E-Mail-Adresse und optional eine gewünschte Farbe/Größe an und bestätigen eine gesonderte, nicht vorausgewählte Einwilligung. Die Vormerkung erfolgt im Double-Opt-in-Verfahren: Nach dem Absenden erhalten Sie zunächst eine E-Mail mit einem Bestätigungslink. Erst wenn Sie diesen Link anklicken (Gültigkeit 48 Stunden), wird die Vormerkung aktiv; ohne Ihre Bestätigung speichern wir nichts dauerhaft. Wir dokumentieren dabei den Zeitpunkt Ihrer Einwilligung sowie das betreffende Produkt. Rechtsgrundlage ist Ihre Einwilligung nach Art. 6 Abs. 1 lit. a DSGVO. Wir verwenden Ihre E-Mail-Adresse ausschließlich für diese eine Benachrichtigung; es erfolgt kein Newsletter und keine sonstige Werbung. Ihre Adresse wird nach dem Versand der Benachrichtigung – oder unmittelbar nach einem Widerruf – gelöscht. Sie können die Vormerkung jederzeit formlos widerrufen (z. B. per E-Mail an info@videko-kuechen.de). Verantwortliche Stelle ist die oben genannte Süddeutsche Sachwert eG. Für den technischen Versand der Bestätigungs- und Benachrichtigungs-E-Mails setzen wir einen E-Mail-(SMTP-)Dienstleister ein; zur Dokumentation der Einwilligung kann Supabase (siehe unten) genutzt werden.
+Bei noch nicht verfügbaren Produkten können Sie sich über die Schaltfläche „Benachrichtige mich" für eine einmalige Verfügbarkeits-Benachrichtigung vormerken. Dazu geben Sie Ihre E-Mail-Adresse und optional eine gewünschte Farbe/Größe an und bestätigen eine gesonderte, nicht vorausgewählte Einwilligung. Die Vormerkung erfolgt im Double-Opt-in-Verfahren: Nach dem Absenden erhalten Sie zunächst eine E-Mail mit einem Bestätigungslink. Erst wenn Sie diesen Link anklicken (Gültigkeit 48 Stunden), wird die Vormerkung aktiv; ohne Ihre Bestätigung speichern wir nichts dauerhaft. Wir dokumentieren dabei den Zeitpunkt Ihrer Einwilligung sowie das betreffende Produkt. Rechtsgrundlage ist Ihre Einwilligung nach Art. 6 Abs. 1 lit. a DSGVO. Wir verwenden Ihre E-Mail-Adresse ausschließlich für diese eine Benachrichtigung; es erfolgt kein Newsletter und keine sonstige Werbung. Ihre Adresse wird nach dem Versand der Benachrichtigung – oder unmittelbar nach einem Widerruf – gelöscht. Sie können die Vormerkung jederzeit formlos widerrufen (z. B. per E-Mail an info@videko-kuechen.de). Verantwortliche Stelle ist die oben genannte VIDEKO Küchen eG. Für den technischen Versand der Bestätigungs- und Benachrichtigungs-E-Mails setzen wir einen E-Mail-(SMTP-)Dienstleister ein; zur Dokumentation der Einwilligung kann Supabase (siehe unten) genutzt werden.
 
 Interesse-Schaltfläche („Herz") bei Coming-soon-Produkten
 Bei noch nicht verfügbaren Produkten können Sie über eine Herz-Schaltfläche anonym Interesse an einem Produkt signalisieren. Dabei werden ausschließlich das betreffende Produkt bzw. dessen Kennung, eine etwaige Variante und das Datum an uns übermittelt, damit wir die Nachfrage einschätzen können. Es werden bewusst KEINE personenbezogenen Daten verarbeitet – insbesondere keine IP-Adresse, kein Browser-/Geräte-Kennzeichen (User-Agent/Fingerprint), kein Name, keine E-Mail-Adresse und keine Standortdaten. Ein Rückschluss auf Ihre Person ist dadurch nicht möglich. Die von Ihnen lokal gesetzte Markierung wird zusätzlich nur in Ihrem Browser gespeichert (localStorage), damit dieselbe Markierung nicht mehrfach ausgelöst wird. Da hierbei keine personenbezogenen Daten verarbeitet werden, ist eine datenschutzrechtliche Rechtsgrundlage insoweit nicht erforderlich; die rein lokale Speicherung erfolgt als technisch notwendige Funktion (Art. 6 Abs. 1 lit. f DSGVO, § 25 Abs. 2 TDDDG).

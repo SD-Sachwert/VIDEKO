@@ -1,27 +1,20 @@
 /**
  * Zentrale Unternehmens-/Betreiberkonfiguration – Single Source of Truth.
  *
- * RECHTLICHER HINTERGRUND (Stand: 2026-07):
- * Die »VIDEKO Küchen eG« ist noch NICHT im Genossenschaftsregister eingetragen
- * und darf daher NICHT als bereits bestehende Betreiberin, Herstellerin,
- * Vertragspartnerin, Zahlungsempfängerin oder Rechnungsausstellerin dargestellt
- * werden. Bis zu ihrer Eintragung ist die bereits eingetragene
- *   »Süddeutsche Sachwert eG«
- * die rechtliche Betreiberin dieses Internetauftritts (videko-kuechen.de),
- * datenschutzrechtlich Verantwortliche, Absenderin von Angeboten, mögliche
- * Verkäuferin, Zahlungsempfängerin, Rechnungsausstellerin und Vertragspartnerin
- * der Kunden. »VIDEKO Küchen« ist derzeit ein Geschäftsbereich bzw. eine Marke
- * dieser Genossenschaft.
+ * RECHTLICHER HINTERGRUND (Stand: 2026-10-08):
+ * Die »VIDEKO Küchen eG« ist seit 02.09.2026 im Genossenschaftsregister des
+ * Amtsgerichts Würzburg eingetragen (GnR 298, Sitz Würzburg) und hat ihr Gewerbe
+ * zum 01.10.2026 angemeldet (Betriebsstätte Hertzstraße 4, 97076 Würzburg).
+ * Seit 08.10.2026 ist sie die Betreiberin dieses Internetauftritts
+ * (`ACTIVE_OPERATOR = VIDEKO_EG`): Impressum, Datenschutz-Verantwortliche,
+ * GPSR-Herstellerangabe und strukturierte Daten ziehen von hier.
  *
- * UMSTELLUNG NACH EINTRAGUNG:
- * Sobald die VIDEKO Küchen eG mit Registergericht, Registernummer, Vorständen,
- * Anschrift, Steuerdaten und tatsächlichem Stichtag eingetragen ist, wird die
- * Zielgesellschaft `VIDEKO_EG` vollständig befüllt und `ACTIVE_OPERATOR` von
- * `SD_SACHWERT` auf `VIDEKO_EG` umgestellt. Damit ziehen an EINER Stelle nach:
- * Impressum, Datenschutz-Verantwortliche, GPSR-Herstellerangabe, E-Mail-
- * Absender, Angebote, Rechnungen, Zahlungsempfänger, Widerruf, AGB und
- * Rücksende-/Betreiberadresse. Bis dahin bleibt `VIDEKO_EG` bewusst
- * unvollständig (`null`) und darf NICHT aktiviert werden.
+ * Bis 07.10.2026 war die »Süddeutsche Sachwert eG« Betreiberin; VIDEKO Küchen
+ * war ein Geschäftsbereich der SDS. Das Würzburger Stadtfest 2026 (18./19.09.)
+ * lief noch unter der SDS – dessen Teilnahme- und Einwilligungstexte bleiben
+ * deshalb fest auf `SD_SACHWERT` (siehe stadtfest-recht.js).
+ *
+ * Offen: Umsatzsteuer-Identifikationsnummer (noch keine erteilt, `vatId: null`).
  */
 
 /**
@@ -42,8 +35,8 @@ export const BRAND = {
    *
    * ABGRENZUNG – dieser Wert wird bewusst NICHT auf der Website ausgegeben:
    * Im Frontend gilt weiterhin `BRAND.name` (Marke, ohne Zusatz), im Impressum und
-   * auf Vertrags-/Rechnungsebene weiterhin `ACTIVE_OPERATOR` (Süddeutsche Sachwert
-   * eG). Der Wert dient als Sollwert für den NAP-Abgleich in Verzeichnissen.
+   * auf Vertrags-/Rechnungsebene `ACTIVE_OPERATOR` (seit 08.10.2026 die
+   * VIDEKO Küchen eG). Der Wert dient als Sollwert für den NAP-Abgleich in Verzeichnissen.
    * Siehe docs/LOCAL-SEO-NAP-AUDIT-2026-08-24.md, Abschnitt 1.1a.
    */
   listingName: 'VIDEKO Küchen eG',
@@ -118,39 +111,47 @@ export const SD_SACHWERT = {
 }
 
 /**
- * Zielgesellschaft nach Registereintragung – bewusst UNVOLLSTÄNDIG.
- * Erst befüllen UND aktivieren, wenn der Registerauszug tatsächlich vorliegt.
+ * VIDEKO Küchen eG – Betreiberin seit 08.10.2026.
+ * Quellen: Registerauszug GnR 298 AG Würzburg (Abruf 02.09.2026), Satzung vom
+ * 03.03.2026, AGO § 42 (Prüfungsverband), Gewerbeanmeldung vom 01.10.2026.
+ * Vertretung laut Register: alle drei Vorstände einzelvertretungsberechtigt.
  * Nichts erfinden – offene Felder bleiben `null`.
  */
 export const VIDEKO_EG = {
   legalName: 'VIDEKO Küchen eG',
   legalForm: 'eingetragene Genossenschaft (eG)',
-  street: null,
-  postalCode: null,
-  city: null,
+  street: 'Hertzstraße 4',
+  postalCode: '97076',
+  city: 'Würzburg',
   country: 'Deutschland',
-  board: null,
-  registerCourt: null,
+  board: ['Vitali Freisinger', 'Dennis Himmel', 'Heiko Himmel'],
+  boardNote: 'jeweils einzelvertretungsberechtigt',
+  registerCourt: 'Amtsgericht Würzburg',
   registerType: 'Genossenschaftsregister',
-  registerNumber: null,
+  registerNumber: 'GnR 298',
+  // noch keine USt-IdNr. erteilt (Stand 08.10.2026) – Impressum lässt den Abschnitt dann weg
   vatId: null,
-  auditAssociation: null,
-  operatorEmail: null,
-  operatorPhone: null,
-  registered: false,
+  auditAssociation: 'DIVK Deutscher Interessenverband der Kleingenossenschaften e.V., Hildesheim',
+  operatorEmail: 'info@videko-kuechen.de',
+  // Festnetz fürs Impressum (Vorgabe Heiko 08.10.2026); Studio-Handy bleibt BRAND.phone
+  operatorPhone: '0931 29764861',
+  registered: true,
 }
 
 /**
  * >>> ZENTRALER SCHALTER <<<
- * Solange die VIDEKO Küchen eG nicht eingetragen ist, bleibt die
- * Süddeutsche Sachwert eG die rechtliche Betreiberin. Nach der Eintragung hier
- * (und erst dann) auf `VIDEKO_EG` umstellen.
+ * Rechtliche Betreiberin der Website. Seit 08.10.2026 die VIDEKO Küchen eG
+ * (eingetragen 02.09.2026, GnR 298 AG Würzburg).
  */
-export const ACTIVE_OPERATOR = SD_SACHWERT
+export const ACTIVE_OPERATOR = VIDEKO_EG
+
+/** Betreibt die VIDEKO Küchen eG selbst (und nicht mehr die SDS als Geschäftsbereich)? */
+export const EIGENE_GENOSSENSCHAFT = ACTIVE_OPERATOR === VIDEKO_EG
 
 /** Einheitlicher Betreiberhinweis für Footer / Impressum / Datenschutz. */
-export const OPERATOR_NOTICE =
-  `${BRAND.name} ist derzeit ein Geschäftsbereich bzw. eine Marke der ${ACTIVE_OPERATOR.legalName}.`
+export const OPERATOR_NOTICE = EIGENE_GENOSSENSCHAFT
+  ? `${BRAND.name} ist eine Marke der ${ACTIVE_OPERATOR.legalName}, ${ACTIVE_OPERATOR.city}.`
+  : `${BRAND.name} ist derzeit ein Geschäftsbereich bzw. eine Marke der ${ACTIVE_OPERATOR.legalName}.`
 
 /** Kurzform „handelnd unter der Marke" – für Angebots-/Rechnungsabsender. */
 export const OPERATOR_TRADING_AS =
@@ -164,7 +165,7 @@ export const OPERATOR_TRADING_AS =
  */
 export const MANUFACTURER = {
   brandLine: BRAND.name,
-  roleLine: `ein Geschäftsbereich der ${ACTIVE_OPERATOR.legalName}`,
+  roleLine: EIGENE_GENOSSENSCHAFT ? `eine Marke der ${ACTIVE_OPERATOR.legalName}` : `ein Geschäftsbereich der ${ACTIVE_OPERATOR.legalName}`,
   legalName: ACTIVE_OPERATOR.legalName,
   street: ACTIVE_OPERATOR.street,
   postalCode: ACTIVE_OPERATOR.postalCode,

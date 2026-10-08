@@ -4,11 +4,10 @@ import { ACTIVE_OPERATOR, BRAND, OPERATOR_NOTICE } from '../data/company.js'
 /**
  * Impressum von videko-kuechen.de.
  *
- * Betreiberin dieses Internetauftritts ist die aktuell eingetragene
- * Genossenschaft (ACTIVE_OPERATOR in company.js) – bis zur Eintragung der
- * VIDEKO Küchen eG die »Süddeutsche Sachwert eG«. „VIDEKO Küchen" ist derzeit
- * ein Geschäftsbereich bzw. eine Marke dieser Genossenschaft. Alle Angaben
+ * Betreiberin dieses Internetauftritts ist ACTIVE_OPERATOR aus company.js –
+ * seit 08.10.2026 die VIDEKO Küchen eG (GnR 298, AG Würzburg). Alle Angaben
  * ziehen zentral aus company.js; keine Platzhalter, keine „wird ergänzt".
+ * Fehlt eine USt-IdNr. (noch nicht erteilt), entfällt der Abschnitt.
  */
 export default function Impressum() {
   const op = ACTIVE_OPERATOR
@@ -34,7 +33,7 @@ export default function Impressum() {
             <p>{OPERATOR_NOTICE}</p>
 
             <h2>Vertreten durch die Vorstände</h2>
-            <p>{op.board.join(', ')}</p>
+            <p>{op.board.join(', ')}{op.boardNote ? ` (${op.boardNote})` : ''}</p>
 
             <h2>Registereintrag</h2>
             <p>
@@ -42,32 +41,29 @@ export default function Impressum() {
               Registergericht: {op.registerCourt}
             </p>
 
-            <h2>Umsatzsteuer-Identifikationsnummer</h2>
-            <p>
-              Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:{' '}
-              {op.vatId}
-            </p>
+            {op.vatId && (
+              <>
+                <h2>Umsatzsteuer-Identifikationsnummer</h2>
+                <p>
+                  Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:{' '}
+                  {op.vatId}
+                </p>
+              </>
+            )}
 
             <h2>Genossenschaftlicher Prüfungsverband</h2>
             <p>{op.auditAssociation}</p>
 
-            <h2>Kontakt der Betreiberin</h2>
+            <h2>Kontakt</h2>
             <p>
               Telefon: {op.operatorPhone}<br />
               E-Mail: <a href={`mailto:${op.operatorEmail}`}>{op.operatorEmail}</a>
             </p>
 
-            <h2>Kontakt für {BRAND.name}</h2>
-            <p>
-              {BRAND.name} · {BRAND.studio.street}, {BRAND.studio.postalCode} {BRAND.studio.city}<br />
-              Telefon: {BRAND.phone}<br />
-              E-Mail: <a href={`mailto:${BRAND.contactEmail}`}>{BRAND.contactEmail}</a>
-            </p>
-
             <h2>Inhaltlich verantwortlich gemäß § 18 Abs. 2 MStV</h2>
             <p>
               {inhaltlichVerantwortlich}<br />
-              Anschrift wie oben ({op.legalName}).
+              {op.street}, {op.postalCode} {op.city}
             </p>
 
             <h2>Hinweis zu Bildern (KI-Kennzeichnung)</h2>
