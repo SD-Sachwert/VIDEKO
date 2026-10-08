@@ -13,8 +13,11 @@ import { ACTIVE_OPERATOR, BRAND } from '../data/company.js'
  *   - Haftungsklausel vollstaendig (§ 309 Nr. 7 BGB),
  *   - Hinweis auf die abgeschaltete EU-OS-Plattform entfernt,
  *   - veralteter Verweis auf das Abzahlungsgesetz entfernt,
+ *   - Abholung / Lieferung ohne Montage und Elektrogeraete ergaenzt,
  *   - Teil C fuer den Merch-Shop (Anfragemodell) ergaenzt.
- * Fachanwaltliche Pruefung steht noch aus – siehe Hinweis am Seitenende.
+ *
+ * Vorgaben Heiko 08.10.2026: Zahlung 50/40/10 (Abweichung nur im Kaufvertrag),
+ * Stornopauschalen 20/30/40 % bleiben, Ruecksendekosten (Shop) traegt der Kunde.
  */
 const op = ACTIVE_OPERATOR
 const ANSCHRIFT = `${op.legalName}, ${op.street}, ${op.postalCode} ${op.city}`
@@ -37,11 +40,11 @@ export default function AGB() {
 
           <h3>§ 1 Geltungsbereich und Vertragspartner</h3>
           <p>
-            Diese Allgemeinen Geschäftsbedingungen gelten für alle Verträge über die Lieferung und
-            Montage von Küchen, Küchenteilen, Elektrogeräten und Einrichtungsgegenständen sowie für
-            Bestellungen aus dem {BRAND.name} Merch-Shop. Vertragspartner ist die {ANSCHRIFT},
-            eingetragen im {op.registerType} des {op.registerCourt} unter {op.registerNumber}
-            (im Folgenden „Verkäufer“).
+            Diese Allgemeinen Geschäftsbedingungen gelten für alle Verträge über die Lieferung, die
+            Abholung und die Montage von Küchen, Küchenteilen, Elektrogeräten und
+            Einrichtungsgegenständen sowie für Bestellungen aus dem {BRAND.name} Merch-Shop.
+            Vertragspartner ist die {ANSCHRIFT}, eingetragen im {op.registerType} des{' '}
+            {op.registerCourt} unter {op.registerNumber} (im Folgenden „Verkäufer“).
           </p>
           <p>
             Verbraucher ist jede natürliche Person, die ein Rechtsgeschäft zu Zwecken abschließt,
@@ -55,8 +58,9 @@ export default function AGB() {
           <p>
             Darstellungen auf der Website, in Prospekten und im Studio sind unverbindlich. Ein
             Vertrag kommt zustande, wenn der Käufer den Kaufvertrag bzw. das Angebot des Verkäufers
-            unterschreibt oder in Textform annimmt. Der Käufer erhält den Vertragstext mit allen
-            Anlagen in Textform; der Verkäufer speichert ihn.
+            unterschreibt oder in Textform annimmt – im Studio, bei einem Termin vor Ort oder nach
+            Zusendung der Vertragsunterlagen. Der Käufer erhält den Vertragstext mit allen Anlagen
+            in Textform; der Verkäufer speichert ihn.
           </p>
 
           <h2>Teil B — Küchen und Einrichtung</h2>
@@ -67,7 +71,8 @@ export default function AGB() {
             Rohbau statt, werden 1,5 cm Putzstärke zuzüglich gegebenenfalls der Fliesenstärke
             eingerechnet. Der Käufer sorgt dafür, dass diese Werte nicht überschritten werden, und
             teilt Abweichungen unverzüglich mit. Ein erneutes Aufmaß wegen baulicher Veränderungen
-            nach dem Aufmaß wird nach Aufwand berechnet.
+            nach dem Aufmaß wird nach Aufwand berechnet. Nimmt der Käufer das Aufmaß selbst vor
+            oder liefert er die Maße, trägt er das Risiko ihrer Richtigkeit.
           </p>
           <p>
             Serienmäßig hergestellte Möbel werden nach Muster oder Abbildung verkauft. Ein Anspruch
@@ -84,15 +89,15 @@ export default function AGB() {
             zurücktreten. Vom Verkäufer nicht zu vertretende Störungen, etwa bei Vorlieferanten
             oder durch höhere Gewalt, verlängern die Lieferfrist um die Dauer der Störung; der
             Verkäufer informiert den Käufer darüber unverzüglich. Ansprüche auf Schadensersatz
-            richten sich nach § 10.
+            richten sich nach § 12.
           </p>
 
           <h3>§ 5 Montage</h3>
           <p>
-            Der Käufer stellt sicher, dass die Räume zum vereinbarten Termin montagereif sind.
-            Strom-, Wasser- und Abluftanschlüsse sind bauseits bis zum Übergabepunkt
-            herzustellen. Hat der Verkäufer Bedenken gegen die Eignung von Wänden oder Decken zur
-            Befestigung, teilt er dies dem Käufer unverzüglich mit.
+            Ist die Montage vereinbart, stellt der Käufer sicher, dass die Räume zum vereinbarten
+            Termin montagereif sind. Strom-, Wasser- und Abluftanschlüsse sind bauseits bis zum
+            Übergabepunkt herzustellen. Hat der Verkäufer Bedenken gegen die Eignung von Wänden
+            oder Decken zur Befestigung, teilt er dies dem Käufer unverzüglich mit.
           </p>
           <p>
             Elektro- und Wasseranschlüsse, die über den Anschluss der gelieferten Geräte an
@@ -108,31 +113,48 @@ export default function AGB() {
             Für deren Funktion haftet der Verkäufer nicht.
           </p>
 
-          <h3>§ 6 Zahlung</h3>
+          <h3>§ 6 Lieferung ohne Montage und Abholung</h3>
           <p>
-            Es gelten die im Kaufvertrag vereinbarten Zahlungsbedingungen. Ist dort nichts anderes
-            vereinbart, ist der Kaufpreis wie folgt fällig:
+            Ist keine Montage vereinbart, schuldet der Verkäufer nur die Lieferung bzw. die
+            Bereitstellung der Ware. Bei Abholung stellt der Verkäufer die Ware zum vereinbarten
+            Termin in seinem Lager bzw. Studio bereit; der Käufer sorgt für ein geeignetes
+            Fahrzeug und ausreichende Ladehilfe. Bei Lieferung ohne Montage wird die Ware bis
+            hinter die erste verschließbare Tür an der Lieferanschrift gebracht, sofern nichts
+            anderes vereinbart ist.
           </p>
-          <ul>
-            <li>30 % bei Auftragserteilung,</li>
-            <li>60 % vor Auslieferung bzw. Beginn der Montage,</li>
-            <li>10 % nach Fertigstellung und Übergabe der montierten Küche.</li>
-          </ul>
           <p>
-            Rechnungen sind innerhalb von 10 Tagen nach Rechnungsdatum ohne Abzug zu zahlen. Der
-            Käufer kann nur mit unbestrittenen oder rechtskräftig festgestellten Forderungen
-            aufrechnen; seine Rechte wegen Mängeln bleiben unberührt.
+            Der Käufer prüft die Ware bei der Übergabe auf Vollständigkeit und sichtbare
+            Transportschäden und vermerkt Beanstandungen möglichst im Lieferschein; seine
+            gesetzlichen Mängelrechte bleiben davon unberührt. Für Schäden und Funktionsmängel,
+            die durch unsachgemäßen Aufbau oder Anschluss durch den Käufer oder von ihm
+            beauftragte Dritte entstehen, haftet der Verkäufer nicht. Elektro-, Gas- und
+            Wasseranschlüsse dürfen nur von zugelassenen Fachbetrieben ausgeführt werden.
           </p>
 
-          <h3>§ 7 Eigentumsvorbehalt und Gefahrübergang</h3>
+          <h3>§ 7 Zahlung</h3>
+          <p>Sofern im Kaufvertrag nichts anderes vereinbart ist, ist der Kaufpreis wie folgt fällig:</p>
+          <ul>
+            <li>50 % bei Auftragserteilung,</li>
+            <li>40 % vor Auslieferung, Abholung bzw. Beginn der Montage,</li>
+            <li>10 % nach Fertigstellung und Übergabe der montierten Küche; ohne Montage mit der Auslieferung bzw. Abholung.</li>
+          </ul>
+          <p>
+            Abweichende Zahlungsbedingungen werden im Kaufvertrag festgehalten. Rechnungen sind
+            innerhalb von 10 Tagen nach Rechnungsdatum ohne Abzug zu zahlen. Der Käufer kann nur
+            mit unbestrittenen oder rechtskräftig festgestellten Forderungen aufrechnen; seine
+            Rechte wegen Mängeln bleiben unberührt.
+          </p>
+
+          <h3>§ 8 Eigentumsvorbehalt und Gefahrübergang</h3>
           <p>
             Die Ware bleibt bis zur vollständigen Zahlung Eigentum des Verkäufers. Der Käufer
             behandelt sie pfleglich und teilt Pfändungen oder andere Eingriffe Dritter
             unverzüglich mit. Die Gefahr geht mit der Übergabe der Ware auf den Käufer über, bei
-            vereinbarter Montage mit deren Fertigstellung.
+            vereinbarter Montage mit deren Fertigstellung, bei Abholung mit der Übergabe im Lager
+            bzw. Studio.
           </p>
 
-          <h3>§ 8 Rücktritt des Käufers ohne Grund (Stornierung)</h3>
+          <h3>§ 9 Rücktritt des Käufers ohne Grund (Stornierung)</h3>
           <p>
             Tritt der Käufer ohne Rechtsgrund vom Vertrag zurück oder verweigert er die Abnahme,
             kann der Verkäufer pauschalen Schadensersatz verlangen:
@@ -148,7 +170,7 @@ export default function AGB() {
             Schaden geltend machen. Ein gesetzliches Widerrufsrecht bleibt unberührt.
           </p>
 
-          <h3>§ 9 Mängelrechte</h3>
+          <h3>§ 10 Mängelrechte</h3>
           <p>
             Es gelten die gesetzlichen Mängelrechte. Naturstein, Keramik und Glas sind
             Naturprodukte; Farb- und Strukturunterschiede, Adern und feine Poren sind
@@ -156,7 +178,23 @@ export default function AGB() {
             beeinträchtigen.
           </p>
 
-          <h3>§ 10 Haftung</h3>
+          <h3>§ 11 Elektrogeräte</h3>
+          <p>
+            Für mitverkaufte Elektrogeräte gelten die gesetzlichen Mängelrechte gegenüber dem
+            Verkäufer. Garantien der Gerätehersteller bestehen zusätzlich nach deren
+            Bedingungen und lassen die gesetzlichen Rechte unberührt. Angaben zur
+            Energieeffizienz und die Produktdatenblätter stellt der Verkäufer mit dem Angebot
+            bzw. im Studio zur Verfügung.
+          </p>
+          <p>
+            Altgeräte dürfen nicht über den Hausmüll entsorgt werden; sie gehören zu einer
+            Sammelstelle für Elektroaltgeräte, etwa dem kommunalen Wertstoffhof. Personenbezogene
+            Daten auf Altgeräten löscht der Käufer vor der Abgabe selbst. Die Mitnahme von
+            Altgeräten durch den Verkäufer erfolgt, soweit sie im Kaufvertrag vereinbart oder
+            gesetzlich vorgeschrieben ist.
+          </p>
+
+          <h3>§ 12 Haftung</h3>
           <p>
             Der Verkäufer haftet unbeschränkt bei Vorsatz und grober Fahrlässigkeit, bei der
             Verletzung von Leben, Körper oder Gesundheit, nach dem Produkthaftungsgesetz und im
@@ -170,7 +208,7 @@ export default function AGB() {
 
           <h2>Teil C — Merch-Shop</h2>
 
-          <h3>§ 11 Anfrage, Angebot und Vertragsschluss im Merch-Shop</h3>
+          <h3>§ 13 Anfrage, Angebot und Vertragsschluss im Merch-Shop</h3>
           <p>
             Die Anfrage über den Merch-Shop ist unverbindlich. Der Verkäufer schickt daraufhin ein
             individuelles Angebot mit Preis, Versandkosten und Zahlungsweg per E-Mail. Der Vertrag
@@ -186,18 +224,24 @@ export default function AGB() {
 
           <h2>Teil D — Widerruf und Schlussbestimmungen</h2>
 
-          <h3>§ 12 Widerrufsrecht</h3>
+          <h3>§ 14 Widerrufsrecht</h3>
           <p>
             Verbrauchern steht bei Verträgen, die im Fernabsatz oder außerhalb der Geschäftsräume
-            des Verkäufers geschlossen werden, ein gesetzliches Widerrufsrecht nach Maßgabe der{' '}
-            <Link to="/rueckgabe-widerruf">Widerrufsbelehrung</Link> zu. Es besteht nicht bei
-            Waren, die nach Kundenspezifikation angefertigt oder eindeutig auf die persönlichen
-            Bedürfnisse des Verbrauchers zugeschnitten sind (§ 312g Abs. 2 Nr. 1 BGB), etwa
-            personalisierte Textilien. Für Küchenverträge, die außerhalb des Studios geschlossen
-            werden, erhält der Käufer die Widerrufsbelehrung mit den Vertragsunterlagen.
+            des Verkäufers geschlossen werden, ein gesetzliches Widerrufsrecht nach Maßgabe der
+            jeweiligen Widerrufsbelehrung zu. Für Bestellungen aus dem Merch-Shop gilt die{' '}
+            <Link to="/rueckgabe-widerruf">Widerrufsbelehrung auf dieser Website</Link>; für
+            Küchenverträge, die nicht im Studio unterschrieben werden, erhält der Käufer die
+            Widerrufsbelehrung mit den Vertragsunterlagen. Für Verträge, die der Käufer im Studio
+            abschließt, besteht kein gesetzliches Widerrufsrecht.
+          </p>
+          <p>
+            Das Widerrufsrecht besteht nicht bei Waren, die nicht vorgefertigt sind und für deren
+            Herstellung eine individuelle Auswahl oder Bestimmung durch den Verbraucher maßgeblich
+            ist oder die eindeutig auf die persönlichen Bedürfnisse des Verbrauchers zugeschnitten
+            sind (§ 312g Abs. 2 Nr. 1 BGB).
           </p>
 
-          <h3>§ 13 Recht, Gerichtsstand, Streitbeilegung</h3>
+          <h3>§ 15 Recht, Gerichtsstand, Streitbeilegung</h3>
           <p>
             Es gilt das Recht der Bundesrepublik Deutschland. Gegenüber Verbrauchern gilt diese
             Rechtswahl nur, soweit ihnen dadurch nicht der Schutz zwingender Bestimmungen des
@@ -210,7 +254,7 @@ export default function AGB() {
             vor einer Verbraucherschlichtungsstelle teilzunehmen.
           </p>
 
-          <h3>§ 14 Datenschutz und Schlussbestimmungen</h3>
+          <h3>§ 16 Datenschutz und Schlussbestimmungen</h3>
           <p>
             Informationen zur Verarbeitung personenbezogener Daten stehen in der{' '}
             <Link to="/datenschutz">Datenschutzerklärung</Link>. Sollten einzelne Bestimmungen

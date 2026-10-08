@@ -103,10 +103,12 @@ export default function RueckgabeWiderruf() {
           <h2>Küchen und Einrichtung</h2>
           <p>
             Küchenverträge, die Sie in unserem Studio abschließen, sind keine Fernabsatz- oder
-            Außergeschäftsraumverträge; dafür besteht kein gesetzliches Widerrufsrecht. Schließen
-            Sie einen Küchenvertrag außerhalb unserer Geschäftsräume, zum Beispiel bei Ihnen zu
-            Hause, erhalten Sie die dafür geltende Widerrufsbelehrung zusammen mit den
-            Vertragsunterlagen.
+            Außergeschäftsraumverträge; dafür besteht kein gesetzliches Widerrufsrecht.
+            Unterschreiben Sie einen Küchenvertrag nicht im Studio – etwa bei einem Beratungstermin
+            bei Ihnen zu Hause oder nach Zusendung der Vertragsunterlagen –, erhalten Sie die dafür
+            geltende Widerrufsbelehrung mit dem Muster-Widerrufsformular zusammen mit den
+            Vertragsunterlagen. Das gilt auch für Küchen, die Sie abholen oder sich ohne Montage
+            liefern lassen.
           </p>
 
           <h2>Muster-Widerrufsformular</h2>
