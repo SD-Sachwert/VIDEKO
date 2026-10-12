@@ -470,6 +470,22 @@ export const merchCanonicalSlug = (slug) => kanonischeSlugs.get(slug) || slug
 /** true, wenn die Seite selbst kanonisch ist und damit in die Sitemap gehoert. */
 export const merchIstKanonisch = (slug) => !kanonischeSlugs.has(slug)
 
+/**
+ * Nur tatsaechlich verfuegbare, kanonische Produktseiten in die Sitemap.
+ *
+ * Die kommenden Produkte bleiben erreichbar und verlinkt. Sobald wenigstens
+ * eine Variante einer Produktgruppe live ist, erscheint deren fuehrende URL
+ * automatisch in der Sitemap. Das vermeidet dutzende Coming-Soon-Eintraege,
+ * ohne ihre Canonicals oder die sichtbare Shop-Vorschau zu aendern.
+ */
+const KANONISCHE_LIVE_SLUGS = new Set(
+  MERCH_PRODUCTS
+    .filter((p) => p.status === 'live')
+    .map((p) => merchCanonicalSlug(p.slug)),
+)
+export const merchInSitemap = (slug) =>
+  merchIstKanonisch(slug) && KANONISCHE_LIVE_SLUGS.has(slug)
+
 /** Accessoires als Einzelprodukte (keine sammelbare Familie). */
 export const ACCESSORY_PRODUCTS = MERCH_PRODUCTS.filter((p) => p.category === 'Accessoires')
 /** Workwear für die eigene Teaser-Sektion. */
