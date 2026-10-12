@@ -26,7 +26,7 @@ if (!fs.existsSync(path.join(DIST, 'index.html'))) {
 const { daten } = await ladeModule()
 const {
   STATIC_ROUTES, journalArticles, MERCH_PRODUCTS, MERCH_FAMILIES,
-  staticRouteHead, journalArticleHead, merchDetailHead, merchCanonicalSlug, absUrl,
+  staticRouteHead, journalArticleHead, merchDetailHead, merchCanonicalSlug, merchInSitemap, absUrl,
 } = daten
 
 /* ------------------------------------------------------------------ */
@@ -68,10 +68,10 @@ for (const seite of merchSeiten) {
   gesehen.add(seite.slug)
   const kanonisch = merchCanonicalSlug(seite.slug)
   const head = merchDetailHead({ ...seite, canonicalSlug: kanonisch })
-  // Farbvarianten zeigen per Canonical auf die fuehrende Seite ihrer Gruppe
-  // und gehoeren deshalb nicht in die Sitemap.
+  // Farbvarianten und reine Coming-Soon-Gruppen gehoeren nicht in die
+  // Sitemap. Ihre Seiten bleiben weiterhin erreichbar und crawlbar.
   routen.push({
-    pfad: `/merch/${seite.slug}`, head, inSitemap: kanonisch === seite.slug, art: 'merch',
+    pfad: `/merch/${seite.slug}`, head, inSitemap: merchInSitemap(seite.slug), art: 'merch',
   })
 }
 

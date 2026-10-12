@@ -309,6 +309,7 @@ const ALLE_STATISCHEN_ROUTEN = [
   },
   {
     path: '/agb',
+    lastModified: '2026-10-08',
     title: 'Allgemeine Geschäftsbedingungen | VIDEKO Küchen',
     description: 'Die Allgemeinen Geschäftsbedingungen für Bestellungen über videko-kuechen.de.',
     crumb: 'AGB',

@@ -369,7 +369,7 @@ if (!WURZEL_RE.test(vorlage)) {
 const { daten, server } = await ladeModule()
 const {
   STATIC_ROUTES, journalArticles, MERCH_PRODUCTS, MERCH_FAMILIES,
-  staticRouteHead, journalArticleHead, merchDetailHead, merchCanonicalSlug,
+  staticRouteHead, journalArticleHead, merchDetailHead, merchCanonicalSlug, merchInSitemap,
   ldSlotId, SITE, absUrl, IMAGE_VARIANTS,
 } = daten
 
@@ -462,10 +462,10 @@ for (const seite of merchSeiten) {
   const koerper = await koerperFuer(pfad)
   if (koerper) mitKoerper += 1
   geschrieben.push(schreibeSeite(vorlage, pfad, head, absUrl, SITE, IMAGE_VARIANTS, koerper))
-  // Nur kanonische Seiten in die Sitemap. Die Farbvarianten bleiben crawlbar
-  // und verlinkt, konkurrieren aber nicht mit ihrer eigenen Hauptseite.
+  // Nur kanonische Seiten mit mindestens einer live geschalteten Variante
+  // in die Sitemap. Coming-Soon-Seiten bleiben erreichbar und verlinkt.
   // Fuer Produktseiten liegt kein belegtes Aenderungsdatum vor -> ohne <lastmod>.
-  if (kanonisch === seite.slug) sitemapPfade.push({ pfad })
+  if (merchInSitemap(seite.slug)) sitemapPfade.push({ pfad })
 }
 
 /* 404 — noindex, kein Sitemap-Eintrag.
