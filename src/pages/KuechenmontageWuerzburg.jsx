@@ -21,12 +21,10 @@ import aufmassImg from '../assets/images/leistungen/ls-3d.webp'
  * Planungsprozess. /planung beschreibt den Weg von der Idee bis zur Abnahme,
  * diese Seite den Teil, der bei dir in der Wohnung passiert.
  *
- * INHALTLICHE LEITPLANKE: Die Küchenmontage führt VIDEKO laut /planung
- * („Fachgerecht durch unser eigenes Team") selbst aus; angrenzende Gewerke
- * laufen laut /alles-aus-einer-hand über Fachpartner. Beides steht hier
- * unterschieden. Das Einzugsgebiet entspricht der Liste, die schon auf der
- * Standortseite geführt wurde. Keine Preise, keine Dauerzusagen, keine
- * Garantieversprechen.
+ * Die Küchenmontage führt VIDEKO laut /planung selbst aus. Zuständigkeiten
+ * für angrenzende Gewerke werden im Angebot benannt. Das Einzugsgebiet
+ * entspricht der Liste auf der Standortseite. Keine Preise, Dauerzusagen
+ * oder Garantieversprechen erfinden.
  */
 
 const UMFANG = [
@@ -53,7 +51,7 @@ const UMFANG = [
   {
     step: '05',
     title: 'Anschluss',
-    text: 'Geräte, Spüle und Technik werden angeschlossen und geprüft. Elektro-, Boden- oder Trockenbauarbeiten koordinieren wir mit den passenden Fachpartnern.',
+    text: 'Geräte, Spüle und Technik werden angeschlossen und geprüft. Welche angrenzenden Arbeiten dazugehören und wer sie fachgerecht ausführt, steht im Angebot.',
   },
   {
     step: '06',
