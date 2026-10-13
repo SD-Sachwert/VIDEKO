@@ -18,10 +18,9 @@ import raumImg from '../assets/images/inspiration/03_wohnliche_kueche.webp'
 /**
  * Landingpage „Alles aus einer Hand".
  *
- * WICHTIGE INHALTLICHE LEITPLANKE: VIDEKO plant und koordiniert. Elektro,
- * Boden, Trockenbau und Spanndecke werden über VIDEKO organisiert und mit
- * passenden Fachpartnern umgesetzt. Auf dieser Seite steht deshalb nirgends,
- * dass VIDEKO alle Gewerke mit eigenen Mitarbeitern ausführt.
+ * Planung und Koordination sind beschrieben. Wer einzelne Arbeiten ausführt,
+ * wird im Angebot ausgewiesen; für regulierte Gewerke werden ohne Nachweis
+ * keine eigenen Fachbetriebsqualifikationen behauptet.
  */
 
 const LEISTUNGEN = [
@@ -33,12 +32,12 @@ const LEISTUNGEN = [
   {
     icon: Zap,
     title: 'Elektro & Elektroplanung',
-    text: 'Steckdosen, Anschlüsse und Leitungswege werden früh mitgedacht und über passende Elektrofachbetriebe umgesetzt.',
+    text: 'Steckdosen, Anschlüsse und Leitungswege werden früh mitgedacht. Die fachgerechte Ausführung und Zuständigkeit werden im Angebot benannt.',
   },
   {
     icon: Layers,
     title: 'Boden',
-    text: 'Aufbauhöhen, Übergänge und Belastbarkeit stimmen wir mit der Küchenplanung ab – Ausführung über Fachpartner.',
+    text: 'Aufbauhöhen, Übergänge und Belastbarkeit stimmen wir mit der Küchenplanung ab, damit Boden und Küche zusammenpassen.',
   },
   {
     icon: PaintRoller,
@@ -58,7 +57,7 @@ const LEISTUNGEN = [
   {
     icon: Layers,
     title: 'Arbeitsplatten',
-    text: 'Material, Kante und Ausschnitte inklusive Aufmaß beim Naturstein- oder Keramikpartner.',
+    text: 'Material, Kante und Ausschnitte werden abgestimmt; das genaue Aufmaß erfolgt vor der Fertigung.',
   },
   {
     icon: Wrench,
@@ -85,8 +84,8 @@ const ABLAUF = [
   },
   {
     step: '03',
-    title: 'Fachpartner & Angebote',
-    text: 'Für jedes Gewerk holen wir die passenden Fachbetriebe dazu und bündeln die Angebote für dich.',
+    title: 'Leistungsumfang & Angebot',
+    text: 'Wir legen fest, welche Arbeiten nötig sind, wer sie ausführt und wie sie im Angebot ausgewiesen werden.',
   },
   {
     step: '04',
@@ -112,9 +111,9 @@ export default function AllesAusEinerHand() {
     <div className="aaeh-page">
       {/* 1 — HERO */}
       <PageHero
-        kicker="Komplettumbau"
+        kicker="Räume & Ausbau"
         title={<>Nicht nur Küche. <span className="grad">Der ganze Raum.</span></>}
-        lead="Küche, Elektro, Boden, Wand, Decke und Licht greifen ineinander. Wir planen sie zusammen und koordinieren die Fachpartner, die sie umsetzen."
+        lead="Küche, Elektro, Boden, Wand, Decke und Licht greifen ineinander. Wir planen sie zusammen und stimmen die Umsetzung der einzelnen Schritte ab."
         image={heroImg}
         aiImage
       >
@@ -160,7 +159,7 @@ export default function AllesAusEinerHand() {
             tone="light"
             kicker="Der Umfang"
             title={<>Was zusammen geplant wird, <span className="grad">passt am Ende zusammen.</span></>}
-            lead="Diese Bereiche denken wir von Anfang an gemeinsam. Ausgeführt werden sie von VIDEKO und den jeweils passenden Fachpartnern."
+            lead="Diese Bereiche denken wir von Anfang an gemeinsam. Wer welche Arbeiten ausführt, halten wir im Angebot transparent fest."
           />
           <div className="aaeh-grid">
             {LEISTUNGEN.map(({ icon: Icon, title, text }, i) => (
@@ -210,12 +209,14 @@ export default function AllesAusEinerHand() {
               zusammen, klären Schnittstellen vorab und melden uns, bevor du fragen musst.
             </p>
             <p className="aaeh-split__text">
-              Ausgeführt wird von Fachbetrieben, die ihr Handwerk können. Organisiert,
-              geplant und terminiert wird über VIDEKO.
+              Ausführung und Zuständigkeiten klären wir für jedes Gewerk im Angebot.
+              VIDEKO hält Planung, Termine und Schnittstellen zusammen.
             </p>
             <div className="aaeh-split__links">
-              <Link to="/leistungen" className="aaeh-link">Alle Leistungen im Detail <ArrowRight size={15} strokeWidth={2} /></Link>
-              <Link to="/planung" className="aaeh-link">So läuft die Planung <ArrowRight size={15} strokeWidth={2} /></Link>
+              <Link to="/leistungen" className="aaeh-link">Küchenleistungen im Überblick <ArrowRight size={15} strokeWidth={2} /></Link>
+              <Link to="/planung" className="aaeh-link">So läuft die Küchenplanung <ArrowRight size={15} strokeWidth={2} /></Link>
+              <Link to="/kuechenmontage-wuerzburg" className="aaeh-link">Küchenmontage in Würzburg <ArrowRight size={15} strokeWidth={2} /></Link>
+              <Link to="/journal/licht-in-der-kueche" className="aaeh-link">Licht in der Küche planen <ArrowRight size={15} strokeWidth={2} /></Link>
             </div>
           </Reveal>
           <Reveal className="aaeh-split__media">
