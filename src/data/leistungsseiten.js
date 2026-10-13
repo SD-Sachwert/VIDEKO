@@ -9,13 +9,9 @@
  *   • von der Seitenkomponente, die sie anzeigt
  *   • von routes-meta.js, aus dem head.js das FAQPage-Objekt baut
  *
- * INHALTLICHE LEITPLANKE (wie in AllesAusEinerHand.jsx): VIDEKO plant,
- * koordiniert und montiert die Küche. Gewerke wie Elektro, Boden, Trockenbau
- * oder Spanndecke werden über VIDEKO organisiert und von Fachpartnern
- * ausgeführt; Arbeitsplatten werden beim Naturstein- oder Keramikpartner
- * aufgemessen und gefertigt. Keine Antwort hier behauptet etwas anderes.
- * Ebenso stehen hier keine Preise, Quadratmeterzahlen, Lieferzeiten oder
- * Garantien, die im Projekt nicht belegt sind.
+ * Die Zuständigkeit für einzelne Gewerke wird im konkreten Angebot benannt.
+ * Keine Antwort behauptet ohne Nachweis eine Fachbetriebsqualifikation.
+ * Ebenso stehen hier keine unbelegten Preise, Maße, Lieferzeiten oder Garantien.
  */
 
 /**
@@ -25,8 +21,8 @@
  */
 export const ALLES_AUS_EINER_HAND_FAQS = [
   {
-    q: 'Führt VIDEKO alle Arbeiten selbst aus?',
-    a: 'Nein. VIDEKO plant deine Küche und koordiniert das Projekt. Gewerke wie Elektro, Boden, Trockenbau oder Spanndecke werden über VIDEKO organisiert und von passenden Fachpartnern ausgeführt. Du hast trotzdem nur einen Ansprechpartner.',
+    q: 'Wie erfahre ich, wer welches Gewerk ausführt?',
+    a: 'Wir planen und koordinieren die Gewerke gemeinsam. Im Angebot steht, welche Arbeiten VIDEKO übernimmt und wer für die einzelnen Schritte verantwortlich ist.',
   },
   {
     q: 'Was bringt mir das gegenüber einzelnen Aufträgen?',
@@ -86,7 +82,7 @@ export const ARBEITSPLATTEN_FAQS = [
   },
   {
     q: 'Wer misst die Platte auf?',
-    a: 'Das Aufmaß für Naturstein und Keramik macht der jeweilige Fachpartner, mit dem wir zusammenarbeiten. Material, Kante und Ausschnitte werden vorher gemeinsam mit dir festgelegt, koordiniert wird das Ganze über VIDEKO.',
+    a: 'Wir stimmen das genaue Aufmaß vor der Fertigung mit dir ab. Material, Kante und Ausschnitte legen wir vorher gemeinsam fest. Wer das Aufmaß ausführt und wann es stattfindet, steht im Angebot.',
   },
   {
     q: 'Kann ich Materialien vorher ansehen?',
@@ -98,7 +94,7 @@ export const ARBEITSPLATTEN_FAQS = [
 export const MONTAGE_FAQS = [
   {
     q: 'Montiert VIDEKO die Küche selbst?',
-    a: 'Die Küchenmontage übernimmt unser eigenes Team. Angrenzende Gewerke wie Elektro, Boden oder Trockenbau werden über VIDEKO organisiert und von passenden Fachpartnern ausgeführt. Dein Ansprechpartner bleibt derselbe.',
+    a: 'Die Küchenmontage übernimmt unser eigenes Team. Welche angrenzenden Arbeiten dazugehören und wer sie fachgerecht ausführt, halten wir im Angebot fest. Dein Ansprechpartner bleibt derselbe.',
   },
   {
     q: 'Montiert ihr auch Küchen, die woanders gekauft wurden?',
