@@ -52,7 +52,7 @@ const VARIANTS = {
     img: bgHome, pos: 'center 42%', tone: 'warm', kicker: 'Persönlich. Ehrlich. Anspruchsvoll.',
     t1: 'Deine Küche. Dein Zuhause. ', t2: 'Dein Leben.',
     sub: 'Vereinbare deinen persönlichen Beratungstermin und erlebe, wie aus Ideen eine Küche wird, die wirklich zu dir passt.',
-    primary: { label: 'Beratung anfragen', to: '/beratung' }, secondary: { label: 'Studio besuchen', to: '/studio' },
+    primary: { label: 'Beratung anfragen', to: '/beratung' }, secondary: { label: 'Studio & Termine', to: '/studio' },
   },
   journal: {
     img: bgJournal, pos: 'center 32%', tone: 'deep', kicker: 'Inspiration trifft Planung.',
@@ -75,7 +75,7 @@ const VARIANTS = {
   studio: {
     img: bgDefault, pos: 'center 30%', tone: 'warm', kicker: 'Dein Studio in Würzburg.',
     t1: 'Deine Küche. Dein Zuhause. ', t2: 'Wir machen es möglich.',
-    sub: 'Komm vorbei, fühl die Materialien und erlebe Planung, wie sie sein sollte.',
+    sub: 'Unsere Ausstellung entsteht noch. Persönliche Küchenberatung und Planung sind bereits jetzt nach Terminvereinbarung möglich.',
     primary: { label: 'Termin vereinbaren', to: '/beratung' }, secondary: { label: 'Studio entdecken', to: '/studio' },
   },
   vorher: {

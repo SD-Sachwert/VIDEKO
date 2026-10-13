@@ -170,8 +170,8 @@ export default function Home() {
         <div className="container lp-studio-head">
           <Reveal>
             <span className="kicker">Studio Würzburg</span>
-            <h2 className="lp-h2">Erlebe unser Studio <span className="grad">in Würzburg.</span></h2>
-            <p className="lp-lead">Tausend Bilder ersetzen kein echtes Raumgefühl. Komm vorbei und lass dich inspirieren.</p>
+            <h2 className="lp-h2">Unser Studio entsteht <span className="grad">in Würzburg.</span></h2>
+            <p className="lp-lead">Persönliche Küchenberatung und Planung sind bereits jetzt nach Terminvereinbarung möglich. Unsere Ausstellung ist noch im Aufbau; die offizielle Eröffnung ist derzeit für den 1. Dezember 2026 geplant.</p>
             <CTAButton to="/studio">Studio virtuell erleben</CTAButton>
           </Reveal>
         </div>

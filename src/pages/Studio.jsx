@@ -71,9 +71,10 @@ export default function Studio() {
             <span className="kicker kicker--gold">Studio Würzburg</span>
             <h1 className="pagehero__title">Küchen erleben.<br /><span className="grad">Nicht nur ansehen.</span></h1>
             <p className="pagehero__lead">
-              Unser Studio in Würzburg ist mehr als ein Ausstellungsraum. Hier werden
-              Materialien, Planung und Atmosphäre spürbar – persönlich und auf
-              höchstem Niveau.
+              Unsere Ausstellung in Würzburg befindet sich noch im Aufbau. Persönliche
+              Küchenberatung und Planung sind bereits jetzt nach Terminvereinbarung
+              möglich. Die offizielle Ausstellungseröffnung ist derzeit für den
+              1. Dezember 2026 geplant.
             </p>
             <div className="pagehero__actions">
               <CTAButton to="/beratung">Termin vereinbaren</CTAButton>
@@ -274,10 +275,11 @@ export default function Studio() {
         <div className="container aaeh-final">
           <Reveal>
             <span className="kicker kicker--gold">Nächster Schritt</span>
-            <h2 className="aaeh-final__title">Komm vorbei. In Ruhe.</h2>
+            <h2 className="aaeh-final__title">Jetzt Beratungstermin vereinbaren.</h2>
             <p className="aaeh-final__text">
-              Ohne Termindruck, ohne Verkaufstheater. Erzähl uns von deinem Raum – den
-              Rest sortieren wir gemeinsam.
+              Wir beraten und planen schon jetzt persönlich – nach vorheriger
+              Terminvereinbarung. Erzähl uns von deinem Raum; den Rest sortieren
+              wir gemeinsam.
             </p>
             <ul className="lstances lstances--center">
               {FINAL_HL.map((u) => <li key={u}><Check size={16} strokeWidth={2.4} /> {u}</li>)}
