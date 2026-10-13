@@ -66,7 +66,7 @@ import ogMontage from '../assets/images/leistungen/ls-install.webp'
 
 export const HOME_META = {
   path: '/',
-  lastModified: '2026-08-24',
+  lastModified: '2026-10-13',
   title: 'VIDEKO Küchen | Küchenstudio Würzburg',
   description:
     'VIDEKO Küchen – dein Küchenstudio in Würzburg. Küchenplanung, ehrliche Beratung und maßgeschneiderte Küchen für deinen Alltag.',
@@ -93,7 +93,7 @@ const ALLE_STATISCHEN_ROUTEN = [
   },
   {
     path: '/alles-aus-einer-hand',
-    lastModified: '2026-08-24',
+    lastModified: '2026-10-13',
     title: 'Nicht nur Küche. Der ganze Raum. | VIDEKO Küchen',
     description:
       'Küche, Elektro, Boden, Wand, Spanndecke, Licht und Montage – über VIDEKO koordiniert, mit passenden Fachpartnern geplant und abgestimmt.',
