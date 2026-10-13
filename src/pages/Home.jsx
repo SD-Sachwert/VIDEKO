@@ -94,8 +94,8 @@ const TEAM = [
 const TEAM_BENEFITS = ['Erfahren & engagiert', 'Kreativ & individuell', 'Verlässlich & transparent', 'Qualität mit Leidenschaft']
 
 // Kurzuebersicht der Gewerke, die bei einem Komplettumbau zusammenkommen.
-// Details und die korrekte Einordnung (VIDEKO plant und koordiniert, ausgefuehrt
-// wird mit Fachpartnern) stehen auf /alles-aus-einer-hand.
+// Details zu Planung, Umsetzung und Zuständigkeiten stehen auf
+// /alles-aus-einer-hand.
 const RAUM_GEWERKE = [
   { icon: ChefHat, label: 'Küche' },
   { icon: Zap, label: 'Elektro' },
@@ -222,7 +222,7 @@ export default function Home() {
             align="center"
             kicker="Räume & Ausbau"
             title={<>VIDEKO ist mehr als Küchen. <span className="grad">Wir denken den Raum mit.</span></>}
-            lead="Beim Küchenumbau denken wir Boden, Wände, Spanndecke, Licht und Anschlüsse zusammen. VIDEKO plant und koordiniert das Projekt; passende Fachpartner setzen die jeweiligen Gewerke um."
+            lead="Beim Küchenumbau denken wir Boden, Wände, Spanndecke, Licht und Anschlüsse zusammen. Wir begleiten das Projekt von der Planung bis zur Umsetzung und stimmen die Gewerke aufeinander ab."
           />
           <Reveal className="raum-sec__grid">
             {RAUM_GEWERKE.map(({ icon: Icon, label }) => (
