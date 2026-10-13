@@ -112,7 +112,7 @@ export default function AllesAusEinerHand() {
     <div className="aaeh-page">
       {/* 1 — HERO */}
       <PageHero
-        kicker="Komplettumbau"
+        kicker="Räume & Ausbau"
         title={<>Nicht nur Küche. <span className="grad">Der ganze Raum.</span></>}
         lead="Küche, Elektro, Boden, Wand, Decke und Licht greifen ineinander. Wir planen sie zusammen und koordinieren die Fachpartner, die sie umsetzen."
         image={heroImg}
@@ -214,8 +214,10 @@ export default function AllesAusEinerHand() {
               geplant und terminiert wird über VIDEKO.
             </p>
             <div className="aaeh-split__links">
-              <Link to="/leistungen" className="aaeh-link">Alle Leistungen im Detail <ArrowRight size={15} strokeWidth={2} /></Link>
-              <Link to="/planung" className="aaeh-link">So läuft die Planung <ArrowRight size={15} strokeWidth={2} /></Link>
+              <Link to="/leistungen" className="aaeh-link">Küchenleistungen im Überblick <ArrowRight size={15} strokeWidth={2} /></Link>
+              <Link to="/planung" className="aaeh-link">So läuft die Küchenplanung <ArrowRight size={15} strokeWidth={2} /></Link>
+              <Link to="/kuechenmontage-wuerzburg" className="aaeh-link">Küchenmontage in Würzburg <ArrowRight size={15} strokeWidth={2} /></Link>
+              <Link to="/journal/licht-in-der-kueche" className="aaeh-link">Licht in der Küche planen <ArrowRight size={15} strokeWidth={2} /></Link>
             </div>
           </Reveal>
           <Reveal className="aaeh-split__media">
