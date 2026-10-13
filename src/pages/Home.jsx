@@ -220,9 +220,9 @@ export default function Home() {
         <div className="container">
           <SectionHeader
             align="center"
-            kicker="Komplettumbau"
-            title={<>Nicht nur Küche. <span className="grad">Der ganze Raum.</span></>}
-            lead="Elektro, Boden, Wand, Decke und Licht hängen an jeder neuen Küche mit dran. Wir planen sie zusammen und koordinieren die Fachpartner, die sie umsetzen."
+            kicker="Räume & Ausbau"
+            title={<>VIDEKO ist mehr als Küchen. <span className="grad">Wir denken den Raum mit.</span></>}
+            lead="Beim Küchenumbau denken wir Boden, Wände, Spanndecke, Licht und Anschlüsse zusammen. VIDEKO plant und koordiniert das Projekt; passende Fachpartner setzen die jeweiligen Gewerke um."
           />
           <Reveal className="raum-sec__grid">
             {RAUM_GEWERKE.map(({ icon: Icon, label }) => (
@@ -233,7 +233,7 @@ export default function Home() {
             ))}
           </Reveal>
           <Reveal className="raum-sec__cta">
-            <CTAButton to="/alles-aus-einer-hand">Alles aus einer Hand</CTAButton>
+            <CTAButton to="/alles-aus-einer-hand">Räume & Ausbau entdecken</CTAButton>
             <CTAButton to="/leistungen" variant="dark">Unsere Leistungen</CTAButton>
           </Reveal>
         </div>
