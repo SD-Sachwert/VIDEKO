@@ -1,7 +1,10 @@
 import { BRAND } from './company.js'
 import { SOCIAL_PROFILES, socialUrl } from './site.js'
 import { INDEX_BASIS, INDEX_ZIEL, MODUS } from '../lib/baustellenindex.js'
-import entdeckenVideo from '../assets/images/studio/bilder/Umbau.mp4'
+// Hero-Video: Cinematic Trailer V4.2 mit Originalton (Web-Encode 1080p).
+// Umbau.mp4 bleibt als Rueckfall im Repo — Import zuruecktauschen und
+// `mitTon` auf false setzen, dann ist der alte Stand wieder da.
+import entdeckenVideo from '../assets/images/studio/bilder/Trailer_V42.mp4'
 import entdeckenPoster from '../assets/images/studio/bilder/02_intro_showroom_hell.webp'
 import texturNacht from '../assets/images/studio/bilder/08_split_section_showroom_gross.webp'
 import texturFinale from '../assets/images/studio/bilder/10_final_cta_studio_banner.webp'
@@ -59,6 +62,11 @@ export const ENTDECKEN_CONFIG = {
     src: entdeckenVideo,
     poster: entdeckenPoster,
     label: 'Studio im Aufbau',
+    // Originalton per Knopf im Videorahmen; startet ihn, pausiert der
+    // Soundtrack (siehe useFilmTon in Entdecken.jsx).
+    mitTon: true,
+    labelTonAn: 'Mit Ton ansehen',
+    labelTonAus: 'Ton aus',
   },
   // Dezente Texturen fuer die dunklen Baender. Eigene Studio-Renderings, stark
   // abgedunkelt und rein als Flaeche — sie behaupten keinen Bauzustand.

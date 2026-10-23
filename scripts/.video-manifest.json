@@ -8,6 +8,11 @@
   "src/assets/images/leistungen/vorher-nachher.mp4": {
     "bytes": 4872482
   },
+  "src/assets/images/studio/bilder/Trailer_V42.mp4": {
+    "bytes": 28570269,
+    "ton": true,
+    "note": "Web-Encode CRF 24, AAC 128k, faststart — Tonspur wird auf /entdecken gebraucht"
+  },
   "src/assets/images/studio/bilder/Umbau.mp4": {
     "bytes": 1890489
   },

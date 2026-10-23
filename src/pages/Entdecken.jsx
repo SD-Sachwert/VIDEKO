@@ -256,6 +256,13 @@ function Nachtband({ textur, klasse = '', children }) {
  *     der Browser blockiert, stehen die Balken still.
  *   - Der Speicher wird erst nach der Hydration gelesen (siehe lib/hydration.js
  *     zum Warum) — der erste Render muss dem vorgerenderten HTML entsprechen.
+ *   - Nie zwei Musiken gleichzeitig: Schaltet jemand den Originalton des
+ *     Trailers ein, bekommt der Film Vorrang (`filmVorrang(true)`). Der
+ *     Soundtrack pausiert dann, ohne dass das als „aus" gespeichert wird, und
+ *     kein Geste-Start greift. Endet der Filmton, laeuft der Soundtrack nur
+ *     weiter, wenn er vorher wirklich lief. Startet der Soundtrack trotzdem
+ *     (eigener Schalter, Medientaste), gewinnt die letzte Entscheidung: der
+ *     Film wird ueber `beiFremdstartRef` wieder stumm.
  */
 function useSoundtrack() {
   const verfuegbar = Boolean(SOUNDTRACK.datei)
@@ -263,6 +270,9 @@ function useSoundtrack() {
   const [an, setAn] = useState(false)
   const [laeuft, setLaeuft] = useState(false)
   const wahl = useRef(null)
+  const vorrang = useRef(false)
+  const warVorher = useRef(false)
+  const beiFremdstartRef = useRef(null)
 
   const merken = useCallback((wert) => {
     wahl.current = wert
@@ -310,7 +320,7 @@ function useSoundtrack() {
 
   /** Eindeutiger Nutzerwille, z. B. der Klick auf „Baustelle betreten". */
   const starten = useCallback(() => {
-    if (!verfuegbar || wahl.current === 'aus') return
+    if (!verfuegbar || wahl.current === 'aus' || vorrang.current) return
     const el = audioRef.current
     if (!el || !el.paused) return
     merken('an')
@@ -340,6 +350,8 @@ function useSoundtrack() {
         abmelden()
         return
       }
+      // Filmton hat Vorrang — angemeldet bleiben, spaeter darf es noch klappen.
+      if (vorrang.current) return
       const el = audioRef.current
       if (!el) return
       if (!el.paused) {
@@ -379,12 +391,49 @@ function useSoundtrack() {
     }
   }, [merken, abspielen])
 
+  /** Filmton an (true) oder wieder aus (false). */
+  const filmVorrang = useCallback(
+    (aktiv) => {
+      const el = audioRef.current
+      if (aktiv) {
+        vorrang.current = true
+        warVorher.current = Boolean(el && !el.paused)
+        if (warVorher.current) el.pause()
+        return
+      }
+      if (!vorrang.current) return
+      vorrang.current = false
+      const weiter = warVorher.current
+      warVorher.current = false
+      if (weiter && wahl.current !== 'aus') abspielen()
+    },
+    [abspielen]
+  )
+
   // Der Browser ist die letzte Instanz: pausiert das Betriebssystem den Ton,
   // faellt der Equalizer von selbst zurueck.
-  const beiPlay = useCallback(() => setLaeuft(true), [])
+  const beiPlay = useCallback(() => {
+    setLaeuft(true)
+    if (!vorrang.current) return
+    // Soundtrack startet, waehrend der Film klingt — die letzte Wahl gewinnt.
+    vorrang.current = false
+    warVorher.current = false
+    if (beiFremdstartRef.current) beiFremdstartRef.current()
+  }, [])
   const beiPause = useCallback(() => setLaeuft(false), [])
 
-  return { verfuegbar, an, laeuft, starten, umschalten, audioRef, beiPlay, beiPause }
+  return {
+    verfuegbar,
+    an,
+    laeuft,
+    starten,
+    umschalten,
+    audioRef,
+    beiPlay,
+    beiPause,
+    filmVorrang,
+    beiFremdstartRef,
+  }
 }
 
 /**
@@ -412,6 +461,108 @@ function SoundSchalter({ an, laeuft, umschalten }) {
         <i />
       </span>
       <span className="ent-sound__txt">{an ? SOUNDTRACK.labelAn : SOUNDTRACK.labelAus}</span>
+    </button>
+  )
+}
+
+/* ------------------------------------------------------------------ *
+ * Filmton
+ * ------------------------------------------------------------------ */
+
+/**
+ * Originalton des Hero-Trailers.
+ *
+ * Das Video selbst bleibt LazyVideo (stumm, Autoplay, Schleife) — der Hook
+ * holt sich das <video> ueber den Rahmen `boxRef` und schaltet nur dessen
+ * Eigenschaften um. Mit Ton beginnt der Film von vorn und laeuft genau einmal;
+ * am Ende faellt er zurueck in die stumme Schleife. Der Seiten-Soundtrack
+ * pausiert so lange (`filmVorrang`), siehe useSoundtrack.
+ */
+function useFilmTon(boxRef, filmVorrang, beiFremdstartRef) {
+  const [an, setAn] = useState(false)
+
+  const stumm = useCallback(() => {
+    const el = boxRef.current ? boxRef.current.querySelector('video') : null
+    setAn(false)
+    if (!el) return
+    el.muted = true
+    el.loop = true
+    if (el.paused) el.play().catch(() => {})
+  }, [boxRef])
+
+  const aus = useCallback(() => {
+    stumm()
+    filmVorrang(false)
+  }, [stumm, filmVorrang])
+
+  const umschalten = useCallback(() => {
+    const el = boxRef.current ? boxRef.current.querySelector('video') : null
+    if (!el) return
+    if (an) {
+      aus()
+      return
+    }
+    filmVorrang(true)
+    el.loop = false
+    el.currentTime = 0
+    el.volume = 1
+    el.muted = false
+    let zusage
+    try {
+      zusage = el.play()
+    } catch {
+      zusage = null
+    }
+    Promise.resolve(zusage).then(
+      () => setAn(true),
+      () => aus()
+    )
+  }, [boxRef, an, aus, filmVorrang])
+
+  useEffect(() => {
+    const el = boxRef.current ? boxRef.current.querySelector('video') : null
+    if (!el) return
+    // Ohne Schleife feuert `ended` — dann wieder stumm und Soundtrack zurueck.
+    el.addEventListener('ended', aus)
+    return () => el.removeEventListener('ended', aus)
+  }, [boxRef, aus])
+
+  // Startet der Soundtrack, waehrend der Film klingt, wird der Film stumm.
+  useEffect(() => {
+    beiFremdstartRef.current = stumm
+    return () => {
+      beiFremdstartRef.current = null
+    }
+  }, [beiFremdstartRef, stumm])
+
+  return { an, umschalten }
+}
+
+/**
+ * Ton-Knopf im Videorahmen, unten rechts gegenueber dem Label. Die Gesten
+ * enden hier: sonst sieht der Geste-Start des Soundtracks (Fenster-Listener)
+ * denselben Klick und beide Musiken liefen kurz uebereinander.
+ */
+function FilmTonSchalter({ an, umschalten, labelAn, labelAus }) {
+  const halt = (e) => e.stopPropagation()
+  return (
+    <button
+      type="button"
+      className={`ent-vid__ton${an ? ' is-an' : ''}`}
+      onClick={(e) => {
+        e.stopPropagation()
+        umschalten()
+      }}
+      onPointerDown={halt}
+      onTouchStart={halt}
+      onKeyDown={halt}
+      aria-pressed={an}
+      aria-label={an ? 'Filmton ausschalten' : 'Trailer mit Ton abspielen'}
+    >
+      <span className="ent-vid__ton-icon" aria-hidden="true">
+        {an ? <Volume2 size={16} strokeWidth={1.9} /> : <VolumeX size={16} strokeWidth={1.9} />}
+      </span>
+      <span className="ent-vid__ton-txt">{an ? labelAus : labelAn}</span>
     </button>
   )
 }
@@ -1289,7 +1440,11 @@ export default function Entdecken() {
     audioRef,
     beiPlay,
     beiPause,
+    filmVorrang,
+    beiFremdstartRef,
   } = useSoundtrack()
+  const vidRef = useRef(null)
+  const film = useFilmTon(vidRef, filmVorrang, beiFremdstartRef)
 
   // Sprung in die Baustelle, ohne die Adresszeile anzufassen: angehaengte
   // UTM-Parameter bleiben dadurch unveraendert stehen (ein Router-Link mit
@@ -1467,7 +1622,7 @@ export default function Entdecken() {
           </div>
 
           <div className="ent-hero__media">
-            <div className="ent-vid">
+            <div className="ent-vid" ref={vidRef}>
               <LazyVideo
                 className="ent-vid__el"
                 src={video.src}
@@ -1477,6 +1632,14 @@ export default function Entdecken() {
               />
               <span className="ent-vid__veil" aria-hidden="true" />
               <span className="ent-vid__tag">{video.label}</span>
+              {video.mitTon ? (
+                <FilmTonSchalter
+                  an={film.an}
+                  umschalten={film.umschalten}
+                  labelAn={video.labelTonAn}
+                  labelAus={video.labelTonAus}
+                />
+              ) : null}
             </div>
             <p className="ent-hero__note">Wir nehmen dich von Anfang an mit. Staub inklusive.</p>
           </div>

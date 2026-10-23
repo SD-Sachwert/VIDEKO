@@ -100,6 +100,14 @@ for (const datei of dateien) {
   // Schon einmal durchgelaufen und seitdem unveraendert? Ein zweiter Durchlauf
   // wuerde nur Qualitaet kosten.
   const erledigt = vorher[rel]?.bytes === groesse
+  // Videos mit hoerbarem Originalton (Manifest `ton: true`) sind fertige
+  // Web-Encodes — auch --force darf ihnen die Tonspur nicht nehmen.
+  if (erledigt && vorher[rel].ton) {
+    nachher[rel] = vorher[rel]
+    summeNach += groesse
+    console.log(`·  ${rel} — mit Ton, wird nicht angefasst (${mb(groesse)})`)
+    continue
+  }
   if (!FORCE && erledigt) {
     nachher[rel] = vorher[rel]
     summeNach += groesse

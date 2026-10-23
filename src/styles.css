@@ -15105,6 +15105,72 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   animation: ent-blink 2.4s ease-in-out infinite;
 }
 
+/* Ton-Knopf im Videorahmen — dieselbe Pille wie das Label, rechts unten
+   gegenueber. Liegt ueber dem Schleier, der keine Klicks nimmt. */
+.ent-vid__ton {
+  position: absolute;
+  right: 22px;
+  bottom: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 16px 8px 13px;
+  border-radius: 999px;
+  background: rgba(8, 8, 7, 0.62);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  border: 1px solid rgba(232, 201, 120, 0.34);
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--champagne);
+  cursor: pointer;
+  transition:
+    border-color 0.4s ease,
+    background 0.4s ease;
+}
+
+.ent-vid__ton:hover {
+  border-color: rgba(232, 201, 120, 0.75);
+  background: rgba(8, 8, 7, 0.8);
+}
+
+.ent-vid__ton:focus-visible {
+  outline: 2px solid var(--gold-bright);
+  outline-offset: 3px;
+}
+
+.ent-vid__ton.is-an {
+  border-color: rgba(232, 201, 120, 0.75);
+}
+
+.ent-vid__ton-icon {
+  display: grid;
+  place-items: center;
+  color: var(--gold-bright);
+  flex: none;
+}
+
+.ent-vid__ton-txt {
+  white-space: nowrap;
+}
+
+/* Bis 560px passen Label und Knopf-Text nicht nebeneinander: nur das
+   Symbol, der Name steht im aria-label. */
+@media (max-width: 560px) {
+  .ent-vid__ton {
+    right: 14px;
+    bottom: 14px;
+    padding: 9px;
+  }
+
+  .ent-vid__ton-txt {
+    display: none;
+  }
+}
+
 @keyframes ent-blink {
   0%,
   100% {
