@@ -515,16 +515,18 @@ function useFilmTon(boxRef, filmVorrang, beiFremdstartRef) {
     el.currentTime = 0
     el.volume = 1
     el.muted = false
+    setAn(true)
     let zusage
     try {
       zusage = el.play()
     } catch {
       zusage = null
     }
-    Promise.resolve(zusage).then(
-      () => setAn(true),
-      () => aus()
-    )
+    // Pausiert der Besucher, bevor der Film angelaufen ist, bricht `play()`
+    // mit AbortError ab — das ist kein Grund, den Ton wieder auszuschalten.
+    Promise.resolve(zusage).catch((e) => {
+      if (!e || e.name !== 'AbortError') aus()
+    })
   }, [boxRef, an, aus, filmVorrang])
 
   useEffect(() => {
