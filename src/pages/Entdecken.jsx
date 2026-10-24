@@ -14,7 +14,10 @@ import {
   Lock,
   MapPin,
   Martini,
+  Maximize,
+  Minimize,
   Pause,
+  Play,
   QrCode,
   ShowerHead,
   Sofa,
@@ -480,9 +483,13 @@ function SoundSchalter({ an, laeuft, umschalten }) {
  */
 function useFilmTon(boxRef, filmVorrang, beiFremdstartRef) {
   const [an, setAn] = useState(false)
+  // Spiegel von `an` fuer den volumechange-Listener; wird nur hier im Hook
+  // gesetzt, damit eigene Umschaltungen nicht als Fremdeingriff zaehlen.
+  const anRef = useRef(false)
 
   const stumm = useCallback(() => {
     const el = boxRef.current ? boxRef.current.querySelector('video') : null
+    anRef.current = false
     setAn(false)
     if (!el) return
     el.muted = true
@@ -502,6 +509,7 @@ function useFilmTon(boxRef, filmVorrang, beiFremdstartRef) {
       aus()
       return
     }
+    anRef.current = true
     filmVorrang(true)
     el.loop = false
     el.currentTime = 0
@@ -524,8 +532,23 @@ function useFilmTon(boxRef, filmVorrang, beiFremdstartRef) {
     if (!el) return
     // Ohne Schleife feuert `ended` — dann wieder stumm und Soundtrack zurueck.
     el.addEventListener('ended', aus)
-    return () => el.removeEventListener('ended', aus)
-  }, [boxRef, aus])
+    // Im nativen Vollbild-Player (iPhone) schaltet der Besucher den Ton dort
+    // selbst ein — auch dann bekommt der Film Vorrang vor dem Soundtrack.
+    const beiLautstaerke = () => {
+      if (!el.muted && !anRef.current) {
+        anRef.current = true
+        filmVorrang(true)
+        setAn(true)
+      } else if (el.muted && anRef.current) {
+        aus()
+      }
+    }
+    el.addEventListener('volumechange', beiLautstaerke)
+    return () => {
+      el.removeEventListener('ended', aus)
+      el.removeEventListener('volumechange', beiLautstaerke)
+    }
+  }, [boxRef, aus, filmVorrang])
 
   // Startet der Soundtrack, waehrend der Film klingt, wird der Film stumm.
   useEffect(() => {
@@ -539,31 +562,115 @@ function useFilmTon(boxRef, filmVorrang, beiFremdstartRef) {
 }
 
 /**
- * Ton-Knopf im Videorahmen, unten rechts gegenueber dem Label. Die Gesten
- * enden hier: sonst sieht der Geste-Start des Soundtracks (Fenster-Listener)
- * denselben Klick und beide Musiken liefen kurz uebereinander.
+ * Wiedergabe und Vollbild des Hero-Trailers. Wie useFilmTon greift der Hook
+ * nur auf das <video> im Rahmen `boxRef` zu. Vollbild bekommt der ganze
+ * Rahmen, damit die eigenen Knoepfe sichtbar bleiben; das iPhone kann nur
+ * das Video selbst gross machen und zeigt dann seinen eigenen Player.
  */
-function FilmTonSchalter({ an, umschalten, labelAn, labelAus }) {
+function useFilmBild(boxRef) {
+  const [pausiert, setPausiert] = useState(false)
+  const [gross, setGross] = useState(false)
+
+  useEffect(() => {
+    const el = boxRef.current ? boxRef.current.querySelector('video') : null
+    if (!el) return
+    const beiPlay = () => setPausiert(false)
+    const beiPause = () => setPausiert(true)
+    el.addEventListener('play', beiPlay)
+    el.addEventListener('pause', beiPause)
+    return () => {
+      el.removeEventListener('play', beiPlay)
+      el.removeEventListener('pause', beiPause)
+    }
+  }, [boxRef])
+
+  useEffect(() => {
+    const beiWechsel = () => {
+      const voll = document.fullscreenElement || document.webkitFullscreenElement
+      setGross(Boolean(voll) && voll === boxRef.current)
+    }
+    document.addEventListener('fullscreenchange', beiWechsel)
+    document.addEventListener('webkitfullscreenchange', beiWechsel)
+    return () => {
+      document.removeEventListener('fullscreenchange', beiWechsel)
+      document.removeEventListener('webkitfullscreenchange', beiWechsel)
+    }
+  }, [boxRef])
+
+  const wiedergabe = useCallback(() => {
+    const el = boxRef.current ? boxRef.current.querySelector('video') : null
+    if (!el) return
+    if (el.paused) el.play().catch(() => {})
+    else el.pause()
+  }, [boxRef])
+
+  const vollbild = useCallback(() => {
+    const box = boxRef.current
+    if (!box) return
+    if (document.fullscreenElement || document.webkitFullscreenElement) {
+      const raus = document.exitFullscreen || document.webkitExitFullscreen
+      if (raus) Promise.resolve(raus.call(document)).catch(() => {})
+      return
+    }
+    const rein = box.requestFullscreen || box.webkitRequestFullscreen
+    if (rein) {
+      Promise.resolve(rein.call(box)).catch(() => {})
+      return
+    }
+    const el = box.querySelector('video')
+    if (el && el.webkitEnterFullscreen) el.webkitEnterFullscreen()
+  }, [boxRef])
+
+  return { pausiert, gross, wiedergabe, vollbild }
+}
+
+/**
+ * Knopfleiste im Videorahmen, unten rechts gegenueber dem Label: Wiedergabe,
+ * Ton, Vollbild. Die Gesten enden hier: sonst sieht der Geste-Start des
+ * Soundtracks (Fenster-Listener) denselben Klick und beide Musiken liefen
+ * kurz uebereinander.
+ */
+function FilmSteuerung({ ton, bild, labelAn, labelAus }) {
   const halt = (e) => e.stopPropagation()
+  const gesten = { onPointerDown: halt, onTouchStart: halt, onKeyDown: halt }
+  const klick = (fn) => (e) => {
+    e.stopPropagation()
+    fn()
+  }
   return (
-    <button
-      type="button"
-      className={`ent-vid__ton${an ? ' is-an' : ''}`}
-      onClick={(e) => {
-        e.stopPropagation()
-        umschalten()
-      }}
-      onPointerDown={halt}
-      onTouchStart={halt}
-      onKeyDown={halt}
-      aria-pressed={an}
-      aria-label={an ? 'Filmton ausschalten' : 'Trailer mit Ton abspielen'}
-    >
-      <span className="ent-vid__ton-icon" aria-hidden="true">
-        {an ? <Volume2 size={16} strokeWidth={1.9} /> : <VolumeX size={16} strokeWidth={1.9} />}
-      </span>
-      <span className="ent-vid__ton-txt">{an ? labelAus : labelAn}</span>
-    </button>
+    <div className="ent-vid__ctrl">
+      <button
+        type="button"
+        className="ent-vid__knopf"
+        onClick={klick(bild.wiedergabe)}
+        {...gesten}
+        aria-label={bild.pausiert ? 'Trailer abspielen' : 'Trailer pausieren'}
+      >
+        {bild.pausiert ? <Play size={16} strokeWidth={1.9} /> : <Pause size={16} strokeWidth={1.9} />}
+      </button>
+      <button
+        type="button"
+        className={`ent-vid__ton${ton.an ? ' is-an' : ''}`}
+        onClick={klick(ton.umschalten)}
+        {...gesten}
+        aria-pressed={ton.an}
+        aria-label={ton.an ? 'Filmton ausschalten' : 'Trailer mit Ton abspielen'}
+      >
+        <span className="ent-vid__ton-icon" aria-hidden="true">
+          {ton.an ? <Volume2 size={16} strokeWidth={1.9} /> : <VolumeX size={16} strokeWidth={1.9} />}
+        </span>
+        <span className="ent-vid__ton-txt">{ton.an ? labelAus : labelAn}</span>
+      </button>
+      <button
+        type="button"
+        className="ent-vid__knopf"
+        onClick={klick(bild.vollbild)}
+        {...gesten}
+        aria-label={bild.gross ? 'Vollbild verlassen' : 'Trailer im Vollbild ansehen'}
+      >
+        {bild.gross ? <Minimize size={16} strokeWidth={1.9} /> : <Maximize size={16} strokeWidth={1.9} />}
+      </button>
+    </div>
   )
 }
 
@@ -1445,6 +1552,7 @@ export default function Entdecken() {
   } = useSoundtrack()
   const vidRef = useRef(null)
   const film = useFilmTon(vidRef, filmVorrang, beiFremdstartRef)
+  const filmBild = useFilmBild(vidRef)
 
   // Sprung in die Baustelle, ohne die Adresszeile anzufassen: angehaengte
   // UTM-Parameter bleiben dadurch unveraendert stehen (ein Router-Link mit
@@ -1633,9 +1741,9 @@ export default function Entdecken() {
               <span className="ent-vid__veil" aria-hidden="true" />
               <span className="ent-vid__tag">{video.label}</span>
               {video.mitTon ? (
-                <FilmTonSchalter
-                  an={film.an}
-                  umschalten={film.umschalten}
+                <FilmSteuerung
+                  ton={film}
+                  bild={filmBild}
                   labelAn={video.labelTonAn}
                   labelAus={video.labelTonAus}
                 />
