@@ -66,7 +66,7 @@ import ogMontage from '../assets/images/leistungen/ls-install.webp'
 
 export const HOME_META = {
   path: '/',
-  lastModified: '2026-08-24',
+  lastModified: '2026-10-13',
   title: 'VIDEKO Küchen | Küchenstudio Würzburg',
   description:
     'VIDEKO Küchen – dein Küchenstudio in Würzburg. Küchenplanung, ehrliche Beratung und maßgeschneiderte Küchen für deinen Alltag.',
@@ -93,17 +93,17 @@ const ALLE_STATISCHEN_ROUTEN = [
   },
   {
     path: '/alles-aus-einer-hand',
-    lastModified: '2026-08-24',
+    lastModified: '2026-10-13',
     title: 'Nicht nur Küche. Der ganze Raum. | VIDEKO Küchen',
     description:
-      'Küche, Elektro, Boden, Wand, Spanndecke, Licht und Montage – über VIDEKO koordiniert, mit passenden Fachpartnern geplant und abgestimmt.',
+      'Küche, Elektro, Boden, Wand, Spanndecke, Licht und Montage werden als Raumprojekt geplant und in der Umsetzung aufeinander abgestimmt.',
     crumb: 'Alles aus einer Hand',
     ogImage: ogAllesAusEinerHand,
     service: {
       name: 'Küchenumbau mit Koordination aller Gewerke',
       serviceType: 'Küchenumbau',
       description:
-        'Küche, Elektro, Boden, Wand, Decke und Licht werden gemeinsam geplant. VIDEKO koordiniert die Fachpartner und den Terminplan.',
+        'Küche, Elektro, Boden, Wand, Decke und Licht werden gemeinsam geplant. VIDEKO stimmt Zuständigkeiten, Schnittstellen und Termine ab.',
     },
     faqs: ALLES_AUS_EINER_HAND_FAQS,
   },
@@ -178,7 +178,7 @@ const ALLE_STATISCHEN_ROUTEN = [
   },
   {
     path: '/arbeitsplatten',
-    lastModified: '2026-08-24',
+    lastModified: '2026-10-13',
     title: 'Arbeitsplatten für die Küche: Holz, Stein, Keramik & Compact | VIDEKO Küchen',
     description:
       'Welche Arbeitsplatte hält deinem Alltag stand? Massivholz, Naturstein, Keramik und Compact im ehrlichen Vergleich – mit Aufmaß, Kante und Ausschnitten über VIDEKO.',
@@ -188,13 +188,13 @@ const ALLE_STATISCHEN_ROUTEN = [
       name: 'Arbeitsplatten für die Küche',
       serviceType: 'Arbeitsplatten',
       description:
-        'Beratung zu Massivholz, Naturstein, Keramik und Compact sowie Material, Kante und Ausschnitte inklusive Aufmaß beim Naturstein- oder Keramikpartner.',
+        'Beratung zu Massivholz, Naturstein, Keramik und Compact sowie Abstimmung von Material, Kante, Ausschnitten und Aufmaß.',
     },
     faqs: ARBEITSPLATTEN_FAQS,
   },
   {
     path: '/kuechenmontage-wuerzburg',
-    lastModified: '2026-08-24',
+    lastModified: '2026-10-13',
     title: 'Küchenmontage Würzburg: Aufmaß, Aufbau & Abnahme | VIDEKO Küchen',
     description:
       'Küchenmontage in Würzburg und Umgebung: Laseraufmaß, feste Termine, sauberer Aufbau, Anschluss und gemeinsame Endabnahme – koordiniert über einen Ansprechpartner.',

@@ -24,15 +24,13 @@ import cQuarz from '../assets/images/materialien/cards/material-card-quarzkompos
  * Abgrenzung zum Journalbeitrag /journal/welche-arbeitsplatte-passt-zu-mir:
  * Der Artikel ist der ausführliche Lesetext zur Materialentscheidung. Diese
  * Seite ist die Leistungsseite — sie beantwortet, was VIDEKO dabei übernimmt
- * (Beratung, Material, Kante, Ausschnitte, Aufmaß über den Fachpartner) und
+ * (Beratung, Material, Kante, Ausschnitte und Aufmaß) und
  * verlinkt für den langen Text auf den Artikel. Deshalb sind die Materialtexte
  * hier bewusst neu und kürzer gefasst statt aus dem Artikel übernommen.
  *
- * INHALTLICHE LEITPLANKE: Die Materialauswahl entspricht den im Projekt
- * geführten Materialien (MaterialsSection.jsx). Aufmaß und Fertigung von
- * Naturstein und Keramik laufen laut /alles-aus-einer-hand über den jeweiligen
- * Fachpartner — das steht hier genauso. Keine Preise, keine Stärkenangaben,
- * keine Herstellernamen.
+ * Die Materialauswahl entspricht den im Projekt geführten Materialien
+ * (MaterialsSection.jsx). Wer Aufmaß und Fertigung übernimmt, wird im Angebot
+ * ausgewiesen. Keine Preise, Stärkenangaben oder Herstellernamen erfinden.
  */
 
 const MATERIALIEN = [
@@ -76,7 +74,7 @@ const RICHTIG = {
     'Material und Pflegeaufwand werden ehrlich benannt',
     'Kante, Ausschnitte und Anschlüsse gehören in die Planung',
     'Oberflächen werden im Studio im echten Licht angesehen',
-    'Das Aufmaß macht der Fachpartner, koordiniert über VIDEKO',
+    'Das Aufmaß wird vor der Fertigung geplant und abgestimmt',
   ],
 }
 
@@ -93,8 +91,8 @@ const ABLAUF = [
   },
   {
     step: '03',
-    title: 'Aufmaß beim Fachpartner',
-    text: 'Naturstein und Keramik werden vor Ort aufgemessen – vom Naturstein- oder Keramikpartner, mit dem wir zusammenarbeiten.',
+    title: 'Präzises Aufmaß',
+    text: 'Naturstein und Keramik werden vor der Fertigung vor Ort genau aufgemessen. Zuständigkeit und Termin stimmen wir mit dir ab.',
   },
   {
     step: '04',
