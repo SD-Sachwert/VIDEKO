@@ -38,8 +38,8 @@ export default function Planung() {
     <>
       <PageHero
         kicker="Planung"
-        title={<>Planung, die jeden Tag <span className="grad">Sinn ergibt.</span></>}
-        lead="Von der durchdachten Konstruktion über typische Planungsfehler bis zum transparenten Budget – so entsteht eine Küche, die wirklich passt."
+        title={<>Küchenplanung in Würzburg.<br /><span className="grad">Für deinen Alltag gedacht.</span></>}
+        lead="Persönliche Küchenplanung in Würzburg: vom ersten Gespräch über Grundriss, 3D-Entwurf, typische Planungsfehler und Budget bis zum präzisen Aufmaß."
         image={heroImg}
         aiImage
       />
