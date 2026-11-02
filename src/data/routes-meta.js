@@ -123,7 +123,7 @@ const ALLE_STATISCHEN_ROUTEN = [
     lastModified: '2026-11-02',
     title: 'Küchenstudio Würzburg – Hertzstraße 4 | VIDEKO Küchen',
     description:
-      'Das VIDEKO Küchenstudio in der Hertzstraße 4 in Würzburg: Materialien fühlen, Fronten vergleichen, Planung verstehen – nach Terminvereinbarung, ohne Verkaufsdruck.',
+      'In der Hertzstraße 4 entsteht das VIDEKO Küchenstudio Würzburg. Persönliche Küchenberatung und Planung sind während des Ausstellungsaufbaus nach Termin möglich.',
     crumb: 'Studio',
     ogImage: ogStudio,
   },
@@ -139,9 +139,10 @@ const ALLE_STATISCHEN_ROUTEN = [
   },
   {
     path: '/stylefinder',
-    title: 'Stylefinder: Welcher Küchenstil passt zu dir? | VIDEKO Küchen',
+    lastModified: '2026-11-02',
+    title: 'Welche Küche passt zu mir? Küchenstil-Test | VIDEKO Küchen',
     description:
-      'In wenigen Minuten zu einer ersten Einschätzung: Der VIDEKO Stylefinder zeigt dir, welcher Küchenstil und welches Budget zu dir passen.',
+      'Welche Küche passt zu dir? Finde mit dem kostenlosen VIDEKO Küchenstil-Test deine Stilrichtung, passende Materialien und Prioritäten für die Planung – ohne Registrierung.',
     crumb: 'Stylefinder',
     ogImage: ogStylefinder,
   },
