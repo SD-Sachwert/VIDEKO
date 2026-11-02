@@ -85,7 +85,7 @@ export default function KuechenNachMass() {
     <div className="aaeh-page">
       <PageHero
         kicker="Küchen nach Maß"
-        title={<>Dein Raum hat Maße. <span className="grad">Deine Küche auch.</span></>}
+        title={<>Einbauküchen in Würzburg.<br /><span className="grad">Nach Maß für dein Zuhause.</span></>}
         lead="Wände sind selten gerade, Anschlüsse selten dort, wo man sie bräuchte. Wir planen deine Einbauküche für den Raum, den du wirklich hast – und für den Alltag, den du darin führst."
         image={heroImg}
         aiImage
