@@ -69,7 +69,7 @@ export default function Studio() {
         <div className="container pagehero__inner">
           <Reveal>
             <span className="kicker kicker--gold">Studio Würzburg</span>
-            <h1 className="pagehero__title">Küchen erleben.<br /><span className="grad">Nicht nur ansehen.</span></h1>
+            <h1 className="pagehero__title">Küchenstudio Würzburg.<br /><span className="grad">Mehr als nur ansehen.</span></h1>
             <p className="pagehero__lead">
               Unsere Ausstellung in Würzburg befindet sich noch im Aufbau. Persönliche
               Küchenberatung und Planung sind bereits jetzt nach Terminvereinbarung

@@ -72,7 +72,7 @@ export default function KuechenmontageWuerzburg() {
     <div className="aaeh-page">
       <PageHero
         kicker="Küchenmontage Würzburg"
-        title={<>Der Tag, an dem sich zeigt, <span className="grad">wie gut geplant wurde.</span></>}
+        title={<>Küchenmontage in Würzburg.<br /><span className="grad">Präzise bis zur Abnahme.</span></>}
         lead="Eine Küche wird nicht beim Aufbau gut, sondern beim Aufmaß. Wir messen millimetergenau, terminieren verbindlich und montieren mit dem eigenen Team – in Würzburg und der Region."
         image={heroImg}
         aiImage

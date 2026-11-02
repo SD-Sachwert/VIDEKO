@@ -66,7 +66,7 @@ import ogMontage from '../assets/images/leistungen/ls-install.webp'
 
 export const HOME_META = {
   path: '/',
-  lastModified: '2026-08-24',
+  lastModified: '2026-11-02',
   title: 'VIDEKO Küchen | Küchenstudio Würzburg',
   description:
     'VIDEKO Küchen – dein Küchenstudio in Würzburg. Küchenplanung, ehrliche Beratung und maßgeschneiderte Küchen für deinen Alltag.',
@@ -93,15 +93,15 @@ const ALLE_STATISCHEN_ROUTEN = [
   },
   {
     path: '/alles-aus-einer-hand',
-    lastModified: '2026-08-24',
-    title: 'Nicht nur Küche. Der ganze Raum. | VIDEKO Küchen',
+    lastModified: '2026-11-02',
+    title: 'Küchenrenovierung Würzburg – Küche & Raum neu planen | VIDEKO',
     description:
-      'Küche, Elektro, Boden, Wand, Spanndecke, Licht und Montage – über VIDEKO koordiniert, mit passenden Fachpartnern geplant und abgestimmt.',
+      'Küchenrenovierung in Würzburg: Küche, Elektro, Boden, Wand, Decke und Licht gemeinsam planen. VIDEKO koordiniert die Umsetzung mit Fachpartnern.',
     crumb: 'Alles aus einer Hand',
     ogImage: ogAllesAusEinerHand,
     service: {
-      name: 'Küchenumbau mit Koordination aller Gewerke',
-      serviceType: 'Küchenumbau',
+      name: 'Küchenrenovierung mit Koordination der Gewerke',
+      serviceType: 'Küchenrenovierung',
       description:
         'Küche, Elektro, Boden, Wand, Decke und Licht werden gemeinsam geplant. VIDEKO koordiniert die Fachpartner und den Terminplan.',
     },
@@ -120,7 +120,7 @@ const ALLE_STATISCHEN_ROUTEN = [
   },
   {
     path: '/studio',
-    lastModified: '2026-08-24',
+    lastModified: '2026-11-02',
     title: 'Küchenstudio Würzburg – Hertzstraße 4 | VIDEKO Küchen',
     description:
       'Das VIDEKO Küchenstudio in der Hertzstraße 4 in Würzburg: Materialien fühlen, Fronten vergleichen, Planung verstehen – nach Terminvereinbarung, ohne Verkaufsdruck.',
@@ -147,10 +147,10 @@ const ALLE_STATISCHEN_ROUTEN = [
   },
   {
     path: '/planung',
-    lastModified: '2026-08-24',
-    title: 'Küchenplanung Würzburg: Ablauf, Fehler & Budget | VIDEKO Küchen',
+    lastModified: '2026-11-02',
+    title: 'Küchenplanung Würzburg – 3D-Planung & Beratung | VIDEKO',
     description:
-      'Küchenplanung aus Würzburg: wie eine Küche entsteht, welche Planungsfehler typisch sind und wie ein realistisches Budget aussieht – von der Idee bis zur Abnahme.',
+      'Persönliche Küchenplanung in Würzburg: von Beratung und 3D-Entwurf über Materialien, Budget und Laseraufmaß bis zur Montage. Planungsgespräch anfragen.',
     crumb: 'Planung',
     ogImage: ogPlanung,
     service: {
@@ -162,10 +162,10 @@ const ALLE_STATISCHEN_ROUTEN = [
   },
   {
     path: '/kuechen-nach-mass',
-    lastModified: '2026-08-24',
-    title: 'Küchen nach Maß in Würzburg – Einbauküchen & Designküchen | VIDEKO',
+    lastModified: '2026-11-02',
+    title: 'Einbauküchen Würzburg – Küchen nach Maß | VIDEKO Küchen',
     description:
-      'Einbauküche, Designküche oder Küche nach Maß: Wie VIDEKO in Würzburg Grundriss, Maße, Materialien und Stil zu einer Küche zusammenführt, die genau in deinen Raum passt.',
+      'Einbauküchen in Würzburg nach Maß planen: VIDEKO verbindet Grundriss, Stauraum, Geräte und Materialien zu einer Küche, die zu deinem Raum und Alltag passt.',
     crumb: 'Küchen nach Maß',
     ogImage: ogNachMass,
     service: {
@@ -194,10 +194,10 @@ const ALLE_STATISCHEN_ROUTEN = [
   },
   {
     path: '/kuechenmontage-wuerzburg',
-    lastModified: '2026-08-24',
-    title: 'Küchenmontage Würzburg: Aufmaß, Aufbau & Abnahme | VIDEKO Küchen',
+    lastModified: '2026-11-02',
+    title: 'Küchenmontage Würzburg – Aufmaß bis Abnahme | VIDEKO',
     description:
-      'Küchenmontage in Würzburg und Umgebung: Laseraufmaß, feste Termine, sauberer Aufbau, Anschluss und gemeinsame Endabnahme – koordiniert über einen Ansprechpartner.',
+      'Küchenmontage in Würzburg und Umgebung: von Laseraufmaß und Anlieferung über den sauberen Aufbau bis zur gemeinsamen Abnahme. Ablauf ansehen und Beratung anfragen.',
     crumb: 'Küchenmontage',
     ogImage: ogMontage,
     service: {
@@ -258,10 +258,10 @@ const ALLE_STATISCHEN_ROUTEN = [
   },
   {
     path: '/beratung',
-    lastModified: '2026-08-24',
+    lastModified: '2026-11-02',
     title: 'Küchenberatung Würzburg – persönlich & unverbindlich | VIDEKO Küchen',
     description:
-      'Küchenberatung in Würzburg: Erzähl uns von deinem Raum und deinen Vorstellungen. Wir melden uns und sortieren gemeinsam die nächsten Schritte.',
+      'Persönliche Küchenberatung in Würzburg: Wünsche, Grundriss und Budget besprechen, Materialien vergleichen und die nächsten Schritte planen. Termin bei VIDEKO anfragen.',
     crumb: 'Beratung',
     ogImage: ogLeistungen,
     service: {

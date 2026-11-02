@@ -113,8 +113,8 @@ export default function AllesAusEinerHand() {
       {/* 1 — HERO */}
       <PageHero
         kicker="Komplettumbau"
-        title={<>Nicht nur Küche. <span className="grad">Der ganze Raum.</span></>}
-        lead="Küche, Elektro, Boden, Wand, Decke und Licht greifen ineinander. Wir planen sie zusammen und koordinieren die Fachpartner, die sie umsetzen."
+        title={<>Küchenrenovierung in Würzburg.<br /><span className="grad">Der ganze Raum im Blick.</span></>}
+        lead="Wenn du deine Küche renovieren oder komplett erneuern möchtest, müssen Küche, Elektro, Boden, Wand, Decke und Licht zusammenpassen. Wir planen die Arbeiten und koordinieren die ausführenden Fachpartner."
         image={heroImg}
         aiImage
       >
