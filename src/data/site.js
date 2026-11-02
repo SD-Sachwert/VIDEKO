@@ -123,7 +123,9 @@ export function localBusinessLd() {
     '@context': 'https://schema.org',
     '@type': ['HomeAndConstructionBusiness', 'FurnitureStore'],
     '@id': `${SITE.origin}/#studio`,
-    name: `${BRAND.name} Studio Würzburg`,
+    // Exakter Profilname des Betriebs; die Marke bleibt als alternativer Name auffindbar.
+    name: BRAND.listingName,
+    alternateName: BRAND.name,
     parentOrganization: { '@id': `${SITE.origin}/#organization` },
     url: `${SITE.origin}/studio`,
     image: absUrl(SITE.defaultOgImage),
