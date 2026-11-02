@@ -43,7 +43,7 @@ const DROPDOWN = {
     { label: 'Küchen nach Maß', to: '/kuechen-nach-mass' },
     { label: 'Arbeitsplatten', to: '/arbeitsplatten' },
     { label: 'Küchenmontage', to: '/kuechenmontage-wuerzburg' },
-    { label: 'Alles aus einer Hand', to: '/alles-aus-einer-hand' },
+    { label: 'Küchenrenovierung & Umbau', to: '/alles-aus-einer-hand' },
   ],
   about: [
     { label: 'Über uns', to: '/ueber-uns' },
