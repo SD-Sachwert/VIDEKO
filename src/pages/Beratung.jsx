@@ -112,7 +112,7 @@ export default function Beratung() {
         <div className="container pagehero__inner">
           <Reveal>
             <span className="kicker kicker--gold">Beratung anfragen</span>
-            <h1 className="pagehero__title">Erzähl uns groß,<br /><span className="grad">wir sortieren den Rest.</span></h1>
+            <h1 className="pagehero__title">Küchenberatung in Würzburg.<br /><span className="grad">Persönlich. Ohne Druck.</span></h1>
             <p className="pagehero__lead">
               Kein Verkaufstheater, kein künstlicher Druck, kein Fachchinesisch. Nur ehrliche
               Beratung, klare nächste Schritte und eine Küche, die zu deinem Alltag passt.
