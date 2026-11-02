@@ -222,7 +222,7 @@ export default function Home() {
             align="center"
             kicker="Komplettumbau"
             title={<>Nicht nur Küche. <span className="grad">Der ganze Raum.</span></>}
-            lead="Elektro, Boden, Wand, Decke und Licht hängen an jeder neuen Küche mit dran. Wir planen sie zusammen und koordinieren die Fachpartner, die sie umsetzen."
+            lead="Bei einer Küchenrenovierung hängen oft Elektro, Boden, Wand, Decke und Licht mit dran. Wir planen sie gemeinsam mit deiner Küche und koordinieren die Fachpartner, die sie umsetzen."
           />
           <Reveal className="raum-sec__grid">
             {RAUM_GEWERKE.map(({ icon: Icon, label }) => (
@@ -233,7 +233,7 @@ export default function Home() {
             ))}
           </Reveal>
           <Reveal className="raum-sec__cta">
-            <CTAButton to="/alles-aus-einer-hand">Alles aus einer Hand</CTAButton>
+            <CTAButton to="/alles-aus-einer-hand">Küchenrenovierung & Umbau</CTAButton>
             <CTAButton to="/leistungen" variant="dark">Unsere Leistungen</CTAButton>
           </Reveal>
         </div>
