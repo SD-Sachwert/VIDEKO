@@ -25,7 +25,7 @@ const OPTIONS = [
 const TRUST = [
   { icon: ShieldCheck, t: '100% unverbindlich', d: 'Ohne Verpflichtungen' },
   { icon: Sparkles, t: 'Für deinen Stil', d: 'Individuell & persönlich' },
-  { icon: Clock, t: '2 Minuten Zeit', d: 'Schnell & unkompliziert' },
+  { icon: Clock, t: '2–4 Minuten Zeit', d: 'Schnell & unkompliziert' },
   { icon: Award, t: 'Durchdachte Planung', d: 'Persönlich statt von der Stange' },
 ]
 
@@ -48,9 +48,9 @@ function StyleCard({ active }) {
     <div className={`sfc sfc--main ${active ? 'is-active' : ''}`}>
       <span className="sfc__label">Empfohlener erster Schritt</span>
       <span className="sfc__title sfc__title--main">Stylefinder starten</span>
-      <span className="sfc__text">Beantworte 7 kurze Fragen und wir sagen dir, welche Küche zu dir passt – bevor du dich in 14 Beigetönen verlierst.</span>
+      <span className="sfc__text">Klick dich durch 8 kurze Schritte und finde eine erste Stilrichtung – bevor du dich in 14 Beigetönen verlierst.</span>
       <div className="sfq">
-        <span className="sfq__prog">Frage 1 von 7</span>
+        <span className="sfq__prog">Schritt 1 von 8</span>
         <span className="sfq__q">Welche Atmosphäre spricht dich am meisten an?</span>
         <div className="sfq__opts">
           {OPTIONS.map((o, i) => (
@@ -64,15 +64,15 @@ function StyleCard({ active }) {
       <div className="sfresult">
         <LazyBg className="sfresult__img" image={resultImg} aria-hidden="true" />
         <span className="sfresult__body">
-          <span className="sfresult__k">Voraussichtliches Ergebnis</span>
-          <span className="sfresult__t">Modern Luxury – 92% Match</span>
-          <span className="sfresult__d">Zeitlos. Edel. Individuell.</span>
+          <span className="sfresult__k">Beispiel für die Auswertung</span>
+          <span className="sfresult__t">Dein Küchenstil und deine Prioritäten</span>
+          <span className="sfresult__d">Erste Orientierung für die Planung.</span>
         </span>
-        <span className="sfresult__badge">92%<i>Match</i></span>
+        <span className="sfresult__badge">Stil<i>Idee</i></span>
       </div>
       <div className="sfc__ctawrap"><CTAButton to="/stylefinder" size="md">Jetzt Stylefinder starten <ArrowRight size={16} strokeWidth={2} /></CTAButton></div>
       <span className="sfc__quip"><Clock size={13} strokeWidth={1.9} /> Dauert kürzer als drei Stunden planlos Küchen googeln.</span>
-      <div className="sfc__micro"><span><Check size={13} strokeWidth={2.6} /> Kostenlos</span><span><Check size={13} strokeWidth={2.6} /> ca. 2 Minuten</span><span><Check size={13} strokeWidth={2.6} /> Ohne Registrierung</span></div>
+      <div className="sfc__micro"><span><Check size={13} strokeWidth={2.6} /> Kostenlos</span><span><Check size={13} strokeWidth={2.6} /> ca. 2–4 Minuten</span><span><Check size={13} strokeWidth={2.6} /> Ohne Registrierung</span></div>
     </div>
   )
 }
