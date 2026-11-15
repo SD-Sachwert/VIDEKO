@@ -14,6 +14,7 @@ import entryGrob from '../assets/images/beratung/entry-grob.webp'
 import entryRueckruf from '../assets/images/beratung/entry-rueckruf.webp'
 import entryStudio from '../assets/images/beratung/entry-studio.webp'
 import { BRAND, STUDIO_ADRESSE } from '../data/company.js'
+import { meldeAnfrage } from '../lib/marketing.js'
 
 const ANLIEGEN = ['Rückruf', 'Studio-Termin', 'Ich habe erst mal Fragen']
 const KUECHENART = ['Zeile', 'L-Küche', 'U-Küche', 'Insel', 'Noch offen']
@@ -81,7 +82,7 @@ export default function Beratung() {
       })
       const data = await res.json().catch(() => ({}))
       if (res.ok && data.ok) {
-        setSent(true); e.target.reset()
+        meldeAnfrage(); setSent(true); e.target.reset()
         setF({ anliegen: '', kueche: '', status: '', zeit: '', budget: '', grundriss: '' }); setFiles([])
       } else setError(true)
     } catch { setError(true) }

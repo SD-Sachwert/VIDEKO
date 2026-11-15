@@ -1,5 +1,6 @@
 import Reveal from '../components/Reveal.jsx'
 import legalText from './datenschutz-text.txt?raw'
+import { aktiveDienste, DATENSCHUTZ_ALLGEMEIN } from '../lib/marketing.js'
 
 /**
  * ACHTUNG – INTERNER STATUS (nicht im öffentlichen Text sichtbar):
@@ -30,6 +31,19 @@ const ELEMENTS = legalText
     const headingLike = l.length < 95 && /[A-ZÄÖÜ0-9]/.test(l[0]) && !/[.:,;]$/.test(l)
     return { tag: headingLike ? 'h3' : 'p', text: l, key: idx }
   })
+
+// Werbe- und Statistikdienste erscheinen nur, wenn ihre ID gesetzt ist (src/lib/marketing.js),
+// und zwar am Ende von Abschnitt 4, direkt vor „5. Plugins und Tools“.
+const DIENSTE = aktiveDienste()
+if (DIENSTE.length) {
+  const vor = ELEMENTS.findIndex((el) => el.tag === 'h2' && el.text.startsWith('5.'))
+  const neu = [
+    { tag: 'h3', text: 'Werbe- und Statistikdienste (nur mit Einwilligung)', key: 'mk-h' },
+    ...DIENSTE.map((d, i) => ({ tag: 'p', text: `${d.name} (${d.zweck === 'statistik' ? 'Statistik' : 'Marketing'}), Anbieter: ${d.anbieter}. ${d.text}`, key: `mk-${i}` })),
+    { tag: 'p', text: DATENSCHUTZ_ALLGEMEIN, key: 'mk-a' },
+  ]
+  ELEMENTS.splice(vor < 0 ? ELEMENTS.length : vor, 0, ...neu)
+}
 
 export default function Datenschutz() {
   return (

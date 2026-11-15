@@ -4,6 +4,7 @@ import logoMark from '../assets/brand/logo-web-auf-dunkel.webp'
 import Img from './Img.jsx'
 import { BRAND, ACTIVE_OPERATOR, OPERATOR_NOTICE, STUDIO_MAPS_URL } from '../data/company.js'
 
+import { CookieEinstellungenLink } from './Einwilligung.jsx'
 import kitchenVision from '../assets/images/kitchen-vision-1.webp'
 
 // "Kitchen Vision" als einheitlicher Footer-Hintergrund auf allen Seiten
@@ -159,6 +160,7 @@ export default function Footer() {
             <Link to="/agb">AGB</Link>
             <Link to="/versand-lieferung">Versand &amp; Lieferung</Link>
             <Link to="/rueckgabe-widerruf">Rückgabe &amp; Widerruf</Link>
+            <CookieEinstellungenLink />
           </div>
         </div>
 

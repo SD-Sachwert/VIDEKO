@@ -29,6 +29,7 @@ import iHell from '../../assets/images/inspiration/05_helle_kueche.webp'
 import iWohnlich from '../../assets/images/inspiration/03_wohnliche_kueche.webp'
 import iModernK from '../../assets/images/inspiration/02_moderne_kueche.webp'
 import { BRAND } from '../../data/company.js'
+import { meldeAnfrage } from '../../lib/marketing.js'
 
 const STEPS = ['Stil', 'Mehrwerte', 'Materialdetails', 'Farbwelten', 'Funktionsraum', 'Budget', 'Prioritäten', 'Ergebnis']
 
@@ -219,7 +220,7 @@ export default function StylefinderFlow() {
         }),
       })
       const data = await res.json().catch(() => ({}))
-      if (res.ok && data.ok) setPlanSent(true)
+      if (res.ok && data.ok) { meldeAnfrage(); setPlanSent(true) }
       else setPlanError(true)
     } catch { setPlanError(true) }
     setPlanSending(false)

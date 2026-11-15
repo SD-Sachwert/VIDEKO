@@ -6,6 +6,7 @@ import AmbientBackground from './AmbientBackground.jsx'
 import Header from './Header.jsx'
 import Footer from './Footer.jsx'
 import RouteSeo from './RouteSeo.jsx'
+import Einwilligung from './Einwilligung.jsx'
 // Anfragemodell (§ 3/§ 4): „Deine Anfrageliste" ist ein rein lokales Merk-Panel
 // für die unverbindliche E-Mail-Sammelanfrage – KEIN Warenkorb/Checkout, keine
 // Bestellung, keine Server-Speicherung.
@@ -130,6 +131,7 @@ export default function Layout() {
         </main>
         <Footer />
         <ShopOverlays />
+        <Einwilligung />
       </div>
     </CartProvider>
   )

@@ -59,6 +59,7 @@ import imgProzess from '../assets/images/karriere/08_bewerbungsprozess_teammeeti
 import imgFormular from '../assets/images/karriere/09_bewerbung_interior_formular.webp'
 import imgCta from '../assets/images/karriere/10_cta_footer_premium_showroom.webp'
 import { BRAND, STUDIO_ADRESSE, STUDIO_MAPS_URL } from '../data/company.js'
+import { meldeAnfrage } from '../lib/marketing.js'
 
 const ROLES = [
   { title: 'Beratung & Verkauf', cat: 'verkaufen', icon: Store, image: jVerkauf, text: 'Für Menschen, die zuhören können, bevor sie verkaufen.' },
@@ -130,7 +131,7 @@ export default function Karriere() {
         }),
       })
       const data = await res.json().catch(() => ({}))
-      if (res.ok && data.ok) { setSent(true); e.target.reset() } else setError(true)
+      if (res.ok && data.ok) { meldeAnfrage(); setSent(true); e.target.reset() } else setError(true)
     } catch { setError(true) }
     setSending(false)
   }
