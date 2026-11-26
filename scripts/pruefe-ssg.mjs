@@ -153,16 +153,20 @@ for (const r of routen) {
 
   // 6 sichtbarer Text
   const text = (wurzel || '').replace(TAGS_RAUS, ' ').replace(/\s+/g, ' ').trim()
-  if (sollKoerper && text.length < 200) f.push(`nur ${text.length} Zeichen Text`)
+  // Inhaltskriterien (Text, H1, Links) betreffen nur indexierbare Seiten.
+  // Bewusst noindex gesetzte Seiten (z. B. Stadtfest-Buehnenansichten)
+  // melden sie als Hinweis statt als Fehler.
+  const inhalt = soll.noindex ? w : f
+  if (sollKoerper && text.length < 200) inhalt.push(`nur ${text.length} Zeichen Text`)
 
   // 5 H1
   const h1 = ((wurzel || '').match(/<h1[^>]*>([\s\S]*?)<\/h1>/) || [])[1]
   const h1Text = h1 ? h1.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim() : ''
-  if (sollKoerper && !h1Text) f.push('kein H1')
+  if (sollKoerper && !h1Text) inhalt.push('kein H1')
 
   // 7 interne Links
   const links = [...(wurzel || '').matchAll(/<a\b[^>]*href="(\/[^"]*)"/g)].map((m) => m[1])
-  if (sollKoerper && links.length === 0) f.push('keine internen Links')
+  if (sollKoerper && links.length === 0) inhalt.push('keine internen Links')
 
   // 8 Titel
   const title = entschaerft((html.match(/<title>([\s\S]*?)<\/title>/) || [])[1] || '').trim()
