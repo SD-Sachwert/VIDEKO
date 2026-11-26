@@ -19,6 +19,16 @@ import { journalArticleHead } from '../data/head.js'
  * also ohne Anschluss.
  */
 const WEITER = {
+  'kuechenstudio-wuerzburg-checkliste': {
+    text: 'Wie unsere persönliche Beratung in Würzburg abläuft, erfährst du unter',
+    label: 'Küchenplanung',
+    to: '/planung',
+  },
+  'kuechenrenovierung-wuerzburg-ablauf': {
+    text: 'Wie wir die Küche und angrenzende Gewerke gemeinsam planen und koordinieren, steht unter',
+    label: 'Alles aus einer Hand',
+    to: '/alles-aus-einer-hand',
+  },
   'licht-in-der-kueche': {
     text: 'Wann Licht in der Planung entschieden wird – solange die Leitungswege offen sind – steht unter',
     label: 'Küchenplanung',
