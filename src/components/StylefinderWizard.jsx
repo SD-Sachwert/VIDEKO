@@ -210,7 +210,7 @@ export default function StylefinderWizard() {
               <label className="field"><span>Telefon</span><input type="tel" placeholder="Optional" /></label>
               <label className="field"><span>PLZ / Ort</span><input type="text" placeholder="z. B. 97070 Würzburg" /></label>
             </div>
-            <label className="field"><span>Gewünschter Fertigstellungstermin</span><input type="text" placeholder="z. B. Herbst 2026" /></label>
+            <label className="field"><span>Gewünschter Fertigstellungstermin</span><input type="text" placeholder="z. B. Sommer 2027" /></label>
             <label className="field"><span>Nachricht</span><textarea rows={3} placeholder="Worauf kommt es dir an?" /></label>
             <label className="sfupload">
               <Upload size={18} strokeWidth={1.7} />
