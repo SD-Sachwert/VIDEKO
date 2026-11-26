@@ -1,6 +1,14 @@
 # Entwurf: Leistungsseite „Küchen für Investoren und Bauträger“
 
-**Status:** Entwurf, **nicht veröffentlicht**, keine Route angelegt.
+**Status (26.11.2026):** **veröffentlicht** unter `/kuechen-fuer-bautraeger` und
+`/kuechen-fuer-immobilieninvestoren` (Inhalt: `src/data/projektkuechen.js`).
+Der Umfang ist auf die bestätigten Leistungen begrenzt: Beratung, Planung,
+Aufmaß, Arbeitsplatten über Partner, Montage durch das eigene Team,
+Abstimmung angrenzender Gewerke mit Partnern. Keine Projektgrößen,
+Referenzen, Sonderleistungen oder Lieferzeiten. Die Fragen 2–8 unten bleiben
+offen; jede Antwort darf erst danach auf die Seite.
+
+**Früherer Status:** Entwurf, nicht veröffentlicht, keine Route angelegt.
 **Grund:** Das Angebot für Bauträger und Immobilieninvestoren ist seit 26.11.2026 bestätigt; konkrete Projektleistungen, Umfang und Ansprechpartner sind noch zu klären. Der Auftrag lautet: „sofern das
 Angebot bestätigt ist“. Die Seite geht erst live, wenn alle Pflichtfragen
 unten beantwortet sind.

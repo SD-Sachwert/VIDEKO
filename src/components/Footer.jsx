@@ -45,6 +45,9 @@ const SERVICE = [
   { label: 'Arbeitsplatten', to: '/arbeitsplatten' },
   { label: 'Küchenmontage', to: '/kuechenmontage-wuerzburg' },
   { label: 'Küchenrenovierung & Umbau', to: '/alles-aus-einer-hand' },
+  { label: 'Küchen für Bauträger', to: '/kuechen-fuer-bautraeger' },
+  { label: 'Küchen für Investoren', to: '/kuechen-fuer-immobilieninvestoren' },
+  { label: 'Unsere Marken', to: '/marken' },
 ]
 
 // Pro Seite leichte Variation: Bildmotiv, Komposition (object-position), Overlay-Ton + die jeweils stärksten Claims.

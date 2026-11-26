@@ -83,6 +83,18 @@ const WEGWEISER = [
     link: 'Studio ansehen',
     to: '/studio',
   },
+  {
+    titel: 'Unsere Marken',
+    text: 'Küchen von Schüller, next125, IMPULS und nobilia, Geräte, Spülen und Armaturen – und wofür sich welche Marke eignet.',
+    link: 'Marken ansehen',
+    to: '/marken',
+  },
+  {
+    titel: 'Für Bauträger und Investoren',
+    text: 'Küchenplanung, Aufmaß und Montage für Neubauprojekte, Mietwohnungen und Sanierungen im Bestand.',
+    link: 'Projektküchen ansehen',
+    to: '/kuechen-fuer-bautraeger',
+  },
 ]
 
 const STATS = [

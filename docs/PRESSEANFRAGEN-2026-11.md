@@ -14,8 +14,9 @@ die Main-Post.
    geratene Adresse benutzt wird.
 2. **`[Name]` ersetzen.** Redaktionen wollen eine Person, mit der sie
    sprechen können. Eine Mail ohne Namen wird seltener beantwortet.
-3. **Studio-Stand prüfen.** Die Texte sagen „im Aufbau“. Ist das Studio
-   eröffnet, wird der Satz angepasst. Dann wird auch ein Termin genannt.
+3. **Studio-Stand prüfen.** Die Texte sagen „im Aufbau“. Die Eröffnung ist
+   für den **1. März 2027** bestätigt und darf genannt werden. Nach der
+   Eröffnung wird „im Aufbau“ ersetzt.
 4. **Telefon:** ausschließlich 0931 29764861.
 5. **Fotos:** nur echte Aufnahmen aus der Hertzstraße. Keine
    KI-Visualisierungen als „unser Studio“.
@@ -24,12 +25,21 @@ die Main-Post.
 
 - VIDEKO Küchen eG, eingetragen am 02.09.2026, AG Würzburg GnR 298.
 - Hertzstraße 4, 97076 Würzburg.
-- Beratung nach Terminvereinbarung.
-- Leistungen: Planung, 3D-Planung, Aufmaß, Montage, Koordination angrenzender
+- Beratung nach Terminvereinbarung bis zur Eröffnung.
+- Eröffnung der Ausstellung am 1. März 2027. Danach geöffnet 09:00–18:00 Uhr;
+  die Wochentage sind noch **nicht** bestätigt und werden nicht genannt.
+- Leistungen: Planung, 3D-Planung, Aufmaß, Montage durch das eigene Team,
+  Arbeitsplatten über Naturstein-/Keramikpartner, Koordination angrenzender
   Gewerke mit Partnern.
+- Sortiment (als „wir führen“): Küchen von Schüller, next125, IMPULS, nobilia;
+  Geräte von AEG, NEFF, Bosch, Miele, BORA; Spülen und Armaturen von Quooker,
+  BLANCO, SCHOCK.
+- Auch für Bauträger und Immobilieninvestoren (Planung und Montage; keine
+  Projektgrößen, Referenzen oder Lieferzeiten nennen).
 
 **Nicht verwenden:** Umsätze, Kundenzahlen, Rankings, „erste“, „größte“ oder
-„führende“, erfundene Kundenstimmen und Preise.
+„führende“, erfundene Kundenstimmen und Preise, „autorisierter Händler“ oder
+„Partner von …“ für eine Marke.
 
 ---
 
@@ -45,8 +55,8 @@ Betreff: Drehidee: Ein Küchenstudio entsteht in der Hertzstraße, Würzburg
 >
 > Vielleicht ist das etwas für einen kurzen Beitrag: Wir zeigen den Ausbau,
 > eine Küchenplanung in 3D und erklären, warum wir uns als Genossenschaft
-> gegründet haben. Wenn Sie es nach der Eröffnung noch einmal aufgreifen
-> möchten, wäre ein zweiter Termin auch möglich.
+> gegründet haben. Die Ausstellung öffnet am 1. März 2027. Wenn Sie es dann
+> noch einmal aufgreifen möchten, wäre ein zweiter Termin auch möglich.
 >
 > Für eine kurze Vorabbesichtigung ohne Kamera sind wir ebenfalls offen.
 >
@@ -170,6 +180,35 @@ Betreff: Neue Mitgliedsgenossenschaft: VIDEKO Küchen eG, Würzburg
 
 ---
 
+## 7. Eröffnungsmeldung (Versand ab Mitte Februar 2027)
+
+Gleicher Text für Main-Post (Lokalteil), Würzburg erleben / wuerzburgerleben.de,
+Stadtmarketing-Newsletter und das Anzeigenblatt. Nur mit echten Fotos aus der
+fertigen Ausstellung verschicken. Ablauf und Termine: `KAMPAGNE-ERÖFFNUNG-2027-03-01.md`.
+
+Betreff: Neues Küchenstudio in der Hertzstraße: VIDEKO öffnet am 1. März
+
+> Guten Tag,
+>
+> am 1. März 2027 öffnet die VIDEKO Küchen eG ihre Küchenausstellung in der
+> Hertzstraße 4 in Würzburg. Gezeigt werden Küchen von Schüller, next125,
+> IMPULS und nobilia, dazu Geräte, Spülen und Armaturen, die man vor Ort
+> ausprobieren kann.
+>
+> VIDEKO plant Küchen in 3D, misst vor Ort auf und montiert mit eigenem Team.
+> Die Genossenschaft ist seit September 2026 im Genossenschaftsregister
+> eingetragen.
+>
+> Geöffnet ist ab dem 1. März von 9 bis 18 Uhr [Wochentage nach Bestätigung
+> eintragen]. Fotos aus der Ausstellung schicken wir gern mit, für ein
+> Gespräch vor Ort sind wir jederzeit offen.
+>
+> Freundliche Grüße
+> [Name], VIDEKO Küchen eG
+> Hertzstraße 4 · 97076 Würzburg · 0931 29764861 · info@videko-kuechen.de
+
+---
+
 ## Nachverfolgen
 
 | Medium | Versendet am | Antwort | Ergebnis (Link) |
@@ -181,6 +220,7 @@ Betreff: Neue Mitgliedsgenossenschaft: VIDEKO Küchen eG, Würzburg
 | Stadtmarketing | | | |
 | IHK WiM | | | |
 | Prüfungsverband | | | |
+| Eröffnungsmeldung (ab Feb. 2027) | | | |
 
 Kommt nach zwei Wochen keine Antwort, einmal kurz nachfragen. Danach nicht
 mehr. Jeden veröffentlichten Beitrag mit Link hier eintragen. Ein Beitrag ist

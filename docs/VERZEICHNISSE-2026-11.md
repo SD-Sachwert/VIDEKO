@@ -16,12 +16,19 @@ Pakete werden nicht gebucht.
 | E-Mail | info@videko-kuechen.de |
 | Website | https://videko-kuechen.de/ |
 | Kategorie | Küchenstudio / Küchenplanung / Küchenmontage |
-| Öffnungszeiten | „Beratung nach Terminvereinbarung“, keine festen Zeiten, solange nichts entschieden ist |
+| Öffnungszeiten | **bis 28.02.2027:** „Beratung nach Terminvereinbarung“. **Ab 01.03.2027:** 09:00–18:00 Uhr – die Wochentage sind noch nicht bestätigt, deshalb noch keine Wochentage eintragen. Wo das Portal nur feste Tage erlaubt: weiter „nach Vereinbarung“ |
+| Ausstellung | Eröffnung am **1. März 2027** in der Hertzstraße 4 |
 | Register | Genossenschaftsregister AG Würzburg, GnR 298 |
-| Kurzbeschreibung | Küchenstudio in der Hertzstraße 4, Würzburg. Küchenplanung mit 3D-Planung, Aufmaß, Arbeitsplatten und Montage aus einer Hand. Angrenzende Gewerke stimmen wir mit Partnerbetrieben ab. Beratung nach Terminvereinbarung. |
+| Kurzbeschreibung | Küchenstudio in der Hertzstraße 4, Würzburg. Küchen von Schüller, next125, IMPULS und nobilia, Geräte von AEG, NEFF, Bosch, Miele und BORA, Spülen und Armaturen von Quooker, BLANCO und SCHOCK. Küchenplanung mit 3D-Planung, Aufmaß, Arbeitsplatten und Montage durch das eigene Team, auch für Bauträger und Immobilieninvestoren. Ausstellung ab 1. März 2027, bis dahin Beratung nach Terminvereinbarung. |
+| Marken (Feld „Marken“/„Sortiment“) | Schüller, next125, IMPULS, nobilia, AEG, NEFF, Bosch, Miele, BORA, Quooker, BLANCO, SCHOCK |
+| Zielgruppen | Privatkunden, Bauträger, Immobilieninvestoren |
 
-Keine Mobilnummer, kein Fax. Auch kein „24 Stunden“ und keine
-Marken, solange die Lieferbeziehung nicht bestätigt ist.
+Keine Mobilnummer, kein Fax, kein „24 Stunden“. Die Marken sind seit
+26.11.2026 bestätigt und dürfen genannt werden – aber **nur als „wir führen“**,
+nie als „autorisierter Händler“, „Premium-Partner“ oder „offizieller Partner“,
+solange der Hersteller das nicht schriftlich bestätigt hat. Keine
+Herstellerlogos hochladen, solange die Nutzungsrechte nicht geklärt sind
+(siehe `HERSTELLER-ANFRAGEN-2026-11.md`).
 
 ## 1. Nummernwechsel: bestehende Einträge korrigieren
 
@@ -108,7 +115,9 @@ Betreff: Aufnahme Küchenstudio Würzburg: VIDEKO Küchen eG
 > VIDEKO Küchen eG, Hertzstraße 4, 97076 Würzburg, Tel. 0931 29764861,
 > info@videko-kuechen.de, https://videko-kuechen.de/
 > Leistungen: Küchenplanung mit 3D-Planung, Aufmaß, Arbeitsplatten,
-> Montage. Beratung nach Terminvereinbarung.
+> Montage durch das eigene Team. Küchen von Schüller, next125, IMPULS und
+> nobilia. Ausstellung ab 1. März 2027, bis dahin Beratung nach
+> Terminvereinbarung.
 >
 > Ist ein Grundeintrag kostenlos? Falls Kosten entstehen, teilen Sie uns
 > diese bitte vorher mit. Wir buchen nichts ohne schriftliches Angebot.

@@ -95,8 +95,13 @@ export default function Studio() {
             <h2 className="lp-h2">Küchen, Geräte und Ausstattung.</h2>
             <p className="lp-lead">Wir führen Küchen von {BRAND.assortment.kitchens.join(', ')}.</p>
             <p className="lp-lead">Elektrogeräte: {BRAND.assortment.appliances.join(', ')}. Spülen und Armaturen: {BRAND.assortment.sinksAndTaps.join(', ')}.</p>
+            <p className="lp-lead"><TextLink href="/marken">Alle Marken im Überblick</TextLink></p>
             <h2 className="lp-h2">Küchen für Bauträger und Immobilieninvestoren.</h2>
             <p className="lp-lead">Auch für Bauträger und Immobilieninvestoren bieten wir Küchenplanung und Montage an. Umfang, Ausstattung und Terminplanung stimmen wir im persönlichen Projektgespräch ab.</p>
+            <p className="lp-lead">
+              Mehr dazu: <TextLink href="/kuechen-fuer-bautraeger">Küchen für Bauträger</TextLink> und{' '}
+              <TextLink href="/kuechen-fuer-immobilieninvestoren">Küchen für Immobilieninvestoren</TextLink>.
+            </p>
             <CTAButton to="/beratung">Projekt anfragen</CTAButton>
           </Reveal>
         </div>

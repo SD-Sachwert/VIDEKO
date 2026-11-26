@@ -16,6 +16,29 @@ Stand 26.11.2026. Es entstehen keine Kosten.
 - Das Telefon im JSON-LD der Startseite ist `+4993129764861`.
 - `robots.txt` verweist auf die Sitemap.
 - Die IndexNow-Schlüsseldatei ist erreichbar.
+- **Suchbegriff → Zielseite** (`SUCHBEGRIFFE` im Skript): Jede Zielseite steht
+  in der Sitemap, liefert 200 und trägt alle Kernwörter des Begriffs in
+  `<title>`, description oder `<h1>`. Das misst keine Position bei Google,
+  sondern stellt sicher, dass die Seite für den Begriff eindeutig bleibt.
+
+  | Suchbegriff | Zielseite |
+  |---|---|
+  | Schüller Küchen Würzburg | /marken/schueller |
+  | next125 Würzburg | /marken/next125 |
+  | nobilia Würzburg | /marken/nobilia |
+  | IMPULS Küchen Würzburg | /marken/impuls |
+  | BORA Würzburg | /marken/bora |
+  | Miele Würzburg | /marken/miele |
+  | Quooker Würzburg | /marken/quooker |
+  | Küchenmarken Würzburg | /marken |
+  | Küchen für Bauträger Würzburg | /kuechen-fuer-bautraeger |
+  | Küchen Immobilieninvestoren Würzburg | /kuechen-fuer-immobilieninvestoren |
+  | Küchenstudio Eröffnung Würzburg | /studio |
+  | Küchenmontage Würzburg | /kuechenmontage-wuerzburg |
+
+  Positionen und Klicks je Begriff kommen erst mit Search-Console-Zugang
+  (siehe „Manuell“). Bis dahin: monatlich in einem privaten Browserfenster
+  von Hand suchen und unten eintragen.
 
 **Ausführen:**
 

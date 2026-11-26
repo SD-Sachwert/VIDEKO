@@ -157,6 +157,9 @@ const SEITEN_MODUL = {
   '/kuechen-nach-mass': 'src/pages/KuechenNachMass.jsx',
   '/arbeitsplatten': 'src/pages/Arbeitsplatten.jsx',
   '/kuechenmontage-wuerzburg': 'src/pages/KuechenmontageWuerzburg.jsx',
+  '/kuechen-fuer-bautraeger': 'src/pages/ProjektKuechen.jsx',
+  '/kuechen-fuer-immobilieninvestoren': 'src/pages/ProjektKuechen.jsx',
+  '/marken': 'src/pages/Marken.jsx',
   '/inspiration': 'src/pages/Inspiration.jsx',
   '/vorher-nachher': 'src/pages/VorherNachher.jsx',
   '/journal': 'src/pages/Journal.jsx',
@@ -204,6 +207,7 @@ const EINSTIEG_CHUNKS = new Set()
 function modulPfadFuer(pfad) {
   if (SEITEN_MODUL[pfad]) return SEITEN_MODUL[pfad]
   if (pfad.startsWith('/journal/')) return 'src/pages/JournalArticle.jsx'
+  if (pfad.startsWith('/marken/')) return 'src/pages/Marke.jsx'
   if (pfad.startsWith('/merch/')) return 'src/pages/ProductDetail.jsx'
   return null // '/' ist statisch importiert und braucht nichts
 }

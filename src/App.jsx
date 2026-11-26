@@ -48,6 +48,9 @@ const Planung = lazy(() => import('./pages/Planung.jsx'))
 const KuechenNachMass = lazy(() => import('./pages/KuechenNachMass.jsx'))
 const Arbeitsplatten = lazy(() => import('./pages/Arbeitsplatten.jsx'))
 const KuechenmontageWuerzburg = lazy(() => import('./pages/KuechenmontageWuerzburg.jsx'))
+const ProjektKuechen = lazy(() => import('./pages/ProjektKuechen.jsx'))
+const Marken = lazy(() => import('./pages/Marken.jsx'))
+const Marke = lazy(() => import('./pages/Marke.jsx'))
 const Team = lazy(() => import('./pages/Team.jsx'))
 // Ziel der gedruckten QR-Codes — wie jede andere Unterseite nachgeladen.
 const Entdecken = lazy(() => import('./pages/Entdecken.jsx'))
@@ -115,6 +118,10 @@ export default function App() {
         <Route path="/kuechen-nach-mass" element={<KuechenNachMass />} />
         <Route path="/arbeitsplatten" element={<Arbeitsplatten />} />
         <Route path="/kuechenmontage-wuerzburg" element={<KuechenmontageWuerzburg />} />
+        <Route path="/kuechen-fuer-bautraeger" element={<ProjektKuechen variante="bautraeger" />} />
+        <Route path="/kuechen-fuer-immobilieninvestoren" element={<ProjektKuechen variante="investoren" />} />
+        <Route path="/marken" element={<Marken />} />
+        <Route path="/marken/:slug" element={<Marke />} />
         <Route path="/inspiration" element={<Inspiration />} />
         <Route path="/vorher-nachher" element={<VorherNachher />} />
         <Route path="/journal" element={<Journal />} />

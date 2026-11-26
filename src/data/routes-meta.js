@@ -58,7 +58,14 @@ import ogKarriere from '../assets/images/karriere/01_hero_team_beratung.webp'
 import {
   ALLES_AUS_EINER_HAND_FAQS, NACH_MASS_FAQS, ARBEITSPLATTEN_FAQS, MONTAGE_FAQS,
 } from './leistungsseiten.js'
+import { BAUTRAEGER, INVESTOREN } from './projektkuechen.js'
+import { MARKEN_MIT_SEITE, MARKEN_FAQS } from './marken.js'
+import ogMarken from '../assets/images/showroom/showroom-hero-immersive.webp'
+import ogMarkeKueche from '../assets/images/leistungen/ls-3d.webp'
+import ogMarkeGeraet from '../assets/images/leistungen/ls-feature.webp'
 import { TERMINAL_OEFFENTLICH } from './terminal-freigabe.js'
+import ogProjektBautraeger from '../assets/images/leistungen/ls-coordination.webp'
+import ogProjektInvestoren from '../assets/images/leistungen/ls-consulting.webp'
 
 import ogNachMass from '../assets/images/inspiration/07_kueche_mit_insel.webp'
 import ogArbeitsplatten from '../assets/images/inspiration/06_materialien_und_details.webp'
@@ -209,6 +216,57 @@ const ALLE_STATISCHEN_ROUTEN = [
     },
     faqs: MONTAGE_FAQS,
   },
+  {
+    path: '/kuechen-fuer-bautraeger',
+    lastModified: '2026-11-26',
+    title: 'Küchen für Bauträger in Würzburg – Planung & Montage | VIDEKO',
+    description:
+      'Küchenplanung, Aufmaß und Montage für Mehrfamilienhäuser und Neubauprojekte in Würzburg und der Region – abgestimmt auf Installationsplan und Bauablauf.',
+    crumb: 'Küchen für Bauträger',
+    ogImage: ogProjektBautraeger,
+    service: {
+      name: 'Küchen für Bauträger',
+      serviceType: 'Küchenplanung und Küchenmontage für Bauträgerprojekte',
+      description:
+        'Beratung, Küchenplanung je Grundriss, Aufmaß, Arbeitsplatten und Montage durch das eigene Team; angrenzende Gewerke in Abstimmung mit Fachpartnern.',
+    },
+    faqs: BAUTRAEGER.faqs,
+  },
+  {
+    path: '/kuechen-fuer-immobilieninvestoren',
+    lastModified: '2026-11-26',
+    title: 'Küchen für Immobilieninvestoren & Mietwohnungen | VIDEKO Würzburg',
+    description:
+      'Robuste, vermietbare Küchen für Kapitalanlagen und Sanierungen im Bestand: Planung, Aufmaß je Wohnung und Montage durch VIDEKO in Würzburg.',
+    crumb: 'Küchen für Investoren',
+    ogImage: ogProjektInvestoren,
+    service: {
+      name: 'Küchen für Immobilieninvestoren',
+      serviceType: 'Küchenplanung und Küchenmontage für Mietwohnungen',
+      description:
+        'Beratung, Planung, Aufmaß je Wohnung, Arbeitsplatten und Montage durch das eigene Team; angrenzende Gewerke in Abstimmung mit Fachpartnern.',
+    },
+    faqs: INVESTOREN.faqs,
+  },
+  {
+    path: '/marken',
+    lastModified: '2026-11-26',
+    title: 'Küchenmarken in Würzburg: Schüller, next125, nobilia, IMPULS | VIDEKO',
+    description:
+      'Die Marken bei VIDEKO in Würzburg: Küchen von Schüller, next125, IMPULS und nobilia, Geräte von Miele, BORA, NEFF, Bosch und AEG, Spülen und Armaturen von Quooker, BLANCO und SCHOCK.',
+    crumb: 'Marken',
+    ogImage: ogMarken,
+    faqs: MARKEN_FAQS,
+  },
+  ...MARKEN_MIT_SEITE.map((m) => ({
+    path: `/marken/${m.slug}`,
+    lastModified: '2026-11-26',
+    title: m.title,
+    description: m.description,
+    crumb: m.name,
+    ogImage: m.gruppe === 'appliances' ? ogMarkeGeraet : m.gruppe === 'sinksAndTaps' ? ogProjektInvestoren : ogMarkeKueche,
+    faqs: m.faqs,
+  })),
   {
     path: '/vorher-nachher',
     title: 'Vorher / Nachher: Küchen-Verwandlungen | VIDEKO Küchen',

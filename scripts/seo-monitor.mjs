@@ -13,6 +13,8 @@
 //  - Startseite: JSON-LD-Telefon = offizielle Nummer
 //  - robots.txt verweist auf die Sitemap
 //  - IndexNow-Schluesseldatei ist erreichbar
+//  - Suchbegriff -> Zielseite (SUCHBEGRIFFE): jede Zielseite steht in der Sitemap
+//    und traegt alle Kernwoerter des Begriffs in <title>, description oder <h1>
 // Was hier NICHT geht (braucht Logins): Search-Console-Klicks/Indexierung,
 // Bing Webmaster, Google-Unternehmensprofil. Siehe docs/SEO-MONITORING.md.
 import { createHash } from 'node:crypto'
@@ -36,6 +38,26 @@ const enthaeltAlteNummer = (text) => {
 const fehler = []
 const hinweise = []
 const fehlt = (url, was) => fehler.push(`${url}: ${was}`)
+
+// Suchbegriff -> Seite, die dafuer ranken soll. "woerter" muessen alle (klein
+// geschrieben) in title + description + h1 der Live-Seite vorkommen. Neue
+// Begriffe hier eintragen und in docs/SEO-MONITORING.md dokumentieren.
+const SUCHBEGRIFFE = [
+  { begriff: 'Schüller Küchen Würzburg', pfad: '/marken/schueller', woerter: ['schüller', 'küchen', 'würzburg'] },
+  { begriff: 'next125 Würzburg', pfad: '/marken/next125', woerter: ['next125', 'würzburg'] },
+  { begriff: 'nobilia Würzburg', pfad: '/marken/nobilia', woerter: ['nobilia', 'würzburg'] },
+  { begriff: 'IMPULS Küchen Würzburg', pfad: '/marken/impuls', woerter: ['impuls', 'küchen', 'würzburg'] },
+  { begriff: 'BORA Würzburg', pfad: '/marken/bora', woerter: ['bora', 'würzburg'] },
+  { begriff: 'Miele Würzburg', pfad: '/marken/miele', woerter: ['miele', 'würzburg'] },
+  { begriff: 'Quooker Würzburg', pfad: '/marken/quooker', woerter: ['quooker', 'würzburg'] },
+  { begriff: 'Küchenmarken Würzburg', pfad: '/marken', woerter: ['küchenmarken', 'würzburg'] },
+  { begriff: 'Küchen für Bauträger Würzburg', pfad: '/kuechen-fuer-bautraeger', woerter: ['küchen', 'bauträger', 'würzburg'] },
+  { begriff: 'Küchen Immobilieninvestoren Würzburg', pfad: '/kuechen-fuer-immobilieninvestoren', woerter: ['küchen', 'immobilieninvestoren', 'würzburg'] },
+  { begriff: 'Küchenstudio Eröffnung Würzburg', pfad: '/studio', woerter: ['küchenstudio', 'eröffnung', 'würzburg'] },
+  { begriff: 'Küchenmontage Würzburg', pfad: '/kuechenmontage-wuerzburg', woerter: ['küchenmontage', 'würzburg'] },
+]
+const seitenText = new Map()
+const entities = (t) => t.replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#x27;|&#39;/g, "'")
 
 async function hole(url) {
   const res = await fetch(url, { redirect: 'manual', headers: { 'User-Agent': 'VIDEKO-SEO-Monitor' } })
@@ -64,7 +86,23 @@ for (let i = 0; i < urls.length; i += 6) {
     else if (canon.replace(/\/$/, '') !== url.replace(/\/$/, '')) fehlt(url, `canonical zeigt auf ${canon}`)
     if (/<meta name="robots" content="[^"]*noindex/.test(text)) fehlt(url, 'noindex, steht aber in der Sitemap')
     if (enthaeltAlteNummer(text)) fehlt(url, 'alte Mobilnummer im HTML')
+    const kern = [
+      text.match(/<title>([^<]*)<\/title>/)?.[1],
+      text.match(/<meta name="description" content="([^"]*)"/)?.[1],
+      text.match(/<h1[^>]*>([\s\S]*?)<\/h1>/)?.[1]?.replace(/<[^>]+>/g, ' '),
+    ].filter(Boolean).join(' ')
+    seitenText.set(new URL(url).pathname.replace(/\/$/, '') || '/', entities(kern).toLowerCase())
   }))
+}
+
+// Suchbegriffe: Zielseite vorhanden und thematisch eindeutig
+let begriffeOk = 0
+for (const b of SUCHBEGRIFFE) {
+  const kern = seitenText.get(b.pfad)
+  if (kern === undefined) { fehlt(b.pfad, `Zielseite fuer "${b.begriff}" nicht in der Sitemap oder nicht 200`); continue }
+  const fehlend = b.woerter.filter((w) => !kern.includes(w))
+  if (fehlend.length) fehlt(b.pfad, `"${b.begriff}": ${fehlend.join(', ')} fehlt in title/description/h1`)
+  else begriffeOk++
 }
 
 // Startseite: strukturierte Daten
@@ -94,6 +132,7 @@ if (ohneLastmod > 0) hinweise.push(`${ohneLastmod} Sitemap-URLs ohne <lastmod>`)
 
 console.log(`SEO-Monitor ${new Date().toISOString().slice(0, 16).replace('T', ' ')} UTC`)
 console.log(`Sitemap-URLs: ${urls.length} · 200: ${ergebnisse.filter((e) => e.status === 200).length} · JSON-LD-Telefon: ${tel.join(', ') || '–'}`)
+console.log(`Suchbegriffe mit passender Zielseite: ${begriffeOk}/${SUCHBEGRIFFE.length}`)
 for (const h of hinweise) console.log(`Hinweis: ${h}`)
 if (fehler.length) {
   console.log(`\n${fehler.length} Fehler:`)
