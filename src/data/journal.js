@@ -19,6 +19,57 @@ export const categories = [
 
 export const journalArticles = [
   {
+    "slug": "kuechenangebote-vergleichen",
+    "lastModified": "2026-11-26",
+    "title": "Küchenangebote vergleichen: So legst du zwei Angebote richtig nebeneinander",
+    "category": "Planung",
+    "read": "6 Min.",
+    "teaser": "Zwei Küchenangebote, zwei Endsummen – und trotzdem kaum vergleichbar. So bringst du Positionen, Geräte, Leistungen und Zahlungsplan auf einen gemeinsamen Nenner.",
+    "metaTitle": "Küchenangebote vergleichen: Positionen richtig prüfen | VIDEKO",
+    "metaDescription": "Küchenangebote sinnvoll vergleichen: Leistungsumfang, Gerätemodelle, Arbeitsplatte, Aufmaß, Montage, Anschlüsse und Zahlungsplan Schritt für Schritt prüfen.",
+    "intro": "Wer zwei oder drei Küchenangebote vor sich liegen hat, schaut zuerst auf die Endsumme. Das ist verständlich, führt aber oft in die Irre: Das eine Angebot enthält Montage und Anschlüsse, das andere nicht. Hier stehen konkrete Gerätemodelle, dort nur „Backofen, Edelstahl“. Bevor du Preise vergleichst, musst du die Angebote vergleichbar machen. Diese Anleitung zeigt dir, wie – Position für Position.",
+    "sections": [
+      {
+        "h": "Schritt 1: Gleiche Grundlage schaffen",
+        "p": "Ein Vergleich funktioniert nur, wenn beide Angebote auf demselben Raum und denselben Wünschen beruhen. Prüfe zuerst: Liegt beiden derselbe Grundriss zugrunde, mit gleichen Wandlängen, Fenstern und Türen? Sind Anzahl und Breite der Schränke ungefähr gleich? Ist es dieselbe Zeile, dasselbe L oder dieselbe Insel? Wenn ein Studio mit einer Skizze vom Handy plant und das andere nach einem Aufmaß vor Ort, sind das zwei verschiedene Küchen – auch wenn sie auf dem Bildschirm ähnlich aussehen."
+      },
+      {
+        "h": "Schritt 2: Leistungen als Liste nebeneinanderlegen",
+        "p": "Nimm ein Blatt und schreib links die Positionen untereinander, daneben eine Spalte je Angebot. Für jede Position trägst du ein: enthalten, nicht enthalten oder unklar. Die wichtigsten Zeilen sind: Planung und Beratung, verbindliches Aufmaß vor Ort, Lieferung bis in den Raum, Montage der Möbel, Einbau der Geräte, Ausschnitte für Spüle und Kochfeld, Anschluss von Wasser und Abwasser, Elektroanschluss der Geräte, Wandabschluss oder Nischenrückwand, Beleuchtung, Abbau und Entsorgung der alten Küche, Verpackungsentsorgung. Jedes „unklar“ ist eine Frage an das Studio, bevor du weiter vergleichst."
+      },
+      {
+        "h": "Schritt 3: Geräte mit Modellnummer prüfen",
+        "p": "Bei Elektrogeräten entscheidet die genaue Modellbezeichnung. „Kochfeld mit Dunstabzug“ oder „Geschirrspüler vollintegriert“ sagt wenig über Ausstattung, Lautstärke, Energieeffizienz oder Garantie. Bitte um die vollständige Modellnummer jedes Geräts. Damit kannst du Datenblätter vergleichen und siehst, ob ein Angebot nur günstiger ist, weil einfachere Geräte eingeplant sind. Achte auch darauf, ob Zubehör wie Umluftset, Filter oder Teleskopauszüge separat berechnet wird."
+      },
+      {
+        "h": "Schritt 4: Arbeitsplatte genau beschreiben lassen",
+        "p": "Die Arbeitsplatte ist eine der Positionen, die sich zwischen Angeboten am stärksten unterscheiden. Gleiche ab: Material und Dekor, Stärke, Kantenausführung, Anzahl und Art der Ausschnitte (aufgesetzt, flächenbündig, unterbaut), Wandabschlussleiste oder Rückwand, und ob die Platte nach Aufmaß gefertigt wird. Bei Stein- und Keramikplatten wird meist erst nach Montage der Unterschränke gemessen – frag nach, ob das im Preis enthalten ist und wie lange es dauert."
+      },
+      {
+        "h": "Schritt 5: Was nicht im Angebot steht",
+        "p": "Viele Unterschiede stecken in dem, was fehlt. Typische Lücken: Elektro- und Wasserinstallation, die über den reinen Geräteanschluss hinausgeht, etwa neue Steckdosen oder verlegte Leitungen. Wand- und Bodenarbeiten, wenn die alte Küche Spuren hinterlässt. Anpassungen an schiefe Wände oder Dachschrägen. Zusätzliche Anfahrten, falls die Montage unterbrochen werden muss. Frag ausdrücklich: Was müsste ich selbst organisieren, damit diese Küche fertig benutzbar ist?"
+      },
+      {
+        "h": "Schritt 6: Termine, Zahlung und Änderungen",
+        "p": "Zum Vergleich gehört auch das Kleingedruckte. Wie viel Anzahlung wird verlangt, und wann ist der Rest fällig – bei Lieferung oder nach abgeschlossener Montage? Gibt es einen verbindlichen Liefertermin oder nur eine Kalenderwoche? Was passiert, wenn du nach der Bestellung noch etwas ändern möchtest? Und wer ist dein Ansprechpartner, wenn nach der Montage eine Tür nachjustiert werden muss?"
+      },
+      {
+        "h": "Schritt 7: Erst jetzt den Preis vergleichen",
+        "p": "Wenn beide Angebote denselben Raum, dieselben Leistungen und vergleichbare Geräte abbilden, ist die Endsumme aussagekräftig. Rechne die Positionen, die in einem Angebot fehlen, als Schätzung hinzu oder lass sie dir nachreichen. Erst dann siehst du, welches Angebot für dein Budget tatsächlich mehr Küche liefert. Ein hoher Rabatt auf einen hohen Listenpreis ist dabei kein Qualitätsmerkmal, sondern nur eine andere Art, denselben Endpreis zu zeigen."
+      },
+      {
+        "h": "Kurze Checkliste zum Ausdrucken",
+        "p": "Gleicher Grundriss und Aufmaß vor Ort? Alle Leistungen von Lieferung bis Entsorgung aufgelistet? Gerätemodelle mit Nummer? Arbeitsplatte mit Material, Stärke, Kante und Ausschnitten? Anschlüsse Wasser und Strom enthalten? Eigenleistungen klar benannt? Zahlungsplan und Termin schriftlich? Ansprechpartner nach der Montage bekannt? Wenn du jede Frage für jedes Angebot beantworten kannst, vergleichst du wirklich Küchen – und nicht nur Zahlen."
+      },
+      {
+        "h": "Wie wir unsere Angebote aufbauen",
+        "p": "Bei VIDEKO in Würzburg gehören Beratung, 3D-Planung, Aufmaß und Küchenmontage zu unserem Angebot; angrenzende Arbeiten koordinieren wir auf Wunsch mit Fachpartnern. Wenn dir in unserem Angebot eine Position unklar ist, frag nach – du sollst es genau so prüfen können, wie hier beschrieben. Und gern auch neben ein anderes legen."
+      }
+    ],
+    "fazit": "Ein gutes Küchenangebot ist eines, das du ohne Rückfragen verstehst. Je klarer Positionen, Geräte und Leistungen beschrieben sind, desto weniger Überraschungen gibt es bei Lieferung und Montage.",
+    "image": imgBeratung
+  },
+  {
     "slug": "kuechenstudio-wuerzburg-checkliste",
     "lastModified": "2026-11-26",
     "title": "Küchenstudio in Würzburg finden: 10 Fragen vor dem Küchenkauf",

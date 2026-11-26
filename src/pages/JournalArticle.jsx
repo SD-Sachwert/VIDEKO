@@ -19,6 +19,11 @@ import { journalArticleHead } from '../data/head.js'
  * also ohne Anschluss.
  */
 const WEITER = {
+  'kuechenangebote-vergleichen': {
+    text: 'Wie Aufmaß, Lieferung, Aufbau und Anschluss bei uns ablaufen, steht unter',
+    label: 'Küchenmontage Würzburg',
+    to: '/kuechenmontage-wuerzburg',
+  },
   'kuechenstudio-wuerzburg-checkliste': {
     text: 'Wie unsere persönliche Beratung in Würzburg abläuft, erfährst du unter',
     label: 'Küchenplanung',
