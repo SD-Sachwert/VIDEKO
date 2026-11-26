@@ -73,8 +73,8 @@ export default function Studio() {
             <p className="pagehero__lead">
               Unsere Ausstellung in Würzburg befindet sich noch im Aufbau. Persönliche
               Küchenberatung und Planung sind bereits jetzt nach Terminvereinbarung
-              möglich. Die offizielle Ausstellungseröffnung ist derzeit für den
-              1. Dezember 2026 geplant.
+              möglich. Die offizielle Ausstellungseröffnung ist für den
+              {BRAND.plannedOpeningLabel} geplant.
             </p>
             <div className="pagehero__actions">
               <CTAButton to="/beratung">Termin vereinbaren</CTAButton>
@@ -83,6 +83,21 @@ export default function Studio() {
             <div className="hero-badges">
               {HERO_BADGES.map((b) => <span className="hero-badge" key={b}><Check size={13} strokeWidth={2.4} /> {b}</span>)}
             </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Bestätigtes Sortiment und Projektgeschäft, ohne Herstellerstatus zu behaupten. */}
+      <section className="section section--light">
+        <div className="container">
+          <Reveal>
+            <span className="kicker">Unsere Marken</span>
+            <h2 className="lp-h2">Küchen, Geräte und Ausstattung.</h2>
+            <p className="lp-lead">Wir führen Küchen von {BRAND.assortment.kitchens.join(', ')}.</p>
+            <p className="lp-lead">Elektrogeräte: {BRAND.assortment.appliances.join(', ')}. Spülen und Armaturen: {BRAND.assortment.sinksAndTaps.join(', ')}.</p>
+            <h2 className="lp-h2">Küchen für Bauträger und Immobilieninvestoren.</h2>
+            <p className="lp-lead">Auch für Bauträger und Immobilieninvestoren bieten wir Küchenplanung und Montage an. Umfang, Ausstattung und Terminplanung stimmen wir im persönlichen Projektgespräch ab.</p>
+            <CTAButton to="/beratung">Projekt anfragen</CTAButton>
           </Reveal>
         </div>
       </section>
