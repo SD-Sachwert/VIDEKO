@@ -1,8 +1,7 @@
 # Entwurf: Leistungsseite „Küchen für Investoren und Bauträger“
 
 **Status:** Entwurf, **nicht veröffentlicht**, keine Route angelegt.
-**Grund:** Weder auf der Website noch im Code gibt es eine Bestätigung, dass
-VIDEKO dieses Angebot aktiv vertreibt. Der Auftrag lautet: „sofern das
+**Grund:** Das Angebot für Bauträger und Immobilieninvestoren ist seit 26.11.2026 bestätigt; konkrete Projektleistungen, Umfang und Ansprechpartner sind noch zu klären. Der Auftrag lautet: „sofern das
 Angebot bestätigt ist“. Die Seite geht erst live, wenn alle Pflichtfragen
 unten beantwortet sind.
 
@@ -10,7 +9,7 @@ unten beantwortet sind.
 
 | # | Frage | Antwort VIDEKO |
 |---|---|---|
-| 1 | Bietet VIDEKO Küchen für mehrere Wohneinheiten (Mehrfamilienhaus, Bauträgerprojekt, Kapitalanlage) aktiv an? | |
+| 1 | Bietet VIDEKO Küchen für mehrere Wohneinheiten (Mehrfamilienhaus, Bauträgerprojekt, Kapitalanlage) aktiv an? | Ja, am 26.11.2026 durch den Betreiber bestätigt. |
 | 2 | Ab wie vielen Einheiten bzw. welchem Umfang? | |
 | 3 | Welche Leistungen genau? (Planung je Wohnungstyp, Bemusterung für Käufer, Sonderwunschabwicklung, Lieferung/Montage nach Bauzeitenplan, Abnahme je Einheit) | |
 | 4 | Arbeitet VIDEKO direkt mit dem Bauträger, mit den Käufern der Wohnungen oder mit beiden? | |
