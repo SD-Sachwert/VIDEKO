@@ -74,11 +74,7 @@ automatisch; fremde Seiten muss man selbst prüfen.
 | 20 | Europages | europages.de | Basis kostenlos | nur B2B, niedrig |
 | 21 | HWK Unterfranken, Lehrstellenatlas | hwk-ufr.de | kostenlos | nur wenn VIDEKO ausbildet |
 
-**Herstellerverzeichnisse:** Auf der Website ist nur AEG als Marke erkennbar.
-Ein Händlersuche-Eintrag ist nur bei echter Lieferbeziehung legitim, zum
-Beispiel bei Nobilia, BSH (Siemens, Bosch, Neff), Miele, Blanco oder Bora.
-**Offene Frage an VIDEKO:** Welche Marken führen wir direkt? Dann wird je
-Hersteller der Außendienst gebeten, den Eintrag mit 0931 29764861 anzulegen.
+**Herstellerverzeichnisse – Sortiment am 26.11.2026 durch den Betreiber bestätigt:** Schüller, next125, IMPULS, nobilia, AEG, NEFF, Bosch, Miele, BORA, Quooker, BLANCO, SCHOCK. „Next“ als next125 interpretiert. Einträge über vorhandene Außendienstkontakte anfragen; keine autorisierte Händlerstellung behaupten, sofern nicht gesondert bestätigt. Keine kostenpflichtigen Buchungen. Standortdaten wie oben. Ausstellungseröffnung geplant am 01.03.2027, danach 09–18 Uhr an den noch zu bestätigenden Wochentagen. Bis zur Eröffnung Beratung nach Terminvereinbarung.
 
 **Nicht anwendbar:** AMK-Mitgliederverzeichnis (nur Industrie),
 Franchise-Verband, Wikipedia (Relevanzkriterien), FOCUS-MONEY-Siegel (kein
