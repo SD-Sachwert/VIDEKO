@@ -69,7 +69,7 @@ export const HOME_META = {
   lastModified: '2026-11-02',
   title: 'VIDEKO Küchen | Küchenstudio Würzburg',
   description:
-    'VIDEKO Küchen – dein Küchenstudio in Würzburg. Küchenplanung, ehrliche Beratung und maßgeschneiderte Küchen für deinen Alltag.',
+    'Küchenstudio in Würzburg: individuelle Küchen, 3D-Planung, Aufmaß, Montage und Küchenrenovierung mit Fachpartnern. Beratung in der Hertzstraße 4.',
   // Mobil zeigt der Hero ein 9:16-Foto, ab 721 px ein Video mit Poster. Die
   // media-Bedingungen spiegeln exakt den Breakpoint aus Hero.jsx, damit nie
   // beide Motive geladen werden. Das Poster hat kein srcset (es haengt am
