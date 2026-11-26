@@ -99,7 +99,7 @@ const WERTE = [
 const featured = getProduct('signature-hoodie-white')
 const bossBattle = getProduct('boss-battle')
 const signature = getProduct('signature-t-shirt-black')
-const workwearTeaser = getProduct('workwear-polo-black') // Sammel-CTA der Workwear-Sektion
+ // Sammel-CTA der Workwear-Sektion
 
 const FAQ = [
   {
@@ -155,9 +155,7 @@ export default function Merch() {
   // wuerde React den kompletten Shop-Teilbaum neu aufbauen lassen. Ab der
   // ersten Navigation im Browser greift die Wiederherstellung wie bisher —
   // und genau dafuer ist sie da (Zurueck aus einem Produkt).
-  const startRef = useRef(null)
-  if (startRef.current === null) startRef.current = istHydriert() ? ladeShopState(key) : {}
-  const start = startRef.current
+  const [start] = useState(() => (istHydriert() ? ladeShopState(key) : {}))
 
   const [tab, setTab] = useState(start.tab ?? 'alle')
   const [stil, setStil] = useState(start.stil ?? null) // Logo-Stil-Filter aus der Stil-Sektion

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Play, RotateCcw, ArrowRight, Check, AlertTriangle, LayoutGrid } from 'lucide-react'
+import { RotateCcw, ArrowRight, Check, AlertTriangle, LayoutGrid } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
 import MagneticButton from './MagneticButton.jsx'

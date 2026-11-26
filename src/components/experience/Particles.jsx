@@ -7,8 +7,11 @@ export default function Particles({ count = 260, depth = 140 }) {
   const positions = useMemo(() => {
     const a = new Float32Array(count * 3)
     for (let i = 0; i < count; i++) {
+      // eslint-disable-next-line react-hooks/purity -- Zufallsverteilung wird per useMemo einmal erzeugt und ist gewollt
       a[i * 3] = (Math.random() - 0.5) * 32
+      // eslint-disable-next-line react-hooks/purity -- Zufallsverteilung wird per useMemo einmal erzeugt und ist gewollt
       a[i * 3 + 1] = Math.random() * 11 - 1.5
+      // eslint-disable-next-line react-hooks/purity -- Zufallsverteilung wird per useMemo einmal erzeugt und ist gewollt
       a[i * 3 + 2] = 8 - Math.random() * depth
     }
     return a

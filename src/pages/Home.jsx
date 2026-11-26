@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
-  ArrowRight, ArrowUpRight, Check, PenTool, Telescope, Heart, Gem, LifeBuoy,
+  ArrowRight, ArrowUpRight, PenTool, Telescope, Heart, Gem, LifeBuoy,
   ChefHat, Zap, Layers, PaintRoller, Ruler, Lightbulb, Wrench,
 } from 'lucide-react'
 
@@ -21,38 +21,12 @@ import ProcessSection from '../components/ProcessSection.jsx'
 import { journalArticles } from '../data/journal.js'
 import { BRAND } from '../data/company.js'
 import verwandleVideo from '../assets/images/home/verwandle-raum.mp4'
-import gameScene from '../assets/images/kuechenfehler/scene.webp'
 
-import wayInsp from '../assets/images/home/way-organic-1.webp'
-import waySf from '../assets/images/home/way-organic-2.webp'
-import wayBer from '../assets/images/home/way-organic-3.webp'
-import sfResult from '../assets/images/kuechenwelten/stilfinderresult-modern-warm.webp'
-import sfCard1 from '../assets/images/kuechenwelten/stilfindercard-modern-warm.webp'
-import sfCard2 from '../assets/images/kuechenwelten/stilfindercard-zeitlos-elegant.webp'
-import sfCard3 from '../assets/images/kuechenwelten/stilfindercard-natuerlich-luxurioes.webp'
 import gKuechen from '../assets/images/inspiration/02_moderne_kueche.webp'
 import gMat from '../assets/images/inspiration/06_materialien_und_details.webp'
 import gBer from '../assets/images/ueber-uns/02_why_videko_beratungsszene.webp'
 import gTech from '../assets/images/inspiration/09_premium_architektur_kueche.webp'
 import gBesicht from '../assets/images/studio/bilder/01_hero_studio_showroom.webp'
-import pc1 from '../assets/images/leistungen/ls-consulting.webp'
-import pc2 from '../assets/images/leistungen/ls-3d.webp'
-import pc3 from '../assets/images/leistungen/ls-materials.webp'
-import pc4 from '../assets/images/leistungen/ls-coordination.webp'
-import pc5 from '../assets/images/leistungen/ls-install.webp'
-import pc6 from '../assets/images/leistungen/ls-aftercare.webp'
-import tm1 from '../assets/images/ueber-uns/06_team_beratung_und_planung.webp'
-import tm2 from '../assets/images/ueber-uns/07_team_marketing_und_social_media.webp'
-import tm3 from '../assets/images/ueber-uns/08_team_montage_und_handwerk.webp'
-import tm4 from '../assets/images/ueber-uns/09_team_organisation_und_partner.webp'
-import finalImg from '../assets/images/studio/bilder/10_final_cta_studio_banner.webp'
-
-const WAYS = [
-  { n: '01', title: 'Inspiration finden', text: 'Entdecke Stile, Materialien und Ideen für die Küche, die zu dir passt.', cta: 'Jetzt entdecken', to: '/inspiration', img: wayInsp },
-  { n: '02', title: 'Stylefinder starten', text: 'In 2 Minuten zu deiner individuellen Küchenrichtung – ohne Geschmackstest mit Gewinner.', cta: 'Jetzt starten', to: '/stylefinder', img: waySf, light: true },
-  { n: '03', title: 'Persönliche Beratung', text: 'Gemeinsam planen wir deine Küche – ehrlich und auf Augenhöhe.', cta: 'Termin sichern', to: '/beratung', img: wayBer },
-]
-
 
 const WHY = [
   { icon: PenTool, title: 'Design mit Haltung', text: 'Klare Linien, warme Materialien – kein Effekt um des Effekts willen.' },
@@ -75,24 +49,6 @@ const STATS = [
   { v: 'Durchdacht', l: 'Klar geplant, sauber umgesetzt' },
   { v: 'Persönlich', l: 'Von der ersten Idee bis zur fertigen Küche' },
 ]
-
-const PROCESS = [
-  { n: '01', title: 'Kennenlernen', text: 'Wir lernen dich und deine Wünsche kennen.', img: pc1 },
-  { n: '02', title: 'Planung', text: 'Kreativ, technisch und durchdacht.', img: pc2 },
-  { n: '03', title: 'Detaillierung', text: 'Jedes Detail wird perfekt abgestimmt.', img: pc3 },
-  { n: '04', title: 'Bemusterung', text: 'Materialien erleben und entscheiden.', img: pc4 },
-  { n: '05', title: 'Umsetzung', text: 'Präzise Fertigung und Montage.', img: pc5 },
-  { n: '06', title: 'Betreuung', text: 'Für dich da – auch danach.', img: pc6 },
-]
-
-const TEAM = [
-  { title: 'Beratung & Planung', role: 'Dein erster Kontakt', story: 'Die Menschen, die zuhören, bevor sie planen.', img: tm1 },
-  { title: 'Marketing & Social', role: 'Macht VIDEKO sichtbar', story: 'Macht sichtbar, was andere nur behaupten.', img: tm2 },
-  { title: 'Montage & Handwerk', role: 'Bringt Pläne in den Raum', story: 'Sorgt dafür, dass aus Planung Realität wird.', img: tm3 },
-  { title: 'Organisation', role: 'Hält alle Fäden zusammen', story: 'Hält die Fäden zusammen, damit du nicht jonglieren musst.', img: tm4 },
-]
-
-const TEAM_BENEFITS = ['Erfahren & engagiert', 'Kreativ & individuell', 'Verlässlich & transparent', 'Qualität mit Leidenschaft']
 
 // Kurzuebersicht der Gewerke, die bei einem Komplettumbau zusammenkommen.
 // Details und die korrekte Einordnung (VIDEKO plant und koordiniert, ausgefuehrt

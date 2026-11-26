@@ -47,7 +47,7 @@ export default function Layout() {
   // Laufende Scrollposition des aktuellen Eintrags festhalten.
   const scrollRef = useRef(0)
   const keyRef = useRef(key)
-  keyRef.current = key
+  useLayoutEffect(() => { keyRef.current = key }, [key])
   const letzterWrite = useRef(0)
 
   useLenis((l) => {

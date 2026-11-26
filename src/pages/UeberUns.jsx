@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import {
-  Handshake, Heart, Gem, Lightbulb, Smile, Wrench, ArrowRight, MapPin, Plus,
+  Handshake, Heart, Gem, Lightbulb, Smile, Wrench, ArrowRight, Plus,
   ShieldCheck, Zap, Ruler, UserCheck, BadgeCheck, Ban, Layers, MessageSquare,
 } from 'lucide-react'
 
@@ -63,8 +63,6 @@ const RULES = [
   { icon: Layers, title: 'Keine Küche von der Stange', text: 'Maßgeschneidert auf dich, nicht auf den Katalog.' },
   { icon: MessageSquare, title: 'Wir sagen auch mal Nein', text: 'Wenn etwas keinen Sinn ergibt, sagen wir es.' },
 ]
-
-const REGION = ['Würzburg', 'Tauberbischofsheim', 'Kitzingen', 'Main-Tauber', 'Schweinfurt']
 
 export default function UeberUns() {
   const heroRef = useRef(null)

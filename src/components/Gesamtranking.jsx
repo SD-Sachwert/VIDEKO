@@ -13,6 +13,7 @@ import { SPIEL_NACH_KEY, TEXTE, fuelle, spielKurz, zahl } from '../data/terminal
 
 const T = TEXTE.r
 
+// eslint-disable-next-line react-refresh/only-export-components -- betrifft nur Hot-Reload im Dev-Server
 export const spielTitel = (key) => SPIEL_NACH_KEY[key]?.titel ?? key
 
 /**
@@ -44,6 +45,7 @@ export function GesamtPreise({ preise, texte }) {
 }
 
 /** Eine Zeile zum eigenen Stand: Platz oder Qualifikationsstand. */
+// eslint-disable-next-line react-refresh/only-export-components -- betrifft nur Hot-Reload im Dev-Server
 export function gesamtrankingZeile(eigen) {
   if (!eigen) return null
   if (eigen.qualifiziert && eigen.platz) {

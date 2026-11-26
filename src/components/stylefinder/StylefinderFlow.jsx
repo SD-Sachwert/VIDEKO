@@ -104,10 +104,6 @@ const SHOW_MAIL_SEND = false
 const MODAL_INPUT = { width: '100%', background: 'rgba(255,255,255,.05)', border: '1px solid rgba(255,255,255,.14)', borderRadius: '10px', padding: '11px 13px', color: '#f4f1ea', fontSize: '.95rem', marginTop: '4px', boxSizing: 'border-box', fontFamily: 'inherit' }
 const MODAL_LABEL = { display: 'block', fontSize: '.82rem', color: '#a89f90', marginBottom: '12px' }
 
-function Chip({ active, onClick, children }) {
-  return <button type="button" className={`sf-chip ${active ? 'is-active' : ''}`} onClick={onClick} aria-pressed={active}>{active && <Check size={14} strokeWidth={2.6} />} {children}</button>
-}
-
 export default function StylefinderFlow() {
   const [step, setStep] = useState(0)
   const [maxReached, setMaxReached] = useState(0)
@@ -188,6 +184,7 @@ export default function StylefinderFlow() {
     const out = []
     for (const file of fileList) {
       const safe = file.name.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 80)
+      // eslint-disable-next-line react-hooks/purity -- läuft im Upload-Handler, nicht beim Rendern
       const path = `stylefinder/${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${safe}`
       try {
         const r = await fetch(`${base}/storage/v1/object/lead-uploads/${path}`, {

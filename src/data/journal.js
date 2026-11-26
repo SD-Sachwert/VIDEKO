@@ -8,7 +8,6 @@ import imgBeratung from '../assets/images/vorher-nachher/11_beratung_kundenmomen
 import imgStauraum from '../assets/images/inspiration/08_kleine_kueche_clever_geplant.webp'
 import imgGeraete from '../assets/images/inspiration/02_moderne_kueche.webp'
 import imgPflege from '../assets/images/inspiration/05_helle_kueche.webp'
-import imgFaq from '../assets/images/leistungen/04_intro_helle_kueche.webp'
 import imgTopicPlanung from '../assets/images/inspiration/07_kueche_mit_insel.webp'
 import imgTopicMaterial from '../assets/images/inspiration/06_materialien_und_details.webp'
 import imgTopicInsp from '../assets/images/inspiration/10_favoriten_wohnkueche_luxus.webp'

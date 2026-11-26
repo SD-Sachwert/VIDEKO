@@ -13,13 +13,13 @@ import { confirmNotify } from '../shop/notify.js'
 export default function VormerkungBestaetigen() {
   const [params] = useSearchParams()
   const token = params.get('token') || ''
-  const [status, setStatus] = useState('pending') // pending | ok | invalid | unconfigured | error
+  const [status, setStatus] = useState(token ? 'pending' : 'invalid') // pending | ok | invalid | unconfigured | error
   const lief = useRef(false)
 
   useEffect(() => {
     if (lief.current) return
     lief.current = true
-    if (!token) { setStatus('invalid'); return }
+    if (!token) return
     confirmNotify(token)
       .then((r) => {
         if (r.configured === false) setStatus('unconfigured')

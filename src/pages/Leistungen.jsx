@@ -1,10 +1,7 @@
 import { useRef, useState } from 'react'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import {
-  Check, X, ArrowRight, MapPin, Mail, Phone,
-  PencilRuler, Ruler, Layers, Lightbulb, Truck, Cpu, CalendarClock, LifeBuoy, UserCheck, CalendarCheck, Coffee,
-} from 'lucide-react'
+import { Check, X, ArrowRight, PencilRuler, Ruler, Layers, Lightbulb, Truck, Cpu, CalendarClock, LifeBuoy, UserCheck, CalendarCheck, Coffee } from 'lucide-react'
 
 import Reveal from '../components/Reveal.jsx'
 import LazyVideo from '../components/LazyVideo.jsx'

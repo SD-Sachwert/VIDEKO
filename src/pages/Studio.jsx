@@ -19,15 +19,9 @@ import cPlanung from '../assets/images/studio/bilder/06_studio_card_planung_erle
 import cBeratung from '../assets/images/studio/bilder/07_studio_card_beratung_vertiefen.webp'
 import splitImg from '../assets/images/studio/bilder/08_split_section_showroom_gross.webp'
 import teamImg from '../assets/images/studio/bilder/09_team_beratung_auf_augenhoehe.webp'
-import ctaImg from '../assets/images/studio/bilder/10_final_cta_studio_banner.webp'
 import umbauVideo from '../assets/images/studio/bilder/Umbau.mp4'
 
 const HERO_BADGES = ['Persönliche Beratung', 'Hochwertige Materialien', 'Planung auf höchstem Niveau']
-
-const INTRO_USP = [
-  'Individuelle Beratung', 'Planung mit Feingefühl', 'Realistische Planung',
-  'Premium Materialien', 'Alles aus einer Hand',
-]
 
 const JOURNEY = [
   { title: 'Ankommen', text: 'Erstmal ankommen, durchatmen, wohlfühlen. Kein Druck, kein Geschwätz.', img: cAnkommen },

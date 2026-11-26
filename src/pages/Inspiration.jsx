@@ -1,9 +1,6 @@
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import {
-  ArrowUpRight, Heart, Check, Compass, Lightbulb, Archive, Layers, Cpu, PanelsTopLeft,
-  Boxes, ChefHat, Utensils, Sofa, Briefcase, WashingMachine, Upload, MessageSquare, ArrowRight,
-} from 'lucide-react'
+import { Check } from 'lucide-react'
 
 import Reveal from '../components/Reveal.jsx'
 import CTAButton from '../components/CTAButton.jsx'
@@ -20,82 +17,11 @@ import { KiHinweis } from '../components/legal/KiKennzeichnung.jsx'
 import { imageMeta } from '../data/image-meta.js'
 
 import heroImg from '../assets/images/inspiration/insp-hero-dark.webp'
-import explodeImg from '../assets/images/inspiration/insp-exploding-light.webp'
-import iModern from '../assets/images/inspiration/02_moderne_kueche.webp'
-import iWohnlich from '../assets/images/inspiration/03_wohnliche_kueche.webp'
-import iDunkel from '../assets/images/inspiration/04_dunkle_kueche.webp'
-import iHell from '../assets/images/inspiration/05_helle_kueche.webp'
 import iDetails from '../assets/images/inspiration/06_materialien_und_details.webp'
-import iInsel from '../assets/images/inspiration/07_kueche_mit_insel.webp'
-import iKlein from '../assets/images/inspiration/08_kleine_kueche_clever_geplant.webp'
 import iPremium from '../assets/images/inspiration/09_premium_architektur_kueche.webp'
 import iLuxus from '../assets/images/inspiration/10_favoriten_wohnkueche_luxus.webp'
 
-import mHolz from '../assets/images/materialien/cards/material-card-holz.webp'
-import mStein from '../assets/images/materialien/cards/material-card-naturstein.webp'
-import mKeramik from '../assets/images/materialien/cards/material-card-keramik.webp'
-import mGlas from '../assets/images/materialien/cards/material-card-glas.webp'
-import mMetall from '../assets/images/materialien/cards/material-card-metall.webp'
-import mFronten from '../assets/images/materialien/cards/material-card-lack-matt.webp'
-import mPlatten from '../assets/images/materialien/cards/material-card-quarzkomposit.webp'
-
-const STYLES = [
-  { key: 'modern', label: 'Modern', img: iModern },
-  { key: 'warm', label: 'Warm & wohnlich', img: iWohnlich },
-  { key: 'dunkel', label: 'Dunkel & elegant', img: iDunkel },
-  { key: 'hell', label: 'Hell & leicht', img: iHell },
-  { key: 'natuerlich', label: 'Natürlich', img: iKlein },
-  { key: 'luxus', label: 'Luxuriös', img: iPremium },
-]
-
-const STILWELTEN = [
-  { title: 'Zeitlos modern', text: 'Klare Linien, ruhige Flächen, langlebig schön.', img: iModern },
-  { title: 'Urban dunkel', text: 'Tiefe Töne, viel Charakter, starke Statements.', img: iDunkel },
-  { title: 'Natürlich warm', text: 'Holz, weiche Töne und echte Geborgenheit.', img: iWohnlich },
-  { title: 'Licht & elegant', text: 'Helligkeit, Leichtigkeit und feine Details.', img: iHell },
-]
-
-const MATERIALS = [
-  { key: 'Naturstein', img: mStein, text: 'Jede Platte ein Unikat. Naturstein bringt Tiefe, Charakter und eine ehrliche Oberfläche in deine Küche.' },
-  { key: 'Keramik', img: mKeramik, text: 'Robust, pflegeleicht und stark in der Wirkung. Perfekt, wenn Alltag und Optik beide gewinnen sollen.' },
-  { key: 'Holz', img: mHolz, text: 'Warm, lebendig und natürlich. Holz bringt Ruhe in den Raum und macht moderne Küchen wohnlicher.' },
-  { key: 'Metall', img: mMetall, text: 'Kühl, präzise und markant. Metall setzt Akzente und bringt einen modernen, architektonischen Charakter.' },
-  { key: 'Glas', img: mGlas, text: 'Leicht, klar und elegant. Glas sorgt für Reflexion, Tiefe und eine ruhige, hochwertige Wirkung.' },
-  { key: 'Fronten', img: mFronten, text: 'Fronten bestimmen den ersten Eindruck deiner Küche. Matt, strukturiert oder glatt – hier entsteht der Charakter.' },
-  { key: 'Arbeitsplatten', img: mPlatten, text: 'Die Arbeitsplatte muss gut aussehen und im Alltag liefern. Wir zeigen dir, was wirklich zu deinem Leben passt.' },
-]
-
 const MOOD = ['Licht & Atmosphäre', 'Farben & Kontraste', 'Proportion & Raum', 'Details, die bleiben']
-
-const PROJECTS = [
-  { title: 'Puristische Eleganz', text: 'Reduziert, klar, hochwertig.', img: iModern },
-  { title: 'Stadtvilla mit Charakter', text: 'Dunkel, edel, selbstbewusst.', img: iDunkel },
-  { title: 'Natürlich wohnen', text: 'Warm, offen, zum Wohlfühlen.', img: iWohnlich },
-  { title: 'Raumlösung mit Licht', text: 'Hell, luftig, durchdacht.', img: iHell },
-]
-
-const EXPLODE = [
-  { n: '01', icon: Lightbulb, title: 'Beleuchtung', text: 'Stimmung, Akzente und Funktion in perfektem Licht.' },
-  { n: '02', icon: Archive, title: 'Stauraum', text: 'Durchdacht bis ins Detail – für Ordnung und Komfort.' },
-  { n: '03', icon: Layers, title: 'Arbeitsplatte', text: 'Materialien, die Schönheit und Alltag verbinden.' },
-  { n: '04', icon: Cpu, title: 'Technik', text: 'Intelligente Geräte, nahtlos integriert.' },
-  { n: '05', icon: PanelsTopLeft, title: 'Fronten', text: 'Design mit Charakter – Farbe, Struktur, Material.' },
-  { n: '06', icon: Boxes, title: 'Innenleben', text: 'Qualität, die man sieht – langlebig und wertbeständig.' },
-]
-
-const ROOMS = [
-  { key: 'Kochen', icon: ChefHat, title: 'Kochen mit Stil.', text: 'Funktion trifft Emotion – Küchen, die mehr können und schöner sind.', img: iInsel },
-  { key: 'Essen', icon: Utensils, title: 'Essen & zusammenkommen.', text: 'Übergänge, die Küche und Tisch zu einem Ort verbinden.', img: iWohnlich },
-  { key: 'Wohnen', icon: Sofa, title: 'Offen wohnen.', text: 'Küche und Wohnraum als eine ruhige, warme Einheit.', img: iHell },
-  { key: 'Homeoffice', icon: Briefcase, title: 'Arbeiten zuhause.', text: 'Clevere Nischen, die sich nahtlos in den Raum fügen.', img: iModern },
-  { key: 'Hauswirtschaft', icon: WashingMachine, title: 'Ordnung dahinter.', text: 'Stauraum und Technik, die den Alltag leise tragen.', img: iKlein },
-]
-
-const CONVERT = [
-  { tag: 'Schnell & einfach', icon: Compass, title: 'VIDEKO Stylefinder', text: 'Starte deine erste Einschätzung in nur 2 Minuten.', points: ['Sofort eine grobe Preisspanne', 'Passende Stilwelt entdecken', 'Unverbindlich & anonym'], cta: 'Stylefinder starten', to: '/stylefinder' },
-  { tag: 'Genau & individuell', icon: Upload, title: 'Unterlagen hochladen', text: 'Teile Grundriss, Fotos und Ideen für ein präzises Angebot.', points: ['Grundriss, Fotos, Skizzen', 'PDF, JPG, PNG', 'Wir melden uns mit Plan'], cta: 'Unterlagen hochladen', to: '/stylefinder' },
-  { tag: 'Persönlich & beratend', icon: MessageSquare, title: 'Persönlich beraten lassen', text: 'Buche ein unverbindliches Gespräch mit unseren Küchenexperten.', points: ['Individuelle Beratung', 'Konkrete Empfehlungen', 'Zeitlich flexibel'], cta: 'Termin buchen', to: '/beratung' },
-]
 
 const STEPS4 = [
   { n: '1', title: 'Stylefinder starten', text: 'Beantworte ein paar Fragen und finde deinen Stil. Schnell & unverbindlich.' },
@@ -109,14 +35,6 @@ export default function Inspiration() {
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
   const imgY = useTransform(scrollYProgress, [0, 1], ['0%', '16%'])
   const imgScale = useTransform(scrollYProgress, [0, 1], [1.06, 1.16])
-
-  const [activeStyle, setActiveStyle] = useState('modern')
-  const [activeMat, setActiveMat] = useState(0)
-  const [activeRoom, setActiveRoom] = useState(0)
-  const room = ROOMS[activeRoom]
-  const [favs, setFavs] = useState(() => new Set())
-  const toggleFav = (i) => setFavs((s) => { const n = new Set(s); n.has(i) ? n.delete(i) : n.add(i); return n })
-  const mat = MATERIALS[activeMat]
 
   return (
     <div className="leist-page insp-page">
@@ -163,7 +81,6 @@ export default function Inspiration() {
 
       {/* VIDEKO STYLEFINDER — Premium-Style-Coverflow */}
       <StylefinderStyles />
-
 
       {/* RAUMIDEEN — interaktive Sektion */}
       <RaumideenSection />

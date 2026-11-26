@@ -302,8 +302,6 @@ function EndeBild() {
 export function DemoZiehungsBuehne({
   kompakt = false,
   schritt = 0,
-  updatedAt = null,
-  clockOffset = 0,
   verbindung = true,
 }) {
   const index = begrenzen(schritt)
@@ -394,6 +392,7 @@ export function DemoRegie() {
   const index = begrenzen(stand.schritt)
   const phase = PHASEN[index]
   const start = stand.updatedAt ? Date.parse(stand.updatedAt) : Number.NaN
+  // eslint-disable-next-line react-hooks/purity -- Live-Countdown, der Takt-Timer rendert neu
   const elapsed = Number.isFinite(start) ? Date.now() + stand.clockOffset - start : DRAW_MS
   const zieht = phase.art === 'ziehen'
   const rest = zieht ? Math.max(0, Math.ceil((DRAW_MS - elapsed) / 1000)) : 0

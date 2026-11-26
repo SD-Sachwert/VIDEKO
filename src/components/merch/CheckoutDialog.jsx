@@ -61,11 +61,13 @@ export default function CheckoutDialog() {
   const alleMitPreis = inquiryItems.every((i) => i.unitPrice != null)
 
   // Beim Öffnen zurücksetzen (Erfolgsschritt aber stehen lassen, falls schon gesendet)
-  useEffect(() => {
+  const [warOffen, setWarOffen] = useState(checkoutOpen)
+  if (checkoutOpen !== warOffen) {
+    setWarOffen(checkoutOpen)
     if (checkoutOpen) {
       setStep(0); setFehler(''); setFallbackHref(''); setBusy(false); setTouched(false)
     }
-  }, [checkoutOpen])
+  }
 
   useEffect(() => {
     if (!checkoutOpen) return

@@ -301,6 +301,7 @@ function BonusStartBild({ daten }) {
 function ZiehBild({ current, pot }) {
   const start = current?.startedAt ? Date.parse(current.startedAt) : Number.NaN
   const rest = Number.isFinite(start)
+    // eslint-disable-next-line react-hooks/purity -- Live-Anzeige, der Takt-Timer rendert neu
     ? Math.max(0, Math.ceil((start + 15000 - Date.now()) / 1000))
     : 15
 
@@ -366,6 +367,7 @@ export function ZiehungsBuehne({ kompakt = false }) {
     winners.length >= gesamt
     && current?.status === 'revealed'
     && Number.isFinite(revealZeit)
+    // eslint-disable-next-line react-hooks/purity -- Live-Anzeige, der Takt-Timer rendert neu
     && Date.now() - revealZeit >= 15000
   const hauptGewinner = winners.filter((w) => w.drawType !== 'bonus' && !w.prizeKey?.startsWith('bonus_')).length
   const bonusBereit = Boolean(
@@ -375,6 +377,7 @@ export function ZiehungsBuehne({ kompakt = false }) {
     && current?.status === 'revealed'
     && current?.drawType !== 'bonus'
     && Number.isFinite(revealZeit)
+    // eslint-disable-next-line react-hooks/purity -- Live-Anzeige, der Takt-Timer rendert neu
     && Date.now() - revealZeit >= 15000
   )
   const fertig = Boolean(

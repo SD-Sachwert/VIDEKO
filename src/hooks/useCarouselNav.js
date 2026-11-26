@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useLayoutEffect } from 'react'
 
 /**
  * Macht ein Karussell per Mausrad/Trackpad und Touch-Swipe steuerbar.
@@ -11,7 +11,8 @@ export default function useCarouselNav(next, prev) {
   const lock = useRef(false)
   const touch = useRef(null)
   const fns = useRef({ next, prev })
-  fns.current = { next, prev }
+  // Neueste Callbacks nach jedem Commit übernehmen (nicht während des Renderns).
+  useLayoutEffect(() => { fns.current = { next, prev } })
 
   useEffect(() => {
     const el = ref.current

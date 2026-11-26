@@ -39,7 +39,7 @@ export default function MaterialsLab() {
   const pick = (i) => { setActive(i); setSelected(i) }
   const next = () => pick((active + 1) % n)
   const prev = () => pick((active - 1 + n) % n)
-  const nav = useCarouselNav(next, prev)
+  const { ref: navRef, onTouchStart: navTouchStart, onTouchEnd: navTouchEnd } = useCarouselNav(next, prev)
   const rel = (i) => { let d = i - active; if (d > n / 2) d -= n; if (d < -n / 2) d += n; return d }
 
   useEffect(() => {
@@ -80,7 +80,7 @@ export default function MaterialsLab() {
         </Reveal>
 
         <div className="matlab__stagewrap" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
-          <div className="matlab__stage" ref={nav.ref} onTouchStart={nav.onTouchStart} onTouchEnd={nav.onTouchEnd} style={{ touchAction: 'pan-y' }}>
+          <div className="matlab__stage" ref={navRef} onTouchStart={navTouchStart} onTouchEnd={navTouchEnd} style={{ touchAction: 'pan-y' }}>
             {MATS.map((m, i) => {
               const d = rel(i)
               const isActive = d === 0

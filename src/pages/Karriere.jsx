@@ -1,9 +1,8 @@
 import { useRef, useState, useEffect } from 'react'
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import {
   Store, PencilRuler, Hammer, Ruler, Headset, MessageSquare, Megaphone,
-  Sparkles, Rocket, Mail, ArrowRight, MapPin, Upload, Check,
-  Gem, Smile, ShieldCheck, Zap, Coffee, Heart, ChevronLeft, ChevronRight,
+  Sparkles, Rocket, Mail, ArrowRight, MapPin, Upload, Gem, Smile, ShieldCheck, Zap, Coffee, Heart, ChevronLeft, ChevronRight,
 } from 'lucide-react'
 
 import Reveal from '../components/Reveal.jsx'
@@ -55,9 +54,7 @@ const STATS_DECK = [
   { v: '∞', l: 'Tassen Kaffee' },
   { v: '∞', l: 'Möglichkeiten' },
 ]
-import imgProzess from '../assets/images/karriere/08_bewerbungsprozess_teammeeting.webp'
 import imgFormular from '../assets/images/karriere/09_bewerbung_interior_formular.webp'
-import imgCta from '../assets/images/karriere/10_cta_footer_premium_showroom.webp'
 import { BRAND, STUDIO_ADRESSE, STUDIO_MAPS_URL } from '../data/company.js'
 import { meldeAnfrage } from '../lib/marketing.js'
 
@@ -73,8 +70,6 @@ const ROLES = [
   { title: 'Quereinsteiger', cat: 'offen', icon: Rocket, image: jReinigung, text: 'Noch keine Küchen-Erfahrung? Hauptsache Kopf an.' },
 ]
 
-
-
 const STEPS3 = [
   { n: '1', title: 'Kurz melden', text: 'Ein paar Zeilen reichen. Lebenslauf? Gern, muss aber nicht perfekt sein.' },
   { n: '2', title: 'Wir melden uns', text: 'Persönlich, ehrlich, kein Bot – wir schauen, ob die Chemie passt.' },
@@ -85,13 +80,6 @@ const HEROCARDS = [
   { icon: ShieldCheck, t: 'Echte Verantwortung' },
   { icon: Zap, t: 'Kurze Wege' },
   { icon: Gem, t: 'Premium statt Preisschlacht' },
-]
-
-const WHY4 = [
-  { icon: Gem, title: 'Premium statt Masse', text: 'Qualität vor Stückzahl – jedes Projekt zählt.' },
-  { icon: Rocket, title: 'Mitgestalten statt Mitschwimmen', text: 'Aufbauphase mit echtem Gestaltungsspielraum.' },
-  { icon: MessageSquare, title: 'Klartext statt Konzernsprech', text: 'Kurze Wege, ehrliche Worte, schnelle Entscheidungen.' },
-  { icon: Smile, title: 'Humor inklusive', text: 'Hochwertig heißt nicht steif. Wir nehmen die Arbeit ernst – uns nicht zu sehr.' },
 ]
 
 const FLOW3 = [
@@ -139,7 +127,7 @@ export default function Karriere() {
   const deckNext = () => setActiveJob((v) => (v + 1) % DECK.length)
   const deckPrev = () => setActiveJob((v) => (v - 1 + DECK.length) % DECK.length)
   const deckGo = (i) => setActiveJob(i)
-  const deckNav = useCarouselNav(deckNext, deckPrev)
+  const { ref: deckRef, onTouchStart: deckTouchStart, onTouchEnd: deckTouchEnd } = useCarouselNav(deckNext, deckPrev)
 
   // autoplay — pauses on hover; respects reduced-motion
   useEffect(() => {
@@ -231,7 +219,7 @@ export default function Karriere() {
           </Reveal>
         </div>
 
-        <div className="cdeck2" ref={deckNav.ref} onTouchStart={deckNav.onTouchStart} onTouchEnd={deckNav.onTouchEnd} onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+        <div className="cdeck2" ref={deckRef} onTouchStart={deckTouchStart} onTouchEnd={deckTouchEnd} onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
           <div className="cdeck2__stage" style={{ touchAction: 'pan-y' }}>
             {DECK.map((r, i) => {
               const d = deckRel(i)

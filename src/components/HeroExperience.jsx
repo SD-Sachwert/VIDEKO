@@ -1,16 +1,11 @@
 import { useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { ArrowRight, Boxes, Lightbulb, Ruler, Clock, Gem, ShieldCheck, PencilRuler, Wrench, Layers, Cpu, Workflow, Sparkles, UserCheck } from 'lucide-react'
+import { ArrowRight, Boxes, Lightbulb, Ruler, Gem, ShieldCheck, PencilRuler, Wrench, Layers, Cpu, Workflow, Sparkles, UserCheck } from 'lucide-react'
 
 import Reveal from './Reveal.jsx'
 import Img from './Img.jsx'
-import CTAButton from './CTAButton.jsx'
 import { KiHinweis } from './legal/KiKennzeichnung.jsx'
 import beforeImg from '../assets/images/home-hero/before.webp'
 import afterImg from '../assets/images/home-hero/after.webp'
-import cardInsp from '../assets/images/home-hero/card-inspiration.webp'
-import cardStyle from '../assets/images/home-hero/card-stylefinder.webp'
-import cardBer from '../assets/images/home-hero/card-beratung.webp'
 
 const HOTSPOTS = [
   { icon: Layers, t: 'Materialkonzept', d: 'Oberflächen, die zum Alltag passen.' },
@@ -41,19 +36,6 @@ const HOTSPOTS = [
   { icon: Lightbulb, t: 'Akzentbeleuchtung', d: 'Licht, das auch Stimmung kann.' },
   { icon: Layers, t: 'Rückwand & Spritzschutz', d: 'Rückwand, die was aushält.' },
   { icon: Boxes, t: 'Ecknutzung', d: 'Jede Ecke arbeitet mit.' },
-]
-
-const BAUSTEINE = [
-  'Materialkonzept', 'Stauraumplanung', 'Lichtkonzept', 'Geräteintegration', 'Ablaufplanung',
-  'Sitzplatzlösung', 'Raumwirkung', 'Wand- & Deckenkonzept', 'Maßarbeit', 'Präzise Montage',
-  'Gewerke-Koordination', 'Persönliche Planung', 'Design + Funktion', 'Elektroplanung',
-  'Wasser- & Anschlussplanung', 'Handwerkersteuerung', 'Komplettumbau', 'Betreuung von A bis Z',
-]
-
-const ENTRIES = [
-  { n: '01', img: cardInsp, title: 'Inspiration finden', text: 'Entdecke Stile, Materialien und Ideen für die Küche, die zu dir passt.', cta: 'Jetzt entdecken', to: '/inspiration' },
-  { n: '02', img: cardStyle, title: 'Stylefinder starten', text: 'In 2 Minuten zu deiner individuellen Küchenrichtung.', cta: 'Jetzt starten', to: '/stylefinder' },
-  { n: '03', img: cardBer, title: 'Persönliche Beratung', text: 'Gemeinsam planen wir deine Küche – ehrlich und auf Augenhöhe.', cta: 'Termin sichern', to: '/beratung' },
 ]
 
 const TRUST = [

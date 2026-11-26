@@ -1,8 +1,6 @@
 import { useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import {
-  ArrowRight, ArrowUpRight, Plus, Minus, Clock, Bookmark, Quote, Sparkles,
-} from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Plus, Minus, Clock, Quote, Sparkles } from 'lucide-react'
 
 import Reveal from '../components/Reveal.jsx'
 import SectionHeader from '../components/SectionHeader.jsx'
@@ -12,9 +10,7 @@ import Img from '../components/Img.jsx'
 import heroImg from '../assets/images/inspiration/01_hero_atmosphaerische_kueche.webp'
 import faqImg from '../assets/images/leistungen/04_intro_helle_kueche.webp'
 import { BRAND, whatsappUrl } from '../data/company.js'
-import {
-  categories, journalArticles, journalFaqs, kitchenMyths, fragVidekoQuestions, popularTopics,
-} from '../data/journal.js'
+import { categories, journalArticles, journalFaqs, kitchenMyths, fragVidekoQuestions, popularTopics } from '../data/journal.js'
 
 export default function Journal() {
   const [cat, setCat] = useState('Alle Themen')

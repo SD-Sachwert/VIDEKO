@@ -25,7 +25,7 @@ export default function KarriereTopShowcase() {
 
   const next = () => setActive((v) => (v + 1) % CARDS.length)
   const prev = () => setActive((v) => (v - 1 + CARDS.length) % CARDS.length)
-  const nav = useCarouselNav(next, prev)
+  const { ref: navRef, onTouchStart: navTouchStart, onTouchEnd: navTouchEnd } = useCarouselNav(next, prev)
   const rel = (i) => { let d = i - active; const n = CARDS.length; if (d > n / 2) d -= n; if (d < -n / 2) d += n; return d }
 
   useEffect(() => {
@@ -45,7 +45,7 @@ export default function KarriereTopShowcase() {
           <span className="karr-topshow__cue">Echte Haltung. Kein Konzernsprech.</span>
         </Reveal>
 
-        <div className="kts" ref={nav.ref} onTouchStart={nav.onTouchStart} onTouchEnd={nav.onTouchEnd} onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+        <div className="kts" ref={navRef} onTouchStart={navTouchStart} onTouchEnd={navTouchEnd} onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
           <div className="kts__stage" style={{ touchAction: 'pan-y' }}>
             {CARDS.map((c, i) => {
               const d = rel(i)

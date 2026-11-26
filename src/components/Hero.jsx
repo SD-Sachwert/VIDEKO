@@ -60,9 +60,6 @@ export default function Hero() {
   const mx = useMotionValue(0)
   const my = useMotionValue(0)
   const sx = useSpring(mx, { stiffness: 55, damping: 18, mass: 0.6 })
-  const sy = useSpring(my, { stiffness: 55, damping: 18, mass: 0.6 })
-  const imgPX = useTransform(sx, [-0.5, 0.5], [18, -18])
-  const imgPY = useTransform(sy, [-0.5, 0.5], [14, -14])
   const arcPX = useTransform(sx, [-0.5, 0.5], [28, -28])
   const txtPX = useTransform(sx, [-0.5, 0.5], [-10, 10])
 

@@ -15,7 +15,7 @@ import FamilyCard from '../components/merch/FamilyCard.jsx'
 import NotifyModal from '../components/merch/NotifyModal.jsx'
 import PersonalisierungHinweis from '../components/merch/PersonalisierungHinweis.jsx'
 import { useCart } from '../shop/cart-context.js'
-import { sendInterest, interestAlreadySent } from '../shop/notify.js'
+import { sendInterest } from '../shop/notify.js'
 import {
   getProduct, getFamilyOfProduct, getRelated, MERCH_FAMILIES,
   formatPrice, personalizationPrice, getSizeGuide,
@@ -291,7 +291,14 @@ function Konfigurator({ family, start }) {
   const [notifyOpen, setNotifyOpen] = useState(false)
 
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'auto' }) }, [])
-  useEffect(() => { if (params.get('benachrichtigen')) setNotifyOpen(true) }, [params])
+  // Beim Auftauchen von ?benachrichtigen=1 öffnen (auch beim Wechsel auf ein
+  // anderes Produkt). Während des Renderns statt im Effekt: kein Zusatz-Render.
+  const willNotify = Boolean(params.get('benachrichtigen'))
+  const [notifyParam, setNotifyParam] = useState(false)
+  if (willNotify !== notifyParam) {
+    setNotifyParam(willNotify)
+    if (willNotify) setNotifyOpen(true)
+  }
 
   const setParam = (updates) => {
     const p = new URLSearchParams(params)
@@ -669,7 +676,14 @@ function Einzelseite({ product }) {
   const [notifyOpen, setNotifyOpen] = useState(false)
 
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'auto' }) }, [])
-  useEffect(() => { if (params.get('benachrichtigen')) setNotifyOpen(true) }, [params])
+  // Beim Auftauchen von ?benachrichtigen=1 öffnen (auch beim Wechsel auf ein
+  // anderes Produkt). Während des Renderns statt im Effekt: kein Zusatz-Render.
+  const willNotify = Boolean(params.get('benachrichtigen'))
+  const [notifyParam, setNotifyParam] = useState(false)
+  if (willNotify !== notifyParam) {
+    setNotifyParam(willNotify)
+    if (willNotify) setNotifyOpen(true)
+  }
 
   const related = useMemo(() => getRelated(product, 5).filter((p) => p.category === 'Accessoires' || p.collection === 'WORKWEAR'), [product])
   const sizeGuide = getSizeGuide(product.sizeGuide)
