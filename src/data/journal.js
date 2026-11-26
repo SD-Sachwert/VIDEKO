@@ -19,6 +19,112 @@ export const categories = [
 
 export const journalArticles = [
   {
+    "slug": "kuechenstudio-wuerzburg-checkliste",
+    "lastModified": "2026-11-26",
+    "title": "Küchenstudio in Würzburg finden: 10 Fragen vor dem Küchenkauf",
+    "category": "Planung",
+    "read": "6 Min.",
+    "teaser": "Was gehört in ein vergleichbares Küchenangebot? Zehn Fragen zu Aufmaß, Geräten, Montage, Umbau und Kosten, die du jedem Küchenstudio stellen kannst.",
+    "metaTitle": "Küchenstudio Würzburg: Checkliste für den Küchenkauf | VIDEKO",
+    "metaDescription": "Küchenstudios in Würzburg vergleichen: 10 konkrete Fragen zu Planung, Angebot, Aufmaß, Elektrogeräten, Montage und Küchenrenovierung.",
+    "intro": "Wer in Würzburg eine Küche kaufen möchte, hat mehrere Anlaufstellen. Entscheidend ist nicht allein die schönste Ausstellung oder der größte Rabatt, sondern was du für dein Budget tatsächlich bekommst. Mit diesen zehn Fragen kannst du Angebote unterschiedlicher Küchenstudios sinnvoll vergleichen – auch unser eigenes.",
+    "sections": [
+      {
+        "h": "1. Was ist im Angebot enthalten?",
+        "p": "Bitte um eine nachvollziehbare Aufstellung von Möbeln, Arbeitsplatte, Geräten, Lieferung, Montage und optionalen Arbeiten. Vergleiche die Gesamtsumme bei gleichem Umfang, nicht nur den Rabatt auf einen Ausgangspreis."
+      },
+      {
+        "h": "2. Welche Geräte sind konkret eingeplant?",
+        "p": "Lass dir Hersteller und Modellbezeichnungen geben. Zwei optisch ähnliche Backöfen können unterschiedliche Funktionen haben. Nur mit Modellnummern kannst du Ausstattung, Verbrauch und Preis sinnvoll vergleichen."
+      },
+      {
+        "h": "3. Wer nimmt das verbindliche Aufmaß?",
+        "p": "Ein Grundriss ist eine gute Basis, ersetzt aber kein Aufmaß am tatsächlichen Raum. Kläre, wann Wände, Fenster, Leitungen und Höhen aufgenommen werden und wer Abweichungen vor der Bestellung prüft."
+      },
+      {
+        "h": "4. Kann ich den Entwurf vor der Bestellung prüfen?",
+        "p": "Eine 3D-Ansicht hilft bei Optik und Anordnung. Prüfe zusätzlich Maße, Öffnungsrichtungen, Auszüge, Steckdosen, Durchgänge und Gerätehöhen. Lass dir erläutern, welche Details im Vertrag festgehalten werden."
+      },
+      {
+        "h": "5. Welche Eigenschaften haben Fronten und Arbeitsplatte?",
+        "p": "Frage nach Material, Oberfläche, Kanten, Pflege und Herstellervorgaben. Bei Keramik, Naturstein, Holz und Schichtstoff unterscheiden sich unter anderem Gewicht, Empfindlichkeit und Pflegeaufwand."
+      },
+      {
+        "h": "6. Wer übernimmt die Montage?",
+        "p": "Kläre, wer die Küche liefert und montiert, was mit Anschlüssen passiert und welche Arbeiten nicht enthalten sind. Frage auch, wie die Endabnahme und die Bearbeitung offener Punkte organisiert werden."
+      },
+      {
+        "h": "7. Wer kümmert sich um den Raum?",
+        "p": "Bei einer Renovierung müssen alte Küche, Elektroanschlüsse, Wasser, Boden, Wände, Decke und Licht zeitlich zusammenpassen. Kläre, welche Gewerke separat beauftragt werden und wer die Abstimmung übernimmt."
+      },
+      {
+        "h": "8. Wie verbindlich sind Termine?",
+        "p": "Frage nach dem geplanten Liefer- und Montagezeitraum, notwendigen Vorarbeiten und dem Vorgehen bei Änderungen. Wenn ein Termin für deinen Einzug entscheidend ist, sollte er im Vertrag entsprechend geklärt sein."
+      },
+      {
+        "h": "9. Wie werden Zahlung und spätere Änderungen geregelt?",
+        "p": "Lies Zahlungsplan, Leistungsumfang und Regelungen zu Änderungen vor der Unterschrift. Lass dir Zusatzkosten schriftlich bestätigen, bevor weitere Arbeiten beauftragt werden."
+      },
+      {
+        "h": "10. Was passiert nach der Montage?",
+        "p": "Kläre, wer bei Fehlteilen, Nacharbeiten oder Fragen zu Geräten und Pflege erreichbar ist. Eine gemeinsame Abnahme mit dokumentierten offenen Punkten schafft Klarheit."
+      },
+      {
+        "h": "So arbeitet VIDEKO in Würzburg",
+        "p": "VIDEKO Küchen eG sitzt in der Hertzstraße 4, 97076 Würzburg. Wir bieten individuelle Küchenberatung, 3D-Planung, Aufmaß und Küchenmontage an. Auf Wunsch koordinieren wir auch angrenzende Ausbauarbeiten mit Fachpartnern. Persönliche Beratung ist nach Terminvereinbarung möglich; den aktuellen Stand der Ausstellung findest du auf unserer Studio-Seite."
+      }
+    ],
+    "fazit": "Vergleiche Leistungen und vertragliche Zusagen statt Werberabatte. Ein gutes Angebot beantwortet deine Fragen, bevor du unterschreibst.",
+    "image": imgBeratung
+  },
+  {
+    "slug": "kuechenrenovierung-wuerzburg-ablauf",
+    "lastModified": "2026-11-26",
+    "title": "Küchenrenovierung in Würzburg: In welcher Reihenfolge wird umgebaut?",
+    "category": "Planung",
+    "read": "5 Min.",
+    "teaser": "Neue Küche, neuer Boden, neue Anschlüsse? Ein praktischer Ablaufplan für die Abstimmung von Küchenplanung und Handwerk.",
+    "metaTitle": "Küchenrenovierung Würzburg: Ablauf und Gewerke | VIDEKO Küchen",
+    "metaDescription": "Küche renovieren: Welche Reihenfolge ist sinnvoll? Planung, Rückbau, Elektro, Wasser, Boden, Wände, Decke und Küchenmontage im Überblick.",
+    "intro": "Wer eine alte Küche durch eine neue ersetzt, tauscht oft nicht nur Möbel aus. Werden Boden, Anschlüsse, Beleuchtung oder Wände geändert, hängen mehrere Gewerke voneinander ab. Eine gute Reihenfolge vermeidet, dass die neue Küche schon geliefert wird, während der Raum noch nicht bereit ist.",
+    "sections": [
+      {
+        "h": "1. Bestand und Wunschgrundriss klären",
+        "p": "Dokumentiere Raummaße, Fenster, Türen, vorhandene Anschlüsse, Bodenaufbau und Geräte. Kläre, welche Teile bleiben und welche verändert werden sollen. Die genaue Reihenfolge richtet sich nach dem Bestand und muss im Einzelfall abgestimmt werden."
+      },
+      {
+        "h": "2. Küche und Anschlüsse gemeinsam planen",
+        "p": "Lege Positionen von Spüle, Geschirrspüler, Kochfeld, Kühlschrank und Beleuchtung fest, bevor Installationsarbeiten beginnen. Aus dem Küchenentwurf lassen sich die Anforderungen an Strom, Wasser und Abluft ableiten. Die technische Ausführung und Prüfung übernimmt das zuständige Fachgewerk."
+      },
+      {
+        "h": "3. Umfang und Schnittstellen schriftlich festhalten",
+        "p": "Bestimme, wer Rückbau, Entsorgung, Elektroarbeiten, Wasseranschlüsse, Boden, Malerarbeiten oder Deckenarbeiten übernimmt. Halte fest, wer welche Leistung beauftragt und welche Vorleistungen bis zum Montagetermin abgeschlossen sein müssen."
+      },
+      {
+        "h": "4. Rückbau und Rohinstallation",
+        "p": "Nach der fachgerechten Trennung der betroffenen Anschlüsse kann die alte Küche demontiert werden. Wenn Leitungen oder Wände verändert werden, sollten die notwendigen Arbeiten vor dem endgültigen Oberflächenaufbau koordiniert sein. Trocknungs- und Prüfzeiten müssen berücksichtigt werden."
+      },
+      {
+        "h": "5. Boden, Wände und Decke abstimmen",
+        "p": "Der endgültige Bodenaufbau verändert Höhen und damit möglicherweise die Küchenplanung. Bei schwimmend verlegten Belägen sind die Herstellervorgaben zur Aufstellung schwerer Einbauten zu beachten. Auch die Reihenfolge von Decken-, Wand- und Bodenarbeiten hängt von Material und Bauweise ab."
+      },
+      {
+        "h": "6. Kontrollaufmaß und Bestellung",
+        "p": "Ob das endgültige Aufmaß vor oder nach einzelnen Vorarbeiten erfolgt, hängt von den vereinbarten Maßen und dem Projekt ab. Entscheidend ist, dass die Bestellung auf einer belastbaren Planung basiert und relevante spätere Änderungen berücksichtigt werden."
+      },
+      {
+        "h": "7. Montage und Endabnahme",
+        "p": "Wenn Raum und vereinbarte Vorleistungen bereit sind, folgen Lieferung, Montage und die erforderlichen fachgerechten Anschlüsse. Prüfe am Ende Oberflächen, Funktionen und Vollständigkeit gemeinsam mit den Verantwortlichen; dokumentiere offene Punkte."
+      },
+      {
+        "h": "Küchenrenovierung mit VIDEKO",
+        "p": "Wir planen die Küche und auf Wunsch den gesamten Küchenraum gemeinsam. Angrenzende Gewerke wie Elektro, Boden, Trockenbau oder Spanndecke koordinieren wir mit Fachpartnern. Welche Leistungen benötigt werden und wie die Beauftragung im konkreten Projekt erfolgt, klären wir in der Beratung."
+      }
+    ],
+    "fazit": "Die Küche und die Vorarbeiten müssen zusammen geplant werden. Ein abgestimmter Terminplan ist wichtiger als eine starre Standardreihenfolge.",
+    "image": imgOffen
+  },
+  {
     slug: 'licht-in-der-kueche',
     lastModified: '2026-08-24',
     title: 'Licht in der Küche: Warum gutes Licht mehr kann als nur hell machen',
