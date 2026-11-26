@@ -17,7 +17,7 @@ technisch bereinigte **Rohfassung** und noch **nicht geprüft**.
 
 ### A1) Unternehmensangaben (verantwortliche Stelle)
 - VIDEKO Küchen eG, Hertzstraße 4, 97076 Würzburg
-- Telefon: 0160 5545818 · E-Mail: info@videko-kuechen.de
+- Telefon: 0931 29764861 · E-Mail: info@videko-kuechen.de
 - **Zu bestätigen:** vertretungsberechtigte Person(en), Register-/Genossenschaftsdaten,
   ob eine/ein Datenschutzbeauftragte/r bestellt ist (dann mit Kontakt ergänzen),
   zuständige Datenschutz-Aufsichtsbehörde.

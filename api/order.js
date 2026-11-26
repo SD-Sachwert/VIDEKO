@@ -208,7 +208,7 @@ function customerMail(d) {
     `danke für deine Anfrage! 🙌 Sie ist bei uns eingegangen und wir erstellen dir jetzt dein individuelles Angebot inkl. Versandkosten.\n\n` +
     `Deine Auswahl:\n${liste}\n\n` +
     `Was jetzt passiert: Wir melden uns ganz schnell persönlich per E-Mail mit deinem Angebot. Erst wenn du dieses Angebot bestätigst, wird daraus etwas Verbindliches – bis dahin ist alles unverbindlich und kostenlos.`
-  const text = `${body}\n\nBis gleich,\nDein VIDEKO Team\n\nVIDEKO Küchen eG · Hertzstraße 4 · 97076 Würzburg\ninfo@videko-kuechen.de · 0160 5545818`
+  const text = `${body}\n\nBis gleich,\nDein VIDEKO Team\n\nVIDEKO Küchen eG · Hertzstraße 4 · 97076 Würzburg\ninfo@videko-kuechen.de · 0931 29764861`
   const html =
     `<div style="font-family:Arial,Helvetica,sans-serif;max-width:560px;margin:auto;color:#1a1a1a">
       <div style="background:#0d0d0d;color:#fff;padding:26px 24px;border-radius:14px 14px 0 0;text-align:center">
@@ -221,7 +221,7 @@ function customerMail(d) {
         <hr style="border:none;border-top:1px solid #eee;margin:22px 0">
         <p style="margin:0;font-size:12px;color:#999;line-height:1.6">
           VIDEKO Küchen eG · Hertzstraße 4 · 97076 Würzburg<br>
-          <a href="mailto:info@videko-kuechen.de" style="color:#caa15a">info@videko-kuechen.de</a> · 0160 5545818
+          <a href="mailto:info@videko-kuechen.de" style="color:#caa15a">info@videko-kuechen.de</a> · 0931 29764861
         </p>
       </div>
     </div>`

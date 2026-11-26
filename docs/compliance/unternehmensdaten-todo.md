@@ -10,7 +10,7 @@ Rechnungen, Bestellbestätigung, Checkout, Produktseite (Hersteller).
 | Firma | VIDEKO Küchen eG |
 | Anschrift | Hertzstraße 4, 97076 Würzburg, Deutschland |
 | Vorstand | Vitali Freisinger, Dennis Himmel, Heiko Himmel |
-| Telefon | 0160 5545818 |
+| Telefon | 0931 29764861 |
 | E-Mail | info@videko-kuechen.de |
 | Marke | VIDEKO |
 
