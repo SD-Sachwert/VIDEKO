@@ -144,11 +144,16 @@ export default function Home() {
                   was VIDEKO ist und wo. Der Satz sagt beides einmal — und führt zu den
                   zwei Seiten, die das Thema vertiefen. */}
               <p className="lp-lead">
-                VIDEKO ist ein Küchenstudio in Würzburg. Wir planen Küchen für den
-                Grundriss, der tatsächlich da ist – von der ersten Idee über die{' '}
-                <TextLink href="/planung">Küchenplanung</TextLink> bis zur Montage, und auf
-                Wunsch für den ganzen Raum. Sehen und anfassen kann man das in unserem{' '}
-                <TextLink href="/studio">Studio in der Hertzstraße</TextLink>.
+                VIDEKO ist ein Küchenstudio in Würzburg, in der Hertzstraße 4.
+                Wir planen individuelle{' '}
+                <TextLink href="/kuechen-nach-mass">Einbauküchen nach Maß</TextLink>{' '}
+                – von der persönlichen Beratung über die{' '}
+                <TextLink href="/planung">3D-Küchenplanung</TextLink> und das Aufmaß bis zur{' '}
+                <TextLink href="/kuechenmontage-wuerzburg">Küchenmontage</TextLink>.
+                Auf Wunsch planen wir bei einer{' '}
+                <TextLink href="/alles-aus-einer-hand">kompletten Küchenrenovierung</TextLink>{' '}
+                auch Boden, Wand, Decke, Licht und Anschlüsse mit und koordinieren die Fachpartner.
+                Eine persönliche Beratung ist bereits nach Terminvereinbarung möglich.
               </p>
             </Reveal>
           </div>
