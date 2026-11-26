@@ -8,6 +8,7 @@
     "build": "vite build && node scripts/prerender.mjs",
     "check:products": "node scripts/check-products.mjs",
     "indexnow": "node scripts/indexnow.mjs",
+    "seo:monitor": "node scripts/seo-monitor.mjs",
     "images:optimize": "node scripts/optimize-images.mjs",
     "lint": "eslint .",
     "preview": "vite preview",

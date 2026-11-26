@@ -1,0 +1,94 @@
+// SEO-Monitor: prueft die LIVE-Seite auf die Dinge, die still kaputtgehen koennen.
+//
+// Aufruf:  node scripts/seo-monitor.mjs          -> Bericht, Exit 1 bei Fehlern
+//          JSON=1 node scripts/seo-monitor.mjs   -> Bericht zusaetzlich als JSON
+//
+// Laeuft woechentlich per GitHub Action (.github/workflows/seo-monitor.yml).
+// Schlaegt der Lauf fehl, verschickt GitHub automatisch eine Mail an die
+// Repo-Beobachter – das ist der Alarm. Keine Kosten, keine Zugangsdaten.
+//
+// Geprueft wird:
+//  - jede Sitemap-URL: Status 200, <title>, meta description, canonical = URL,
+//    kein noindex, keine alte Mobilnummer
+//  - Startseite: JSON-LD-Telefon = offizielle Nummer
+//  - robots.txt verweist auf die Sitemap
+//  - IndexNow-Schluesseldatei ist erreichbar
+// Was hier NICHT geht (braucht Logins): Search-Console-Klicks/Indexierung,
+// Bing Webmaster, Google-Unternehmensprofil. Siehe docs/SEO-MONITORING.md.
+import { readdirSync, readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
+import { dirname, join } from 'node:path'
+
+const ORIGIN = 'https://videko-kuechen.de'
+const TELEFON_OFFIZIELL = '+4993129764861'
+// Alte Mobilnummer in allen ueblichen Schreibweisen (darf nirgends mehr stehen)
+const ALTE_NUMMER = /0160[\s\/-]*554[\s\/-]*5818|\+?49[\s\/-]*160[\s\/-]*554[\s\/-]*5818|1605545818/
+
+const fehler = []
+const hinweise = []
+const fehlt = (url, was) => fehler.push(`${url}: ${was}`)
+
+async function hole(url) {
+  const res = await fetch(url, { redirect: 'manual', headers: { 'User-Agent': 'VIDEKO-SEO-Monitor' } })
+  return { status: res.status, text: res.status === 200 ? await res.text() : '' }
+}
+
+// Sitemap
+const sm = await hole(`${ORIGIN}/sitemap.xml`)
+if (sm.status !== 200) {
+  console.error(`sitemap.xml liefert ${sm.status} – Abbruch.`)
+  process.exit(1)
+}
+const urls = [...sm.text.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1])
+
+// Seiten pruefen (je 6 parallel, damit es schnell geht und nicht drueckt)
+const ergebnisse = []
+for (let i = 0; i < urls.length; i += 6) {
+  await Promise.all(urls.slice(i, i + 6).map(async (url) => {
+    const { status, text } = await hole(url)
+    ergebnisse.push({ url, status })
+    if (status !== 200) return fehlt(url, `Status ${status}`)
+    if (!/<title>[^<]{5,}<\/title>/.test(text)) fehlt(url, 'kein <title>')
+    if (!/<meta name="description" content="[^"]{30,}"/.test(text)) fehlt(url, 'keine meta description')
+    const canon = text.match(/<link rel="canonical" href="([^"]+)"/)?.[1]
+    if (!canon) fehlt(url, 'kein canonical')
+    else if (canon.replace(/\/$/, '') !== url.replace(/\/$/, '')) fehlt(url, `canonical zeigt auf ${canon}`)
+    if (/<meta name="robots" content="[^"]*noindex/.test(text)) fehlt(url, 'noindex, steht aber in der Sitemap')
+    if (ALTE_NUMMER.test(text)) fehlt(url, 'alte Mobilnummer im HTML')
+  }))
+}
+
+// Startseite: strukturierte Daten
+const home = await hole(`${ORIGIN}/`)
+const tel = [...home.text.matchAll(/"telephone":"([^"]+)"/g)].map((m) => m[1])
+if (tel.length === 0) fehlt('/', 'kein telephone im JSON-LD')
+for (const t of tel) if (t.replace(/\s/g, '') !== TELEFON_OFFIZIELL) fehlt('/', `JSON-LD-Telefon ${t} statt ${TELEFON_OFFIZIELL}`)
+
+// robots.txt
+const robots = await hole(`${ORIGIN}/robots.txt`)
+if (robots.status !== 200) fehlt('/robots.txt', `Status ${robots.status}`)
+else if (!robots.text.includes(`${ORIGIN}/sitemap.xml`)) fehlt('/robots.txt', 'verweist nicht auf die Sitemap')
+
+// IndexNow-Schluessel
+try {
+  const pub = join(dirname(fileURLToPath(import.meta.url)), '..', 'public')
+  const keyFile = readdirSync(pub).find((n) => /^[a-f0-9]{32}\.txt$/.test(n))
+  const key = readFileSync(join(pub, keyFile), 'utf8').trim()
+  const k = await hole(`${ORIGIN}/${keyFile}`)
+  if (k.status !== 200 || k.text.trim() !== key) fehlt(`/${keyFile}`, `IndexNow-Schluessel liefert ${k.status} oder falschen Inhalt`)
+} catch {
+  hinweise.push('IndexNow-Schluessel lokal nicht gefunden – Pruefung uebersprungen')
+}
+
+const ohneLastmod = (sm.text.match(/<url>/g) || []).length - (sm.text.match(/<lastmod>/g) || []).length
+if (ohneLastmod > 0) hinweise.push(`${ohneLastmod} Sitemap-URLs ohne <lastmod>`)
+
+console.log(`SEO-Monitor ${new Date().toISOString().slice(0, 16).replace('T', ' ')} UTC`)
+console.log(`Sitemap-URLs: ${urls.length} · 200: ${ergebnisse.filter((e) => e.status === 200).length} · JSON-LD-Telefon: ${tel.join(', ') || '–'}`)
+for (const h of hinweise) console.log(`Hinweis: ${h}`)
+if (fehler.length) {
+  console.log(`\n${fehler.length} Fehler:`)
+  for (const f of fehler) console.log(`  ✕ ${f}`)
+} else console.log('Keine Fehler.')
+if (process.env.JSON) console.log(JSON.stringify({ urls: urls.length, fehler, hinweise }, null, 2))
+process.exit(fehler.length ? 1 : 0)

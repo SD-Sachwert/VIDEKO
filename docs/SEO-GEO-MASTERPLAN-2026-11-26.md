@@ -169,6 +169,18 @@ Betreff: Kostenloser Grundeintrag: VIDEKO Küchen eG, Würzburg
 | Küchenstudio in Würzburg finden: 10 Fragen | `/journal/kuechenstudio-wuerzburg-checkliste` | `/planung` |
 | Küchenrenovierung in Würzburg: Ablauf | `/journal/kuechenrenovierung-wuerzburg-ablauf` | `/alles-aus-einer-hand` |
 | Küchenangebote vergleichen | `/journal/kuechenangebote-vergleichen` | `/kuechenmontage-wuerzburg` |
+| Küche im Neubau planen | `/journal/kueche-im-neubau-planen` | `/planung` |
+| Alte Küche erneuern oder neu kaufen? | `/journal/kueche-erneuern-oder-neu-kaufen` | `/arbeitsplatten` |
+| Küche ausmessen: Raumskizze | `/journal/kueche-ausmessen-anleitung` | `/beratung` |
+
+**Weitere Unterlagen:**
+
+- Budget-Rechner: `docs/KUECHENBUDGET-RECHNER-KONZEPT.md`
+- Leistungsseite für Investoren und Bauträger: Entwurf in
+  `docs/ENTWURF-LEISTUNG-INVESTOREN-BAUTRAEGER.md`, nicht live, weil das
+  Angebot unbestätigt ist
+- Presseanfragen: `docs/PRESSEANFRAGEN-2026-11.md`
+- Monitoring: `docs/SEO-MONITORING.md`
 
 **Geplant**, in dieser Reihenfolge. Jeder Artikel braucht einen eigenen
 Suchintent und darf sich nicht mit bestehenden Artikeln überschneiden.
@@ -176,7 +188,6 @@ Suchintent und darf sich nicht mit bestehenden Artikeln überschneiden.
 | Thema | Voraussetzung, Abgrenzung |
 |---|---|
 | Was kostet eine Küche? | Nur mit belegten Spannen (eigene Auswertung oder Quelle). Ohne Beleg wird er nicht veröffentlicht. |
-| Küche im Neubau planen | Zeitpunkt der Planung, Abstimmung von Elektro- und Wasseranschlüssen, Zusammenarbeit mit Bauträgern |
 | Kleine Küche planen | Baut auf „Mehr Stauraum“ auf, Schwerpunkt Grundriss und Maße |
 | Küchen für Investoren und Mehrfamilienhäuser | Serienplanung, robuste Materialien, Koordination mehrerer Wohnungen. Nur schreiben, wenn VIDEKO dieses Angebot aktiv vertreibt. |
 | Küchenmontage: Was am Montagetag passiert | Ergänzt `/kuechenmontage-wuerzburg`, kein Duplikat |
@@ -239,6 +250,12 @@ Nicht verwenden: Umsätze, Kundenzahlen, Rankings, „erste“ oder „größte�
 ---
 
 ## Phase 6: Monitoring
+
+**Automatisiert seit 26.11.2026:** Jeden Montag läuft der Live-Check
+`scripts/seo-monitor.mjs` als GitHub Action. Er prüft Status, Titel,
+Beschreibung, canonical, noindex, alte Mobilnummer und das JSON-LD-Telefon.
+Ein Fehler löst eine GitHub-Mail aus. Details und die manuellen Teile stehen
+in `docs/SEO-MONITORING.md`.
 
 | Bereich | Quelle | Rhythmus | Kennzahl |
 |---|---|---|---|
