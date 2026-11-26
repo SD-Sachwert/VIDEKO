@@ -17837,3 +17837,22 @@ a.mwork__chip:hover { background: rgba(244, 239, 228, 0.12); border-color: rgba(
   .einwilligung__karte { padding: 18px; }
   .einwilligung__knoepfe { grid-template-columns: 1fr; }
 }
+
+/* Planungs-Check (/planung): drei Gruppen zum Abhaken, Ergebnis geht ins
+   Nachrichtenfeld auf /beratung. Nur bestehende Tokens. */
+.pcheck { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 34px; }
+.pcheck__gruppe { background: rgba(255, 255, 255, 0.72); border: 1px solid var(--line-dark); border-radius: 18px; padding: 22px 20px; }
+.pcheck__titel { font-family: var(--serif); font-size: 1.35rem; color: var(--ink); margin: 0 0 14px; }
+.pcheck__liste { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.pcheck__punkt { display: flex; gap: 12px; align-items: flex-start; width: 100%; text-align: left; padding: 10px 12px; border-radius: 12px; border: 1px solid transparent; background: transparent; color: var(--ink); cursor: pointer; font: inherit; transition: background 0.2s ease, border-color 0.2s ease; }
+.pcheck__punkt:hover { background: rgba(201, 160, 80, 0.08); }
+.pcheck__punkt:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.pcheck__punkt.is-active { border-color: rgba(201, 160, 80, 0.45); background: rgba(201, 160, 80, 0.1); }
+.pcheck__box { flex: 0 0 22px; height: 22px; margin-top: 1px; border-radius: 7px; border: 1.5px solid var(--line-dark); display: grid; place-items: center; color: #20170a; background: #fff; }
+.pcheck__punkt.is-active .pcheck__box { background: var(--grad-gold); border-color: transparent; }
+.pcheck__text { display: block; font-size: 0.92rem; font-weight: 600; line-height: 1.4; }
+.pcheck__tipp { display: block; margin-top: 3px; font-size: 0.82rem; line-height: 1.55; color: var(--ink-soft); }
+.pcheck__fazit .aaeh-note { margin-top: 26px; }
+@media (max-width: 900px) {
+  .pcheck { grid-template-columns: 1fr; }
+}

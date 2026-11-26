@@ -121,3 +121,55 @@ export const MONTAGE_FAQS = [
     a: 'Eine gemeinsame Endabnahme. Wir gehen die Küche mit dir durch, erklären Details und halten offene Punkte fest, statt sie stillschweigend liegen zu lassen.',
   },
 ]
+
+/** /planung (Suchbegriff „Küchenplanung Würzburg“) */
+export const PLANUNG_FAQS = [
+  {
+    q: 'Wie läuft eine Küchenplanung bei VIDEKO ab?',
+    a: 'In acht Schritten: Erstgespräch, Bedarf, Stil und Budgetrahmen, 3D-Planung, Laseraufmaß bei dir vor Ort, Bestellung, Montage durch unser eigenes Team und gemeinsame Endabnahme. Dein Ansprechpartner bleibt dabei derselbe.',
+  },
+  {
+    q: 'Kann ich schon vor der Eröffnung planen lassen?',
+    a: 'Ja. Die Ausstellung in der Hertzstraße 4 öffnet am 1. März 2027. Beratung und Planung laufen schon jetzt, nach Terminvereinbarung.',
+  },
+  {
+    q: 'Was sollte ich zum ersten Gespräch mitbringen?',
+    a: 'Eine Skizze mit groben Maßen, Fotos vom Raum und eine Vorstellung davon, was dich an der jetzigen Küche stört. Der Planungs-Check auf dieser Seite hilft beim Sortieren. Was fehlt, klären wir gemeinsam.',
+  },
+  {
+    q: 'Mit welchen Marken plant ihr?',
+    a: 'Mit Küchen von Schüller, next125, IMPULS und nobilia, Geräten von AEG, NEFF, Bosch, Miele und BORA sowie Spülen und Armaturen von Quooker, BLANCO und SCHOCK. Welche Kombination passt, hängt von Raum, Alltag und Budget ab.',
+  },
+  {
+    q: 'Plant ihr auch außerhalb von Würzburg?',
+    a: 'Planung, Aufmaß und Montage machen wir in Würzburg und der Region, zum Beispiel in Kitzingen, Schweinfurt oder Tauberbischofsheim. Liefern können wir deutschlandweit; die Lieferkosten trägst du, wir nennen sie vorab im Angebot. Eine Montage weiter weg sagen wir nur nach gesonderter Absprache zu.',
+  },
+  {
+    q: 'Wie lange dauert es bis zur fertigen Küche?',
+    a: 'Das hängt vor allem von den Lieferzeiten des Herstellers und den Vorarbeiten im Raum ab. Einen belastbaren Terminrahmen nennen wir nach dem Aufmaß – vorher wäre jede Zahl geraten.',
+  },
+]
+
+/** /studio (Suchbegriff „Küchenstudio Würzburg“). Wochentage erst nach Bestätigung nennen. */
+export const STUDIO_FAQS = [
+  {
+    q: 'Wann öffnet die Ausstellung?',
+    a: 'Am 1. März 2027 in der Hertzstraße 4 in Würzburg. Geöffnet ist dann von 9 bis 18 Uhr; die Wochentage nennen wir, sobald sie feststehen.',
+  },
+  {
+    q: 'Kann ich vorher schon vorbeikommen?',
+    a: 'Zur Beratung ja, nach Terminvereinbarung. Die Ausstellung ist bis zur Eröffnung noch im Aufbau, Planungsgespräche führen wir trotzdem schon.',
+  },
+  {
+    q: 'Welche Marken führt VIDEKO?',
+    a: 'Küchen von Schüller, next125, IMPULS und nobilia, Geräte von AEG, NEFF, Bosch, Miele und BORA sowie Spülen und Armaturen von Quooker, BLANCO und SCHOCK.',
+  },
+  {
+    q: 'Muss ich eine fertige Idee mitbringen?',
+    a: 'Nein. Ein Grundriss, ein paar Fotos und die Frage, was dich an der jetzigen Küche stört, reichen für den Anfang. Wer vorher sortieren will, nutzt den Planungs-Check auf der Seite zur Küchenplanung.',
+  },
+  {
+    q: 'Arbeitet VIDEKO auch für Bauträger und Investoren?',
+    a: 'Ja. Für Bauträger und Immobilieninvestoren übernehmen wir Küchenplanung, Aufmaß und Montage durch das eigene Team. Umfang, Ausstattung und Terminplanung stimmen wir je Projekt ab.',
+  },
+]

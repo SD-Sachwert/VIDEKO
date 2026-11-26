@@ -1,4 +1,5 @@
-import { Ruler, ClipboardList, Hammer, BadgeCheck } from 'lucide-react'
+import { useState } from 'react'
+import { Ruler, ClipboardList, Hammer, BadgeCheck, Plus, Minus } from 'lucide-react'
 
 import PageHero from '../components/PageHero.jsx'
 import ExplodingKitchenSection from '../components/ExplodingKitchenSection.jsx'
@@ -11,6 +12,8 @@ import FeatureCard from '../components/FeatureCard.jsx'
 import CTAButton from '../components/CTAButton.jsx'
 import Reveal from '../components/Reveal.jsx'
 import TextLink from '../components/TextLink.jsx'
+import PlanungsCheck from '../components/PlanungsCheck.jsx'
+import { PLANUNG_FAQS } from '../data/leistungsseiten.js'
 import { BRAND } from '../data/company.js'
 
 import heroImg from '../assets/images/shared/hero-kitchen-arch.webp'
@@ -34,6 +37,7 @@ const SERVICE = [
 ]
 
 export default function Planung() {
+  const [offen, setOffen] = useState(-1)
   return (
     <>
       <PageHero
@@ -59,6 +63,8 @@ export default function Planung() {
         </div>
       </section>
 
+      <PlanungsCheck />
+
       {/* Wo geplant wird. Bis SEO-Phase 2 stand auf dieser Seite kein einziger
           Ortsbezug und kein Link zum Studio — obwohl genau dort geplant wird
           und die Suche nach „Küchenplanung Würzburg“ hier landen soll. */}
@@ -80,6 +86,26 @@ export default function Planung() {
             Boden, Wand oder Licht dran sind, steht das unter{' '}
             <TextLink href="/alles-aus-einer-hand">Alles aus einer Hand</TextLink>.
           </Reveal>
+        </div>
+      </section>
+
+      <section className="section section--light">
+        <div className="container">
+          <SectionHeader
+            kicker="Häufige Fragen"
+            title={<>Was vor der Planung <span className="grad">oft gefragt wird.</span></>}
+          />
+          <div className="aaeh-faq">
+            {PLANUNG_FAQS.map((f, i) => (
+              <Reveal key={f.q} as="div" className={`jacc ${offen === i ? 'is-open' : ''}`} delay={(i % 2) * 0.05}>
+                <button type="button" className="jacc__q" onClick={() => setOffen(offen === i ? -1 : i)} aria-expanded={offen === i}>
+                  <span>{f.q}</span>
+                  <span className="jacc__icon">{offen === i ? <Minus size={16} strokeWidth={2.2} /> : <Plus size={16} strokeWidth={2.2} />}</span>
+                </button>
+                <div className="jacc__a"><div className="jacc__a-in"><p>{f.a}</p></div></div>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 

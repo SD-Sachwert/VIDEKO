@@ -15,6 +15,7 @@ import entryRueckruf from '../assets/images/beratung/entry-rueckruf.webp'
 import entryStudio from '../assets/images/beratung/entry-studio.webp'
 import { BRAND, STUDIO_ADRESSE } from '../data/company.js'
 import { meldeAnfrage } from '../lib/marketing.js'
+import { PLANUNGSCHECK_KEY } from '../components/PlanungsCheck.jsx'
 
 const ANLIEGEN = ['Rückruf', 'Studio-Termin', 'Ich habe erst mal Fragen']
 const KUECHENART = ['Zeile', 'L-Küche', 'U-Küche', 'Insel', 'Noch offen']
@@ -96,6 +97,14 @@ export default function Beratung() {
   const pick = (anliegen) => { if (anliegen) setF((p) => ({ ...p, anliegen })); scrollToForm() }
 
   useEffect(() => {
+    // Ergebnis aus dem Planungs-Check (/planung) ins Nachrichtenfeld übernehmen.
+    // Nur einmal, danach frei änderbar; übertragen wird erst mit dem Formular.
+    try {
+      const check = sessionStorage.getItem(PLANUNGSCHECK_KEY)
+      const feld = formRef.current?.querySelector('textarea[name="nachricht"]')
+      if (check && feld && !feld.value) feld.value = check
+      if (check) sessionStorage.removeItem(PLANUNGSCHECK_KEY)
+    } catch { /* ohne sessionStorage bleibt das Feld leer */ }
     if (window.location.hash === '#anfrage-formular') {
       setTimeout(() => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300)
     }

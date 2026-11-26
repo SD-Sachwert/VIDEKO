@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
-import { Check, ArrowRight, MapPin, Mail, Phone } from 'lucide-react'
+import { Check, ArrowRight, MapPin, Mail, Phone, Plus, Minus } from 'lucide-react'
 
 import Reveal from '../components/Reveal.jsx'
 import LazyVideo from '../components/LazyVideo.jsx'
@@ -9,6 +9,7 @@ import SectionHeader from '../components/SectionHeader.jsx'
 import TextLink from '../components/TextLink.jsx'
 import { KiBadge, KiHinweis } from '../components/legal/KiKennzeichnung.jsx'
 import { BRAND, STUDIO_MAPS_URL } from '../data/company.js'
+import { STUDIO_FAQS } from '../data/leistungsseiten.js'
 
 import heroImg from '../assets/images/studio/bilder/01_hero_studio_showroom.webp'
 import introImg from '../assets/images/studio/bilder/02_intro_showroom_hell.webp'
@@ -50,6 +51,7 @@ export default function Studio() {
   const imgY = useTransform(scrollYProgress, [0, 1], ['0%', '16%'])
   const imgScale = useTransform(scrollYProgress, [0, 1], [1.06, 1.16])
   const [active, setActive] = useState(0)
+  const [offen, setOffen] = useState(-1)
 
   return (
     <div className="leist-page studio-page">
@@ -281,6 +283,26 @@ export default function Studio() {
           <div className="aaeh-split__links">
             <TextLink href="/leistungen">Alle Leistungen im Überblick</TextLink>
             <TextLink href="/arbeitsplatten">Arbeitsplatten</TextLink>
+          </div>
+        </div>
+      </section>
+
+      <section className="section section--light">
+        <div className="container">
+          <SectionHeader
+            kicker="Häufige Fragen"
+            title={<>Vor dem ersten Besuch <span className="grad">oft gefragt.</span></>}
+          />
+          <div className="aaeh-faq">
+            {STUDIO_FAQS.map((f, i) => (
+              <Reveal key={f.q} as="div" className={`jacc ${offen === i ? 'is-open' : ''}`} delay={(i % 2) * 0.05}>
+                <button type="button" className="jacc__q" onClick={() => setOffen(offen === i ? -1 : i)} aria-expanded={offen === i}>
+                  <span>{f.q}</span>
+                  <span className="jacc__icon">{offen === i ? <Minus size={16} strokeWidth={2.2} /> : <Plus size={16} strokeWidth={2.2} />}</span>
+                </button>
+                <div className="jacc__a"><div className="jacc__a-in"><p>{f.a}</p></div></div>
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>

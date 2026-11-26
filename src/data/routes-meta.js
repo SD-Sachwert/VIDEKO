@@ -57,6 +57,7 @@ import ogTeam from '../assets/images/showroom/journey-07-verstehen.webp'
 import ogKarriere from '../assets/images/karriere/01_hero_team_beratung.webp'
 import {
   ALLES_AUS_EINER_HAND_FAQS, NACH_MASS_FAQS, ARBEITSPLATTEN_FAQS, MONTAGE_FAQS,
+  PLANUNG_FAQS, STUDIO_FAQS,
 } from './leistungsseiten.js'
 import { BAUTRAEGER, INVESTOREN } from './projektkuechen.js'
 import { MARKEN_MIT_SEITE, MARKEN_FAQS } from './marken.js'
@@ -133,6 +134,7 @@ const ALLE_STATISCHEN_ROUTEN = [
       'VIDEKO Küchenstudio Würzburg: Schüller, next125, IMPULS und nobilia. Beratung nach Termin; Ausstellungseröffnung am 1. März 2027 geplant.',
     crumb: 'Studio',
     ogImage: ogStudio,
+    faqs: STUDIO_FAQS,
   },
   {
     path: '/inspiration',
@@ -155,7 +157,8 @@ const ALLE_STATISCHEN_ROUTEN = [
   },
   {
     path: '/planung',
-    lastModified: '2026-11-02',
+    lastModified: '2026-11-26',
+    faqs: PLANUNG_FAQS,
     title: 'Küchenplanung Würzburg – 3D-Planung & Beratung | VIDEKO',
     description:
       'Persönliche Küchenplanung in Würzburg: von Beratung und 3D-Entwurf über Materialien, Budget und Laseraufmaß bis zur Montage. Planungsgespräch anfragen.',
