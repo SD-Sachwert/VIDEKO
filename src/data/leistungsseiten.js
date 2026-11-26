@@ -113,6 +113,10 @@ export const MONTAGE_FAQS = [
     a: 'Weil Wände selten gerade und Anschlüsse selten dort sind, wo man sie erwartet. Wir messen millimetergenau per Laser, bevor bestellt wird. Was hier auffällt, kostet in der Planung wenig – am Montagetag deutlich mehr.',
   },
   {
+    q: 'Montiert ihr auch außerhalb von Würzburg?',
+    a: 'Unser Montageteam arbeitet in Würzburg und der Region. Liefern können wir eine Küche auch deutschlandweit, die Lieferkosten trägst du, und wir nennen sie vorab im Angebot. Eine Montage weiter weg sagen wir nur nach gesonderter Absprache zu.',
+  },
+  {
     q: 'Was passiert am Ende der Montage?',
     a: 'Eine gemeinsame Endabnahme. Wir gehen die Küche mit dir durch, erklären Details und halten offene Punkte fest, statt sie stillschweigend liegen zu lassen.',
   },

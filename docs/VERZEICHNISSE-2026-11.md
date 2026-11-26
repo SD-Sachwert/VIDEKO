@@ -22,6 +22,7 @@ Pakete werden nicht gebucht.
 | Kurzbeschreibung | Küchenstudio in der Hertzstraße 4, Würzburg. Küchen von Schüller, next125, IMPULS und nobilia, Geräte von AEG, NEFF, Bosch, Miele und BORA, Spülen und Armaturen von Quooker, BLANCO und SCHOCK. Küchenplanung mit 3D-Planung, Aufmaß, Arbeitsplatten und Montage durch das eigene Team, auch für Bauträger und Immobilieninvestoren. Ausstellung ab 1. März 2027, bis dahin Beratung nach Terminvereinbarung. |
 | Marken (Feld „Marken“/„Sortiment“) | Schüller, next125, IMPULS, nobilia, AEG, NEFF, Bosch, Miele, BORA, Quooker, BLANCO, SCHOCK |
 | Zielgruppen | Privatkunden, Bauträger, Immobilieninvestoren |
+| Servicegebiet | Würzburg und Region (Planung, Aufmaß, Montage). Lieferung deutschlandweit gegen Lieferkosten des Kunden. Im Google-Profil **nur** das regionale Gebiet eintragen, kein „Deutschland“ |
 
 Keine Mobilnummer, kein Fax, kein „24 Stunden“. Die Marken sind seit
 26.11.2026 bestätigt und dürfen genannt werden – aber **nur als „wir führen“**,

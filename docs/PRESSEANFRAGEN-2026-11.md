@@ -34,6 +34,9 @@ die Main-Post.
 - Sortiment (als „wir führen“): Küchen von Schüller, next125, IMPULS, nobilia;
   Geräte von AEG, NEFF, Bosch, Miele, BORA; Spülen und Armaturen von Quooker,
   BLANCO, SCHOCK.
+- Lieferung auch deutschlandweit, Lieferkosten trägt der Kunde. Montage nur in
+  Würzburg und der Region (weiter weg nur nach Absprache) – nie „bundesweit
+  montiert“ schreiben.
 - Auch für Bauträger und Immobilieninvestoren (Planung und Montage; keine
   Projektgrößen, Referenzen oder Lieferzeiten nennen).
 

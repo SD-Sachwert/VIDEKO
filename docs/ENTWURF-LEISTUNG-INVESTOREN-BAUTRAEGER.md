@@ -5,7 +5,10 @@
 Der Umfang ist auf die bestätigten Leistungen begrenzt: Beratung, Planung,
 Aufmaß, Arbeitsplatten über Partner, Montage durch das eigene Team,
 Abstimmung angrenzender Gewerke mit Partnern. Keine Projektgrößen,
-Referenzen, Sonderleistungen oder Lieferzeiten. Die Fragen 2–8 unten bleiben
+Referenzen, Sonderleistungen oder Lieferzeiten.
+**Lieferung (bestätigt 26.11.2026):** deutschlandweit möglich, die Lieferkosten
+trägt der Kunde. Planung, Aufmaß und Montage bleiben regional; Montage außerhalb
+nur nach gesonderter Absprache, nie pauschal „bundesweite Montage“. Die Fragen 2–8 unten bleiben
 offen; jede Antwort darf erst danach auf die Seite.
 
 **Früherer Status:** Entwurf, nicht veröffentlicht, keine Route angelegt.

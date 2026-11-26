@@ -33,7 +33,15 @@ Stand 26.11.2026. Es entstehen keine Kosten.
   | Küchenmarken Würzburg | /marken |
   | Küchen für Bauträger Würzburg | /kuechen-fuer-bautraeger |
   | Küchen Immobilieninvestoren Würzburg | /kuechen-fuer-immobilieninvestoren |
+  | Küchen für Bauträger deutschlandweit | /kuechen-fuer-bautraeger |
+  | Küchen für Immobilieninvestoren deutschlandweit | /kuechen-fuer-immobilieninvestoren |
   | Küchenstudio Eröffnung Würzburg | /studio |
+
+  **Bewusst nicht verfolgt (26.11.2026):** „Einbauküchen deutschlandweit“ und
+  „Küchenlieferung bundesweit“. Die Treffer gehören Ketten, Baumärkten und
+  Marktplätzen (Höffner, Hornbach, XXXLutz, Kaufland). Dafür gibt es keine
+  eigene Seite und **keine Städteseiten** für Orte ohne VIDEKO-Studio. Die
+  Lieferung steht als Fakt auf /studio, den B2B-Seiten und /kuechenmontage-wuerzburg.
   | Küchenmontage Würzburg | /kuechenmontage-wuerzburg |
 
   Positionen und Klicks je Begriff kommen erst mit Search-Console-Zugang

@@ -202,7 +202,7 @@ const ALLE_STATISCHEN_ROUTEN = [
   },
   {
     path: '/kuechenmontage-wuerzburg',
-    lastModified: '2026-11-02',
+    lastModified: '2026-11-26',
     title: 'Küchenmontage Würzburg – Aufmaß bis Abnahme | VIDEKO',
     description:
       'Küchenmontage in Würzburg und Umgebung: von Laseraufmaß und Anlieferung über den sauberen Aufbau bis zur gemeinsamen Abnahme. Ablauf ansehen und Beratung anfragen.',
@@ -221,14 +221,15 @@ const ALLE_STATISCHEN_ROUTEN = [
     lastModified: '2026-11-26',
     title: 'Küchen für Bauträger in Würzburg – Planung & Montage | VIDEKO',
     description:
-      'Küchenplanung, Aufmaß und Montage für Mehrfamilienhäuser und Neubauprojekte in Würzburg und der Region – abgestimmt auf Installationsplan und Bauablauf.',
+      'Küchenplanung, Aufmaß und Montage für Mehrfamilienhäuser und Neubauprojekte in Würzburg und der Region. Lieferung auch deutschlandweit, Lieferkosten trägt der Auftraggeber.',
     crumb: 'Küchen für Bauträger',
     ogImage: ogProjektBautraeger,
     service: {
       name: 'Küchen für Bauträger',
       serviceType: 'Küchenplanung und Küchenmontage für Bauträgerprojekte',
       description:
-        'Beratung, Küchenplanung je Grundriss, Aufmaß, Arbeitsplatten und Montage durch das eigene Team; angrenzende Gewerke in Abstimmung mit Fachpartnern.',
+        'Beratung, Küchenplanung je Grundriss, Aufmaß, Arbeitsplatten und Montage durch das eigene Team in Würzburg und der Region; angrenzende Gewerke in Abstimmung mit Fachpartnern. Lieferung auch deutschlandweit, Lieferkosten trägt der Auftraggeber; Montage außerhalb der Region nur nach gesonderter Absprache.',
+      areaServed: [{ '@type': 'City', name: 'Würzburg' }, { '@type': 'Country', name: 'Deutschland' }],
     },
     faqs: BAUTRAEGER.faqs,
   },
@@ -237,14 +238,15 @@ const ALLE_STATISCHEN_ROUTEN = [
     lastModified: '2026-11-26',
     title: 'Küchen für Immobilieninvestoren & Mietwohnungen | VIDEKO Würzburg',
     description:
-      'Robuste, vermietbare Küchen für Kapitalanlagen und Sanierungen im Bestand: Planung, Aufmaß je Wohnung und Montage durch VIDEKO in Würzburg.',
+      'Robuste, vermietbare Küchen für Kapitalanlagen: Planung, Aufmaß und Montage in Würzburg und der Region, Lieferung deutschlandweit gegen Lieferkosten.',
     crumb: 'Küchen für Investoren',
     ogImage: ogProjektInvestoren,
     service: {
       name: 'Küchen für Immobilieninvestoren',
       serviceType: 'Küchenplanung und Küchenmontage für Mietwohnungen',
       description:
-        'Beratung, Planung, Aufmaß je Wohnung, Arbeitsplatten und Montage durch das eigene Team; angrenzende Gewerke in Abstimmung mit Fachpartnern.',
+        'Beratung, Planung, Aufmaß je Wohnung, Arbeitsplatten und Montage durch das eigene Team in Würzburg und der Region; angrenzende Gewerke in Abstimmung mit Fachpartnern. Lieferung auch deutschlandweit, Lieferkosten trägt der Auftraggeber; Montage außerhalb der Region nur nach gesonderter Absprache.',
+      areaServed: [{ '@type': 'City', name: 'Würzburg' }, { '@type': 'Country', name: 'Deutschland' }],
     },
     faqs: INVESTOREN.faqs,
   },

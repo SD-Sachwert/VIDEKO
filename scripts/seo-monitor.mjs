@@ -53,6 +53,8 @@ const SUCHBEGRIFFE = [
   { begriff: 'Küchenmarken Würzburg', pfad: '/marken', woerter: ['küchenmarken', 'würzburg'] },
   { begriff: 'Küchen für Bauträger Würzburg', pfad: '/kuechen-fuer-bautraeger', woerter: ['küchen', 'bauträger', 'würzburg'] },
   { begriff: 'Küchen Immobilieninvestoren Würzburg', pfad: '/kuechen-fuer-immobilieninvestoren', woerter: ['küchen', 'immobilieninvestoren', 'würzburg'] },
+  { begriff: 'Küchen für Bauträger deutschlandweit', pfad: '/kuechen-fuer-bautraeger', woerter: ['bauträger', 'deutschlandweit'] },
+  { begriff: 'Küchen für Immobilieninvestoren deutschlandweit', pfad: '/kuechen-fuer-immobilieninvestoren', woerter: ['immobilieninvestoren', 'deutschlandweit'] },
   { begriff: 'Küchenstudio Eröffnung Würzburg', pfad: '/studio', woerter: ['küchenstudio', 'eröffnung', 'würzburg'] },
   { begriff: 'Küchenmontage Würzburg', pfad: '/kuechenmontage-wuerzburg', woerter: ['küchenmontage', 'würzburg'] },
 ]

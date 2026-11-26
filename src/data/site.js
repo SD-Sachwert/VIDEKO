@@ -239,9 +239,12 @@ export function articleLd(article, path) {
  * Result unmittelbare Folgen. `serviceType` und `name` stehen so auch sichtbar
  * auf der jeweiligen Seite.
  *
- * @param {{ name: string, description: string, path: string, serviceType?: string }} s
+ * areaServed: Standard Würzburg. Die B2B-Seiten geben zusätzlich Deutschland an,
+ * weil dorthin geliefert wird (Montage bleibt regional, steht in description).
+ *
+ * @param {{ name: string, description: string, path: string, serviceType?: string, areaServed?: object|object[] }} s
  */
-export function serviceLd({ name, description, path, serviceType }) {
+export function serviceLd({ name, description, path, serviceType, areaServed }) {
   return {
     '@context': 'https://schema.org',
     '@type': 'Service',
@@ -250,7 +253,7 @@ export function serviceLd({ name, description, path, serviceType }) {
     description,
     serviceType: serviceType || name,
     provider: { '@id': `${SITE.origin}/#organization` },
-    areaServed: { '@type': 'City', name: 'Würzburg' },
+    areaServed: areaServed || { '@type': 'City', name: 'Würzburg' },
     url: absUrl(path),
   }
 }

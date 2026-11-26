@@ -10,7 +10,10 @@
  * VIDEKO bietet Küchen für Bauträger und Immobilieninvestoren an. Bestätigt
  * sind Beratung, Küchenplanung inkl. 3D-Planung, Aufmaß, Arbeitsplatten und
  * Montage durch das eigene Team; angrenzende Gewerke werden mit Fachpartnern
- * abgestimmt. NICHT bestätigt und deshalb hier nicht versprochen: Projekt-
+ * abgestimmt. Lieferung deutschlandweit ist bestätigt, wenn der Kunde die
+ * Lieferkosten trägt; Planung, Aufmaß und Montage bleiben regional (Würzburg
+ * und Region), Montage außerhalb nur nach gesonderter Absprache – also nie
+ * „bundesweite Montage“ schreiben. NICHT bestätigt und deshalb hier nicht versprochen: Projekt-
  * größen oder Mindestmengen, Referenzen, Käuferbemusterung,
  * Sonderwunschabwicklung, Lieferzeiten, Preise pro Einheit, Rahmenverträge.
  * Wer das ergänzen will, braucht vorher die Bestätigung des Betreibers
@@ -27,7 +30,7 @@ export const PROJEKT_LEISTUNGEN = [
   { title: 'Küchenplanung', text: 'Planung je Grundriss, auf Wunsch in 3D, abgestimmt auf die vorhandenen oder geplanten Anschlüsse.' },
   { title: 'Aufmaß', text: 'Millimetergenaues Aufmaß vor Ort, bevor bestellt wird. Im Rohbau dann, wenn die Wände stehen, im Bestand in jeder Wohnung einzeln.' },
   { title: 'Arbeitsplatten', text: 'Material, Kante und Ausschnitte, aufgemessen und gefertigt über unseren Naturstein- oder Keramikpartner.' },
-  { title: 'Montage', text: 'Aufbau und Anschluss durch unser eigenes Team, mit Abnahme der fertigen Küche.' },
+  { title: 'Montage', text: 'Aufbau und Anschluss durch unser eigenes Team in Würzburg und der Region, mit Abnahme der fertigen Küche. Lieferung auch deutschlandweit, Lieferkosten trägt der Auftraggeber.' },
   { title: 'Angrenzende Gewerke', text: 'Elektro, Wasser, Boden oder Trockenbau stimmen wir mit Fachpartnern ab, damit die Küche nicht auf eine fehlende Leitung wartet.' },
 ]
 
@@ -68,6 +71,10 @@ export const BAUTRAEGER = {
     {
       q: 'Welche Küchenmarken bietet VIDEKO an?',
       a: `Küchen von ${list(A.kitchens)}, Geräte von ${list(A.appliances)}, Spülen und Armaturen von ${list(A.sinksAndTaps)}. Welche Linie zu einem Projekt passt, hängt von Zielgruppe und Budget ab.`,
+    },
+    {
+      q: 'Liefert VIDEKO auch außerhalb der Region?',
+      a: 'Ja. Planung, Aufmaß und Montage übernehmen wir in Würzburg und der Region. Küchen liefern wir auf Wunsch auch deutschlandweit; die Lieferkosten trägt der Auftraggeber und stehen vorab im Angebot. Eine Montage außerhalb der Region sagen wir nicht pauschal zu, sondern nur nach gesonderter Absprache für das jeweilige Projekt.',
     },
     {
       q: 'Kann man die Küchen vorher ansehen?',
@@ -113,6 +120,10 @@ export const INVESTOREN = {
     {
       q: 'Nennt VIDEKO Preise pro Wohnung?',
       a: 'Nicht pauschal. Der Preis hängt von Grundriss, Ausstattung und Geräten ab. Nach dem Aufmaß erhalten Sie ein konkretes Angebot.',
+    },
+    {
+      q: 'Liefert VIDEKO auch außerhalb der Region?',
+      a: 'Ja. Planung, Aufmaß und Montage übernehmen wir in Würzburg und der Region. Küchen liefern wir auf Wunsch auch deutschlandweit; die Lieferkosten trägt der Auftraggeber und stehen vorab im Angebot. Eine Montage außerhalb der Region sagen wir nicht pauschal zu, sondern nur nach gesonderter Absprache für das jeweilige Projekt.',
     },
     {
       q: 'Wo sitzt VIDEKO?',

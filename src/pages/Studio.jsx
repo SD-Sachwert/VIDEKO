@@ -242,7 +242,7 @@ export default function Studio() {
                 <div className="standort__chips">
                   {AREA.map((a) => <span className="chip" key={a}>{a}</span>)}
                 </div>
-                <p className="standort__note">Auch überregionale Küchenlieferungen sind möglich – deutschlandweit nach individueller Vereinbarung. Die Lieferkosten werden projektbezogen abgestimmt.</p>
+                <p className="standort__note">Planung, Aufmaß und Montage machen wir in Würzburg und der Region. Liefern können wir Küchen auch deutschlandweit – die Lieferkosten trägt der Kunde, wir nennen sie vorab im Angebot. Montage außerhalb der Region nur nach gesonderter Absprache.</p>
               </div>
               <CTAButton to="/beratung">Studio-Termin vereinbaren</CTAButton>
             </Reveal>
