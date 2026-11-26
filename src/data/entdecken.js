@@ -41,7 +41,7 @@ import bildSpotify from '../assets/images/studio/bilder/05_studio_card_materiali
  * spaeter es geworden ist.
  */
 export const OPENING = {
-  plannedDate: '2026-12-01T00:00:00+01:00',
+  plannedDate: BRAND.plannedOpeningDate,
   actualOpen: false,
   actualOpeningDate: null,
 }

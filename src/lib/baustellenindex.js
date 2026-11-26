@@ -59,11 +59,13 @@
  * verhindert, dass die Seite eine Fertigstellung behauptet, die es nicht gibt.
  */
 
+import { BRAND } from '../data/company.js'
+
 const TAG_MS = 86400000
 
 /** Basistag des Index und der geplante Eroeffnungstag (nur noch Anzeige). */
 export const INDEX_BASIS = '2026-09-02'
-export const INDEX_ZIEL = '2026-12-01'
+export const INDEX_ZIEL = BRAND.plannedOpeningDate.slice(0, 10)
 
 /** Die drei Wachstumsmodi. Siehe Kopfkommentar. */
 export const MODUS = {

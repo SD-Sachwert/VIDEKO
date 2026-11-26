@@ -120,10 +120,10 @@ const ALLE_STATISCHEN_ROUTEN = [
   },
   {
     path: '/studio',
-    lastModified: '2026-11-02',
+    lastModified: '2026-11-26',
     title: 'Küchenstudio Würzburg – Hertzstraße 4 | VIDEKO Küchen',
     description:
-      'In der Hertzstraße 4 entsteht das VIDEKO Küchenstudio Würzburg. Persönliche Küchenberatung und Planung sind während des Ausstellungsaufbaus nach Termin möglich.',
+      'VIDEKO Küchenstudio Würzburg: Schüller, next125, IMPULS und nobilia. Beratung nach Termin; Ausstellungseröffnung am 1. März 2027 geplant.',
     crumb: 'Studio',
     ogImage: ogStudio,
   },

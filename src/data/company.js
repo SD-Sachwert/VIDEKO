@@ -74,6 +74,16 @@ export const BRAND = {
    * Stelle, aus der Website, Schema.org und alle Verzeichnisse gespeist werden.
    */
   openingHours: null,
+  // Bestätigt am 26.11.2026: geplante Ausstellungseröffnung; Wochentage
+  // für die angekündigten Zeiten sind noch offen. Keine vorzeitigen Live-Zeiten.
+  plannedOpeningDate: '2027-03-01T00:00:00+01:00',
+  plannedOpeningLabel: '1. März 2027',
+  plannedOpeningHours: { opens: '09:00', closes: '18:00', days: null },
+  assortment: {
+    kitchens: ['Schüller', 'next125', 'IMPULS', 'nobilia'],
+    appliances: ['AEG', 'NEFF', 'Bosch', 'Miele', 'BORA'],
+    sinksAndTaps: ['Quooker', 'BLANCO', 'SCHOCK'],
+  },
 }
 
 /** Vollständige Studio-Anschrift einzeilig – für Fließtext und Listen. */

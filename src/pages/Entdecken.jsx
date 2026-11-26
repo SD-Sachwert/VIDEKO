@@ -683,7 +683,7 @@ function FilmSteuerung({ ton, bild, labelAn, labelAus }) {
 /**
  * Eroeffnungstermin ausgeschrieben — aus demselben ISO-Wert wie die Zaehlung,
  * damit Datum und Countdown nie auseinanderlaufen koennen. Feste Zeitzone,
- * damit „1. Dezember 2026“ auch fuer Besucher stimmt, deren Geraet auf einer
+ * damit „1. März 2027“ auch fuer Besucher stimmt, deren Geraet auf einer
  * anderen Zone steht.
  */
 const DATUM_LANG = new Intl.DateTimeFormat('de-DE', {
@@ -730,7 +730,7 @@ function zweistellig(n) {
 }
 
 /**
- * Kalendertag des geplanten Termins („2026-12-01“), in Europa/Berlin gelesen.
+ * Kalendertag des geplanten Termins („2027-03-01“), in Europa/Berlin gelesen.
  * Der Umschlag von Countdown auf Verzug haengt genau an diesem Tageswechsel —
  * nicht an der Uhrzeit des Besuchergeraets.
  */
