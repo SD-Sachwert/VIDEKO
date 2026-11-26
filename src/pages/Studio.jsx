@@ -238,10 +238,11 @@ export default function Studio() {
                 jemand Zeit für dich hat und nicht nebenbei berät.
               </p>
               <div className="standort__area">
-                <span className="standort__area-label">Einzugsgebiet</span>
+                <span className="standort__area-label">Regionales Kerneinzugsgebiet</span>
                 <div className="standort__chips">
                   {AREA.map((a) => <span className="chip" key={a}>{a}</span>)}
                 </div>
+                <p className="standort__note">Auch überregionale Küchenlieferungen sind möglich – deutschlandweit nach individueller Vereinbarung. Die Lieferkosten werden projektbezogen abgestimmt.</p>
               </div>
               <CTAButton to="/beratung">Studio-Termin vereinbaren</CTAButton>
             </Reveal>
