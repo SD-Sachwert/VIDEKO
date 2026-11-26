@@ -327,3 +327,26 @@ bereits eine Zielseite; die wird gestärkt statt verdoppelt.
 - **Bekannt, kein Fehler der Website:** Lokale Windows-Builds zeigen in
   `vite preview` eine React-Hydration-Meldung (#418), auch auf Ständen vor
   dieser Phase. Live (Vercel-Build) tritt sie nicht auf, geprüft am 26.11.2026.
+
+## Offensive Phase 4 (26.11.2026): Reichweite und Kundengewinnung
+
+Schwerpunkt Reichweite statt Technik. Ergebnisse, die nicht ins Repo gehören
+(Firmenlisten, Wettbewerb, Presse, Bauvorhaben, Social-Entwürfe), liegen privat
+unter `O:\VIDEKO\Vertrieb\` und `O:\VIDEKO\Marketing\`, weil das Repo öffentlich ist.
+
+- **Budget-Kompass (Commit ccc365d, live geprüft am 26.11.2026):** Preisspannen
+  sind als „Unverbindliche Budgetorientierung, kein Angebot“ gekennzeichnet,
+  die Beispielbilder als „Inspiration, keine Kundenprojekte von VIDEKO“. Die
+  Preisstufen selbst sind unverändert und **noch nicht vom Betreiber
+  freigegeben**. Woher die Bilder stammen, ist nicht dokumentiert.
+- **Hydration #418 geklärt:** `vite preview` liefert für Pfade ohne
+  Schrägstrich per SPA-Fallback die Startseite aus, React hydriert dann das
+  falsche Markup. Mit Schrägstrich lokal kein Fehler, live auf Vercel auf 8
+  geprüften Pfaden kein Fehler. Kein Produktionsfehler, keine Codeänderung.
+- **Social-Profile (nur öffentlich lesbar):** LinkedIn und TikTok nennen noch
+  „Eröffnung 2026“, XING zeigt als Telefon die alte Mobilnummer. Instagram und
+  Facebook (Info) sind ohne Login nicht prüfbar. Ersatztexte liegen bei den
+  privaten Social-Entwürfen; ändern muss VIDEKO selbst.
+- **Datenschutz Repo:** Die alte Mobilnummer stand ausgeschrieben im NAP-Audit
+  und ist dort jetzt maskiert. In der Git-Historie bleibt sie, solange die
+  Historie nicht umgeschrieben wird (nur mit ausdrücklicher Freigabe).
