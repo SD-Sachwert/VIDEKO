@@ -64,6 +64,19 @@ einer Hand, nicht über den Preis.
 
 ## Phase 3: Verzeichnisse
 
+**Neu am 26.11.2026:** Die offizielle Nummer lautet 0931 29764861. Die
+Tabelle unten wurde mit der alten Mobilnummer geprüft. Ein „korrekt“ darin
+heißt deshalb nur, dass Adresse und Website stimmen. Die Telefonnummer muss
+**überall** umgestellt werden.
+
+In `docs/VERZEICHNISSE-2026-11.md` stehen:
+
+- die Korrekturliste
+- 21 weitere kostenlose Portale
+- die Herstellerverzeichnisse
+- die Wettbewerber-Links
+- Mail 5 an Küchen-Atlas
+
 | Eintrag | Stand 26.11.2026 | Nächster Schritt |
 |---|---|---|
 | Würzburg macht Spaß (wuems.de, Mitgliederliste) | **Falsch:** Tel 0931 355930 und Fax 0931 3559320 (VHS-Daten), kein Website-Link | Mail 1 |
