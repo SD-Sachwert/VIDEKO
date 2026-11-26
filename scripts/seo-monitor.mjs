@@ -15,14 +15,23 @@
 //  - IndexNow-Schluesseldatei ist erreichbar
 // Was hier NICHT geht (braucht Logins): Search-Console-Klicks/Indexierung,
 // Bing Webmaster, Google-Unternehmensprofil. Siehe docs/SEO-MONITORING.md.
+import { createHash } from 'node:crypto'
 import { readdirSync, readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 
 const ORIGIN = 'https://videko-kuechen.de'
 const TELEFON_OFFIZIELL = '+4993129764861'
-// Alte Mobilnummer in allen ueblichen Schreibweisen (darf nirgends mehr stehen)
-const ALTE_NUMMER = /0160[\s\/-]*554[\s\/-]*5818|\+?49[\s\/-]*160[\s\/-]*554[\s\/-]*5818|1605545818/
+// Alte Mobilnummer: nur als SHA-256 der Ziffern 160xxxxxxx hinterlegt, damit sie
+// nicht im oeffentlichen Repo steht. Erkannt werden 0160…, +49 160…, 49160… in
+// allen Schreibweisen mit Leerzeichen, Schraegstrich, Bindestrich oder Punkt.
+const ALTE_NUMMER_SHA256 = '7feec87cd054cc78589ab488f9238b015c111b6845f50447fc889f18111b39ff'
+const enthaeltAlteNummer = (text) => {
+  const kompakt = text.replace(/[\s\/.\-()]/g, '')
+  for (const t of kompakt.matchAll(/(?:\+49|0049|49|0)(160\d{7})(?!\d)/g))
+    if (createHash('sha256').update(t[1]).digest('hex') === ALTE_NUMMER_SHA256) return true
+  return false
+}
 
 const fehler = []
 const hinweise = []
@@ -54,7 +63,7 @@ for (let i = 0; i < urls.length; i += 6) {
     if (!canon) fehlt(url, 'kein canonical')
     else if (canon.replace(/\/$/, '') !== url.replace(/\/$/, '')) fehlt(url, `canonical zeigt auf ${canon}`)
     if (/<meta name="robots" content="[^"]*noindex/.test(text)) fehlt(url, 'noindex, steht aber in der Sitemap')
-    if (ALTE_NUMMER.test(text)) fehlt(url, 'alte Mobilnummer im HTML')
+    if (enthaeltAlteNummer(text)) fehlt(url, 'alte Mobilnummer im HTML')
   }))
 }
 

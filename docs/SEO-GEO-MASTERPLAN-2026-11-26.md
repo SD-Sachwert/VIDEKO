@@ -4,7 +4,7 @@ Arbeitsdokument zu den Phasen 1–6. Es enthält keine Zugangsdaten und keine
 personenbezogenen Daten. Unternehmensangaben kommen ausschließlich aus
 `src/data/company.js`.
 
-**Kontaktkorrektur 26.11.2026:** Die bisherige Mobilnummer 0160 5545818 ist durch die bestätigte Festnetznummer 0931 29764861 (+49 931 29764861) zu ersetzen. Google Business Profile führt noch die alte Nummer; Änderung und Abgleich der Verzeichnisse stehen aus. Die folgenden Mail-Entwürfe sind entsprechend aktualisiert. WhatsApp nicht auf die Festnetznummer umleiten, solange kein aktiver WhatsApp-Anschluss bestätigt ist.
+**Kontaktkorrektur 26.11.2026:** Die bisherige Mobilnummer [alte Mobilnummer] ist durch die bestätigte Festnetznummer 0931 29764861 (+49 931 29764861) zu ersetzen. Google Business Profile führt noch die alte Nummer; Änderung und Abgleich der Verzeichnisse stehen aus. Die folgenden Mail-Entwürfe sind entsprechend aktualisiert. WhatsApp nicht auf die Festnetznummer umleiten, solange kein aktiver WhatsApp-Anschluss bestätigt ist.
 
 **Ausgangswerte (GSC, Stand 26.11.2026):** 1.121 Impressionen, 60 Klicks,
 durchschnittliche Position 18,4.

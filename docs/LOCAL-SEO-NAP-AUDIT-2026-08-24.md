@@ -20,7 +20,7 @@ gespeist.
 | Studio-Straße | Hertzstraße 4 | `BRAND.studio.street` |
 | PLZ / Ort | 97076 Würzburg | `BRAND.studio.postalCode/city` — Stadtteil strittig, siehe 2.3 |
 | Land | Deutschland | `BRAND.studio.country` |
-| Telefon | **0160 5545818** (`+491605545818`) | `BRAND.phone` / `BRAND.phoneHref` |
+| Telefon | **[alte Mobilnummer]** (`[alte Mobilnummer]`) | `BRAND.phone` / `BRAND.phoneHref` |
 | E-Mail | info@videko-kuechen.de | `BRAND.contactEmail` |
 | Website | **https://videko-kuechen.de/** (HTTPS, ohne `www`) | `SITE.origin` |
 | Öffnungszeiten | **nicht belegt — offener Datenpunkt** | `BRAND.openingHours === null` |
@@ -83,13 +83,13 @@ Alle Einträge wurden am 2026-08-24 öffentlich abgerufen.
 | Plattform | Name | Adresse | Telefon | Öffnungszeiten | Website | Status |
 | --- | --- | --- | --- | --- | --- | --- |
 | **Würzburg macht Spaß e. V.** (wuems.de, Mitgliederliste) | „Videko Küchen eG" — abweichend | Hertzstr. 4, 97076 Würzburg — korrekt | **0931 355930**, Fax **0931 3559320** — **falsch** | keine Angabe | info@videko-kuechen.de + Website-Link — korrekt | **Korrektur notwendig** |
-| **Cylex** (`web2.cylex.de/firma-home/videko-kuechen-eg-17200128.html`) | „VIDEKO Küchen eG" — abweichend | Hertzstraße 4, 97076 Würzburg, Bayern — korrekt | 0160 5545818 — korrekt | **Mo–So 09:00–18:00** — unbelegt | https://videko-kuechen.de/ — korrekt | **unklar / Korrektur notwendig** (Zeiten) |
+| **Cylex** (`web2.cylex.de/firma-home/videko-kuechen-eg-17200128.html`) | „VIDEKO Küchen eG" — abweichend | Hertzstraße 4, 97076 Würzburg, Bayern — korrekt | [alte Mobilnummer] — korrekt | **Mo–So 09:00–18:00** — unbelegt | https://videko-kuechen.de/ — korrekt | **unklar / Korrektur notwendig** (Zeiten) |
 | **Das Örtliche** (`dasoertliche.de`, Suche „VIDEKO", Würzburg) | „VIDEKO Küchen" — korrekt | Hertzstraße 4, 97076 Würzburg, Grombühl — korrekt | 0160 5 54 58 18 — korrekt | „Geöffnet bis 18:00 Uhr"; laut Detailansicht **Mo–Fr 09:00–18:00, Sa/So geschlossen** — unbelegt | Website-Link vorhanden — korrekt | **unklar / Korrektur notwendig** (Zeiten) |
 | **Gelbe Seiten** (`gelbeseiten.de/suche/videko/würzburg`) | „VIDEKO Küchen" — korrekt | Hertzstraße 4, 97076 Würzburg (Grombühl) — korrekt | 0160 5 54 58 18 — korrekt | **„Geöffnet – 24 Stunden Service"** — **mit hoher Wahrscheinlichkeit Fehlinformation** | Webseite-Link vorhanden — korrekt | **Korrektur notwendig** |
-| **11880.com** (`11880.com/branchenbuch/wuerzburg/131903204B114143681/videko-kuechen.html`) | „VIDEKO Küchen" — korrekt | Hertzstr. 4, 97076 Würzburg (Grombühl) — korrekt | (0160) 5545818 — korrekt | **keine hinterlegt** („Öffnungszeiten hinzufügen") | https://videko-kuechen.de/ — korrekt | **korrekt** (konsistent mit dem offenen Datenpunkt) |
-| **Geolokal** (`geolokal.de/firmen/videko-kuechen-wuerzburg`) | „VIDEKO Küchen" — korrekt | Hertzstraße 4, 97076 Würzburg, Deutschland — korrekt | 0160 5545818 — korrekt | „Heute (Montag) 09:00–18:00" — unbelegt | videko-kuechen.de + info@videko-kuechen.de — korrekt | **unklar** (Zeiten; zusätzlich „Keine genauen Koordinaten vorhanden") |
+| **11880.com** (`11880.com/branchenbuch/wuerzburg/131903204B114143681/videko-kuechen.html`) | „VIDEKO Küchen" — korrekt | Hertzstr. 4, 97076 Würzburg (Grombühl) — korrekt | [alte Mobilnummer] — korrekt | **keine hinterlegt** („Öffnungszeiten hinzufügen") | https://videko-kuechen.de/ — korrekt | **korrekt** (konsistent mit dem offenen Datenpunkt) |
+| **Geolokal** (`geolokal.de/firmen/videko-kuechen-wuerzburg`) | „VIDEKO Küchen" — korrekt | Hertzstraße 4, 97076 Würzburg, Deutschland — korrekt | [alte Mobilnummer] — korrekt | „Heute (Montag) 09:00–18:00" — unbelegt | videko-kuechen.de + info@videko-kuechen.de — korrekt | **unklar** (Zeiten; zusätzlich „Keine genauen Koordinaten vorhanden") |
 | **LinkedIn** (`de.linkedin.com/company/videko-kuechen-eg`) | „VIDEKO Küchen eG" — abweichend | Hauptsitz: „Würzburg" (ohne Straße) | keine Angabe | keine Angabe | videko-kuechen.de — korrekt | **abweichend** (Name) |
-| **XING** (`xing.com/pages/videko-kuechen-eg`) | „VIDEKO Küchen eG" — abweichend | Hertzstraße 4, 97076 Würzburg, Deutschland — korrekt | +49 160 5545818 — korrekt | keine Angabe | **`http://videko-kuechen.de`** — Protokoll abweichend (HTTP statt HTTPS) | **abweichend** (Name, URL-Protokoll) |
+| **XING** (`xing.com/pages/videko-kuechen-eg`) | „VIDEKO Küchen eG" — abweichend | Hertzstraße 4, 97076 Würzburg, Deutschland — korrekt | [alte Mobilnummer] — korrekt | keine Angabe | **`http://videko-kuechen.de`** — Protokoll abweichend (HTTP statt HTTPS) | **abweichend** (Name, URL-Protokoll) |
 | **Instagram** (`instagram.com/videko.kuechen/`) | Profilname VIDEKO Küchen | — | — | — | Profil-Link | **korrekt** (einziges in `SOCIAL_PROFILES` hinterlegtes Profil) |
 | **YouTube** (Video `mESXT-HGWqo`) | Erwähnung/Video | — | — | — | — | **unklar** (kein NAP-Datensatz, kein Verzeichniseintrag) |
 
@@ -101,7 +101,7 @@ Fax 0931 3559320 | eMail info@videko-kuechen.de". Der **unmittelbar davor** steh
 Datensatz derselben Liste (Volkshochschule Würzburg, `info@vhs-wuerzburg.de`) trägt
 **exakt dieselbe Telefon- und Faxnummer**. Damit ist der Verdacht belegt: die Nummern
 wurden beim Anlegen aus dem Nachbardatensatz übernommen. E-Mail-Adresse und Website
-sind korrekt. **Sollwert: 0160 5545818, kein Fax.** Höchste Priorität — hier steht eine
+sind korrekt. **Sollwert: [alte Mobilnummer], kein Fax.** Höchste Priorität — hier steht eine
 fremde Rufnummer unter dem VIDEKO-Namen.
 
 **(2) Cylex — Adresse und Telefon korrekt, Öffnungszeiten unbelegt.** Bestätigt:
@@ -180,7 +180,7 @@ wurden bewusst **nicht** in Variablen aufgelöst — das ist Copy, keine Datenha
 | Primäre Kategorie | **Küchenstudio** (`Kitchen furniture store` / „Küchenmöbelgeschäft") | Ist die primäre Kategorie gesetzt und passend? Sie hat den größten Einfluss auf das lokale Ranking. |
 | Weitere Kategorien | Küchenplaner, Innenausstatter, Möbelgeschäft, Tischler/Schreiner (nur soweit tatsächlich zutreffend) | Nur echte Leistungen eintragen — nichts aufzählen, was nicht angeboten wird. |
 | Adresse | Hertzstraße 4, 97076 Würzburg | Exakte Schreibweise inkl. „Hertzstraße" (nicht „Hertzstr."); Pin-Position im Kartendienst prüfen (Geolokal meldet fehlende Koordinaten). |
-| Telefonnummer | **0160 5545818** | Muss identisch zur Website sein. Keine 0931-Nummer. |
+| Telefonnummer | **[alte Mobilnummer]** | Muss identisch zur Website sein. Keine 0931-Nummer. |
 | Website | **https://videko-kuechen.de/** | HTTPS, ohne `www`, ohne Tracking-Parameter. |
 | Öffnungszeiten | **offen — nicht freigegeben** | **Nicht raten.** Entweder freigegebene Zeiten eintragen oder das Profil auf „nach Vereinbarung" / ohne Zeiten belassen. Auf keinen Fall die Cylex-, Örtliche- oder Gelbe-Seiten-Variante übernehmen. |
 | Beschreibung | Küchenstudio in Würzburg; Planung, Beratung, Aufmaß, Montage, Arbeitsplatten; individuelle Küchen nach Maß | Beschreibung ohne Keyword-Stuffing, ohne Preisangaben, ohne Werbeversprechen (Google-Richtlinie). |

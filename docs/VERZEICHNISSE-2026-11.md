@@ -44,7 +44,7 @@ entfernt, nicht als „Zweitnummer“ behalten.
 | E-Mail-Signaturen, Visitenkarten, Fahrzeug | intern | |
 
 Danach im Quartal einmal nach der alten Nummer suchen, und zwar in den
-Schreibweisen `0160 5545818`, `01605545818` und `+49 160 5545818`. Jeden
+Schreibweisen `[alte Mobilnummer]`, `[alte Mobilnummer]` und `[alte Mobilnummer]`. Jeden
 Treffer korrigieren. Auf der Website prüft das der wöchentliche Monitor
 automatisch; fremde Seiten muss man selbst prüfen.
 

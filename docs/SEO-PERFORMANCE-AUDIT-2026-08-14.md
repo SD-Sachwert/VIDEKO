@@ -225,7 +225,7 @@ Genau **ein** JSON-LD-Block, statisch in `index.html:33-55`:
   "url": "https://videko-kuechen.de",
   "image": "https://videko-kuechen.de/og-image.jpg",
   "logo": "https://videko-kuechen.de/favicon-512.png",
-  "telephone": "+49 160 5545818",
+  "telephone": "[alte Mobilnummer]",
   "email": "info@videko-kuechen.de",
   "address": { "streetAddress": "Hertzstraße 4", "postalCode": "97076",
                "addressLocality": "Würzburg", "addressRegion": "Bayern",
@@ -311,7 +311,7 @@ Datenschutz, Footer, GPSR-Angaben und E-Mail-Absender ziehen alle daraus.
 | Fundstelle | Aktueller Wert | Problem | Empfohlener Wert |
 |---|---|---|---|
 | `index.html:38` | `"legalName": "Süddeutsche Sachwert eG"` (hartcodiert) | Umgeht `company.js`; bei Eintragung der VIDEKO Küchen eG bleibt der Wert stehen, während alles andere umschaltet | Aus `ACTIVE_OPERATOR.legalName` erzeugen (Build-Time-Injection oder JSON-LD clientseitig) |
-| `index.html:42` | `"telephone": "+49 160 5545818"` | dito hartcodiert | aus `BRAND.phoneHref` |
+| `index.html:42` | `"telephone": "[alte Mobilnummer]"` | dito hartcodiert | aus `BRAND.phoneHref` |
 | `index.html:44-51` | Adresse hartcodiert | dito | aus `BRAND.studio` |
 | `index.html:36` | `"@type": [HomeAndConstructionBusiness, FurnitureStore]` | Adresse = Studio Würzburg, `legalName` = Betreiberin mit Sitz Tutzing. Formal zulässig, aber ohne `Organization`-Gegenstück verwirrend | `Organization` (Betreiberin, Tutzing) + `LocalBusiness` (Studio, Würzburg), über `@id` verknüpft |
 | `index.html` | kein `sameAs` | Social-Profile nicht zugeordnet | `sameAs` nach Freigabe der URLs |

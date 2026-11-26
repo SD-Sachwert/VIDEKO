@@ -1,7 +1,7 @@
 # Arbeitsbericht: Google Business Profile, Öffnungszeiten, NAP, Search Console
 
 **Datum:** 2026-08-24 · **Sollname extern:** VIDEKO Küchen eG · **Sollanschrift:** Hertzstraße 4, 97076 Würzburg ·
-**Solltelefon:** 0160 5545818 · **Sollwebsite:** https://videko-kuechen.de/
+**Solltelefon:** [alte Mobilnummer] · **Sollwebsite:** https://videko-kuechen.de/
 
 Alle Werte in diesem Bericht wurden am 2026-08-24 live erhoben. Wo eine Angabe nicht
 verifiziert werden konnte, steht das ausdrücklich dabei. Es wurde nichts geschätzt,
@@ -36,7 +36,7 @@ notwendige Schritt stehen in Abschnitt 6.
 | Weitere Kategorien | öffentlich nicht sichtbar | nur in der Verwaltungsansicht prüfbar |
 | Adresse | Hertzstraße 4, 97076 Würzburg (Google-Label „Würzburg-Lengfeld") | **korrekt** |
 | Koordinaten / Plus Code | 49,7997 / 9,9726 · QXXF+V2 Würzburg | plausibel, deckt sich mit Cylex (49,799718 / 9,972572) |
-| Telefon | 0160 5545818 | **korrekt** |
+| Telefon | [alte Mobilnummer] | **korrekt** |
 | Website | videko-kuechen.de | **korrekt** |
 | Öffnungszeiten | öffentlich nur `Montag 09:00–18:00`; Statuszeile „Geschlossen · Öffnet Di um 09:00" | **unvollständig** – siehe Abschnitt 2 |
 | Sonderöffnungszeiten | öffentlich nicht sichtbar | nicht prüfbar |
@@ -240,19 +240,19 @@ Dokumentiert, nicht angefasst.
 
 ## 3. NAP – Abgleich aller geprüften Plattformen
 
-Sollwerte: **VIDEKO Küchen eG** · **Hertzstraße 4, 97076 Würzburg** · **0160 5545818** ·
+Sollwerte: **VIDEKO Küchen eG** · **Hertzstraße 4, 97076 Würzburg** · **[alte Mobilnummer]** ·
 **https://videko-kuechen.de/**
 
 | Plattform | Name | Adresse | Telefon | Website | Öffnungszeiten | Abweichung | Priorität |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Google Business Profile | VIDEKO Küchen eG ✔ | Hertzstraße 4, 97076 Würzburg ✔ | 0160 5545818 ✔ | videko-kuechen.de ✔ | nur Montag | Wochenplan unvollständig; Profil inhaltlich fast leer | **hoch** |
+| Google Business Profile | VIDEKO Küchen eG ✔ | Hertzstraße 4, 97076 Würzburg ✔ | [alte Mobilnummer] ✔ | videko-kuechen.de ✔ | nur Montag | Wochenplan unvollständig; Profil inhaltlich fast leer | **hoch** |
 | Würzburg macht Spaß (wuems.de) | Videko Küchen eG ✔ | Hertzstr. 4 ✔ | **0931 355930 ✘** + Fax **0931 3559320 ✘** | keine | keine | **Fremde Telefon- und Faxnummer.** Identisch mit dem unmittelbar davorstehenden Eintrag „vhs Würzburg & Umgebung e.V." – nachweislich aus dem Nachbardatensatz übernommen | **kritisch** |
-| Gelbe Seiten | Videko Küchen eG ✔ | Hertzstraße 4 ✔ | 0160 5545818 ✔ | vorhanden | **„Geöffnet – 24 Stunden Service" ✘** | Falsche Öffnungsangabe | **hoch** |
-| Cylex | Videko Küchen eG ✔ | Hertzstraße 4 ✔ | 0160 5545818 ✔ | vorhanden | **Mo–So 09:00–18:00 ✘** | Nicht belegte Öffnungszeiten; Eintrag-ID 17200128 | hoch |
-| Das Örtliche | Videko Küchen eG ✔ | Hertzstraße 4, Grombühl | 0160 5545818 ✔ | vorhanden | **Mo–Fr 09:00–18:00 ✘** | Nicht belegte Öffnungszeiten | hoch |
-| Geolokal | Videko Küchen ✔ | Hertzstraße 4 ✔ | 0160 5545818 ✔ | vorhanden | **Mo 09:00–18:00 ✘** | Nicht belegte Zeiten; zusätzlich „Keine genauen Koordinaten vorhanden" | mittel |
-| 11880 | Videko Küchen ✔ | Hertzstraße 4 ✔ | 0160 5545818 ✔ | vorhanden | keine | keine NAP-Abweichung; Stand 23.08.2026 | niedrig |
-| XING (`/pages/videko-kuechen-eg`) | VIDEKO Küchen eG ✔ | Hertzstraße 4, 97076 Würzburg ✔ | +49 160 5545818 ✔ | **http://videko-kuechen.de ✘** | keine | Website ohne HTTPS und ohne abschließenden Schrägstrich; „Über uns"-Text ist noch der **XING-Platzhaltertext**; 1–10 Mitarbeitende | mittel |
+| Gelbe Seiten | Videko Küchen eG ✔ | Hertzstraße 4 ✔ | [alte Mobilnummer] ✔ | vorhanden | **„Geöffnet – 24 Stunden Service" ✘** | Falsche Öffnungsangabe | **hoch** |
+| Cylex | Videko Küchen eG ✔ | Hertzstraße 4 ✔ | [alte Mobilnummer] ✔ | vorhanden | **Mo–So 09:00–18:00 ✘** | Nicht belegte Öffnungszeiten; Eintrag-ID 17200128 | hoch |
+| Das Örtliche | Videko Küchen eG ✔ | Hertzstraße 4, Grombühl | [alte Mobilnummer] ✔ | vorhanden | **Mo–Fr 09:00–18:00 ✘** | Nicht belegte Öffnungszeiten | hoch |
+| Geolokal | Videko Küchen ✔ | Hertzstraße 4 ✔ | [alte Mobilnummer] ✔ | vorhanden | **Mo 09:00–18:00 ✘** | Nicht belegte Zeiten; zusätzlich „Keine genauen Koordinaten vorhanden" | mittel |
+| 11880 | Videko Küchen ✔ | Hertzstraße 4 ✔ | [alte Mobilnummer] ✔ | vorhanden | keine | keine NAP-Abweichung; Stand 23.08.2026 | niedrig |
+| XING (`/pages/videko-kuechen-eg`) | VIDEKO Küchen eG ✔ | Hertzstraße 4, 97076 Würzburg ✔ | [alte Mobilnummer] ✔ | **http://videko-kuechen.de ✘** | keine | Website ohne HTTPS und ohne abschließenden Schrägstrich; „Über uns"-Text ist noch der **XING-Platzhaltertext**; 1–10 Mitarbeitende | mittel |
 | Instagram (`@videko.kuechen`) | Profil erreichbar | – | – | – | – | Inhalte nur nach Login prüfbar; offizieller Kanal laut `site.js` und GBP-Beitrag | – |
 | Bing / Bing Maps | **kein Eintrag** | – | – | – | – | Bing Maps kennt nur die Adresse, kein Unternehmen. Bing Places fehlt vollständig | mittel |
 | Apple Maps (über DuckDuckGo-Places geprüft) | **kein Eintrag** | – | – | – | – | Apple Business Connect fehlt vollständig | mittel |
@@ -291,7 +291,7 @@ angelegt, keine Identitätsprüfung umgangen und keine kostenpflichtigen Pakete 
 | **Das Örtliche** | „Inhalte melden" https://www.dasoertliche.de/inhaltemelden/ · Geschäftseinträge werden über Das Telefonbuch Marketing gepflegt: https://www.dtme.de/ihr-eintrag/ | Textvorlage 3.3 |
 | **11880** | https://unternehmen.11880.com/kontakt · Eintrag https://www.11880.com/branchenbuch/wuerzburg/131903204B114143681/videko-kuechen.html | derzeit keine Abweichung |
 | **XING** | Seitenverwaltung durch eine berechtigte Person: Website auf `https://videko-kuechen.de/` ändern, Platzhalter-„Über uns"-Text durch den Entwurf aus 1.5 ersetzen | Textvorlage 1.5 |
-| **LinkedIn** | Seitenverwaltung (Dennis Himmel ist als Beschäftigter gelistet): Telefonnummer 0160 5545818 nachtragen, Eröffnungsformulierung auf „Winter 2026" vereinheitlichen | Kleinigkeit, kein Fehler |
+| **LinkedIn** | Seitenverwaltung (Dennis Himmel ist als Beschäftigter gelistet): Telefonnummer [alte Mobilnummer] nachtragen, Eröffnungsformulierung auf „Winter 2026" vereinheitlichen | Kleinigkeit, kein Fehler |
 | **Bing Places** | Neuanlage über https://www.bingplaces.com – setzt Microsoft-Account und Verifizierung voraus | Entscheidung Dennis |
 | **Apple Business Connect** | Neuanlage über https://businessconnect.apple.com – setzt Apple-ID und Verifizierung voraus | Entscheidung Dennis |
 
@@ -311,7 +311,7 @@ angelegt, keine Identitätsprüfung umgangen und keine kostenpflichtigen Pakete 
 > Bitte korrigieren Sie den Eintrag wie folgt:
 > Name: VIDEKO Küchen eG
 > Anschrift: Hertzstraße 4, 97076 Würzburg
-> Telefon: 0160 5545818
+> Telefon: [alte Mobilnummer]
 > Fax: bitte ersatzlos streichen
 > Website: https://videko-kuechen.de/
 >
@@ -328,14 +328,14 @@ angelegt, keine Identitätsprüfung umgangen und keine kostenpflichtigen Pakete 
 > Winter 2026; es gibt derzeit keine regulären Öffnungszeiten, Termine erfolgen nach
 > Vereinbarung. Bitte entfernen Sie die Öffnungszeiten ersatzlos.
 > Alle übrigen Daten sind korrekt: VIDEKO Küchen eG, Hertzstraße 4, 97076 Würzburg,
-> Telefon 0160 5545818, https://videko-kuechen.de/.
+> Telefon [alte Mobilnummer], https://videko-kuechen.de/.
 
 **Cylex (nach Eintragsübernahme oder über das Kontaktformular):**
 
 > Im Eintrag 17200128 („Videko Küchen eG") sind Öffnungszeiten Mo–So 09:00–18:00
 > hinterlegt, die von uns nicht stammen und nicht zutreffen. Unser Küchenstudio in der
 > Hertzstraße 4 eröffnet erst im Winter 2026. Bitte entfernen Sie die Öffnungszeiten.
-> Name, Anschrift, Telefon (0160 5545818) und Website (https://videko-kuechen.de/)
+> Name, Anschrift, Telefon ([alte Mobilnummer]) und Website (https://videko-kuechen.de/)
 > sind korrekt.
 
 ### 3.4 Durchgeführte Repo-Änderungen
@@ -476,11 +476,11 @@ Geschäftscode-Ansicht: 2 bestätigte Unternehmen im Konto (100 % bestätigt), d
 | Feld | Wert |
 | --- | --- |
 | Unternehmensname | `VIDEKO Küchen eG` |
-| Telefonnummer | `0160 5545818` |
+| Telefonnummer | `[alte Mobilnummer]` |
 | Website | `https://videko-kuechen.de/` |
 | Adresse | `Hertzstraße 4, 97076 Würzburg` |
 | Einzugsgebiet | `Würzburg, Deutschland` |
-| Chat | `https://wa.me/491605545818` |
+| Chat | `[alte Mobilnummer]` |
 | Soziale Profile | Facebook, Instagram, YouTube, TikTok (4 Einträge) |
 | Barrierefreiheit | Rollstuhlgerechter Eingang / Parkplatz / Sitzgelegenheiten |
 | Eröffnungsdatum | leer — **bewusst leer gelassen**, siehe 9.4 |
