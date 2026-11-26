@@ -19,6 +19,7 @@ import LazyBg from '../components/LazyBg.jsx'
 import StylefinderHero from '../components/StylefinderHero.jsx'
 import ProcessSection from '../components/ProcessSection.jsx'
 import { journalArticles } from '../data/journal.js'
+import { BRAND } from '../data/company.js'
 import verwandleVideo from '../assets/images/home/verwandle-raum.mp4'
 import gameScene from '../assets/images/kuechenfehler/scene.webp'
 
@@ -176,7 +177,7 @@ export default function Home() {
           <Reveal>
             <span className="kicker">Studio Würzburg</span>
             <h2 className="lp-h2">Unser Studio entsteht <span className="grad">in Würzburg.</span></h2>
-            <p className="lp-lead">Persönliche Küchenberatung und Planung sind bereits jetzt nach Terminvereinbarung möglich. Unsere Ausstellung ist noch im Aufbau; die offizielle Eröffnung ist derzeit für den 1. Dezember 2026 geplant.</p>
+            <p className="lp-lead">Persönliche Küchenberatung und Planung sind bereits jetzt nach Terminvereinbarung möglich. Unsere Ausstellung ist noch im Aufbau; die offizielle Eröffnung ist für den {BRAND.plannedOpeningLabel} geplant.</p>
             <CTAButton to="/studio">Studio virtuell erleben</CTAButton>
           </Reveal>
         </div>
