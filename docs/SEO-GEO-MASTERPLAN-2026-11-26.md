@@ -298,3 +298,32 @@ korrigiert, siehe Phase 3.
 
 **Erste Messung:** offen. Sie muss manuell erfolgen, weil die Antworten von
 Anmeldung und Standort abhängen.
+
+## Offensive Phase 3 (26.11.2026): Zielseiten, Planungs-Check, Kampagne
+
+**Entscheidung:** keine neuen Stadt- oder Keyword-URLs. Jeder Suchbegriff hat
+bereits eine Zielseite; die wird gestärkt statt verdoppelt.
+
+| Suchbegriff | Zielseite | Stand |
+|---|---|---|
+| Küchenstudio Würzburg / Küchen Würzburg | `/`, `/studio` | `/studio` mit 5 FAQ + FAQPage-JSON-LD |
+| Küchenplanung Würzburg | `/planung` | Planungs-Check + 6 FAQ + FAQPage-JSON-LD |
+| Einbauküchen Würzburg | `/kuechen-nach-mass` | FAQ bestand schon |
+| Küchenrenovierung Würzburg | `/alles-aus-einer-hand`, Journal-Artikel | FAQ bestand schon |
+| Tauberbischofsheim | nur Erwähnung (Einzugsgebiet, FAQ /planung) | bewusst keine eigene Seite, dort kein Studio |
+
+- **Planungs-Check** (`src/components/PlanungsCheck.jsx`): 10 Punkte zum
+  Abhaken für das Erstgespräch, keine Preise, speichert nichts. Der Knopf
+  übergibt die Liste als Text ins Nachrichtenfeld auf `/beratung`; abgeschickt
+  wird erst mit dem Formular.
+- **Offen:** Der bestehende Budget-Kompass auf `/planung` (seit Juni 2026)
+  zeigt Preisspannen ab 5.000 €. Von VIDEKO bestätigen lassen oder entfernen.
+- **B2B-Zielliste:** 17 von 50 angestrebten Einträgen, nur öffentliche
+  Firmenkontakte. Liegt bewusst **nicht** im (öffentlichen) Repo, sondern lokal
+  unter `O:\VIDEKO\Vertrieb\B2B-Zielliste-2026-11-26.csv`. Ansprache nur
+  persönlich, keine automatisierten Werbemails.
+- **Kampagne:** Wochenplan bis 01.03.2027 in `KAMPAGNE-ERÖFFNUNG-2027-03-01.md`.
+- **Lint:** 110 → 0 Fehler (Commit 4d11b25), ohne sichtbare Änderung.
+- **Bekannt, kein Fehler der Website:** Lokale Windows-Builds zeigen in
+  `vite preview` eine React-Hydration-Meldung (#418), auch auf Ständen vor
+  dieser Phase. Live (Vercel-Build) tritt sie nicht auf, geprüft am 26.11.2026.
