@@ -44,8 +44,10 @@ export const BRAND = {
   // Öffentliche Kontaktwege des Geschäftsbereichs VIDEKO Küchen.
   contactEmail: 'info@videko-kuechen.de',
   inquiryEmail: 'shop@videko-kuechen.de',
-  phone: '0160 5545818',
-  phoneHref: '+491605545818',
+  phone: '0931 29764861',
+  phoneHref: '+4993129764861',
+  // WhatsApp getrennt von Telefon: keine bestätigte aktuelle WhatsApp-Nummer.
+  whatsappPhoneHref: null,
   // Physischer Studio-Standort (Küchenstudio) – NICHT der Sitz der Betreiberin.
   studio: { street: 'Hertzstraße 4', postalCode: '97076', city: 'Würzburg', country: 'Deutschland' },
   /**
@@ -81,9 +83,10 @@ export const STUDIO_ADRESSE = `${BRAND.studio.street}, ${BRAND.studio.postalCode
 export const STUDIO_MAPS_URL =
   `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(STUDIO_ADRESSE)}`
 
-/** WhatsApp-Link auf die Studio-Rufnummer. `text` wird angehängt, wenn gesetzt. */
+/** WhatsApp-Link nur für einen ausdrücklich bestätigten WhatsApp-Anschluss. */
 export function whatsappUrl(text) {
-  const nummer = BRAND.phoneHref.replace(/[^0-9]/g, '')
+  if (!BRAND.whatsappPhoneHref) return null
+  const nummer = BRAND.whatsappPhoneHref.replace(/[^0-9]/g, '')
   return text ? `https://wa.me/${nummer}?text=${encodeURIComponent(text)}` : `https://wa.me/${nummer}`
 }
 
@@ -133,7 +136,7 @@ export const VIDEKO_EG = {
   vatId: null,
   auditAssociation: 'DIVK Deutscher Interessenverband der Kleingenossenschaften e.V., Hildesheim',
   operatorEmail: 'info@videko-kuechen.de',
-  // Festnetz fürs Impressum (Vorgabe Heiko 08.10.2026); Studio-Handy bleibt BRAND.phone
+  // Festnetz für Impressum und Studio (bestätigt am 26.11.2026).
   operatorPhone: '0931 29764861',
   registered: true,
 }
