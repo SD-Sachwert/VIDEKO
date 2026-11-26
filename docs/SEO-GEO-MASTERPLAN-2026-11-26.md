@@ -4,6 +4,8 @@ Arbeitsdokument zu den Phasen 1–6. Es enthält keine Zugangsdaten und keine
 personenbezogenen Daten. Unternehmensangaben kommen ausschließlich aus
 `src/data/company.js`.
 
+**Kontaktkorrektur 26.11.2026:** Die bisherige Mobilnummer 0160 5545818 ist durch die bestätigte Festnetznummer 0931 29764861 (+49 931 29764861) zu ersetzen. Google Business Profile führt noch die alte Nummer; Änderung und Abgleich der Verzeichnisse stehen aus. Die folgenden Mail-Entwürfe sind entsprechend aktualisiert. WhatsApp nicht auf die Festnetznummer umleiten, solange kein aktiver WhatsApp-Anschluss bestätigt ist.
+
 **Ausgangswerte (GSC, Stand 26.11.2026):** 1.121 Impressionen, 60 Klicks,
 durchschnittliche Position 18,4.
 
@@ -89,26 +91,26 @@ Betreff: Korrektur Mitgliederliste: VIDEKO Küchen eG – Telefonnummer und Webs
 > bei VIDEKO Küchen eG eine Telefon- und Faxnummer, die nicht zu uns gehören
 > (0931 355930 / 0931 3559320). Bitte korrigieren Sie den Eintrag:
 >
-> - Telefon: 0160 5545818
+> - Telefon: 0931 29764861
 > - Fax: bitte entfernen
 > - Website: https://videko-kuechen.de/ (bitte ergänzen)
 >
 > Adresse (Hertzstraße 4, 97076 Würzburg) und E-Mail stimmen bereits.
 >
 > Vielen Dank und freundliche Grüße
-> VIDEKO Küchen eG · Hertzstraße 4 · 97076 Würzburg · 0160 5545818 · info@videko-kuechen.de
+> VIDEKO Küchen eG · Hertzstraße 4 · 97076 Würzburg · 0931 29764861 · info@videko-kuechen.de
 
 ### Mail 2: an haendler@kitchenadvisor.de
 
-Betreff: Händlereintrag VIDEKO Küchen eG, Würzburg („undefined Würzburg“)
+Betreff: Händlereintrag VIDEKO Küchen eG, Würzburg
 
 > Guten Tag,
 >
 > wir sind ein Küchenstudio in Würzburg und möchten unseren Händlereintrag
-> korrekt bei Ihnen hinterlegen. Ein Eintrag erscheint offenbar als
-> „undefined Würzburg“. Bitte legen Sie ihn an oder korrigieren Sie ihn:
+> korrekt bei Ihnen hinterlegen. Bitte prüfen Sie, ob bereits ein Eintrag existiert,
+> und korrigieren Sie diesen gegebenenfalls. Andernfalls bitten wir um einen neuen Eintrag:
 >
-> VIDEKO Küchen eG, Hertzstraße 4, 97076 Würzburg, Tel. 0160 5545818,
+> VIDEKO Küchen eG, Hertzstraße 4, 97076 Würzburg, Tel. 0931 29764861,
 > info@videko-kuechen.de, https://videko-kuechen.de/
 > Leistungen: Küchenplanung, 3D-Planung, Aufmaß, Küchenmontage.
 > Beratung nach Terminvereinbarung, bitte keine festen Öffnungszeiten anzeigen.
@@ -117,7 +119,7 @@ Betreff: Händlereintrag VIDEKO Küchen eG, Würzburg („undefined Würzburg“
 > informieren Sie uns bitte vorher.
 >
 > Freundliche Grüße
-> VIDEKO Küchen eG · Hertzstraße 4 · 97076 Würzburg · 0160 5545818 · info@videko-kuechen.de
+> VIDEKO Küchen eG · Hertzstraße 4 · 97076 Würzburg · 0931 29764861 · info@videko-kuechen.de
 
 ### Mail 3: an info@kuechenring.de
 
@@ -127,11 +129,11 @@ Betreff: Aufnahme in die Händlersuche: VIDEKO Küchen eG, Würzburg
 >
 > wir sind ein Küchenstudio in Würzburg (VIDEKO Küchen eG, Hertzstraße 4,
 > 97076 Würzburg, https://videko-kuechen.de/). Unter welchen Bedingungen ist
-> eine Aufnahme in Ihre Händlersuche möglich? Bitte senden Sie uns die
+> eine Aufnahme in Ihre Händlersuche für unser Mitglied (Mitgliedsnummer 62030) möglich? Bitte senden Sie uns die
 > Konditionen, bevor Kosten entstehen.
 >
 > Freundliche Grüße
-> VIDEKO Küchen eG · 0160 5545818 · info@videko-kuechen.de
+> VIDEKO Küchen eG · 0931 29764861 · info@videko-kuechen.de
 
 ### Mail 4: an info@kuechenfinder.com
 
@@ -140,7 +142,7 @@ Betreff: Kostenloser Grundeintrag: VIDEKO Küchen eG, Würzburg
 > Guten Tag,
 >
 > bitte nehmen Sie VIDEKO Küchen eG mit einem kostenlosen Grundeintrag auf:
-> Hertzstraße 4, 97076 Würzburg, Tel. 0160 5545818, info@videko-kuechen.de,
+> Hertzstraße 4, 97076 Würzburg, Tel. 0931 29764861, info@videko-kuechen.de,
 > https://videko-kuechen.de/. Beratung nach Terminvereinbarung, keine festen
 > Öffnungszeiten.
 >
@@ -227,7 +229,7 @@ Nicht verwenden: Umsätze, Kundenzahlen, Rankings, „erste“ oder „größte�
 > Leserinnen und Leser ein Thema ist. Gern zeigen wir Ihnen den Stand vor Ort.
 >
 > Freundliche Grüße
-> VIDEKO Küchen eG · Hertzstraße 4 · 97076 Würzburg · 0160 5545818 · info@videko-kuechen.de
+> VIDEKO Küchen eG · Hertzstraße 4 · 97076 Würzburg · 0931 29764861 · info@videko-kuechen.de
 
 ---
 
