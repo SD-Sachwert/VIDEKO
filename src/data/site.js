@@ -129,8 +129,13 @@ export function localBusinessLd() {
     parentOrganization: { '@id': `${SITE.origin}/#organization` },
     url: `${SITE.origin}/studio`,
     description: 'Küchenstudio in Würzburg für individuelle Küchen, persönliche Beratung, 3D-Küchenplanung, Aufmaß und Montage. Auf Wunsch koordiniert VIDEKO auch den kompletten Küchenraum mit Fachpartnern für Elektro, Boden, Wand, Decke und Licht.',
+    // Direktlink aus dem verwalteten Google-Unternehmensprofil (26.11.2026).
+    hasMap: 'https://maps.google.com/maps?cid=11732976677165745999',
     // Offizielle Unternehmensprofile, die auch den Studio-Standort repräsentieren.
-    sameAs: SOCIAL_PROFILES.filter((p) => ['instagram', 'facebook', 'linkedin', 'tiktok'].includes(p.key)).map((p) => p.url),
+    sameAs: [
+      'https://maps.google.com/maps?cid=11732976677165745999',
+      ...SOCIAL_PROFILES.filter((p) => ['instagram', 'facebook', 'linkedin', 'tiktok'].includes(p.key)).map((p) => p.url),
+    ],
     image: absUrl(SITE.defaultOgImage),
     telephone: BRAND.phoneHref,
     email: BRAND.contactEmail,
