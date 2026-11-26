@@ -128,9 +128,14 @@ Betreff: Aufnahme in die Händlersuche: VIDEKO Küchen eG, Würzburg
 > Guten Tag,
 >
 > wir sind ein Küchenstudio in Würzburg (VIDEKO Küchen eG, Hertzstraße 4,
-> 97076 Würzburg, https://videko-kuechen.de/). Unter welchen Bedingungen ist
-> eine Aufnahme in Ihre Händlersuche für unser Mitglied (Mitgliedsnummer 62030) möglich? Bitte senden Sie uns die
-> Konditionen, bevor Kosten entstehen.
+> 97076 Würzburg, https://videko-kuechen.de/) und Mitglied im Küchenring
+> (Mitgliedsnummer 62030). Wir möchten in Ihrer Händlersuche erscheinen.
+> Ist das für Mitglieder ohne Zusatzkosten möglich, und welche Angaben
+> benötigen Sie von uns? Bitte nennen Sie uns mögliche Kosten, bevor etwas
+> beauftragt wird.
+>
+> Bitte verwenden Sie ausschließlich unsere offizielle Telefonnummer
+> 0931 29764861 – frühere Mobilnummern bitte nicht mehr veröffentlichen.
 >
 > Freundliche Grüße
 > VIDEKO Küchen eG · 0931 29764861 · info@videko-kuechen.de

@@ -19,6 +19,21 @@ import { journalArticleHead } from '../data/head.js'
  * also ohne Anschluss.
  */
 const WEITER = {
+  'kueche-im-neubau-planen': {
+    text: 'Wie wir Entwurf, 3D-Planung und Aufmaß mit dir angehen, steht unter',
+    label: 'Küchenplanung',
+    to: '/planung',
+  },
+  'kueche-erneuern-oder-neu-kaufen': {
+    text: 'Was beim Tausch der Arbeitsplatte zu Material und Ausschnitten dazugehört, steht unter',
+    label: 'Arbeitsplatten',
+    to: '/arbeitsplatten',
+  },
+  'kueche-ausmessen-anleitung': {
+    text: 'Wenn deine Skizze steht, kannst du direkt einen Termin anfragen:',
+    label: 'Beratung',
+    to: '/beratung',
+  },
   'kuechenangebote-vergleichen': {
     text: 'Wie Aufmaß, Lieferung, Aufbau und Anschluss bei uns ablaufen, steht unter',
     label: 'Küchenmontage Würzburg',

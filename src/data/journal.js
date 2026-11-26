@@ -19,6 +19,147 @@ export const categories = [
 
 export const journalArticles = [
   {
+    "slug": "kueche-im-neubau-planen",
+    "lastModified": "2026-11-26",
+    "title": "Küche im Neubau planen: Was du wann entscheiden musst",
+    "category": "Planung",
+    "read": "6 Min.",
+    "teaser": "Im Neubau wird die Küche oft zu spät geplant – dann liegen Wasser und Strom schon an der falschen Stelle. Was vor Rohinstallation, Estrich und Fliesen feststehen sollte.",
+    "metaTitle": "Küche im Neubau planen: Zeitplan und Anschlüsse | VIDEKO",
+    "metaDescription": "Küchenplanung im Neubau: wann Anschlüsse, Insel, Dunstabzug, Boden und Aufmaß entschieden werden müssen – mit Hinweisen für Bauträger-Wohnungen.",
+    "intro": "Im Neubau hast du einen großen Vorteil: Wasser, Strom und Abluft können genau dort hin, wo die Küche sie braucht. Der Vorteil verschwindet aber, sobald Leitungen verlegt und Wände verputzt sind. Wer die Küche erst plant, wenn der Rohbau fertig ist, plant um bestehende Anschlüsse herum. Hier steht, was du in welcher Bauphase entscheiden solltest.",
+    "sections": [
+      {
+        "h": "Vor der Rohinstallation: Grundriss der Küche festlegen",
+        "p": "Bevor Elektriker und Installateur Leitungen ziehen, sollte die Küche zumindest im Grundriss stehen: Wo sitzt die Spüle, wo das Kochfeld, wo Kühlschrank und Backofen? Gibt es eine Insel oder Halbinsel? Diese Entscheidung bestimmt alle weiteren Anschlüsse. Eine Entwurfsplanung reicht dafür – Fronten, Farben und Griffe können später folgen."
+      },
+      {
+        "h": "Wasser und Abwasser",
+        "p": "Spüle und Geschirrspüler brauchen Zu- und Abwasser, der Abfluss zusätzlich ausreichend Gefälle. Liegt die Spüle in einer Insel, müssen die Leitungen im Boden geführt werden – das geht nur vor dem Estrich. Plane auch gleich mit, ob ein Wasseranschluss für Kühlschrank oder Kaffeevollautomat gewünscht ist."
+      },
+      {
+        "h": "Strom: Kochfeld, Geräte und Steckdosen",
+        "p": "Kochfeld und Backofen brauchen in der Regel einen eigenen Herdanschluss, viele Großgeräte einen eigenen Stromkreis. Lege fest, wo über der Arbeitsplatte Steckdosen sitzen sollen – zu wenige Steckdosen gehören zu den häufigsten Ärgernissen in fertigen Küchen. Auch Zuleitungen für Unterbau- und Nischenbeleuchtung, Hängelampen über Insel oder Tisch und gegebenenfalls Steckdosen in der Insel müssen jetzt eingeplant werden."
+      },
+      {
+        "h": "Dunstabzug: Abluft oder Umluft klären",
+        "p": "Neubauten sind sehr dicht gebaut und haben oft eine Lüftungsanlage. Ob Abluft nach außen möglich und sinnvoll ist, hängt von Wanddurchbruch, Lüftungskonzept und einer eventuell vorhandenen Feuerstätte ab. Das muss mit Architekt oder Lüftungsplaner abgestimmt werden, bevor die Fassade fertig ist. Umluft kommt ohne Durchbruch aus, braucht aber Platz für Filter und regelmäßige Filterpflege."
+      },
+      {
+        "h": "Boden: unter der Küche durch oder nicht?",
+        "p": "Früh entscheiden solltest du, ob der Bodenbelag unter der Küche durchläuft oder an der Sockelkante endet. Das beeinflusst Arbeitshöhe, Sockelhöhe und spätere Umbauten. Läuft der Belag durch, lässt sich die Küche später leichter tauschen; endet er an der Küche, sparst du Material, legst dich aber auf den Grundriss fest."
+      },
+      {
+        "h": "Wohnung vom Bauträger: Fristen für Sonderwünsche beachten",
+        "p": "Kaufst du eine Neubauwohnung, ist die Küche häufig nicht im Kaufpreis enthalten. Die Lage der Anschlüsse ist dann im Installationsplan des Bauträgers festgelegt. Änderungen sind meist nur als Sonderwunsch und nur bis zu einer bestimmten Bauphase möglich. Fordere den Installationsplan früh an, plane die Küche darauf und reiche gewünschte Änderungen rechtzeitig ein."
+      },
+      {
+        "h": "Nach Putz und Estrich: verbindliches Aufmaß",
+        "p": "Die Planung entsteht nach Bauplänen, bestellt wird aber erst nach einem Aufmaß im fertigen Raum. Pläne und Wirklichkeit weichen im Bau oft um einige Zentimeter ab, und genau diese Zentimeter entscheiden über Passstücke, Arbeitsplatte und Geräte. Lieferzeiten der Hersteller solltest du dabei einplanen, damit die Küche zum Einzug fertig ist – frag beim Studio nach dem aktuellen Stand."
+      },
+      {
+        "h": "Kurzer Zeitplan",
+        "p": "Entwurfsplanung: vor der Rohinstallation. Anschlüsse und Lüftung: mit Elektriker, Installateur und Architekt abstimmen, bevor Leitungen verlegt werden. Bodenaufbau: vor dem Estrich. Feinplanung von Fronten, Arbeitsplatte und Geräten: parallel zum Innenausbau. Aufmaß und Bestellung: nach Putz und Estrich. Montage: nach Malerarbeiten und Bodenbelag."
+      },
+      {
+        "h": "Neubauküche mit VIDEKO",
+        "p": "Wir planen Küchen in Würzburg und der Region mit 3D-Planung, Aufmaß und Montage. Wenn du früh kommst, können wir die Anschlusspositionen aus der Küchenplanung an deine Handwerker weitergeben – das spart Änderungen auf der Baustelle."
+      }
+    ],
+    "fazit": "Im Neubau ist der beste Zeitpunkt für die Küchenplanung früher, als die meisten denken: bevor die erste Leitung liegt. Dann passt die Küche zum Haus und nicht umgekehrt.",
+    "image": imgOffen
+  },
+  {
+    "slug": "kueche-erneuern-oder-neu-kaufen",
+    "lastModified": "2026-11-26",
+    "title": "Alte Küche erneuern oder neue kaufen? Eine Entscheidungshilfe",
+    "category": "Planung",
+    "read": "5 Min.",
+    "teaser": "Fronten, Arbeitsplatte oder Geräte tauschen – oder gleich ganz neu? Woran du erkennst, ob sich ein Teiltausch lohnt und wann eine neue Küche die bessere Wahl ist.",
+    "metaTitle": "Küche erneuern oder neu kaufen? Entscheidungshilfe | VIDEKO",
+    "metaDescription": "Fronten tauschen, neue Arbeitsplatte, neue Geräte oder komplett neue Küche? Kriterien zu Korpus, Grundriss, Anschlüssen und Alltag für eine ehrliche Entscheidung.",
+    "intro": "Nicht jede Küche, die alt aussieht, muss raus. Und nicht jede Küche, die noch gut aussieht, funktioniert im Alltag. Die Frage „erneuern oder neu?“ lässt sich mit ein paar Prüfpunkten ziemlich ehrlich beantworten. Entscheidend ist, ob das Problem an der Oberfläche liegt oder in der Planung.",
+    "sections": [
+      {
+        "h": "Zuerst prüfen: Ist der Korpus noch gut?",
+        "p": "Die Schrankkörper sind das Gerüst der Küche. Schau dir besonders den Spülenschrank an: Ist der Boden aufgequollen oder fleckig, gab es einen Wasserschaden? Hängen Türen schief, obwohl die Scharniere nachgestellt wurden? Lassen sich Schubkästen leicht und vollständig öffnen? Ist der Korpus beschädigt, lohnt sich ein Tausch von Fronten oder Arbeitsplatte meist nicht."
+      },
+      {
+        "h": "Wenn nur die Optik stört: Fronten tauschen",
+        "p": "Sind Korpus und Beschläge in Ordnung und gefällt dir nur die Optik nicht, können neue Fronten viel verändern. Voraussetzung ist, dass passende Fronten für Maße und Bohrbild deiner Schränke erhältlich sind. Bei älteren Küchen oder Herstellern, die es nicht mehr gibt, ist das nicht immer der Fall. Neue Griffe und eine neue Arbeitsplatte verstärken die Wirkung."
+      },
+      {
+        "h": "Wenn die Arbeitsfläche das Problem ist: Arbeitsplatte tauschen",
+        "p": "Eine abgenutzte, aufgequollene oder zu kleine Arbeitsplatte lässt sich häufig einzeln ersetzen. Dafür müssen die Unterschränke stabil und waagerecht stehen. Spüle und Kochfeld werden dabei aus- und wieder eingebaut oder gleich mit erneuert. Wichtig: Neue Ausschnitte müssen zu den Geräten passen, die du behalten oder neu kaufen willst."
+      },
+      {
+        "h": "Wenn Geräte schwächeln: einzeln ersetzen",
+        "p": "Viele Einbaugeräte folgen gängigen Nischenmaßen, sodass ein Backofen, Geschirrspüler oder Kühlschrank einzeln getauscht werden kann. Prüfe vor dem Kauf das Nischenmaß im Datenblatt des neuen Geräts und miss die vorhandene Nische nach. Bei Kühlgeräten unterscheiden sich außerdem Montagearten wie Schlepptür oder Festtür."
+      },
+      {
+        "h": "Wann eine neue Küche die bessere Wahl ist",
+        "p": "Eine neue Küche ist meist sinnvoll, wenn das Problem in der Planung liegt: zu wenig Arbeitsfläche, umständliche Laufwege, zu wenig Stauraum, Türen statt Auszüge oder ein Grundriss, der nicht mehr zu deinem Alltag passt. Auch wenn Anschlüsse verlegt werden sollen, eine Wand fällt oder Wasserschäden den Korpus angegriffen haben, kommst du mit einem Teiltausch nicht weit."
+      },
+      {
+        "h": "Entscheidungshilfe in fünf Fragen",
+        "p": "Ist der Korpus intakt? Wenn nein: neu. Funktioniert der Grundriss im Alltag? Wenn nein: neu. Stört vor allem die Optik? Dann Fronten und gegebenenfalls Arbeitsplatte prüfen. Ist vor allem die Arbeitsplatte verschlissen? Dann Arbeitsplatte tauschen. Fallen einzelne Geräte aus? Dann Geräte einzeln ersetzen. Wenn drei oder mehr Punkte zusammenkommen, rechne beide Varianten nebeneinander – oft liegt eine neue Küche dann näher als gedacht."
+      },
+      {
+        "h": "Ehrliche Einschätzung bei VIDEKO",
+        "p": "Bei einem Beratungstermin in Würzburg schauen wir uns an, was deine Küche noch kann und wo es hakt. Wenn eine neue Arbeitsplatte reicht, sagen wir das. Wenn sich ein Teiltausch nicht lohnt, sagen wir das auch."
+      }
+    ],
+    "fazit": "Erneuern lohnt sich, wenn der Korpus gut ist und dich vor allem Oberfläche oder einzelne Geräte stören. Liegt das Problem in Grundriss, Stauraum oder Anschlüssen, ist eine neue Küche die ehrlichere Lösung.",
+    "image": imgFehler
+  },
+  {
+    "slug": "kueche-ausmessen-anleitung",
+    "lastModified": "2026-11-26",
+    "title": "Küche ausmessen: So skizzierst du deinen Raum für die Planung",
+    "category": "Planung",
+    "read": "5 Min.",
+    "teaser": "Mit Zollstock, Papier und Handy zur brauchbaren Raumskizze: welche Maße, Anschlüsse und Hindernisse für die erste Küchenplanung wirklich zählen.",
+    "metaTitle": "Küche ausmessen: Anleitung für die Raumskizze | VIDEKO",
+    "metaDescription": "Küche selbst ausmessen: Wandlängen, Raumhöhe, Fenster, Türen, Wasser- und Stromanschlüsse richtig erfassen – als Grundlage für die erste Küchenplanung.",
+    "intro": "Für eine erste Küchenplanung brauchst du keinen Laser und keinen Bauplan. Eine saubere Skizze mit den richtigen Maßen reicht, damit aus Ideen ein realistischer Entwurf wird. Diese Anleitung zeigt, was du messen solltest – und was du getrost dem verbindlichen Aufmaß überlassen kannst.",
+    "sections": [
+      {
+        "h": "Was du brauchst",
+        "p": "Einen Zollstock oder ein Maßband, Papier und Stift, dein Handy für Fotos und etwa eine halbe Stunde Zeit. Zeichne den Raum von oben als einfache Skizze. Sie muss nicht maßstäblich sein; wichtig ist, dass jedes Maß eindeutig einer Wand zugeordnet ist."
+      },
+      {
+        "h": "Wandlängen messen",
+        "p": "Beginne an einer Ecke und miss im Uhrzeigersinn jede Wand. Miss möglichst auf drei Höhen: knapp über dem Boden, auf Arbeitshöhe und unter der Decke. Weichen die Werte voneinander ab, ist die Wand nicht gerade oder die Ecke nicht rechtwinklig – das ist im Altbau normal und wichtig für die Planung. Notiere alle Maße durchgehend in derselben Einheit."
+      },
+      {
+        "h": "Raumhöhe, Fenster und Türen",
+        "p": "Miss die Raumhöhe an mehreren Stellen. Bei Fenstern brauchst du Breite, Höhe, Brüstungshöhe vom Boden bis zur Fensterbank und den Abstand zur nächsten Ecke. Notiere, ob das Fenster nach innen aufgeht und ob ein Heizkörper darunter sitzt. Bei Türen: Breite, Abstand zur Ecke und in welche Richtung die Tür aufschlägt."
+      },
+      {
+        "h": "Anschlüsse eintragen",
+        "p": "Markiere in der Skizze, wo Wasserzulauf und Abfluss aus der Wand kommen, jeweils mit Höhe vom Boden und Abstand zur nächsten Ecke. Genauso für die Herdanschlussdose, vorhandene Steckdosen, Lichtauslässe, einen Gasanschluss und eine eventuelle Abluftöffnung. Diese Punkte entscheiden, wo Spüle und Kochfeld ohne Umbau stehen können."
+      },
+      {
+        "h": "Hindernisse nicht vergessen",
+        "p": "Heizkörper, Rohre, Vorsprünge, Schornsteinzüge, Fensterbänke, Lüftungsgitter und Sicherungskästen sind in der Planung genauso wichtig wie Wände. Miss ihre Breite, Tiefe und Höhe und trage sie mit Abstand zur Ecke ein."
+      },
+      {
+        "h": "Fotos machen",
+        "p": "Fotografiere jede Wand frontal und jede Ecke. Fotos zeigen Details, die in keiner Skizze stehen: wie die Leitungen aus der Wand kommen, wo Fliesen enden, wie der Boden aussieht. Bring sie zum Beratungstermin mit oder schick sie vorab."
+      },
+      {
+        "h": "Was die Skizze nicht ersetzt",
+        "p": "Deine Skizze reicht für einen ersten Entwurf und eine realistische Einschätzung. Bestellt wird eine Küche aber nur nach einem verbindlichen Aufmaß vor Ort, bei dem Wände, Winkel und Anschlüsse genau erfasst werden. Bei VIDEKO übernehmen wir dieses Aufmaß im Rahmen der Planung."
+      },
+      {
+        "h": "Checkliste",
+        "p": "Skizze von oben. Alle Wandlängen auf drei Höhen. Raumhöhe. Fenster mit Brüstungshöhe und Öffnungsrichtung. Türen mit Aufschlagrichtung. Wasser, Abfluss, Herdanschluss, Steckdosen, Licht, Gas, Abluft mit Höhe und Abstand. Heizkörper und Vorsprünge. Fotos jeder Wand."
+      }
+    ],
+    "fazit": "Eine gute Raumskizze spart im ersten Gespräch viel Rätselraten. Messen musst du dafür nicht perfekt – nur vollständig.",
+    "image": imgStauraum
+  },
+  {
     "slug": "kuechenangebote-vergleichen",
     "lastModified": "2026-11-26",
     "title": "Küchenangebote vergleichen: So legst du zwei Angebote richtig nebeneinander",
