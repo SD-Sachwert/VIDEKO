@@ -128,6 +128,9 @@ export function localBusinessLd() {
     alternateName: BRAND.name,
     parentOrganization: { '@id': `${SITE.origin}/#organization` },
     url: `${SITE.origin}/studio`,
+    description: 'Küchenstudio in Würzburg für individuelle Küchen, persönliche Beratung, 3D-Küchenplanung, Aufmaß und Montage. Auf Wunsch koordiniert VIDEKO auch den kompletten Küchenraum mit Fachpartnern für Elektro, Boden, Wand, Decke und Licht.',
+    // Offizielle Unternehmensprofile, die auch den Studio-Standort repräsentieren.
+    sameAs: SOCIAL_PROFILES.filter((p) => ['instagram', 'facebook', 'linkedin', 'tiktok'].includes(p.key)).map((p) => p.url),
     image: absUrl(SITE.defaultOgImage),
     telephone: BRAND.phoneHref,
     email: BRAND.contactEmail,
@@ -139,7 +142,14 @@ export function localBusinessLd() {
       addressRegion: 'Bayern',
       addressCountry: 'DE',
     },
-    areaServed: { '@type': 'City', name: 'Würzburg' },
+    // Einzugsgebiet wie auf /studio sichtbar angegeben; keine zusätzlichen Standorte.
+    areaServed: [
+      { '@type': 'City', name: 'Würzburg' },
+      { '@type': 'City', name: 'Tauberbischofsheim' },
+      { '@type': 'City', name: 'Kitzingen' },
+      { '@type': 'AdministrativeArea', name: 'Main-Tauber-Kreis' },
+      { '@type': 'City', name: 'Schweinfurt' },
+    ],
     // Terminbasiert statt offener Ladenöffnung – ehrlich abgebildet.
     availableService: { '@type': 'Service', name: 'Küchenplanung nach Terminvereinbarung' },
     // Nur wenn in company.js freigegebene Zeiten hinterlegt sind – sonst gar nicht.
