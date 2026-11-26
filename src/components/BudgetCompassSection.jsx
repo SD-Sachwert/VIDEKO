@@ -109,13 +109,14 @@ export default function BudgetCompassSection() {
               Was kostet<br />eine gute Küche<br /><span className="grad">wirklich?</span>
             </h2>
             <p className="budget__lead">
-              Transparenz schafft Vertrauen. Unser Budget-Kompass hilft dir,
-              realistische Erwartungen zu setzen und die perfekte Küche für dein
-              Budget zu finden.
+              Transparenz schafft Vertrauen. Der Budget-Kompass gibt dir eine
+              erste, unverbindliche Orientierung, was in welcher Preisspanne
+              möglich ist. Was deine Küche kostet, steht erst nach Planung und
+              Aufmaß fest.
             </p>
             <MagneticButton as="a" href="#budget-showcase">Kompass starten</MagneticButton>
             <span className="budget__hint">
-              <Compass size={15} strokeWidth={1.7} /> Vertrauen durch Transparenz
+              <Compass size={15} strokeWidth={1.7} /> Unverbindliche Budgetorientierung, kein Angebot
             </span>
           </Reveal>
 
@@ -180,11 +181,17 @@ export default function BudgetCompassSection() {
         <Reveal className="budget__showcase" id="budget-showcase">
           <div className="showcase__head">
             <div className="showcase__intro">
-              <span className="kicker">Küchenbeispiele in deiner Budgetspanne</span>
+              <span className="kicker">Inspiration für deine Budgetspanne</span>
               <h3 className="showcase__title">
                 {active.range} <span className="showcase__tier">· {active.label}</span>
               </h3>
               <p className="showcase__text">{active.text}</p>
+              <p className="showcase__text showcase__note">
+                Unverbindliche Richtwerte zur Orientierung, kein Angebot und keine
+                Preiszusage. Der tatsächliche Preis hängt von Raum, Hersteller,
+                Geräten und Ausführung ab. Die Bilder zeigen Beispiele zur
+                Inspiration, keine Kundenprojekte von VIDEKO.
+              </p>
             </div>
             <div className="showcase__tiers" role="tablist" aria-label="Budgetstufe">
               {TIERS.map((t) => (

@@ -3607,6 +3607,12 @@ body {
   max-width: 520px;
 }
 
+.showcase__note {
+  margin-top: 10px;
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
 .showcase__tiers {
   display: inline-flex;
   flex-wrap: wrap;
