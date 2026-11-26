@@ -66,7 +66,7 @@ import ogMontage from '../assets/images/leistungen/ls-install.webp'
 
 export const HOME_META = {
   path: '/',
-  lastModified: '2026-11-02',
+  lastModified: '2026-11-26',
   title: 'VIDEKO Küchen | Küchenstudio Würzburg',
   description:
     'Küchenstudio in Würzburg: individuelle Küchen, 3D-Planung, Aufmaß, Montage und Küchenrenovierung mit Fachpartnern. Beratung in der Hertzstraße 4.',
